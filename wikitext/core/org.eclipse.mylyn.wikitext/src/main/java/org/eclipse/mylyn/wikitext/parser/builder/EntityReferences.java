@@ -13,8 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +49,7 @@ public class EntityReferences {
 	 * @return the equivalent string, or null if no equivalent could be provided
 	 */
 	public String equivalentString(String entityReference) {
-		checkNotNull(entityReference, "Must provide an entityReference"); //$NON-NLS-1$
+		Objects.requireNonNull(entityReference, "Must provide an entityReference"); //$NON-NLS-1$
 		String entity = entityReference;
 		if (entityReference.startsWith("&") && entityReference.endsWith(";")) { //$NON-NLS-1$//$NON-NLS-2$
 			entity = entityReference.substring(1, entityReference.length() - 1);

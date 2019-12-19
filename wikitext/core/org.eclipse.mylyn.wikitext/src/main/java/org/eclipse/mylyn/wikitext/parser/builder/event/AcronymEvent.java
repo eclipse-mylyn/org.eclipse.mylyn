@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -32,8 +30,8 @@ public class AcronymEvent extends DocumentBuilderEvent {
 	private final String definition;
 
 	public AcronymEvent(String text, String definition) {
-		this.text = checkNotNull(text, "Must provide text"); //$NON-NLS-1$
-		this.definition = checkNotNull(definition, "Must provide definition"); //$NON-NLS-1$
+		this.text = Objects.requireNonNull(text, "Must provide text"); //$NON-NLS-1$
+		this.definition = Objects.requireNonNull(definition, "Must provide definition"); //$NON-NLS-1$
 	}
 
 	@Override

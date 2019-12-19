@@ -13,14 +13,14 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class HtmlElementStrategy<ElementType extends Enum<ElementType>> {
 
 	private final ElementMatcher<ElementType> matcher;
 
 	protected HtmlElementStrategy(ElementMatcher<ElementType> matcher) {
-		this.matcher = checkNotNull(matcher);
+		this.matcher = requireNonNull(matcher);
 	}
 
 	public ElementMatcher<ElementType> matcher() {

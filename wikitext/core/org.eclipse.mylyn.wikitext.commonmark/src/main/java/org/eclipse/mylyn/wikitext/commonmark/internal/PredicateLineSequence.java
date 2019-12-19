@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Predicate;
 
@@ -24,8 +24,8 @@ class PredicateLineSequence extends LineSequence {
 	private final Predicate<Line> predicate;
 
 	public PredicateLineSequence(LineSequence delegate, Predicate<Line> predicate) {
-		this.delegate = checkNotNull(delegate);
-		this.predicate = checkNotNull(predicate);
+		this.delegate = requireNonNull(delegate);
+		this.predicate = requireNonNull(predicate);
 	}
 
 	@Override

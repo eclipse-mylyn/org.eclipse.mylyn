@@ -13,10 +13,10 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.text.MessageFormat.format;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
@@ -35,7 +35,7 @@ public class DocumentBuilderEvents {
 	private final List<DocumentBuilderEvent> events;
 
 	public DocumentBuilderEvents(List<DocumentBuilderEvent> events) {
-		this.events = ImmutableList.copyOf(checkNotNull(events, "Must provide events")); //$NON-NLS-1$
+		this.events = ImmutableList.copyOf(Objects.requireNonNull(events, "Must provide events")); //$NON-NLS-1$
 	}
 
 	public List<DocumentBuilderEvent> getEvents() {
@@ -49,7 +49,7 @@ public class DocumentBuilderEvents {
 	 *            the builder
 	 */
 	public void applyTo(DocumentBuilder builder) {
-		checkNotNull(builder, "Must provide a builder"); //$NON-NLS-1$
+		Objects.requireNonNull(builder, "Must provide a builder"); //$NON-NLS-1$
 		for (DocumentBuilderEvent event : events) {
 			event.invoke(builder);
 		}

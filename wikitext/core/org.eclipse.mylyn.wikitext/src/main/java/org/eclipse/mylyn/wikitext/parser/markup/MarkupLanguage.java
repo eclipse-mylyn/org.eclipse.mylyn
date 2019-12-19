@@ -13,10 +13,10 @@
 package org.eclipse.mylyn.wikitext.parser.markup;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Writer;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -128,7 +128,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * @see #getFileExtensions()
 	 */
 	public void setFileExtensions(Set<String> fileExtensions) {
-		checkNotNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
+		Objects.requireNonNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
 		checkArgument(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
 		this.fileExtensions = ImmutableSet.copyOf(fileExtensions);
 	}

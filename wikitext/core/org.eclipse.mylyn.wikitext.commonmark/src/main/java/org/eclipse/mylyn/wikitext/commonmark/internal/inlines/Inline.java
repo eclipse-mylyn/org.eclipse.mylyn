@@ -15,7 +15,6 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,7 @@ public abstract class Inline {
 	private final int length;
 
 	public Inline(Line line, int offset, int length) {
-		this.line = checkNotNull(line);
+		this.line = Objects.requireNonNull(line);
 		this.offset = offset;
 		this.length = length;
 		checkArgument(offset >= 0);

@@ -12,12 +12,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.markup.DefaultIdGenerationStrategy;
@@ -116,6 +115,6 @@ public class IdGenerator {
 	}
 
 	public void setGenerationStrategy(IdGenerationStrategy generationStrategy) {
-		this.generationStrategy = checkNotNull(generationStrategy, "Must provide a generationStrategy"); //$NON-NLS-1$
+		this.generationStrategy = Objects.requireNonNull(generationStrategy, "Must provide a generationStrategy"); //$NON-NLS-1$
 	}
 }

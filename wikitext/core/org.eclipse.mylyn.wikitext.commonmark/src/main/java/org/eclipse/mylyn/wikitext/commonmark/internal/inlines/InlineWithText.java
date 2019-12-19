@@ -14,7 +14,6 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
 
@@ -26,7 +25,7 @@ abstract class InlineWithText extends Inline {
 
 	public InlineWithText(Line line, int offset, int length, String text) {
 		super(line, offset, length);
-		this.text = checkNotNull(text);
+		this.text = Objects.requireNonNull(text);
 	}
 
 	public String getText() {

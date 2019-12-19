@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -51,8 +51,8 @@ class LinesIterable implements Iterable<Line> {
 	private final Predicate<Line> predicate;
 
 	public LinesIterable(LineSequence lineSequence, Predicate<Line> predicate) {
-		this.lineSequence = checkNotNull(lineSequence);
-		this.predicate = checkNotNull(predicate);
+		this.lineSequence = requireNonNull(lineSequence);
+		this.predicate = requireNonNull(predicate);
 	}
 
 	@Override

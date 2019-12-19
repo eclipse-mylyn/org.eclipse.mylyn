@@ -15,7 +15,8 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
@@ -34,7 +35,7 @@ public class Line {
 		checkArgument(lineNumber >= 0);
 		this.lineNumber = lineNumber;
 		this.offset = offset;
-		this.text = checkNotNull(text);
+		this.text = Objects.requireNonNull(text);
 	}
 
 	public boolean isEmpty() {

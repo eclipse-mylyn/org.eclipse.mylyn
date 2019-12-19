@@ -14,8 +14,8 @@
 package org.eclipse.mylyn.wikitext.html;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class HtmlLanguageBuilder {
 	 * @return this builder
 	 */
 	public HtmlLanguageBuilder name(String name) {
-		checkNotNull(name, "Must provide a name"); //$NON-NLS-1$
+		requireNonNull(name, "Must provide a name"); //$NON-NLS-1$
 		checkArgument(!Strings.isNullOrEmpty(name), "Name must not be empty"); //$NON-NLS-1$
 		checkArgument(!name.equalsIgnoreCase(HtmlLanguage.NAME_HTML), "Name must not be equal to %s", //$NON-NLS-1$
 				HtmlLanguage.NAME_HTML);
@@ -98,7 +98,7 @@ public class HtmlLanguageBuilder {
 	 * @return this builder
 	 */
 	public HtmlLanguageBuilder add(BlockType blockType) {
-		blockTypes.add(checkNotNull(blockType, "Must provide a blockType")); //$NON-NLS-1$
+		blockTypes.add(requireNonNull(blockType, "Must provide a blockType")); //$NON-NLS-1$
 		return this;
 	}
 
@@ -110,7 +110,7 @@ public class HtmlLanguageBuilder {
 	 * @return this builder
 	 */
 	public HtmlLanguageBuilder add(SpanType spanType) {
-		spanTypes.add(checkNotNull(spanType, "Must provide a spanType")); //$NON-NLS-1$
+		spanTypes.add(requireNonNull(spanType, "Must provide a spanType")); //$NON-NLS-1$
 		return this;
 	}
 
@@ -126,8 +126,8 @@ public class HtmlLanguageBuilder {
 	 * @see HtmlDocumentBuilder#setElementNameOfSpanType(SpanType, String)
 	 */
 	public HtmlLanguageBuilder addSubstitution(SpanType spanType, String alternativeTagName) {
-		checkNotNull(spanType, "Must provide a spanType"); //$NON-NLS-1$
-		checkNotNull(alternativeTagName, "Must provide an alternativeTagName"); //$NON-NLS-1$
+		requireNonNull(spanType, "Must provide a spanType"); //$NON-NLS-1$
+		requireNonNull(alternativeTagName, "Must provide an alternativeTagName"); //$NON-NLS-1$
 		spanTypeToElementNameSubstitution.put(spanType, alternativeTagName);
 		return this;
 	}
@@ -183,8 +183,8 @@ public class HtmlLanguageBuilder {
 	 * @see HtmlDocumentHandler
 	 */
 	public HtmlLanguageBuilder document(String prefix, String suffix) {
-		checkNotNull(prefix, "Must provide a prefix"); //$NON-NLS-1$
-		checkNotNull(suffix, "Must provide a suffix"); //$NON-NLS-1$
+		requireNonNull(prefix, "Must provide a prefix"); //$NON-NLS-1$
+		requireNonNull(suffix, "Must provide a suffix"); //$NON-NLS-1$
 		documentHandler = new LiteralHtmlDocumentHandler(prefix, suffix);
 		return this;
 	}

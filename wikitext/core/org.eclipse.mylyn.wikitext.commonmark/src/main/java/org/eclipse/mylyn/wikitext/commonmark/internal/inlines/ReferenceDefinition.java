@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
@@ -33,8 +33,8 @@ public class ReferenceDefinition extends Inline {
 
 	public ReferenceDefinition(Line line, int offset, int length, String href, String title, String name) {
 		super(line, offset, length);
-		this.href = checkNotNull(href);
-		this.name = checkNotNull(name);
+		this.href = requireNonNull(href);
+		this.name = requireNonNull(name);
 		this.title = title;
 	}
 

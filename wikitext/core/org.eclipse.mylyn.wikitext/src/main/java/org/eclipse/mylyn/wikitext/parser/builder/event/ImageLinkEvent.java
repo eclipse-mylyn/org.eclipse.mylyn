@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -38,10 +36,10 @@ public class ImageLinkEvent extends DocumentBuilderEvent {
 	private final String imageUrl;
 
 	public ImageLinkEvent(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		this.linkAttributes = checkNotNull(linkAttributes, "Must provide linkAttributes").clone(); //$NON-NLS-1$
-		this.imageAttributes = checkNotNull(imageAttributes, "Must provide imageAttributes").clone(); //$NON-NLS-1$
-		this.href = checkNotNull(href, "Must provide link href"); //$NON-NLS-1$
-		this.imageUrl = checkNotNull(imageUrl, "Must provide imageUrl"); //$NON-NLS-1$
+		this.linkAttributes = Objects.requireNonNull(linkAttributes, "Must provide linkAttributes").clone(); //$NON-NLS-1$
+		this.imageAttributes = Objects.requireNonNull(imageAttributes, "Must provide imageAttributes").clone(); //$NON-NLS-1$
+		this.href = Objects.requireNonNull(href, "Must provide link href"); //$NON-NLS-1$
+		this.imageUrl = Objects.requireNonNull(imageUrl, "Must provide imageUrl"); //$NON-NLS-1$
 	}
 
 	@Override

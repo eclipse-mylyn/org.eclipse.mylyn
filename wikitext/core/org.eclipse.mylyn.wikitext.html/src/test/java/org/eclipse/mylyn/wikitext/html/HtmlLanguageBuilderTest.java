@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -119,8 +119,8 @@ public class HtmlLanguageBuilderTest {
 	@Test
 	public void createWithoutBlockType() {
 		HtmlLanguage language = builder.document("", "").name("Test").create();
-		checkNotNull(language);
-		checkNotNull(language.createDocumentBuilder(new StringWriter()));
+		requireNonNull(language);
+		requireNonNull(language.createDocumentBuilder(new StringWriter()));
 	}
 
 	@Test

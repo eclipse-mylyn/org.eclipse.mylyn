@@ -14,11 +14,11 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,7 +96,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					.secondPass(inlines.subList(indexOfOpeningDelimiter + 1, inlines.size()));
 			if (!openingDelimiter.isLinkDelimiter() || !containsLink(contents)) {
 
-				if (!cursor.hasNext() || !checkNotNull(matcher).matches()) {
+				if (!cursor.hasNext() || !Objects.requireNonNull(matcher).matches()) {
 					String referenceName = toReferenceName(referenceName(cursor, contents));
 					int size = 1;
 					if (cursor.hasNext()) {

@@ -1,7 +1,7 @@
 package org.eclipse.mylyn.wikitext.toolkit;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Duration;
 import java.util.Timer;
@@ -23,7 +23,7 @@ public abstract class TimeoutActionRule implements TestRule {
 	 * Creates the rule with the specified timeout.
 	 */
 	public TimeoutActionRule(Duration timeoutDuration) {
-		this.timeoutDuration = checkNotNull(timeoutDuration, "Must specify a timeout duration");
+		this.timeoutDuration = requireNonNull(timeoutDuration, "Must specify a timeout duration");
 		checkArgument(timeoutDuration.toMillis() > 100L, "Timeout must be > 100ms");
 	}
 

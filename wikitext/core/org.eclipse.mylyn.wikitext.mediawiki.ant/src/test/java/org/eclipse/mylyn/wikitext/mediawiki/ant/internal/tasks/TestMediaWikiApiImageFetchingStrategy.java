@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -29,7 +29,7 @@ public class TestMediaWikiApiImageFetchingStrategy extends MediaWikiApiImageFetc
 	private final Map<String, String> serverContent;
 
 	public TestMediaWikiApiImageFetchingStrategy(Map<String, String> serverContent) {
-		checkNotNull(serverContent,
+		requireNonNull(serverContent,
 				"Please specify some server content for images used during the tests. See: TestMediaWikiApiImageFetchingStrategy#serverContent");
 		this.serverContent = ImmutableMap.copyOf(serverContent);
 	}

@@ -13,14 +13,12 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
-
-import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
 
 /**
  * Extension of the {@link WikiTemplateResolver} for test purposes. You should set some content with
@@ -37,13 +35,13 @@ class TestWikiTemplateResolver extends WikiTemplateResolver {
 	 *            keys are URLs as String, values are the page content corresponding to the URL
 	 */
 	public void setServerContent(Map<String, String> serverContent) {
-		checkNotNull(serverContent);
+		requireNonNull(serverContent);
 		this.serverContent = serverContent;
 	}
 
 	@Override
 	protected String readContent(URL pathUrl) throws IOException {
-		checkNotNull(serverContent, "Please specify some server content for the tests.");
+		requireNonNull(serverContent, "Please specify some server content for the tests.");
 		String key = pathUrl.toString();
 		checkState(serverContent.containsKey(key), "Server content not found for key: %s", key);
 		return serverContent.get(key);

@@ -13,12 +13,11 @@
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -33,11 +32,11 @@ public class FileToMarkupLanguage {
 	}
 
 	public FileToMarkupLanguage(Set<MarkupLanguage> markupLanguages) {
-		this.extensionToMarkupLanguage = computeExtensionToMarkupLanguage(checkNotNull(markupLanguages));
+		this.extensionToMarkupLanguage = computeExtensionToMarkupLanguage(requireNonNull(markupLanguages));
 	}
 
 	public MarkupLanguage get(File file) {
-		Objects.requireNonNull(file);
+		requireNonNull(file);
 		String extension = computeFileExtension(file);
 		return extensionToMarkupLanguage.get(extension.toLowerCase());
 	}

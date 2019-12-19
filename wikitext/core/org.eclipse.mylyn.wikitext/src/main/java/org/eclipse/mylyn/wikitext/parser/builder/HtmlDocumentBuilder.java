@@ -15,7 +15,6 @@
 package org.eclipse.mylyn.wikitext.parser.builder;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -231,7 +230,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @since 3.1
 	 */
 	public void addLinkUriProcessor(UriProcessor processor) {
-		checkNotNull(processor, "Must provide processor");
+		Objects.requireNonNull(processor, "Must provide processor");
 		this.linkUriProcessors = ImmutableList.<UriProcessor> builder()
 				.addAll(linkUriProcessors)
 				.add(processor)
@@ -258,8 +257,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *            the element name to use in the generated HTML when emitting spans of the given type
 	 */
 	public void setElementNameOfSpanType(SpanType spanType, String elementName) {
-		checkNotNull(spanType, "Must provide spanType"); //$NON-NLS-1$
-		checkNotNull(elementName, "Must provide elementName"); //$NON-NLS-1$
+		Objects.requireNonNull(spanType, "Must provide spanType"); //$NON-NLS-1$
+		Objects.requireNonNull(elementName, "Must provide elementName"); //$NON-NLS-1$
 
 		ImmutableMap.Builder<SpanType, String> builder = ImmutableMap.builder();
 		for (Entry<SpanType, String> entry : spanTypeToElementName.entrySet()) {
@@ -558,7 +557,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @see HtmlDocumentHandler
 	 */
 	public void setDocumentHandler(HtmlDocumentHandler documentHandler) {
-		this.documentHandler = checkNotNull(documentHandler, "Must provide a documentHandler"); //$NON-NLS-1$
+		this.documentHandler = Objects.requireNonNull(documentHandler, "Must provide a documentHandler"); //$NON-NLS-1$
 	}
 
 	private class DefaultDocumentHandler implements HtmlDocumentHandler {

@@ -14,8 +14,8 @@
 package org.eclipse.mylyn.wikitext.html.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.io.Writer;
 import java.util.List;
@@ -53,14 +53,14 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
 			Set<BlockType> blockTypes, Set<SpanType> spanTypes, Map<SpanType, String> tagNameSubstitutions,
 			List<SpanHtmlElementStrategy> spanElementStrategies, boolean xhtmlStrict, boolean supportsImages) {
-		setName(checkNotNull(name));
+		setName(requireNonNull(name));
 		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
 		this.headingLevel = headingLevel;
-		this.supportedBlockTypes = ImmutableSet.copyOf(checkNotNull(blockTypes));
-		this.supportedSpanTypes = ImmutableSet.copyOf(checkNotNull(spanTypes));
-		this.tagNameSubstitutions = ImmutableMap.copyOf(checkNotNull(tagNameSubstitutions));
-		this.spanElementStrategies = ImmutableList.copyOf(checkNotNull(spanElementStrategies));
+		this.supportedBlockTypes = ImmutableSet.copyOf(requireNonNull(blockTypes));
+		this.supportedSpanTypes = ImmutableSet.copyOf(requireNonNull(spanTypes));
+		this.tagNameSubstitutions = ImmutableMap.copyOf(requireNonNull(tagNameSubstitutions));
+		this.spanElementStrategies = ImmutableList.copyOf(requireNonNull(spanElementStrategies));
 		this.xhtmlStrict = xhtmlStrict;
 		this.supportsImages = supportsImages;
 

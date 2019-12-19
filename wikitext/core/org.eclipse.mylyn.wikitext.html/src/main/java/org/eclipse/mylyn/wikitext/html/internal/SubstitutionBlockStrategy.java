@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -24,7 +24,7 @@ class SubstitutionBlockStrategy implements BlockStrategy {
 	private final BlockType blockType;
 
 	protected SubstitutionBlockStrategy(BlockType blockType) {
-		this.blockType = checkNotNull(blockType);
+		this.blockType = requireNonNull(blockType);
 	}
 
 	BlockType getBlockType() {

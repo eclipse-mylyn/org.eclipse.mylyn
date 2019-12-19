@@ -15,7 +15,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class TextSegment {
 			}
 			previous = line;
 		}
-		return checkNotNull(previous);
+		return requireNonNull(previous);
 	}
 
 }

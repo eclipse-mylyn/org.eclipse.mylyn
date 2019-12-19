@@ -14,7 +14,6 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +31,7 @@ public class Image extends InlineWithNestedContents {
 
 	public Image(Line line, int offset, int length, String src, String title, List<Inline> contents) {
 		super(line, offset, length, contents);
-		this.src = checkNotNull(src);
+		this.src = Objects.requireNonNull(src);
 		this.title = title;
 	}
 

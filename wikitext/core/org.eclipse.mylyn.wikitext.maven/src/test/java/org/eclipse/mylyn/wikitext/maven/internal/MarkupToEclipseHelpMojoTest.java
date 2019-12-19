@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -69,7 +69,7 @@ public class MarkupToEclipseHelpMojoTest {
 
 	private File calculateSourceFolder() {
 		URL resource = MarkupToEclipseHelpMojoTest.class.getResource("/test.textile");
-		checkNotNull(resource);
+		requireNonNull(resource);
 		checkState(resource.getProtocol().equals("file"), "Expecting resource to have the file protocol: %s", resource);
 		String path = resource.getPath();
 		File file = new File(path);

@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 /**
  * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are
@@ -119,7 +119,7 @@ public class Attributes implements Cloneable {
 	 * @since 3.0.26
 	 */
 	public void copyInto(Attributes other) {
-		checkNotNull(other);
+		Objects.requireNonNull(other);
 		other.setId(getId());
 		other.setCssClass(getCssClass());
 		other.setCssStyle(getCssStyle());

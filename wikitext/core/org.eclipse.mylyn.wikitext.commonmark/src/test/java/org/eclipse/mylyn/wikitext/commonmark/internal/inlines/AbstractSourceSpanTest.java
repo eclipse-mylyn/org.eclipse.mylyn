@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -74,6 +74,6 @@ abstract class AbstractSourceSpanTest {
 	}
 
 	public AbstractSourceSpanTest(SourceSpan span) {
-		this.span = checkNotNull(span);
+		this.span = requireNonNull(span);
 	}
 }

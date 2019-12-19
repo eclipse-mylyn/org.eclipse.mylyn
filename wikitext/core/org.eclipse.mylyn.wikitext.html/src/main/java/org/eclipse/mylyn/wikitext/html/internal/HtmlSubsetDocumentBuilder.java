@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.io.Writer;
 import java.util.List;
@@ -49,11 +49,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	private boolean supportsImages = true;
 
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
-		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
+		this(new HtmlDocumentBuilder(requireNonNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
 	}
 
 	HtmlSubsetDocumentBuilder(HtmlDocumentBuilder delegate) {
-		this.delegate = checkNotNull(delegate, "Must provide a delegate"); //$NON-NLS-1$
+		this.delegate = requireNonNull(delegate, "Must provide a delegate"); //$NON-NLS-1$
 	}
 
 	void setSupportedBlockTypes(Set<BlockType> blockTypes) {

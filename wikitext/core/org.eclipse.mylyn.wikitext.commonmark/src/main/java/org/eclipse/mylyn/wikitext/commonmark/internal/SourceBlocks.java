@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public class SourceBlocks extends SourceBlock {
 	private final List<SourceBlock> supportedBlocks;
 
 	public SourceBlocks(SourceBlock... blocks) {
-		this(Arrays.asList(checkNotNull(blocks)));
+		this(Arrays.asList(requireNonNull(blocks)));
 	}
 
 	SourceBlocks(List<SourceBlock> supportedBlocks) {

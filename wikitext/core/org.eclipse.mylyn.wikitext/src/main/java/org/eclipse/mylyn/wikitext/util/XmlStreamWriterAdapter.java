@@ -13,10 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Objects;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
@@ -28,7 +27,7 @@ class XmlStreamWriterAdapter implements XMLStreamWriter {
 	private final XmlStreamWriter delegate;
 
 	public XmlStreamWriterAdapter(XmlStreamWriter delegate) {
-		this.delegate = checkNotNull(delegate, "Must provide a delegate"); //$NON-NLS-1$
+		this.delegate = Objects.requireNonNull(delegate, "Must provide a delegate"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -203,13 +202,13 @@ class XmlStreamWriterAdapter implements XMLStreamWriter {
 
 	@Override
 	public Object getProperty(String name) throws IllegalArgumentException {
-		checkNotNull(name);
+		Objects.requireNonNull(name);
 		throw new IllegalArgumentException(name);
 	}
 
 	@Override
 	public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
-		checkNotNull(context);
+		Objects.requireNonNull(context);
 		// silently ignore
 	}
 

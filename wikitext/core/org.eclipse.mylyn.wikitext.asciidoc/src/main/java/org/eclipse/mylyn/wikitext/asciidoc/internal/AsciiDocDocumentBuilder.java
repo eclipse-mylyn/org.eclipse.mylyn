@@ -13,13 +13,12 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
@@ -139,7 +138,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		protected void addListItem(ListItemBlock item) {
-			checkNotNull(item);
+			Objects.requireNonNull(item);
 			count++;
 		}
 

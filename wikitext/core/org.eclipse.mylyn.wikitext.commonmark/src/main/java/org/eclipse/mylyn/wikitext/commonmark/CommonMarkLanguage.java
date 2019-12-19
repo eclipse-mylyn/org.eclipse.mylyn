@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.commonmark;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.CommonMark;
 import org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkIdGenerationStrategy;
@@ -39,10 +39,10 @@ public class CommonMarkLanguage extends MarkupLanguage {
 
 	@Override
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		checkNotNull(parser);
-		checkNotNull(markupContent);
+		requireNonNull(parser);
+		requireNonNull(markupContent);
 
-		DocumentBuilder builder = checkNotNull(parser.getBuilder());
+		DocumentBuilder builder = requireNonNull(parser.getBuilder());
 		if (asDocument) {
 			builder.beginDocument();
 		}

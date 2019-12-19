@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +28,7 @@ public class TestResources {
 	public static String load(Class<?> relativeToClass, String path) {
 		try {
 			URL url = relativeToClass.getResource(path);
-			checkNotNull(url, "Resource %s not found relative to %s", path, relativeToClass.getName());
+			requireNonNull(url, String.format("Resource %s not found relative to %s", path, relativeToClass.getName()));
 			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
@@ -26,8 +26,8 @@ public class LiteralHtmlDocumentHandler implements HtmlDocumentHandler {
 	private final String suffix;
 
 	public LiteralHtmlDocumentHandler(String prefix, String suffix) {
-		this.prefix = checkNotNull(prefix);
-		this.suffix = checkNotNull(suffix);
+		this.prefix = requireNonNull(prefix);
+		this.suffix = requireNonNull(suffix);
 	}
 
 	@Override

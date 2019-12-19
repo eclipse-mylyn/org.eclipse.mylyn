@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.parser.markup;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
@@ -38,7 +38,7 @@ public abstract class MarkupLanguageProvider {
 	 */
 	public final Set<MarkupLanguage> getMarkupLanguages() {
 		Set<MarkupLanguage> languages = ImmutableSet
-				.copyOf(checkNotNull(loadMarkupLanguages(), "loadMarkupLanguages() must not return null")); //$NON-NLS-1$
+				.copyOf(Objects.requireNonNull(loadMarkupLanguages(), "loadMarkupLanguages() must not return null")); //$NON-NLS-1$
 		assertLanguageNames(languages);
 		return languages;
 	}
@@ -46,7 +46,7 @@ public abstract class MarkupLanguageProvider {
 	private void assertLanguageNames(Set<MarkupLanguage> languages) {
 		Set<String> names = Sets.newHashSet();
 		for (MarkupLanguage language : languages) {
-			checkNotNull(language.getName(), "Provided languages must have a name"); //$NON-NLS-1$
+			Objects.requireNonNull(language.getName(), "Provided languages must have a name"); //$NON-NLS-1$
 			checkState(names.add(language.getName()), "Language name '%s' must not be provided more than once", //$NON-NLS-1$
 					language.getName());
 		}

@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -34,8 +32,8 @@ public class BeginSpanEvent extends DocumentBuilderEvent {
 	private final Attributes attributes;
 
 	public BeginSpanEvent(SpanType type, Attributes attributes) {
-		this.type = checkNotNull(type, "Must provide type"); //$NON-NLS-1$
-		this.attributes = checkNotNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
+		this.type = Objects.requireNonNull(type, "Must provide type"); //$NON-NLS-1$
+		this.attributes = Objects.requireNonNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
 	}
 
 	@Override

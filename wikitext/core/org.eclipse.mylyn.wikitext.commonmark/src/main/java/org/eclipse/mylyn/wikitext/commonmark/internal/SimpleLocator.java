@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
@@ -35,7 +35,7 @@ public class SimpleLocator implements Locator {
 	}
 
 	public SimpleLocator(Line line, int lineCharacterOffset, int lineSegmentEndOffset) {
-		checkNotNull(line);
+		requireNonNull(line);
 		lineNumber = line.getLineNumber() + 1;
 		lineDocumentOffset = line.getOffset();
 		lineLength = line.getText().length();

@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.tests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import org.osgi.framework.FrameworkUtil;
 
 /**
  * A utility for visiting Mylyn classes available on the classpath.
- * 
+ *
  * @author David Green
  */
 public class ClassTraversal {
@@ -85,7 +85,8 @@ public class ClassTraversal {
 	}
 
 	private Bundle getBundle(long bundleId) {
-		return checkNotNull(FrameworkUtil.getBundle(WikiTextUiPlugin.class), "Cannot determine bundle").getBundleContext()
+		return requireNonNull(FrameworkUtil.getBundle(WikiTextUiPlugin.class), "Cannot determine bundle")
+				.getBundleContext()
 				.getBundle(bundleId);
 	}
 

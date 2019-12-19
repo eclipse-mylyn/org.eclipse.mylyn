@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -30,7 +28,7 @@ public class CharactersEvent extends DocumentBuilderEvent {
 	private final String text;
 
 	public CharactersEvent(String text) {
-		this.text = checkNotNull(text, "Must provide text"); //$NON-NLS-1$
+		this.text = Objects.requireNonNull(text, "Must provide text"); //$NON-NLS-1$
 	}
 
 	@Override

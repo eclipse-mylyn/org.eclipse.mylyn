@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.wikitext.maven.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 
@@ -27,7 +27,7 @@ public class SourceFileTraversal {
 	private final File root;
 
 	public SourceFileTraversal(File root) {
-		this.root = checkNotNull(root);
+		this.root = requireNonNull(root);
 		checkArgument(root.exists(), "Root folder must exist");
 		checkArgument(root.isDirectory(), "Root folder must be a folder");
 	}

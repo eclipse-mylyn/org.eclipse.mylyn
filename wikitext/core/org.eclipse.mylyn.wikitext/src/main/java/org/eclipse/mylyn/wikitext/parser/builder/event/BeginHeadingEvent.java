@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -34,7 +32,7 @@ public class BeginHeadingEvent extends DocumentBuilderEvent {
 
 	public BeginHeadingEvent(int level, Attributes attributes) {
 		this.level = level;
-		this.attributes = checkNotNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
+		this.attributes = Objects.requireNonNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
 	}
 
 	@Override

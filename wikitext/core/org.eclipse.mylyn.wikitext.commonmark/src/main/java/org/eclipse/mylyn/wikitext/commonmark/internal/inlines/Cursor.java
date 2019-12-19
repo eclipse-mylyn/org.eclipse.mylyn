@@ -14,8 +14,8 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +31,7 @@ public class Cursor {
 	private int textOffset;
 
 	public Cursor(TextSegment segment) {
-		this.segment = checkNotNull(segment);
+		this.segment = Objects.requireNonNull(segment);
 		this.text = segment.getText();
 		this.textOffset = 0;
 	}
@@ -145,7 +145,7 @@ public class Cursor {
 
 	public Matcher matcher(int offset, Pattern pattern) {
 		checkArgument(offset >= 0 && (offset + textOffset < text.length()));
-		checkNotNull(pattern);
+		Objects.requireNonNull(pattern);
 		Matcher matcher = pattern.matcher(text);
 		matcher.region(textOffset + offset, text.length());
 		return matcher;

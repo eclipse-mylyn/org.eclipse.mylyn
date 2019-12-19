@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.internal.wikitext;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -25,7 +25,7 @@ public class MockMarkupLanguage extends MarkupLanguage {
 	}
 
 	public MockMarkupLanguage(String name) {
-		setName(checkNotNull(name));
+		setName(Objects.requireNonNull(name));
 	}
 
 	@Override

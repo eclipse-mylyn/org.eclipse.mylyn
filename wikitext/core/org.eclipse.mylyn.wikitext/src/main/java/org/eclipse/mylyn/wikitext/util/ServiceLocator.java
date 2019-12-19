@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.wikitext.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +26,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Level;
@@ -261,7 +261,7 @@ public class ServiceLocator {
 		private final URL url;
 
 		public ResourceDescriptor(URL url) {
-			this.url = checkNotNull(url);
+			this.url = Objects.requireNonNull(url);
 		}
 
 		public URL getUrl() {

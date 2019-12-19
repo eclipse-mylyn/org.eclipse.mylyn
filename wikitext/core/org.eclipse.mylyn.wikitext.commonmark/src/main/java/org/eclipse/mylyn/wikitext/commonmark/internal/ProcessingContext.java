@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.parser.IdGenerator;
@@ -61,9 +61,9 @@ public class ProcessingContext {
 
 	ProcessingContext(InlineParser inlineParser, ImmutableMap<String, NamedUriWithTitle> links,
 			IdGenerator idGenerator) {
-		this.inlineParser = checkNotNull(inlineParser);
-		this.links = checkNotNull(links);
-		this.idGenerator = checkNotNull(idGenerator);
+		this.inlineParser = requireNonNull(inlineParser);
+		this.links = requireNonNull(links);
+		this.idGenerator = requireNonNull(idGenerator);
 	}
 
 	public boolean isEmpty() {

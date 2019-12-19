@@ -14,7 +14,6 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +32,7 @@ public class Link extends InlineWithNestedContents {
 
 	public Link(Line line, int offset, int length, String href, String title, List<Inline> contents) {
 		super(line, offset, length, contents);
-		this.href = checkNotNull(href);
+		this.href = Objects.requireNonNull(href);
 		this.title = title;
 	}
 

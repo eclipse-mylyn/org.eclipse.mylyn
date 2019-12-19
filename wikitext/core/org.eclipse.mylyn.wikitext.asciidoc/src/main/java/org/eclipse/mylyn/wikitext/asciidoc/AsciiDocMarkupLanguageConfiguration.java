@@ -13,10 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 
@@ -46,7 +45,7 @@ public class AsciiDocMarkupLanguageConfiguration extends MarkupLanguageConfigura
 	 *            initial attributes (key, values)
 	 */
 	public void setInitialAttributes(Map<String, String> initialAttributes) {
-		checkNotNull(initialAttributes, "initialAttributes can not be null");
+		Objects.requireNonNull(initialAttributes, "initialAttributes can not be null");
 		this.initialAttributes = ImmutableMap.copyOf(initialAttributes);
 	}
 }

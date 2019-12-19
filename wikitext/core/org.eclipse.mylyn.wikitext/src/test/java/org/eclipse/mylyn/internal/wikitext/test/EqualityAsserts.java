@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.test;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -21,8 +21,8 @@ import static org.junit.Assert.assertTrue;
 public class EqualityAsserts {
 
 	public static void assertEquality(Object one, Object two) {
-		checkNotNull(one, "Must provide a value");
-		checkNotNull(two, "Must provide a value");
+		requireNonNull(one, "Must provide a value");
+		requireNonNull(two, "Must provide a value");
 		assertEquals(one, two);
 		assertEquals(two, one);
 		assertEquals(one.hashCode(), two.hashCode());
@@ -31,8 +31,8 @@ public class EqualityAsserts {
 	}
 
 	public static void assertInequality(Object one, Object two) {
-		checkNotNull(one, "Must provide a value");
-		checkNotNull(two, "Must provide a value");
+		requireNonNull(one, "Must provide a value");
+		requireNonNull(two, "Must provide a value");
 		assertFalse(one.equals(two));
 		assertFalse(two.equals(one));
 		assertEquality(one);

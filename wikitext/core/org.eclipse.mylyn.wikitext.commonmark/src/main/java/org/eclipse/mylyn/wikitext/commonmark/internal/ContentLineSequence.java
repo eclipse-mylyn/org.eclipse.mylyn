@@ -14,12 +14,12 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence.ForwardLineSequence;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
@@ -33,7 +33,7 @@ class ContentLineSequence extends ForwardLineSequence {
 	private final List<Line> followingLines = new ArrayList<Line>();
 
 	ContentLineSequence(String content) {
-		this.reader = new LocationTrackingReader(new StringReader(checkNotNull(content)));
+		this.reader = new LocationTrackingReader(new StringReader(Objects.requireNonNull(content)));
 		currentLine = readLine();
 	}
 

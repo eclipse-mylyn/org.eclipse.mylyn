@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.core.osgi;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -139,7 +139,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 	BundleContext getContext() {
 		Bundle bundle = getBundle();
 		ensureContext(bundle);
-		return checkNotNull(bundle.getBundleContext(), "Bundle has no context"); //$NON-NLS-1$
+		return requireNonNull(bundle.getBundleContext(), "Bundle has no context"); //$NON-NLS-1$
 	}
 
 	protected void ensureContext(Bundle bundle) {
@@ -153,6 +153,6 @@ public class OsgiServiceLocator extends ServiceLocator {
 	}
 
 	private Bundle getBundle() {
-		return checkNotNull(FrameworkUtil.getBundle(OsgiServiceLocator.class), "Bundle is null."); //$NON-NLS-1$
+		return requireNonNull(FrameworkUtil.getBundle(OsgiServiceLocator.class), "Bundle is null."); //$NON-NLS-1$
 	}
 }

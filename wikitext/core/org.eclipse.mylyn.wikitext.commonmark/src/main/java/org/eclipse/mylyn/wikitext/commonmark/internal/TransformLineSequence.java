@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Function;
 
@@ -24,8 +24,8 @@ class TransformLineSequence extends LineSequence {
 	private final Function<Line, Line> transform;
 
 	public TransformLineSequence(LineSequence delegate, Function<Line, Line> transform) {
-		this.delegate = checkNotNull(delegate);
-		this.transform = checkNotNull(transform);
+		this.delegate = requireNonNull(delegate);
+		this.transform = requireNonNull(transform);
 	}
 
 	@Override

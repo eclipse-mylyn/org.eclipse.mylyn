@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -34,22 +34,22 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 
 	ElementStrategies(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes,
 			List<HtmlElementStrategyType> elementStrategies) {
-		checkNotNull(elementTypeClass);
-		checkNotNull(elementTypes);
-		this.elementStrategies = ImmutableList.copyOf(checkNotNull(elementStrategies));
+		requireNonNull(elementTypeClass);
+		requireNonNull(elementTypes);
+		this.elementStrategies = ImmutableList.copyOf(requireNonNull(elementStrategies));
 
 		initialize(elementTypeClass, elementTypes);
 	}
 
 	public ElementStrategy getStrategy(ElementType elementType, Attributes attributes) {
-		checkNotNull(elementType);
+		requireNonNull(elementType);
 
 		for (HtmlElementStrategyType strategy : elementStrategies) {
 			if (strategy.matcher().matches(elementType, attributes)) {
 				return getElementStrategy(strategy);
 			}
 		}
-		return checkNotNull(elementStrategyByElementType.get(elementType));
+		return requireNonNull(elementStrategyByElementType.get(elementType));
 	}
 
 	abstract ElementStrategy getElementStrategy(HtmlElementStrategyType strategy);
@@ -76,7 +76,8 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 	abstract void addImplicitElementTypes(Map<ElementType, ElementStrategy> blockStrategyByElementType,
 			Set<ElementType> elementTypes);
 
-	void addSupportedElementType(Map<ElementType, ElementStrategy> elementStrategyByElementType, ElementType elementType) {
+	void addSupportedElementType(Map<ElementType, ElementStrategy> elementStrategyByElementType,
+			ElementType elementType) {
 		elementStrategyByElementType.put(elementType, getSupportedStrategy(elementType));
 	}
 

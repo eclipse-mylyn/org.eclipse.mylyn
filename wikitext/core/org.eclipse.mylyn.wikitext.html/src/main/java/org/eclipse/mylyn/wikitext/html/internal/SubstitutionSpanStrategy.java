@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -24,7 +24,7 @@ class SubstitutionSpanStrategy implements SpanStrategy {
 	private final SpanType type;
 
 	protected SubstitutionSpanStrategy(SpanType type) {
-		this.type = checkNotNull(type);
+		this.type = requireNonNull(type);
 	}
 
 	@Override

@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.IOException;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlCleaner;
@@ -36,7 +35,7 @@ public class HtmlParser {
 	private final AbstractSaxHtmlParser delegate;
 
 	private HtmlParser(AbstractSaxHtmlParser parser) {
-		this.delegate = checkNotNull(parser);
+		this.delegate = Objects.requireNonNull(parser);
 
 	}
 
@@ -98,8 +97,8 @@ public class HtmlParser {
 	 *            indicates if the builder should be driven as a {@link DocumentBuilder#beginDocument() document}.
 	 */
 	public void parse(InputSource input, DocumentBuilder builder, boolean asDocument) throws IOException, SAXException {
-		checkNotNull(input);
-		checkNotNull(builder);
+		Objects.requireNonNull(input);
+		Objects.requireNonNull(builder);
 
 		delegate.parse(input, builder, asDocument);
 	}

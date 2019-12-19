@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ class InlinesSubstitution {
 	private final List<Inline> substitution;
 
 	public InlinesSubstitution(Inline first, Inline last, List<Inline> substitution) {
-		this.first = checkNotNull(first);
-		this.last = checkNotNull(last);
+		this.first = requireNonNull(first);
+		this.last = requireNonNull(last);
 		this.substitution = ImmutableList.copyOf(substitution);
 	}
 

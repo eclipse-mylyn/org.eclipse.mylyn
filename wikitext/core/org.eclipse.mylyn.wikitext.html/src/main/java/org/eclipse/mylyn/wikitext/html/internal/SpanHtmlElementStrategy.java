@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
@@ -23,7 +23,7 @@ public class SpanHtmlElementStrategy extends HtmlElementStrategy<SpanType> {
 
 	protected SpanHtmlElementStrategy(ElementMatcher<SpanType> matcher, SpanStrategy spanStrategy) {
 		super(matcher);
-		this.spanStrategy = checkNotNull(spanStrategy);
+		this.spanStrategy = requireNonNull(spanStrategy);
 	}
 
 	public SpanStrategy spanStrategy() {

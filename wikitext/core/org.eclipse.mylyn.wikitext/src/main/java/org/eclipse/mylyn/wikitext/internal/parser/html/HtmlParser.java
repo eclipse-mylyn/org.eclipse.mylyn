@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,6 +22,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -160,8 +159,8 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 	private List<DocumentProcessor> processors = new ArrayList<DocumentProcessor>();
 
 	@Override
-	protected void parse(InputSource input, DocumentBuilder builder, ContentHandler contentHandler) throws IOException,
-			SAXException {
+	protected void parse(InputSource input, DocumentBuilder builder, ContentHandler contentHandler)
+			throws IOException, SAXException {
 		Document document = Jsoup.parse(readContent(input));
 
 		for (DocumentProcessor processor : processors) {
@@ -181,7 +180,7 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 	}
 
 	public void setProcessors(List<DocumentProcessor> processors) {
-		this.processors = checkNotNull(processors);
+		this.processors = Objects.requireNonNull(processors);
 	}
 
 	private String readContent(InputSource input) throws IOException {

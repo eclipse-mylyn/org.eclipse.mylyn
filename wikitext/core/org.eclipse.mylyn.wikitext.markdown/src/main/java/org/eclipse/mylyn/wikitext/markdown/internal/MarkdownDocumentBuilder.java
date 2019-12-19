@@ -14,7 +14,7 @@
 
 package org.eclipse.mylyn.wikitext.markdown.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -178,7 +178,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		protected void addListItem(ListItemBlock item) {
-			checkNotNull(item);
+			requireNonNull(item);
 			count++;
 		}
 

@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -35,9 +33,9 @@ public class LinkEvent extends DocumentBuilderEvent {
 	private final Attributes attributes;
 
 	public LinkEvent(Attributes attributes, String hrefOrHashName, String text) {
-		this.attributes = checkNotNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
-		this.hrefOrHashName = checkNotNull(hrefOrHashName, "Must provide hrefOrHashName"); //$NON-NLS-1$
-		this.text = checkNotNull(text, "Must provide text"); //$NON-NLS-1$
+		this.attributes = Objects.requireNonNull(attributes, "Must provide attributes").clone(); //$NON-NLS-1$
+		this.hrefOrHashName = Objects.requireNonNull(hrefOrHashName, "Must provide hrefOrHashName"); //$NON-NLS-1$
+		this.text = Objects.requireNonNull(text, "Must provide text"); //$NON-NLS-1$
 	}
 
 	@Override
