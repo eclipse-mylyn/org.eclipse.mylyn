@@ -22,4 +22,5 @@ Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.listener,
  org.eclipse.mylyn.htmltext.model
 Bundle-Localization: OSGI-INF/l10n/bundle
+Automatic-Module-Name: org.eclipse.mylyn.htmltext.ui
 

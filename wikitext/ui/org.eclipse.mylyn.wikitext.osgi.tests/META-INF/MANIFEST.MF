@@ -12,4 +12,5 @@ Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.36",
  org.objenesis;bundle-version="[1.0.0,2.0.0)",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi.tests
 

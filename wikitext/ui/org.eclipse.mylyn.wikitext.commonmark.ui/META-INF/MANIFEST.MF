@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.mylyn.wikitext.commonmark;bundle-version="3.0.36",
  org.eclipse.mylyn.wikitext;bundle-version="3.0.36",
  org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.36"
 Bundle-Localization: META-INF/l10n/bundle
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.commonmark.ui

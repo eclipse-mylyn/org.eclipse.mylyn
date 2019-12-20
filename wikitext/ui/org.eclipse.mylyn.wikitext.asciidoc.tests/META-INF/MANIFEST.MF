@@ -16,3 +16,4 @@ Bundle-Localization: plugin
 Import-Package: org.eclipse.jface.text.templates.persistence,
  org.eclipse.mylyn.internal.wikitext.ui,
  org.eclipse.mylyn.internal.wikitext.ui.editor.assist
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.asciidoc.tests

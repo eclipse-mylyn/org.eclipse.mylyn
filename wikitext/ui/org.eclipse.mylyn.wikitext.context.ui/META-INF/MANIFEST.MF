@@ -26,3 +26,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.36"
 Export-Package: org.eclipse.mylyn.internal.wikitext.context.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.context.ui.actions;x-internal:=true
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.context.ui

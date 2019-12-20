@@ -58,3 +58,4 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile.resources;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.ui.tests

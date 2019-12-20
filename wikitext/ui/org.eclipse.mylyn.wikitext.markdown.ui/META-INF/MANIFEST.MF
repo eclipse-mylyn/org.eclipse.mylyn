@@ -9,3 +9,4 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.36",
  org.eclipse.mylyn.wikitext.markdown;bundle-version="3.0.36",
  org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.36"
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.markdown.ui
