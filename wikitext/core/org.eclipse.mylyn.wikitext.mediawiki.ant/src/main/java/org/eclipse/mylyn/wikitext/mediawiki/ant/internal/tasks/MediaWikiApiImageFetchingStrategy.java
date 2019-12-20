@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -172,7 +173,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 	}
 
 	protected Reader createInputReader(URL apiUrl) throws UnsupportedEncodingException, IOException {
-		return new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), "UTF-8");
+		return new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), StandardCharsets.UTF_8);
 	}
 
 	public URL getUrl() {

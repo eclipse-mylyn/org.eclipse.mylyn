@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
@@ -67,7 +68,8 @@ public abstract class AbstractTestAntTask extends TestCase {
 	}
 
 	protected String getContent(File file) throws IOException {
-		Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)), "utf-8");
+		Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)),
+				StandardCharsets.UTF_8);
 		try {
 			StringWriter writer = new StringWriter();
 			int i;

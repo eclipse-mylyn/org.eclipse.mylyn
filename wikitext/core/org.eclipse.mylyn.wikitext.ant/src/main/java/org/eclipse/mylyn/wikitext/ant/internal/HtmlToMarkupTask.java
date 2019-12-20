@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,8 @@ import org.xml.sax.InputSource;
 
 /**
  * An Ant task to generate wiki markup from HTML sources. For best results ensure that jsoup is on the classpath.
- * 
+ *
  * @author David Green
- * 
  */
 public class HtmlToMarkupTask extends MarkupTask {
 
@@ -87,9 +87,10 @@ public class HtmlToMarkupTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						throw new BuildException(
+								MessageFormat.format(Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
+										e.getMessage()),
+								e);
 					}
 				}
 			}
@@ -100,8 +101,8 @@ public class HtmlToMarkupTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -124,10 +125,11 @@ public class HtmlToMarkupTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)), "utf-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToHtmlTask.16"), outputFile, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), outputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 			try {
 				DocumentBuilder builder = markupLanguage.createDocumentBuilder(writer);
@@ -136,11 +138,12 @@ public class HtmlToMarkupTask extends MarkupTask {
 				InputStream in;
 				try {
 					in = new BufferedInputStream(new FileInputStream(source));
-					input = getSourceEncoding() == null ? new InputStreamReader(in) : new InputStreamReader(in,
-							getSourceEncoding());
+					input = getSourceEncoding() == null
+							? new InputStreamReader(in)
+							: new InputStreamReader(in, getSourceEncoding());
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupTask.cannotReadSource"), source, e.getMessage()), e); //$NON-NLS-1$
+					throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), //$NON-NLS-1$
+							source, e.getMessage()), e);
 				}
 				try {
 					new HtmlParser().parse(new InputSource(input), builder);
@@ -151,16 +154,15 @@ public class HtmlToMarkupTask extends MarkupTask {
 					try {
 						in.close();
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupTask.cannotReadSource"), source, e.getMessage()), e); //$NON-NLS-1$
+						throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), //$NON-NLS-1$
+								source, e.getMessage()), e);
 					}
 				}
 			} finally {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToHtmlTask.17"), outputFile, //$NON-NLS-1$
+					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToHtmlTask.17"), outputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}

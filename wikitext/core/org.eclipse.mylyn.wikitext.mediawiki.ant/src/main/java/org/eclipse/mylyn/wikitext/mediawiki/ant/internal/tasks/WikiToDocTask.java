@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -278,7 +279,7 @@ public class WikiToDocTask extends MarkupTask {
 	}
 
 	protected Reader createInputReader(URL pathUrl) throws IOException {
-		return new InputStreamReader(new BufferedInputStream(pathUrl.openStream()), "UTF-8"); //$NON-NLS-1$
+		return new InputStreamReader(new BufferedInputStream(pathUrl.openStream()), StandardCharsets.UTF_8);
 	}
 
 	protected void performValidation(MarkupLanguage markupLanguage, Path path, String markupContent) {
@@ -325,7 +326,8 @@ public class WikiToDocTask extends MarkupTask {
 		File tocFile = new File(dest, path.name.replaceAll("[^a-zA-Z0-9]", "-") + "-toc.xml"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
 		try {
-			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)), "UTF-8"); //$NON-NLS-1$
+			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
+					StandardCharsets.UTF_8);
 			try {
 				writer.write(tocContents);
 			} finally {
@@ -429,7 +431,8 @@ public class WikiToDocTask extends MarkupTask {
 		String tocContents = markupToEclipseToc.createToc(rootItem);
 
 		try {
-			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)), "UTF-8"); //$NON-NLS-1$
+			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
+					StandardCharsets.UTF_8);
 			try {
 				writer.write(tocContents);
 			} finally {
@@ -512,7 +515,8 @@ public class WikiToDocTask extends MarkupTask {
 		}
 		Writer writer;
 		try {
-			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
+			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
+					StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			throw new BuildException(
 					MessageFormat.format(Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
@@ -1100,7 +1104,6 @@ public class WikiToDocTask extends MarkupTask {
 	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
 	 *
 	 * @return true if index.php and HTTP parameters should be used in the URL, otherwise false. Defaults to false.
-	 * 
 	 */
 	public boolean isTitleParameter() {
 		return titleParameter;
@@ -1111,7 +1114,6 @@ public class WikiToDocTask extends MarkupTask {
 	 *
 	 * @param titleParameter
 	 *            true if index.php and HTTP parameters should be used in the URL, otherwise false.
-	 * 
 	 */
 	public void setTitleParameter(boolean titleParameter) {
 		this.titleParameter = titleParameter;

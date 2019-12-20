@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -104,7 +105,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				}
 				currentFile = new File(rootFile.getParent(), item.getSplitTarget());
 
-				writer = new OutputStreamWriter(new FileOutputStream(currentFile), "UTF-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new FileOutputStream(currentFile), StandardCharsets.UTF_8);
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatting);
 				rootBuilder.copyConfiguration(builder);
 				if (item.getLabel() != null) {

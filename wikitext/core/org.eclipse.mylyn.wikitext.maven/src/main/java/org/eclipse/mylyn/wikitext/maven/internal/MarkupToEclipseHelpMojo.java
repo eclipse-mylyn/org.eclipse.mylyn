@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -448,7 +449,8 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	private Writer createWriter(File outputFile) {
 		Writer writer;
 		try {
-			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)), "utf-8");
+			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+					StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new BuildFailureException(format("Cannot write to file {0}: {1}", outputFile, e.getMessage()), e);
 		}

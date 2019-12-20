@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,8 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
  * An Ant task for converting markup to docbook format.
- * 
+ *
  * @author David Green
- * 
  */
 public class MarkupToDocbookTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
@@ -93,9 +93,10 @@ public class MarkupToDocbookTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToDocbookTask.6"), inputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						throw new BuildException(
+								MessageFormat.format(Messages.getString("MarkupToDocbookTask.6"), inputFile, //$NON-NLS-1$
+										e.getMessage()),
+								e);
 					}
 				}
 			}
@@ -107,8 +108,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDocbookTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToDocbookTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -136,11 +137,12 @@ public class MarkupToDocbookTask extends MarkupTask {
 			Writer writer;
 			try {
 				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),
-						"utf-8"); //$NON-NLS-1$
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
-						e.getMessage()), e);
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
+								e.getMessage()),
+						e);
 			}
 			try {
 				DocBookDocumentBuilder builder = new DocBookDocumentBuilder(writer) {
@@ -161,9 +163,10 @@ public class MarkupToDocbookTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToDocbookTask.12"), docbookOutputFile, //$NON-NLS-1$
-							e.getMessage()), e);
+					throw new BuildException(
+							MessageFormat.format(Messages.getString("MarkupToDocbookTask.12"), docbookOutputFile, //$NON-NLS-1$
+									e.getMessage()),
+							e);
 				}
 			}
 		}
@@ -173,7 +176,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.xml</code>
-	 * 
+	 *
 	 * @see #setDocbookFilenameFormat(String)
 	 */
 	public String getDocbookFilenameFormat() {
@@ -183,7 +186,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.xml</code>
-	 * 
+	 *
 	 * @param docbookFilenameFormat
 	 */
 	public void setDocbookFilenameFormat(String docbookFilenameFormat) {
@@ -192,7 +195,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 	/**
 	 * Get the book title.
-	 * 
+	 *
 	 * @return the title, or null if the source filename is to be used as the title.
 	 */
 	public String getBookTitle() {
@@ -201,7 +204,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 	/**
 	 * The book title.
-	 * 
+	 *
 	 * @param bookTitle
 	 *            the title, or null if the source filename is to be used as the title.
 	 */

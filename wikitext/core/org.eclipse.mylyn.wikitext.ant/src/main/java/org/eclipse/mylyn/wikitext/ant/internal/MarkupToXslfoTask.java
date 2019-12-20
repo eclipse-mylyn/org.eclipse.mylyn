@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 
 /**
  * @author David Green
- * 
  */
 public class MarkupToXslfoTask extends MarkupTask {
 
@@ -87,9 +87,10 @@ public class MarkupToXslfoTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToXslfoTask.5"), inputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						throw new BuildException(
+								MessageFormat.format(Messages.getString("MarkupToXslfoTask.5"), inputFile, //$NON-NLS-1$
+										e.getMessage()),
+								e);
 					}
 				}
 			}
@@ -100,15 +101,15 @@ public class MarkupToXslfoTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToXslfoTask.6"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToXslfoTask.6"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
 
 	/**
 	 * process the file
-	 * 
+	 *
 	 * @param baseDir
 	 * @param source
 	 * @return
@@ -141,10 +142,11 @@ public class MarkupToXslfoTask extends MarkupTask {
 
 			Writer out;
 			try {
-				out = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)), "utf-8"); //$NON-NLS-1$
+				out = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToXslfoTask.8"), outputFile, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToXslfoTask.8"), outputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 			try {
 				XslfoDocumentBuilder builder = new XslfoDocumentBuilder(out);
@@ -169,8 +171,7 @@ public class MarkupToXslfoTask extends MarkupTask {
 				try {
 					out.close();
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToXslfoTask.9"), outputFile, //$NON-NLS-1$
+					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToXslfoTask.9"), outputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -355,14 +356,14 @@ public class MarkupToXslfoTask extends MarkupTask {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public boolean isGenerateBookmarks() {
 		return generateBookmarks;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setGenerateBookmarks(boolean generateBookmarks) {
 		this.generateBookmarks = generateBookmarks;

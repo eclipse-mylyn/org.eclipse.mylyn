@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -43,17 +44,18 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 
 	@Override
 	protected void handleFile(ExecutionEvent event, IFile file, String name) throws ExecutionException {
-		MarkupLanguage targetMmarkupLanguage = ServiceLocator.getInstance().getMarkupLanguage(
-				event.getParameter(PARAM_MARKUP_LANGUAGE));
+		MarkupLanguage targetMmarkupLanguage = ServiceLocator.getInstance()
+				.getMarkupLanguage(event.getParameter(PARAM_MARKUP_LANGUAGE));
 
 		// TODO: better way to get the file extension
 		String extension = targetMmarkupLanguage.getName().toLowerCase().replaceAll("\\W", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final IFile newFile = file.getParent().getFile(new Path(name + "." + extension)); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), NLS.bind(
-					Messages.ConvertMarkupToMarkup_overwrite_file, targetMmarkupLanguage.getName()), NLS.bind(
-					Messages.ConvertMarkupToMarkup_overwrite_file_detail, new Object[] { newFile.getFullPath() }))) {
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					NLS.bind(Messages.ConvertMarkupToMarkup_overwrite_file, targetMmarkupLanguage.getName()),
+					NLS.bind(Messages.ConvertMarkupToMarkup_overwrite_file_detail,
+							new Object[] { newFile.getFullPath() }))) {
 				return;
 			}
 		}
@@ -72,10 +74,11 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 			IRunnableWithProgress runnable = monitor -> {
 				try {
 					if (newFile.exists()) {
-						newFile.setContents(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, true, //$NON-NLS-1$
-								monitor);
+						newFile.setContents(new ByteArrayInputStream(targetConent.getBytes(StandardCharsets.UTF_8)),
+								false, true, monitor);
 					} else {
-						newFile.create(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
+						newFile.create(new ByteArrayInputStream(targetConent.getBytes(StandardCharsets.UTF_8)), false,
+								monitor);
 					}
 					newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 				} catch (Exception e) {
@@ -92,8 +95,8 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(NLS.bind(Messages.ConvertMarkupToMarkup_cannot_generate_detail,
-					targetMmarkupLanguage.getName(), e.getMessage()));
+			out.println(NLS.bind(Messages.ConvertMarkupToMarkup_cannot_generate_detail, targetMmarkupLanguage.getName(),
+					e.getMessage()));
 			out.println(Messages.ConvertMarkupToMarkup_details_follow);
 			e.printStackTrace(out);
 			out.close();

@@ -61,10 +61,11 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 					String xhtmlContent = writer.toString();
 
 					if (newFile.exists()) {
-						newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true, //$NON-NLS-1$
-								monitor);
+						newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes(StandardCharsets.UTF_8)),
+								false, true, monitor);
 					} else {
-						newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
+						newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes(StandardCharsets.UTF_8)), false,
+								monitor);
 					}
 					newFile.setCharset(StandardCharsets.UTF_8.name(), monitor);
 				} catch (Exception e) {

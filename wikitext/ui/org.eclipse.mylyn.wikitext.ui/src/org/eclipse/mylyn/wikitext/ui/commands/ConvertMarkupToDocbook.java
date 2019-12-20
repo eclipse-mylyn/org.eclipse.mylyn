@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
@@ -55,10 +56,11 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 					final String docbook = markupToDocbook.parse(content);
 
 					if (newFile.exists()) {
-						newFile.setContents(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, true, //$NON-NLS-1$
-								monitor);
+						newFile.setContents(new ByteArrayInputStream(docbook.getBytes(StandardCharsets.UTF_8)), false,
+								true, monitor);
 					} else {
-						newFile.create(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
+						newFile.create(new ByteArrayInputStream(docbook.getBytes(StandardCharsets.UTF_8)), false,
+								monitor);
 					}
 					newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 				} catch (Exception e) {

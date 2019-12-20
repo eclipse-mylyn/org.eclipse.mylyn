@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.tools.ant.BuildException;
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
@@ -25,9 +26,8 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingMarkupToEclipseToc;
 
 /**
  * An Ant task for converting lightweight markup such as Textile to eclipse help format.
- * 
+ *
  * @author David Green
- * 
  */
 public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
@@ -52,7 +52,8 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)), "utf-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)),
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
 				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()), //$NON-NLS-1$
 						e);

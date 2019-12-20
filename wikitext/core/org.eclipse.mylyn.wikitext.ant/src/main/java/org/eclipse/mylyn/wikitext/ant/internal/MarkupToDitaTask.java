@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +39,8 @@ import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 
 /**
  * An Ant task for converting markup to OASIS DITA format.
- * 
+ *
  * @author David Green
- * 
  */
 public class MarkupToDitaTask extends MarkupTask {
 	public enum BreakStrategy {
@@ -131,9 +131,10 @@ public class MarkupToDitaTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToDitaTask.6"), inputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						throw new BuildException(
+								MessageFormat.format(Messages.getString("MarkupToDitaTask.6"), inputFile, //$NON-NLS-1$
+										e.getMessage()),
+								e);
 					}
 				}
 			}
@@ -145,8 +146,8 @@ public class MarkupToDitaTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDitaTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToDitaTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -173,7 +174,8 @@ public class MarkupToDitaTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)), "utf-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
 				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.11"), outputFile, //$NON-NLS-1$
 						e.getMessage()), e);
@@ -234,9 +236,10 @@ public class MarkupToDitaTask extends MarkupTask {
 						try {
 							builder.close();
 						} catch (IOException e) {
-							throw new BuildException(MessageFormat.format(
-									Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
-									e.getMessage()), e);
+							throw new BuildException(
+									MessageFormat.format(Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
+											e.getMessage()),
+									e);
 						}
 					}
 				}
@@ -244,8 +247,7 @@ public class MarkupToDitaTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
+					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -255,7 +257,7 @@ public class MarkupToDitaTask extends MarkupTask {
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.ditamap</code>
-	 * 
+	 *
 	 * @see #setFilenameFormat(String)
 	 */
 	public String getFilenameFormat() {
@@ -272,7 +274,7 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * Get the book title.
-	 * 
+	 *
 	 * @return the title, or null if the source filename is to be used as the title.
 	 */
 	public String getBookTitle() {
@@ -281,7 +283,7 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * The book title.
-	 * 
+	 *
 	 * @param bookTitle
 	 *            the title, or null if the source filename is to be used as the title.
 	 */
@@ -291,7 +293,7 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * Set the XML doctype of the ditamap. The doctype should look something like this:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;!DOCTYPE bookmap PUBLIC \&quot;-//OASIS//DTD DITA 1.1 BookMap//EN\&quot;  \&quot;http://docs.oasis-open.org/dita/v1.1/OS/dtd/bookmap.dtd\&quot;&gt;
 	 * </pre>
@@ -316,7 +318,7 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * the XML doctype of topics The doctype should look something like this:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;!DOCTYPE topic PUBLIC \&quot;-//OASIS//DTD DITA 1.1 Topic//EN\&quot;&gt;
 	 * </pre>
@@ -359,8 +361,6 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * Indicate if the dita output should be formatted
-	 * 
-	 * 
 	 */
 	public boolean isFormatting() {
 		return formatting;
@@ -368,8 +368,6 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	/**
 	 * Indicate if the dita output should be formatted
-	 * 
-	 * 
 	 */
 	public void setFormatting(boolean formatting) {
 		this.formatting = formatting;

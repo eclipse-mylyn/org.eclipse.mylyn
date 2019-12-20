@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -183,7 +184,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 			try {
 				currentTopicFile = computeFile(latestHeadingId);
 				currentTopicOut = new OutputStreamWriter(
-						new BufferedOutputStream(new FileOutputStream(currentTopicFile)), "utf-8"); //$NON-NLS-1$
+						new BufferedOutputStream(new FileOutputStream(currentTopicFile)), StandardCharsets.UTF_8);
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			}

@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -38,8 +39,7 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		super.handleFile(file, name);
 		final IFile newFile = file.getParent().getFile(new Path(name + "-toc.xml")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					Messages.ConvertMarkupToEclipseHelp_overwrite,
 					NLS.bind(Messages.ConvertMarkupToEclipseHelp_fileExistsOverwrite,
 							new Object[] { newFile.getFullPath() }))) {
@@ -72,10 +72,11 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 					String content = IOUtil.readFully(file);
 					final String tocXml = markupToEclipseToc.parse(content);
 					if (newFile.exists()) {
-						newFile.setContents(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, true, //$NON-NLS-1$
-								monitor);
+						newFile.setContents(new ByteArrayInputStream(tocXml.getBytes(StandardCharsets.UTF_8)), false,
+								true, monitor);
 					} else {
-						newFile.create(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
+						newFile.create(new ByteArrayInputStream(tocXml.getBytes(StandardCharsets.UTF_8)), false,
+								monitor);
 					}
 					newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 				} catch (Exception e) {
