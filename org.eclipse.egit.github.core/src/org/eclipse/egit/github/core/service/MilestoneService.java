@@ -1,5 +1,6 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2019 GitHub Inc. and others.
+ *
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -19,7 +20,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.Milestone;
@@ -35,6 +39,14 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  *      milestones API documentation</a>
  */
 public class MilestoneService extends GitHubService {
+
+	private static final String TITLE = "title"; //$NON-NLS-1$
+
+	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
+
+	private static final String DUE_ON = "due_on"; //$NON-NLS-1$
+
+	private static final String STATE = "state"; //$NON-NLS-1$
 
 	/**
 	 * Create milestone service
@@ -87,13 +99,12 @@ public class MilestoneService extends GitHubService {
 	private List<Milestone> getMilestones(String id, String state)
 			throws IOException {
 
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(id);
-		uri.append(SEGMENT_MILESTONES);
+		String uri = SEGMENT_REPOS + '/' + id + SEGMENT_MILESTONES;
 		PagedRequest<Milestone> request = createPagedRequest();
-		if (state != null)
+		if (state != null) {
 			request.setParams(Collections.singletonMap(
 					IssueService.FILTER_STATE, state));
+		}
 		request.setUri(uri).setType(new TypeToken<List<Milestone>>() {
 			// make protected type visible
 		}.getType());
@@ -136,15 +147,49 @@ public class MilestoneService extends GitHubService {
 		return createMilestone(repoId, milestone);
 	}
 
+	private Map<String, Object> createParams(Milestone milestone,
+			boolean titleRequired) {
+		Map<String, Object> params = new LinkedHashMap<>();
+		String value = milestone.getTitle();
+		if (titleRequired && value == null) {
+			throw new IllegalArgumentException(
+					"Milestone title must not be null"); //$NON-NLS-1$
+		}
+		if (value != null) {
+			params.put(TITLE, value);
+		}
+		value = milestone.getState();
+		if (value != null) {
+			if (!"open".equals(value) && !"closed".equals(value)) { //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException(
+						"Milestone state must be 'open' or 'closed', or null for default ('open')"); //$NON-NLS-1$
+			}
+			params.put(STATE, value);
+		}
+		value = milestone.getDescription();
+		if (value != null) {
+			params.put(DESCRIPTION, value);
+		}
+		Date date = milestone.getDueOn();
+		if (date != null) {
+			params.put(DUE_ON, date);
+		}
+		if (params.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Milestone operation requires at least one of title, description, state, or due date"); //$NON-NLS-1$
+		}
+		return params;
+	}
+
 	private Milestone createMilestone(String id, Milestone milestone)
 			throws IOException {
-		if (milestone == null)
+		if (milestone == null) {
 			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+		}
+		String uri = SEGMENT_REPOS + '/' + id + SEGMENT_MILESTONES;
 
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(id);
-		uri.append(SEGMENT_MILESTONES);
-		return client.post(uri.toString(), milestone, Milestone.class);
+		Map<String, Object> dto = createParams(milestone, true);
+		return client.post(uri, dto, Milestone.class);
 	}
 
 	/**
@@ -214,15 +259,12 @@ public class MilestoneService extends GitHubService {
 	}
 
 	private Milestone getMilestone(String id, String number) throws IOException {
-		if (number == null)
-			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
-		if (number.length() == 0)
-			throw new IllegalArgumentException("Milestone cannot be empty"); //$NON-NLS-1$
-
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(id);
-		uri.append(SEGMENT_MILESTONES);
-		uri.append('/').append(number);
+		if (number == null || number.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Milestone cannot be null or empty"); //$NON-NLS-1$
+		}
+		String uri = SEGMENT_REPOS + '/' + id + SEGMENT_MILESTONES + '/'
+				+ number;
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(Milestone.class);
@@ -285,16 +327,13 @@ public class MilestoneService extends GitHubService {
 
 	private void deleteMilestone(String id, String milestone)
 			throws IOException {
-		if (milestone == null)
-			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
-		if (milestone.length() == 0)
-			throw new IllegalArgumentException("Milestone cannot be empty"); //$NON-NLS-1$
-
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(id);
-		uri.append(SEGMENT_MILESTONES);
-		uri.append('/').append(milestone);
-		client.delete(uri.toString());
+		if (milestone == null || milestone.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Milestone cannot be null or empty"); //$NON-NLS-1$
+		}
+		String uri = SEGMENT_REPOS + '/' + id + SEGMENT_MILESTONES + '/'
+				+ milestone;
+		client.delete(uri);
 	}
 
 	/**
@@ -308,14 +347,13 @@ public class MilestoneService extends GitHubService {
 	public Milestone editMilestone(IRepositoryIdProvider repository,
 			Milestone milestone) throws IOException {
 		String repoId = getId(repository);
-		if (milestone == null)
+		if (milestone == null) {
 			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+		}
+		String uri = SEGMENT_REPOS + '/' + repoId + SEGMENT_MILESTONES + '/'
+				+ milestone.getNumber();
 
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(repoId);
-		uri.append(SEGMENT_MILESTONES);
-		uri.append('/').append(milestone.getNumber());
-
-		return client.post(uri.toString(), milestone, Milestone.class);
+		Map<String, Object> dto = createParams(milestone, false);
+		return client.post(uri, dto, Milestone.class);
 	}
 }
