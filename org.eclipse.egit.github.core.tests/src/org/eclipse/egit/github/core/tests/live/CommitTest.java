@@ -172,7 +172,7 @@ public class CommitTest extends LiveTest {
 		assertTrue("response is a patch", fourthLine.contains("[PATCH "));
 	}
 
-	private String readLine(InputStream inStream, int i) throws IOException {
+	private String readLine(InputStream inStream, int i) {
 		try (final Scanner sc = new Scanner(inStream)) {
 			sc.useDelimiter("\\n");
 			for (; i > 0; i--) {
