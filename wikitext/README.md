@@ -19,11 +19,11 @@ Mechanics of performing a release:
 
 1. Login to [Nexus Repository Manager](https://oss.sonatype.org/#stagingRepositories) and ensure that any old staging repositories are closed out or removed.
    To find the staging repository follow the [Maven Central instructions](http://central.sonatype.org/pages/releasing-the-deployment.html).
-2. Run the [Mylyn Docs release build](https://ci.eclipse.org/mylyn/job/mylyn-docs-release/)
+2. Run the [Mylyn Docs release build](https://ci.eclipse.org/docs/job/mylyn-docs-release/)
     - use the version numbers that correspond to the versions in the wikitext pom
     - wait until completed before starting the next step
     - verify the p2 artifacts are published at the release location, e.g.  http://download.eclipse.org/mylyn/docs/releases/3.0/
-3. Kick off the [WikiText release build](https://ci.eclipse.org/mylyn/job/mylyn-wikitext-release/)
+3. Kick off the [WikiText release build](https://ci.eclipse.org/docs/job/mylyn-wikitext-release/)
 4. Login to the [Nexus Repository Manager](https://oss.sonatype.org/#stagingRepositories) and close the new staging repository.
 5. Verify the Maven artifacts in the staging repository if necessary
 6. From the [Nexus Repository Manager](https://oss.sonatype.org/#stagingRepositories) release the Maven artifacts to Maven central
