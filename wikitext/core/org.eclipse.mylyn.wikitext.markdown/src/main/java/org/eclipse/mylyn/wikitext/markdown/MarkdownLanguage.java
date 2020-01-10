@@ -12,6 +12,7 @@
  *     Alexander Nyßen - support for inline links in phrases
  *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 552231 - Styling should not apply inside words
  *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses
+ *     Max Bureck (Fraunhofer FOKUS) - Bug 559037 - Extended automatic link replacement
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.wikitext.markdown.internal.block.ParagraphBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.QuoteBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.BackslashEscapePhraseModifier;
+import org.eclipse.mylyn.wikitext.markdown.internal.phrase.ExtendedAutomaticLinkReplacementToken;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.SimpleWordModifier;
 import org.eclipse.mylyn.wikitext.markdown.internal.token.AutomaticLinkReplacementToken;
@@ -60,7 +62,24 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  */
 public class MarkdownLanguage extends AbstractMarkupLanguage {
 
+	private final boolean enableHeuristicFeatures;
+
+	/**
+	 * Constructs an instance of MarkdownLanguage with heuristic features disabled.
+	 */
 	public MarkdownLanguage() {
+		this(false);
+	}
+
+	/**
+	 * Constructs an instance of MarkdownLanguage, with the choice to enable heuristic features. Currently only extended
+	 * hyperlink detection (without delimiters) is supported as a heuristic feature
+	 * 
+	 * @param enableHeuristicFeatures
+	 *            if {@code true} enables heristic features.
+	 */
+	public MarkdownLanguage(boolean enableHeuristicFeatures) {
+		this.enableHeuristicFeatures = enableHeuristicFeatures;
 		setName("Markdown"); //$NON-NLS-1$
 	}
 
@@ -116,6 +135,9 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimpleWordModifier("_", SpanType.EMPHASIS)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("~~", SpanType.DELETED)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.DELETED)); //$NON-NLS-1$
+		if (enableHeuristicFeatures) {
+			phraseModifierSyntax.add(new ExtendedAutomaticLinkReplacementToken());
+		}
 	}
 
 	@Override
