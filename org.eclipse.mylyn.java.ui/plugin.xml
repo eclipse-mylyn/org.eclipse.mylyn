@@ -103,9 +103,10 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaAllCompletionProposalComputer">
 		<javaCompletionProposalComputer
-          activate="true"
-          categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
-          class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaAllProposalComputer">
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaAllProposalComputer"
+        requiresUIThread="false">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
@@ -114,27 +115,30 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="LegacyJavadocCompletionProposalComputer_all">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+		<javaCompletionProposalComputer
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
+        requiresUIThread="false">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="JavadocCompletionProposalComputer_all">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+		<javaCompletionProposalComputer
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
+        requiresUIThread="false">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="JavadocHTMLCompletionProposalComputer_all">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory">
+		<javaCompletionProposalComputer
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
+        requiresUIThread="false">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
