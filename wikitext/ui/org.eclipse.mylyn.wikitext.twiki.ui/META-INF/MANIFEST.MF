@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.twiki.ui;singleton:=true
-Bundle-Version: 3.0.36.qualifier
+Bundle-Version: 3.0.37.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.36",
- org.eclipse.mylyn.wikitext.twiki;bundle-version="3.0.36",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.36"
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.37",
+ org.eclipse.mylyn.wikitext.twiki;bundle-version="3.0.37",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.37"
 Export-Package: org.eclipse.mylyn.internal.wikitext.twiki.ui;x-internal:=true
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.twiki.ui

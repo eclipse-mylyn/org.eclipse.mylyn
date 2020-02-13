@@ -5,10 +5,10 @@
   <parent>
     <artifactId>wikitext.ui</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>3.0.36-SNAPSHOT</version>
+    <version>3.0.37-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext.tasks.ui</artifactId>
-  <version>3.0.36-SNAPSHOT</version>
+  <version>3.0.37-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
