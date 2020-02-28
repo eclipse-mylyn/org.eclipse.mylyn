@@ -98,6 +98,24 @@ public class ConfluenceLanguageIntegrationTest {
 		assertEquals(characterContent, text);
 	}
 
+	@Test
+	public void emptyTableFollowedByParagraphs() {
+		HtmlLanguage htmlLanguage = HtmlLanguage.builder()
+				.add(BlockType.PARAGRAPH)
+				.add(BlockType.TABLE)
+				.add(BlockType.DIV)
+				.name("Test")
+				.create();
+		MarkupParser parser = new MarkupParser(htmlLanguage);
+		Writer confluenceOut = new StringWriter();
+		DocumentBuilder confluenceBuilder = new ConfluenceLanguage().createDocumentBuilder(confluenceOut);
+		parser.setBuilder(confluenceBuilder);
+		parser.parse(
+				"<table></table><div><p>Step 1: Complete</p><p>Step 2: Complete</p><p>Step 3: Complete</p><p>Step 4: In Progress</p></div>");
+		assertEquals("\n\nStep 1: Complete\n\nStep 2: Complete\n\nStep 3: Complete\n\nStep 4: In Progress\n\n",
+				confluenceOut.toString());
+	}
+
 	private String toText(DocumentBuilderEvents events) {
 		String text = "";
 		for (DocumentBuilderEvent event : events.getEvents()) {

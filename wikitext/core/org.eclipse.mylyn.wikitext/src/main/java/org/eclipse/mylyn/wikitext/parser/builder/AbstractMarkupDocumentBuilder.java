@@ -403,7 +403,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	 */
 	protected int getTrailingNewlineCount() {
 		int count = writer.getTrailingNewlineCount();
-		if (writer.getCharacterCount() == count) {
+		if (writer.getCharacterCount() == count && writerState != null) {
 			for (int x = writerState.size() - 1; x >= 0; --x) {
 				MarkupWriter markupWriter = writerState.get(x);
 				int trailingNewlineCount = markupWriter.getTrailingNewlineCount();
