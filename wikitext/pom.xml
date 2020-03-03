@@ -4,7 +4,7 @@
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext</artifactId>
     <name>Mylyn Docs: WikiText</name>
-    <version>3.0.37-SNAPSHOT</version>
+    <version>3.0.38-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

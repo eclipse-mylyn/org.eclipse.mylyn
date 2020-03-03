@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.ui;singleton:=true
-Bundle-Version: 3.0.37.qualifier
+Bundle-Version: 3.0.38.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.37",
- org.eclipse.mylyn.wikitext.osgi;bundle-version="3.0.37",
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.38",
+ org.eclipse.mylyn.wikitext.osgi;bundle-version="3.0.38",
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui;bundle-version="3.6.0",
