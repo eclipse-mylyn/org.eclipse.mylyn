@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.tracwiki.TracWikiLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 import junit.framework.TestCase;
@@ -80,9 +79,8 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(
 				"there is a macro [[Image(local_attachment.png)]] in the [[Image(http://www.example.com/external.png)]] page");
 
-		assertTrue(Pattern
-				.compile(
-						"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the <img border=\"0\" src=\"http://www.example.com/external.png\"/> page</p></body>")
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the <img border=\"0\" src=\"http://www.example.com/external.png\"/> page</p></body>")
 				.matcher(html)
 				.find());
 	}
@@ -94,9 +92,8 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(
 				"there is a macro [[Image(local_attachment.png, alt=Alt Text, title=Title Text, border=5)]] in the page");
 
-		assertTrue(Pattern
-				.compile(
-						"<body><p>there is a macro <img alt=\"Alt Text\" title=\"Title Text\" border=\"5\" src=\"local_attachment.png\"/> in the page</p></body>")
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img alt=\"Alt Text\" title=\"Title Text\" border=\"5\" src=\"local_attachment.png\"/> in the page</p></body>")
 				.matcher(html)
 				.find());
 	}
@@ -108,9 +105,8 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser
 				.parseToHtml("there is a macro [[Image(local_attachment.png, 100px, height=10%)]] in the page");
 
-		assertTrue(Pattern
-				.compile(
-						"<body><p>there is a macro <img height=\"10%\" width=\"100\" border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img height=\"10%\" width=\"100\" border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
 				.matcher(html)
 				.find());
 	}
@@ -122,9 +118,8 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(
 				"there is a macro [[Image(local_attachment.png, right)]] in the [[Image(local_attachment.png, align=left)]] page");
 
-		assertTrue(Pattern
-				.compile(
-						"<body><p>there is a macro <img style=\"float:right;\" border=\"0\" src=\"local_attachment.png\"/> in the <img style=\"float:left;\" border=\"0\" src=\"local_attachment.png\"/> page</p></body>")
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img style=\"float:right;\" border=\"0\" src=\"local_attachment.png\"/> in the <img style=\"float:left;\" border=\"0\" src=\"local_attachment.png\"/> page</p></body>")
 				.matcher(html)
 				.find());
 	}
@@ -136,9 +131,8 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml(
 				"there is a macro [[Image(local_attachment.png, beans, align=beans, border=b, width=10ee)]] in the page");
 
-		assertTrue(Pattern
-				.compile(
-						"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
 				.matcher(html)
 				.find());
 	}

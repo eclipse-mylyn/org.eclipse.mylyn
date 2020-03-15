@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal.validation;
 
-import org.eclipse.mylyn.wikitext.mediawiki.internal.validation.CommentValidationRule;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 
 import junit.framework.TestCase;

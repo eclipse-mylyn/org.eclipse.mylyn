@@ -15,13 +15,11 @@ package org.eclipse.mylyn.wikitext.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 /**
  * a test markup validation rule that creates errors for text matching "ERROR" or "WARNING".
- * 
+ *
  * @author David Green
  */
 public class TestMarkupValidationRule extends ValidationRule {

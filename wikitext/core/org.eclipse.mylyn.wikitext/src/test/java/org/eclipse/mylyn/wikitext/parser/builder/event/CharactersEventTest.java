@@ -17,7 +17,6 @@ import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertEqu
 import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertInequality;
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
 import org.junit.Test;
 
 public class CharactersEventTest {

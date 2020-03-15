@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.File;
 
-import org.eclipse.mylyn.wikitext.maven.internal.SourceFileTraversal;
 import org.eclipse.mylyn.wikitext.maven.internal.SourceFileTraversal.Visitor;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,8 +51,8 @@ public class SourceFileTraversalTest {
 	@Test
 	public void traverseMatchWithPath() {
 		File file = mockFile("one.Test");
-		SourceFileTraversal traversal = new SourceFileTraversal(mockFolder("test",
-				mockFolder("depth1", mockFolder("depth2", file))));
+		SourceFileTraversal traversal = new SourceFileTraversal(
+				mockFolder("test", mockFolder("depth1", mockFolder("depth2", file))));
 		Visitor visitor = mock(Visitor.class);
 		traversal.traverse(visitor);
 		verify(visitor).accept(eq("depth1" + File.separator + "depth2"), same(file));

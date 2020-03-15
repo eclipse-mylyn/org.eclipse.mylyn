@@ -19,13 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 
-import org.eclipse.mylyn.wikitext.html.internal.SpanHtmlElementStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SpanStrategies;
-import org.eclipse.mylyn.wikitext.html.internal.SpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SubstitutionSpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SubstitutionWithoutCssSpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SupportedSpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.UnsupportedSpanStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Rule;

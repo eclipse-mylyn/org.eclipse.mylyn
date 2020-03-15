@@ -15,7 +15,6 @@ package org.eclipse.mylyn.wikitext.textile.internal.validation;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.textile.internal.validation.TextileReferenceValidationRule;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 
@@ -39,7 +38,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testNoErrors() {
 		final String markup = "h1. Title\n\n\"a link\":#Title";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertTrue(problems.isEmpty());
 	}
@@ -47,7 +46,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testErrors() {
 		final String markup = "h1. Title\n\nsome text \"a link\":#BADTitle more text";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(21, problems.get(0).getOffset());
@@ -57,7 +56,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testFootnoteReference() {
 		String markup = "some text with a footnote reference[1]\n\nfn1. a footnote";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(0, problems.size());
 	}
@@ -65,7 +64,7 @@ public class TextileReferenceValidationRuleTest extends TestCase {
 	public void testFootnoteReferenceWithErrors() {
 		String markup = "some text with a footnote reference[1]\n\nfn2. a footnote";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(35, problems.get(0).getOffset());

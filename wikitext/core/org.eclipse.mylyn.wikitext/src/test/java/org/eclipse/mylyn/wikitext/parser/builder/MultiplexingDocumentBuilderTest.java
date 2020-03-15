@@ -24,15 +24,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.MultiplexingDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.event.AcronymEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginDocumentEvent;

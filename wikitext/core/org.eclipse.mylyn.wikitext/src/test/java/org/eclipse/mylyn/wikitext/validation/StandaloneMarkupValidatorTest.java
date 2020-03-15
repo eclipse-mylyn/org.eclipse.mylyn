@@ -15,8 +15,6 @@ package org.eclipse.mylyn.wikitext.validation;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.validation.StandaloneMarkupValidator;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 import junit.framework.TestCase;
@@ -30,7 +28,8 @@ public class StandaloneMarkupValidatorTest extends TestCase {
 		super.setUp();
 		validator = new StandaloneMarkupValidator();
 		validator.setClassLoader(StandaloneMarkupValidatorTest.class.getClassLoader());
-		validator.computeRules("TestMarkupLanguage", StandaloneMarkupValidatorTest.class.getResource("test-plugin.xml"));
+		validator.computeRules("TestMarkupLanguage",
+				StandaloneMarkupValidatorTest.class.getResource("test-plugin.xml"));
 	}
 
 	public void testSimple() {

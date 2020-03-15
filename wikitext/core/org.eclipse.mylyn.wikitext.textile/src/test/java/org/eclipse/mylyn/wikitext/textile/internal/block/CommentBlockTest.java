@@ -16,7 +16,6 @@ package org.eclipse.mylyn.wikitext.textile.internal.block;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.mylyn.wikitext.textile.internal.block.CommentBlock;
 import org.junit.Test;
 
 public class CommentBlockTest {

@@ -13,9 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
 
-import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.wikitext.internal.parser.html.XHtmlParser;
-
 public class XHtmlParserTest extends HtmlParserTest {
 	@Override
 	protected AbstractSaxHtmlParser createParser() {

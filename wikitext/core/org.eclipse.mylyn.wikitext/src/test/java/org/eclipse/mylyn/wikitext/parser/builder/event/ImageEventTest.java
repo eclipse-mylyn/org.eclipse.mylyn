@@ -18,7 +18,6 @@ import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertIne
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.builder.event.ImageEvent;
 import org.junit.Test;
 
 public class ImageEventTest {
@@ -31,9 +30,9 @@ public class ImageEventTest {
 
 	@Test
 	public void equals() {
-		assertEquality(new ImageEvent(new Attributes(), "http://example.com/img.png"), new ImageEvent(new Attributes(),
-				"http://example.com/img.png"));
-		assertInequality(new ImageEvent(new Attributes(), "http://example.com/img.png"), new ImageEvent(
-				new Attributes(), "http://example.com/img2.png"));
+		assertEquality(new ImageEvent(new Attributes(), "http://example.com/img.png"),
+				new ImageEvent(new Attributes(), "http://example.com/img.png"));
+		assertInequality(new ImageEvent(new Attributes(), "http://example.com/img.png"),
+				new ImageEvent(new Attributes(), "http://example.com/img2.png"));
 	}
 }

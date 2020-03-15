@@ -18,8 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToDitaTask;
-
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDitaTask ditaTask;
@@ -111,7 +109,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		String ditamapContent = getContent(ditamapFile);
 		assertTrue(ditamapContent.contains("<bookmap>"));
 		assertTrue(ditamapContent.contains("<chapter href=\"topics/FirstHeading.dita\" navtitle=\"First Heading\"/>"));
-		assertTrue(ditamapContent.contains("<chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/>"));
+		assertTrue(
+				ditamapContent.contains("<chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/>"));
 
 		String firstTopicContent = getContent(firstHeadingFile);
 //		<?xml version='1.0' ?><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA 1.1 Topic//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd">
@@ -145,9 +144,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String ditamapContent = getContent(ditamapFile);
 
-		
-
-		assertTrue(ditamapContent.contains("<bookmap><title>Sample Title</title><chapter href=\"topics/FirstHeading.dita\" navtitle=\"First Heading\"/><chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/></bookmap>"));
+		assertTrue(ditamapContent.contains(
+				"<bookmap><title>Sample Title</title><chapter href=\"topics/FirstHeading.dita\" navtitle=\"First Heading\"/><chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/></bookmap>"));
 
 		String firstTopicContent = getContent(firstHeadingFile);
 //		<?xml version='1.0' ?><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA 1.1 Topic//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd">
@@ -157,9 +155,9 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 //				<p>some content</p>
 //			</body>
 //		</topic>
-		
 
-		assertTrue(firstTopicContent.contains("<topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic>"));
+		assertTrue(firstTopicContent.contains(
+				"<topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic>"));
 	}
 
 	public void testCreatesSingleTopic() throws IOException {
@@ -179,8 +177,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
-
-		
 
 		assertTrue(firstTopicContent.contains("<topic id=\"FirstHeading\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));
@@ -209,9 +205,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 		String firstTopicContent = getContent(firstHeadingFile);
 
-		
-
-		assertTrue(firstTopicContent.contains("<topic><title>Sample Title</title><topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic><topic id=\"SecondHeading\"><title>Second Heading</title><body><p>some more content</p></body></topic></topic>"));
+		assertTrue(firstTopicContent.contains(
+				"<topic><title>Sample Title</title><topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic><topic id=\"SecondHeading\"><title>Second Heading</title><body><p>some more content</p></body></topic></topic>"));
 	}
 
 	public void testMapbookXRef() throws IOException {
@@ -254,9 +249,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		String firstTopicContent = getContent(firstHeadingFile);
 		String secondTopicContent = getContent(secondHeadingFile);
 
-		
-		
-
 		assertTrue(firstTopicContent.contains("<xref href=\"Id2.dita#Id2\">ref to 2</xref>"));
 		assertTrue(secondTopicContent.contains("<xref href=\"Id1.dita#Id1\">ref to 1</xref>"));
 		assertTrue(secondTopicContent.contains("<xref href=\"#Id2\">ref to 2</xref>"));
@@ -279,8 +271,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
-
-		
 
 		assertTrue(firstTopicContent.contains("<topic id=\"Id1\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));
@@ -307,8 +297,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
-
-		
 
 		assertTrue(firstTopicContent.contains("<topic id=\"Id1\">"));
 		assertTrue(firstTopicContent.contains("<title>First Heading</title>"));
@@ -341,7 +329,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(ditamapContent.contains("<bookmap>"));
 		assertTrue(ditamapContent.contains("<chapter href=\"topics/" + MarkupToDitaTaskTest.class.getName()
 				+ ".dita\" navtitle=\"" + MarkupToDitaTaskTest.class.getName() + "\"/>"));
-		assertTrue(ditamapContent.contains("<chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/>"));
+		assertTrue(
+				ditamapContent.contains("<chapter href=\"topics/SecondHeading.dita\" navtitle=\"Second Heading\"/>"));
 
 		String firstTopicContent = getContent(firstHeadingFile);
 //		<?xml version='1.0' ?><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA 1.1 Topic//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd">

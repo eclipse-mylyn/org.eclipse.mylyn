@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
 import org.junit.Test;
 
 public class BeginBlockEventTest {
@@ -31,11 +30,11 @@ public class BeginBlockEventTest {
 
 	@Test
 	public void equals() {
-		assertEquality(new BeginBlockEvent(BlockType.CODE, new Attributes()), new BeginBlockEvent(BlockType.CODE,
-				new Attributes()));
-		assertInequality(new BeginBlockEvent(BlockType.CODE, new Attributes()), new BeginBlockEvent(
-				BlockType.BULLETED_LIST, new Attributes()));
-		assertInequality(new BeginBlockEvent(BlockType.CODE, new Attributes()), new BeginBlockEvent(
-				BlockType.PREFORMATTED, new Attributes()));
+		assertEquality(new BeginBlockEvent(BlockType.CODE, new Attributes()),
+				new BeginBlockEvent(BlockType.CODE, new Attributes()));
+		assertInequality(new BeginBlockEvent(BlockType.CODE, new Attributes()),
+				new BeginBlockEvent(BlockType.BULLETED_LIST, new Attributes()));
+		assertInequality(new BeginBlockEvent(BlockType.CODE, new Attributes()),
+				new BeginBlockEvent(BlockType.PREFORMATTED, new Attributes()));
 	}
 }

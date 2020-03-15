@@ -20,12 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.html.internal.BlockStrategies;
-import org.eclipse.mylyn.wikitext.html.internal.BlockStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.NoOpBlockStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SubstitutionBlockStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SupportedBlockStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.UnsupportedBlockStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.junit.Rule;

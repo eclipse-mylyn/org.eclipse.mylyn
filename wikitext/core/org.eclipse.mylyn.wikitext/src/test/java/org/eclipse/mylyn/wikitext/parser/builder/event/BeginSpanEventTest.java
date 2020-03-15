@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.junit.Test;
 
 public class BeginSpanEventTest {
@@ -31,9 +30,9 @@ public class BeginSpanEventTest {
 
 	@Test
 	public void equals() {
-		assertEquality(new BeginSpanEvent(SpanType.CODE, new Attributes()), new BeginSpanEvent(SpanType.CODE,
-				new Attributes()));
-		assertInequality(new BeginSpanEvent(SpanType.CODE, new Attributes()), new BeginSpanEvent(SpanType.BOLD,
-				new Attributes()));
+		assertEquality(new BeginSpanEvent(SpanType.CODE, new Attributes()),
+				new BeginSpanEvent(SpanType.CODE, new Attributes()));
+		assertInequality(new BeginSpanEvent(SpanType.CODE, new Attributes()),
+				new BeginSpanEvent(SpanType.BOLD, new Attributes()));
 	}
 }

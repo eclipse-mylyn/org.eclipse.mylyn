@@ -21,17 +21,6 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.parser.css.Block;
-import org.eclipse.mylyn.wikitext.parser.css.CompositeSelector;
-import org.eclipse.mylyn.wikitext.parser.css.CssClassSelector;
-import org.eclipse.mylyn.wikitext.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.parser.css.CssRule;
-import org.eclipse.mylyn.wikitext.parser.css.DescendantSelector;
-import org.eclipse.mylyn.wikitext.parser.css.IdSelector;
-import org.eclipse.mylyn.wikitext.parser.css.NameSelector;
-import org.eclipse.mylyn.wikitext.parser.css.Selector;
-import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
-
 import junit.framework.TestCase;
 
 /**

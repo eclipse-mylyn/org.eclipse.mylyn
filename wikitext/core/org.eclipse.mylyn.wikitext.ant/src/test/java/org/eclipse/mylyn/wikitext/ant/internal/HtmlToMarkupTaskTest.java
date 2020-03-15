@@ -18,8 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.eclipse.mylyn.wikitext.ant.internal.HtmlToMarkupTask;
-
 /**
  * @author David Green
  */
@@ -49,7 +47,6 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 		assertTrue("Expecting file: " + markupFile, markupFile.exists() && markupFile.isFile());
 
 		String content = getContent(markupFile);
-		
 
 		assertTrue(content.equals("h1. First Heading\n\nsome content\n\nh1. Second Heading\n\nsome more content\n\n"));
 	}
@@ -58,7 +55,8 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 		File htmlFile = new File(tempFolder, "markup.html");
 		PrintWriter writer = new PrintWriter(new FileWriter(htmlFile));
 		try {
-			writer.println("<html><body>\n<h1>First Heading</h1>\n\n<p>some content</p>\n<h1>Second Heading</h1>\n<p>some more content</p></body></html>");
+			writer.println(
+					"<html><body>\n<h1>First Heading</h1>\n\n<p>some content</p>\n<h1>Second Heading</h1>\n<p>some more content</p></body></html>");
 		} finally {
 			writer.close();
 		}

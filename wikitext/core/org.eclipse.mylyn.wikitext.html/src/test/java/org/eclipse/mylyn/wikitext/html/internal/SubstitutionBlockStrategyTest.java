@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.html.internal.SubstitutionBlockStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;

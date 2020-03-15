@@ -17,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
-import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -90,8 +88,7 @@ public class FormattingXMLStreamWriterTest {
 		writer.writeComment("test one two");
 		writer.writeEndElement();
 		writer.writeEndDocument();
-		assertEquals(
-				"<?xml version='1.0' encoding='utf-8' ?>\n" + "<root>\n" + "\t<!-- test one two -->\n" + "</root>",
+		assertEquals("<?xml version='1.0' encoding='utf-8' ?>\n" + "<root>\n" + "\t<!-- test one two -->\n" + "</root>",
 				out.toString());
 	}
 

@@ -18,9 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToEclipseHelpTask;
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask;
-
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
 	@Override
@@ -36,7 +33,6 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -51,7 +47,6 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -66,7 +61,6 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"Alternate Title\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -85,7 +79,6 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocFile.exists());
 
 		String tocContent = getContent(tocFile);
-		
 
 		assertTrue(tocContent.contains("<toc topic=\"markup.html\" label=\"markup\">"));
 		assertTrue(tocContent.contains("<topic href=\"markup.html\" label=\"First Heading\""));
@@ -122,6 +115,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
 	@Override
 	public void testTaskdef() {
-		assertEquals(MarkupToEclipseHelpTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-eclipse-help"));
+		assertEquals(MarkupToEclipseHelpTask.class.getName(),
+				loadTaskdefBundle().getString("wikitext-to-eclipse-help"));
 	}
 }

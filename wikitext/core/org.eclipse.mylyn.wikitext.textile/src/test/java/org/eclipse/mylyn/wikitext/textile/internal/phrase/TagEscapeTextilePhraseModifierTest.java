@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.textile.internal.phrase.TagEscapeTextilePhraseModifier;
 import org.junit.Test;
 
 public class TagEscapeTextilePhraseModifierTest {

@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.textile.internal.Textile;
 
 import junit.framework.TestCase;
 
@@ -70,16 +69,15 @@ public class TextileTest extends TestCase {
 		int i = 0;
 		for (String value : values) {
 			Matcher matcher = pattern.matcher(value);
-			
+
 			if (matcher.matches()) {
-				
-				
+
 				for (int x = 1; x <= matcher.groupCount(); ++x) {
-					
+
 					assertEquals(verify[i][x], matcher.group(x));
 				}
 			} else {
-				
+
 			}
 			++i;
 		}

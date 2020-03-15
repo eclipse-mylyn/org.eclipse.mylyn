@@ -19,9 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.parser.builder.event.BeginDocumentEvent;
-import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
-import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

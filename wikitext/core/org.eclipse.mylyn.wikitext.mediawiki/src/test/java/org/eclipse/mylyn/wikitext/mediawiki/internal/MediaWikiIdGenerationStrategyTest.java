@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal;
 
-import org.eclipse.mylyn.wikitext.mediawiki.internal.MediaWikiIdGenerationStrategy;
-
 import junit.framework.TestCase;
 
 public class MediaWikiIdGenerationStrategyTest extends TestCase {

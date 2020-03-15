@@ -18,7 +18,6 @@ import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertIne
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.builder.event.BeginHeadingEvent;
 import org.junit.Test;
 
 public class BeginHeadingEventTest {

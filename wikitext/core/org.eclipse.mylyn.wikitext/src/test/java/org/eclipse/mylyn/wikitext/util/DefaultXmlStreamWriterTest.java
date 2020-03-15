@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.junit.Test;
 
 public class DefaultXmlStreamWriterTest {
@@ -48,7 +47,8 @@ public class DefaultXmlStreamWriterTest {
 		writer.writeAttribute("px", "uri:urn:test2", "a", "testv");
 		writer.writeAttribute("b", "test");
 		writer.writeEndElement();
-		assertXml("<?xml version='1.1' encoding='utf-8' ?><test xmlns:pf=\"uri:urn:test\" xmlns:px=\"uri:urn:test2\" pf:a=\"testv\" px:a=\"testv\" b=\"test\"></test>");
+		assertXml(
+				"<?xml version='1.1' encoding='utf-8' ?><test xmlns:pf=\"uri:urn:test\" xmlns:px=\"uri:urn:test2\" pf:a=\"testv\" px:a=\"testv\" b=\"test\"></test>");
 	}
 
 	@Test

@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.twiki.internal.validation;
 
-import org.eclipse.mylyn.wikitext.twiki.internal.validation.ListWhitespaceValidationRule;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 
 import junit.framework.TestCase;

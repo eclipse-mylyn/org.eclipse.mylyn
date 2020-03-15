@@ -23,8 +23,6 @@ import java.io.StringWriter;
 import java.util.Arrays;
 
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
-import org.eclipse.mylyn.wikitext.html.internal.FontElementStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SpanStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -57,14 +55,14 @@ public class FontElementStrategyTest {
 
 	@Test
 	public void matchesSpanWithFontFamily() {
-		assertTrue(strategy.matcher()
-				.matches(SpanType.SPAN, new Attributes(null, null, "font-family: something", null)));
+		assertTrue(
+				strategy.matcher().matches(SpanType.SPAN, new Attributes(null, null, "font-family: something", null)));
 	}
 
 	@Test
 	public void matchesSpanWithColorAndFontSize() {
-		assertTrue(strategy.matcher().matches(SpanType.SPAN,
-				new Attributes(null, null, "color: blue;font-size: 10", null)));
+		assertTrue(strategy.matcher()
+				.matches(SpanType.SPAN, new Attributes(null, null, "color: blue;font-size: 10", null)));
 	}
 
 	@Test
@@ -94,8 +92,10 @@ public class FontElementStrategyTest {
 		builder.characters("test");
 		spanStrategy.endSpan(builder);
 
-		assertEquals(Arrays.asList(new BeginSpanEvent(SpanType.SPAN, new Attributes(null, null, "color: red", null)),
-				new CharactersEvent("test"), new EndSpanEvent()), builder.getDocumentBuilderEvents().getEvents());
+		assertEquals(
+				Arrays.asList(new BeginSpanEvent(SpanType.SPAN, new Attributes(null, null, "color: red", null)),
+						new CharactersEvent("test"), new EndSpanEvent()),
+				builder.getDocumentBuilderEvents().getEvents());
 	}
 
 	@Test

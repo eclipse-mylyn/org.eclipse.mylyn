@@ -15,9 +15,6 @@ package org.eclipse.mylyn.wikitext.html.internal;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.mylyn.wikitext.html.internal.CompositeSpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SubstitutionWithoutCssSpanStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
@@ -43,15 +40,17 @@ public class CompositeSpanStrategyTest {
 
 	@Test
 	public void test() {
-		CompositeSpanStrategy strategy = new CompositeSpanStrategy(Lists.<SpanStrategy> newArrayList(
-				new SubstitutionWithoutCssSpanStrategy(SpanType.BOLD), new SubstitutionWithoutCssSpanStrategy(
-						SpanType.ITALIC)));
+		CompositeSpanStrategy strategy = new CompositeSpanStrategy(
+				Lists.<SpanStrategy> newArrayList(new SubstitutionWithoutCssSpanStrategy(SpanType.BOLD),
+						new SubstitutionWithoutCssSpanStrategy(SpanType.ITALIC)));
 		EventDocumentBuilder builder = new EventDocumentBuilder();
 		strategy.beginSpan(builder, SpanType.DELETED, new Attributes());
 		strategy.endSpan(builder);
 		DocumentBuilderEvents events = builder.getDocumentBuilderEvents();
-		assertEquals(ImmutableList.of(new BeginSpanEvent(SpanType.BOLD, new Attributes()), new BeginSpanEvent(
-				SpanType.ITALIC, new Attributes()), new EndSpanEvent(), new EndSpanEvent()), events.getEvents());
+		assertEquals(
+				ImmutableList.of(new BeginSpanEvent(SpanType.BOLD, new Attributes()),
+						new BeginSpanEvent(SpanType.ITALIC, new Attributes()), new EndSpanEvent(), new EndSpanEvent()),
+				events.getEvents());
 
 	}
 }

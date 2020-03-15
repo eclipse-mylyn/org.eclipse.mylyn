@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.builder.event.ImageLinkEvent;
 import org.junit.Test;
 
 public class ImageLinkEventTest {
@@ -33,14 +32,20 @@ public class ImageLinkEventTest {
 
 	@Test
 	public void equals() {
-		assertEquality(new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
-				"http://example.com/img.png"), new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(),
-				"http://example.com", "http://example.com/img.png"));
-		assertInequality(new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
-				"http://example.com/img.png"), new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(),
-				"http://example.com", "http://example.com/img2.png"));
-		assertInequality(new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
-				"http://example.com/img.png"), new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(),
-				"http://example.com/2", "http://example.com/img.png"));
+		assertEquality(
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
+						"http://example.com/img.png"),
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
+						"http://example.com/img.png"));
+		assertInequality(
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
+						"http://example.com/img.png"),
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
+						"http://example.com/img2.png"));
+		assertInequality(
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com",
+						"http://example.com/img.png"),
+				new ImageLinkEvent(new LinkAttributes(), new ImageAttributes(), "http://example.com/2",
+						"http://example.com/img.png"));
 	}
 }

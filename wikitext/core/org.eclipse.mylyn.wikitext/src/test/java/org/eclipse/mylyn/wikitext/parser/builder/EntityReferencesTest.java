@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

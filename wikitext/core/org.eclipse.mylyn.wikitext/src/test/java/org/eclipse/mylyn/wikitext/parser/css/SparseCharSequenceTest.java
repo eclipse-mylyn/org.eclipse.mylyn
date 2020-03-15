@@ -15,8 +15,6 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.css.SparseCharSequence;
-
 import junit.framework.TestCase;
 
 /**

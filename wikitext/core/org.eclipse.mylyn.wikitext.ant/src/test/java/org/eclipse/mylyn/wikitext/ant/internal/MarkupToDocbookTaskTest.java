@@ -19,9 +19,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToDocbookTask;
-
-
 public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDocbookTask task;
@@ -44,21 +41,17 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 		assertTrue(docbookFile.exists() && docbookFile.isFile());
 
 		String content = getContent(docbookFile);
-//		
+//
 
 		assertTrue(content.contains("<book"));
 		assertTrue(content.contains("</book>"));
 		assertTrue(content.contains("<title>markup</title>"));
 		assertTrue(Pattern.compile(
 				"<chapter id=\"FirstHeading\">\\s*<title>First Heading</title>\\s*<para>some content</para>\\s*</chapter>",
-				Pattern.MULTILINE)
-				.matcher(content)
-				.find());
+				Pattern.MULTILINE).matcher(content).find());
 		assertTrue(Pattern.compile(
 				"<chapter id=\"SecondHeading\">\\s*<title>Second Heading</title>\\s*<para>some more content</para>\\s*</chapter>",
-				Pattern.MULTILINE)
-				.matcher(content)
-				.find());
+				Pattern.MULTILINE).matcher(content).find());
 
 	}
 
@@ -74,21 +67,17 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 		assertTrue(docbookFile.exists() && docbookFile.isFile());
 
 		String content = getContent(docbookFile);
-//		
+//
 
 		assertTrue(content.contains("<book"));
 		assertTrue(content.contains("</book>"));
 		assertTrue(content.contains("<title>Alternate Title</title>"));
 		assertTrue(Pattern.compile(
 				"<chapter id=\"FirstHeading\">\\s*<title>First Heading</title>\\s*<para>some content</para>\\s*</chapter>",
-				Pattern.MULTILINE)
-				.matcher(content)
-				.find());
+				Pattern.MULTILINE).matcher(content).find());
 		assertTrue(Pattern.compile(
 				"<chapter id=\"SecondHeading\">\\s*<title>Second Heading</title>\\s*<para>some more content</para>\\s*</chapter>",
-				Pattern.MULTILINE)
-				.matcher(content)
-				.find());
+				Pattern.MULTILINE).matcher(content).find());
 
 	}
 

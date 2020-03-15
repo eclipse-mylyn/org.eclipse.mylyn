@@ -15,7 +15,6 @@ package org.eclipse.mylyn.wikitext.markdown.internal;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.mylyn.wikitext.markdown.internal.GfmIdGenerationStrategy;
 import org.junit.Test;
 
 public class GfmIdGenerationStrategyTest {

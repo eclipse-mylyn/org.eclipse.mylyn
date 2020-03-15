@@ -19,8 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

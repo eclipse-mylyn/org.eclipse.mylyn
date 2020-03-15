@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.TemplateResolver;
-import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
 
 import junit.framework.TestCase;
 

@@ -19,7 +19,6 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.junit.Before;
 import org.junit.Test;

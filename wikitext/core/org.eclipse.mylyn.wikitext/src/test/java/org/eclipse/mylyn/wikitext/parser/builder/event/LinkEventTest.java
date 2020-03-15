@@ -18,7 +18,6 @@ import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertIne
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
 import org.junit.Test;
 
 public class LinkEventTest {
@@ -30,11 +29,11 @@ public class LinkEventTest {
 
 	@Test
 	public void equals() {
-		assertEquality(new LinkEvent(new Attributes(), "#name", "text"), new LinkEvent(new Attributes(), "#name",
-				"text"));
-		assertInequality(new LinkEvent(new Attributes(), "#name", "text"), new LinkEvent(new Attributes(), "#name2",
-				"text"));
-		assertInequality(new LinkEvent(new Attributes(), "#name", "text"), new LinkEvent(new Attributes(), "#name",
-				"text2"));
+		assertEquality(new LinkEvent(new Attributes(), "#name", "text"),
+				new LinkEvent(new Attributes(), "#name", "text"));
+		assertInequality(new LinkEvent(new Attributes(), "#name", "text"),
+				new LinkEvent(new Attributes(), "#name2", "text"));
+		assertInequality(new LinkEvent(new Attributes(), "#name", "text"),
+				new LinkEvent(new Attributes(), "#name", "text2"));
 	}
 }

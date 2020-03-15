@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -61,7 +60,8 @@ public class HtmlParserTest {
 		assertNotNull(instance);
 		assertNotNull(instance.getDelegate());
 		assertTrue(instance.getDelegate() instanceof org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser);
-		org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser delegate = (org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser) instance.getDelegate();
+		org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser delegate = (org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser) instance
+				.getDelegate();
 		assertFalse(delegate.getProcessors().isEmpty());
 	}
 

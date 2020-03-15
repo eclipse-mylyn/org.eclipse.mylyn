@@ -18,9 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToXslfoTask;
-
-
 public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
 	private MarkupToXslfoTask task;
@@ -43,7 +40,7 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 		assertTrue(targetFile.exists() && targetFile.isFile());
 
 		String content = getContent(targetFile);
-//		
+//
 
 		assertTrue(content.contains("<root xmlns=\"http://www.w3.org/1999/XSL/Format\""));
 		assertTrue(content.contains("</root>"));
