@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -36,9 +37,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -59,9 +58,6 @@ public class ServiceLocatorTest {
 			throw new IllegalStateException();
 		}
 	}
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private ServiceLocator locator;
 
@@ -204,8 +200,8 @@ public class ServiceLocatorTest {
 	@Test
 	public void testUnknownLanguage() {
 		setupServiceLocatorWithMockMarkupLanguage(true);
-		thrown.expect(IllegalArgumentException.class);
-		locator.getMarkupLanguage("No Such Language asdlkfjal;sjdf");
+		assertThrows(IllegalArgumentException.class,
+				() -> locator.getMarkupLanguage("No Such Language asdlkfjal;sjdf"));
 	}
 
 	@Test
@@ -217,18 +213,19 @@ public class ServiceLocatorTest {
 
 	@Test
 	public void getMarkupLanguageNull() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Must provide a languageName");
-		locator.getMarkupLanguage(null);
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+				() -> locator.getMarkupLanguage(null));
+		assertTrue(e.getMessage().contains("Must provide a languageName"));
 	}
 
 	@Test
 	public void getMarkupLanguageUnknown() {
 		setupServiceLocatorWithMockMarkupLanguage(true);
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage(
-				"Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'");
-		locator.getMarkupLanguage("UnknownLanguage");
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+				() -> locator.getMarkupLanguage("UnknownLanguage"));
+		assertTrue(e.getMessage()
+				.contains(
+						"Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'"));
 	}
 
 	@Test

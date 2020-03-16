@@ -20,13 +20,9 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class HtmlLanguageIntegrationTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void defaultMarkupLanguageHasImageSupport() {

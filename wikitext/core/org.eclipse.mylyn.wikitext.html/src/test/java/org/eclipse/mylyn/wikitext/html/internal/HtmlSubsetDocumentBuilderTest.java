@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
@@ -27,16 +28,12 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private StringWriter writer;
 
@@ -59,16 +56,15 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void createNullWriter() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a writer");
-		new HtmlSubsetDocumentBuilder(null, false);
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> new HtmlSubsetDocumentBuilder(null, false));
+		assertTrue(npe.getMessage().contains("Must provide a writer"));
 	}
 
 	@Test
 	public void createNoDelegate() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a delegate");
-		new HtmlSubsetDocumentBuilder(null);
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> new HtmlSubsetDocumentBuilder(null));
+		assertTrue(npe.getMessage().contains("Must provide a delegate"));
 	}
 
 	@Test
@@ -177,9 +173,8 @@ public class HtmlSubsetDocumentBuilderTest {
 		assertContent("<b>test</b>");
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void setSupportedBlockTypesNull() {
-		thrown.expect(NullPointerException.class);
 		builder.setSupportedBlockTypes(null);
 	}
 

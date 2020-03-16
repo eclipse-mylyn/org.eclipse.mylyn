@@ -19,32 +19,24 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Strings;
 
 public class LineTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresText() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new Line(0, 0, null));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void requiresNonNegativeLineOffset() {
-		thrown.expect(IllegalArgumentException.class);
 		assertNotNull(new Line(1, -1, "test"));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void requiresNonNegativeLineNumber() {
-		thrown.expect(IllegalArgumentException.class);
 		assertNotNull(new Line(-1, 1, "test"));
 	}
 

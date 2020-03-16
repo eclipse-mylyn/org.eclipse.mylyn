@@ -24,21 +24,15 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
 public class CursorTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresTextSegment() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new Cursor(null));
 	}
 
@@ -183,12 +177,11 @@ public class CursorTest {
 		assertEquals(12, cursor.getOffset(2));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void toCursorOffset() {
 		Cursor cursor = new Cursor(new TextSegment(ImmutableList.of(new Line(1, 10, "abc"))));
 		assertEquals(0, cursor.toCursorOffset(10));
 		assertEquals(2, cursor.toCursorOffset(12));
-		thrown.expect(IllegalArgumentException.class);
 		cursor.toCursorOffset(9);
 	}
 

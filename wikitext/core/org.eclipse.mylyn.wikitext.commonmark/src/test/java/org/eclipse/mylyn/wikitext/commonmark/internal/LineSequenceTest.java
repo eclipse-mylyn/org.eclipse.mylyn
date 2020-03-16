@@ -19,25 +19,20 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
 public class LineSequenceTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createRequiresContent() {
-		thrown.expect(NullPointerException.class);
 		LineSequence.create((String) null);
 	}
 
@@ -117,8 +112,7 @@ public class LineSequenceTest {
 	@Test
 	public void advanceWithCountNegative() {
 		LineSequence lineSequence = LineSequence.create("one");
-		thrown.expect(IllegalArgumentException.class);
-		lineSequence.advance(-1);
+		assertThrows(IllegalArgumentException.class, () -> lineSequence.advance(-1));
 	}
 
 	@Test
@@ -134,8 +128,7 @@ public class LineSequenceTest {
 	private void assertLookAheadFailsFast(LineSequence lineSequence) {
 		LineSequence lookAhead = lineSequence.lookAhead();
 		lineSequence.advance();
-		thrown.expect(IllegalStateException.class);
-		lookAhead.advance();
+		assertThrows(IllegalStateException.class, () -> lookAhead.advance());
 	}
 
 	private void assertAdvance(LineSequence lineSequence) {

@@ -17,6 +17,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
@@ -27,18 +28,13 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableSet;
 
 public class HtmlLanguageBuilderTest {
 
 	private HtmlLanguageBuilder builder;
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void before() {
@@ -47,41 +43,41 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void nameNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a name");
-		builder.name(null);
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> builder.name(null));
+		assertTrue(npe.getMessage().contains("Must provide a name"));
 	}
 
 	@Test
 	public void nameEmpty() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Name must not be empty");
-		builder.name("");
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> builder.name(""));
+		assertTrue(iae.getMessage().contains("Name must not be empty"));
 	}
 
 	@Test
 	public void nameLeadingWhitespace() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Name must not have leading or trailing whitespace");
-		builder.name(" Name");
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> builder.name(" Name"));
+		assertTrue(iae.getMessage().contains("Name must not have leading or trailing whitespace"));
 	}
 
 	@Test
 	public void nameBlacklisted() {
-		expectBlacklisted();
-		builder.name(HtmlLanguage.NAME_HTML);
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
+				() -> builder.name(HtmlLanguage.NAME_HTML));
+		assertTrue(iae.getMessage().contains("Name must not be equal to " + HtmlLanguage.NAME_HTML));
 	}
 
 	@Test
 	public void nameBlacklisted2() {
-		expectBlacklisted();
-		builder.name(HtmlLanguage.NAME_HTML.toLowerCase());
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
+				() -> builder.name(HtmlLanguage.NAME_HTML.toLowerCase()));
+		assertTrue(iae.getMessage().contains("Name must not be equal to " + HtmlLanguage.NAME_HTML));
 	}
 
 	@Test
 	public void nameBlacklisted3() {
-		expectBlacklisted();
-		builder.name(HtmlLanguage.NAME_HTML.toUpperCase());
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
+				() -> builder.name(HtmlLanguage.NAME_HTML.toUpperCase()));
+		assertTrue(iae.getMessage().contains("Name must not be equal to " + HtmlLanguage.NAME_HTML));
 	}
 
 	@Test
@@ -111,9 +107,9 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void createWithoutName() {
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("Name must be provided to create an HtmlLanguage");
-		builder.add(BlockType.PARAGRAPH).create();
+		IllegalStateException ise = assertThrows(IllegalStateException.class,
+				() -> builder.add(BlockType.PARAGRAPH).create());
+		assertTrue(ise.getMessage().contains("Name must be provided to create an HtmlLanguage"));
 	}
 
 	@Test
@@ -125,9 +121,8 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void addBlockTypeNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a blockType");
-		builder.add((BlockType) null);
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> builder.add((BlockType) null));
+		assertTrue(npe.getMessage().contains("Must provide a blockType"));
 	}
 
 	@Test
@@ -138,9 +133,8 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void addSpanTypeNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a spanType");
-		builder.add((SpanType) null);
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> builder.add((SpanType) null));
+		assertTrue(npe.getMessage().contains("Must provide a spanType"));
 	}
 
 	@Test
@@ -151,16 +145,16 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void addSpanSubstitutionNullAlternative() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide an alternativeTagName");
-		builder.addSubstitution(SpanType.BOLD, (String) null);
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> builder.addSubstitution(SpanType.BOLD, (String) null));
+		assertTrue(npe.getMessage().contains("Must provide an alternativeTagName"));
 	}
 
 	@Test
 	public void addSpanSubstitutionNullSpanType() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a spanType");
-		builder.addSubstitution((SpanType) null, "bold");
+		NullPointerException npe = assertThrows(NullPointerException.class,
+				() -> builder.addSubstitution((SpanType) null, "bold"));
+		assertTrue(npe.getMessage().contains("Must provide a spanType"));
 	}
 
 	@Test
@@ -187,17 +181,15 @@ public class HtmlLanguageBuilderTest {
 	@Test
 	public void addHeadingsLowerBounds() {
 		builder.addHeadings(1);
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Heading level must be between 1 and 6");
-		builder.addHeadings(0);
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> builder.addHeadings(0));
+		assertTrue(iae.getMessage().contains("Heading level must be between 1 and 6"));
 	}
 
 	@Test
 	public void addHeadingsUpperBounds() {
 		builder.addHeadings(6);
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Heading level must be between 1 and 6");
-		builder.addHeadings(7);
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> builder.addHeadings(7));
+		assertTrue(iae.getMessage().contains("Heading level must be between 1 and 6"));
 	}
 
 	@Test
@@ -216,16 +208,14 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void documentNullPrefix() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a prefix");
-		builder.document(null, "ouch");
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> builder.document(null, "ouch"));
+		assertTrue(npe.getMessage().contains("Must provide a prefix"));
 	}
 
 	@Test
 	public void documentNullSuffix() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide a suffix");
-		builder.document("ouch", null);
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> builder.document("ouch", null));
+		assertTrue(npe.getMessage().contains("Must provide a suffix"));
 	}
 
 	@Test
@@ -392,11 +382,6 @@ public class HtmlLanguageBuilderTest {
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
 		builder.characters("inside font");
 		builder.endSpan();
-	}
-
-	protected void expectBlacklisted() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Name must not be equal to " + HtmlLanguage.NAME_HTML);
 	}
 
 	private void assertEmittedCharsEqual(boolean xhtmlStrict, String expected, String... chars) {

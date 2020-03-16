@@ -23,18 +23,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.io.File;
 
 import org.eclipse.mylyn.wikitext.maven.internal.SourceFileTraversal.Visitor;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class SourceFileTraversalTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullRoot() {
-		thrown.expect(NullPointerException.class);
 		new SourceFileTraversal(null);
 	}
 

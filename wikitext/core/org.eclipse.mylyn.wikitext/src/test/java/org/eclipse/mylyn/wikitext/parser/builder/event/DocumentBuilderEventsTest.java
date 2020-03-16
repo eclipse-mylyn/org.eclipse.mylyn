@@ -15,25 +15,21 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
 
 public class DocumentBuilderEventsTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void createNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide events");
-		new DocumentBuilderEvents(null);
+		NullPointerException e = assertThrows(NullPointerException.class, () -> new DocumentBuilderEvents(null));
+		assertTrue(e.getMessage().contains("Must provide events"));
 	}
 
 	@Test
@@ -47,8 +43,7 @@ public class DocumentBuilderEventsTest {
 	@Test
 	public void getEventsImmutable() {
 		DocumentBuilderEvents events = new DocumentBuilderEvents(Lists.<DocumentBuilderEvent> newArrayList());
-		thrown.expect(UnsupportedOperationException.class);
-		events.getEvents().clear();
+		assertThrows(UnsupportedOperationException.class, () -> events.getEvents().clear());
 	}
 
 	@Test

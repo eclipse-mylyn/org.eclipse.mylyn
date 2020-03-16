@@ -15,6 +15,7 @@ package org.eclipse.mylyn.wikitext.html.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
@@ -27,61 +28,55 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 public class HtmlSubsetLanguageTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullName() {
-		thrown.expect(NullPointerException.class);
 		new HtmlSubsetLanguage(null, null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
 				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullBlockTypes() {
-		thrown.expect(NullPointerException.class);
 		new HtmlSubsetLanguage("Test", null, 6, null, ImmutableSet.of(SpanType.BOLD),
 				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullSpanTypes() {
-		thrown.expect(NullPointerException.class);
 		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), null,
 				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullTagNameSubstitutions() {
-		thrown.expect(NullPointerException.class);
 		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
 				null, Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
 	}
 
 	@Test
 	public void createInvalidHeadingLevel() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("headingLevel must be between 0 and 6");
-		new HtmlSubsetLanguage("Test", null, -1, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
-				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
+				() -> new HtmlSubsetLanguage("Test", null, -1, ImmutableSet.of(BlockType.PARAGRAPH),
+						ImmutableSet.of(SpanType.BOLD), ImmutableMap.<SpanType, String> of(),
+						Collections.<SpanHtmlElementStrategy> emptyList(), false, true));
+		assertTrue(iae.getMessage().contains("headingLevel must be between 0 and 6"));
 	}
 
 	@Test
 	public void createWithUnsupportedSubstituted() {
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("SpanType [ITALIC] is unsupported. Cannot add substitution to unsupported span types.");
-		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
-				ImmutableMap.of(SpanType.ITALIC, "italic"), Collections.<SpanHtmlElementStrategy> emptyList(), false,
-				true);
+		IllegalStateException ise = assertThrows(IllegalStateException.class,
+				() -> new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH),
+						ImmutableSet.of(SpanType.BOLD), ImmutableMap.of(SpanType.ITALIC, "italic"),
+						Collections.<SpanHtmlElementStrategy> emptyList(), false, true));
+		assertTrue(ise.getMessage()
+				.contains("SpanType [ITALIC] is unsupported. Cannot add substitution to unsupported span types."));
 	}
 
 	@Test

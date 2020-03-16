@@ -17,14 +17,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class EntityReferencesTest {
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void instance() {
@@ -34,9 +32,9 @@ public class EntityReferencesTest {
 
 	@Test
 	public void equivalentStringNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide an entityReference");
-		EntityReferences.instance().equivalentString(null);
+		NullPointerException e = assertThrows(NullPointerException.class,
+				() -> EntityReferences.instance().equivalentString(null));
+		assertTrue(e.getMessage().contains("Must provide an entityReference"));
 	}
 
 	@Test

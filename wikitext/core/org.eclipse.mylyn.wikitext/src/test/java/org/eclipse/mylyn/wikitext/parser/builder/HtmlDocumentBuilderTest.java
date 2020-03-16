@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.parser.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -31,9 +32,7 @@ import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.io.Resources;
 
@@ -41,9 +40,6 @@ public class HtmlDocumentBuilderTest {
 	private StringWriter out;
 
 	private HtmlDocumentBuilder builder;
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -111,9 +107,8 @@ public class HtmlDocumentBuilderTest {
 		assertEquals("<pre>test</pre>", out.toString());
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void setDocumentHandlerNull() {
-		thrown.expect(NullPointerException.class);
 		builder.setDocumentHandler(null);
 	}
 
@@ -242,16 +237,16 @@ public class HtmlDocumentBuilderTest {
 
 	@Test
 	public void setElementNameOfSpanTypeRequiresSpanType() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide spanType");
-		builder.setElementNameOfSpanType(null, "some-name");
+		NullPointerException e = assertThrows(NullPointerException.class,
+				() -> builder.setElementNameOfSpanType(null, "some-name"));
+		assertTrue(e.getMessage().contains("Must provide spanType"));
 	}
 
 	@Test
 	public void setElementNameOfSpanTypeRequiresElementName() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must provide elementName");
-		builder.setElementNameOfSpanType(SpanType.BOLD, null);
+		NullPointerException e = assertThrows(NullPointerException.class,
+				() -> builder.setElementNameOfSpanType(SpanType.BOLD, null));
+		assertTrue(e.getMessage().contains("Must provide elementName"));
 	}
 
 	@Test

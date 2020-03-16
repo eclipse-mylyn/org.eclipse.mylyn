@@ -22,26 +22,19 @@ import static org.mockito.Mockito.mock;
 import java.io.File;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Sets;
 
 public class FileToMarkupLanguageTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNull() {
-		thrown.expect(NullPointerException.class);
 		new FileToMarkupLanguage(null);
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void getNull() {
-		thrown.expect(NullPointerException.class);
 		create().get(null);
 	}
 

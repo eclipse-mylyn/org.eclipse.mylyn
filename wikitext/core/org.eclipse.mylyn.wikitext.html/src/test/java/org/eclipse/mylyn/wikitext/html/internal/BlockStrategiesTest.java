@@ -22,20 +22,15 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 public class BlockStrategiesTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNull() {
-		thrown.expect(NullPointerException.class);
 		new BlockStrategies(null);
 	}
 

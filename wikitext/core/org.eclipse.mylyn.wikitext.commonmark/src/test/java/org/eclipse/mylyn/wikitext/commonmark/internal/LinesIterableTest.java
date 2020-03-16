@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -24,27 +25,20 @@ import static org.mockito.Mockito.mock;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public class LinesIterableTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresLineSequence() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new LinesIterable(null, Predicates.<Line> alwaysTrue()));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresPredicate() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new LinesIterable(LineSequence.create(""), null));
 	}
 
@@ -54,8 +48,7 @@ public class LinesIterableTest {
 		Iterator<Line> iterator = iterable.iterator();
 		assertNotNull(iterator);
 		assertFalse(iterator.hasNext());
-		thrown.expect(NoSuchElementException.class);
-		iterator.next();
+		assertThrows(NoSuchElementException.class, () -> iterator.next());
 	}
 
 	@Test
@@ -81,8 +74,7 @@ public class LinesIterableTest {
 		Line next = iterator.next();
 		assertNotNull(next);
 		assertEquals("one", next.getText());
-		thrown.expect(UnsupportedOperationException.class);
-		iterator.remove();
+		assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
 	}
 
 	@Test

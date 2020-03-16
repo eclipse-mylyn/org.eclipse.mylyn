@@ -32,15 +32,11 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.jsoup.Jsoup;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.io.Resources;
 
 public class HtmlLanguageTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void create() {

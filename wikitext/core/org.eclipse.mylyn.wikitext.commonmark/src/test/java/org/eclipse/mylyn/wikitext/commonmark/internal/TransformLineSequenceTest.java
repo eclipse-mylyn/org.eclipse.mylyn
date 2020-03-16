@@ -17,9 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Function;
 
@@ -33,24 +31,19 @@ public class TransformLineSequenceTest {
 		}
 	}
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
 	private final Function<Line, Line> transform = new UpperCaseTransform();
 
 	private final LineSequence delegate = LineSequence.create("first\nsecond");
 
 	private final LineSequence lineSequence = new TransformLineSequence(delegate, transform);
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresDelegate() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new TransformLineSequence(null, transform));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresTransform() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new TransformLineSequence(delegate, null));
 	}
 

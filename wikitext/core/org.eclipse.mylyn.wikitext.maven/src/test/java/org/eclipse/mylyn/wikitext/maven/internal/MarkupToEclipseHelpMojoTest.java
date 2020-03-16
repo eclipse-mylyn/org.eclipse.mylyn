@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -44,7 +45,6 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
@@ -54,9 +54,6 @@ public class MarkupToEclipseHelpMojoTest {
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private MarkupToEclipseHelpMojo markupToEclipseHelp;
 
@@ -83,17 +80,17 @@ public class MarkupToEclipseHelpMojoTest {
 		File folder = mock(File.class);
 		doReturn(true).when(folder).exists();
 		doReturn(false).when(folder).isDirectory();
-		thrown.expect(BuildFailureException.class);
-		thrown.expectMessage("test exists but is not a folder");
-		markupToEclipseHelp.ensureFolderExists("test", folder, false);
+		BuildFailureException bfe = assertThrows(BuildFailureException.class,
+				() -> markupToEclipseHelp.ensureFolderExists("test", folder, false));
+		assertTrue(bfe.getMessage().contains("test exists but is not a folder"));
 	}
 
 	@Test
 	public void ensureFolderExistsMissingNoCreate() {
 		File folder = mock(File.class);
-		thrown.expect(BuildFailureException.class);
-		thrown.expectMessage("test does not exist");
-		markupToEclipseHelp.ensureFolderExists("test", folder, false);
+		BuildFailureException bfe = assertThrows(BuildFailureException.class,
+				() -> markupToEclipseHelp.ensureFolderExists("test", folder, false));
+		assertTrue(bfe.getMessage().contains("test does not exist"));
 	}
 
 	@Test
@@ -120,9 +117,9 @@ public class MarkupToEclipseHelpMojoTest {
 	@Test
 	public void ensureFolderExistsMissingCreateFails() {
 		File folder = mock(File.class);
-		thrown.expect(BuildFailureException.class);
-		thrown.expectMessage("Cannot create");
-		markupToEclipseHelp.ensureFolderExists("test", folder, true);
+		BuildFailureException bfe = assertThrows(BuildFailureException.class,
+				() -> markupToEclipseHelp.ensureFolderExists("test", folder, true));
+		assertTrue(bfe.getMessage().contains("Cannot create"));
 	}
 
 	@Test
@@ -242,9 +239,9 @@ public class MarkupToEclipseHelpMojoTest {
 
 	@Test
 	public void computeResourcePathInvalidUri() {
-		thrown.expect(BuildFailureException.class);
-		thrown.expectMessage("\":not valid\" is not a valid URI");
-		markupToEclipseHelp.computeResourcePath(":not valid", "");
+		BuildFailureException bfe = assertThrows(BuildFailureException.class,
+				() -> markupToEclipseHelp.computeResourcePath(":not valid", ""));
+		assertTrue(bfe.getMessage().contains("\":not valid\" is not a valid URI"));
 	}
 
 	@Test

@@ -21,20 +21,15 @@ import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public class CompositeSpanStrategyTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNull() {
-		thrown.expect(NullPointerException.class);
 		new CompositeSpanStrategy(null);
 	}
 

@@ -22,19 +22,14 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableList;
 
 public class SubstitutionWithoutCssSpanStrategyTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNull() {
-		thrown.expect(NullPointerException.class);
 		new SubstitutionWithoutCssSpanStrategy(null);
 	}
 

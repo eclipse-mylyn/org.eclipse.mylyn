@@ -36,16 +36,11 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndDocumentEvent;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Joiner;
 
 public class CommonMarkLanguageTest {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	private final CommonMarkLanguage language = new CommonMarkLanguage();
 

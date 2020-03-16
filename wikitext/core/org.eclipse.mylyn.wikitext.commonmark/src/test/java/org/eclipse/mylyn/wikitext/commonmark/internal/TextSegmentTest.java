@@ -17,21 +17,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 public class TextSegmentTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresLines() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new TextSegment(null));
 	}
 

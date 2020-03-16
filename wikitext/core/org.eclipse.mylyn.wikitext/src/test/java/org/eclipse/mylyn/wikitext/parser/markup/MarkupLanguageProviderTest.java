@@ -15,13 +15,13 @@ package org.eclipse.mylyn.wikitext.parser.markup;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -33,9 +33,6 @@ public class MarkupLanguageProviderTest {
 			return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage("Test"));
 		}
 	}
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void getMarkupLanguages() {
@@ -54,9 +51,8 @@ public class MarkupLanguageProviderTest {
 				return null;
 			}
 		};
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("loadMarkupLanguages() must not return null");
-		provider.getMarkupLanguages();
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> provider.getMarkupLanguages());
+		assertTrue(npe.getMessage().contains("loadMarkupLanguages() must not return null"));
 	}
 
 	@Test
@@ -68,9 +64,8 @@ public class MarkupLanguageProviderTest {
 				return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
 			}
 		};
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("Language name 'Test' must not be provided more than once");
-		provider.getMarkupLanguages();
+		IllegalStateException ise = assertThrows(IllegalStateException.class, () -> provider.getMarkupLanguages());
+		assertTrue(ise.getMessage().contains("Language name 'Test' must not be provided more than once"));
 	}
 
 	@Test
@@ -84,8 +79,7 @@ public class MarkupLanguageProviderTest {
 				return ImmutableSet.<MarkupLanguage> of(language);
 			}
 		};
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Provided languages must have a name");
-		provider.getMarkupLanguages();
+		NullPointerException npe = assertThrows(NullPointerException.class, () -> provider.getMarkupLanguages());
+		assertTrue(npe.getMessage().contains("Provided languages must have a name"));
 	}
 }

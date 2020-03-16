@@ -21,25 +21,19 @@ import java.util.Collections;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Sets;
 
 public class SpanStrategiesTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullElementTypes() {
-		thrown.expect(NullPointerException.class);
 		new SpanStrategies(null, Collections.<SpanHtmlElementStrategy> emptyList());
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void createNullSpanStrategies() {
-		thrown.expect(NullPointerException.class);
 		new SpanStrategies(Collections.<SpanType> emptySet(), null);
 	}
 

@@ -28,17 +28,12 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 public class SourceBlocksTest {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	private final SourceBlock block1 = mockBlock(BlockType.QUOTE, "b1");
 
@@ -46,15 +41,13 @@ public class SourceBlocksTest {
 
 	private final SourceBlocks sourceBlocks = new SourceBlocks(block1, block2);
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresBlocks() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new SourceBlocks((SourceBlock[]) null));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresBlocksCollection() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new SourceBlocks((List<SourceBlock>) null));
 	}
 

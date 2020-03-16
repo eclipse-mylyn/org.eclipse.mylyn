@@ -17,27 +17,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public class PredicateLineSequenceTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresDelegate() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new PredicateLineSequence(null, Predicates.<Line> alwaysTrue()));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresPredicate() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new PredicateLineSequence(LineSequence.create(""), null));
 	}
 

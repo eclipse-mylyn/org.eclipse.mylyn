@@ -24,26 +24,19 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class InlineParserTest {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
 	private final Line line = new Line(0, 1, "test");
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresSpans() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new InlineParser((SourceSpan[]) null));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void requiresListOfSpans() {
-		thrown.expect(NullPointerException.class);
 		assertNotNull(new InlineParser((List<SourceSpan>) null));
 	}
 
