@@ -154,6 +154,19 @@
       <requirement
           name="org.eclipse.sdk.feature.group"/>
       <repositoryList
+          name="2020-03">
+        <repository
+            url="http://download.eclipse.org/releases/2020-03"/>
+        <repository
+            url="http://download.eclipse.org/cbi/updates/license"/>
+        <repository
+            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20181128170323/repository"/>
+      </repositoryList>
+      <repositoryList
           name="2019-12">
         <repository
             url="http://download.eclipse.org/releases/2019-12"/>
@@ -961,6 +974,11 @@
               name="org.eclipse.mylyn.versions.development.feature.group"/>
           <sourceLocator
               rootFolder="${git.clone.mylyn.versions.location}"/>
+          <repositoryList
+              name="2020-03">
+            <repository
+                url="http://subclipse.tigris.org/update_1.8.x"/>
+          </repositoryList>
           <repositoryList
               name="2019-12">
             <repository
