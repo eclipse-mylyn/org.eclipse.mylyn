@@ -306,8 +306,8 @@
       </activation>
       <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
-        <target-version>4.7</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/oxygen/</platform-repository-url>
+        <target-version>4.8</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
       </properties>
     </profile>
     <profile>
