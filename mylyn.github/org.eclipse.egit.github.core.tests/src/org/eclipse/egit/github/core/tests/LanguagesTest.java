@@ -16,26 +16,26 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.egit.github.core.Language;
+import org.eclipse.egit.github.core.Languages;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Language}
+ * Unit tests of {@link Languages}
  */
-public class LanguageTest {
+public class LanguagesTest {
 
 	/**
 	 * Test languages
 	 */
 	@Test
 	public void languages() {
-		assertNotNull(Language.values());
-		assertTrue(Language.values().length > 0);
-		for (Language lang : Language.values()) {
+		String[] languages = Languages.getLanguages();
+		assertNotNull(languages);
+		assertTrue(languages.length > 0);
+		for (String lang : languages) {
 			assertNotNull(lang);
-			assertNotNull(Language.valueOf(lang.name()));
-			assertNotNull(lang.getValue());
-			assertFalse(lang.getValue().length() == 0);
+			assertFalse(lang.length() == 0);
+			assertFalse("HTML encoding found in language name", lang.contains("&"));
 		}
 	}
 
