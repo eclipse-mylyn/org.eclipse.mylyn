@@ -77,7 +77,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		LabelComparatorTest.class, //
 		LabelServiceTest.class, //
 		LabelTest.class, //
-		LanguageTest.class, //
+		LanguagesTest.class, //
 		MarkdownServiceTest.class, //
 		MemberPayloadTest.class, //
 		MergeStatusTest.class, //

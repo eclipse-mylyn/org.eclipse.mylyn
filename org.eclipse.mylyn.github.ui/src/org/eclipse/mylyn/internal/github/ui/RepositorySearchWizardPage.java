@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.github.core.Language;
+import org.eclipse.egit.github.core.Languages;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -110,8 +110,8 @@ public class RepositorySearchWizardPage extends WizardPage implements
 				| SWT.DROP_DOWN);
 		languageCombo.add(Messages.RepositorySearchWizardPage_AnyLanguage);
 
-		for (Language language : Language.values())
-			languageCombo.add(language.getValue());
+		for (String language : Languages.getLanguages())
+			languageCombo.add(language);
 
 		languageCombo.select(0);
 
