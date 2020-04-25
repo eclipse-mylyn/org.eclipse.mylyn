@@ -114,16 +114,6 @@
 	<!-- javadoc completions -->
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="LegacyJavadocCompletionProposalComputer_all">
-		<javaCompletionProposalComputer
-        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
-        class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
-        requiresUIThread="false">
-			<partition type="__java_javadoc"/>
-		</javaCompletionProposalComputer>
-	</extension>
-	<extension
-		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="JavadocCompletionProposalComputer_all">
 		<javaCompletionProposalComputer
         categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
