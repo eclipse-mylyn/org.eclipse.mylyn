@@ -1,6 +1,6 @@
 target "4.5-mars" with source configurePhase
 
-location "http://download.eclipse.org/releases/mars/" {
+location "https://download.eclipse.org/releases/mars/" {
 	// Eclipse platform
 	org.eclipse.sdk.ide lazy
 	org.eclipse.emf.sdk.feature.group lazy
