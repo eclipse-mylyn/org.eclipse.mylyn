@@ -48,6 +48,8 @@ public class TableBlock extends AsciiDocBlock {
 
 	private boolean cellBlockIsOpen = false;
 
+	private int cellSpan = 1;
+
 	public TableBlock() {
 		super(Pattern.compile("^(\\||,|:)===\\s*")); //$NON-NLS-1$
 	}
@@ -107,10 +109,6 @@ public class TableBlock extends AsciiDocBlock {
 		return colsAttribute.isEmpty() || cellsCount < colsAttribute.size();
 	}
 
-	private final boolean isFirsCellOfTable() {
-		return !cellBlockIsOpen;
-	}
-
 	@Override
 	protected void processBlockContent(String line) {
 		if (!line.trim().isEmpty()) {
@@ -120,30 +118,39 @@ public class TableBlock extends AsciiDocBlock {
 			}
 
 			int offset = 0;
-			boolean firstCellInLine = true;
 			Matcher rowCellMatcher = createRowCellMatcher(line);
 
 			while (offset <= line.length()) {
 				boolean found = rowCellMatcher.find();
 				int endOffset = found ? rowCellMatcher.start() : line.length();
-				String cellContent = line.substring(offset, endOffset);
-				if (offset == 0 && format == TableFormat.PREFIX_SEPARATED_VALUES) {
-					if (!cellContent.isEmpty()) {
-						if (isFirsCellOfTable()) {
-							handleCellContent(cellContent, offset);
-							firstCellInLine = false;
-						} else {
-							appendCellContent(cellContent, endOffset);
-							firstCellInLine = false;
+				String fullCellContent = line.substring(offset, endOffset);
+				String cellContent = fullCellContent.trim();
+				int contentOffset = offset + fullCellContent.indexOf(cellContent);
+
+				if (format == TableFormat.PREFIX_SEPARATED_VALUES) {
+					handleCellContent(cellContent, contentOffset, offset == 0 && !cellContent.isEmpty());
+					if (found) {
+						if (!isColFormatKnown() && offset == 0 && endOffset == 0
+								&& (cellsCount > 0 || cellBlockIsOpen)) {
+							colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + 1);
 						}
+						closeCellBlockIfNeeded();
+						String spanGroup = rowCellMatcher.group(1);
+						if (spanGroup != null && !spanGroup.isEmpty()) {
+							cellSpan = Integer.parseInt(spanGroup.substring(0, spanGroup.length() - 1));
+						} else {
+							cellSpan = 1;
+						}
+						String alignGroup = rowCellMatcher.group(2);
+						openCellBlock(alignGroup == null ? "" : alignGroup);
 					}
 				} else {
-					if (!isColFormatKnown() && firstCellInLine && !isFirsCellOfTable()) {
+					if (!found && !isColFormatKnown()) {
 						colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + 1);
 					}
-					// start of new cell
-					handleCellContent(cellContent, offset);
-					firstCellInLine = false;
+					openCellBlock("");
+					handleCellContent(cellContent, contentOffset, false);
+					closeCellBlockIfNeeded();
 				}
 				offset = found ? rowCellMatcher.end() : line.length() + 1;
 			}
@@ -151,12 +158,17 @@ public class TableBlock extends AsciiDocBlock {
 	}
 
 	private Matcher createRowCellMatcher(String line) {
-		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
+		String delimiter = getCellSeparator();
+		switch (format) {
+		case COMMA_SEPARATED_VALUES:
 			String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; //$NON-NLS-1$
 			return Pattern.compile(regex).matcher(line);
+		case DELIMITER_SEPARATED_VALUES:
+			return Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
+		case PREFIX_SEPARATED_VALUES:
+		default:
+			return Pattern.compile("(\\d+\\+)?([<^>])?(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
 		}
-		String delimiter = getCellSeparator();
-		return Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
 	}
 
 	private String getCellSeparator() {
@@ -171,21 +183,8 @@ public class TableBlock extends AsciiDocBlock {
 		}
 	}
 
-	private void handleCellContent(String fullCellContent, int positionInLine) {
+	private void openCellBlock(String alignCode) {
 		closeCellBlockIfNeeded();
-
-		String cellContent = fullCellContent.trim();
-		String blockContent;
-		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
-			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
-				blockContent = cellContent.substring(1, cellContent.length() - 1).replaceAll("\"\"", "\"");
-			} else {
-				blockContent = cellContent;
-			}
-		} else {
-			String delimiter = getCellSeparator();
-			blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
-		}
 
 		if (isColFormatKnown() && cellsCount % colsAttribute.size() == 0) {
 			TableRowAttributes tableRowAttributes = new TableRowAttributes();
@@ -196,22 +195,45 @@ public class TableBlock extends AsciiDocBlock {
 		if (colsAttribute.isEmpty()) {
 			attributes = new TableCellAttributes();
 		} else {
-			attributes = colsAttribute.get(cellsCount % colsAttribute.size());
+			attributes = (TableCellAttributes) colsAttribute.get(cellsCount % colsAttribute.size()).clone();
+		}
+		attributes.setColspan(cellSpan > 1 ? Integer.toString(cellSpan) : null);
+		switch (alignCode) {
+		case "<":
+			attributes.setAlign("left");
+			break;
+		case "^":
+			attributes.setAlign("center");
+			break;
+		case ">":
+			attributes.setAlign("right");
+			break;
+		default:
+			break;
 		}
 
-		if (hasHeader && isFirstRow()) {
-			builder.beginBlock(BlockType.TABLE_CELL_HEADER, attributes);
-		} else {
-			builder.beginBlock(BlockType.TABLE_CELL_NORMAL, attributes);
-		}
+		builder.beginBlock((hasHeader && isFirstRow()) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL,
+				attributes);
 		cellBlockIsOpen = true;
-
-		int offset = fullCellContent.indexOf(cellContent);
-		markupLanguage.emitMarkupLine(parser, state, offset + positionInLine, blockContent, 0);
 	}
 
-	private void appendCellContent(String cellContent, int positionInLine) {
-		markupLanguage.emitMarkupLine(parser, state, positionInLine, " " + cellContent.trim(), 0);
+	private void handleCellContent(String cellContent, int positionInLine, boolean append) {
+		if (!cellBlockIsOpen) {
+			return;
+		}
+		String blockContent = append ? " " : "";
+		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
+			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
+				blockContent += cellContent.substring(1, cellContent.length() - 1).replaceAll("\"\"", "\"");
+			} else {
+				blockContent += cellContent;
+			}
+		} else {
+			String delimiter = getCellSeparator();
+			blockContent += cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
+		}
+
+		markupLanguage.emitMarkupLine(parser, state, positionInLine, blockContent, 0);
 	}
 
 	@Override
@@ -227,9 +249,7 @@ public class TableBlock extends AsciiDocBlock {
 		if (cellBlockIsOpen) {
 			builder.endBlock(); // close table cell
 			cellBlockIsOpen = false;
-
-			cellsCount = cellsCount + 1;
-
+			cellsCount = cellsCount + cellSpan;
 			if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
 				builder.endBlock(); // close table row
 			}

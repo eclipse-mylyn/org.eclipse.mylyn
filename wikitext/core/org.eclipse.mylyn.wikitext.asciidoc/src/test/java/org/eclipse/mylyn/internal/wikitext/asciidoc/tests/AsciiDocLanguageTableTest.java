@@ -54,6 +54,28 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void testSimpleTableOneCol() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "\n" //
+				+ "| first\n" //
+				+ "\n" //
+				+ "| lorem\n" //
+				+ "\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
 	public void testJustOpenedTable() {
 		String html = parseToHtml("" //
 				+ "|===\n");
@@ -800,5 +822,91 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 		assertTrue("expected to find strong span", boldFound);
 		assertTrue("expected to find superscript span", superFound);
 		assertTrue("expected to find subscript span", subFound);
+	}
+
+	@Test
+	public void testHorizontalSpan() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| first | second | third\n" //
+				+ "3+| lorem\n" //
+				+ "2+| lorem | ipsum\n" //
+				+ "| lorem 2+| ipsum\n" //
+				+ "| lorem | ipsum | dolor\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td colspan=\"3\">lorem</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td colspan=\"2\">lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td colspan=\"2\">ipsum</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "<td>dolor</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testCellHorizontalAlign() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| first | second | third\n" //
+				+ ">| lorem ^| ipsum <| dolor\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td align=\"right\">lorem</td>" //
+				+ "<td align=\"center\">ipsum</td>" //
+				+ "<td align=\"left\">dolor</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testCellHorizontalAlignAndSpan() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| first | second | third\n" //
+				+ "3+>| lorem\n" //
+				+ ">| lorem 2+^| ipsum\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td align=\"right\" colspan=\"3\">lorem</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td align=\"right\">lorem</td>" //
+				+ "<td align=\"center\" colspan=\"2\">ipsum</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
 	}
 }
