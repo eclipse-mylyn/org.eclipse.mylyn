@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EGit GitHub API Core
 Bundle-SymbolicName: org.eclipse.egit.github.core
-Bundle-Version: 5.8.0.qualifier
+Bundle-Version: 5.8.0.202005061305-m2
 Bundle-Vendor: Eclipse EGit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.google.gson;version="[1.6.0,3.0.0)",
