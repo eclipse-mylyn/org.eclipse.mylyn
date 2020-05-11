@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.25.0-SNAPSHOT</version>
+    <version>3.25.1-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn-site</artifactId>
-  <version>3.25.0-SNAPSHOT</version>
+  <version>3.25.1-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 4.x</name>
   <properties>
