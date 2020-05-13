@@ -74,14 +74,14 @@
 
     <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/</orbit-repository-url>
     <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
-    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
-    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
-    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
-    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
-    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
-    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
-    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
+    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/</mylyn-repository-url>
+    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/builds/</mylyn-builds-repository-url>
+    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/commons/</mylyn-commons-repository-url>
+    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/context/</mylyn-context-repository-url>
+    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/docs/</mylyn-docs-repository-url>
+    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/reviews/</mylyn-reviews-repository-url>
+    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/tasks/</mylyn-tasks-repository-url>
+    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/versions/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
