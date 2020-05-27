@@ -24,8 +24,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -77,10 +75,7 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 					}
 					RemoteConfig remote = PullRequestUtils.addRemote(repo,
 							request);
-					new FetchOperationUI(repo, remote, Activator.getDefault()
-							.getPreferenceStore()
-							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT),
-							false).execute(monitor);
+					new FetchOperationUI(repo, remote, false).execute(monitor);
 					executeCallback(event);
 				} catch (IOException e) {
 					GitHubUi.logError(e);

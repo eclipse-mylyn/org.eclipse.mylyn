@@ -26,12 +26,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.op.CloneOperation;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
-import org.eclipse.egit.ui.UIPreferences;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jgit.lib.Constants;
@@ -84,14 +83,11 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 		Repository fullRepo = service.getRepository(repo);
 		URIish uri = new URIish(fullRepo.getCloneUrl());
 
-		IPreferenceStore store = org.eclipse.egit.ui.Activator.getDefault()
-				.getPreferenceStore();
-
 		String defaultRepoDir = RepositoryUtil.getDefaultRepositoryDir();
 		File directory = new File(new File(defaultRepoDir, repo.getOwner()),
 				repo.getName());
 
-		int timeout = store.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+		int timeout = GitSettings.getRemoteConnectionTimeout();
 
 		return new CloneOperation(uri, true, null, directory, Constants.R_HEADS
 				+ Constants.MASTER, Constants.DEFAULT_REMOTE_NAME, timeout);

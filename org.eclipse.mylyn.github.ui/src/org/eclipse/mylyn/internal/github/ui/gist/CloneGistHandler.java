@@ -36,8 +36,8 @@ import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.op.CloneOperation;
 import org.eclipse.egit.core.op.CloneOperation.PostCloneTask;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
@@ -128,8 +128,7 @@ public class CloneGistHandler extends TaskDataHandler {
 				.getAttribute(GistAttribute.CLONE_URL.getMetadata().getId())
 				.getValue();
 		URIish uri = new URIish(pullUrl);
-		int timeout = Activator.getDefault().getPreferenceStore()
-				.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+		int timeout = GitSettings.getRemoteConnectionTimeout();
 		final File workDir = new File(getParentDirectory(), name);
 
 		if (getRepoUtil().getConfiguredRepositories().contains(

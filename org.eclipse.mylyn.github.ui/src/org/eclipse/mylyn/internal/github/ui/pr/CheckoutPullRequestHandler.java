@@ -28,9 +28,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.branch.BranchOperationUI;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
@@ -141,9 +140,8 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 					sub.subTask(MessageFormat.format(
 							Messages.CheckoutPullRequestHandler_TaskFetching,
 							remote.getName()));
-					new FetchOperation(repo, remote, Activator.getDefault()
-							.getPreferenceStore()
-							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT),
+					new FetchOperation(repo, remote,
+							GitSettings.getRemoteConnectionTimeout(),
 							false).run(sub);
 					sub.done();
 
