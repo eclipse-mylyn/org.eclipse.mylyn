@@ -40,6 +40,7 @@ public class PullRequestTest {
 	public void defaultState() {
 		PullRequest request = new PullRequest();
 		assertNull(request.isMergeable());
+		assertNull(request.getMergeableState());
 		assertFalse(request.isMerged());
 		assertEquals(0, request.getAdditions());
 		assertNull(request.getBase());
@@ -81,6 +82,8 @@ public class PullRequestTest {
 		PullRequest request = new PullRequest();
 		assertTrue(request.setMerged(true).isMerged());
 		assertTrue(request.setMergeable(true).isMergeable());
+		assertEquals("clean", request.setMergeableState("clean")
+				.getMergeableState());
 		assertEquals(15, request.setAdditions(15).getAdditions());
 		PullRequestMarker base = new PullRequestMarker();
 		assertEquals(base, request.setBase(base).getBase());
