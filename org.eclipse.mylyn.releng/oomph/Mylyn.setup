@@ -5,6 +5,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
     xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
@@ -13,7 +14,7 @@
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -129,9 +130,9 @@
         xsi:type="pde:APIBaselineTask"
         id="mylyn.baseline"
         name="Mylyn"
-        version="3.24"
+        version="3.25"
         location="${mylyn.baseline.location}"
-        remoteURI="http://download.eclipse.org/mylyn/drops/3.24.0/mylyn-3.24.0-api.zip"/>
+        remoteURI="http://download.eclipse.org/mylyn/drops/3.25.0/mylyn-3.25.0-api.zip"/>
   </setupTask>
   <setupTask
       xsi:type="setup.targlets:TargletTask">
@@ -1615,11 +1616,6 @@
           <sourceLocator
               rootFolder="${git.clone.mylyn.versions.simple.location}"/>
           <repositoryList
-              name="2020-06">
-            <repository
-                url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
-          </repositoryList>
-          <repositoryList
               name="2020-03">
             <repository
                 url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
@@ -1977,6 +1973,353 @@
           label="master"/>
     </project>
     <description>Add Editors for HTML and BASH Scripts</description>
+  </project>
+  <project name="Maintainer"
+      label="">
+    <setupTask
+        xsi:type="setup:StringSubstitutionTask"
+        name="git.clone.mylyn.all"
+        value="${git.clone.mylyn.all.location}"/>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.all"
+        remoteURI="mylyn/org.eclipse.mylyn.all"
+        recursive="true">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn All Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
+      <description>Mylyn All</description>
+    </setupTask>
+    <setupTask
+        xsi:type="projects:ProjectsImportTask">
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.all.location}"
+          locateNestedProjects="true">
+        <excludedPath>org.eclipse.mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
+        <excludedPath>org.eclipse.mylyn.reviews/tbr</excludedPath>
+        <excludedPath>org.eclipse.mylyn.docs</excludedPath>
+      </sourceLocator>
+      <description>Import Releng Project</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Builds">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.builds.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Commons">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.commons.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Context">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.context.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Releng">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.releng"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Reviews">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.reviews.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Tasks">
+        <predicate
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn.tasks.core"/>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:NamePredicate"
+                pattern="org\.eclipse\.mylyn\.bugzilla\.rest.*"/>
+          </operand>
+        </predicate>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Versions">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.versions.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Docs">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="epub"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Bugzilla Connector">
+        <predicate
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn.tasks.core"/>
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern="org\.eclipse\.mylyn\.bugzilla\.rest.*"/>
+        </predicate>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Builds"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.builds.development.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.builds"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Releng"
+          activeRepositoryList="${eclipse.target.platform}">
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.releng"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Context"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.context.development.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.context"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Commons"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.commons.development.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.commons"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Reviews"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.reviews.development.feature.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.reviews"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Tasks Bugzilla"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.bugzilla.rest.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.bugzilla.rest.development.feature.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.tasks"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Tasks"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.sdk_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.test_feature.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.tasks"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Versions"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.versions.development.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.all.location}//org.eclipse.mylyn.versions"/>
+        <repositoryList
+            name="2020-06">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2020-03">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2019-12">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2019-09">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2019-06">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2019-03">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2018-12">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="2018-09">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Photon">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Oxygen">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Neon">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Mars">
+          <repository
+              url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+        </repositoryList>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="launching:LaunchTask"
+        launcher="submodulConfig"/>
+    <stream
+        name="master"
+        label="Master"/>
+    <description>Maintaining Mylyn</description>
+  </project>
+  <project name="web"
+      label="Website">
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.web"
+        remoteURI="www.eclipse.org/mylyn.git">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn Web Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
+      <description>Mylyn Website</description>
+    </setupTask>
+    <setupTask
+        xsi:type="projects:ProjectsImportTask">
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.web.location}"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Website">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="mylyn"/>
+      </workingSet>
+    </setupTask>
+    <stream
+        name="master"
+        label="Master"/>
+    <description>Mylyn Website</description>
   </project>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
