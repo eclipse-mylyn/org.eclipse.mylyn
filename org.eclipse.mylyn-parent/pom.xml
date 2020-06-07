@@ -306,8 +306,8 @@
       </activation>
       <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
-        <target-version>4.8</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
+        <target-version>4.14</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/2019-12/</platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -413,6 +413,21 @@
         <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
         <alt-target-version>4.photon</alt-target-version>
         <alt-platform-repository-url>http://download.eclipse.org/releases/photon/</alt-platform-repository-url>
+      </properties>
+    </profile>
+    <profile>
+      <id>2019-12</id>
+      <activation>
+        <property>
+          <name>target-profile</name>
+          <value>photon</value>
+        </property>
+      </activation>
+      <properties>
+        <target-version>4.14</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/2019-12/</platform-repository-url>
+        <alt-target-version>4.14</alt-target-version>
+        <alt-platform-repository-url>http://download.eclipse.org/releases/2019-12/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
