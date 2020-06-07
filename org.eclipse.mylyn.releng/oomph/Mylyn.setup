@@ -2020,6 +2020,10 @@
       <description>Import Releng Project</description>
     </setupTask>
     <setupTask
+        xsi:type="launching:LaunchTask"
+        predecessor="//@projects[name='Maintainer']/@setupTasks.2"
+        launcher="submodulConfig"/>
+    <setupTask
         xsi:type="setup.workingsets:WorkingSetTask">
       <workingSet
           name="Mylyn Builds">
@@ -2266,8 +2270,14 @@
       </targlet>
     </setupTask>
     <setupTask
-        xsi:type="launching:LaunchTask"
-        launcher="submodulConfig"/>
+        xsi:type="mylyn:MylynQueriesTask"
+        repositoryURL="https://bugs.eclipse.org/bugs"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Bugs since 1.6.2019"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?chfield=%5BBug%20creation%5D&amp;chfieldfrom=2019-06-01&amp;chfieldto=Now&amp;list_id=19605345&amp;product=Mylyn&amp;product=Mylyn%20Builds&amp;product=Mylyn%20Commons&amp;product=Mylyn%20Context&amp;product=Mylyn%20Context%20MFT&amp;product=Mylyn%20Incubator&amp;product=Mylyn%20Reviews&amp;product=Mylyn%20Reviews%20R4E&amp;product=Mylyn%20Tasks&amp;product=Mylyn%20Versions&amp;query_format=advanced"/>
+    </setupTask>
     <stream
         name="master"
         label="Master"/>
