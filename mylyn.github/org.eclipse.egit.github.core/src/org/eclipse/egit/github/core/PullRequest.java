@@ -28,6 +28,8 @@ public class PullRequest implements Serializable {
 
 	private Boolean mergeable;
 
+	private String mergeableState;
+
 	private boolean merged;
 
 	private Date closedAt;
@@ -110,6 +112,22 @@ public class PullRequest implements Serializable {
 	 */
 	public PullRequest setMergeable(Boolean mergeable) {
 		this.mergeable = mergeable;
+		return this;
+	}
+
+	/**
+	 * @return mergeableState
+	 */
+	public String getMergeableState() {
+		return mergeableState;
+	}
+
+	/**
+	 * @param mergeableState
+	 * @return this pull request
+	 */
+	public PullRequest setMergeableState(String mergeableState) {
+		this.mergeableState = mergeableState;
 		return this;
 	}
 
