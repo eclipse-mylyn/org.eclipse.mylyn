@@ -5,7 +5,7 @@
 
 	<groupId>org.eclipse.mylyn.github</groupId>
 	<artifactId>org.eclipse.egit.github.core</artifactId>
-	<version>5.8.0.202006091008-r</version>
+	<version>5.8.1-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
