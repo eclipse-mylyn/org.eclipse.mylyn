@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/org.eclipse.mylyn.github.feature_0.0.0.qualifier.jar" id="org.eclipse.mylyn.github.feature" version="0.0.0">
-      <category name="Collaboration"/>
+      <category name="EGit.GitHub"/>
    </feature>
-   <category-def name="Collaboration" label="Collaboration">
+   <category-def name="EGit.GitHub" label="EGit GitHub">
       <description>
-         Tools to foster collaboration between developers.
+         Integration with GitHub
       </description>
    </category-def>
 </site>
