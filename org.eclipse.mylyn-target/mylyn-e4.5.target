@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="mylyn-e4.5" sequenceNumber="12">
+<?pde version="3.8"?>
+<target name="mylyn-e4.5" sequenceNumber="12">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
@@ -74,9 +75,9 @@
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.10"/>
-<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
-<repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
+<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
+<repository location="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.core.runtime.compatibility.auth" version="3.2.300.v20120523-2004"/>

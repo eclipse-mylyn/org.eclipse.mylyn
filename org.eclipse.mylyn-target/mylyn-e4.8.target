@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="mylyn-e4.8" sequenceNumber="18">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="mylyn-e4.8" sequenceNumber="18">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
@@ -54,9 +56,9 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.10"/>
-<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
-<repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
+<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
+<repository location="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <repository location="http://download.eclipse.org/cbi/updates/license"/>
