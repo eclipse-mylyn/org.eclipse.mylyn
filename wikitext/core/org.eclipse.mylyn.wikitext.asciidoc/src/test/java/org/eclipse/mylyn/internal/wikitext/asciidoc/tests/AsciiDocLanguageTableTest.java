@@ -909,4 +909,26 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 				+ "</table>" //
 				+ "<p>Some Text</p>\n", html);
 	}
+
+	@Test
+	public void testHorizontalSpanInFirstRow() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "3+| one\n" //
+				+ "| lorem | ipsum | dolor\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td colspan=\"3\">one</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "<td>dolor</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
 }

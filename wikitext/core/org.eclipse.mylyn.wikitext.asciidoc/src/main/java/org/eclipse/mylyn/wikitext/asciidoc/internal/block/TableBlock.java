@@ -132,7 +132,7 @@ public class TableBlock extends AsciiDocBlock {
 					if (found) {
 						if (!isColFormatKnown() && offset == 0 && endOffset == 0
 								&& (cellsCount > 0 || cellBlockIsOpen)) {
-							colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + 1);
+							colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + cellSpan);
 						}
 						closeCellBlockIfNeeded();
 						String spanGroup = rowCellMatcher.group(1);
