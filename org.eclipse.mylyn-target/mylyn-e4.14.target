@@ -8,23 +8,7 @@
 	<unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
-<unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
-<unit id="javax.servlet" version="3.0.0.v201112011016"/>
-<unit id="javax.activation" version="1.1.0.v201211130549"/>
-<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
-<unit id="com.sun.xml.bind" version="2.2.0.v201505121915"/>
-<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
-<unit id="org.apache.commons.codec" version="1.9.0.v20170208-1614"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.5.2.v20170210-0925"/>
 <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
 <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
 <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
@@ -59,6 +43,24 @@
 	<unit id="org.mockito" version="1.9.5.v201605172210"/>
 	<unit id="org.mockito" version="2.23.0.v20190527-1420"/>
 	<unit id="org.mockito.source" version="2.23.0.v20190527-1420"/>
+	<unit id="com.google.gson.source" version="2.8.2.v20180104-1110"/>
+	<unit id="com.google.gson" version="2.8.2.v20180104-1110"/>
+	<unit id="org.junit" version="4.12.0.v201504281640"/>
+	<unit id="org.junit.source" version="4.12.0.v201504281640"/>
+	<unit id="org.antlr.runtime" version="3.2.0.v201101311130"/>
+	<unit id="org.antlr.runtime.source" version="3.2.0.v201101311130"/>
+	<unit id="com.google.gwt.servlet" version="2.1.0.v201111291940"/>
+	<unit id="com.google.gwt.servlet.source" version="2.1.0.v201111291940"/>
+	<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
+	<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+	<unit id="javax.servlet" version="3.1.0.v201410161800"/>
+	<unit id="javax.activation" version="1.1.0.v201211130549"/>
+	<unit id="com.sun.xml.bind" version="2.2.0.v201505121915"/>
+	<unit id="javax.servlet.source" version="3.1.0.v201410161800"/>
+	<unit id="org.apache.commons.codec" version="1.9.0.v20180919-1350"/>
+	<unit id="org.apache.commons.codec.source" version="1.9.0.v20180919-1350"/>
+	<unit id="org.apache.httpcomponents.httpclient" version="4.5.2.v20190208-1758"/>
+	<unit id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
