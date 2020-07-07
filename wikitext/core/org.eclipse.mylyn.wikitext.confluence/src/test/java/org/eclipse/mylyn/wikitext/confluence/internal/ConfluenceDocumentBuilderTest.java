@@ -825,7 +825,7 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("first\nsecond\n\n", markup);
+		assertEquals("first\\\\second\n\n", markup);
 	}
 
 	@Test
@@ -842,7 +842,24 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("first\n\\\\ \\\\second\n\n", markup);
+		assertEquals("first\\\\ \\\\ \\\\second\n\n", markup);
+	}
+
+	@Test
+	public void paragraphWithMultipleNewlinesAndEscapedContent() {
+		builder.beginDocument();
+
+		builder.characters("first");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("[second]");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("first\\\\ \\\\ \\\\ \\[second\\]\n\n", markup);
 	}
 
 	@Test

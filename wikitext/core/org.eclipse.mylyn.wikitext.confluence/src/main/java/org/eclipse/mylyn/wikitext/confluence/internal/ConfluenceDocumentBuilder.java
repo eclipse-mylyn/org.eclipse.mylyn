@@ -241,7 +241,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		private boolean isBlockTerminatedByNewlines() {
-			return suffix.isEmpty() && !prefix.isEmpty();
+			return suffix.isEmpty();
 		}
 
 		private boolean isBlockTypePreservingWhitespace() {
@@ -577,10 +577,17 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (c == '\\') {
 			super.emitContent("&#92;");
 		} else {
-			if ((c == '#' && getLastChar() == '&') || (c == '{' || c == '\\' || c == '[' || c == ']')) {
-				super.emitContent('\\');
-			}
+			emitEscapeCharacter(c);
 			super.emitContent(c);
+		}
+	}
+
+	void emitEscapeCharacter(int c) throws IOException {
+		if ((c == '#' && getLastChar() == '&') || (c == '{' || c == '\\' || c == '[' || c == ']')) {
+			if (getLastChar() == '\\') {
+				super.emitContent(' ');
+			}
+			super.emitContent('\\');
 		}
 	}
 
