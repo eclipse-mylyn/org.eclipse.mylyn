@@ -51,8 +51,9 @@
     </profiles>
 
     <properties>
-        <guava.version>21.0</guava.version>
-        <guava.version.upper>22.0</guava.version.upper>
+    	<guava.osgi>27.1</guava.osgi>
+    	<guava.osgi.upper>30.0</guava.osgi.upper>
+        <guava.version>${guava.osgi}-jre</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <scm.developerConnection>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</scm.developerConnection>
@@ -107,7 +108,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
                         <Export-Package>${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
-                        <Import-Package>com.google.common*; version="[${guava.version},${guava.version.upper})", *</Import-Package>
+                        <Import-Package>com.google.common*; version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

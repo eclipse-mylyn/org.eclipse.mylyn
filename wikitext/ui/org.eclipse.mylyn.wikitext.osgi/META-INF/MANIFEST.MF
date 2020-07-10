@@ -10,6 +10,6 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.40"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi
 Import-Package: org.osgi.framework;version="1.5.0",
- com.google.common.base;version="[21.0.0,31.0.0)",
- com.google.common.collect;version="[21.0.0,31.0.0)"
+ com.google.common.base;version="[27.1.0,31.0.0)",
+ com.google.common.collect;version="[27.1.0,31.0.0)"
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi

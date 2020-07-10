@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
+import org.eclipse.mylyn.internal.wikitext.ui.util.Util;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;

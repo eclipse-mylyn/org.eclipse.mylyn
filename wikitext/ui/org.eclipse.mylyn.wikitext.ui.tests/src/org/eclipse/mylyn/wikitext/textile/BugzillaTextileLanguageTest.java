@@ -14,7 +14,7 @@ package org.eclipse.mylyn.wikitext.textile;
 
 import java.io.IOException;
 
-import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
+import org.eclipse.mylyn.internal.wikitext.ui.util.Util;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
