@@ -2,7 +2,7 @@
 pwd
 for i in org.eclipse.mylyn*; do
   cd $i
-  echo Entering \'$i\'
+  echo Configure git for gerrit \'$i\'
   fetchnode="`git config --local --get-all remote.origin.fetch | grep "/notes"`"
   if [ -z "$fetchnode" ]
   then
