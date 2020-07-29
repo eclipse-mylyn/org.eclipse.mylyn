@@ -1,10 +1,10 @@
 /*******************************************************************************
  *  Copyright (c) 2006, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -50,16 +50,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.misc.StringMatcher;
+import org.eclipse.ui.dialogs.SearchPattern;
 import org.eclipse.ui.navigator.CommonViewer;
 
 /**
  * Derived from {@link QuickOutlinePopupDialog}.
- * 
+ *
  * @author Mik Kersten
  */
-public class QuickContextPopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
-		IInformationControlExtension2, DisposeListener {
+public class QuickContextPopupDialog extends PopupDialog
+		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
 	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick"; //$NON-NLS-1$
 
@@ -69,7 +69,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	private Text fFilterText;
 
-	private StringMatcher fStringMatcher;
+	private SearchPattern fStringMatcher;
 
 	private QuickOutlinePatternAndInterestFilter namePatternFilter;
 
@@ -246,7 +246,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		 * computed in Window#getInitialLocation, which will center it in the parent shell / main
 		 * monitor, which is wrong for two reasons:
 		 * - we want to center over the editor / subject control, not the parent shell
-		 * - the center is computed via the initalSize, which may be also wrong since the size may 
+		 * - the center is computed via the initalSize, which may be also wrong since the size may
 		 *   have been updated since via min/max sizing of AbstractInformationControlManager.
 		 * In that case, override the location with the one computed by the manager. Note that
 		 * the call to constrainShellSize in PopupDialog.open will still ensure that the shell is
@@ -320,7 +320,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	private void createUIWidgetFilterText(Composite parent) {
 		// Create the widget
 		fFilterText = new Text(parent, SWT.NONE);
-		// Set the font 
+		// Set the font
 		GC gc = new GC(parent);
 		gc.setFont(parent.getFont());
 		FontMetrics fontMetrics = gc.getFontMetrics();
@@ -334,7 +334,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void gotoSelectedElement() {
 		Object selectedElement = getSelectedElement();
@@ -394,7 +394,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	 * <p>
 	 * The following characters have special meaning: ? => any character * => any string
 	 * </p>
-	 * 
+	 *
 	 * @param pattern
 	 *            the pattern
 	 * @param update
@@ -404,7 +404,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		if (pattern.length() == 0) {
 			fStringMatcher = null;
 		} else {
-			fStringMatcher = new StringMatcher(pattern, true, false);
+			fStringMatcher = new SearchPattern(SearchPattern.RULE_PATTERN_MATCH);
+			fStringMatcher.setPattern(pattern);
 		}
 		// Update the name pattern filter on the tree viewer
 		namePatternFilter.setStringMatcher(fStringMatcher);
@@ -457,7 +458,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 			// Return the element if it matches the pattern
 			if (element != null) {
 				String label = labelProvider.getText(element);
-				if (fStringMatcher.match(label)) {
+				if (fStringMatcher.matches(label)) {
 					return element;
 				}
 			}

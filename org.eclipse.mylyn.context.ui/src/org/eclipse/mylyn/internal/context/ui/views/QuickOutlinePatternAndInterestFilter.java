@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -18,18 +18,18 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.ui.internal.misc.StringMatcher;
+import org.eclipse.ui.dialogs.SearchPattern;
 
 /**
  * Derived from {@link QuickOutlinePatternAndInterestFilter}
- * 
+ *
  * @author Mik Kersten
  */
 public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 
 	private final InterestFilter interestFilter = new InterestFilter();
 
-	private StringMatcher stringMatcher;
+	private SearchPattern stringMatcher;
 
 	public QuickOutlinePatternAndInterestFilter() {
 		stringMatcher = null;
@@ -51,7 +51,7 @@ public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 			// Match the pattern against the label of the given element
 			String matchName = ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
 			// Element passes the filter if it matches the pattern
-			if ((matchName != null) && stringMatcher.match(matchName)) {
+			if ((matchName != null) && stringMatcher.matches(matchName)) {
 				return true;
 			}
 			// Determine whether the element has children that pass the filter
@@ -79,7 +79,7 @@ public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 		return false;
 	}
 
-	public void setStringMatcher(StringMatcher stringMatcher) {
+	public void setStringMatcher(SearchPattern stringMatcher) {
 		this.stringMatcher = stringMatcher;
 	}
 
