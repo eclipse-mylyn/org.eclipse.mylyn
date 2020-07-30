@@ -5,6 +5,7 @@
 			<accessrule kind="accessible" pattern="org/eclipse/search/internal/ui/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/search/internal/*"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/internal/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/jdt/annotation/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

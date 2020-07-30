@@ -20,6 +20,7 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.commons.repositories.core,
  org.eclipse.mylyn.commons.repositories.http.core,
  org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.commons.net
+ org.eclipse.mylyn.commons.net,
+ org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional
 Export-Package: org.eclipse.mylyn.bugzilla.rest.core.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.rest.test.support;x-internal:=true
