@@ -26,9 +26,9 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>mylyn-commons-e4.5.target</file>
+                  <file>mylyn-commons-e4.14.target</file>
                   <type>target</type>
-                  <classifier>mylyn-commons-e4.5</classifier>
+                  <classifier>mylyn-commons-e4.14</classifier>
                   <!-- used by the gerrit trigger and snapshot build -->
                 </artifact>
               </artifacts>

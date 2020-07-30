@@ -31,7 +31,7 @@
    </license>
 
    <requires>
-      <import plugin="org.junit" version="4.8.2" match="equivalent"/>
+      <import plugin="org.junit" version="4.8.2" match="compatible"/>
       <import plugin="org.hamcrest.core" version="1.1.0" match="equivalent"/>
    </requires>
 
