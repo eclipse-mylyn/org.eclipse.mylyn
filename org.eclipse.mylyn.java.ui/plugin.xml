@@ -106,6 +106,7 @@
         activate="true"
         categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
         class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaAllProposalComputer"
+        needsSortingAfterFiltering="true"
         requiresUIThread="false">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
