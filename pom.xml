@@ -5,12 +5,12 @@
  <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.25.1-SNAPSHOT</version>
+    <version>3.25.2-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn-aggregator</artifactId>
   <name>Mylyn Releng</name>
-  <version>3.25.1-SNAPSHOT</version>
+  <version>3.25.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
     <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
