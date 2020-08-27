@@ -4,7 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Automatic-Module-Name: org.eclipse.mylyn.github.core
 Bundle-SymbolicName: org.eclipse.mylyn.github.core;singleton:=true
-Bundle-Version: 5.9.0.202008260805-m3
+Bundle-Version: 5.9.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.mylyn.internal.github.core;version="5.9.0";x-friends:="org.eclipse.mylyn.github.ui",
