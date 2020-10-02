@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -16,8 +16,9 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -32,6 +33,8 @@ public class CredentialsWizardPage extends WizardPage {
 	private Text userText;
 
 	private Text passwordText;
+
+	private Button useToken;
 
 	/**
 	 * Create credentials wizard page
@@ -53,26 +56,42 @@ public class CredentialsWizardPage extends WizardPage {
 		new Label(displayArea, SWT.NONE).setText(Messages.CredentialsWizardPage_LabelUser);
 
 		userText = new Text(displayArea, SWT.BORDER | SWT.SINGLE);
-		userText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				validatePage();
-			}
-		});
+		userText.addModifyListener(e -> validatePage());
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
 
-		new Label(displayArea, SWT.NONE).setText(Messages.CredentialsWizardPage_LabelPassword);
+		Label passwordLabel = new Label(displayArea, SWT.NONE);
+		passwordLabel.setText(Messages.CredentialsWizardPage_LabelPassword);
 		passwordText = new Text(displayArea, SWT.BORDER | SWT.SINGLE
 				| SWT.PASSWORD);
-		passwordText.addModifyListener(new ModifyListener() {
+		passwordText.addModifyListener(e -> validatePage());
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+		useToken = new Button(displayArea, SWT.CHECK);
+		useToken.setText(Messages.HttpRepositorySettingsPage_LabelUseToken);
+		useToken.setToolTipText(
+				Messages.HttpRepositorySettingsPage_TooltipUseToken);
+		useToken.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean isChecked = useToken.getSelection();
+				// Don't disable the userText; if the user want to create a
+				// Gists Mylyn repository, we need a user name even with token
+				// auth.
+				if (isChecked) {
+					passwordLabel.setText(
+							Messages.HttpRepositorySettingsPage_LabelToken);
+				} else {
+					passwordLabel.setText(
+							Messages.CredentialsWizardPage_LabelPassword);
+				}
+				passwordLabel.requestLayout();
+			}
 
 			@Override
-			public void modifyText(ModifyEvent e) {
-				validatePage();
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
 			}
 		});
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+
 
 		setControl(displayArea);
 		setPageComplete(false);
@@ -80,10 +99,14 @@ public class CredentialsWizardPage extends WizardPage {
 
 	private void validatePage() {
 		String message = null;
-		if (userText.getText().trim().isEmpty()) {
+		if (!useToken.getSelection() && userText.getText().trim().isEmpty()) {
 			message = Messages.CredentialsWizardPage_ErrorUser;
 		} else if (passwordText.getText().trim().isEmpty()) {
-			message = Messages.CredentialsWizardPage_ErrorPassword;
+			if (useToken.getSelection()) {
+				message = Messages.HttpRepositorySettingsPage_EnterToken;
+			} else {
+				message = Messages.CredentialsWizardPage_ErrorPassword;
+			}
 		}
 
 		setErrorMessage(message);
@@ -92,21 +115,29 @@ public class CredentialsWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Get user name
+	 * Retrieves the user name.
 	 *
-	 * @return user name
+	 * @return the user name
 	 */
 	public String getUserName() {
-		return this.userText.getText();
+		return userText.getText();
 	}
 
 	/**
-	 * Get password
+	 * Retrieves the password.
 	 *
-	 * @return password
+	 * @return the password
 	 */
 	public String getPassword() {
-		return this.passwordText.getText();
+		return passwordText.getText();
 	}
 
+	/**
+	 * Tells whether the {@link #getPassword() password} is a token.
+	 *
+	 * @return {@code true} if the password is a token; {@code false} otherwise
+	 */
+	public boolean isToken() {
+		return useToken.getSelection();
+	}
 }

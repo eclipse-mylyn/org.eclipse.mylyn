@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -29,22 +29,14 @@ import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * Pull request task repository settings page.
  */
-@SuppressWarnings("restriction")
 public class PullRequestRepositorySettingsPage extends
 		HttpRepositorySettingsPage {
-
-	private boolean syncLabel = true;
-	private boolean editingUrl = false;
 
 	/**
 	 * Create pull request repository settings page
@@ -62,67 +54,23 @@ public class PullRequestRepositorySettingsPage extends
 		return PullRequestConnector.KIND;
 	}
 
-	/**
-	 * Sync server URL combo with repository label editor based on default label
-	 * format
-	 */
-	protected void syncRepositoryLabel() {
-		if (syncLabel) {
-			String url = serverUrlCombo.getText();
-			RepositoryId repo = GitHub.getRepository(url);
-			if (repo != null)
-				repositoryLabelEditor.setStringValue(PullRequestConnector
-						.getRepositoryLabel(repo));
-		}
-	}
-
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		// Set the URL now, because serverURL is definitely instantiated .
 		if (serverUrlCombo.getText().length() == 0) {
-			String fullUrlText = GitHub.HTTP_GITHUB_COM
-					+ GitHub.REPOSITORY_SEGMENTS;
-			serverUrlCombo.setText(fullUrlText);
-			serverUrlCombo.setFocus();
-			// select the user/project part of the URL so that the user can just
-			// start typing to replace the text.
-			serverUrlCombo.setSelection(new Point(GitHub.HTTP_GITHUB_COM
-					.length() + 1, fullUrlText.length()));
-
-			syncRepositoryLabel();
-
-			serverUrlCombo.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					editingUrl = true;
-					try {
-						syncRepositoryLabel();
-					} finally {
-						editingUrl = false;
-					}
-				}
-			});
-
-			repositoryLabelEditor.getTextControl(compositeContainer)
-					.addModifyListener(new ModifyListener() {
-
-						@Override
-						public void modifyText(ModifyEvent e) {
-							if (!editingUrl)
-								syncLabel = false;
-						}
-					});
-		} else
+			setInitialUrl(PullRequestConnector::getRepositoryLabel);
+		} else {
 			serverUrlCombo.setText(PullRequestConnector.stripPulls(repository
 					.getRepositoryUrl()));
-
-		if (getRepository() == null)
+		}
+		if (getRepository() == null) {
 			setAnonymous(false);
+		}
+		addTokenCheckbox(true);
 	}
 
 	@Override
-	protected Validator getValidator(final TaskRepository repository) {
+	protected Validator getValidator(final TaskRepository taskRepository) {
 		Validator validator = new Validator() {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -132,9 +80,9 @@ public class PullRequestRepositorySettingsPage extends
 				monitor.subTask(Messages.PullRequestRepositorySettingsPage_TaskContacting);
 				try {
 					GitHubClient client = IssueConnector
-							.createClient(repository);
+							.createClient(taskRepository);
 					PullRequestService service = new PullRequestService(client);
-					RepositoryId repo = GitHub.getRepository(repository
+					RepositoryId repo = GitHub.getRepository(taskRepository
 							.getRepositoryUrl());
 					monitor.worked(50);
 					service.pagePullRequests(repo, IssueService.STATE_OPEN, 1)
@@ -159,14 +107,10 @@ public class PullRequestRepositorySettingsPage extends
 		return validator;
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
 	@Override
-	public void applyTo(TaskRepository repository) {
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				TaskRepository.CATEGORY_REVIEW);
-		super.applyTo(repository);
+	public void applyTo(TaskRepository taskRepository) {
+		taskRepository.setCategory(TaskRepository.CATEGORY_REVIEW);
+		super.applyTo(taskRepository);
 	}
 
 	@Override

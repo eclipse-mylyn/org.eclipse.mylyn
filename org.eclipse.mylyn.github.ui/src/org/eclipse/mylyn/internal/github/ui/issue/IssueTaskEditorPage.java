@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
+ * Copyright (c) 2011, 2020 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -103,7 +103,11 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 	private boolean checkCanSubmit(final int type) {
 		final TaskRepository taskRepository = getModel().getTaskRepository();
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
-		if (cred == null || cred.getUserName() == null || cred.getUserName().equals("")) { //$NON-NLS-1$
+		boolean isToken = Boolean.parseBoolean(
+				taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
+		boolean noUser = !isToken
+				&& (cred.getUserName() == null || cred.getUserName().isEmpty());
+		if (cred == null || noUser) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -168,35 +168,40 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	private String generateSummary(int files, long size, String description) {
 		StringBuilder summaryText = new StringBuilder();
-		if (description != null && description.length() > 0) {
-			description = description.trim();
-			int firstLine = description.indexOf('\n');
-			if (firstLine != -1)
-				description = description.substring(0, firstLine).trim();
-			if (description.length() > SUMMARY_LENGTH) {
+		if (description != null && !description.isEmpty()) {
+			String desc = description.trim();
+			int firstLine = desc.indexOf('\n');
+			if (firstLine != -1) {
+				desc = desc.substring(0, firstLine).trim();
+			}
+			if (desc.length() > SUMMARY_LENGTH) {
 				// Break on last whitespace if maximum length is in the middle
 				// of a word
-				if (!Character.isWhitespace(description.charAt(SUMMARY_LENGTH))
-						&& !Character.isWhitespace(description
+				if (!Character.isWhitespace(desc.charAt(SUMMARY_LENGTH))
+						&& !Character.isWhitespace(desc
 								.charAt(SUMMARY_LENGTH - 1))) {
-					int lastWhitespace = description.lastIndexOf(' ');
-					if (lastWhitespace > 0)
-						description = description.substring(0, lastWhitespace);
-					else
-						description = description.substring(0, SUMMARY_LENGTH);
-				} else
-					description = description.substring(0, SUMMARY_LENGTH);
-				description = description.trim();
+					int lastWhitespace = desc.lastIndexOf(' ');
+					if (lastWhitespace > 0) {
+						desc = desc.substring(0, lastWhitespace);
+					} else {
+						desc = desc.substring(0, SUMMARY_LENGTH);
+					}
+				} else {
+					desc = desc.substring(0, SUMMARY_LENGTH);
+				}
+				desc = desc.trim();
 			}
-			if (description.length() > 0)
+			if (!desc.isEmpty()) {
 				summaryText.append(description).append(' ');
+			}
 		}
-		if (files != 1)
+		if (files != 1) {
 			summaryText.append(MessageFormat.format(
 					Messages.GistTaskDataHandler_FilesMultiple,
 					Integer.valueOf(files)));
-		else
+		} else {
 			summaryText.append(Messages.GistTaskDataHandler_FilesSingle);
+		}
 		summaryText.append(',').append(' ').append(formatSize(size));
 		return summaryText.toString();
 	}
@@ -234,8 +239,13 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
+			if (Boolean.parseBoolean(
+					repository.getProperty(GitHub.PROPERTY_USE_TOKEN))) {
+				client.setOAuth2Token(credentials.getPassword());
+			} else {
+				client.setCredentials(credentials.getUserName(),
+						credentials.getPassword());
+			}
 			gist.setOwner(new User().setLogin(credentials.getUserName()));
 		}
 

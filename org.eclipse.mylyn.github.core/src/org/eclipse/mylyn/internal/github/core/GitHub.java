@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
+ * Copyright (c) 2011, 2020 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,14 @@ public class GitHub {
 	public static final String REPOSITORY_SEGMENTS = "/user/repository"; //$NON-NLS-1$
 
 	/**
+	 * Key for a repository property storing a stringified boolean ("true" or
+	 * "false") telling whether to use token authentication for a Mylyn task
+	 * repository.
+	 */
+	public static final String PROPERTY_USE_TOKEN = GitHub.class.getPackage()
+			.getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
+
+	/**
 	 * Configure client with standard configuration
 	 *
 	 * @param client
@@ -77,9 +85,15 @@ public class GitHub {
 			TaskRepository repository) {
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
+		if (credentials != null) {
+			if (Boolean
+					.parseBoolean(repository.getProperty(PROPERTY_USE_TOKEN))) {
+				client.setOAuth2Token(credentials.getPassword());
+			} else {
+				client.setCredentials(credentials.getUserName(),
+						credentials.getPassword());
+			}
+		}
 		return client;
 	}
 

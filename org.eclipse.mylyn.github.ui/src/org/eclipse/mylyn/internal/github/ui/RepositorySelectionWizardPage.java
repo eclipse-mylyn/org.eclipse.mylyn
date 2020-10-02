@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -207,6 +207,8 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	private String user;
 	private String password;
 
+	private boolean isToken;
+
 	/**
 	 * Create repository selection wizard page
 	 */
@@ -226,7 +228,17 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		this.password = password;
 	}
 
-	/** @return true to create giste repository, false otherwise */
+	/**
+	 * Sets whether the {@link #setPassword(String) password} is a token.
+	 *
+	 * @param isToken
+	 *            whether the password is a token
+	 */
+	public void setIsToken(boolean isToken) {
+		this.isToken = isToken;
+	}
+
+	/** @return true to create gists repository, false otherwise */
 	public boolean createGistRepository() {
 		return this.addGistRepoButton.getSelection()
 				&& this.addGistRepoButton.isVisible();
@@ -261,7 +273,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		viewer.setComparator(new ViewerComparator() {
 
 			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
+			public int compare(Viewer v, Object e1, Object e2) {
 				if (e1 instanceof OrganizationAdapter)
 					if (e2 instanceof OrganizationAdapter)
 						return ((OrganizationAdapter) e1)
@@ -277,7 +289,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 										((RepositoryAdapter) e2).getLabel(e2));
 					else if (e2 instanceof OrganizationAdapter)
 						return -1;
-				return super.compare(viewer, e1, e2);
+				return super.compare(v, e1, e2);
 			}
 
 		});
@@ -393,10 +405,13 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		if (!visible)
+		if (!visible) {
 			return;
-		addGistRepoButton.setVisible(TasksUi.getRepositoryManager()
-				.getRepositories(GistConnector.KIND).isEmpty());
+		}
+		// For gists a user name is needed.
+		addGistRepoButton.setVisible(user != null && !user.isEmpty()
+				&& TasksUi.getRepositoryManager()
+						.getRepositories(GistConnector.KIND).isEmpty());
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
 
@@ -405,7 +420,11 @@ public class RepositorySelectionWizardPage extends WizardPage {
 						throws InvocationTargetException, InterruptedException {
 					GitHubClient client = GitHub
 							.configureClient(new GitHubClient());
-					client.setCredentials(user, password);
+					if (isToken) {
+						client.setOAuth2Token(password);
+					} else {
+						client.setCredentials(user, password);
+					}
 					RepositoryService service = new RepositoryService(client);
 					OrganizationService orgs = new OrganizationService(client);
 					repoCount = 0;

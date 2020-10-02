@@ -1,5 +1,6 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
+ *
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -13,7 +14,6 @@
 package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.io.IOException;
-import java.net.URL;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
@@ -22,27 +22,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Gist repository settings page class.
- *
- * @author Kevin Sawicki (kevin@github.com)
+ * Gist repository settings.
  */
-@SuppressWarnings("restriction")
-public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
+public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 
-	/**
-	 * URL
-	 */
+	/** URL for gists. */
 	public static final String URL = "https://gist.github.com"; //$NON-NLS-1$
 
 	/**
@@ -54,17 +47,11 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		setNeedsAnonymousLogin(false);
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getConnectorKind()
-	 */
 	@Override
 	public String getConnectorKind() {
 		return GistConnector.KIND;
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#createAdditionalControls(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		if (repository == null) {
@@ -72,30 +59,12 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			repositoryLabelEditor
 					.setStringValue(Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
 		}
+		// For gists we still need a user name.
+		addTokenCheckbox(false);
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isValidUrl(java.lang.String)
-	 */
-	@SuppressWarnings("unused")
 	@Override
-	protected boolean isValidUrl(String url) {
-		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
-			try {
-				new URL(url);
-				return true;
-			} catch (IOException e) {
-				return false;
-			}
-		return false;
-
-	}
-
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getValidator(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
-	@Override
-	protected Validator getValidator(final TaskRepository repository) {
+	protected Validator getValidator(final TaskRepository taskRepository) {
 		return new Validator() {
 
 			@Override
@@ -106,9 +75,9 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 					monitor.subTask(Messages.GistRepositorySettingsPage_TaskContacting);
 					try {
 						GitHubClient client = GistConnector
-								.createClient(repository);
+								.createClient(taskRepository);
 						GistService service = new GistService(client);
-						String user = repository.getCredentials(
+						String user = taskRepository.getCredentials(
 								AuthenticationType.REPOSITORY).getUserName();
 						monitor.worked(20);
 						service.getGists(user);
@@ -131,23 +100,10 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		};
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
 	@Override
-	public void applyTo(TaskRepository repository) {
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				TaskRepository.CATEGORY_REVIEW);
-		super.applyTo(repository);
-	}
-
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
-	 */
-	@Override
-	public boolean canValidate() {
-		return isPageComplete()
-				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
+	public void applyTo(TaskRepository taskRepository) {
+		taskRepository.setCategory(TaskRepository.CATEGORY_REVIEW);
+		super.applyTo(taskRepository);
 	}
 
 }

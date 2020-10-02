@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -35,7 +35,6 @@ import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -46,7 +45,6 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * GitHub pull request connector.
  */
-@SuppressWarnings("restriction")
 public class PullRequestConnector extends RepositoryConnector {
 
 	/**
@@ -71,25 +69,34 @@ public class PullRequestConnector extends RepositoryConnector {
 	}
 
 	/**
-	 * Create pull request task repository
+	 * Creates a pull request task repository.
 	 *
 	 * @param repo
+	 *            internal model to create the task repository from
 	 * @param username
+	 *            for authentication
 	 * @param password
-	 * @return task repository
+	 *            for authentication
+	 * @param isToken
+	 *            whether the password is a token
+	 * @return the {@link TaskRepository}
 	 */
 	public static TaskRepository createTaskRepository(Repository repo,
-			String username, String password) {
+			String username, String password, boolean isToken) {
 		String url = PullRequestConnector.appendPulls(GitHub.createGitHubUrl(
 				repo.getOwner().getLogin(), repo.getName()));
 		TaskRepository repository = new TaskRepository(KIND, url);
-		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
-				getRepositoryLabel(repo));
-		if (username != null && password != null)
+		repository.setRepositoryLabel(getRepositoryLabel(repo));
+		String loginName = username;
+		if (loginName == null && isToken) {
+			loginName = ""; //$NON-NLS-1$
+		}
+		if (loginName != null && password != null)
 			repository.setCredentials(AuthenticationType.REPOSITORY,
-					new AuthenticationCredentials(username, password), true);
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				TaskRepository.CATEGORY_REVIEW);
+					new AuthenticationCredentials(loginName, password), true);
+		repository.setCategory(TaskRepository.CATEGORY_REVIEW);
+		repository.setProperty(GitHub.PROPERTY_USE_TOKEN,
+				Boolean.toString(isToken));
 		return repository;
 	}
 
@@ -110,9 +117,10 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @return stripped string
 	 */
 	public static String stripPulls(String repoUrl) {
-		if (repoUrl.endsWith(IGitHubConstants.SEGMENT_PULLS))
-			repoUrl = repoUrl.substring(0, repoUrl.length()
+		if (repoUrl.endsWith(IGitHubConstants.SEGMENT_PULLS)) {
+			return repoUrl.substring(0, repoUrl.length()
 					- IGitHubConstants.SEGMENT_PULLS.length());
+		}
 		return repoUrl;
 	}
 

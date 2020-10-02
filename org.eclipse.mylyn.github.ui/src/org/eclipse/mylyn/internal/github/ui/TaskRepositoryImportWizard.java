@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -18,12 +18,12 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.gist.GistRepositorySettingsPage;
 import org.eclipse.mylyn.internal.github.ui.gist.Messages;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -74,6 +74,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 		if (next == reposPage) {
 			reposPage.setUser(credentialsPage.getUserName());
 			reposPage.setPassword(credentialsPage.getPassword());
+			reposPage.setIsToken(credentialsPage.isToken());
 		}
 		return next;
 	}
@@ -94,24 +95,26 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	public boolean performFinish() {
 		String user = credentialsPage.getUserName();
 		String password = credentialsPage.getPassword();
+		boolean isToken = credentialsPage.isToken();
 		final IRepositoryManager manager = TasksUi.getRepositoryManager();
 		for (Repository repo : reposPage.getRepositories()) {
 			manager.addRepository(IssueConnector.createTaskRepository(repo,
-					user, password));
+					user, password, isToken));
 			manager.addRepository(PullRequestConnector.createTaskRepository(
-					repo, user, password));
+					repo, user, password, isToken));
 		}
 		if (reposPage.createGistRepository()) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(
 					user, password);
 			TaskRepository repository = new TaskRepository(GistConnector.KIND,
 					GistRepositorySettingsPage.URL);
-			repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
+			repository.setRepositoryLabel(
 					Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					credentials, true);
-			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-					TaskRepository.CATEGORY_REVIEW);
+			repository.setCategory(TaskRepository.CATEGORY_REVIEW);
+			repository.setProperty(GitHub.PROPERTY_USE_TOKEN,
+					Boolean.toString(isToken));
 			manager.addRepository(repository);
 		}
 		return true;

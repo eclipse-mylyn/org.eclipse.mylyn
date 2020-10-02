@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2020 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -35,6 +35,24 @@ public class Messages extends NLS {
 
 	/** */
 	public static String CredentialsWizardPage_LabelUser;
+
+	/** */
+	public static String HttpRepositorySettingsPage_EnterToken;
+
+	/** */
+	public static String HttpRepositorySettingsPage_EnterUserAndToken;
+
+	/** */
+	public static String HttpRepositorySettingsPage_LabelSaveToken;
+
+	/** */
+	public static String HttpRepositorySettingsPage_LabelToken;
+
+	/** */
+	public static String HttpRepositorySettingsPage_LabelUseToken;
+
+	/** */
+	public static String HttpRepositorySettingsPage_TooltipUseToken;
 
 	/** */
 	public static String CredentialsWizardPage_Title;

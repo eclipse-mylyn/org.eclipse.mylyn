@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
+ * Copyright (c) 2011, 2020 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -59,7 +58,6 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * GitHub issue repository connector.
  */
-@SuppressWarnings("restriction")
 public class IssueConnector extends RepositoryConnector {
 
 	/**
@@ -78,25 +76,35 @@ public class IssueConnector extends RepositoryConnector {
 	}
 
 	/**
-	 * Create issue task repository
+	 * Creates an issue task repository.
 	 *
 	 * @param repo
+	 *            internal model to create the task repository from
 	 * @param username
+	 *            for authentication
 	 * @param password
-	 * @return task repository
+	 *            for authentication
+	 * @param isToken
+	 *            whether the password is a token
+	 * @return the {@link TaskRepository}
 	 */
 	public static TaskRepository createTaskRepository(Repository repo,
-			String username, String password) {
+			String username, String password, boolean isToken) {
 		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(),
 				repo.getName());
 		TaskRepository repository = new TaskRepository(KIND, url);
-		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
-				getRepositoryLabel(repo));
-		if (username != null && password != null)
+		repository.setRepositoryLabel(getRepositoryLabel(repo));
+		String loginName = username;
+		if (loginName == null && isToken) {
+			loginName = ""; //$NON-NLS-1$
+		}
+		if (loginName != null && password != null) {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
-					new AuthenticationCredentials(username, password), true);
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				TaskRepository.CATEGORY_BUGS);
+					new AuthenticationCredentials(loginName, password), true);
+		}
+		repository.setCategory(TaskRepository.CATEGORY_BUGS);
+		repository.setProperty(GitHub.PROPERTY_USE_TOKEN,
+				Boolean.toString(isToken));
 		return repository;
 	}
 
@@ -405,13 +413,13 @@ public class IssueConnector extends RepositoryConnector {
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository taskRepository,
 			IProgressMonitor monitor) throws CoreException {
-		monitor = Policy.monitorFor(monitor);
-		monitor.beginTask("", 2); //$NON-NLS-1$
-		monitor.setTaskName(Messages.IssueConnector_TaskUpdatingLabels);
+		IProgressMonitor m = Policy.monitorFor(monitor);
+		m.beginTask("", 2); //$NON-NLS-1$
+		m.setTaskName(Messages.IssueConnector_TaskUpdatingLabels);
 		refreshLabels(taskRepository);
-		monitor.worked(1);
-		monitor.setTaskName(Messages.IssueConnector_TaskUpdatingMilestones);
+		m.worked(1);
+		m.setTaskName(Messages.IssueConnector_TaskUpdatingMilestones);
 		refreshMilestones(taskRepository);
-		monitor.done();
+		m.done();
 	}
 }

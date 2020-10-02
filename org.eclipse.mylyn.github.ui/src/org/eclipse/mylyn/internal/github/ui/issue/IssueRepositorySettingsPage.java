@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
+ * Copyright (c) 2011, 2020 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
-import java.io.IOException;
-import java.net.URL;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,27 +24,18 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.NoSuchPageException;
 import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * GitHub connector specific extensions.
  */
-@SuppressWarnings("restriction")
-public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage {
-
-	private boolean syncLabel = true;
-	private boolean editingUrl = false;
+public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 
 	/**
 	 * Populate taskRepository with repository settings.
@@ -58,11 +47,6 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 		super(Messages.IssueRepositorySettingsPage_Title,
 				Messages.IssueRepositorySettingsPage_Description,
 				taskRepository);
-		setHttpAuth(false);
-		setNeedsAdvanced(false);
-		setNeedsAnonymousLogin(true);
-		setNeedsTimeZone(false);
-		setNeedsHttpAuth(false);
 	}
 
 	@Override
@@ -70,65 +54,20 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 		return GitHub.CONNECTOR_KIND;
 	}
 
-	/**
-	 * Sync server url combo with repository label editor base on default label
-	 * format
-	 */
-	protected void syncRepositoryLabel() {
-		if (syncLabel) {
-			String url = serverUrlCombo.getText();
-			RepositoryId repo = GitHub.getRepository(url);
-			if (repo != null)
-				repositoryLabelEditor.setStringValue(IssueConnector
-						.getRepositoryLabel(repo));
-		}
-	}
-
 	@Override
 	protected void createAdditionalControls(Composite parent) {
-		// Set the URL now, because serverURL is definitely instantiated .
-		if (serverUrlCombo.getText().length() == 0) {
-			String fullUrlText = GitHub.HTTP_GITHUB_COM
-					+ GitHub.REPOSITORY_SEGMENTS;
-			serverUrlCombo.setText(fullUrlText);
-			serverUrlCombo.setFocus();
-			// select the user/project part of the URL so that the user can just
-			// start typing to replace the text.
-			serverUrlCombo.setSelection(new Point(GitHub.HTTP_GITHUB_COM
-					.length() + 1, fullUrlText.length()));
-
-			syncRepositoryLabel();
-
-			serverUrlCombo.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					editingUrl = true;
-					try {
-						syncRepositoryLabel();
-					} finally {
-						editingUrl = false;
-					}
-				}
-			});
-
-			repositoryLabelEditor.getTextControl(compositeContainer)
-					.addModifyListener(new ModifyListener() {
-
-						@Override
-						public void modifyText(ModifyEvent e) {
-							if (!editingUrl)
-								syncLabel = false;
-						}
-					});
-		}
-
-		if (getRepository() == null)
+		if (getRepository() == null) {
 			setAnonymous(false);
+		}
+		addTokenCheckbox(true);
+		// Set the URL now, because serverURL is definitely instantiated.
+		if (serverUrlCombo.getText().isEmpty()) {
+			setInitialUrl(IssueConnector::getRepositoryLabel);
+		}
 	}
 
 	@Override
-	protected Validator getValidator(final TaskRepository repository) {
+	protected Validator getValidator(final TaskRepository taskRepository) {
 		Validator validator = new Validator() {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -139,9 +78,9 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 					monitor.subTask(Messages.IssueRepositorySettingsPage_TaskContactingServer);
 					try {
 						GitHubClient client = IssueConnector
-								.createClient(repository);
+								.createClient(taskRepository);
 						IssueService service = new IssueService(client);
-						RepositoryId repo = GitHub.getRepository(repository
+						RepositoryId repo = GitHub.getRepository(taskRepository
 								.getRepositoryUrl());
 						monitor.worked(50);
 						service.pageIssues(repo.getOwner(), repo.getName(),
@@ -167,36 +106,10 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 		return validator;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
-	protected boolean isValidUrl(final String url) {
-		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
-			try {
-				new URL(url);
-				return GitHub.getRepository(url) != null;
-			} catch (IOException e) {
-				return false;
-			}
-		return false;
-	}
-
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
-	@Override
-	public void applyTo(TaskRepository repository) {
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				TaskRepository.CATEGORY_BUGS);
-		super.applyTo(repository);
-	}
-
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
-	 */
-	@Override
-	public boolean canValidate() {
-		return isPageComplete()
-				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
+	public void applyTo(TaskRepository taskRepository) {
+		taskRepository.setCategory(TaskRepository.CATEGORY_BUGS);
+		super.applyTo(taskRepository);
 	}
 
 }
