@@ -39,16 +39,12 @@ public class GitHub {
 	/** CONNECTOR_KIND */
 	public static final String CONNECTOR_KIND = "github"; //$NON-NLS-1$
 
-	/** HTTP_WWW_GITHUB_ORG */
-	public static final String HTTP_WWW_GITHUB_ORG = "http://www.github.org"; //$NON-NLS-1$
-
 	/** HTTP_GITHUB_COM */
-	public static final String HTTP_GITHUB_COM = "http://github.com"; //$NON-NLS-1$
+	public static final String HTTPS_GITHUB_COM = "https://github.com"; //$NON-NLS-1$
 
 	/** URL_PATTERN */
-	public static final Pattern URL_PATTERN = Pattern.compile("(?:" //$NON-NLS-1$
-			+ Pattern.quote(HTTP_WWW_GITHUB_ORG) + "|" //$NON-NLS-1$
-			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)"); //$NON-NLS-1$
+	public static final Pattern URL_PATTERN = Pattern
+			.compile("https?://github.com/([^/]+)/([^/]+)"); //$NON-NLS-1$
 
 	/** USER_AGENT */
 	public static final String USER_AGENT = "GitHubEclipse/1.3.0"; //$NON-NLS-1$
@@ -208,22 +204,8 @@ public class GitHub {
 	 * @param project
 	 * @return url
 	 *
-	 * @see #createGitHubUrlAlternate(String, String)
 	 */
 	public static String createGitHubUrl(String user, String project) {
-		return HTTP_GITHUB_COM + '/' + user + '/' + project;
-	}
-
-	/**
-	 * Create url with github.org host
-	 *
-	 * @param user
-	 * @param project
-	 * @return url
-	 *
-	 * @see #createGitHubUrl(String, String)
-	 */
-	public static String createGitHubUrlAlternate(String user, String project) {
-		return HTTP_WWW_GITHUB_ORG + '/' + user + '/' + project;
+		return HTTPS_GITHUB_COM + '/' + user + '/' + project;
 	}
 }

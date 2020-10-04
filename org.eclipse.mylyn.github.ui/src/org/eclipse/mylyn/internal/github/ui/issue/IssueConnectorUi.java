@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
+ * Copyright (c) 2011, 2020 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -148,13 +148,6 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 					taskRepository = TasksUi
 							.getRepositoryManager()
 							.getRepository(GitHub.CONNECTOR_KIND, repositoryUrl);
-					if (taskRepository == null) {
-						repositoryUrl = GitHub.createGitHubUrlAlternate(user,
-								project);
-						taskRepository = TasksUi.getRepositoryManager()
-								.getRepository(GitHub.CONNECTOR_KIND,
-										repositoryUrl);
-					}
 				}
 				if (taskRepository != null) {
 					Region region = createRegion(textOffset, matcher);

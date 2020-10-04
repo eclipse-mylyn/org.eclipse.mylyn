@@ -99,14 +99,14 @@ public abstract class HttpRepositorySettingsPage extends
 	 *            to provide a repository label
 	 */
 	protected void setInitialUrl(Function<RepositoryId, String> labelProvider) {
-		String fullUrlText = GitHub.HTTP_GITHUB_COM
+		String fullUrlText = GitHub.HTTPS_GITHUB_COM
 				+ GitHub.REPOSITORY_SEGMENTS;
 		serverUrlCombo.setText(fullUrlText);
 		serverUrlCombo.setFocus();
 		// select the user/project part of the URL so that the user can just
 		// start typing to replace the text.
 		serverUrlCombo.setSelection(new Point(
-				GitHub.HTTP_GITHUB_COM.length() + 1, fullUrlText.length()));
+				GitHub.HTTPS_GITHUB_COM.length() + 1, fullUrlText.length()));
 
 		syncRepositoryLabel(labelProvider);
 
