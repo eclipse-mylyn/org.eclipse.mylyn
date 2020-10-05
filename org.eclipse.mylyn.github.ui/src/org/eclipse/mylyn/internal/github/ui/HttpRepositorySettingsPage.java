@@ -144,7 +144,8 @@ public abstract class HttpRepositorySettingsPage extends
 		GridDataFactory.defaultsFor(useToken).span(3, 1).applyTo(useToken);
 		String savePasswordText = savePasswordButton.getText();
 		boolean[] allowAnon = { isAnonymousAccess() };
-		useToken.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter listener = new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean isChecked = useToken.getSelection();
@@ -183,11 +184,14 @@ public abstract class HttpRepositorySettingsPage extends
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-		});
+		};
+		useToken.addSelectionListener(listener);
 		TaskRepository taskRepository = getRepository();
 		if (taskRepository != null) {
 			useToken.setSelection(Boolean.parseBoolean(
 					taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN)));
+			// setSelection does not fire a selection event
+			listener.widgetSelected(null);
 		}
 	}
 
