@@ -50,6 +50,8 @@ import java.net.Proxy;
 import java.net.URL;
 
 import org.eclipse.egit.github.core.RequestError;
+import org.eclipse.egit.github.core.User;
+import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.util.EncodingUtils;
 
 /**
@@ -158,6 +160,8 @@ public class GitHubClient {
 	private int requestLimit = -1;
 
 	private int remainingRequests = -1;
+
+	private boolean userSet;
 
 	/**
 	 * Create default client
@@ -423,6 +427,18 @@ public class GitHubClient {
 	 * @return user or null if not authentication
 	 */
 	public String getUser() {
+		if (!userSet && user == null && credentials != null
+				&& credentials.startsWith(AUTH_TOKEN)) {
+			userSet = true;
+			try {
+				User authenticatedUser = new UserService(this).getUser();
+				if (authenticatedUser != null) {
+					user = authenticatedUser.getLogin();
+				}
+			} catch (IOException e) {
+				// Ignore here
+			}
+		}
 		return user;
 	}
 
