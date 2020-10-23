@@ -1,0 +1,29 @@
+############ install required plugins ############
+
+unless Vagrant.has_plugin?("vagrant-vbguest")
+  puts 'Installing vagrant-vbguest Plugin...'
+  system('vagrant plugin install vagrant-vbguest')
+end
+ 
+
+############ definitoins ############
+MYLYN_TEST_IP_ADDRESS = "192.168.50.5"
+MYLYN_TEST_NAME = "websitetest.local"
+############ vagrant setup ############
+
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder "../../../../../eclipse.org-common", "/var/www/html/eclipse.org-common"
+  config.vm.synced_folder "../../../../../mylyn"             , "/var/www/html/mylyn"
+
+  config.vm.box = "ubuntu/focal64"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "private_network", ip: MYLYN_TEST_IP_ADDRESS
+  config.vm.hostname = MYLYN_TEST_NAME
+  config.vm.define :websitetest do |t|
+    config.vm.provider "virtualbox" do |vb|
+       vb.name = "Mylyn Website - Test"
+       vb.customize [ "modifyvm", :id, "--uartmode1", "file", File::NULL ]
+    end
+  end 
+  config.vm.provision "shell", :path => "install.sh", :args => "'#{MYLYN_TEST_NAME}'", :run => "always"
+end
