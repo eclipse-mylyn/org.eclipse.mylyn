@@ -35,10 +35,10 @@
    <requires>
       <import plugin="com.google.gson" version="2.1.0" match="compatible"/>
       <!-- Java 11 compatibility -->
-      <import plugin="javax.activation" version="1.1.0" match="compatible"/>
-      <import plugin="javax.xml.bind" version="2.2.0" match="compatible"/>
-      <import plugin="com.sun.xml.bind" version="2.2.0" match="compatible"/>
-      <import plugin="javax.xml.stream" version="1.0.1" match="compatible"/>
+      <import plugin="javax.activation" version="1.2.2" match="equivalent"/>
+      <import plugin="jakarta.xml.bind" version="2.3.3" match="equivalent"/>
+      <import plugin="com.sun.xml.bind" version="2.3.3" match="equivalent"/>
+      <import plugin="javax.xml.stream" version="1.0.1" match="equivalent"/>
       
       <import feature="org.eclipse.mylyn.builds" version="1.18.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.repositories.http" version="1.18.0" match="compatible"/>
