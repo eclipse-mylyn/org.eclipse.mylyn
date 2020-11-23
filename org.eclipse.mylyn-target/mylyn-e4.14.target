@@ -57,8 +57,6 @@
 			<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
 			<unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
 			<unit id="org.apache.commons.httpclient.source" version="3.1.0.v201012070820"/>
-			<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
-			<unit id="com.sun.xml.bind" version="2.2.0.v201505121915"/>
 			<unit id="org.apache.xmlrpc" version="3.0.0.v20100427-1100"/>
 			<unit id="org.mockito" version="1.8.4.v201303031500"/>
 			<unit id="org.objenesis" version="1.0.0.v201505121915"/>
@@ -72,6 +70,14 @@
 			<unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
 			<unit id="org.hamcrest.generator.source" version="1.1.0.v20090501071000"/>
 			<unit id="com.thoughtworks.qdox" version="1.6.3.v20081201-1400"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<!-- TODO - update URL to R verion of 2020-12 when it is available -->
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/I20201119185738/repository/"/>
+			<unit id="jakarta.xml.bind" version="2.3.3.v20201118-1818"/>
+			<unit id="com.sun.xml.bind" version="2.3.3.v20201118-1818"/>
+			<unit id="javax.activation" version="1.2.2.v20201119-1642"/>
+			<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
 		</location>
 	</locations>
 </target>

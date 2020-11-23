@@ -841,7 +841,7 @@
         <requirement
             name="org.slf4j.api"/>
         <requirement
-            name="javax.xml.bind"/>
+            name="jakarta.xml.bind"/>
         <requirement
             name="Docker Editor Dependencies"/>
         <requirement
