@@ -20,7 +20,7 @@ SPDX-License-Identifier: EPL-2.0
   <parent>
      <groupId>org.eclipse.mylyn.github</groupId>
      <artifactId>github-parent</artifactId>
-     <version>5.10.0.202012080955-r</version>
+     <version>5.10.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.eclipse.mylyn.github.doc</artifactId>
