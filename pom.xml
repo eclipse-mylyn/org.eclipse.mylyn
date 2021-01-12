@@ -79,39 +79,15 @@
       </properties>
     </profile>
     <profile>
-      <id>platform-photon</id>
+      <id>platform-2020-12</id>
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>photon</value>
+          <value>2020-12</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/photon</eclipse-site>
-      </properties>
-    </profile>
-    <profile>
-      <id>platform-2018-09</id>
-      <activation>
-        <property>
-          <name>platform-version-name</name>
-          <value>2018-09</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/2018-09</eclipse-site>
-      </properties>
-    </profile>
-    <profile>
-      <id>platform-2018-12</id>
-      <activation>
-        <property>
-          <name>platform-version-name</name>
-          <value>2018-12</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/2018-12</eclipse-site>
+        <eclipse-site>http://download.eclipse.org/releases/2020-12</eclipse-site>
       </properties>
     </profile>
     <profile>
