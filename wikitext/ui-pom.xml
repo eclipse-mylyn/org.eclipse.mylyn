@@ -22,7 +22,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
@@ -87,7 +87,7 @@
                 as part of the build.
                 -->
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <pom>ui/pom.xml</pom>
                     <streamLogs>true</streamLogs>
