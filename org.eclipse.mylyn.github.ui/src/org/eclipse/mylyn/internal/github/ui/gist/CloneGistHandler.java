@@ -68,7 +68,7 @@ public class CloneGistHandler extends TaskDataHandler {
 	}
 
 	private static RepositoryUtil getRepoUtil() {
-		return org.eclipse.egit.core.Activator.getDefault().getRepositoryUtil();
+		return RepositoryUtil.getInstance();
 	}
 
 	/**

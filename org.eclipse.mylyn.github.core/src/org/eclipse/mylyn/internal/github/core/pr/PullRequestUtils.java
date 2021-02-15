@@ -16,8 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryCache;
+import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.User;
@@ -72,8 +72,8 @@ public abstract class PullRequestUtils {
 				.getRepo();
 		String id = remoteRepo.getOwner().getLogin() + '/'
 				+ remoteRepo.getName() + Constants.DOT_GIT;
-		RepositoryCache cache = Activator.getDefault().getRepositoryCache();
-		for (String path : Activator.getDefault().getRepositoryUtil()
+		RepositoryCache cache = RepositoryCache.getInstance();
+		for (String path : RepositoryUtil.getInstance()
 				.getConfiguredRepositories())
 			try {
 				Repository repo = cache.lookupRepository(new File(path));
