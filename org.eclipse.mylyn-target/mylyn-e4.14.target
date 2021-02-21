@@ -26,6 +26,7 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
+            <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
 			<unit id="javax.servlet" version="3.0.0.v201112011016"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -72,12 +73,15 @@
 			<unit id="com.thoughtworks.qdox" version="1.6.3.v20081201-1400"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<!-- TODO - update URL to R verion of 2020-12 when it is available -->
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/"/>
 			<unit id="jakarta.xml.bind" version="2.3.3.v20201118-1818"/>
 			<unit id="com.sun.xml.bind" version="2.3.3.v20201118-1818"/>
 			<unit id="javax.activation" version="1.2.2.v20201119-1642"/>
 			<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://download.eclipse.org/cbi/updates/license"/>
+			<unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
 		</location>
 	</locations>
 </target>
