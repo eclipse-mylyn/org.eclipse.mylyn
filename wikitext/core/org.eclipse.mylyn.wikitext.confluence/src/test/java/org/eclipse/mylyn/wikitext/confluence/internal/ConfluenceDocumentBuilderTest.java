@@ -825,7 +825,7 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("first\\\\second\n\n", markup);
+		assertEquals("first\nsecond\n\n", markup);
 	}
 
 	@Test
@@ -842,7 +842,39 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("first\\\\ \\\\ \\\\second\n\n", markup);
+		assertEquals("first\n\\\\ \\\\second\n\n", markup);
+	}
+
+	@Test
+	public void textBetweenSingleLineBreaksDoesNotUseDoubleSlashLineBreak() {
+		builder.beginDocument();
+
+		builder.characters("first");
+		builder.lineBreak();
+		builder.characters("second");
+		builder.lineBreak();
+		builder.characters("third");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("first\nsecond\nthird\n\n", markup);
+	}
+
+	@Test
+	public void paragraphWithSingleNewLineAndEscapedContent() {
+		builder.beginDocument();
+
+		builder.characters("first");
+		builder.lineBreak();
+		builder.characters("[second]");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("first\n\\[second\\]\n\n", markup);
 	}
 
 	@Test
@@ -859,7 +891,7 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("first\\\\ \\\\ \\\\ \\[second\\]\n\n", markup);
+		assertEquals("first\n\\\\ \\\\ \\[second\\]\n\n", markup);
 	}
 
 	@Test

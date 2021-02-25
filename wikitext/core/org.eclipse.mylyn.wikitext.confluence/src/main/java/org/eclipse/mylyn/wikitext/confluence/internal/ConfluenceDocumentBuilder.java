@@ -148,7 +148,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		public void writeLineBreak() throws IOException {
 			++consecutiveLineBreakCount;
 			if (consecutiveLineBreakCount == 1 || isBlockTypePreservingWhitespace()) {
-				if (isBlockTerminatedByNewlines()) {
+				if (isPrefixedBlockTerminatedByNewlines()) {
 					ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
 				} else {
 					ConfluenceDocumentBuilder.this.emitContent('\n');
@@ -240,8 +240,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return false;
 		}
 
-		private boolean isBlockTerminatedByNewlines() {
-			return suffix.isEmpty();
+		private boolean isPrefixedBlockTerminatedByNewlines() {
+			return suffix.isEmpty() && !prefix.isEmpty();
 		}
 
 		private boolean isBlockTypePreservingWhitespace() {
