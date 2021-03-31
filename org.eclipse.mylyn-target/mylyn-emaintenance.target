@@ -81,7 +81,7 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
-<repository location="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+<repository location="https://subclipse.github.io/updates/subclipse/1.8.x"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.osgi" version="3.8.2.v20130124-134944"/>

@@ -31,7 +31,7 @@
   <setupTask
       xsi:type="setup:RedirectionTask"
       sourceURL="http://subclipse.tigris.org/update_1.8.x"
-      targetURL="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+      targetURL="https://subclipse.github.io/updates/subclipse/1.8.x"/>
   <setupTask
       xsi:type="setup:CompoundTask"
       name="Global Variables">
@@ -39,7 +39,6 @@
         xsi:type="setup:VariableTask"
         name="mylyn.org.id"
         label="ci.mylyn.org user ID">
-        documentation="The ci.mylyn.org user ID, typically first-initial.lastname.">
       <description>The ci.mylyn.org user ID, typically first-initial.lastname</description>
     </setupTask>
     <setupTask
@@ -47,7 +46,6 @@
         type="PASSWORD"
         name="mylyn.org.password"
         label="ci.mylyn.org password">
-        documentation="The ci.mylyn.org password.">
       <description>The ci.mylyn.org password</description>
     </setupTask>
   </setupTask>
@@ -730,7 +728,7 @@
         <requirement
             name="de.jcup.basheditor.feature.group"/>
         <repository
-            url="https://dl.bintray.com/de-jcup/basheditor"/>
+            url="https://de-jcup.github.io/update-site-eclipse-bash-editor/update-site"/>
       </setupTask>
       <stream
           name="master"
@@ -1784,62 +1782,62 @@
             <repositoryList
                 name="2020-06">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2020-03">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-12">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-09">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-06">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-03">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2018-12">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2018-09">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Photon">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Oxygen">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Neon">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Mars">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
           </targlet>
         </setupTask>
@@ -2412,57 +2410,57 @@
             <repositoryList
                 name="2020-03">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-12">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-09">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-06">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2019-03">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2018-12">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="2018-09">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Photon">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Oxygen">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Neon">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
             <repositoryList
                 name="Mars">
               <repository
-                  url="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+                  url="https://subclipse.github.io/updates/subclipse/1.8.x"/>
             </repositoryList>
           </targlet>
         </setupTask>

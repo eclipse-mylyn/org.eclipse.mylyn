@@ -46,7 +46,7 @@
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="0.0.0"/>
-<repository location="https://dl.bintray.com/subclipse/archive/release/1.8.x"/>
+<repository location="https://subclipse.github.io/updates/subclipse/1.8.x"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
