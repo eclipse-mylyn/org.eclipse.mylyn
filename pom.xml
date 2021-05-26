@@ -18,7 +18,7 @@
 
   <groupId>org.eclipse.mylyn.github</groupId>
   <artifactId>github-parent</artifactId>
-  <version>5.12.0-SNAPSHOT</version>
+  <version>5.12.0.202105261145-m3</version>
   <packaging>pom</packaging>
 
   <name>Eclipse EGit Mylyn GitHub Connector Parent</name>
@@ -55,7 +55,7 @@
   </licenses>
 
   <properties>
-    <egit-github-version>5.12.0-SNAPSHOT</egit-github-version>
+    <egit-github-version>5.12.0.202105261145-m3</egit-github-version>
     <tycho-version>1.7.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <spotbugs-maven-plugin-version>3.1.11</spotbugs-maven-plugin-version>
