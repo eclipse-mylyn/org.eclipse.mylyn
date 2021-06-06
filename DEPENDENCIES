@@ -1,18 +1,17 @@
-maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.egit.github.core/5.11.0-SNAPSHOT, , approved, eclipse
-maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.core/5.11.0-SNAPSHOT, , approved, eclipse
-maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.doc/5.11.0-SNAPSHOT, , approved, eclipse
-maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.feature/5.11.0-SNAPSHOT, , approved, eclipse
-maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.ui/5.11.0-SNAPSHOT, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.cvs/1.4.404.v20180330-0640, , approved, eclipse
+maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.egit.github.core/5.12.0-SNAPSHOT, , approved, eclipse
+maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.core/5.12.0-SNAPSHOT, , approved, eclipse
+maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.doc/5.12.0-SNAPSHOT, , approved, eclipse
+maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.feature/5.12.0-SNAPSHOT, , approved, eclipse
+maven/mavencentral/org.eclipse.mylyn.github/org.eclipse.mylyn.github.ui/5.12.0-SNAPSHOT, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.e4.rcp/1.6.3.v20180329-0507, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.egit/5.11.0.202103031150-rc1, , approved, eclipse
+p2/orbit/p2.eclipse-feature/org.eclipse.egit/5.12.0.202106070711, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.emf.common/2.13.0.v20170609-0707, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.emf.ecore/2.13.0.v20170609-0707, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.jdt/3.13.4.v20180330-0919, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.jgit.gpg.bc/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.jgit.http.apache/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.jgit.ssh.apache/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-feature/org.eclipse.jgit/5.11.0.202103031150-rc1, , approved, eclipse
+p2/orbit/p2.eclipse-feature/org.eclipse.jgit.gpg.bc/5.12.0.202106070707, , approved, eclipse
+p2/orbit/p2.eclipse-feature/org.eclipse.jgit.http.apache/5.12.0.202106070707, , approved, eclipse
+p2/orbit/p2.eclipse-feature/org.eclipse.jgit.ssh.apache/5.12.0.202106070707, , approved, eclipse
+p2/orbit/p2.eclipse-feature/org.eclipse.jgit/5.12.0.202106070707, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.license/2.0.2.v20181016-2210, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.mylyn_feature/3.23.1.v20170623-0008, , approved, eclipse
 p2/orbit/p2.eclipse-feature/org.eclipse.mylyn.commons.identity/1.15.0.v20170411-1844, , approved, eclipse
@@ -26,7 +25,6 @@ p2/orbit/p2.eclipse-plugin/com.google.gson/2.8.6.v20201231-1626, Apache-2.0, app
 p2/orbit/p2.eclipse-plugin/com.google.guava/21.0.0.v20170206-1425, Apache-2.0 AND LicenseRef-Public-Domain, approved, CQ12563
 p2/orbit/p2.eclipse-plugin/com.ibm.icu/58.2.0.v20170418-1837, , approved, CQ12470
 p2/orbit/p2.eclipse-plugin/com.ibm.icu/67.1.0.v20200706-1749, ICU AND Unicode-TOU AND BSD-3-Clause AND BSD-2-Clause AND LicenseRef-ipadic-license AND LicenseRef-Public-Domain, approved, CQ22320
-p2/orbit/p2.eclipse-plugin/com.jcraft.jsch/0.1.55.v20190404-1902, BSD-3-Clause, approved, CQ19435
 p2/orbit/p2.eclipse-plugin/javaewah/1.1.7.v20200107-0831, , approved, CQ21348
 p2/orbit/p2.eclipse-plugin/javax.annotation/1.2.0.v201602091430, , approved, CQ7386
 p2/orbit/p2.eclipse-plugin/javax.annotation/1.3.5.v20200909-1856, CDDL-1.1 OR GPL-2.0, approved, CQ16910
@@ -34,8 +32,8 @@ p2/orbit/p2.eclipse-plugin/javax.inject/1.0.0.v20091030, Apache-2.0, approved, C
 p2/orbit/p2.eclipse-plugin/javax.xml/1.3.4.v201005080400, Apache-2.0 OR LicenseRef-Public-Domain OR W3C, approved, CQ1448
 p2/orbit/p2.eclipse-plugin/net.bytebuddy.byte-buddy-agent/1.9.0.v20181106-1534, Apache-2.0, approved, CQ18087
 p2/orbit/p2.eclipse-plugin/net.bytebuddy.byte-buddy/1.9.0.v20181107-1410, Apache-2.0 AND BSD-3-Clause, approved, CQ18086
-p2/orbit/p2.eclipse-plugin/net.i2p.crypto.eddsa/0.3.0.v20181102-1323, , approved, CQ17940
-p2/orbit/p2.eclipse-plugin/org.apache.ant/1.10.9.v20201106-1946, , approved, CQ22759
+p2/orbit/p2.eclipse-plugin/net.i2p.crypto.eddsa/0.3.0.v20181102-1323, CC0, approved, CQ17804
+p2/orbit/p2.eclipse-plugin/org.apache.ant/1.10.10.v20210426-1926, Apache-2.0 AND W3C AND LicenseRef-Public-Domain, approved, CQ23252
 p2/orbit/p2.eclipse-plugin/org.apache.batik.constants/1.13.0.v20200622-2037, Apache-2.0, approved, CQ22304
 p2/orbit/p2.eclipse-plugin/org.apache.batik.css/1.8.0.v20170214-1941, Apache-2.0, approved, CQ12537
 p2/orbit/p2.eclipse-plugin/org.apache.batik.i18n/1.13.0.v20200622-2037, Apache-2.0, approved, CQ22301
@@ -45,7 +43,7 @@ p2/orbit/p2.eclipse-plugin/org.apache.batik.util/1.8.0.v20170214-1941, Apache-2.
 p2/orbit/p2.eclipse-plugin/org.apache.commons.codec/1.14.0.v20200818-1422, Apache-2.0, approved, emo_ip_team
 p2/orbit/p2.eclipse-plugin/org.apache.commons.compress/1.19.0.v20200106-2343, Apache-2.0 AND BSD-3-Clause AND LicenseRef-Public-Domain, approved, CQ21349
 p2/orbit/p2.eclipse-plugin/org.apache.commons.httpclient/3.1.0.v201012070820, Apache-2.0, approved, CQ1857
-p2/orbit/p2.eclipse-plugin/org.apache.commons.io/2.6.0.v20190123-2029, Apache-2.0, approved, CQ18796
+p2/orbit/p2.eclipse-plugin/org.apache.commons.io/2.6.0.v20190123-2029, Apache-2.0, approved, CQ16712
 p2/orbit/p2.eclipse-plugin/org.apache.commons.jxpath/1.3.0.v200911051830, Apache-2.0, approved, CQ3247
 p2/orbit/p2.eclipse-plugin/org.apache.commons.lang/2.6.0.v201404270220, Apache-2.0, approved, CQ6183
 p2/orbit/p2.eclipse-plugin/org.apache.commons.logging/1.2.0.v20180409-1502, Apache-2.0, approved, CQ16082
@@ -86,7 +84,6 @@ p2/orbit/p2.eclipse-plugin/org.eclipse.core.net/1.3.100.v20170516-0820, , approv
 p2/orbit/p2.eclipse-plugin/org.eclipse.core.resources/3.12.0.v20170417-1558, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.core.runtime/3.13.0.v20170207-1030, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.core.variables/3.4.0.v20170113-2056, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.cvs/1.4.453.v20180330-0640, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.debug.core/3.11.0.v20170605-1534, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.debug.ui/3.12.50.v20170920-1329, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.e4.core.commands/0.12.100.v20170513-0428, , approved, eclipse
@@ -113,10 +110,10 @@ p2/orbit/p2.eclipse-plugin/org.eclipse.e4.ui.workbench.renderers.swt/0.14.102.v2
 p2/orbit/p2.eclipse-plugin/org.eclipse.e4.ui.workbench.swt/0.14.101.v20170710-1119, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.e4.ui.workbench/1.5.1.v20170815-1446, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.e4.ui.workbench3/0.14.0.v20160630-0740, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.egit.core/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.egit.doc/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.egit.ui/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.egit/5.11.0.202103031150-rc1, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.egit.core/5.12.0.202106070711, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.egit.doc/5.12.0.202106070711, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.egit.ui/5.12.0.202106070711, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.egit/5.12.0.202106070711, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.emf.common/2.13.0.v20170609-0707, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.emf.ecore.change/2.11.0.v20170609-0707, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.emf.ecore.xmi/2.13.0.v20170609-0707, , approved, eclipse
@@ -183,12 +180,11 @@ p2/orbit/p2.eclipse-plugin/org.eclipse.jdt/3.13.4.v20180330-0640, , approved, ec
 p2/orbit/p2.eclipse-plugin/org.eclipse.jface.databinding/1.8.100.v20170503-1507, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.jface.text/3.12.2.v20180112-1341, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.jface/3.13.2.v20171022-1656, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.archive/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.gpg.bc/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.http.apache/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.ssh.apache/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jgit/5.11.0.202103031150-rc1, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.jsch.core/1.3.0.v20160422-1917, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.archive/5.12.0.202106070700, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.gpg.bc/5.12.0.202106070700, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.http.apache/5.12.0.202106070700, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.jgit.ssh.apache/5.12.0.202106070700, , approved, eclipse
+p2/orbit/p2.eclipse-plugin/org.eclipse.jgit/5.12.0.202106070700, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.ltk.core.refactoring/3.8.0.v20170105-1156, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.ltk.ui.refactoring/3.9.0.v20170412-0825, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.mylyn.commons.core/3.23.0.v20170411-1844, , approved, eclipse
@@ -246,9 +242,6 @@ p2/orbit/p2.eclipse-plugin/org.eclipse.swt.win32.win32.x86_64/3.106.3.v20180329-
 p2/orbit/p2.eclipse-plugin/org.eclipse.swt.win32.win32.x86/3.106.3.v20180329-0507, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.swt/3.106.3.v20180329-0507, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.team.core/3.8.100.v20170516-0820, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.team.cvs.core/3.4.100.v20170128-0234, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.team.cvs.ssh2/3.3.0.v20160418-1534, , approved, eclipse
-p2/orbit/p2.eclipse-plugin/org.eclipse.team.cvs.ui/3.4.1.v20161011-1400, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.team.ui/3.8.1.v20170515-1133, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.text/3.6.100.v20170203-0814, , approved, eclipse
 p2/orbit/p2.eclipse-plugin/org.eclipse.tools.layout.spy/1.0.0.v20170428-1608, , approved, eclipse
