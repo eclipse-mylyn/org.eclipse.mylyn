@@ -25,6 +25,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ ApplicationTest.class, //
 		AuthorizationTest.class, //
 		BlobTest.class, //
+		BreeSmokeTest.class, //
 		CollaboratorServiceTest.class, //
 		CommentTest.class, //
 		CommitCommentPayloadTest.class, //
