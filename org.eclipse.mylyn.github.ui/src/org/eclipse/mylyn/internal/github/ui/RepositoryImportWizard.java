@@ -108,7 +108,6 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				monitor.beginTask(name, repositories.length * 3);
 				GitHubClient client = GitHub
 						.configureClient(new GitHubClient());
-				RepositoryUtil repositoryUtil = RepositoryUtil.getInstance();
 				RepositoryService service = new RepositoryService(client);
 				for (SearchRepository repo : repositories)
 					try {
@@ -129,7 +128,8 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 						monitor.setTaskName(MessageFormat
 								.format(Messages.RepositoryImportWizard_Registering,
 										id));
-						repositoryUtil.addConfiguredRepository(op.getGitDir());
+						RepositoryUtil.INSTANCE
+								.addConfiguredRepository(op.getGitDir());
 						monitor.worked(1);
 					} catch (InvocationTargetException e) {
 						GitHubUi.logError(e);

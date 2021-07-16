@@ -67,10 +67,6 @@ public class CloneGistHandler extends TaskDataHandler {
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
-	private static RepositoryUtil getRepoUtil() {
-		return RepositoryUtil.getInstance();
-	}
-
 	/**
 	 * ID
 	 */
@@ -80,7 +76,8 @@ public class CloneGistHandler extends TaskDataHandler {
 	public boolean isEnabled(TaskData data) {
 		String id = getGistName(data);
 		return !getWorkspaceRoot().getProject(id).exists()
-				&& !getRepoUtil().getConfiguredRepositories().contains(id);
+				&& !RepositoryUtil.INSTANCE.getConfiguredRepositories()
+						.contains(id);
 	}
 
 	private File getParentDirectory() {
@@ -131,7 +128,7 @@ public class CloneGistHandler extends TaskDataHandler {
 		int timeout = GitSettings.getRemoteConnectionTimeout();
 		final File workDir = new File(getParentDirectory(), name);
 
-		if (getRepoUtil().getConfiguredRepositories().contains(
+		if (RepositoryUtil.INSTANCE.getConfiguredRepositories().contains(
 				new File(workDir, Constants.DOT_GIT).getAbsolutePath()))
 			throw new IOException(MessageFormat.format(
 					Messages.CloneGistHandler_ErrorRepoExists, name));
@@ -158,7 +155,7 @@ public class CloneGistHandler extends TaskDataHandler {
 							if (monitor.isCanceled())
 								return;
 							monitor.setTaskName(Messages.CloneGistHandler_TaskRegisteringRepository);
-							getRepoUtil().addConfiguredRepository(
+							RepositoryUtil.INSTANCE.addConfiguredRepository(
 									repository.getDirectory());
 						}
 					});

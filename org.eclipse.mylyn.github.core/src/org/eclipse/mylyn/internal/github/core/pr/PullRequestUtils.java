@@ -72,11 +72,10 @@ public abstract class PullRequestUtils {
 				.getRepo();
 		String id = remoteRepo.getOwner().getLogin() + '/'
 				+ remoteRepo.getName() + Constants.DOT_GIT;
-		RepositoryCache cache = RepositoryCache.getInstance();
-		for (String path : RepositoryUtil.getInstance()
-				.getConfiguredRepositories())
+		for (String path : RepositoryUtil.INSTANCE.getConfiguredRepositories())
 			try {
-				Repository repo = cache.lookupRepository(new File(path));
+				Repository repo = RepositoryCache.INSTANCE
+						.lookupRepository(new File(path));
 				RemoteConfig rc = new RemoteConfig(repo.getConfig(),
 						Constants.DEFAULT_REMOTE_NAME);
 				for (URIish uri : rc.getURIs())
