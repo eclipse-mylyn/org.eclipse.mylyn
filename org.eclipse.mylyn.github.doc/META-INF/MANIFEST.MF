@@ -3,5 +3,5 @@ Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.github.doc;singleton:=true
-Bundle-Version: 5.13.0.202108250949-m3
+Bundle-Version: 5.13.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
