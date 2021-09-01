@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -39,9 +39,9 @@ import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	// we use the template pattern for creating new blocks
-	protected List<Block> blocks = new ArrayList<Block>();
+	protected List<Block> blocks = new ArrayList<>();
 
-	protected List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
+	protected List<Block> paragraphBreakingBlocks = new ArrayList<>();
 
 	protected PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
@@ -69,17 +69,17 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 *
 	 */
 	public static final class PatternBasedSyntax {
-		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
+		protected List<PatternBasedElement> elements = new ArrayList<>();
 
 		protected Pattern elementPattern;
 
-		protected List<Integer> elementGroup = new ArrayList<Integer>();
+		protected List<Integer> elementGroup = new ArrayList<>();
 
 		private final StringBuilder patternBuffer = new StringBuilder();
 
 		private int patternGroup = 0;
 
-		private final Stack<Group> groups = new Stack<Group>();
+		private final Stack<Group> groups = new Stack<>();
 		{
 			groups.push(new Group());
 		}
@@ -267,7 +267,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 								if (closeOffset > lineOffset) {
 									String truncatedLine = line.substring(0, closeOffset);
 									if (lineStates == null) {
-										lineStates = new Stack<LineState>();
+										lineStates = new Stack<>();
 									}
 									lineStates.push(new LineState(line, closeOffset));
 									line = truncatedLine;
@@ -304,7 +304,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 							currentBlock = null;
 						} else if (currentBlock.beginNesting()) {
 							if (nestedBlocks == null) {
-								nestedBlocks = new Stack<Block>();
+								nestedBlocks = new Stack<>();
 							}
 							nestedBlocks.push(currentBlock);
 							currentBlock = null;

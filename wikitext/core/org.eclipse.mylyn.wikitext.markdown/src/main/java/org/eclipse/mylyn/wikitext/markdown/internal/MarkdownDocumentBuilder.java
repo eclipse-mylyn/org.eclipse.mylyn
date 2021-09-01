@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2019 Tasktop Technologies.
+ * Copyright (c) 2014, 2021 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_LINE_BREAK = Pattern.compile("(.*(\r\n|\r|\n)?)?"); //$NON-NLS-1$
 
-	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+	private final Map<String, String> entityToLiteral = new HashMap<>();
 	{
 		entityToLiteral.put("amp", "&"); //$NON-NLS-1$ //$NON-NLS-2$
 		entityToLiteral.put("lt", "<"); //$NON-NLS-1$ //$NON-NLS-2$
