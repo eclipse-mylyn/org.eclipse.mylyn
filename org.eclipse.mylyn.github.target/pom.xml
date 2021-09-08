@@ -20,7 +20,7 @@
   <parent>
     <artifactId>github-parent</artifactId>
     <groupId>org.eclipse.mylyn.github</groupId>
-    <version>5.13.0.202109080827-r</version>
+    <version>5.13.1-SNAPSHOT</version>
   </parent>
 
   <properties>
