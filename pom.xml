@@ -56,58 +56,16 @@
 
   <properties>
     <egit-github-version>6.0.0-SNAPSHOT</egit-github-version>
-    <tycho-version>1.7.0</tycho-version>
+    <java-version>11</java-version>
+    <tycho-version>2.5.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
-    <spotbugs-maven-plugin-version>3.1.11</spotbugs-maven-plugin-version>
+    <spotbugs-maven-plugin-version>4.4.1</spotbugs-maven-plugin-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
-    <platform-version-name>oxygen</platform-version-name>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
     <license-site>http://download.eclipse.org/cbi/updates/license</license-site>
   </properties>
 
   <profiles>
-    <profile>
-      <id>compile-jdk-newer-than-8</id>
-      <!-- The release argument is allowed only if the Java version used to run maven is > 1.8 -->
-      <activation>
-        <jdk>[9,]</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-compiler-plugin</artifactId>
-            <configuration>
-              <release>8</release>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>platform-oxygen</id>
-      <activation>
-        <property>
-          <name>platform-version-name</name>
-          <value>oxygen</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/oxygen</eclipse-site>
-      </properties>
-    </profile>
-    <profile>
-      <id>platform-2020-12</id>
-      <activation>
-        <property>
-          <name>platform-version-name</name>
-          <value>2020-12</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/2020-12</eclipse-site>
-      </properties>
-    </profile>
     <profile>
       <id>static-checks</id>
       <build>
@@ -135,19 +93,6 @@
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.eclipse.tycho.extras</groupId>
-            <artifactId>tycho-pack200a-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>pack200-normalize</id>
-                <goals>
-                  <goal>normalize</goal>
-                </goals>
-                <phase>verify</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <groupId>org.eclipse.cbi.maven.plugins</groupId>
             <artifactId>eclipse-jarsigner-plugin</artifactId>
             <executions>
@@ -161,19 +106,6 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.eclipse.tycho.extras</groupId>
-            <artifactId>tycho-pack200b-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>pack200-pack</id>
-                <goals>
-                  <goal>pack</goal>
-                </goals>
-                <phase>verify</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>tycho-p2-plugin</artifactId>
             <executions>
@@ -183,60 +115,6 @@
                   <goal>p2-metadata</goal>
                 </goals>
                 <phase>verify</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <defaultP2Metadata>false</defaultP2Metadata>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>eclipse-pack</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho.extras</groupId>
-            <artifactId>tycho-pack200a-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>pack200-normalize</id>
-                <goals>
-                  <goal>normalize</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho.extras</groupId>
-            <artifactId>tycho-pack200b-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>pack200-pack</id>
-                <goals>
-                  <goal>pack</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-p2-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>p2-metadata</id>
-                <goals>
-                  <goal>p2-metadata</goal>
-                </goals>
-                <phase>package</phase>
               </execution>
             </executions>
             <configuration>
@@ -330,7 +208,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>3.5.2</version>
+                  <version>3.6.3</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -369,8 +247,7 @@
           <version>${tycho-version}</version>
           <configuration>
             <encoding>UTF-8</encoding>
-            <source>1.8</source>
-            <target>1.8</target>
+            <release>${java-version}</release>
             <!-- Do not use useProjectSettings; it'll always override -nowarn -->
             <useProjectSettings>false</useProjectSettings>
             <compilerArgs>
@@ -399,17 +276,7 @@
               <environment>
                 <os>linux</os>
                 <ws>gtk</ws>
-                <arch>x86</arch>
-              </environment>
-              <environment>
-                <os>linux</os>
-                <ws>gtk</ws>
                 <arch>x86_64</arch>
-              </environment>
-              <environment>
-                <os>win32</os>
-                <ws>win32</ws>
-                <arch>x86</arch>
               </environment>
               <environment>
                 <os>win32</os>
@@ -459,20 +326,11 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.eclipse.tycho.extras</groupId>
-          <artifactId>tycho-pack200a-plugin</artifactId>
-          <version>${tycho-extras-version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho.extras</groupId>
-          <artifactId>tycho-pack200b-plugin</artifactId>
-          <version>${tycho-extras-version}</version>
-        </plugin>
-        <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <version>${spotbugs-maven-plugin-version}</version>
           <configuration>
+            <excludeFilterFile>${project.basedir}/../spotbugs-excludes.xml</excludeFilterFile>
             <xmlOutput>true</xmlOutput>
             <failOnError>false</failOnError>
           </configuration>
@@ -487,11 +345,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.11.0</version>
+          <version>3.15.0</version>
           <configuration>
             <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
-            <targetJdk>1.8</targetJdk>
+            <targetJdk>${java-version}</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
             <linkXRef>false</linkXRef>
@@ -524,7 +382,7 @@
         <plugin>
           <groupId>org.eclipse.cbi.maven.plugins</groupId>
           <artifactId>eclipse-jarsigner-plugin</artifactId>
-          <version>1.3.1</version>
+          <version>1.3.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
