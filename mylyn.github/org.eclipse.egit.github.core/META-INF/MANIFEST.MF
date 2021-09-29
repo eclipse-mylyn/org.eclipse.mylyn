@@ -6,7 +6,7 @@ Automatic-Module-Name: org.eclipse.egit.github.core
 Bundle-SymbolicName: org.eclipse.egit.github.core
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: com.google.gson;version="[1.6.0,3.0.0)",
  com.google.gson.annotations;version="[1.6.0,3.0.0)",
  com.google.gson.reflect;version="[1.6.0,3.0.0)",
