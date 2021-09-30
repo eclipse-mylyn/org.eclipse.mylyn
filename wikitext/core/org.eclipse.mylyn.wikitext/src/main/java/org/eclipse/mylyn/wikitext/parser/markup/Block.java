@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
  * @author David Green
  * @since 3.0
  */
-public abstract class Block extends Processor implements Cloneable {
+public abstract class Block extends Processor {
 	private boolean closed;
 
 	public Block() {
