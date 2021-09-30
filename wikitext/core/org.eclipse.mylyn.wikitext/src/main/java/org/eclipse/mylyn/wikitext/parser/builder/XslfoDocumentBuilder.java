@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -932,7 +932,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyImageAttributes(Attributes attributes) {
 		boolean sizeSpecified = false;
-		boolean scaleToFit = true;
 		if (attributes instanceof ImageAttributes) {
 			ImageAttributes imageAttributes = (ImageAttributes) attributes;
 			if (imageAttributes.getWidth() > 0) {
@@ -948,10 +947,8 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("content-height", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		if (scaleToFit) {
-			writer.writeAttribute("content-width", "scale-to-fit"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("scaling", "uniform"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		writer.writeAttribute("content-width", "scale-to-fit"); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("scaling", "uniform"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void emitImageSize(String attributeName, int units, boolean isPercentage) {

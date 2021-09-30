@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Tasktop Technologies.
+ * Copyright (c) 2011, 2021 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -445,9 +445,7 @@ public abstract class AbstractSaxHtmlParser {
 							listCssType = "upper-roman";
 							break;
 						}
-						if (typeAttribute != null) {
-							listAttributes.appendCssStyle("list-style-type: " + listCssType + ";");
-						}
+						listAttributes.appendCssStyle("list-style-type: " + listCssType + ";");
 					}
 				}
 				builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
