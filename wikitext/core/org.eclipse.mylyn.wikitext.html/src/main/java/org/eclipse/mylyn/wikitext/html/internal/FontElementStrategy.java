@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Tasktop Technologies and others.
+ * Copyright (c) 2014, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.html.internal;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -24,8 +25,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-
-import com.google.common.collect.Maps;
 
 public class FontElementStrategy extends SpanHtmlElementStrategy {
 
@@ -38,7 +37,8 @@ public class FontElementStrategy extends SpanHtmlElementStrategy {
 					Iterator<CssRule> rules = new CssParser().createRuleIterator(cssStyle);
 					while (rules.hasNext()) {
 						CssRule rule = rules.next();
-						if (rule.name.equals("color") || rule.name.equals("font-size") || rule.name.equals("font-family")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						if (rule.name.equals("color") || rule.name.equals("font-size") //$NON-NLS-1$//$NON-NLS-2$
+								|| rule.name.equals("font-family")) { //$NON-NLS-1$
 							return true;
 						}
 					}
@@ -58,7 +58,7 @@ public class FontElementStrategy extends SpanHtmlElementStrategy {
 				Map<String, String> fontAttributes = null;
 				String cssStyle = attributes.getCssStyle();
 				if (cssStyle != null) {
-					fontAttributes = Maps.newTreeMap();
+					fontAttributes = new TreeMap<>();
 
 					Iterator<CssRule> rules = new CssParser().createRuleIterator(cssStyle);
 					while (rules.hasNext()) {
