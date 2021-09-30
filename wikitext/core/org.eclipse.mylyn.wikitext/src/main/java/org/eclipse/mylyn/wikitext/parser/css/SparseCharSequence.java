@@ -74,6 +74,7 @@ public class SparseCharSequence implements CharSequence {
 		return segment.offset + (index - segment.zeroBase);
 	}
 
+	@Override
 	public char charAt(int index) {
 		if (index < 0 || index >= length()) {
 			throw new IndexOutOfBoundsException(String.format("%s is not within [0,%s)", index, length())); //$NON-NLS-1$
@@ -96,10 +97,12 @@ public class SparseCharSequence implements CharSequence {
 		return candidate;
 	}
 
+	@Override
 	public int length() {
 		return length;
 	}
 
+	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (start < 0 || start >= length || end > length) {
 			throw new IndexOutOfBoundsException(

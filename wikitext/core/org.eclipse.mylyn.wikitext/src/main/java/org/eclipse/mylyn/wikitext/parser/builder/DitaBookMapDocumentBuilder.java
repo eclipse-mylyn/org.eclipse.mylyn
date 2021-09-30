@@ -350,6 +350,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	/**
 	 * users of this class must call close when done with it.
 	 */
+	@Override
 	public void close() throws IOException {
 		if (currentTopicOut != null) {
 			try {

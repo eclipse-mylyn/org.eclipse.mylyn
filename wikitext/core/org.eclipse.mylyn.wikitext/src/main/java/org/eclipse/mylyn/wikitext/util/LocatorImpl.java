@@ -41,26 +41,32 @@ public class LocatorImpl implements Locator {
 		lineSegmentEndOffset = other.getLineSegmentEndOffset();
 	}
 
+	@Override
 	public int getDocumentOffset() {
 		return documentOffset;
 	}
 
+	@Override
 	public int getLineCharacterOffset() {
 		return lineCharacterOffset;
 	}
 
+	@Override
 	public int getLineDocumentOffset() {
 		return lineDocumentOffset;
 	}
 
+	@Override
 	public int getLineLength() {
 		return lineLength;
 	}
 
+	@Override
 	public int getLineNumber() {
 		return lineNumber;
 	}
 
+	@Override
 	public int getLineSegmentEndOffset() {
 		return lineSegmentEndOffset;
 	}

@@ -135,6 +135,7 @@ public class ValidationProblem implements Comparable<ValidationProblem> {
 		return severity + "[" + offset + "," + length + "]: " + message; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
+	@Override
 	public int compareTo(ValidationProblem o2) {
 		if (this == o2) {
 			return 0;

@@ -275,6 +275,7 @@ public class OutlineItem {
 			this.offset = offset;
 		}
 
+		@Override
 		public boolean visit(OutlineItem item) {
 			if (item.isRootItem()) {
 				return true;

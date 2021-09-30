@@ -95,6 +95,7 @@ public abstract class PatternBasedElementProcessor extends Processor
 	 * @return the text, or null if the group did not match any text
 	 * @see Matcher#group(int)
 	 */
+	@Override
 	public String group(int groupNumber) {
 		if (groupByIndex == null) {
 			return null;
@@ -111,6 +112,7 @@ public abstract class PatternBasedElementProcessor extends Processor
 	 * @return the start offset, or -1 if the group did not match any text
 	 * @see Matcher#start(int)
 	 */
+	@Override
 	public int start(int groupNumber) {
 		if (groupByIndex == null) {
 			return -1;
@@ -127,6 +129,7 @@ public abstract class PatternBasedElementProcessor extends Processor
 	 * @return the end offset, or -1 if the group did not match any text
 	 * @see Matcher#start(int)
 	 */
+	@Override
 	public int end(int groupNumber) {
 		if (groupByIndex == null) {
 			return -1;

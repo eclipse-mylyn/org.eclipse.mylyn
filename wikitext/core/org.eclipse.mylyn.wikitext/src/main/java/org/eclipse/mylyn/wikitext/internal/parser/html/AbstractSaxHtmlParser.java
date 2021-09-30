@@ -200,6 +200,7 @@ public abstract class AbstractSaxHtmlParser {
 			this.asDocument = asDocument;
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 			final String lowerCaseName = localName.toLowerCase();
 			if (processingContent) {
@@ -222,6 +223,7 @@ public abstract class AbstractSaxHtmlParser {
 			handler.start(atts);
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			emitText(elementState, null, true);
 
@@ -276,6 +278,7 @@ public abstract class AbstractSaxHtmlParser {
 			}
 		}
 
+		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (processingContent) {
 				if ((elementState.noWhitespaceTextContainer
@@ -324,16 +327,19 @@ public abstract class AbstractSaxHtmlParser {
 			}
 		}
 
+		@Override
 		public void setDocumentLocator(Locator locator) {
 			// ignore
 		}
 
+		@Override
 		public void startDocument() throws SAXException {
 			if (asDocument) {
 				builder.beginDocument();
 			}
 		}
 
+		@Override
 		public void endDocument() throws SAXException {
 			if (asDocument) {
 				builder.endDocument();
@@ -342,24 +348,29 @@ public abstract class AbstractSaxHtmlParser {
 			}
 		}
 
+		@Override
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {
 			// ignore
 		}
 
+		@Override
 		public void endPrefixMapping(String prefix) throws SAXException {
 			// ignore
 		}
 
+		@Override
 		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 			if (processingContent && elementState.preserveWhitespace) {
 				characters(ch, start, length);
 			}
 		}
 
+		@Override
 		public void processingInstruction(String target, String data) throws SAXException {
 			// ignore
 		}
 
+		@Override
 		public void skippedEntity(String name) throws SAXException {
 			// ignore
 		}

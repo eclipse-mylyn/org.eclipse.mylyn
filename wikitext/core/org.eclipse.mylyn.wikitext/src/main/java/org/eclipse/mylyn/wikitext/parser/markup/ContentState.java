@@ -103,6 +103,7 @@ public class ContentState implements Locator {
 	 *
 	 * @return the line number or -1 if it is unknown.
 	 */
+	@Override
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -130,10 +131,12 @@ public class ContentState implements Locator {
 		this.lineOffset = lineOffset;
 	}
 
+	@Override
 	public int getLineDocumentOffset() {
 		return lineOffset;
 	}
 
+	@Override
 	public int getLineCharacterOffset() {
 		return lineCharacterOffset;
 	}
@@ -142,10 +145,12 @@ public class ContentState implements Locator {
 		this.lineCharacterOffset = lineCharacterOffset;
 	}
 
+	@Override
 	public int getDocumentOffset() {
 		return lineOffset + lineCharacterOffset;
 	}
 
+	@Override
 	public int getLineLength() {
 		return lineLength;
 	}
@@ -158,6 +163,7 @@ public class ContentState implements Locator {
 		this.lineSegmentEndOffset = lineSegmentEndOffset;
 	}
 
+	@Override
 	public int getLineSegmentEndOffset() {
 		return lineSegmentEndOffset;
 	}

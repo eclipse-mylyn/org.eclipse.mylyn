@@ -74,10 +74,12 @@ public class CssParser {
 			hasNext = matcher.find();
 		}
 
+		@Override
 		public boolean hasNext() {
 			return hasNext;
 		}
 
+		@Override
 		public CssRule next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
@@ -93,6 +95,7 @@ public class CssParser {
 					valueOffset + blockOffset);
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

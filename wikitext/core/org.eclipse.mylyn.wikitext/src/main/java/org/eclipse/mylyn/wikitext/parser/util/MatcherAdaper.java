@@ -26,14 +26,17 @@ public class MatcherAdaper implements Matcher {
 		this.delegate = delegate;
 	}
 
+	@Override
 	public int end(int group) {
 		return delegate.end(group);
 	}
 
+	@Override
 	public String group(int group) {
 		return delegate.group(group);
 	}
 
+	@Override
 	public int start(int group) {
 		return delegate.start(group);
 	}
