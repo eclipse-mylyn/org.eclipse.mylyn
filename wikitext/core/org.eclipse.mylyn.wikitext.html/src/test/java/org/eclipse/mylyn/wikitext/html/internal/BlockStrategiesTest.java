@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -36,7 +37,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void createEmpty() {
-		BlockStrategies strategies = new BlockStrategies(Sets.<BlockType> newHashSet());
+		BlockStrategies strategies = new BlockStrategies(new HashSet<BlockType>());
 		assertUnsupported(strategies, BlockType.PARAGRAPH);
 	}
 
