@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -1429,14 +1429,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String readFully(Reader input, int bufferSize) throws IOException {
 		StringBuilder buf = new StringBuilder(bufferSize);
-		try {
-			Reader reader = new BufferedReader(input);
+		try (Reader reader = new BufferedReader(input)) {
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
-		} finally {
-			input.close();
 		}
 		return buf.toString();
 	}

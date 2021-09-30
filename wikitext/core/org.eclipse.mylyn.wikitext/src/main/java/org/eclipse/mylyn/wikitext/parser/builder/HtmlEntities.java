@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -37,23 +37,19 @@ class HtmlEntities {
 
 	private static ListMultimap<String, String> readHtmlEntities() {
 		ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
-		try {
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), //$NON-NLS-1$
-							StandardCharsets.UTF_8));
-			try {
-				Splitter splitter = Splitter.on(CharMatcher.whitespace()).trimResults().omitEmptyStrings();
 
-				String line;
-				while ((line = reader.readLine()) != null) {
-					List<String> lineItems = splitter.splitToList(line);
-					checkState(lineItems.size() > 1);
-					for (int x = 1; x < lineItems.size(); ++x) {
-						builder.put(lineItems.get(0), lineItems.get(x));
-					}
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), //$NON-NLS-1$
+						StandardCharsets.UTF_8))) {
+			Splitter splitter = Splitter.on(CharMatcher.whitespace()).trimResults().omitEmptyStrings();
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				List<String> lineItems = splitter.splitToList(line);
+				checkState(lineItems.size() > 1);
+				for (int x = 1; x < lineItems.size(); ++x) {
+					builder.put(lineItems.get(0), lineItems.get(x));
 				}
-			} finally {
-				reader.close();
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
