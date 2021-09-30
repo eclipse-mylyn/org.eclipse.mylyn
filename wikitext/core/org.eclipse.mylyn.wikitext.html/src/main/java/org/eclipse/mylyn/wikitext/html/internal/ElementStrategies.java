@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.html.internal;
 import static java.util.Objects.requireNonNull;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementStrategy, HtmlElementStrategyType extends HtmlElementStrategy<ElementType>> {
 
@@ -55,13 +55,13 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 	abstract ElementStrategy getElementStrategy(HtmlElementStrategyType strategy);
 
 	private void initialize(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes) {
-		Map<ElementType, ElementStrategy> elementStrategyByElementType = Maps.newHashMap();
+		Map<ElementType, ElementStrategy> elementStrategyByElementType = new HashMap<>();
 		for (ElementType elementType : elementTypes) {
 			addSupportedElementType(elementStrategyByElementType, elementType);
 		}
 		addImplicitElementTypes(elementStrategyByElementType, elementTypes);
 
-		Map<ElementType, ElementStrategy> alternativesByElementType = Maps.newHashMap();
+		Map<ElementType, ElementStrategy> alternativesByElementType = new HashMap<>();
 		for (ElementType elementType : EnumSet.allOf(elementTypeClass)) {
 			if (!elementStrategyByElementType.containsKey(elementType)) {
 				alternativesByElementType.put(elementType,

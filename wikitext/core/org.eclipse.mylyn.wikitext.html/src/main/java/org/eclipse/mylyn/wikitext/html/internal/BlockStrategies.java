@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,14 +26,13 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlElementStrategy<BlockType>> {
 
 	private static final Map<BlockType, List<BlockType>> blockTypeToAlternatives = createBlockTypeToAlternatives();
 
 	private static Map<BlockType, List<BlockType>> createBlockTypeToAlternatives() {
-		Map<BlockType, List<BlockType>> alternatives = Maps.newHashMap();
+		Map<BlockType, List<BlockType>> alternatives = new HashMap<>();
 		addAlternatives(alternatives, BlockType.PARAGRAPH, BlockType.DIV);
 		addAlternatives(alternatives, BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST);
 		addAlternatives(alternatives, BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST);
@@ -67,7 +67,8 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 	}
 
 	@Override
-	void addImplicitElementTypes(Map<BlockType, BlockStrategy> elementStrategyByElementType, Set<BlockType> elementTypes) {
+	void addImplicitElementTypes(Map<BlockType, BlockStrategy> elementStrategyByElementType,
+			Set<BlockType> elementTypes) {
 		if (elementTypes.contains(BlockType.TABLE)) {
 			addSupportedElementType(elementStrategyByElementType, BlockType.TABLE_ROW);
 			addSupportedElementType(elementStrategyByElementType, BlockType.TABLE_CELL_HEADER);

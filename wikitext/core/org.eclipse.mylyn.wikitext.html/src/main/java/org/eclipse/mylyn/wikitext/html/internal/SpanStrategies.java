@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import static com.google.common.base.Predicates.isNull;
 import static com.google.common.base.Predicates.not;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +35,13 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
 
 	private static final Map<SpanType, List<SpanType>> spanTypeToAlternatives = createSpanTypeToAlternatives();
 
 	private static Map<SpanType, List<SpanType>> createSpanTypeToAlternatives() {
-		Map<SpanType, List<SpanType>> alternatives = Maps.newHashMap();
+		Map<SpanType, List<SpanType>> alternatives = new HashMap<>();
 		addAlternatives(alternatives, SpanType.BOLD, SpanType.STRONG);
 		addAlternatives(alternatives, SpanType.STRONG, SpanType.BOLD);
 		addAlternatives(alternatives, SpanType.CODE, SpanType.MONOSPACE);

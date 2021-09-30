@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 /**
  * Provides a way to build HTML languages that support a specific set of HTML tags.
@@ -52,7 +52,7 @@ public class HtmlLanguageBuilder {
 
 	private final Set<SpanType> spanTypes = new HashSet<>();
 
-	private final Map<SpanType, String> spanTypeToElementNameSubstitution = Maps.newHashMap();
+	private final Map<SpanType, String> spanTypeToElementNameSubstitution = new HashMap<>();
 
 	private final List<SpanHtmlElementStrategy> spanElementStrategies = new ArrayList<>();
 
