@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
-import com.google.common.base.Predicates;
-
 public class FencedCodeBlock extends SourceBlock {
 
 	private final Pattern openingFencePattern = Pattern.compile("(\\s{0,4})(`{3,}|~{3,})\\s*(?:([^\\s~`]+)[^~`]*)?");
@@ -54,7 +52,7 @@ public class FencedCodeBlock extends SourceBlock {
 			outputLine(builder, indent, lineSequence.getCurrentLine());
 		}
 		lineSequence.advance();
-		for (Line line : lineSequence.with(Predicates.not(LinePredicates.matches(closingFencePattern)))) {
+		for (Line line : lineSequence.with(LinePredicates.matches(closingFencePattern).negate())) {
 			outputLine(builder, indent, line);
 		}
 		if (indentedCodeBlock && lineSequence.getCurrentLine() != null) {

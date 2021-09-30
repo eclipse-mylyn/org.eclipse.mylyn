@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
@@ -109,7 +109,7 @@ public class SourceBlocks extends SourceBlock {
 		while (lineSequence.getCurrentLine() != null) {
 			previousBlock = currentBlock;
 			currentBlock = selectBlock(lineSequence);
-			if (!predicate.apply(new BlockContext(previousBlock, currentBlock, lineSequence))) {
+			if (!predicate.test(new BlockContext(previousBlock, currentBlock, lineSequence))) {
 				break;
 			}
 			if (currentBlock != null) {

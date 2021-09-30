@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,6 @@ import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Predicate;
 
 public class ListBlock extends BlockWithNestedBlocks {
 
@@ -153,7 +153,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 		return new Predicate<SourceBlocks.BlockContext>() {
 
 			@Override
-			public boolean apply(BlockContext blockContext) {
+			public boolean test(BlockContext blockContext) {
 				if (blockContext.getPreviousBlock() != null && blockContext.getCurrentBlock() instanceof EmptyBlock
 						&& nextLineIsEmpty(blockContext.getLineSequence())) {
 					return false;
@@ -211,7 +211,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 			int firstLineNumber = -1;
 
 			@Override
-			public boolean apply(Line line) {
+			public boolean test(Line line) {
 				if (firstLineNumber == -1) {
 					firstLineNumber = line.getLineNumber();
 				}

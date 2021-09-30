@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -28,8 +28,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
-import com.google.common.base.Predicates;
-
 public class IndentedCodeBlock extends SourceBlock {
 
 	private static final Pattern PATTERN = Pattern.compile("(?: {0,3}\t| {4})(.*)");
@@ -40,8 +38,8 @@ public class IndentedCodeBlock extends SourceBlock {
 		builder.beginBlock(BlockType.CODE, new Attributes());
 
 		boolean blockHasContent = false;
-		Iterator<Line> iterator = lineSequence
-				.with(Predicates.or(LinePredicates.matches(PATTERN), LinePredicates.empty())).iterator();
+		Iterator<Line> iterator = lineSequence.with(LinePredicates.matches(PATTERN).or(LinePredicates.empty()))
+				.iterator();
 		while (iterator.hasNext()) {
 			Line line = iterator.next();
 			Matcher matcher = PATTERN.matcher(line.getText());

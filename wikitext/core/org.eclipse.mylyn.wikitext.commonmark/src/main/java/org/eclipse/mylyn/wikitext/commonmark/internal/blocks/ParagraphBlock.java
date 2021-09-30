@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,6 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
-
-import static com.google.common.base.Predicates.not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +86,7 @@ public class ParagraphBlock extends SourceBlock {
 	}
 
 	private boolean notEmptyLine(LineSequence lineSequence) {
-		return not(LinePredicates.empty()).apply(lineSequence.getCurrentLine());
+		return LinePredicates.empty().negate().test(lineSequence.getCurrentLine());
 	}
 
 	private boolean anotherBlockStart(LineSequence lineSequence) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 class LinesIterable implements Iterable<Line> {
 
@@ -27,7 +26,7 @@ class LinesIterable implements Iterable<Line> {
 		@Override
 		public boolean hasNext() {
 			Line currentLine = lineSequence.getCurrentLine();
-			return currentLine != null && predicate.apply(currentLine);
+			return currentLine != null && predicate.test(currentLine);
 		}
 
 		@Override

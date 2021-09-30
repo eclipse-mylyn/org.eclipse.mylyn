@@ -13,11 +13,10 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.LinePredicates.empty;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +30,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.SourceBlocks;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-
-import com.google.common.base.Predicate;
 
 public class BlockQuoteBlock extends BlockWithNestedBlocks {
 
@@ -86,14 +83,14 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		}
 
 		private Predicate<Line> blockQuoteLinePredicate(LineSequence lineSequence) {
-			return and(not(empty()), not(blockStructureStart(lineSequence)));
+			return empty().negate().and(blockStructureStart(lineSequence).negate());
 		}
 
 		private Predicate<Line> blockStructureStart(final LineSequence lineSequence) {
 			return new Predicate<Line>() {
 
 				@Override
-				public boolean apply(Line line) {
+				public boolean test(Line line) {
 					LineSequence lookAhead = createLookAhead(lineSequence, line);
 					SourceBlock lineBlock = CommonMark.sourceBlocks().selectBlock(lookAhead);
 					return lineBlock != null

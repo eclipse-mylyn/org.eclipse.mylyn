@@ -24,14 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
@@ -94,7 +93,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 	protected List<ResourceDescriptor> discoverServiceResources() {
 		Set<URL> resourceUrls = new HashSet<>();
 		List<ResourceDescriptor> descriptors = new ArrayList<>();
-		for (Bundle bundle : bundles()) {
+		for (Bundle bundle : bundles().toArray(Bundle[]::new)) {
 			for (String resourceName : getClasspathServiceResourceNames()) {
 				int indexOf = resourceName.indexOf(SERVICES_SLASH);
 				checkState(indexOf >= 0, resourceName);
@@ -126,14 +125,14 @@ public class OsgiServiceLocator extends ServiceLocator {
 	}
 
 	private static class SystemBundleFilter implements Predicate<Bundle> {
-		public boolean apply(Bundle input) {
+		public boolean test(Bundle input) {
 			return input.getBundleId() != 0L;
 		}
 	}
 
-	private Iterable<Bundle> bundles() {
+	private Stream<Bundle> bundles() {
 		Bundle[] bundles = getContext().getBundles();
-		return FluentIterable.from(Arrays.asList(bundles)).filter(new SystemBundleFilter());
+		return Arrays.asList(bundles).stream().filter(new SystemBundleFilter());
 	}
 
 	BundleContext getContext() {

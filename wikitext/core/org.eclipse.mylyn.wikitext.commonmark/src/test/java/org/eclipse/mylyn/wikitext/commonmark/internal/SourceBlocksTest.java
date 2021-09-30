@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Predicates.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -83,7 +82,7 @@ public class SourceBlocksTest {
 			@Override
 			public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
 				builder.beginBlock(blockType, new Attributes());
-				for (Line line : lineSequence.with(not(LinePredicates.empty()))) {
+				for (Line line : lineSequence.with(LinePredicates.empty().negate())) {
 					builder.characters(line.getText());
 				}
 				builder.endBlock();

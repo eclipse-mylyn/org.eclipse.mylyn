@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,20 +17,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
-
-import com.google.common.base.Predicate;
 
 public class LinePredicatesTest {
 
 	@Test
 	public void empty() {
 		Predicate<Line> predicate = LinePredicates.empty();
-		assertFalse(predicate.apply(null));
-		assertTrue(predicate.apply(new Line(0, 0, "")));
-		assertFalse(predicate.apply(new Line(0, 0, "a")));
+		assertFalse(predicate.test(null));
+		assertTrue(predicate.test(new Line(0, 0, "")));
+		assertFalse(predicate.test(new Line(0, 0, "a")));
 		assertEquals("empty(line)", predicate.toString());
 	}
 
@@ -38,10 +37,10 @@ public class LinePredicatesTest {
 	public void matches() {
 		Pattern pattern = Pattern.compile("\\s*abc\\s*");
 		Predicate<Line> predicate = LinePredicates.matches(pattern);
-		assertFalse(predicate.apply(null));
-		assertTrue(predicate.apply(new Line(0, 0, "  abc ")));
-		assertTrue(predicate.apply(new Line(0, 0, "  abc  ")));
-		assertFalse(predicate.apply(new Line(0, 0, "  de ")));
+		assertFalse(predicate.test(null));
+		assertTrue(predicate.test(new Line(0, 0, "  abc ")));
+		assertTrue(predicate.test(new Line(0, 0, "  abc  ")));
+		assertFalse(predicate.test(new Line(0, 0, "  de ")));
 		assertEquals("matches(\\s*abc\\s*)", predicate.toString());
 	}
 }

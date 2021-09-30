@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
-
-import com.google.common.base.Predicate;
 
 public class LinePredicates {
 
@@ -28,7 +27,7 @@ public class LinePredicates {
 			}
 
 			@Override
-			public boolean apply(Line input) {
+			public boolean test(Line input) {
 				return input != null && input.isEmpty();
 			}
 		};
@@ -43,7 +42,7 @@ public class LinePredicates {
 			}
 
 			@Override
-			public boolean apply(Line input) {
+			public boolean test(Line input) {
 				return input != null && pattern.matcher(input.getText()).matches();
 			}
 		};

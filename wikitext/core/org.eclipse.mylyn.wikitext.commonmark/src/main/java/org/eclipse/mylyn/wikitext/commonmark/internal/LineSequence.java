@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public abstract class LineSequence implements Iterable<Line> {

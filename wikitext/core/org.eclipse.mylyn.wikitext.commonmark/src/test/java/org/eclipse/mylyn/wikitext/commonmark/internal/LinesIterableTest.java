@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,16 +18,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import org.junit.Test;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public class LinesIterableTest {
@@ -84,7 +84,7 @@ public class LinesIterableTest {
 		LineSequence lineSequence = LineSequence.create("one");
 		Iterator<Line> iterator = new LinesIterable(lineSequence, predicate).iterator();
 		assertFalse(iterator.hasNext());
-		doReturn(true).when(predicate).apply(any(Line.class));
+		doReturn(true).when(predicate).test(any(Line.class));
 		assertTrue(iterator.hasNext());
 		lineSequence.advance();
 		assertFalse(iterator.hasNext());
