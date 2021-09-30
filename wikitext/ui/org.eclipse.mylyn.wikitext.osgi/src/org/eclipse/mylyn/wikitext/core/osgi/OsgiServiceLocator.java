@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 David Green and others.
+ * Copyright (c) 2013, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -31,7 +32,6 @@ import org.osgi.framework.FrameworkUtil;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Sets;
 
 /**
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
@@ -92,7 +92,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 
 	@Override
 	protected List<ResourceDescriptor> discoverServiceResources() {
-		Set<URL> resourceUrls = Sets.newHashSet();
+		Set<URL> resourceUrls = new HashSet<>();
 		List<ResourceDescriptor> descriptors = new ArrayList<>();
 		for (Bundle bundle : bundles()) {
 			for (String resourceName : getClasspathServiceResourceNames()) {

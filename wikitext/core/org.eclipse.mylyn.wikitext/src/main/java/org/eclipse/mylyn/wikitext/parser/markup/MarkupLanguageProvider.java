@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,13 @@ package org.eclipse.mylyn.wikitext.parser.markup;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 /**
  * A provider of {@link MarkupLanguage}.
@@ -44,7 +44,7 @@ public abstract class MarkupLanguageProvider {
 	}
 
 	private void assertLanguageNames(Set<MarkupLanguage> languages) {
-		Set<String> names = Sets.newHashSet();
+		Set<String> names = new HashSet<>();
 		for (MarkupLanguage language : languages) {
 			Objects.requireNonNull(language.getName(), "Provided languages must have a name"); //$NON-NLS-1$
 			checkState(names.add(language.getName()), "Language name '%s' must not be provided more than once", //$NON-NLS-1$

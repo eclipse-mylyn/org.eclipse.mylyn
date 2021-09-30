@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.registry;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -34,8 +35,6 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.validation.ValidationRules;
-
-import com.google.common.collect.Sets;
 
 public class WikiTextExtensionPointReader {
 
@@ -117,7 +116,7 @@ public class WikiTextExtensionPointReader {
 	}
 
 	private void configureFileExtensions(MarkupLanguage language) {
-		Set<String> fileExtensions = Sets.newHashSet();
+		Set<String> fileExtensions = new HashSet<>();
 		for (Entry<String, Class<? extends MarkupLanguage>> entry : languageByFileExtension.entrySet()) {
 			if (entry.getValue() == language.getClass()) {
 				fileExtensions.add(entry.getKey());

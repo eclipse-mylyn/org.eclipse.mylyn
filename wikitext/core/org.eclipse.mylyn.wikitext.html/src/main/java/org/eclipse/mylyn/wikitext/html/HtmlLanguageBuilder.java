@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,6 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * Provides a way to build HTML languages that support a specific set of HTML tags.
@@ -48,9 +48,9 @@ import com.google.common.collect.Sets;
 public class HtmlLanguageBuilder {
 	private String name;
 
-	private final Set<BlockType> blockTypes = Sets.newHashSet();
+	private final Set<BlockType> blockTypes = new HashSet<>();
 
-	private final Set<SpanType> spanTypes = Sets.newHashSet();
+	private final Set<SpanType> spanTypes = new HashSet<>();
 
 	private final Map<SpanType, String> spanTypeToElementNameSubstitution = Maps.newHashMap();
 
