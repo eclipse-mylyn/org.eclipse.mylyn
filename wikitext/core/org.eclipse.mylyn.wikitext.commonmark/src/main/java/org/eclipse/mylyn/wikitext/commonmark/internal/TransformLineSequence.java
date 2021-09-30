@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static java.util.Objects.requireNonNull;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 class TransformLineSequence extends LineSequence {
 

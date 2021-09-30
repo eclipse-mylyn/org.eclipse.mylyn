@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.LinePredicates.empty;
 
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public class BlockQuoteBlock extends BlockWithNestedBlocks {
