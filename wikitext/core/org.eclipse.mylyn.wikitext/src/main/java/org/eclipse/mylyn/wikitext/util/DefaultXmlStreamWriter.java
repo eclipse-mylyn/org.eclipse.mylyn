@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,8 @@ package org.eclipse.mylyn.wikitext.util;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -50,7 +50,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	private char xmlHeaderQuoteChar = '\'';
 
-	public DefaultXmlStreamWriter(OutputStream out) throws UnsupportedEncodingException {
+	public DefaultXmlStreamWriter(OutputStream out) {
 		this.out = createUtf8PrintWriter(out);
 	}
 
@@ -63,8 +63,8 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		this.xmlHeaderQuoteChar = xmlHeaderQuoteChar;
 	}
 
-	protected PrintWriter createUtf8PrintWriter(java.io.OutputStream out) throws UnsupportedEncodingException {
-		return new java.io.PrintWriter(new OutputStreamWriter(out, "UTF8")); //$NON-NLS-1$
+	protected PrintWriter createUtf8PrintWriter(java.io.OutputStream out) {
+		return new java.io.PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
 	}
 
 	@Override
