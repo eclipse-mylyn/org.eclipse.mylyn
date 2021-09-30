@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,9 @@ package org.eclipse.mylyn.wikitext.html.internal;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
@@ -24,7 +27,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class CompositeSpanStrategyTest {
 
@@ -36,8 +38,8 @@ public class CompositeSpanStrategyTest {
 	@Test
 	public void test() {
 		CompositeSpanStrategy strategy = new CompositeSpanStrategy(
-				Lists.<SpanStrategy> newArrayList(new SubstitutionWithoutCssSpanStrategy(SpanType.BOLD),
-						new SubstitutionWithoutCssSpanStrategy(SpanType.ITALIC)));
+				new ArrayList<>(Arrays.asList(new SubstitutionWithoutCssSpanStrategy(SpanType.BOLD),
+						new SubstitutionWithoutCssSpanStrategy(SpanType.ITALIC))));
 		EventDocumentBuilder builder = new EventDocumentBuilder();
 		strategy.beginSpan(builder, SpanType.DELETED, new Attributes());
 		strategy.endSpan(builder);

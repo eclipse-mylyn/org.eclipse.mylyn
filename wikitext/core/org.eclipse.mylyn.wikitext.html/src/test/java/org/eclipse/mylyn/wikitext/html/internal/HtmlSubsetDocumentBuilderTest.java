@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -30,7 +32,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderTest {
@@ -641,7 +642,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	@Test
 	public void spanFontTag() {
 		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
-				Lists.<SpanHtmlElementStrategy> newArrayList(new FontElementStrategy()));
+				new ArrayList<>(Arrays.asList(new FontElementStrategy())));
 
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: blue", null));
 		builder.characters("test");
