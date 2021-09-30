@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class MarkupValidator {
 
-	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private final List<ValidationRule> rules = new ArrayList<>();
 
 	/**
 	 * @param markup
@@ -50,7 +50,7 @@ public class MarkupValidator {
 			return Collections.emptyList();
 		}
 
-		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
+		List<ValidationProblem> problems = new ArrayList<>();
 
 		for (ValidationRule rule : rules) {
 			problems.addAll(rule.findProblems(markup, offset, length));

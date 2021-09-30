@@ -33,7 +33,7 @@ public class SparseCharSequence implements CharSequence {
 
 	public SparseCharSequence(CharSequence data, Pattern excludePattern) {
 		this.data = data;
-		List<Segment> segments = new ArrayList<Segment>(5);
+		List<Segment> segments = new ArrayList<>(5);
 		Segment segment = new Segment(0, 0);
 		Matcher matcher = excludePattern.matcher(data);
 		while (matcher.find()) {

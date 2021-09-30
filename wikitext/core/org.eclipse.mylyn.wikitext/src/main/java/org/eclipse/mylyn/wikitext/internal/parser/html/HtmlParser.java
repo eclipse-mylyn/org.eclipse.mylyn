@@ -156,7 +156,7 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 		}
 	}
 
-	private List<DocumentProcessor> processors = new ArrayList<DocumentProcessor>();
+	private List<DocumentProcessor> processors = new ArrayList<>();
 
 	@Override
 	protected void parse(InputSource input, DocumentBuilder builder, ContentHandler contentHandler)
@@ -167,7 +167,7 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 			processor.process(document);
 		}
 
-		Stack<NodeHandler> stack = new Stack<NodeHandler>();
+		Stack<NodeHandler> stack = new Stack<>();
 		stack.push(new DocumentHandler(document));
 		while (!stack.isEmpty()) {
 			NodeHandler handler = stack.pop();

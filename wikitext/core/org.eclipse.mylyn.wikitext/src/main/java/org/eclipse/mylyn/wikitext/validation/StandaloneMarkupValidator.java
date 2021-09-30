@@ -41,9 +41,9 @@ import org.xml.sax.SAXException;
  */
 public class StandaloneMarkupValidator {
 
-	private static Map<ClassLoader, Map<String, StandaloneMarkupValidator>> validatorCacheByClassLoader = new WeakHashMap<ClassLoader, Map<String, StandaloneMarkupValidator>>();
+	private static Map<ClassLoader, Map<String, StandaloneMarkupValidator>> validatorCacheByClassLoader = new WeakHashMap<>();
 
-	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private List<ValidationRule> rules = new ArrayList<>();
 
 	private ClassLoader classLoader;
 
@@ -66,7 +66,7 @@ public class StandaloneMarkupValidator {
 			Map<String, StandaloneMarkupValidator> validatorByMarkupLanguage = validatorCacheByClassLoader
 					.get(classLoader);
 			if (validatorByMarkupLanguage == null) {
-				validatorByMarkupLanguage = new HashMap<String, StandaloneMarkupValidator>();
+				validatorByMarkupLanguage = new HashMap<>();
 				validatorCacheByClassLoader.put(classLoader, validatorByMarkupLanguage);
 			}
 			StandaloneMarkupValidator validator = validatorByMarkupLanguage.get(markupLanguage);
@@ -104,7 +104,7 @@ public class StandaloneMarkupValidator {
 			return Collections.emptyList();
 		}
 
-		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
+		List<ValidationProblem> problems = new ArrayList<>();
 
 		for (ValidationRule rule : rules) {
 			problems.addAll(rule.findProblems(markup, offset, length));

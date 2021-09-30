@@ -30,9 +30,9 @@ public class IdGenerator {
 
 	private static final DefaultIdGenerationStrategy DEFAULT_ID_GENERATION_STRATEGY = new DefaultIdGenerationStrategy();
 
-	private final Map<String, Integer> idGenerators = new HashMap<String, Integer>();
+	private final Map<String, Integer> idGenerators = new HashMap<>();
 
-	private final Set<String> anchorNames = new HashSet<String>();
+	private final Set<String> anchorNames = new HashSet<>();
 
 	private IdGenerationStrategy generationStrategy = DEFAULT_ID_GENERATION_STRATEGY;
 

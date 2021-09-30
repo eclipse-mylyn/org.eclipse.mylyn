@@ -48,7 +48,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)"); //$NON-NLS-1$
 
-	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
+	private static Set<Integer> entityReferenceToUnicode = new HashSet<>();
 
 	static {
 		entityReferenceToUnicode.add(215);
@@ -65,11 +65,11 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String doctype = "<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\">"; //$NON-NLS-1$
 
-	private final Map<String, String> acronyms = new HashMap<String, String>();
+	private final Map<String, String> acronyms = new HashMap<>();
 
 	private int headingLevel = 0;
 
-	private final Stack<BlockDescription> blockDescriptions = new Stack<BlockDescription>();
+	private final Stack<BlockDescription> blockDescriptions = new Stack<>();
 
 	private boolean automaticGlossary = true;
 
@@ -493,7 +493,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEndElement(); // title
 			writer.writeStartElement("glosslist"); //$NON-NLS-1$
 
-			for (Map.Entry<String, String> glossEntry : new TreeMap<String, String>(acronyms).entrySet()) {
+			for (Map.Entry<String, String> glossEntry : new TreeMap<>(acronyms).entrySet()) {
 
 				writer.writeStartElement("glossentry"); //$NON-NLS-1$
 

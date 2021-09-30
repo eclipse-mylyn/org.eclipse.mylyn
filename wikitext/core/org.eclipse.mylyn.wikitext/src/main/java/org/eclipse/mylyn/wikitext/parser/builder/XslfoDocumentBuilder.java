@@ -75,14 +75,14 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final char[] BULLET_CHARS = new char[] { '\u2022' };
 
-	private static Map<BlockType, String> blockTypeToCssStyles = new HashMap<BlockType, String>();
+	private static Map<BlockType, String> blockTypeToCssStyles = new HashMap<>();
 	static {
 		blockTypeToCssStyles.put(BlockType.CODE, "font-family: monospace;"); //$NON-NLS-1$
 		blockTypeToCssStyles.put(BlockType.PREFORMATTED, "font-family: monospace;"); //$NON-NLS-1$
 		blockTypeToCssStyles.put(BlockType.TABLE_CELL_HEADER, "font-weight: bold;"); //$NON-NLS-1$
 	}
 
-	private static Map<SpanType, String> spanTypeToCssStyles = new HashMap<SpanType, String>();
+	private static Map<SpanType, String> spanTypeToCssStyles = new HashMap<>();
 	static {
 		spanTypeToCssStyles.put(SpanType.STRONG, "font-weight: bold;"); //$NON-NLS-1$
 		spanTypeToCssStyles.put(SpanType.BOLD, "font-weight: bold;"); //$NON-NLS-1$
@@ -105,7 +105,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private int h1Count = 0;
 
-	private final Stack<ElementInfo> elementInfos = new Stack<ElementInfo>();
+	private final Stack<ElementInfo> elementInfos = new Stack<>();
 
 	private Configuration configuration = new Configuration();
 
@@ -395,7 +395,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		if (attrs != null) {
 			// output attributes with stable order
-			for (Entry<String, String> ent : new TreeMap<String, String>(attrs).entrySet()) {
+			for (Entry<String, String> ent : new TreeMap<>(attrs).entrySet()) {
 				writer.writeAttribute(ent.getKey(), ent.getValue());
 			}
 		}
@@ -830,7 +830,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (rules.isEmpty()) {
 			return Collections.emptyMap();
 		}
-		Map<String, String> mapping = new HashMap<String, String>();
+		Map<String, String> mapping = new HashMap<>();
 		for (CssRule rule : rules) {
 			if (CSS_RULE_VERTICAL_ALIGN.equals(rule.name)) {
 				String cssValue = rule.value;
@@ -891,7 +891,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 		if (attrs != null) {
 			// output attributes with stable order
-			for (Entry<String, String> ent : new TreeMap<String, String>(attrs).entrySet()) {
+			for (Entry<String, String> ent : new TreeMap<>(attrs).entrySet()) {
 				writer.writeAttribute(ent.getKey(), ent.getValue());
 			}
 		}

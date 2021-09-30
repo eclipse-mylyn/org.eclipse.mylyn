@@ -56,7 +56,7 @@ public abstract class PatternBasedElementProcessor extends Processor
 	 */
 	public void setGroup(int group, String capturedText, int start, int end) {
 		if (groupByIndex == null) {
-			groupByIndex = new HashMap<Integer, Group>();
+			groupByIndex = new HashMap<>();
 		}
 		groupByIndex.put(group, new Group(capturedText, start, end));
 	}

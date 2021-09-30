@@ -36,7 +36,7 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 
 	private String target;
 
-	private final Set<String> targets = new HashSet<String>();
+	private final Set<String> targets = new HashSet<>();
 
 	@Override
 	public void heading(int level, String id, String label) {

@@ -37,7 +37,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final String __TOPIC = "__topic"; //$NON-NLS-1$
 
-	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
+	private static Set<Integer> entityReferenceToUnicode = new HashSet<>();
 	static {
 		entityReferenceToUnicode.add(215);
 		entityReferenceToUnicode.add(8211);
@@ -48,7 +48,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		entityReferenceToUnicode.add(8217);
 	}
 
-	private final Stack<BlockDescription> blockDescriptions = new Stack<BlockDescription>();
+	private final Stack<BlockDescription> blockDescriptions = new Stack<>();
 
 	private String doctype = "<!DOCTYPE topic PUBLIC \"-//OASIS//DTD DITA 1.1 Topic//EN\" \"http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd\">"; //$NON-NLS-1$
 
@@ -58,7 +58,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		int openElements;
 	}
 
-	private final Stack<TopicInfo> topicInfos = new Stack<TopicInfo>();
+	private final Stack<TopicInfo> topicInfos = new Stack<>();
 
 	private OutlineItem outline;
 

@@ -25,7 +25,7 @@ import java.util.List;
 public class ValidationRules {
 	private ValidationRules parent;
 
-	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private final List<ValidationRule> rules = new ArrayList<>();
 
 	public void addValidationRule(ValidationRule rule) {
 		rules.add(rule);
@@ -42,7 +42,7 @@ public class ValidationRules {
 			} else if (parentRules.isEmpty()) {
 				return Collections.unmodifiableList(rules);
 			}
-			List<ValidationRule> combined = new ArrayList<ValidationRule>(rules.size() + parentRules.size());
+			List<ValidationRule> combined = new ArrayList<>(rules.size() + parentRules.size());
 			combined.addAll(parentRules);
 			combined.addAll(rules);
 			return Collections.unmodifiableList(combined);

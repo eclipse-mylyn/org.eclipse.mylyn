@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
  */
 public class MultiplexingDocumentBuilder extends DocumentBuilder {
 
-	private final List<DocumentBuilder> builders = new ArrayList<DocumentBuilder>();
+	private final List<DocumentBuilder> builders = new ArrayList<>();
 
 	public MultiplexingDocumentBuilder(DocumentBuilder... delegates) {
 		builders.addAll(Arrays.asList(delegates));

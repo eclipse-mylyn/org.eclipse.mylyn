@@ -21,12 +21,12 @@ import org.jsoup.nodes.Document;
 
 /**
  * Provides a way of cleaning up HTML to make it more suitable for conversion to Wiki markup.
- * 
+ *
  * @author David Green
  */
 public class HtmlCleaner {
 
-	private final List<DocumentProcessor> processors = new ArrayList<DocumentProcessor>();
+	private final List<DocumentProcessor> processors = new ArrayList<>();
 	{
 		processors.add(new WhitespaceCleanupProcessor()); // ORDER DEPENDENCY - should come first
 		processors.add(new RemoveEmptySpansProcessor());

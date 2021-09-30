@@ -73,7 +73,7 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 				String color = element.attr("color"); //$NON-NLS-1$
 				if (color != null && color.trim().length() > 0) {
 					if (rules == null) {
-						rules = new ArrayList<CssRule>(1);
+						rules = new ArrayList<>(1);
 					}
 					rules.add(new CssRule("color", color.trim(), 0, 0, 0, 0)); //$NON-NLS-1$
 				}
@@ -88,7 +88,7 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 			if (newStyle.length() > 0) {
 				if ("font".equalsIgnoreCase(element.nodeName())) { //$NON-NLS-1$
 					Element spanElement = document.createElement("span"); //$NON-NLS-1$
-					for (Node child : new ArrayList<Node>(element.childNodes())) {
+					for (Node child : new ArrayList<>(element.childNodes())) {
 						child.remove();
 						spanElement.appendChild(child);
 					}
@@ -111,7 +111,7 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 
 	private void removeElementPreserveChildren(Element element) {
 		final Element parent = element.parent();
-		for (Node child : new ArrayList<Node>(element.childNodes())) {
+		for (Node child : new ArrayList<>(element.childNodes())) {
 			child.remove();
 			element.before(child);
 		}

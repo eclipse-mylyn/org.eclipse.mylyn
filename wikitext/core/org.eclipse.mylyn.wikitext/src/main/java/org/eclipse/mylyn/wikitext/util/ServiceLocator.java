@@ -187,7 +187,7 @@ public class ServiceLocator {
 	 * Get all known markup languages
 	 */
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
-		final Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
+		final Set<MarkupLanguage> markupLanguages = new HashSet<>();
 		loadMarkupLanguages(language -> {
 			markupLanguages.add(language);
 			return true;

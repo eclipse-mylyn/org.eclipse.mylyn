@@ -30,11 +30,11 @@ import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage.PatternBa
  */
 public class MarkupLanguageConfiguration implements Cloneable {
 
-	private List<Block> blocks = new ArrayList<Block>();
+	private List<Block> blocks = new ArrayList<>();
 
-	private List<PatternBasedElement> phraseModifiers = new ArrayList<PatternBasedElement>();
+	private List<PatternBasedElement> phraseModifiers = new ArrayList<>();
 
-	private List<PatternBasedElement> tokens = new ArrayList<PatternBasedElement>();
+	private List<PatternBasedElement> tokens = new ArrayList<>();
 
 	private boolean escapingHtmlAndXml = false;
 
@@ -211,15 +211,15 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	public MarkupLanguageConfiguration clone() {
 		try {
 			MarkupLanguageConfiguration copy = (MarkupLanguageConfiguration) super.clone();
-			copy.blocks = new ArrayList<Block>(blocks.size());
+			copy.blocks = new ArrayList<>(blocks.size());
 			for (Block block : blocks) {
 				copy.blocks.add(block.clone());
 			}
-			copy.phraseModifiers = new ArrayList<PatternBasedElement>(phraseModifiers.size());
+			copy.phraseModifiers = new ArrayList<>(phraseModifiers.size());
 			for (PatternBasedElement element : phraseModifiers) {
 				copy.phraseModifiers.add(element.clone());
 			}
-			copy.tokens = new ArrayList<PatternBasedElement>(tokens.size());
+			copy.tokens = new ArrayList<>(tokens.size());
 			for (PatternBasedElement element : tokens) {
 				copy.tokens.add(element.clone());
 			}

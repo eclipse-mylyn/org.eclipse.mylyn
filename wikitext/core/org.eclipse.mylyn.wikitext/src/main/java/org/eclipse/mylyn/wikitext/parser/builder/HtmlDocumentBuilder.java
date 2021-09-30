@@ -154,7 +154,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private HtmlDocumentHandler documentHandler = new DefaultDocumentHandler();
 
-	private final Stack<ElementInfo> blockState = new Stack<ElementInfo>();
+	private final Stack<ElementInfo> blockState = new Stack<>();
 
 	private List<UriProcessor> linkUriProcessors = defaultLinkUriProcessors();
 
@@ -217,7 +217,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.spanTypeToElementName = spanTypeToElementName;
 		copyLinkProcessors(other);
 		if (stylesheets != null) {
-			other.stylesheets = new ArrayList<Stylesheet>();
+			other.stylesheets = new ArrayList<>();
 			other.stylesheets.addAll(stylesheets);
 		}
 	}
@@ -463,7 +463,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		if (stylesheets == null) {
-			stylesheets = new ArrayList<Stylesheet>();
+			stylesheets = new ArrayList<>();
 		}
 		stylesheets.add(stylesheet);
 	}
@@ -1316,7 +1316,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		private final Reader reader;
 
-		private final Map<String, String> attributes = new HashMap<String, String>();
+		private final Map<String, String> attributes = new HashMap<>();
 
 		/**
 		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code

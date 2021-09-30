@@ -53,8 +53,8 @@ public class SplitOutlineItem extends OutlineItem {
 			return getParent().getPageOrder();
 		}
 		if (pages == null) {
-			final Set<String> pageTargets = new HashSet<String>();
-			pages = new ArrayList<SplitOutlineItem>();
+			final Set<String> pageTargets = new HashSet<>();
+			pages = new ArrayList<>();
 			accept(item -> {
 				SplitOutlineItem split = (SplitOutlineItem) item;
 				if (pageTargets.add(split.getSplitTarget())) {
@@ -83,7 +83,7 @@ public class SplitOutlineItem extends OutlineItem {
 			return getParent().getOutlineItemById(id);
 		}
 		if (outlineItemById == null) {
-			final Map<String, SplitOutlineItem> splitTargetById = new HashMap<String, SplitOutlineItem>();
+			final Map<String, SplitOutlineItem> splitTargetById = new HashMap<>();
 			this.accept(item -> {
 				if (item.getId() != null) {
 					if (splitTargetById.containsKey(item.getId())) {

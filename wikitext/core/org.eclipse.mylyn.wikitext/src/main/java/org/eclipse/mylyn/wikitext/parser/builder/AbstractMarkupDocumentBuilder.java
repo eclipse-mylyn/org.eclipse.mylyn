@@ -367,7 +367,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	 */
 	protected void pushWriter(Writer writer) {
 		if (writerState == null) {
-			writerState = new Stack<MarkupWriter>();
+			writerState = new Stack<>();
 		}
 		writerState.push(this.writer);
 		this.writer = new MarkupWriter(writer);

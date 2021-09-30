@@ -24,7 +24,7 @@ import java.util.List;
  * @since 3.0
  */
 public class Stylesheet {
-	private final List<Block> blocks = new ArrayList<Block>();
+	private final List<Block> blocks = new ArrayList<>();
 
 	public List<Block> getBlocks() {
 		return Collections.unmodifiableList(blocks);

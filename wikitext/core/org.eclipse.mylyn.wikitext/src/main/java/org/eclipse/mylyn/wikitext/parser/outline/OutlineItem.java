@@ -32,7 +32,7 @@ public class OutlineItem {
 
 	private final int level;
 
-	private List<OutlineItem> children = new ArrayList<OutlineItem>();
+	private List<OutlineItem> children = new ArrayList<>();
 
 	private final int offset;
 
@@ -254,7 +254,7 @@ public class OutlineItem {
 
 	public OutlineItem findItemById(String id) {
 		if (itemsById == null) {
-			itemsById = new HashMap<String, OutlineItem>();
+			itemsById = new HashMap<>();
 			accept(item -> {
 				if (item.getId() != null) {
 					itemsById.put(item.getId(), item);

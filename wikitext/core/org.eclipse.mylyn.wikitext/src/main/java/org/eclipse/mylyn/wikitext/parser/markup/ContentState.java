@@ -26,9 +26,9 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
  * @since 3.0
  */
 public class ContentState implements Locator {
-	private final Map<String, String> footnoteIdToHtmlId = new HashMap<String, String>();
+	private final Map<String, String> footnoteIdToHtmlId = new HashMap<>();
 
-	private final Map<String, String> glossaryItems = new HashMap<String, String>();
+	private final Map<String, String> glossaryItems = new HashMap<>();
 
 	private String markupContent;
 

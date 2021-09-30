@@ -43,7 +43,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 	}
 
 	private void moveLeadingOrTrailingSpaceOutOfElements(Element body) {
-		Set<Node> affectedParents = new HashSet<Node>();
+		Set<Node> affectedParents = new HashSet<>();
 		for (Element element : body.getAllElements()) {
 			if (!Html.isWhitespacePreserve(element)) {
 				normalizeTextNodes(element);

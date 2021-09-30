@@ -42,7 +42,7 @@ public abstract class GlossaryBlock extends Block {
 			return 0;
 		}
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
-			SortedMap<String, String> glossary = new TreeMap<String, String>(state.getGlossaryTerms());
+			SortedMap<String, String> glossary = new TreeMap<>(state.getGlossaryTerms());
 
 			builder.beginBlock(BlockType.DEFINITION_LIST,
 					new Attributes(null, null, style == null ? null : "list-style: " + style, null)); //$NON-NLS-1$

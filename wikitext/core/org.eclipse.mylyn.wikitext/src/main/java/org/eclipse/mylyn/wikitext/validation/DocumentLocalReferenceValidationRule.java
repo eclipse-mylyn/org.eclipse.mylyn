@@ -113,7 +113,7 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 			}
 			if (href.length() > 0 && href.charAt(0) == '#') {
 				if (references == null) {
-					references = new ArrayList<LocalReference>();
+					references = new ArrayList<>();
 				}
 				String name = href.substring(1);
 				int length = locator.getLineSegmentEndOffset() - locator.getLineCharacterOffset();
@@ -143,7 +143,7 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 			for (LocalReference reference : outlineParser.references) {
 				if (!anchorNames.contains(reference.name)) {
 					if (problems == null) {
-						problems = new ArrayList<ValidationProblem>();
+						problems = new ArrayList<>();
 					}
 					problems.add(new ValidationProblem(Severity.ERROR,
 							MessageFormat.format(Messages.getString("DocumentLocalReferenceValidationRule.0"), //$NON-NLS-1$

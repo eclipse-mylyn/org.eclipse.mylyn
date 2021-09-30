@@ -26,11 +26,11 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	private int indentLevel;
 
-	private final Stack<Integer> childCounts = new Stack<Integer>();
+	private final Stack<Integer> childCounts = new Stack<>();
 
 	private int childCount;
 
-	private final Stack<String> elements = new Stack<String>();
+	private final Stack<String> elements = new Stack<>();
 
 	private int lineOffset = 0;
 

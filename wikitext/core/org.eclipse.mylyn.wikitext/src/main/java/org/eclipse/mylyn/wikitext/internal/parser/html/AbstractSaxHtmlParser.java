@@ -98,7 +98,7 @@ public abstract class AbstractSaxHtmlParser {
 		noCharacterContentElements = noCharacterContentElementsBuilder.build();
 	}
 
-	private static final Map<String, SpanType> elementNameToSpanType = new HashMap<String, SpanType>();
+	private static final Map<String, SpanType> elementNameToSpanType = new HashMap<>();
 	static {
 		elementNameToSpanType.put("a", SpanType.LINK); //$NON-NLS-1$
 		elementNameToSpanType.put("b", SpanType.BOLD); //$NON-NLS-1$
@@ -121,7 +121,7 @@ public abstract class AbstractSaxHtmlParser {
 		elementNameToSpanType.put("mark", SpanType.MARK); //$NON-NLS-1$
 	}
 
-	private static final Map<String, BlockType> elementNameToBlockType = new HashMap<String, DocumentBuilder.BlockType>();
+	private static final Map<String, BlockType> elementNameToBlockType = new HashMap<>();
 	static {
 		elementNameToBlockType.put("ul", BlockType.BULLETED_LIST); //$NON-NLS-1$
 		elementNameToBlockType.put("code", BlockType.CODE); //$NON-NLS-1$
@@ -183,7 +183,7 @@ public abstract class AbstractSaxHtmlParser {
 
 	private class DocumentBuilderAdapter implements ContentHandler {
 
-		private final Stack<ElementHandler> handlers = new Stack<ElementHandler>();
+		private final Stack<ElementHandler> handlers = new Stack<>();
 
 		private ElementState elementState;
 

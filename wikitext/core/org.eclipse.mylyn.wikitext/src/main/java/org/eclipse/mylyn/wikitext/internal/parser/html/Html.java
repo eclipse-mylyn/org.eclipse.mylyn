@@ -23,7 +23,7 @@ import org.jsoup.nodes.Element;
  */
 class Html {
 
-	private static final Set<String> spanElements = new HashSet<String>();
+	private static final Set<String> spanElements = new HashSet<>();
 	static {
 		spanElements.add("a"); //$NON-NLS-1$
 		spanElements.add("b"); //$NON-NLS-1$

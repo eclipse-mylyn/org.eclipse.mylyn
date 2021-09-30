@@ -56,7 +56,7 @@ public abstract class ValidationRule {
 		if (end > markup.length()) {
 			end = markup.length();
 		}
-		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
+		List<ValidationProblem> problems = new ArrayList<>();
 
 		int o = offset;
 		while (o < end) {

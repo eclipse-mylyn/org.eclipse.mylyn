@@ -38,15 +38,15 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	private PrintWriter out;
 
-	private final Map<String, String> prefixToUri = new HashMap<String, String>();
+	private final Map<String, String> prefixToUri = new HashMap<>();
 
-	private final Map<String, String> uriToPrefix = new HashMap<String, String>();
+	private final Map<String, String> uriToPrefix = new HashMap<>();
 
 	private boolean inEmptyElement = false;
 
 	private boolean inStartElement = false;
 
-	private final Stack<String> elements = new Stack<String>();
+	private final Stack<String> elements = new Stack<>();
 
 	private char xmlHeaderQuoteChar = '\'';
 

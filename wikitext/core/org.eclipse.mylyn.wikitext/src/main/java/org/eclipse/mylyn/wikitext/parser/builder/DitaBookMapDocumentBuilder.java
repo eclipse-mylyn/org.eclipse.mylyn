@@ -59,7 +59,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	private File currentTopicFile;
 
-	private final Stack<Integer> headingLevels = new Stack<Integer>();
+	private final Stack<Integer> headingLevels = new Stack<>();
 
 	private boolean mapEntryOpen;
 

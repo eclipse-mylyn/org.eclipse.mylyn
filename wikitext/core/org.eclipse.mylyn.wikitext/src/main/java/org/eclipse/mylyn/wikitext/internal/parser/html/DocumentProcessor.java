@@ -31,7 +31,7 @@ public abstract class DocumentProcessor {
 	/**
 	 * normalize text node children of the given parent element. Ensures that adjacent text nodes are combined into a
 	 * single text node, and whitespace is normalized.
-	 * 
+	 *
 	 * @param parentElement
 	 *            the parent element whose children should be normalized
 	 * @see StringUtil#normaliseWhitespace(String)
@@ -39,7 +39,7 @@ public abstract class DocumentProcessor {
 	protected static void normalizeTextNodes(Element parentElement) {
 		List<Node> children = parentElement.childNodes();
 		if (!children.isEmpty()) {
-			children = new ArrayList<Node>(children);
+			children = new ArrayList<>(children);
 			for (Node child : children) {
 				if (child instanceof TextNode) {
 					TextNode childTextNode = (TextNode) child;

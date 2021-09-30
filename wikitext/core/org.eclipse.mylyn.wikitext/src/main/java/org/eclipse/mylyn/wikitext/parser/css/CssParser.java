@@ -42,8 +42,7 @@ public class CssParser {
 			Pattern.MULTILINE | Pattern.DOTALL);
 
 	static final Pattern CSS_RULE_PATTERN = Pattern.compile("(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", //$NON-NLS-1$
-			Pattern.MULTILINE
-					| Pattern.DOTALL);
+			Pattern.MULTILINE | Pattern.DOTALL);
 
 	private static final String elemNamePatternPart = "(\\*|[a-zA-Z][a-zA-Z0-9]*)"; // capture 1 '*' or name //$NON-NLS-1$
 
@@ -157,7 +156,7 @@ public class CssParser {
 	}
 
 	private List<CssRule> parseBlock(String content, int blockOffset) {
-		List<CssRule> rules = new ArrayList<CssRule>();
+		List<CssRule> rules = new ArrayList<>();
 		Iterator<CssRule> it = createRuleIterator(content, blockOffset);
 		while (it.hasNext()) {
 			rules.add(it.next());
@@ -175,7 +174,7 @@ public class CssParser {
 	public Selector parseSelector(String selectorText) {
 		String[] cssSelectorParts = selectorText.split(","); //$NON-NLS-1$
 
-		List<Selector> parts = new ArrayList<Selector>();
+		List<Selector> parts = new ArrayList<>();
 
 		for (String part : cssSelectorParts) {
 			Selector selector = parseSelectorPart(part);
@@ -193,7 +192,7 @@ public class CssParser {
 	}
 
 	private Selector parseSelectorPart(String part) {
-		List<Selector> parts = new ArrayList<Selector>();
+		List<Selector> parts = new ArrayList<>();
 
 		Matcher matcher = CSS_SELECTOR_PATTERN.matcher(part);
 		while (matcher.find()) {
@@ -238,7 +237,7 @@ public class CssParser {
 
 	private Selector buildElementSelector(String elemSelector, String elemSelectorQualifierType,
 			String elemSelectorQualifier, String elemSelectorPseudoClass) {
-		List<Selector> parts = new ArrayList<Selector>();
+		List<Selector> parts = new ArrayList<>();
 		if (elemSelector != null) {
 			if ("*".equals(elemSelector)) { //$NON-NLS-1$
 				parts.add(new AnySelector());
