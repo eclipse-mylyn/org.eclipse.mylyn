@@ -100,7 +100,7 @@ public class BlockStrategiesTest {
 		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
 		BlockStrategy strategy = strategies.getStrategy(BlockType.TABLE_ROW, new Attributes());
 		assertNotNull(strategy);
-		assertTrue(UnsupportedBlockStrategy.class.equals(strategy.getClass()));
+		assertEquals(UnsupportedBlockStrategy.class, strategy.getClass());
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class BlockStrategiesTest {
 		for (BlockType blockType : unsupportedBlockTypes) {
 			BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 			assertNotNull(strategy);
-			assertTrue(NoOpBlockStrategy.class.equals(strategy.getClass()));
+			assertEquals(NoOpBlockStrategy.class, strategy.getClass());
 		}
 	}
 
