@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
@@ -378,6 +378,6 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 				return Optional.of(delimiter);
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 }
