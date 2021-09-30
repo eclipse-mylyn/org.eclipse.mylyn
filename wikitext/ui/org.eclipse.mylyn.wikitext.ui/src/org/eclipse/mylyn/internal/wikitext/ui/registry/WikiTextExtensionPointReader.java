@@ -277,11 +277,7 @@ public class WikiTextExtensionPointReader {
 				// first ensure that all language names have templates defined
 				Set<String> languageNames = getMarkupLanguageNames();
 				for (String languageName : languageNames) {
-					ValidationRules rules = validationRulesByLanguageName.get(languageName);
-					if (rules == null) {
-						rules = new ValidationRules();
-						validationRulesByLanguageName.put(languageName, rules);
-					}
+					validationRulesByLanguageName.computeIfAbsent(languageName, s -> new ValidationRules());
 				}
 				// next connect the hierarchy
 				for (String languageName : languageNames) {

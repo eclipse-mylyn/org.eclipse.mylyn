@@ -58,17 +58,12 @@ public class ContentState implements Locator {
 	}
 
 	public String getFootnoteId(String footnote) {
-		String id = footnoteIdToHtmlId.get(footnote);
-		if (id == null) {
-			// Create a stable id.  This has a greater chance of collisions, however
-			// it's an acceptable risk to gain stable ids.  Unfortunately there's no way to
-			// know if the id is already in use without doing a two-pass parse, which we don't
-			// want to do.  Instead, we choose a prefix of '___' since the '_' is not used by
-			// the default id generator and it's unlikely to be found in a document.
-			id = "___fn" + footnote; //$NON-NLS-1$
-			footnoteIdToHtmlId.put(footnote, id);
-		}
-		return id;
+		// Create a stable id.  This has a greater chance of collisions, however
+		// it's an acceptable risk to gain stable ids.  Unfortunately there's no way to
+		// know if the id is already in use without doing a two-pass parse, which we don't
+		// want to do.  Instead, we choose a prefix of '___' since the '_' is not used by
+		// the default id generator and it's unlikely to be found in a document.
+		return footnoteIdToHtmlId.computeIfAbsent(footnote, s -> "___fn" + s);
 	}
 
 	/**
