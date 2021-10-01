@@ -31,11 +31,11 @@
 <repository location="https://download.eclipse.org/tools/orbit/R-builds/R20170516192513/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.google.guava" version="30.1.0.v20210127-2300"/>
+<unit id="com.google.guava.source" version="30.1.0.v20210127-2300"/>
 <unit id="org.jsoup" version="1.8.3.v20181012-1713"/>
 <unit id="org.jsoup.source" version="1.8.3.v20181012-1713"/>
-<unit id="com.google.guava" version="27.1.0.v20190517-1946"/>
-<unit id="com.google.guava.source" version="27.1.0.v20190517-1946"/>
-<repository location="https://ci.eclipse.org/orbit/job/orbit-recipes/lastStableBuild/artifact/releng/repository/target/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/R-builds/R20210825222808/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
