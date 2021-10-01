@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,15 +14,14 @@
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 import java.io.StringWriter;
 import java.util.Collections;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Sets;
 
@@ -41,9 +40,6 @@ public class MarkupLanguageTest {
 
 	}
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	private final MarkupLanguage markupLanguage = new TestMarkupLanguage();
 
 	@Test
@@ -53,16 +49,16 @@ public class MarkupLanguageTest {
 
 	@Test
 	public void setFileExtensionsNull() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Must specify file extensions");
-		markupLanguage.setFileExtensions(null);
+		NullPointerException exception = assertThrows(NullPointerException.class,
+				() -> markupLanguage.setFileExtensions(null));
+		assertEquals("Must specify file extensions", exception.getMessage());
 	}
 
 	@Test
 	public void setFileExtensionsEmpty() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("File extensions must not be empty");
-		markupLanguage.setFileExtensions(Collections.<String> emptySet());
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+				() -> markupLanguage.setFileExtensions(Collections.<String> emptySet()));
+		assertEquals("File extensions must not be empty", exception.getMessage());
 	}
 
 	@Test
@@ -73,7 +69,7 @@ public class MarkupLanguageTest {
 
 	@Test
 	public void documentBuilderUnsupported() {
-		thrown.expect(UnsupportedOperationException.class);
-		markupLanguage.createDocumentBuilder(new StringWriter());
+		assertThrows(UnsupportedOperationException.class,
+				() -> markupLanguage.createDocumentBuilder(new StringWriter()));
 	}
 }

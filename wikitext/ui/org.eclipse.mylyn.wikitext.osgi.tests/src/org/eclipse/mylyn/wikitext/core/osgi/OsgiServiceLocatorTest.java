@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 David Green and others.
+ * Copyright (c) 2013, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -29,17 +29,13 @@ import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.common.base.Throwables;
 
 public class OsgiServiceLocatorTest {
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void create() {
@@ -52,7 +48,7 @@ public class OsgiServiceLocatorTest {
 				createBundleWithLanguage(MockMarkupLanguage.class));
 		Set<MarkupLanguage> languages = serviceLocator.getAllMarkupLanguages();
 		assertNotNull(languages);
-		assertTrue(!languages.isEmpty());
+		assertFalse(languages.isEmpty());
 		assertMarkupLanguagePresent("MockMarkupLanguage", languages);
 	}
 
@@ -108,8 +104,8 @@ public class OsgiServiceLocatorTest {
 		try {
 			URL url = new URL("file:" + markupLanguage.getName());
 			List<URL> resources = Collections.singletonList(url);
-			doReturn(Collections.enumeration(resources)).when(bundle).findEntries(eq(servicesFolder),
-					eq(MarkupLanguage.class.getName()), eq(false));
+			doReturn(Collections.enumeration(resources)).when(bundle)
+					.findEntries(eq(servicesFolder), eq(MarkupLanguage.class.getName()), eq(false));
 			doReturn(1234L).when(bundle).getBundleId();
 			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {
