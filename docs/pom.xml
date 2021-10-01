@@ -10,7 +10,7 @@
 	<version>2.11.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>1.7.0</tycho-version>
+		<tycho-version>2.5.0</tycho-version>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
 		<sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
 	</properties>
