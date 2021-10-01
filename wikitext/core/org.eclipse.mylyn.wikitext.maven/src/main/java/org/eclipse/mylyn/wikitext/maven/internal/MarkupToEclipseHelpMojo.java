@@ -391,10 +391,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	}
 
 	private SplittingStrategy createSplittingStrategy() {
-		SplittingStrategy splittingStrategy = multipleOutputFiles
-				? new DefaultSplittingStrategy()
-				: new NoSplittingStrategy();
-		return splittingStrategy;
+		return multipleOutputFiles ? new DefaultSplittingStrategy() : new NoSplittingStrategy();
 	}
 
 	protected HtmlDocumentBuilder createRootBuilder(Writer writer, String name, String relativePath) {

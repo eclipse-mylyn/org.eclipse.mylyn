@@ -164,9 +164,8 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 					AnnotationHyperlinkDetector detector = (AnnotationHyperlinkDetector) viewer.getTextWidget()
 							.getData(AnnotationHyperlinkDetector.class.getName());
 					if (detector != null) {
-						IHyperlink hyperlink = detector.createHyperlink(viewer, viewer.getAnnotationModel(),
+						return detector.createHyperlink(viewer, viewer.getAnnotationModel(),
 								annotation.getHyperlnkAnnotation());
-						return hyperlink;
 					}
 				}
 			}
@@ -194,8 +193,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		Position position = viewer.getAnnotationModel().getPosition(annotation);
 		Point locationAtOffset = viewer.getTextWidget().getLocationAtOffset(position.offset);
 		Rectangle bounds = annotation.getImage().getBounds();
-		Rectangle rectange = new Rectangle(locationAtOffset.x, locationAtOffset.y, bounds.width, bounds.height);
-		return rectange;
+		return new Rectangle(locationAtOffset.x, locationAtOffset.y, bounds.width, bounds.height);
 	}
 
 	void adjust(MouseEvent e) {
