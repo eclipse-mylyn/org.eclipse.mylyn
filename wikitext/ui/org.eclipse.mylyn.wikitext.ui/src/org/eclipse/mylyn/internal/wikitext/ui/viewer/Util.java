@@ -21,7 +21,6 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 
 class Util {
 
-	@SuppressWarnings("unchecked")
 	static boolean annotationsIncludeOffset(IAnnotationModel annotationModel, int offset) {
 		if (annotationModel == null) {
 			return false;

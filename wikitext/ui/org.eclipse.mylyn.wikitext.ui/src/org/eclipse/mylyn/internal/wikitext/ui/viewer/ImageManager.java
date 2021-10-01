@@ -240,7 +240,6 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		inspect();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void inspect() {
 		synchronized (this) {
 			annotations.clear();
@@ -286,7 +285,6 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		stop();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void updateImage(String imgSrc, ImageData imageData) {
 		if (display.isDisposed() || viewer.getTextWidget().isDisposed()) {
 			return;

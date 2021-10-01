@@ -1010,7 +1010,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						newProjectionAnnotationById.put(newAnnotation.getHeadingId(), newAnnotation);
 					}
 				}
-				@SuppressWarnings("unchecked")
 				Iterator<Annotation> annotationIt = projectionAnnotationModel.getAnnotationIterator();
 				while (annotationIt.hasNext()) {
 					Annotation annotation = annotationIt.next();
@@ -1382,6 +1381,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return previewTab != null && tabFolder.getSelection() == previewTab;
 	}
 
+	@Override
 	protected boolean getInitialWordWrapStatus() {
 		return true;
 	}

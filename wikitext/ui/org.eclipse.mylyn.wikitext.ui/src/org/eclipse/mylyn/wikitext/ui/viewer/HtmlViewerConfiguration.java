@@ -200,7 +200,6 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setTextPresentation(TextPresentation textPresentation) {
 		if (textPresentation != null) {
 			TextPresentation textPresentationCopy = new TextPresentation();

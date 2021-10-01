@@ -180,7 +180,6 @@ class FoldingStructure implements IFoldingStructure {
 		}, collapseRegionContainingCaret);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void operateOnAnnotations(AnnotationOperation operation, boolean collapseRegionIncludingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
