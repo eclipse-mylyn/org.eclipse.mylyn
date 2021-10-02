@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.github.core.PullRequest;
@@ -55,39 +55,48 @@ public class MergePullRequestHandler extends TaskDataHandler {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				PullRequestComposite prComp = PullRequestConnector
-						.getPullRequest(data);
-				if (prComp == null)
-					return Status.CANCEL_STATUS;
-				PullRequest request = prComp.getRequest();
-				Repository repo = PullRequestUtils.getRepository(request);
-				if (repo == null)
-					return Status.CANCEL_STATUS;
-				String target = request.getBase().getRef();
-				String branchName = PullRequestUtils.getBranchName(request);
 				try {
-					Ref sourceRef = repo.findRef(branchName);
-					if (sourceRef != null) {
-						if (!PullRequestUtils.isCurrentBranch(target, repo)) {
-							monitor.setTaskName(MessageFormat
-									.format(Messages.MergePullRequestHandler_TaskCheckout,
-											target));
-							BranchOperationUI.checkout(repo, target).run(
-									new SubProgressMonitor(monitor, 1));
+					PullRequestComposite prComp = PullRequestConnector
+							.getPullRequest(data);
+					if (prComp == null)
+						return Status.CANCEL_STATUS;
+					PullRequest request = prComp.getRequest();
+					Repository repo = PullRequestUtils.getRepository(request);
+					if (repo == null)
+						return Status.CANCEL_STATUS;
+					String target = request.getBase().getRef();
+					String branchName = PullRequestUtils.getBranchName(request);
+					try {
+						Ref sourceRef = repo.findRef(branchName);
+						if (sourceRef != null) {
+							SubMonitor progress = SubMonitor.convert(monitor,
+									2);
+							if (!PullRequestUtils.isCurrentBranch(target,
+									repo)) {
+								progress.subTask(MessageFormat.format(
+										Messages.MergePullRequestHandler_TaskCheckout,
+										target));
+								BranchOperationUI.checkout(repo, target)
+										.run(progress.newChild(1));
+							}
+							progress.subTask(MessageFormat.format(
+									Messages.MergePullRequestHandler_TaskMerge,
+									branchName, target));
+							new MergeOperation(repo, branchName)
+									.execute(progress.newChild(1));
+							executeCallback(event);
 						}
-						monitor.setTaskName(MessageFormat.format(
-								Messages.MergePullRequestHandler_TaskMerge,
-								branchName, target));
-						new MergeOperation(repo, branchName)
-								.execute(new SubProgressMonitor(monitor, 1));
-						executeCallback(event);
+					} catch (IOException e) {
+						GitHubUi.logError(e);
+					} catch (CoreException e) {
+						GitHubUi.logError(e);
 					}
-				} catch (IOException e) {
-					GitHubUi.logError(e);
-				} catch (CoreException e) {
-					GitHubUi.logError(e);
+					return Status.OK_STATUS;
+				} finally {
+					if (monitor != null) {
+						monitor.done();
+					}
 				}
-				return Status.OK_STATUS;
 			}
 		};
 		schedule(job, event);

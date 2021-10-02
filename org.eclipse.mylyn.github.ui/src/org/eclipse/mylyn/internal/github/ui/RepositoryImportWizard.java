@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.op.CloneOperation;
@@ -103,46 +103,52 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				Messages.RepositoryImportWizard_CloningRepositories,
 				Integer.valueOf(repositories.length));
 		Job job = new Job(name) {
+
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(name, repositories.length * 3);
-				GitHubClient client = GitHub
-						.configureClient(new GitHubClient());
-				RepositoryService service = new RepositoryService(client);
-				for (SearchRepository repo : repositories)
-					try {
-						final String id = repo.getId();
-						monitor.setTaskName(MessageFormat
-								.format(Messages.RepositoryImportWizard_CreatingOperation,
-										id));
-						CloneOperation op = createCloneOperation(repo, service);
-						monitor.worked(1);
+				try {
+					SubMonitor progress = SubMonitor.convert(monitor, name,
+							repositories.length * 3);
+					GitHubClient client = GitHub
+							.configureClient(new GitHubClient());
+					RepositoryService service = new RepositoryService(client);
+					for (SearchRepository repo : repositories) {
+						try {
+							final String id = repo.getId();
+							progress.subTask(MessageFormat.format(
+									Messages.RepositoryImportWizard_CreatingOperation,
+									id));
+							CloneOperation op = createCloneOperation(repo,
+									service);
+							progress.worked(1);
 
-						monitor.setTaskName(MessageFormat.format(
-								Messages.RepositoryImportWizard_Cloning, id));
-						SubProgressMonitor sub = new SubProgressMonitor(
-								monitor, 1);
-						op.run(sub);
-						sub.done();
+							monitor.setTaskName(MessageFormat.format(
+									Messages.RepositoryImportWizard_Cloning,
+									id));
+							op.run(progress.newChild(1));
 
-						monitor.setTaskName(MessageFormat
-								.format(Messages.RepositoryImportWizard_Registering,
-										id));
-						RepositoryUtil.INSTANCE
-								.addConfiguredRepository(op.getGitDir());
-						monitor.worked(1);
-					} catch (InvocationTargetException e) {
-						GitHubUi.logError(e);
-					} catch (InterruptedException e) {
-						GitHubUi.logError(e);
-					} catch (IOException e) {
-						GitHubUi.logError(GitHubException.wrap(e));
-					} catch (URISyntaxException e) {
-						GitHubUi.logError(e);
+							monitor.setTaskName(MessageFormat.format(
+									Messages.RepositoryImportWizard_Registering,
+									id));
+							RepositoryUtil.INSTANCE
+									.addConfiguredRepository(op.getGitDir());
+							progress.worked(1);
+						} catch (InvocationTargetException e) {
+							GitHubUi.logError(e);
+						} catch (InterruptedException e) {
+							GitHubUi.logError(e);
+						} catch (IOException e) {
+							GitHubUi.logError(GitHubException.wrap(e));
+						} catch (URISyntaxException e) {
+							GitHubUi.logError(e);
+						}
 					}
-				monitor.done();
-
-				return Status.OK_STATUS;
+					return Status.OK_STATUS;
+				} finally {
+					if (monitor != null) {
+						monitor.done();
+					}
+				}
 			}
 		};
 		IWorkbenchSiteProgressService progress = PlatformUI
