@@ -143,8 +143,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		if (message == null && exception != null) {
 			message = exception.getClass().getName() + ": " + exception.getMessage(); //$NON-NLS-1$
 		}
-		Status status = new Status(statusCode, getPluginId(), statusCode, message, exception);
-		return status;
+		return new Status(statusCode, getPluginId(), statusCode, message, exception);
 	}
 
 	public Preferences getPreferences() {
@@ -161,8 +160,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		if (cheatSheets == null) {
 			SortedMap<String, HelpContent> cheatSheets = new TreeMap<>();
 
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-					EXTENSION_POINT_CHEAT_SHEET);
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+					.getExtensionPoint(getPluginId(), EXTENSION_POINT_CHEAT_SHEET);
 			if (extensionPoint != null) {
 				IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 				for (IConfigurationElement element : configurationElements) {
@@ -211,8 +210,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		if (templates == null) {
 			Map<String, Templates> templates = new HashMap<>();
 
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-					EXTENSION_POINT_CONTENT_ASSIST);
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+					.getExtensionPoint(getPluginId(), EXTENSION_POINT_CONTENT_ASSIST);
 			if (extensionPoint != null) {
 
 				IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
@@ -338,8 +337,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 			com.google.common.collect.ImmutableMap.Builder<String, List<String>> markupLanguageToFileRefRegexes = ImmutableMap
 					.builder();
 
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-					EXTENSION_POINT_RELATIVE_FILE_PATH_HYPERLINK_DECTOR);
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+					.getExtensionPoint(getPluginId(), EXTENSION_POINT_RELATIVE_FILE_PATH_HYPERLINK_DECTOR);
 			if (extensionPoint != null) {
 
 				IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
