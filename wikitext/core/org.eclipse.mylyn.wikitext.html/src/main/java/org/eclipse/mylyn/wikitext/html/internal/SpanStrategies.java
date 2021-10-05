@@ -15,14 +15,13 @@ package org.eclipse.mylyn.wikitext.html.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Predicates.isNull;
-import static com.google.common.base.Predicates.not;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -125,7 +124,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 				}
 			}
 		}
-		strategies = ImmutableList.copyOf(FluentIterable.from(strategies).filter(not(isNull())));
+		strategies = ImmutableList.copyOf(FluentIterable.from(strategies).filter(Objects::nonNull));
 		if (strategies.isEmpty()) {
 			return null;
 		} else if (strategies.size() == 1) {

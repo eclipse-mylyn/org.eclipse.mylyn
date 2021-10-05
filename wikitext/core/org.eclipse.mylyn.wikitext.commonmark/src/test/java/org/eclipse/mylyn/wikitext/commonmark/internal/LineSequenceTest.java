@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
 public class LineSequenceTest {
@@ -84,7 +83,7 @@ public class LineSequenceTest {
 	@Test
 	public void withPredicate() {
 		LineSequence originalLineSequence = LineSequence.create("one\ntwo\nthree\nfour");
-		LineSequence lineSequence = originalLineSequence.with(Predicates.not(input -> input.getText().equals("three")));
+		LineSequence lineSequence = originalLineSequence.with(input -> !input.getText().equals("three"));
 		assertEquals("one", lineSequence.getCurrentLine().getText());
 		lineSequence.advance();
 		assertEquals("two", lineSequence.getCurrentLine().getText());
