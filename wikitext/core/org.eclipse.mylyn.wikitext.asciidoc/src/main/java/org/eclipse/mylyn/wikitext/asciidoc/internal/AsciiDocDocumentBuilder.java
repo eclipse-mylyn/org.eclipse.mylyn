@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Jeremie Bresson and others.
+ * Copyright (c) 2016, 2021 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ import com.google.common.base.Strings;
  */
 public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
-	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+	private final Map<String, String> entityToLiteral = new HashMap<>();
 
 	{
 		entityToLiteral.put("amp", "&"); //$NON-NLS-1$ //$NON-NLS-2$
