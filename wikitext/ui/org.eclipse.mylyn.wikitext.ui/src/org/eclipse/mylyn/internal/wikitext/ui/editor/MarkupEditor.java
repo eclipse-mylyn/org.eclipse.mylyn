@@ -409,7 +409,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					return;
 				}
 				if (isFontPreferenceChange(event)) {
-					viewer.getTextWidget().getDisplay().asyncExec(() -> reloadPreferences());
+					viewer.getTextWidget().getDisplay().asyncExec(this::reloadPreferences);
 				}
 			};
 			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
