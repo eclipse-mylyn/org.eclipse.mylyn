@@ -23,7 +23,6 @@ import java.util.function.Predicate;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
 public class SourceBlocks extends SourceBlock {
@@ -78,12 +77,12 @@ public class SourceBlocks extends SourceBlock {
 
 	@Override
 	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
-		createContext(contextBuilder, lineSequence, Predicates.<BlockContext> alwaysTrue());
+		createContext(contextBuilder, lineSequence, x -> true);
 	}
 
 	@Override
 	public void process(final ProcessingContext context, final DocumentBuilder builder, LineSequence lineSequence) {
-		process(context, builder, lineSequence, Predicates.<BlockContext> alwaysTrue());
+		process(context, builder, lineSequence, x -> true);
 	}
 
 	public void process(final ProcessingContext context, final DocumentBuilder builder, LineSequence lineSequence,

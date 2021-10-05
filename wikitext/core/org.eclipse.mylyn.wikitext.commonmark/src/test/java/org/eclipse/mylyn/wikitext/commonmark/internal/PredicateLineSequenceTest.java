@@ -21,13 +21,11 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 public class PredicateLineSequenceTest {
 
 	@Test(expected = NullPointerException.class)
 	public void requiresDelegate() {
-		assertNotNull(new PredicateLineSequence(null, Predicates.<Line> alwaysTrue()));
+		assertNotNull(new PredicateLineSequence(null, x -> true));
 	}
 
 	@Test(expected = NullPointerException.class)

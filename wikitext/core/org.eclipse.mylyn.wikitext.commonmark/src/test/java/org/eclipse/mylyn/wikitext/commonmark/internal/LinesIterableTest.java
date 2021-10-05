@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -28,13 +28,11 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 public class LinesIterableTest {
 
 	@Test(expected = NullPointerException.class)
 	public void requiresLineSequence() {
-		assertNotNull(new LinesIterable(null, Predicates.<Line> alwaysTrue()));
+		assertNotNull(new LinesIterable(null, x -> true));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -44,7 +42,7 @@ public class LinesIterableTest {
 
 	@Test
 	public void iteratorWithNoLines() {
-		LinesIterable iterable = new LinesIterable(LineSequence.create(""), Predicates.<Line> alwaysTrue());
+		LinesIterable iterable = new LinesIterable(LineSequence.create(""), x -> true);
 		Iterator<Line> iterator = iterable.iterator();
 		assertNotNull(iterator);
 		assertFalse(iterator.hasNext());
@@ -53,7 +51,7 @@ public class LinesIterableTest {
 
 	@Test
 	public void iteratorAdvances() {
-		LinesIterable iterable = new LinesIterable(LineSequence.create("one\ntwo"), Predicates.<Line> alwaysTrue());
+		LinesIterable iterable = new LinesIterable(LineSequence.create("one\ntwo"), x -> true);
 		Iterator<Line> iterator = iterable.iterator();
 		assertNotNull(iterator);
 		assertTrue(iterator.hasNext());
@@ -67,7 +65,7 @@ public class LinesIterableTest {
 
 	@Test
 	public void iteratorRemove() {
-		LinesIterable iterable = new LinesIterable(LineSequence.create("one"), Predicates.<Line> alwaysTrue());
+		LinesIterable iterable = new LinesIterable(LineSequence.create("one"), x -> true);
 		Iterator<Line> iterator = iterable.iterator();
 		assertNotNull(iterator);
 		assertTrue(iterator.hasNext());

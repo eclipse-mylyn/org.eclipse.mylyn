@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.google.common.base.Predicates;
-
 public abstract class LineSequence implements Iterable<Line> {
 
 	static abstract class ForwardLineSequence extends LineSequence {
@@ -48,7 +46,7 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	@Override
 	public Iterator<Line> iterator() {
-		Predicate<Line> predicate = Predicates.<Line> alwaysTrue();
+		Predicate<Line> predicate = x -> true;
 		return iterator(predicate);
 	}
 

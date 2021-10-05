@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -71,8 +71,8 @@ public class LineSequenceTest {
 
 	@Test
 	public void iteratorWithPredicate() {
-		assertFalse(LineSequence.create("").with(Predicates.<Line> alwaysTrue()).iterator().hasNext());
-		assertFalse(LineSequence.create("a").with(Predicates.<Line> alwaysFalse()).iterator().hasNext());
+		assertFalse(LineSequence.create("").with(x -> true).iterator().hasNext());
+		assertFalse(LineSequence.create("a").with(x -> false).iterator().hasNext());
 
 		List<String> strings = new ArrayList<>();
 		for (Line line : LineSequence.create("a\nb\nc\na").with(input -> !input.getText().equals("c"))) {
