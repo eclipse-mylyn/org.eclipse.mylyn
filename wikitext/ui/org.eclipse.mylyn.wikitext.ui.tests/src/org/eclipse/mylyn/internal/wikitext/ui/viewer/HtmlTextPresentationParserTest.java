@@ -173,7 +173,7 @@ public class HtmlTextPresentationParserTest {
 	}
 
 	@Test
-	public void defaultStyles() throws IOException {
+	public void defaultStyles() {
 		assertDefaultCssStyles("font-family: Arial, Helvetica, sans-serif", "p");
 		assertDefaultCssStyles(
 				"font-family: Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; color: #172f47", "h1");

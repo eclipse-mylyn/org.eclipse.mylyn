@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -326,7 +326,7 @@ public class HtmlTextPresentationParser {
 		}
 	}
 
-	public static Reader getDefaultStylesheetContent() throws IOException {
+	public static Reader getDefaultStylesheetContent() {
 		return new InputStreamReader(HtmlTextPresentationParser.class.getResourceAsStream("default.css"), //$NON-NLS-1$
 				StandardCharsets.UTF_8);
 	}
@@ -762,7 +762,8 @@ public class HtmlTextPresentationParser {
 				++elementState.indentLevel;
 			}
 			// process stylesheet
-			stylesheet.applyTo(elementState, rule -> cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, rule));
+			stylesheet.applyTo(elementState, rule -> cssStyleManager.processCssStyles(elementState.fontState,
+					parentElementState.fontState, rule));
 
 			int numAtts = atts.getLength();
 			for (int x = 0; x < numAtts; ++x) {
