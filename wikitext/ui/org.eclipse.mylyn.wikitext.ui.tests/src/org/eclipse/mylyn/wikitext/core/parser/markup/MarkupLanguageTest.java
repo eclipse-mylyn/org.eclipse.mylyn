@@ -17,13 +17,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class MarkupLanguageTest {
 
@@ -44,7 +44,7 @@ public class MarkupLanguageTest {
 
 	@Test
 	public void getFileExtensionsDefault() {
-		assertEquals(Sets.newHashSet(markupLanguage.getName()), markupLanguage.getFileExtensions());
+		assertEquals(new HashSet<>(Arrays.asList(markupLanguage.getName())), markupLanguage.getFileExtensions());
 	}
 
 	@Test
@@ -63,8 +63,8 @@ public class MarkupLanguageTest {
 
 	@Test
 	public void getFileExtensionsSpecified() {
-		markupLanguage.setFileExtensions(Sets.newHashSet(markupLanguage.getName(), "123"));
-		assertEquals(Sets.newHashSet(markupLanguage.getName(), "123"), markupLanguage.getFileExtensions());
+		markupLanguage.setFileExtensions(new HashSet<>(Arrays.asList(markupLanguage.getName(), "123")));
+		assertEquals(new HashSet<>(Arrays.asList(markupLanguage.getName(), "123")), markupLanguage.getFileExtensions());
 	}
 
 	@Test

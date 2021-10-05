@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,11 +20,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class FileToMarkupLanguageTest {
 
@@ -80,13 +80,13 @@ public class FileToMarkupLanguageTest {
 	}
 
 	private FileToMarkupLanguage create(MarkupLanguage... languages) {
-		return new FileToMarkupLanguage(Sets.newHashSet(languages));
+		return new FileToMarkupLanguage(new HashSet<>(Arrays.asList(languages)));
 	}
 
 	private MarkupLanguage mockMarkupLanguage(String name) {
 		MarkupLanguage mock = mock(MarkupLanguage.class);
 		doReturn(name).when(mock).getName();
-		doReturn(Sets.newHashSet(name)).when(mock).getFileExtensions();
+		doReturn(new HashSet<>(Arrays.asList(name))).when(mock).getFileExtensions();
 		return mock;
 	}
 }

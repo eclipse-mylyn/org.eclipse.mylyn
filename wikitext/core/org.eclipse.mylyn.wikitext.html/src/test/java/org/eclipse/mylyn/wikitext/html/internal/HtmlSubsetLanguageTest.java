@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,9 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -32,40 +34,38 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 public class HtmlSubsetLanguageTest {
 
 	@Test(expected = NullPointerException.class)
 	public void createNullName() {
 		new HtmlSubsetLanguage(null, null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
-				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+				ImmutableMap.of(), Collections.emptyList(), false, true);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void createNullBlockTypes() {
-		new HtmlSubsetLanguage("Test", null, 6, null, ImmutableSet.of(SpanType.BOLD),
-				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+		new HtmlSubsetLanguage("Test", null, 6, null, ImmutableSet.of(SpanType.BOLD), ImmutableMap.of(),
+				Collections.emptyList(), false, true);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void createNullSpanTypes() {
-		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), null,
-				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), null, ImmutableMap.of(),
+				Collections.emptyList(), false, true);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void createNullTagNameSubstitutions() {
 		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD),
-				null, Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+				null, Collections.emptyList(), false, true);
 	}
 
 	@Test
 	public void createInvalidHeadingLevel() {
 		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
 				() -> new HtmlSubsetLanguage("Test", null, -1, ImmutableSet.of(BlockType.PARAGRAPH),
-						ImmutableSet.of(SpanType.BOLD), ImmutableMap.<SpanType, String> of(),
-						Collections.<SpanHtmlElementStrategy> emptyList(), false, true));
+						ImmutableSet.of(SpanType.BOLD), ImmutableMap.of(), Collections.emptyList(), false, true));
 		assertTrue(iae.getMessage().contains("headingLevel must be between 0 and 6"));
 	}
 
@@ -74,7 +74,7 @@ public class HtmlSubsetLanguageTest {
 		IllegalStateException ise = assertThrows(IllegalStateException.class,
 				() -> new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH),
 						ImmutableSet.of(SpanType.BOLD), ImmutableMap.of(SpanType.ITALIC, "italic"),
-						Collections.<SpanHtmlElementStrategy> emptyList(), false, true));
+						Collections.emptyList(), false, true));
 		assertTrue(ise.getMessage()
 				.contains("SpanType [ITALIC] is unsupported. Cannot add substitution to unsupported span types."));
 	}
@@ -87,13 +87,13 @@ public class HtmlSubsetLanguageTest {
 
 	@Test
 	public void supportedBlockTypes() {
-		assertEquals(Sets.newHashSet(BlockType.PARAGRAPH, BlockType.CODE),
+		assertEquals(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH, BlockType.CODE)),
 				newHtmlSubsetLanguage(BlockType.PARAGRAPH, BlockType.CODE).getSupportedBlockTypes());
 	}
 
 	@Test
 	public void supportedSpanTypes() {
-		assertEquals(Sets.newHashSet(SpanType.BOLD, SpanType.EMPHASIS),
+		assertEquals(new HashSet<>(Arrays.asList(SpanType.BOLD, SpanType.EMPHASIS)),
 				newHtmlSubsetLanguage(SpanType.BOLD, SpanType.EMPHASIS).getSupportedSpanTypes());
 	}
 
@@ -127,9 +127,9 @@ public class HtmlSubsetLanguageTest {
 			}
 		};
 		HtmlSubsetLanguage language = new HtmlSubsetLanguage("Test", documentHandler, 6,
-				Sets.newHashSet(BlockType.PARAGRAPH, BlockType.DIV, BlockType.QUOTE),
-				Sets.newHashSet(SpanType.CITATION, SpanType.EMPHASIS), ImmutableMap.of(SpanType.EMPHASIS, "new-em"),
-				Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+				new HashSet<>(Arrays.asList(BlockType.PARAGRAPH, BlockType.DIV, BlockType.QUOTE)),
+				new HashSet<>(Arrays.asList(SpanType.CITATION, SpanType.EMPHASIS)),
+				ImmutableMap.of(SpanType.EMPHASIS, "new-em"), Collections.emptyList(), false, true);
 		HtmlSubsetLanguage cloned = language.clone();
 
 		assertEquals(language.getName(), cloned.getName());
@@ -193,15 +193,13 @@ public class HtmlSubsetLanguageTest {
 	}
 
 	private HtmlSubsetLanguage createHtmlSubsetLanguage(boolean xhtmlStrict) {
-		return new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.<BlockType> of(BlockType.PARAGRAPH),
-				ImmutableSet.<SpanType> of(), ImmutableMap.<SpanType, String> of(),
-				Collections.<SpanHtmlElementStrategy> emptyList(), xhtmlStrict, true);
+		return new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(),
+				ImmutableMap.of(), Collections.emptyList(), xhtmlStrict, true);
 	}
 
 	private HtmlSubsetLanguage createHtmlSubsetLanguage(boolean xhtmlStrict, boolean supportsImages) {
-		return new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.<BlockType> of(BlockType.PARAGRAPH),
-				ImmutableSet.<SpanType> of(), ImmutableMap.<SpanType, String> of(),
-				Collections.<SpanHtmlElementStrategy> emptyList(), xhtmlStrict, supportsImages);
+		return new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(),
+				ImmutableMap.of(), Collections.emptyList(), xhtmlStrict, supportsImages);
 	}
 
 	private void assertSupportedHeadingLevel(int level) {
@@ -209,20 +207,19 @@ public class HtmlSubsetLanguageTest {
 	}
 
 	private HtmlSubsetLanguage newHtmlSubsetLanguageWithHeadingLevel(int level) {
-		return new HtmlSubsetLanguage("Test", null, level, Sets.newHashSet(BlockType.PARAGRAPH),
-				ImmutableSet.<SpanType> of(), ImmutableMap.<SpanType, String> of(),
-				Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+		return new HtmlSubsetLanguage("Test", null, level, new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)),
+				ImmutableSet.of(), ImmutableMap.of(), Collections.emptyList(), false, true);
 	}
 
 	protected HtmlSubsetLanguage newHtmlSubsetLanguage(SpanType... spans) {
-		return new HtmlSubsetLanguage("Test", null, 6, Sets.newHashSet(BlockType.PARAGRAPH), Sets.newHashSet(spans),
-				ImmutableMap.of(SpanType.EMPHASIS, "new-em"), Collections.<SpanHtmlElementStrategy> emptyList(), false,
-				true);
+		return new HtmlSubsetLanguage("Test", null, 6, new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)),
+				new HashSet<>(Arrays.asList(spans)), ImmutableMap.of(SpanType.EMPHASIS, "new-em"),
+				Collections.emptyList(), false, true);
 	}
 
 	protected HtmlSubsetLanguage newHtmlSubsetLanguage(BlockType... blocks) {
-		return new HtmlSubsetLanguage("Test", null, 6, Sets.newHashSet(blocks), ImmutableSet.<SpanType> of(),
-				ImmutableMap.<SpanType, String> of(), Collections.<SpanHtmlElementStrategy> emptyList(), false, true);
+		return new HtmlSubsetLanguage("Test", null, 6, new HashSet<>(Arrays.asList(blocks)), ImmutableSet.of(),
+				ImmutableMap.of(), Collections.emptyList(), false, true);
 	}
 
 }

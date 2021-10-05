@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 public class BlockStrategiesTest {
 
@@ -43,7 +43,8 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void createNonEmpty() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH, BlockType.CODE));
+		BlockStrategies strategies = new BlockStrategies(
+				new HashSet<>(Arrays.asList(BlockType.PARAGRAPH, BlockType.CODE)));
 		assertSupported(strategies, BlockType.PARAGRAPH);
 		assertSupported(strategies, BlockType.CODE);
 		for (BlockType blockType : BlockType.values()) {
@@ -53,13 +54,13 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void alternatives() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		assertTrue(strategies.getStrategy(BlockType.CODE, new Attributes()) instanceof SubstitutionBlockStrategy);
 	}
 
 	@Test
 	public void unsupportedByDefault() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		for (BlockType blockType : BlockType.values()) {
 			if (blockType == BlockType.PARAGRAPH) {
 				continue;
@@ -70,7 +71,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void table() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.TABLE));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.TABLE)));
 		assertSupported(strategies, BlockType.TABLE);
 		assertSupported(strategies, BlockType.TABLE_ROW);
 		assertSupported(strategies, BlockType.TABLE_CELL_HEADER);
@@ -80,7 +81,7 @@ public class BlockStrategiesTest {
 	@Test
 	public void lists() {
 		for (BlockType listType : new BlockType[] { BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST }) {
-			BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(listType));
+			BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(listType)));
 			assertSupported(strategies, listType);
 			assertSupported(strategies, BlockType.LIST_ITEM);
 		}
@@ -88,7 +89,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void definitionList() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.DEFINITION_LIST));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.DEFINITION_LIST)));
 
 		assertSupported(strategies, BlockType.DEFINITION_LIST);
 		assertSupported(strategies, BlockType.DEFINITION_ITEM);
@@ -97,7 +98,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void fallBackToUnsupported() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		BlockStrategy strategy = strategies.getStrategy(BlockType.TABLE_ROW, new Attributes());
 		assertNotNull(strategy);
 		assertEquals(UnsupportedBlockStrategy.class, strategy.getClass());
@@ -105,7 +106,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void fallBackToNoOp() {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.BULLETED_LIST,
 				BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
 		for (BlockType blockType : unsupportedBlockTypes) {
@@ -140,7 +141,7 @@ public class BlockStrategiesTest {
 	}
 
 	protected void assertFallback(BlockType supportedType, BlockType blockType) {
-		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(supportedType));
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(supportedType)));
 		BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 		assertNotNull(strategy);
 		assertEquals(blockType.name(), SubstitutionBlockStrategy.class, strategy.getClass());

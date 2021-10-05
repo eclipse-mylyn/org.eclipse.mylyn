@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -31,8 +32,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderTest {
 
@@ -48,9 +47,8 @@ public class HtmlSubsetDocumentBuilderTest {
 		delegate = new HtmlDocumentBuilder(writer);
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
-				Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(SpanType.BOLD)), Collections.emptyList());
 		builder.setSupportedHeadingLevel(3);
 		builder.beginDocument();
 	}
@@ -181,19 +179,19 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void setSupportedBlockTypesEmpty() {
-		builder.setSupportedBlockTypes(Sets.<BlockType> newHashSet());
+		builder.setSupportedBlockTypes(new HashSet<>());
 		assertSame(UnsupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH, new Attributes()));
 	}
 
 	@Test
 	public void supportedBlockTypes() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		assertSame(SupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH, new Attributes()));
 	}
 
 	@Test
 	public void unsupportedBlockTypes() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		assertNotNull(builder.pushBlockStrategy(BlockType.CODE, new Attributes()));
 	}
 
@@ -269,7 +267,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockUnsupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		builder.beginBlock(BlockType.DIV, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -278,7 +276,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockSupportedUnsupportedCombined() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -290,35 +288,35 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockBulletedListSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.BULLETED_LIST));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.BULLETED_LIST)));
 		buildList(BlockType.BULLETED_LIST);
 		assertContent("<ul><li>test 0</li><li>test 1</li></ul>");
 	}
 
 	@Test
 	public void blockBulletedListUnsupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		buildList(BlockType.BULLETED_LIST);
 		assertContent("<p>test 0</p><p>test 1</p>");
 	}
 
 	@Test
 	public void blockNumericListSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.NUMERIC_LIST));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.NUMERIC_LIST)));
 		buildList(BlockType.NUMERIC_LIST);
 		assertContent("<ol><li>test 0</li><li>test 1</li></ol>");
 	}
 
 	@Test
 	public void blockNumericListUnsupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		buildList(BlockType.NUMERIC_LIST);
 		assertContent("<p>test 0</p><p>test 1</p>");
 	}
 
 	@Test
 	public void testTableSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.TABLE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.TABLE)));
 		buildTable();
 		assertContent(
 				"<table><tr><td>test 0/0</td><td>test 1/0</td><td>test 2/0</td></tr><tr><td>test 0/1</td><td>test 1/1</td><td>test 2/1</td></tr></table>");
@@ -326,7 +324,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testTableUnsupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
 		buildTable();
 		assertContent(
 				"<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>");
@@ -334,7 +332,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testParagraphUnsupported() {
-		builder.setSupportedBlockTypes(Collections.<BlockType> emptySet());
+		builder.setSupportedBlockTypes(Collections.emptySet());
 		assertUnsupportedBlock("test", BlockType.PARAGRAPH);
 	}
 
@@ -355,7 +353,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testUnsupportedMultiple() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.CODE)));
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -367,7 +365,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testSupportedUnsupportedCombination() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.CODE)));
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -379,7 +377,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testUnsuportedBeforeHeading() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.CODE)));
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -391,7 +389,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void testUnsuportedBeforeImplicitParagraph() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.CODE)));
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
@@ -424,12 +422,12 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	private void assertSupportedBlock(String expected, BlockType blockType) {
-		builder.setSupportedBlockTypes(Sets.newHashSet(blockType));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(blockType)));
 		assertUnsupportedBlock(expected, blockType);
 	}
 
 	private void assertUnsupportedBlock(String expected, BlockType unsupported, BlockType supported) {
-		builder.setSupportedBlockTypes(Sets.newHashSet(supported));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(supported)));
 		assertUnsupportedBlock(expected, unsupported);
 	}
 
@@ -442,15 +440,13 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void supportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
-				Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(SpanType.BOLD)), Collections.emptyList());
 		assertSame(SupportedSpanStrategy.instance, builder.pushSpanStrategy(SpanType.BOLD, new Attributes()));
 	}
 
 	@Test
 	public void unsupportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
-				Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(SpanType.BOLD)), Collections.emptyList());
 		assertNotNull(builder.pushSpanStrategy(SpanType.EMPHASIS, new Attributes()));
 	}
 
@@ -641,7 +637,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void spanFontTag() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(SpanType.BOLD)),
 				new ArrayList<>(Arrays.asList(new FontElementStrategy())));
 
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: blue", null));
@@ -697,7 +693,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	private void assertSupportedSpan(String expected, SpanType spanType) {
-		builder.setSupportedSpanTypes(Sets.newHashSet(spanType), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(spanType)), Collections.emptyList());
 		builder.beginSpan(spanType, new Attributes());
 		builder.characters("test");
 		builder.endSpan();
@@ -705,7 +701,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	private void assertUnsupportedSpan(String expected, SpanType unsupported, SpanType supported) {
-		builder.setSupportedSpanTypes(Sets.newHashSet(supported), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(supported)), Collections.emptyList());
 		builder.beginSpan(unsupported, new Attributes());
 		builder.characters("test");
 		builder.endSpan();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Tasktop Technologies and others.
+ * Copyright (c) 2014, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@ package org.eclipse.mylyn.wikitext.html.internal;
 import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -23,8 +25,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 
@@ -40,10 +40,9 @@ public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 		delegate = new HtmlDocumentBuilder(writer);
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH, BlockType.DIV, BlockType.BULLETED_LIST,
-				BlockType.LIST_ITEM, BlockType.QUOTE, BlockType.PREFORMATTED));
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
-				Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH, BlockType.DIV,
+				BlockType.BULLETED_LIST, BlockType.LIST_ITEM, BlockType.QUOTE, BlockType.PREFORMATTED)));
+		builder.setSupportedSpanTypes(new HashSet<>(Arrays.asList(SpanType.BOLD)), Collections.emptyList());
 		builder.setSupportedHeadingLevel(3);
 		builder.setXhtmlStrict(true);
 		builder.beginDocument();
@@ -182,14 +181,14 @@ public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 
 	@Test
 	public void paragraphNotSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.DIV));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.DIV)));
 		builder.characters("foo");
 		assertContent("<div>foo</div>");
 	}
 
 	@Test
 	public void paragraphAndDivNotSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.setSupportedBlockTypes(new HashSet<>(Arrays.asList(BlockType.CODE)));
 		builder.characters("foo");
 		assertContent("foo");
 	}
