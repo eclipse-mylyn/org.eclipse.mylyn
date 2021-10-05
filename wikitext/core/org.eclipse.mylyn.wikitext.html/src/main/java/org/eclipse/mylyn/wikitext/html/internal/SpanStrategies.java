@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -31,7 +32,6 @@ import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -124,7 +124,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 				}
 			}
 		}
-		strategies = ImmutableList.copyOf(FluentIterable.from(strategies).filter(Objects::nonNull));
+		strategies = ImmutableList.copyOf(strategies.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 		if (strategies.isEmpty()) {
 			return null;
 		} else if (strategies.size() == 1) {

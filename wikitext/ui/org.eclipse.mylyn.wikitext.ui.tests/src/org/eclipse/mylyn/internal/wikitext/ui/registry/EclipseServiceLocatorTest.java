@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -28,7 +29,6 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
 @EclipseRuntimeRequired
@@ -51,7 +51,7 @@ public class EclipseServiceLocatorTest {
 	public void getAllMarkupLanguages() {
 		Set<MarkupLanguage> allMarkupLanguages = ServiceLocator.getInstance().getAllMarkupLanguages();
 		Set<String> names = ImmutableSet
-				.copyOf(FluentIterable.from(allMarkupLanguages).transform(language -> language.getName()));
+				.copyOf(allMarkupLanguages.stream().map(MarkupLanguage::getName).collect(Collectors.toSet()));
 		assertEquals(WikiText.getMarkupLanguageNames(), names);
 	}
 }
