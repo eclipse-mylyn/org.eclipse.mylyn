@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -765,18 +765,17 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 
 		if (IContentOutlinePage.class == adapter) {
 			if (!isOutlinePageValid()) {
 				outlinePage = new MarkupEditorOutline(this);
 			}
-			return outlinePage;
+			return adapter.cast(outlinePage);
 		}
 		if (adapter == OutlineItem.class) {
-			return getOutlineModel();
+			return adapter.cast(getOutlineModel());
 		}
 		if (adapter == IFoldingStructure.class) {
 			if (!isFoldingEnabled()) {
@@ -785,10 +784,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			if (foldingStructure == null) {
 				foldingStructure = new FoldingStructure(this);
 			}
-			return foldingStructure;
+			return adapter.cast(foldingStructure);
 		}
 		if (adapter == IShowInTargetList.class) {
-			return SHOW_IN_TARGET_LIST;
+			return adapter.cast(SHOW_IN_TARGET_LIST);
 		}
 		return super.getAdapter(adapter);
 	}

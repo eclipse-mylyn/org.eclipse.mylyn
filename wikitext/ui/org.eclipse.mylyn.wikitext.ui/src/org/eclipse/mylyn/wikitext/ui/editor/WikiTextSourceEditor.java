@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -277,22 +277,21 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		contextService.activateContext(CONTEXT);
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IContentOutlinePage.class) {
 			if (outlinePage == null || outlinePage.getControl() == null || outlinePage.getControl().isDisposed()) {
 				outlinePage = createContentOutline();
 				outlinePage.setEditor(this);
 			}
-			return outlinePage;
+			return adapter.cast(outlinePage);
 		}
 		if (adapter == OutlineItem.class) {
-			return getOutlineModel();
+			return adapter.cast(getOutlineModel());
 		} else if (adapter == IShowInSource.class) {
-			return this;
+			return adapter.cast(this);
 		} else if (adapter == IShowInTarget.class) {
-			return this;
+			return adapter.cast(this);
 		}
 		return super.getAdapter(adapter);
 	}
@@ -515,7 +514,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		outlineModel.clear();
 		outlineModel.moveChildren(rootItem);
 
-		IFile file = (IFile) getAdapter(IFile.class);
+		IFile file = getAdapter(IFile.class);
 		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
 
 		firePropertyChange(PROP_OUTLINE);
