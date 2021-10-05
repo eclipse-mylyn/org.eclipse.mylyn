@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  */
 public abstract class PreferenceStoreFacade implements IPreferenceStore {
 
-	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
+	private final ListenerList<IPropertyChangeListener> listeners = new ListenerList<>(ListenerList.IDENTITY);
 
 	private IPropertyChangeListener forwardingListener;
 
@@ -39,7 +39,8 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.add(listener);
 		if (forwardingListener == null) {
-			forwardingListener = event -> firePropertyChangeEvent(event.getProperty(), event.getOldValue(), event.getNewValue());
+			forwardingListener = event -> firePropertyChangeEvent(event.getProperty(), event.getOldValue(),
+					event.getNewValue());
 			delegate.addPropertyChangeListener(forwardingListener);
 		}
 	}
@@ -76,8 +77,7 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 			return;
 		}
 		PropertyChangeEvent event = new PropertyChangeEvent(this, name, oldValue, newValue);
-		for (Object o : listeners.getListeners()) {
-			IPropertyChangeListener listener = (IPropertyChangeListener) o;
+		for (IPropertyChangeListener listener : listeners) {
 			listener.propertyChange(event);
 		}
 	}
