@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -29,7 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Test;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 public class SourceBlocksTest {
@@ -72,8 +72,13 @@ public class SourceBlocksTest {
 				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()), //
 				new CharactersEvent("b2"), //
 				new EndBlockEvent());
-		assertEquals(Joiner.on("\n").join(builder.getDocumentBuilderEvents().getEvents()), expectedEvents,
-				builder.getDocumentBuilderEvents().getEvents());
+		assertEquals(
+				builder.getDocumentBuilderEvents()
+						.getEvents()
+						.stream()
+						.map(x -> x.toString())
+						.collect(Collectors.joining("\n")),
+				expectedEvents, builder.getDocumentBuilderEvents().getEvents());
 	}
 
 	private SourceBlock mockBlock(final BlockType blockType, final String startString) {

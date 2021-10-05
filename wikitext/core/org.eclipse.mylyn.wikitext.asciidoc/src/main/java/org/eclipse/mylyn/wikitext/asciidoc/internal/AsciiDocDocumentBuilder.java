@@ -16,10 +16,12 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -27,7 +29,6 @@ import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 /**
@@ -362,7 +363,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		sb.append("image:"); //$NON-NLS-1$
 		sb.append(Strings.nullToEmpty(url));
 		sb.append("["); //$NON-NLS-1$
-		sb.append(Joiner.on(", ").skipNulls().join(altText, title)); //$NON-NLS-1$
+		sb.append(Arrays.asList(altText, title).stream().filter(Objects::nonNull).collect(Collectors.joining(", "))); //$NON-NLS-1$
 		sb.append("]"); //$NON-NLS-1$
 		return sb.toString();
 	}

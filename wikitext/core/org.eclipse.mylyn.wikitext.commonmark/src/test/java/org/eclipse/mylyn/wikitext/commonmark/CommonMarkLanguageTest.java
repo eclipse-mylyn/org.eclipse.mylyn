@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -37,8 +38,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.EndDocumentEvent;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
-
-import com.google.common.base.Joiner;
 
 public class CommonMarkLanguageTest {
 
@@ -133,6 +132,6 @@ public class CommonMarkLanguageTest {
 	}
 
 	private String toMessage(List<DocumentBuilderEvent> expectedEvents) {
-		return Joiner.on(",\n").join(expectedEvents);
+		return expectedEvents.stream().map(x -> x.toString()).collect(Collectors.joining("\n"));
 	}
 }

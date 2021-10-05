@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,11 +18,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
-
-import com.google.common.base.Joiner;
 
 public class ListBlockTest {
 
@@ -76,7 +75,7 @@ public class ListBlockTest {
 	public void tightListWithSublist() {
 		List<String> lines = Arrays.asList("* one", "* two", "    * three", "* four");
 		assertContent("<ul><li>one</li><li>two<ul><li>three</li></ul></li><li>four</li></ul>",
-				Joiner.on("\n").join(lines));
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	@Test
@@ -99,44 +98,49 @@ public class ListBlockTest {
 	@Test
 	public void terminatesWithDoubleBlankLine() {
 		List<String> lines = Arrays.asList("* one", "* two", "", "", "* three");
-		assertContent("<ul><li>one</li><li>two</li></ul><ul><li>three</li></ul>", Joiner.on("\n").join(lines));
+		assertContent("<ul><li>one</li><li>two</li></ul><ul><li>three</li></ul>",
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	@Test
 	public void orderedListWithStart() {
 		List<String> lines = Arrays.asList("3. one", "4. two");
-		assertContent("<ol start=\"3\"><li>one</li><li>two</li></ol>", Joiner.on("\n").join(lines));
+		assertContent("<ol start=\"3\"><li>one</li><li>two</li></ol>",
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	@Test
 	public void doubleBlankLineStartingOnListItem() {
 		List<String> lines = Arrays.asList("* one", "*", "", "* three");
-		assertContent("<ul><li><p>one</p></li><li></li><li><p>three</p></li></ul>", Joiner.on("\n").join(lines));
+		assertContent("<ul><li><p>one</p></li><li></li><li><p>three</p></li></ul>",
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	private void assertSimpleOrderedList(String delimiter) {
-		List<String> lines = Arrays.asList("1" + delimiter + " one", "2" + delimiter + " two", "3" + delimiter
-				+ " three four");
-		assertContent("<ol><li>one</li><li>two</li><li>three four</li></ol>", Joiner.on("\n").join(lines));
+		List<String> lines = Arrays.asList("1" + delimiter + " one", "2" + delimiter + " two",
+				"3" + delimiter + " three four");
+		assertContent("<ol><li>one</li><li>two</li><li>three four</li></ol>",
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	private void assertBulletedListWithNestedBlocks(String delimiter) {
-		List<String> lines = Arrays.asList(delimiter + " one", delimiter + " two\n  two.2\n\n  two.3", delimiter
-				+ " three four");
+		List<String> lines = Arrays.asList(delimiter + " one", delimiter + " two\n  two.2\n\n  two.3",
+				delimiter + " three four");
 		assertContent("<ul><li><p>one</p></li><li><p>two two.2</p><p>two.3</p></li><li><p>three four</p></li></ul>",
-				Joiner.on("\n").join(lines));
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	private void assertOrderedListWithNestedBlocks(String delimiter) {
 		List<String> lines = Arrays.asList("1" + delimiter + " one", "2" + delimiter + " two\n   two.2\n\n   two.3",
 				"3" + delimiter + " three four");
 		assertContent("<ol><li><p>one</p></li><li><p>two two.2</p><p>two.3</p></li><li><p>three four</p></li></ol>",
-				Joiner.on("\n").join(lines));
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	private void assertSimpleBulletedList(String delimiter) {
 		List<String> lines = Arrays.asList(delimiter + " one", delimiter + " two", delimiter + " three four");
-		assertContent("<ul><li>one</li><li>two</li><li>three four</li></ul>", Joiner.on("\n").join(lines));
+		assertContent("<ul><li>one</li><li>two</li><li>three four</li></ul>",
+				lines.stream().collect(Collectors.joining("\n")));
 	}
 
 	private void assertCanStart(boolean expected, String string) {

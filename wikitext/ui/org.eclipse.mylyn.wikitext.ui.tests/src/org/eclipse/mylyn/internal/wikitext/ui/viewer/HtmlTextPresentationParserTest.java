@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
@@ -34,8 +35,6 @@ import org.eclipse.swt.graphics.FontData;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-
-import com.google.common.base.Joiner;
 
 /**
  * @author David Green
@@ -221,6 +220,6 @@ public class HtmlTextPresentationParserTest {
 				return elementName;
 			}
 		}, receiver);
-		assertEquals("element " + elementName, expectedStyles, Joiner.on("; ").join(styles));
+		assertEquals("element " + elementName, expectedStyles, styles.stream().collect(Collectors.joining("; ")));
 	}
 }

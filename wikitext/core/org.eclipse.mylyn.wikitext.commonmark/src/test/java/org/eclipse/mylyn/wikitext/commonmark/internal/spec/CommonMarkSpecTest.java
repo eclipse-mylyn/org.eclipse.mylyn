@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2021 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
@@ -41,7 +42,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.CharStreams;
@@ -176,7 +176,7 @@ public class CommonMarkSpecTest {
 			}
 			lines.add(line);
 		}
-		return Joiner.on("\n").join(lines);
+		return lines.stream().collect(Collectors.joining("\n"));
 	}
 
 	private static String loadCommonMarkSpec() throws IOException {
