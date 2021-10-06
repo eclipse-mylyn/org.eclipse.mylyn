@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013. 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public class FileToMarkupLanguage {
 	}
 
 	Map<String, MarkupLanguage> computeExtensionToMarkupLanguage(Set<MarkupLanguage> markupLanguages) {
-		Map<String, MarkupLanguage> extensionToMarkupLanguage = new HashMap<String, MarkupLanguage>();
+		Map<String, MarkupLanguage> extensionToMarkupLanguage = new HashMap<>();
 		for (MarkupLanguage language : markupLanguages) {
 			for (String extension : language.getFileExtensions()) {
 				extensionToMarkupLanguage.put(extension.toLowerCase(), language);
