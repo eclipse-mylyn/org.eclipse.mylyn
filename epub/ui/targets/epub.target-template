@@ -15,26 +15,16 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.tika.parsers" version="1.3.0.v201605180015"/>
 <unit id="org.apache.tika.core" version="1.3.0.v201505121915"/>
-<unit id="org.hamcrest.library.source" version="1.3.0.v201505072020"/>
-<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
 <unit id="org.junit" version="4.12.0.v201504281640"/>
-<unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
-<unit id="org.mockito.source" version="1.9.5.v201605172210"/>
-<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
+<unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
+<unit id="org.hamcrest.core.source" version="1.3.0.v20180420-1519"/>
 <unit id="org.mockito" version="1.9.5.v201605172210"/>
-<unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.library" version="1.3.0.v201505072020"/>
+<unit id="org.mockito.source" version="1.9.5.v201605172210"/>
+<unit id="org.hamcrest.library" version="1.3.0.v20180524-2246"/>
+<unit id="org.hamcrest.library.source" version="1.3.0.v20180524-2246"/>
 <unit id="org.junit.source" version="4.12.0.v201504281640"/>
 <unit id="org.objenesis" version="0.0.0"/>
-<unit id="org.hamcrest.integration" version="0.0.0"/>
-<unit id="com.sun.xml.bind" version="2.2.0.v201505121915"/>
 <unit id="javax.activation" version="1.1.0.v201211130549"/>
-<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
-<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
-<repository location="https://download.eclipse.org/tools/orbit/R-builds/R20170516192513/repository"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="30.1.0.v20210127-2300"/>
 <unit id="com.google.guava.source" version="30.1.0.v20210127-2300"/>
 <unit id="org.jsoup" version="1.8.3.v20181012-1713"/>
