@@ -15,13 +15,14 @@ package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.junit.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
 public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilderTest {
-
+	@Test
 	public void testItalic() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.ITALIC, new Attributes());
@@ -31,6 +32,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("//italic//\n\n");
 	}
 
+	@Test
 	public void testEmphasis() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
@@ -40,6 +42,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("//emphasis//\n\n");
 	}
 
+	@Test
 	public void testMark() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.MARK, new Attributes());
@@ -49,6 +52,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("//mark//\n\n");
 	}
 
+	@Test
 	public void testBold() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.BOLD, new Attributes());
@@ -58,6 +62,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("**bold**\n\n");
 	}
 
+	@Test
 	public void testStrong() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.STRONG, new Attributes());
@@ -67,6 +72,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("**strong**\n\n");
 	}
 
+	@Test
 	public void testDeleted() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.DELETED, new Attributes());
@@ -76,6 +82,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("--deleted--\n\n");
 	}
 
+	@Test
 	public void testUnderlined() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.UNDERLINED, new Attributes());
@@ -85,6 +92,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("__underlined__\n\n");
 	}
 
+	@Test
 	public void testCode() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.CODE, new Attributes());
@@ -94,6 +102,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("{{{code}}}\n\n");
 	}
 
+	@Test
 	public void testEmptySpan() {
 		builder.beginDocument();
 		builder.characters("prefix");
@@ -104,6 +113,7 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("prefix suffix\n\n");
 	}
 
+	@Test
 	public void testUnsupportedSpan() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.INSERTED, new Attributes());

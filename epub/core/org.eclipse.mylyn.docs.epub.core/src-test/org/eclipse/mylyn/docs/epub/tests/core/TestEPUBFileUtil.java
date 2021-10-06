@@ -13,15 +13,15 @@
 
 package org.eclipse.mylyn.docs.epub.tests.core;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 
 import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings({ "nls" })
-public class TestEPUBFileUtil extends TestCase {
+public class TestEPUBFileUtil {
 
 	/*
 	 * A list of core media types is specified in

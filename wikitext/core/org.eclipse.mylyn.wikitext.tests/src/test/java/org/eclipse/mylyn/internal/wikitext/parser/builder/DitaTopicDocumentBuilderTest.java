@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.parser.builder;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringWriter;
 import java.util.regex.Pattern;
 
@@ -25,10 +27,10 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class DitaTopicDocumentBuilderTest extends TestCase {
+public class DitaTopicDocumentBuilderTest {
 
 	private MarkupParser parser;
 
@@ -36,7 +38,7 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 
 	private DitaTopicDocumentBuilder builder;
 
-	@Override
+	@Before
 	public void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
@@ -45,6 +47,7 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		parser.setBuilder(builder);
 	}
 
+	@Test
 	public void testDiv() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DIV, new Attributes());
@@ -61,14 +64,12 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String dita = out.toString();
-		
 
 		assertTrue(Pattern.compile(".*?<topic>\\s*<title></title>\\s*<body>\\s*<p>foo</p>\\s*<p>bar</p>\\s*</body>.*",
-				Pattern.DOTALL)
-				.matcher(dita)
-				.matches());
+				Pattern.DOTALL).matcher(dita).matches());
 	}
 
+	@Test
 	public void testNoFormatting() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
@@ -82,11 +83,12 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		xmlStreamWriter.close();
 
 		String dita = out.toString();
-		
 
-		assertTrue(dita.contains("<topic id=\"Title1\"><title>Title1</title><body><p>some content in a para</p></body></topic>"));
+		assertTrue(dita.contains(
+				"<topic id=\"Title1\"><title>Title1</title><body><p>some content in a para</p></body></topic>"));
 	}
 
+	@Test
 	public void testSpanLink() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DIV, new Attributes());
@@ -105,23 +107,20 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String dita = out.toString();
-		
 
 		assertTrue(Pattern.compile("<xref href=\"#test1234\">\\s*<i>link text</i>\\s*</xref>").matcher(dita).find());
 	}
 
+	@Test
 	public void testImageWithCaption() {
 		parser.setMarkupLanguage(new MediaWikiLanguage());
 
 		parser.parse("[[Image:images/editor-assist-proposals.png|alt=Alternative text|Caption text.]]");
 
 		String dita = out.toString();
-		
 
 		assertTrue(Pattern.compile(
 				"<fig>\\s*<title>Caption text.</title>\\s*<image href=\"images/editor-assist-proposals.png\" alt=\"Alternative text\"/>\\s*</fig>",
-				Pattern.DOTALL)
-				.matcher(dita)
-				.find());
+				Pattern.DOTALL).matcher(dita).find());
 	}
 }

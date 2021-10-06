@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.core;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -28,15 +30,13 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import junit.framework.TestCase;
-
 /**
  * Tests for the table of contents generator.
  *
  * @author Torkild U. Resheim
  */
 @SuppressWarnings({ "nls" })
-public class TestTOCGenerator extends TestCase {
+public class TestTOCGenerator {
 
 	@Test
 	public void testNormal() throws ParserConfigurationException, SAXException, IOException {

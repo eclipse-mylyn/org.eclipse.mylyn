@@ -13,6 +13,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -83,15 +87,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addCoverage(null, Locale.CANADA_FRENCH, "My Coverage");
 		oebps.addCoverage(null, null, "My Coverage");
 		EList<Coverage> Coverages = oebps.getPackage().getMetadata().getCoverages();
-		Assert.assertEquals("Coverage", Coverages.get(0).getId());
-		Assert.assertEquals("fr_CA", Coverages.get(0).getLang());
-		Assert.assertEquals("My Coverage", getText(Coverages.get(0)));
-		Assert.assertEquals(null, Coverages.get(1).getId());
-		Assert.assertEquals("fr_CA", Coverages.get(1).getLang());
-		Assert.assertEquals("My Coverage", getText(Coverages.get(1)));
-		Assert.assertEquals(null, Coverages.get(2).getId());
-		Assert.assertEquals(null, Coverages.get(2).getLang());
-		Assert.assertEquals("My Coverage", getText(Coverages.get(2)));
+		assertEquals("Coverage", Coverages.get(0).getId());
+		assertEquals("fr_CA", Coverages.get(0).getLang());
+		assertEquals("My Coverage", getText(Coverages.get(0)));
+		assertNull(Coverages.get(1).getId());
+		assertEquals("fr_CA", Coverages.get(1).getLang());
+		assertEquals("My Coverage", getText(Coverages.get(1)));
+		assertNull(Coverages.get(2).getId());
+		assertNull(Coverages.get(2).getLang());
+		assertEquals("My Coverage", getText(Coverages.get(2)));
 		try {
 			oebps.addCoverage(null, null, null);
 			fail();
@@ -153,15 +157,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addDescription(null, Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, null, "My Description");
 		EList<Description> Descriptions = oebps.getPackage().getMetadata().getDescriptions();
-		Assert.assertEquals("Description", Descriptions.get(0).getId());
-		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
-		Assert.assertEquals(null, Descriptions.get(1).getId());
-		Assert.assertEquals("fr_CA", Descriptions.get(1).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(1)));
-		Assert.assertEquals(null, Descriptions.get(2).getId());
-		Assert.assertEquals(null, Descriptions.get(2).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(2)));
+		assertEquals("Description", Descriptions.get(0).getId());
+		assertEquals("fr_CA", Descriptions.get(0).getLang());
+		assertEquals("My Description", getText(Descriptions.get(0)));
+		assertNull(Descriptions.get(1).getId());
+		assertEquals("fr_CA", Descriptions.get(1).getLang());
+		assertEquals("My Description", getText(Descriptions.get(1)));
+		assertNull(Descriptions.get(2).getId());
+		assertNull(Descriptions.get(2).getLang());
+		assertEquals("My Description", getText(Descriptions.get(2)));
 		try {
 			oebps.addDescription(null, null, null);
 			fail();
@@ -179,15 +183,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addDescription(null, Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, null, "My Description");
 		EList<Description> Descriptions = oebps.getPackage().getMetadata().getDescriptions();
-		Assert.assertEquals("Description", Descriptions.get(0).getId());
-		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
-		Assert.assertEquals(null, Descriptions.get(1).getId());
-		Assert.assertEquals("fr_CA", Descriptions.get(1).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(1)));
-		Assert.assertEquals(null, Descriptions.get(2).getId());
-		Assert.assertEquals(null, Descriptions.get(2).getLang());
-		Assert.assertEquals("My Description", getText(Descriptions.get(2)));
+		assertEquals("Description", Descriptions.get(0).getId());
+		assertEquals("fr_CA", Descriptions.get(0).getLang());
+		assertEquals("My Description", getText(Descriptions.get(0)));
+		assertNull(Descriptions.get(1).getId());
+		assertEquals("fr_CA", Descriptions.get(1).getLang());
+		assertEquals("My Description", getText(Descriptions.get(1)));
+		assertNull(Descriptions.get(2).getId());
+		assertNull(Descriptions.get(2).getLang());
+		assertEquals("My Description", getText(Descriptions.get(2)));
 		try {
 			oebps.addDescription(null, null, null);
 			fail();
@@ -206,15 +210,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addIdentifier(null, "ID", "My Identifier");
 		oebps.addIdentifier(null, null, "My Identifier");
 		EList<Identifier> Identifiers = oebps.getPackage().getMetadata().getIdentifiers();
-		Assert.assertEquals("Identifier", Identifiers.get(0).getId());
-		Assert.assertEquals("ID", Identifiers.get(0).getScheme());
-		Assert.assertEquals("My Identifier", getText(Identifiers.get(0)));
-		Assert.assertEquals(null, Identifiers.get(1).getId());
-		Assert.assertEquals("ID", Identifiers.get(1).getScheme());
-		Assert.assertEquals("My Identifier", getText(Identifiers.get(1)));
-		Assert.assertEquals(null, Identifiers.get(2).getId());
-		Assert.assertEquals(null, Identifiers.get(2).getScheme());
-		Assert.assertEquals("My Identifier", getText(Identifiers.get(2)));
+		assertEquals("Identifier", Identifiers.get(0).getId());
+		assertEquals("ID", Identifiers.get(0).getScheme());
+		assertEquals("My Identifier", getText(Identifiers.get(0)));
+		assertEquals(null, Identifiers.get(1).getId());
+		assertEquals("ID", Identifiers.get(1).getScheme());
+		assertEquals("My Identifier", getText(Identifiers.get(1)));
+		assertEquals(null, Identifiers.get(2).getId());
+		assertEquals(null, Identifiers.get(2).getScheme());
+		assertEquals("My Identifier", getText(Identifiers.get(2)));
 		try {
 			oebps.addIdentifier(null, null, null);
 			fail();
@@ -248,8 +252,8 @@ public class TestPublication extends AbstractTest {
 	public final void testAddLanguage() {
 		oebps.addLanguage(null, "no");
 		oebps.addLanguage("id", "no");
-		Assert.assertEquals("no", getText(oebps.getPackage().getMetadata().getLanguages().get(0)));
-		Assert.assertEquals("id", oebps.getPackage().getMetadata().getLanguages().get(1).getId());
+		assertEquals("no", getText(oebps.getPackage().getMetadata().getLanguages().get(0)));
+		assertEquals("id", oebps.getPackage().getMetadata().getLanguages().get(1).getId());
 		try {
 			oebps.addLanguage(null, null);
 			fail();
@@ -268,15 +272,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addPublisher(null, Locale.CANADA_FRENCH, "My Publisher");
 		oebps.addPublisher(null, null, "My Publisher");
 		EList<Publisher> Publishers = oebps.getPackage().getMetadata().getPublishers();
-		Assert.assertEquals("Publisher", Publishers.get(0).getId());
-		Assert.assertEquals("fr_CA", Publishers.get(0).getLang());
-		Assert.assertEquals("My Publisher", getText(Publishers.get(0)));
-		Assert.assertEquals(null, Publishers.get(1).getId());
-		Assert.assertEquals("fr_CA", Publishers.get(1).getLang());
-		Assert.assertEquals("My Publisher", getText(Publishers.get(1)));
-		Assert.assertEquals(null, Publishers.get(2).getId());
-		Assert.assertEquals(null, Publishers.get(2).getLang());
-		Assert.assertEquals("My Publisher", getText(Publishers.get(2)));
+		assertEquals("Publisher", Publishers.get(0).getId());
+		assertEquals("fr_CA", Publishers.get(0).getLang());
+		assertEquals("My Publisher", getText(Publishers.get(0)));
+		assertEquals(null, Publishers.get(1).getId());
+		assertEquals("fr_CA", Publishers.get(1).getLang());
+		assertEquals("My Publisher", getText(Publishers.get(1)));
+		assertEquals(null, Publishers.get(2).getId());
+		assertEquals(null, Publishers.get(2).getLang());
+		assertEquals("My Publisher", getText(Publishers.get(2)));
 		try {
 			oebps.addPublisher(null, null, null);
 			fail();
@@ -305,15 +309,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addRelation(null, Locale.CANADA_FRENCH, "My Relation");
 		oebps.addRelation(null, null, "My Relation");
 		EList<Relation> Relations = oebps.getPackage().getMetadata().getRelations();
-		Assert.assertEquals("Relation", Relations.get(0).getId());
-		Assert.assertEquals("fr_CA", Relations.get(0).getLang());
-		Assert.assertEquals("My Relation", getText(Relations.get(0)));
-		Assert.assertEquals(null, Relations.get(1).getId());
-		Assert.assertEquals("fr_CA", Relations.get(1).getLang());
-		Assert.assertEquals("My Relation", getText(Relations.get(1)));
-		Assert.assertEquals(null, Relations.get(2).getId());
-		Assert.assertEquals(null, Relations.get(2).getLang());
-		Assert.assertEquals("My Relation", getText(Relations.get(2)));
+		assertEquals("Relation", Relations.get(0).getId());
+		assertEquals("fr_CA", Relations.get(0).getLang());
+		assertEquals("My Relation", getText(Relations.get(0)));
+		assertEquals(null, Relations.get(1).getId());
+		assertEquals("fr_CA", Relations.get(1).getLang());
+		assertEquals("My Relation", getText(Relations.get(1)));
+		assertEquals(null, Relations.get(2).getId());
+		assertEquals(null, Relations.get(2).getLang());
+		assertEquals("My Relation", getText(Relations.get(2)));
 		try {
 			oebps.addRelation(null, null, null);
 			fail();
@@ -332,15 +336,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addRights(null, Locale.CANADA_FRENCH, "My Rights");
 		oebps.addRights(null, null, "My Rights");
 		EList<Rights> Rightss = oebps.getPackage().getMetadata().getRights();
-		Assert.assertEquals("Rights", Rightss.get(0).getId());
-		Assert.assertEquals("fr_CA", Rightss.get(0).getLang());
-		Assert.assertEquals("My Rights", getText(Rightss.get(0)));
-		Assert.assertEquals(null, Rightss.get(1).getId());
-		Assert.assertEquals("fr_CA", Rightss.get(1).getLang());
-		Assert.assertEquals("My Rights", getText(Rightss.get(1)));
-		Assert.assertEquals(null, Rightss.get(2).getId());
-		Assert.assertEquals(null, Rightss.get(2).getLang());
-		Assert.assertEquals("My Rights", getText(Rightss.get(2)));
+		assertEquals("Rights", Rightss.get(0).getId());
+		assertEquals("fr_CA", Rightss.get(0).getLang());
+		assertEquals("My Rights", getText(Rightss.get(0)));
+		assertEquals(null, Rightss.get(1).getId());
+		assertEquals("fr_CA", Rightss.get(1).getLang());
+		assertEquals("My Rights", getText(Rightss.get(1)));
+		assertEquals(null, Rightss.get(2).getId());
+		assertEquals(null, Rightss.get(2).getLang());
+		assertEquals("My Rights", getText(Rightss.get(2)));
 		try {
 			oebps.addRights(null, null, null);
 			fail();
@@ -359,15 +363,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addSource(null, Locale.CANADA_FRENCH, "My Source");
 		oebps.addSource(null, null, "My Source");
 		EList<Source> Sources = oebps.getPackage().getMetadata().getSources();
-		Assert.assertEquals("Source", Sources.get(0).getId());
-		Assert.assertEquals("fr_CA", Sources.get(0).getLang());
-		Assert.assertEquals("My Source", getText(Sources.get(0)));
-		Assert.assertEquals(null, Sources.get(1).getId());
-		Assert.assertEquals("fr_CA", Sources.get(1).getLang());
-		Assert.assertEquals("My Source", getText(Sources.get(1)));
-		Assert.assertEquals(null, Sources.get(2).getId());
-		Assert.assertEquals(null, Sources.get(2).getLang());
-		Assert.assertEquals("My Source", getText(Sources.get(2)));
+		assertEquals("Source", Sources.get(0).getId());
+		assertEquals("fr_CA", Sources.get(0).getLang());
+		assertEquals("My Source", getText(Sources.get(0)));
+		assertEquals(null, Sources.get(1).getId());
+		assertEquals("fr_CA", Sources.get(1).getLang());
+		assertEquals("My Source", getText(Sources.get(1)));
+		assertEquals(null, Sources.get(2).getId());
+		assertEquals(null, Sources.get(2).getLang());
+		assertEquals("My Source", getText(Sources.get(2)));
 		// An IllegalArgumentException is expected
 		try {
 			oebps.addSource(null, null, null);
@@ -387,15 +391,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addSubject(null, Locale.CANADA_FRENCH, "My Subject");
 		oebps.addSubject(null, null, "My Subject");
 		EList<Subject> subjects = oebps.getPackage().getMetadata().getSubjects();
-		Assert.assertEquals("Subject", subjects.get(0).getId());
-		Assert.assertEquals("fr_CA", subjects.get(0).getLang());
-		Assert.assertEquals("My Subject", getText(subjects.get(0)));
-		Assert.assertEquals(null, subjects.get(1).getId());
-		Assert.assertEquals("fr_CA", subjects.get(1).getLang());
-		Assert.assertEquals("My Subject", getText(subjects.get(1)));
-		Assert.assertEquals(null, subjects.get(2).getId());
-		Assert.assertEquals(null, subjects.get(2).getLang());
-		Assert.assertEquals("My Subject", getText(subjects.get(2)));
+		assertEquals("Subject", subjects.get(0).getId());
+		assertEquals("fr_CA", subjects.get(0).getLang());
+		assertEquals("My Subject", getText(subjects.get(0)));
+		assertEquals(null, subjects.get(1).getId());
+		assertEquals("fr_CA", subjects.get(1).getLang());
+		assertEquals("My Subject", getText(subjects.get(1)));
+		assertEquals(null, subjects.get(2).getId());
+		assertEquals(null, subjects.get(2).getLang());
+		assertEquals("My Subject", getText(subjects.get(2)));
 		try {
 			oebps.addSubject(null, null, null);
 			fail();
@@ -414,15 +418,15 @@ public class TestPublication extends AbstractTest {
 		oebps.addTitle(null, Locale.CANADA_FRENCH, "My Title");
 		oebps.addTitle(null, null, "My Title");
 		EList<Title> titles = oebps.getPackage().getMetadata().getTitles();
-		Assert.assertEquals("Title", titles.get(0).getId());
-		Assert.assertEquals("fr_CA", titles.get(0).getLang());
-		Assert.assertEquals("My Title", getText(titles.get(0)));
-		Assert.assertEquals(null, titles.get(1).getId());
-		Assert.assertEquals("fr_CA", titles.get(1).getLang());
-		Assert.assertEquals("My Title", getText(titles.get(1)));
-		Assert.assertEquals(null, titles.get(2).getId());
-		Assert.assertEquals(null, titles.get(2).getLang());
-		Assert.assertEquals("My Title", getText(titles.get(2)));
+		assertEquals("Title", titles.get(0).getId());
+		assertEquals("fr_CA", titles.get(0).getLang());
+		assertEquals("My Title", getText(titles.get(0)));
+		assertEquals(null, titles.get(1).getId());
+		assertEquals("fr_CA", titles.get(1).getLang());
+		assertEquals("My Title", getText(titles.get(1)));
+		assertEquals(null, titles.get(2).getId());
+		assertEquals(null, titles.get(2).getLang());
+		assertEquals("My Title", getText(titles.get(2)));
 		try {
 			oebps.addTitle(null, null, null);
 			fail();
@@ -439,10 +443,10 @@ public class TestPublication extends AbstractTest {
 		oebps.addType("Type", "My Type");
 		oebps.addType(null, "My Type");
 		EList<org.eclipse.mylyn.docs.epub.dc.Type> Types = oebps.getPackage().getMetadata().getTypes();
-		Assert.assertEquals("Type", Types.get(0).getId());
-		Assert.assertEquals("My Type", getText(Types.get(0)));
-		Assert.assertEquals(null, Types.get(1).getId());
-		Assert.assertEquals("My Type", getText(Types.get(1)));
+		assertEquals("Type", Types.get(0).getId());
+		assertEquals("My Type", getText(Types.get(0)));
+		assertEquals(null, Types.get(1).getId());
+		assertEquals("My Type", getText(Types.get(1)));
 		try {
 			oebps.addType(null, null);
 			fail();
@@ -622,7 +626,7 @@ public class TestPublication extends AbstractTest {
 		Assert.assertTrue(html2.exists());
 		// The manifest shall only contain the items we have linked to in addition to the toc.ncx and the file that we
 		// started from -- a total of six files.
-		Assert.assertEquals(6, oebps.getPackage().getManifest().getItems().size());
+		assertEquals(6, oebps.getPackage().getManifest().getItems().size());
 
 	}
 
@@ -725,6 +729,7 @@ public class TestPublication extends AbstractTest {
 	 *
 	 * @throws Exception
 	 */
+	@Test
 	public final void test_Bug376312() throws Exception {
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/circular/file-a.xhtml"));

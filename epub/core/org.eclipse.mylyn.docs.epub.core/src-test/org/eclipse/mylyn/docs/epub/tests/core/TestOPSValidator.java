@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.core;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -23,8 +25,6 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import junit.framework.TestCase;
-
 /**
  * Tests for the OPS validator.
  *
@@ -32,7 +32,7 @@ import junit.framework.TestCase;
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
  */
 @SuppressWarnings({ "nls" })
-public class TestOPSValidator extends TestCase {
+public class TestOPSValidator {
 
 	private final String[] illegalAttributes = new String[] { "anything", "goes", "in", "here" };
 

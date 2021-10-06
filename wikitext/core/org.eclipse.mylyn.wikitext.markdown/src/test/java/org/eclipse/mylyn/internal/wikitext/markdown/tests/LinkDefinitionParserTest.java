@@ -13,24 +13,28 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinition;
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinitionParser;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Stefan Seelmann
  */
-public class LinkDefinitionParserTest extends TestCase {
+public class LinkDefinitionParserTest {
 
 	private LinkDefinitionParser linkDefinitionParser;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		linkDefinitionParser = new LinkDefinitionParser();
 	}
 
+	@Test
 	public void testWithoutTitle() {
 		String markup = "[foo]: http://example.com/";
 		linkDefinitionParser.parse(markup);
@@ -42,6 +46,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertNull(linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testEmptyTitle() {
 		String markup = "[foo]: http://example.com/ \"\"";
 		linkDefinitionParser.parse(markup);
@@ -53,6 +58,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testDoubleQuotedTitle() {
 		String markup = "[foo]: http://example.com/ \"Optional Title Here\"";
 		linkDefinitionParser.parse(markup);
@@ -64,6 +70,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testSingleQuotedTitle() {
 		String markup = "[foo]: http://example.com/ 'Optional Title Here'";
 		linkDefinitionParser.parse(markup);
@@ -75,6 +82,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testParenthesedTitle() {
 		String markup = "[foo]: http://example.com/ (Optional Title Here)";
 		linkDefinitionParser.parse(markup);
@@ -86,6 +94,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testUrlInAngleBrackets() {
 		String markup = "[foo]: <http://example.com/> (Optional Title Here)";
 		linkDefinitionParser.parse(markup);
@@ -97,6 +106,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testTitleCanBePutOnNextLine() {
 		String markup = "   [foo]: <http://example.com/>\n      (Optional Title Here)";
 		linkDefinitionParser.parse(markup);
@@ -108,6 +118,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testMayStartWithUpToThreeSpaces() {
 		String markup = "   [foo]: <http://example.com/> (Optional Title Here)";
 		linkDefinitionParser.parse(markup);
@@ -118,6 +129,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertEquals("Optional Title Here", linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testMayNotStartWithMoreThanThreeSpaces() {
 		String markup = "    [foo]: http://example.com/";
 		linkDefinitionParser.parse(markup);
@@ -125,6 +137,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertNotNull(linkDefinition);
 	}
 
+	@Test
 	public void testNoMatchInMiddleOfLine() {
 		String markup = "Lorem [foo]: http://example.com/ ipsum.";
 		linkDefinitionParser.parse(markup);
@@ -132,6 +145,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertNotNull(linkDefinition);
 	}
 
+	@Test
 	public void testNotCaseSensitive() {
 		String markup = "[foo]: http://example.com/";
 		linkDefinitionParser.parse(markup);
@@ -143,6 +157,7 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertNull(linkDefinition.getTitle());
 	}
 
+	@Test
 	public void testMultiline() {
 		String markup = "aaa\n\n  [foo]: http://foo.com/\n  [bar]: http://bar.com/\n\nbbb";
 		linkDefinitionParser.parse(markup);

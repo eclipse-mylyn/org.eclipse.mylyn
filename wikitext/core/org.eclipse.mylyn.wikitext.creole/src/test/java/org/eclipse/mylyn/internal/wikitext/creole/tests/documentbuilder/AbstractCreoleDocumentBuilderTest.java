@@ -13,24 +13,25 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.creole.internal.CreoleDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-
-import junit.framework.TestCase;
+import org.junit.Before;
 
 /**
  * @author Kevin de Vlaming
  */
-public abstract class AbstractCreoleDocumentBuilderTest extends TestCase {
+public abstract class AbstractCreoleDocumentBuilderTest {
 
 	protected DocumentBuilder builder;
 
 	protected StringWriter out;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		out = new StringWriter();
 		builder = new CreoleDocumentBuilder(out);
 	}

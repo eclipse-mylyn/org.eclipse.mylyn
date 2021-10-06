@@ -26,10 +26,8 @@ import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.junit.After;
 import org.junit.Before;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings("nls")
-public abstract class AbstractTest extends TestCase {
+public abstract class AbstractTest {
 
 	private static final boolean DEBUGGING = false;;
 
@@ -112,10 +110,6 @@ public abstract class AbstractTest extends TestCase {
 		return null;
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
 	@Before
 	public void setUp() throws Exception {
 		if (epubFile.exists()) {
@@ -128,7 +122,6 @@ public abstract class AbstractTest extends TestCase {
 		epub = new EPUB(logger);
 	}
 
-	@Override
 	@After
 	public void tearDown() {
 		epubFile.delete();

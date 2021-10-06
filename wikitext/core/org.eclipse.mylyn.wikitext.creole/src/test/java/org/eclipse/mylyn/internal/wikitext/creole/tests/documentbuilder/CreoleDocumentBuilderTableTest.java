@@ -13,25 +13,30 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
+import static org.junit.Assert.assertEquals;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.junit.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
 public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilderTest {
-
+	@Test
 	public void testTableWithEmptyCells() {
 		assertTableRow("| |content| |\n\n", BlockType.TABLE_CELL_NORMAL);
 	}
 
+	@Test
 	public void testTableWithEmptyHeaderCells() {
 		assertTableRow("|= |=content|= |\n\n", BlockType.TABLE_CELL_HEADER);
 	}
 
+	@Test
 	public void testTableWithLineBreaks() {
 		assertTableRow("| |abc\\\\\\\\def| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
 			builder.characters("abc");
@@ -41,6 +46,7 @@ public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilde
 		});
 	}
 
+	@Test
 	public void testTableWithLink() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());
@@ -66,6 +72,7 @@ public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilde
 		assertEquals("|[[http://example.com/|link]]|[[http://example.com]]|\n\n", markup);
 	}
 
+	@Test
 	public void testTableWithImage() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());
@@ -91,6 +98,7 @@ public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilde
 		assertEquals("|{{/path/to/img.jpg}}|{{/path/to/img.jpg|Alt text}}|\n\n", markup);
 	}
 
+	@Test
 	public void testTableWithCodeSpan() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());

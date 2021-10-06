@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.docs.epub.tests.core;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;

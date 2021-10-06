@@ -13,30 +13,30 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringWriter;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
-
-import junit.framework.TestCase;
+import org.junit.Before;
 
 /**
  * Test base for markdown language tests.
  *
  * @author Stefan Seelmann
  */
-public abstract class MarkdownLanguageTestBase extends TestCase {
+public abstract class MarkdownLanguageTestBase {
 
 	private MarkupParser parser;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		parser = new MarkupParser(new MarkdownLanguage());
 	}
 

@@ -13,25 +13,29 @@
 
 package org.eclipse.mylyn.wikitext.validation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class StandaloneMarkupValidatorTest extends TestCase {
+public class StandaloneMarkupValidatorTest {
 
 	private StandaloneMarkupValidator validator;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		validator = new StandaloneMarkupValidator();
 		validator.setClassLoader(StandaloneMarkupValidatorTest.class.getClassLoader());
 		validator.computeRules("TestMarkupLanguage",
 				StandaloneMarkupValidatorTest.class.getResource("test-plugin.xml"));
 	}
 
+	@Test
 	public void testSimple() {
 		List<ValidationProblem> problems = validator.validate("some text ERROR more text WARNING and ERROR");
 
@@ -54,6 +58,7 @@ public class StandaloneMarkupValidatorTest extends TestCase {
 		assertEquals(5, third.getLength());
 	}
 
+	@Test
 	public void testImmutability() {
 		StandaloneMarkupValidator validator = StandaloneMarkupValidator.getValidator("Test");
 		try {
@@ -76,6 +81,7 @@ public class StandaloneMarkupValidatorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMutability() {
 		validator.getRules().clear();
 		validator.getRules().add(new TestMarkupValidationRule());

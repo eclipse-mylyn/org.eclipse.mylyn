@@ -31,10 +31,12 @@ public class HtmlParserTest extends AbstractSaxParserTest {
 		return new HtmlParser();
 	}
 
+	@Test
 	public void testBasicMalformed() throws IOException, SAXException {
 		performTest("<p>foo<br>bar</p>", "foo\nbar\n\n");
 	}
 
+	@Test
 	public void testBasicMalformed2() throws IOException, SAXException {
 		performTest("<p>foo<p>bar", "foo\n\nbar\n\n");
 

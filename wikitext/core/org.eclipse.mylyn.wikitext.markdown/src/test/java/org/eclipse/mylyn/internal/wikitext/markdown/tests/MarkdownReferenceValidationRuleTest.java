@@ -13,41 +13,46 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.markdown.internal.validation.MarkdownReferenceValidationRule;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class MarkdownReferenceValidationRuleTest extends TestCase {
+public class MarkdownReferenceValidationRuleTest {
 
 	private MarkdownReferenceValidationRule rule;
 
 	private MarkupValidator validator;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		rule = new MarkdownReferenceValidationRule();
 		validator = new MarkupValidator();
 		validator.getRules().add(rule);
 	}
 
+	@Test
 	public void testNoErrorInLocalReferenceToExistingAnchor() {
 		final String markup = "# Header 1\n\n[Link to title](#header-1)";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertTrue(problems.isEmpty());
 	}
 
+	@Test
 	public void testErrorInLocalReferenceToNonExistingAnchor() {
 		final String markup = "# Header 1\n\n[Link to title](#FooBar)";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(12, problems.get(0).getOffset());

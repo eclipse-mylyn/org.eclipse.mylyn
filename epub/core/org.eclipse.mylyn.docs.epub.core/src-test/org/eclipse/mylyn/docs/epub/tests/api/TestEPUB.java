@@ -13,6 +13,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

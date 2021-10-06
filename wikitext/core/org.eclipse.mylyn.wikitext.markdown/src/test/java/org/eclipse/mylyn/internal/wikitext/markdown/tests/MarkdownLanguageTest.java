@@ -16,6 +16,11 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
@@ -26,6 +31,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.junit.Test;
 
 /**
  * http://daringfireball.net/projects/markdown/syntax
@@ -33,13 +39,14 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
-
+	@Test
 	public void testDiscoverable() {
 		MarkupLanguage language = ServiceLocator.getInstance().getMarkupLanguage("Markdown");
 		assertNotNull(language);
 		assertTrue(language instanceof MarkdownLanguage);
 	}
 
+	@Test
 	public void testFullExample() {
 
 		StringBuilder text = new StringBuilder();
@@ -106,6 +113,7 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<p>More text.</p>"));
 	}
 
+	@Test
 	public void testPreserveHtmlEntities() {
 		StringBuilder text = new StringBuilder();
 		text.append("AT&T and\n\n");
@@ -117,6 +125,7 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<p>AT&amp;T again</p>"));
 	}
 
+	@Test
 	public void testBacktickWithLang() {
 		StringBuilder text = new StringBuilder();
 		text.append("```java\n");
@@ -128,6 +137,7 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertEquals("<pre class=\"language-java\"><code class=\"language-java\">new String();</code></pre>", html);
 	}
 
+	@Test
 	public void testCreateDocumentBuilder() {
 		AbstractMarkupLanguage lang = new MarkdownLanguage();
 		DocumentBuilder builder = lang.createDocumentBuilder(new StringWriter());
@@ -135,6 +145,7 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(builder instanceof MarkdownDocumentBuilder);
 	}
 
+	@Test
 	public void testIdGenerationStrategy() {
 		IdGenerationStrategy strategy = new MarkdownLanguage().getIdGenerationStrategy();
 		assertNotNull(strategy);

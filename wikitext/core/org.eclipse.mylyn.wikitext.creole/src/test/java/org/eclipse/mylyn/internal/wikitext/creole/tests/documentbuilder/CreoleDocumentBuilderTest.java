@@ -15,13 +15,14 @@ package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.junit.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
 public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest {
-
+	@Test
 	public void testLineBreak() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -33,6 +34,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("line\\\\break\n\n");
 	}
 
+	@Test
 	public void testLineBreakImplicitParagraph() {
 		builder.beginDocument();
 		builder.characters("line");
@@ -42,6 +44,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("line\\\\break\n\n");
 	}
 
+	@Test
 	public void testHeadings() {
 		builder.beginDocument();
 		builder.beginHeading(1, new Attributes());
@@ -57,6 +60,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("= This is an H1\n\n== This is an H2\n\n====== This is an H6\n\n");
 	}
 
+	@Test
 	public void testHorizontalRule() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -68,6 +72,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("horizontal\n----\nrule\n\n");
 	}
 
+	@Test
 	public void testEscapedTilde() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -77,6 +82,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("this ~~ is interpreted as an escape\n\n");
 	}
 
+	@Test
 	public void testEntityReference() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -88,6 +94,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("5 > 4\n\n");
 	}
 
+	@Test
 	public void testEntityReferenceImplicitParagraph() {
 		builder.beginDocument();
 		builder.characters("4 ");
@@ -97,6 +104,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		assertMarkup("4 < 5\n\n");
 	}
 
+	@Test
 	public void testUnknownEntityReference() {
 		builder.beginDocument();
 		builder.entityReference("unknown");

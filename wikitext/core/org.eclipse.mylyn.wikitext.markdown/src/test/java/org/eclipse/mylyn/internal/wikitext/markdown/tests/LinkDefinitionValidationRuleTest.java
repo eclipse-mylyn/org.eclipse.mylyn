@@ -13,49 +13,55 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.markdown.internal.validation.LinkDefinitionValidationRule;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class LinkDefinitionValidationRuleTest extends TestCase {
+public class LinkDefinitionValidationRuleTest {
 
 	private LinkDefinitionValidationRule rule;
 
 	private MarkupValidator validator;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		rule = new LinkDefinitionValidationRule();
 		validator = new MarkupValidator();
 		validator.getRules().add(rule);
 	}
 
+	@Test
 	public void testNoProblemIfLinkDefinitionExistsWithExplicitLinkName() {
 		final String markup = "[Google][Google]\n\n[Google]: http://www.google.com/";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertTrue(problems.isEmpty());
 	}
 
+	@Test
 	public void testNoProblemIfLinkDefinitionExistsWithImplicitLinkName() {
 		final String markup = "[Bing][]\n\n[Bing]: http://www.bing.com/";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertTrue(problems.isEmpty());
 	}
 
+	@Test
 	public void testErrorIfLinkDefinitionDoesNotExist() {
 		final String markup = "[Yahoo][yahoo]";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(0, problems.get(0).getOffset());
@@ -65,10 +71,11 @@ public class LinkDefinitionValidationRuleTest extends TestCase {
 		assertTrue(problems.get(0).getMessage().contains("missing"));
 	}
 
+	@Test
 	public void testWarningIfLinkDefinitionIsUnused() {
 		final String markup = "[ddg]: https://duckduckgo.com/";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(0, problems.get(0).getOffset());
@@ -78,10 +85,11 @@ public class LinkDefinitionValidationRuleTest extends TestCase {
 		assertTrue(problems.get(0).getMessage().contains("never used"));
 	}
 
+	@Test
 	public void testWarningIfLinkDefinitionWithLeadingSpacesIsUnused() {
 		final String markup = "  [ddg]: https://duckduckgo.com/";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(2, problems.get(0).getOffset());
@@ -91,10 +99,11 @@ public class LinkDefinitionValidationRuleTest extends TestCase {
 		assertTrue(problems.get(0).getMessage().contains("never used"));
 	}
 
+	@Test
 	public void testErrorIfLinkDefinitionDoesNotExistWithinHeading() {
 		final String markup = "# Heading with [Link][link]";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(15, problems.get(0).getOffset());
@@ -104,10 +113,11 @@ public class LinkDefinitionValidationRuleTest extends TestCase {
 		assertTrue(problems.get(0).getMessage().contains("missing"));
 	}
 
+	@Test
 	public void testErrorIfLinkDefinitionDoesNotExistWithinUnderlinedHeading() {
 		final String markup = "Heading with [Link][link]\n=============";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(13, problems.get(0).getOffset());
@@ -117,10 +127,11 @@ public class LinkDefinitionValidationRuleTest extends TestCase {
 		assertTrue(problems.get(0).getMessage().contains("missing"));
 	}
 
+	@Test
 	public void testErrorIfLinkDefinitionDoesNotExistWithinBlockquote() {
 		final String markup = "> [Link][link] within blockquote";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
-		
+
 		assertNotNull(problems);
 		assertEquals(1, problems.size());
 		assertEquals(2, problems.get(0).getOffset());

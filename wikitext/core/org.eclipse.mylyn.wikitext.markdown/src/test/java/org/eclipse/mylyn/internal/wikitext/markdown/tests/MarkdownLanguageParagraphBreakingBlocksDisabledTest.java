@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringWriter;
 import java.util.List;
 
@@ -20,15 +22,15 @@ import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests without paragraph breaking blocks.
  * <p>
  * Paragraph breaking blocks are disabled by default in some dialects, e.g. Pandoc.
  */
-public class MarkdownLanguageParagraphBreakingBlocksDisabledTest extends TestCase {
+public class MarkdownLanguageParagraphBreakingBlocksDisabledTest {
 
 	private static class Language extends MarkdownLanguage {
 
@@ -43,9 +45,8 @@ public class MarkdownLanguageParagraphBreakingBlocksDisabledTest extends TestCas
 
 	private MarkupParser parser;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		parser = new MarkupParser(new Language());
 	}
 
@@ -60,34 +61,39 @@ public class MarkdownLanguageParagraphBreakingBlocksDisabledTest extends TestCas
 
 	public void parseAndAssert(String markup, String expectedHtml) {
 		String html = parseToHtml(markup);
-		
+
 		assertEquals(expectedHtml, html);
 	}
 
+	@Test
 	public void testParagraphsBrokenByHorizontalRuleBlock() {
 		String markup = "a paragraph\nfollowed by a horizontal rule\n---";
 		String expectedHtml = "<p>a paragraph\nfollowed by a horizontal rule\n---</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	@Test
 	public void testParagraphsBrokenByHeadingBlock() {
 		String markup = "a paragraph\n# A header";
 		String expectedHtml = "<p>a paragraph\n# A header</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	@Test
 	public void testParagraphsBrokenByQuoteBlock() {
 		String markup = "a paragraph\n> a quote block paragraph";
 		String expectedHtml = "<p>a paragraph\n&gt; a quote block paragraph</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	@Test
 	public void testParagraphsBrokenByUListBlock() {
 		String markup = "a paragraph\n- a list item";
 		String expectedHtml = "<p>a paragraph\n- a list item</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	@Test
 	public void testParagraphsBrokenByOListBlock() {
 		String markup = "a paragraph\n1. a list item";
 		String expectedHtml = "<p>a paragraph\n1. a list item</p>";

@@ -21,30 +21,12 @@ import org.eclipse.mylyn.docs.epub.tests.core.TestEPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.tests.core.TestEclipseTocImporter;
 import org.eclipse.mylyn.docs.epub.tests.core.TestOPSValidator;
 import org.eclipse.mylyn.docs.epub.tests.core.TestTOCGenerator;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-@SuppressWarnings("nls")
+@RunWith(Suite.class)
+@SuiteClasses({ TestEPUB.class, TestOPSPublication.class, TestEPUBPublication.class, TestPublication.class,
+		TestEPUBFileUtil.class, TestOPSValidator.class, TestTOCGenerator.class, TestEclipseTocImporter.class })
 public class AllTests {
-	public static Test suite() {
-		return suite(false);
-	}
-
-	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.docs.epub");
-		// API tests
-		suite.addTestSuite(TestEPUB.class);
-		suite.addTestSuite(TestOPSPublication.class);
-		suite.addTestSuite(TestEPUBPublication.class);
-		suite.addTestSuite(TestPublication.class);
-		// Core tests
-		suite.addTestSuite(TestEPUBFileUtil.class);
-		suite.addTestSuite(TestOPSValidator.class);
-		suite.addTestSuite(TestTOCGenerator.class);
-		suite.addTestSuite(TestEclipseTocImporter.class);
-		// Ant tests
-		//suite.addTestSuite(TestAntTask.class);
-		return suite;
-	}
 }

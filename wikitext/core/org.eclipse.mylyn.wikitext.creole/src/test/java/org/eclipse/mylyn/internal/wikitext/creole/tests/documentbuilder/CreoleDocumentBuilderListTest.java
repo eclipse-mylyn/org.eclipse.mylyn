@@ -13,16 +13,19 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
+import static org.junit.Assert.assertEquals;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.junit.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
 public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilderTest {
-
+	@Test
 	public void testListBulleted() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -40,6 +43,7 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("* X\n* Y\n* Z\n");
 	}
 
+	@Test
 	public void testListNumeric() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
@@ -57,6 +61,7 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("# One\n# Two\n# Three\n");
 	}
 
+	@Test
 	public void testListConsecutive() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -73,6 +78,7 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("* Food\n\n# Drink\n");
 	}
 
+	@Test
 	public void testListWithParagraphs() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -96,6 +102,7 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("* X\n\n* Y\n\n* Z\n\n");
 	}
 
+	@Test
 	public void testListWithCodeSpan() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -120,6 +127,7 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("* No code\n** With {{{* /code\\ *}}}\n");
 	}
 
+	@Test
 	public void testBulletedListWithNestedSublist() {
 		builder.beginDocument();
 

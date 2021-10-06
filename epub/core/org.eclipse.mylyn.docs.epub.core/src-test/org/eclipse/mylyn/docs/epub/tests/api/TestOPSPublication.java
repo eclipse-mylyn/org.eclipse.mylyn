@@ -13,6 +13,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -150,6 +154,7 @@ public class TestOPSPublication extends AbstractTest {
 	 *
 	 * @throws Exception
 	 */
+	@Test
 	public final void testGenerateEmptyTableOfContents() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
@@ -308,8 +313,8 @@ public class TestOPSPublication extends AbstractTest {
 		epub.pack(epubFile);
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
-		assertEquals(true, msg.getMessage().equals(
-				"Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
+		assertEquals(true, msg.getMessage()
+				.equals("Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
 	}
 
 	/**
@@ -333,8 +338,8 @@ public class TestOPSPublication extends AbstractTest {
 		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
-		assertEquals(true, msg.getMessage().equals(
-				"Item \"illegal-type.html\" is not a core media type but a legal fallback item has been specified."));
+		assertEquals(true, msg.getMessage()
+				.equals("Item \"illegal-type.html\" is not a core media type but a legal fallback item has been specified."));
 	}
 
 	private class EPUB_NCX_Test extends OPSPublication {
