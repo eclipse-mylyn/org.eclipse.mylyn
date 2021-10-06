@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -47,154 +50,126 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 import com.google.common.io.Files;
 
-/**
- * @goal eclipse-help
- * @phase compile
- */
+@Mojo(name = "eclipse-help", defaultPhase = LifecyclePhase.COMPILE)
 public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * Output folder.
-	 *
-	 * @parameter expression="${project.build.directory}/generated-eclipse-help"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${project.build.directory}/generated-eclipse-help", required = true)
 	protected File outputFolder;
 
 	/**
 	 * Source folder.
-	 *
-	 * @parameter expression="${basedir}/src/main/docs"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${basedir}/src/main/docs", required = true)
 	protected File sourceFolder;
 
 	/**
 	 * The filename format to use when generating output filenames for HTML files. Defaults to {@code $1.html} where
 	 * {@code $1} is the name of the source file without extension.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String htmlFilenameFormat = "$1.html"; //$NON-NLS-1$
 
 	/**
 	 * The filename format to use when generating output filenames for Eclipse help table of contents XML files.
 	 * Defaults to {@code $1-toc.xml} where {@code $1} is the name of the source file without extension.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String xmlFilenameFormat = "$1-toc.xml"; //$NON-NLS-1$
 
 	/**
 	 * Specify the title of the output document. If unspecified, the title is the filename (without extension).
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String title;
 
 	/**
 	 * The 'rel' value for HTML links. If specified the value is applied to all generated links. The default value is
 	 * null.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String linkRel;
 
 	/**
 	 * Indicate if output should be generated to multiple output files (true/false). Default is false.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean multipleOutputFiles = false;
 
-	/**
-	 * @parameter expression="utf-8"
-	 */
+	@Parameter(defaultValue = "utf-8")
 	private final String sourceEncoding = "utf-8";
 
 	/**
 	 * Indicate if the output should be formatted (true/false). Default is false.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean formatOutput = false;
 
 	/**
 	 * Indicate if navigation links should be images (true/false). Only applicable for multi-file output. Default is
 	 * false.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean navigationImages = false;
 
 	/**
 	 * If specified, the prefix is prepended to relative image urls.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String prependImagePrefix = null;
 
-	/**
-	 * @parameter
-	 */
+	@Parameter
 	protected boolean useInlineCssStyles = true;
 
-	/**
-	 * @parameter
-	 */
+	@Parameter
 	protected boolean suppressBuiltInCssStyles = false;
 
 	/**
 	 * Specify that hyperlinks to external resources (&lt;a href) should use a target attribute to cause them to be
 	 * opened in a seperate window or tab. The value specified becomes the value of the target attribute on anchors
 	 * where the href is an absolute URL.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String defaultAbsoluteLinkTarget;
 
 	/**
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean xhtmlStrict = false;
 
 	/**
 	 * Indicate if the builder should emit a DTD doctype declaration. The default is true.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean emitDoctype = true;
 
 	/**
 	 * The doctype to use. Defaults to
 	 * {@code &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;}
 	 * .
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String htmlDoctype = null;
 
 	/**
 	 * The copyright notice to include in generated output files.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String copyrightNotice = null;
 
 	/**
 	 * The list of CSS stylesheet URLs relative to the {@link #sourceFolder}.
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected List<String> stylesheetUrls = new ArrayList<>();
 
 	/**
 	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if
 	 * the help file is in 'help/index.html' then the help prefix would be 'help'
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected String helpPrefix;
 
 	/**
@@ -204,9 +179,8 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * <p>
 	 * The default level is 0 (the document root)
 	 * </p>
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected int tocAnchorLevel = 0;
 
 	/**
@@ -216,9 +190,8 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * <p>
 	 * Defaults to false.
 	 * </p>
-	 *
-	 * @parameter
 	 */
+	@Parameter
 	protected boolean embeddedTableOfContents = false;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
