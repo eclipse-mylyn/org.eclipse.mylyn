@@ -12,20 +12,22 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.internal.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @SuppressWarnings("resource")
-public class LocationTrackingReaderTest extends TestCase {
-
+public class LocationTrackingReaderTest {
+	@Test
 	public void testCharOffset() throws IOException {
 		String content = "aaflkjsdf \nas;dfj asl;fj\r\naslfkjasd";
 		int count = 0;
@@ -39,6 +41,7 @@ public class LocationTrackingReaderTest extends TestCase {
 		assertEquals(content.length(), count);
 	}
 
+	@Test
 	public void testReadLine() throws IOException {
 		String content = "\rabc\ndef\r\rfoo bar";
 		int bufSize = 3;
@@ -64,10 +67,11 @@ public class LocationTrackingReaderTest extends TestCase {
 			assertEquals(lineNumber - 1, reader.getLineNumber());
 		} while (testLine != null && refLine != null);
 
-		assertTrue(refLine == null);
-		assertTrue(testLine == null);
+		assertNull(refLine);
+		assertNull(testLine);
 	}
 
+	@Test
 	public void testReadLineWithWindowsNewlines() throws IOException {
 		String content = "abc\r\ndef\r\n\r\nfoo bar";
 		int bufSize = 3;
@@ -76,6 +80,7 @@ public class LocationTrackingReaderTest extends TestCase {
 		doTest(content, lineOffsets, bufSize);
 	}
 
+	@Test
 	public void testReadLineWithTerminatingEOLs() throws IOException {
 		String content = "abc\n";
 		int bufSize = 3;

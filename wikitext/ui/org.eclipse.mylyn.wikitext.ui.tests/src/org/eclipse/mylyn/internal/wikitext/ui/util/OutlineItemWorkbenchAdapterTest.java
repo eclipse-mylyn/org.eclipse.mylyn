@@ -13,16 +13,21 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @EclipseRuntimeRequired
-public class OutlineItemWorkbenchAdapterTest extends TestCase {
+public class OutlineItemWorkbenchAdapterTest {
 
 	private OutlineItem outline;
 
@@ -32,9 +37,8 @@ public class OutlineItemWorkbenchAdapterTest extends TestCase {
 
 	private OutlineItemWorkbenchAdapter adapter;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		outline = new OutlineItem(null, 0, "<root>", 0, 100, "<root>");
 
 		child1 = new OutlineItem(outline, 1, "id1", 0, 10, "one");
@@ -43,12 +47,14 @@ public class OutlineItemWorkbenchAdapterTest extends TestCase {
 		adapter = new OutlineItemWorkbenchAdapter();
 	}
 
+	@Test
 	public void testGetParent() {
 		assertNull(adapter.getParent(outline));
 		assertSame(outline, adapter.getParent(child1));
 		assertSame(outline, adapter.getParent(child2));
 	}
 
+	@Test
 	public void testGetChildren() {
 		assertEquals(2, adapter.getChildren(outline).length);
 		assertSame(child1, adapter.getChildren(outline)[0]);
@@ -57,6 +63,7 @@ public class OutlineItemWorkbenchAdapterTest extends TestCase {
 		assertEquals(0, adapter.getChildren(child2).length);
 	}
 
+	@Test
 	public void testGetLabel() {
 		assertTrue(adapter.getLabel(outline).indexOf(outline.getLabel()) != -1);
 		assertTrue(adapter.getLabel(child1).indexOf(child1.getLabel()) != -1);

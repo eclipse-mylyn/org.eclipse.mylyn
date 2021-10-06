@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,20 +28,22 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.junit.Before;
+import org.junit.Test;
 
 @HeadRequired
 public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 	private MarkupTokenScanner tokenScanner;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		Font normalFont = new Font(null, new FontData[] { new FontData("normalFont", 12, 0) });
 		Font monospaceFont = new Font(null, new FontData[] { new FontData("monoFont", 12, 0) });
 		tokenScanner = new MarkupTokenScanner(normalFont, monospaceFont);
 	}
 
+	@Test
 	public void testTextileLinkWithStyle() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -55,7 +61,7 @@ public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 		List<MarkupTokenScanner.Token> tokens = new ArrayList<MarkupTokenScanner.Token>();
 		for (IToken token = tokenScanner.nextToken(); token != Token.EOF; token = tokenScanner.nextToken()) {
-			
+
 			tokens.add((MarkupTokenScanner.Token) token);
 		}
 

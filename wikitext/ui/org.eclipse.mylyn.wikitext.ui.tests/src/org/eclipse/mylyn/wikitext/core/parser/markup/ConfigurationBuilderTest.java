@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
@@ -21,16 +24,15 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.parser.markup.block.EclipseErrorDetailsBlock;
 import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
 import org.junit.Assert;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * test for {@link ConfigurationBuilder}
- * 
+ *
  * @author David Green
  */
-public class ConfigurationBuilderTest extends TestCase {
-
+public class ConfigurationBuilderTest {
+	@Test
 	public void testRepositorySettings() {
 
 		MarkupLanguageConfiguration configuration = ConfigurationBuilder.create().repositorySettings().configuration();

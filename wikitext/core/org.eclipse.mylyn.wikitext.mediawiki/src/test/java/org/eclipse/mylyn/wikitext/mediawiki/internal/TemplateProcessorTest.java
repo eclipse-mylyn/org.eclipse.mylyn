@@ -14,24 +14,28 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.TemplateResolver;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class TemplateProcessorTest extends TestCase {
+public class TemplateProcessorTest {
 
 	private MediaWikiLanguage markupLanguage;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		markupLanguage = new MediaWikiLanguage();
 	}
 
+	@Test
 	public void testBasicTemplateNoParameters() {
 		Template template = new Template();
 		template.setName("test");
@@ -44,6 +48,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNoNamespace() {
 		//Bug 468237
 		Template template = new Template();
@@ -57,6 +62,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateOtherNamespace() {
 		//Bug 468237
 		Template template = new Template();
@@ -70,6 +76,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNamedParameter() {
 		Template template = new Template();
 		template.setName("test");
@@ -82,6 +89,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expandedfoo bar_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplatePositionalParameter() {
 		Template template = new Template();
 		template.setName("test");
@@ -94,6 +102,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expandedoneandtwoandone_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplatePositionalParameterWithSpaces() {
 		Template template = new Template();
 		template.setName("Note");
@@ -106,6 +115,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one <p class='note'>comment with spaces.</p> two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNamedParameterMissingValue() {
 		Template template = new Template();
 		template.setName("test");
@@ -118,6 +128,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNamedParameterMultiple() {
 		Template template = new Template();
 		template.setName("test");
@@ -130,6 +141,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expandedfoo barandbaz_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateQualifiedName() {
 		Template template = new Template();
 		template.setName("Test:test");
@@ -142,6 +154,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateWithSlashes() {
 		//Bug 468237
 		Template template = new Template();
@@ -155,6 +168,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateWithBrackets() {
 		//Bug 468237
 		Template template = new Template();
@@ -168,6 +182,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateIncludeonly() {
 		Template template = new Template();
 		template.setName("test");
@@ -180,6 +195,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNoInclude() {
 		Template template = new Template();
 		template.setName("test");
@@ -192,6 +208,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateExcluded() {
 		Template template = new Template();
 		template.setName("test");
@@ -205,6 +222,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one  two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateExcluded2() {
 		Template template = new Template();
 		template.setName("testBar");
@@ -218,6 +236,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one  two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateExcludedWithWildcards() {
 		Template template = new Template();
 		template.setName("Foo:test");
@@ -231,6 +250,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one  two", markup);
 	}
 
+	@Test
 	public void testCaseSensitivity() {
 		// bug 323224
 		final Set<String> templateNames = new HashSet<String>();
@@ -257,6 +277,7 @@ public class TemplateProcessorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBasicTemplatesNoParametersRec() {
 		//Bug 379783
 		Template templateFoo = new Template();
@@ -275,6 +296,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _+exp+expanded_ two", markup);
 	}
 
+	@Test
 	public void testTemplateRepeated() {
 		Template template = new Template();
 		template.setName("test");
@@ -287,6 +309,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two _expanded_", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNoParametersRecLoopDetection() {
 		//Bug 379783
 		Template templateMer = new Template();
@@ -300,6 +323,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("�test<span class=\"error\">Template loop detected:mer</span>test�", markup);
 	}
 
+	@Test
 	public void testBasicTemplatesNoParametersRecLoopDetection() {
 		//Bug 379783
 		Template template1 = new Template();
@@ -325,6 +349,7 @@ public class TemplateProcessorTest extends TestCase {
 				markup);
 	}
 
+	@Test
 	public void testBasicTemplateDidgitInTheName() {
 		//Bug 380052
 		Template template = new Template();
@@ -338,6 +363,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("This is a first test.", markup);
 	}
 
+	@Test
 	public void testBasicTemplateDidgitInTheName2() {
 		//Bug 380052
 		Template template = new Template();
@@ -351,6 +377,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("This is the second item.", markup);
 	}
 
+	@Test
 	public void testBasicTemplateDidgitInTheName3() {
 		//Bug 380052
 		Template template = new Template();
@@ -364,6 +391,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("foofoo-barbar", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNamedParameter_DefaultValue() {
 		Template template = new Template();
 		template.setName("test");
@@ -376,6 +404,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expandeddefault value_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplateNamedParameter_EmptyDefaultValue() {
 		Template template = new Template();
 		template.setName("test");
@@ -388,6 +417,7 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	@Test
 	public void testBasicTemplatePositionalParameter_DefaultValue() {
 		Template template = new Template();
 		template.setName("test");

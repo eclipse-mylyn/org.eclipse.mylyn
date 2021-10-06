@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
@@ -26,16 +30,16 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.google.common.io.Resources;
-
-import junit.framework.TestCase;
 
 /**
  * @author David Green
  * @author Torkild U. Resheim
  */
-public class XslfoDocumentBuilderIntegrationTest extends TestCase {
+public class XslfoDocumentBuilderIntegrationTest {
 
 	private StringWriter out;
 
@@ -43,8 +47,8 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 
 	private MarkupParser parser;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		out = new StringWriter();
 		documentBuilder = new XslfoDocumentBuilder(new DefaultXmlStreamWriter(out));
 		parser = new MarkupParser();
@@ -52,6 +56,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 	}
 
 	// test for bug 304013: [wikitext-to-xslfo] Missing </block> in <static-content>
+	@Test
 	public void testXslFoNoMissingBlock_bug304013() {
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -61,7 +66,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 				+ "== H2 ==\n" + "\n" + "some text");
 		assertFalse(Pattern.compile("<static-content[^>]*></static-content>").matcher(out.toString()).find());
 	}
-
+	@Test
 	public void testForXslFoBookmarks_bug336592() {
 		final String markup = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n= Bookmark H1 =\n== Bookmark H2 ==\n";
 
@@ -78,7 +83,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 				"<bookmark-tree>\\s*<bookmark internal-destination=\"Bookmark_H1\">\\s*<bookmark-title>Bookmark H1</bookmark-title>\\s*<bookmark internal-destination=\"Bookmark_H2\">\\s*<bookmark-title>Bookmark H2</bookmark-title>\\s*</bookmark>\\s*</bookmark>\\s*</bookmark-tree>")
 				.matcher(xslfo).find());
 	}
-
+	@Test
 	public void testforTableCSSAttributes_bug336813() {
 		final String markup = "{| style=\"border-style: solid; border-color: #000; border-width: 1px;\"\n" + "|-\n"
 				+ "! header 1\n" + "! header 2\n" + "! header 3\n" + "|-\n" + "| row 1, cell 1\n" + "| row 1, cell 2\n"
@@ -106,7 +111,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 				"<block font-size=\"10.0pt\" border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
 				.matcher(xslfo).find());
 	}
-
+	@Test
 	public void testforTableSpan_bug336813() {
 		final String markup = "{|\n|-\n" + "| Column 1 || Column 2 || Column 3\n" + "|-\n" + "| rowspan=\"2\"| A\n"
 				+ "| colspan=\"2\" | B\n" + "|-\n" + "| C <!-- column 1 occupied by cell A -->\n" + "| D \n" + "|-\n"
@@ -133,7 +138,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 				.matcher(xslfo).find());
 
 	}
-
+	@Test
 	public void testforTableRowAlign_bug336813() {
 		final String markup = "{|\n" + "|- valign=\"top\"\n |'''Row heading'''\n"
 				+ "| A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
@@ -155,7 +160,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		// From css styling
 		assertTrue(Pattern.compile("<table-row display-align=\"after\">").matcher(xslfo).find());
 	}
-
+	@Test
 	public void testforTableCellAlign_bug336813() {
 		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
 				+ "| valign=\"top\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
@@ -178,7 +183,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		// From css styling
 		assertTrue(Pattern.compile("<block font-size=\"10.0pt\" display-align=\"after\">").matcher(xslfo).find());
 	}
-
+	@Test
 	public void testforTableCellTextAlign_bug336813() {
 		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
 				+ "| align=\"left\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
@@ -201,7 +206,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		// From css styling
 		assertTrue(Pattern.compile("<block font-size=\"10.0pt\" text-align=\"right\">").matcher(xslfo).find());
 	}
-
+	@Test
 	public void testforXslFoLinks() {
 		final String markup = "\"INTERN-LABEL\":#intern_label\n" + "\"*INTERN-BOLD-LABEL*\":#intern_bold_label\n"
 				+ "\"EXTERN-LABEL\":http://extern-label.com/\n";
@@ -220,7 +225,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		assertTrue(xslfo.contains(
 				"<basic-link external-destination=\"url(http://extern-label.com/)\">EXTERN-LABEL</basic-link>"));
 	}
-
+	@Test
 	public void testCopyrightExtent() {
 		documentBuilder.getConfiguration().setCopyright("Test Copyright");
 

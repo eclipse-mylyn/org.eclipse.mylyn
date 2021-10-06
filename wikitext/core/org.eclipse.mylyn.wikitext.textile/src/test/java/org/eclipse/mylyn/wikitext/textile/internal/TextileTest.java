@@ -12,17 +12,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class TextileTest extends TestCase {
+public class TextileTest {
+	@Test
 	public void testExplicitHeaderStartsNewBlock() {
 		for (int x = 1; x <= 6; ++x) {
 			assertTrue(Textile.explicitBlockBegins("h" + x + ". ", 0));
@@ -33,6 +37,7 @@ public class TextileTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExplicitFootnoteStartsNewBlock() {
 		for (int x = 0; x <= 9; ++x) {
 			assertTrue(Textile.explicitBlockBegins("fn" + x + ". ", 0));
@@ -44,6 +49,7 @@ public class TextileTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExplicitOtherStartsNewBlock() {
 		String[] types = new String[] { "pre", "bc", "bq", "p", "table", "###" };
 		for (String type : types) {
@@ -57,6 +63,7 @@ public class TextileTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testAttributes() {
 		Pattern pattern = Pattern.compile(Textile.REGEX_ATTRIBUTES);
 		String[] values = new String[] { "(someClass)", "(#someId)", "{someStyle}", "[someLanguage]",
@@ -83,6 +90,7 @@ public class TextileTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testLeftAlignment() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -95,6 +103,7 @@ public class TextileTest extends TestCase {
 		assertEquals("text-align: left;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testRightAlignment() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -107,6 +116,7 @@ public class TextileTest extends TestCase {
 		assertEquals("text-align: right;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testCenterAlignment() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -119,6 +129,7 @@ public class TextileTest extends TestCase {
 		assertEquals("text-align: center;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testJustifiedAlignment() {
 
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
@@ -132,6 +143,7 @@ public class TextileTest extends TestCase {
 		assertEquals("text-align: justify;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testLeftPadding() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -144,6 +156,7 @@ public class TextileTest extends TestCase {
 		assertEquals("padding-left: 2em;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testRightPadding() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -156,6 +169,7 @@ public class TextileTest extends TestCase {
 		assertEquals("padding-right: 3em;", attributes.getCssStyle());
 	}
 
+	@Test
 	public void testLeftPaddingCssClass() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 
@@ -169,6 +183,7 @@ public class TextileTest extends TestCase {
 		assertEquals("foo", attributes.getCssClass());
 	}
 
+	@Test
 	public void testRightPaddingCssStyles() {
 		Pattern pattern = Pattern.compile("h1" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\. (.*)?");
 

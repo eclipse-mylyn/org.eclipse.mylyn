@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.StringWriter;
 import java.net.URI;
@@ -19,13 +21,13 @@ import java.net.URISyntaxException;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class HtmlDocumentBuilderIntegrationTest extends TestCase {
+public class HtmlDocumentBuilderIntegrationTest {
 
 	private MarkupParser parser;
 
@@ -33,7 +35,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 
 	private HtmlDocumentBuilder builder;
 
-	@Override
+	@Before
 	public void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
@@ -42,6 +44,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 		parser.setBuilder(builder);
 	}
 
+	@Test
 	public void testRelativeUrlWithBase() throws URISyntaxException {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
@@ -50,6 +53,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.foo.bar/baz/foo/bar.html\">An URL</a>"));
 	}
 
+	@Test
 	public void testAbsoluteUrlWithBase() throws URISyntaxException {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":http://www.baz.ca/foo/bar.html");
@@ -58,6 +62,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.baz.ca/foo/bar.html\">An URL</a>"));
 	}
 
+	@Test
 	public void testRelativeUrlWithFileBase() throws URISyntaxException {
 		URI uri = new File("/base/2/with space/").toURI();
 		builder.setBase(uri);
@@ -68,6 +73,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 		assertTrue("Expected " + expected, html.contains(expected));
 	}
 
+	@Test
 	public void testCopyrightNotice() {
 		builder.setCopyrightNotice("Copyright notice here");
 		parser.parse("content");
@@ -79,6 +85,7 @@ public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 		assertTrue("Expected " + metaExpected + " but received " + html, html.contains(metaExpected));
 	}
 
+	@Test
 	public void testCopyrightNoticeFormatted() {
 		out = new StringWriter();
 		builder = new HtmlDocumentBuilder(out, true);

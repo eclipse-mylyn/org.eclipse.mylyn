@@ -13,18 +13,21 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class MediaWikiIdGenerationStrategyTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
+
+public class MediaWikiIdGenerationStrategyTest {
 
 	MediaWikiIdGenerationStrategy generationStrategy;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		generationStrategy = new MediaWikiIdGenerationStrategy();
 	}
 
+	@Test
 	public void testSimple() {
 		assertEquals("Bugzilla_Connector", generationStrategy.generateId("Bugzilla Connector"));
 		assertEquals("JIRA_Connector", generationStrategy.generateId("JIRA Connector"));
@@ -32,10 +35,12 @@ public class MediaWikiIdGenerationStrategyTest extends TestCase {
 		assertEquals("Alt.2BClick_navigation", generationStrategy.generateId("Alt+Click navigation"));
 	}
 
+	@Test
 	public void testWithDots() {
 		assertEquals("com.foo.Bar", generationStrategy.generateId("com.foo.Bar"));
 	}
 
+	@Test
 	public void testHeadingTextToId() {
 		//Bug 388657
 		assertEquals("Anchor_Text.3F", generationStrategy.generateId("Anchor Text?"));

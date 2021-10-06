@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
@@ -26,39 +29,44 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
-public class CreoleLanguageIntegrationTest extends TestCase {
-
+public class CreoleLanguageIntegrationTest {
+	@Test
 	public void testParagraph() {
 		assertRoundTripExact("a paragraph\n\nanother paragraph\\\\with 2 lines\n\n");
 	}
 
+	@Test
 	public void testSpansWithLineBreaks() {
 		assertRoundTripExact("This is **strong**\\\\This is //italic//\\\\This is __underlined__\n\n");
 	}
 
+	@Test
 	public void testHeadingsAndHorizontalRule() {
 		assertRoundTripExact("= H1\n\n== H2\n\n\n----\n====== H6\n\n");
 	}
 
+	@Test
 	public void testBulletList() {
 		assertRoundTripExact("* item 1\n** item 1.A.\n* item 2\n** item 2.A.\n*** item 2.A.i.\n*** item 2.A.ii.\n");
 	}
 
+	@Test
 	public void testNumericList() {
 		assertRoundTripExact("# item 1\n## item 1.A.\n# item 2\n## item 2.A.\n### item 2.A.i.\n### item 2.A.ii.\n");
 	}
 
+	@Test
 	public void testTable() {
 		assertRoundTripExact("|=H Col 1|=H Col 2|\n|Cell 1 line 1\\\\Cell 1 line 2|Cell 2|\n\n");
 	}
 
+	@Test
 	public void testParagraphParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -76,6 +84,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		assertParsedHtmlMatchesRoundTrip("<p>a paragraph</p><p>another paragraph<br/>with 2 lines</p>", out.toString());
 	}
 
+	@Test
 	public void testSpansWithLineBreaksParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -94,6 +103,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				"<p>This is <b>strong</b><br/>This is <i>italic</i><br/>This is <u>underlined</u></p>", out.toString());
 	}
 
+	@Test
 	public void testHeadingsAndHorizontalRuleParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -108,6 +118,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testBulletListParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -135,6 +146,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testNumericListParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -162,6 +174,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testLinkParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -173,6 +186,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		assertParsedHtmlMatchesRoundTrip("<p>This is a <a href=\"http://example.com/\">link</a>.</p>", out.toString());
 	}
 
+	@Test
 	public void testTableParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -199,6 +213,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testPreformattedBlockParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -217,6 +232,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		assertParsedHtmlMatchesRoundTrip("<pre>line 1\\\\line 2\\\\\\\\line 3</pre><p><br/>line 4</p>", out.toString());
 	}
 
+	@Test
 	public void testCodeSpanParsedToHtml() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -232,6 +248,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testEscapedCharacters() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);
@@ -241,6 +258,7 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		assertParsedHtmlMatchesRoundTrip("<p>~ Tilde ~ * Asterix * # Number # | Pipe |</p>", out.toString());
 	}
 
+	@Test
 	public void testEscapedCharactersInCodeSpan() {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new CreoleDocumentBuilder(out);

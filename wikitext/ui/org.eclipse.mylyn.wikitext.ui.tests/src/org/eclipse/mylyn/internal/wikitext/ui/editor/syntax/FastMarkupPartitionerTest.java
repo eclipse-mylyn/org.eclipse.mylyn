@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.eclipse.jface.text.Document;
@@ -19,12 +21,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 public class FastMarkupPartitionerTest extends AbstractDocumentTest {
-
+	@Test
 	public void testConnectLargeDocument() throws IOException {
 		IDocument document = createDocument("resources/large.textile");
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -34,6 +37,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		document.setDocumentPartitioner(partitioner);
 	}
 
+	@Test
 	public void testTextileCausesExceptionIssue36() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -45,6 +49,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		document.setDocumentPartitioner(partitioner);
 	}
 
+	@Test
 	public void testTextileNestedPhraseModifiersException() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -59,6 +64,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 	/**
 	 * test for bug 273100
 	 */
+	@Test
 	public void testConfluenceTipException_bug273100() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -73,6 +79,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 	/**
 	 * test color
 	 */
+	@Test
 	public void testConfluenceColor() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -101,6 +108,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		assertPartitioningAsExpected(expected, partitioning);
 	}
 
+	@Test
 	public void testConfluenceColor2() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -138,6 +146,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		assertPartitioningAsExpected(expected, partitioning);
 	}
 
+	@Test
 	public void testConfluenceColor3() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -155,6 +164,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 	/**
 	 * bug 314131
 	 */
+	@Test
 	public void testTextileLinkInBold() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
@@ -188,6 +198,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		}
 	}
 
+	@Test
 	public void testTextileLinkWithStyle() {
 		IDocument document = new Document();
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();

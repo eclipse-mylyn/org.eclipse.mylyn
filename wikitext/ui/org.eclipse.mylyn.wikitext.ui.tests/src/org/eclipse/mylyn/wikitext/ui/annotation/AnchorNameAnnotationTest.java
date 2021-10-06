@@ -12,16 +12,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.annotation;
 
-import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @HeadRequired
-public class AnchorNameAnnotationTest extends TestCase {
-
+public class AnchorNameAnnotationTest {
+	@Test
 	public void testSimple() {
 		AnchorNameAnnotation annotation = new AnchorNameAnnotation("foo");
 		assertEquals("foo", annotation.getText());

@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.textile.internal;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -20,14 +22,14 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  * @see TextileDocumentBuilder
  */
-public class TextileDocumentBuilderTest extends TestCase {
+public class TextileDocumentBuilderTest {
 
 	private static final String[] PLATFORM_NEWLINES = new String[] { //
 			"\r\n", // Windows
@@ -39,13 +41,13 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 	private StringWriter out;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		out = new StringWriter();
 		builder = new TextileDocumentBuilder(out);
-		super.setUp();
 	}
 
+	@Test
 	public void testParagraph_MultipleNewlinesInParagraph() throws Exception {
 		for (String newline : PLATFORM_NEWLINES) {
 			setUp();
@@ -61,6 +63,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParagraph_MultipleNewlinesInImplicitParagraph() throws Exception {
 		for (String newline : PLATFORM_NEWLINES) {
 			setUp();
@@ -74,6 +77,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParagraph_MultipleLineBreaksInParagraph() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -89,6 +93,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text\nmore text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraph_MultipleLineBreaksInImplicitParagraph() {
 		builder.beginDocument();
 		builder.characters("text");
@@ -102,6 +107,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text\nmore text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraph_NewlineFollowedBySpaceOrTabInParagraph() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -118,6 +124,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text\n more\n\tmore2 text\n\n", markup);
 	}
 
+	@Test
 	public void testMultipleParagraphs() {
 		builder.beginDocument();
 
@@ -135,6 +142,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("first paragraph\n\nsecond paragraph\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithBoldEmphasis() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -154,6 +162,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("some **bold** and _emphasis_\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithCssClass() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes(null, "test", null, null));
@@ -166,6 +175,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("p(test). text more text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithCssStyle() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes(null, null, "x-test: foo;", null));
@@ -178,6 +188,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("p{x-test: foo;}. text more text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithId() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes("123", null, null, null));
@@ -190,6 +201,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("p(#123). text more text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithIdAndClass() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes("123", "test", null, null));
@@ -202,6 +214,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("p(test#123). text more text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphWithLink() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -220,6 +233,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
 	}
 
+	@Test
 	public void testBlockCode() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.CODE, new Attributes());
@@ -232,6 +246,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("bc.. text\n\nmore text\n\n", markup);
 	}
 
+	@Test
 	public void testParagraphFollowingExtendedBlockCode() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.CODE, new Attributes());
@@ -250,6 +265,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("bc.. text\n\nmore text\n\np. text\n\ntext2\n\n", markup);
 	}
 
+	@Test
 	public void testHeading1() {
 		builder.beginDocument();
 		builder.beginHeading(1, new Attributes());
@@ -265,6 +281,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("h1. text more text\n\ntext\n\n", markup);
 	}
 
+	@Test
 	public void testHeading1_WithNestedMarkup() {
 		builder.beginDocument();
 		builder.beginHeading(1, new Attributes());
@@ -283,12 +300,14 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
 	}
 
+	@Test
 	public void testHeading1_WithAttributes() {
 		String markup = doHeadingAttributesTest();
 
 		assertEquals("h1(classTest#idTest). text more text\n\n", markup);
 	}
 
+	@Test
 	public void testHeading1_WithoutAttributes() {
 		builder.setEmitAttributes(false);
 
@@ -312,6 +331,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		return markup;
 	}
 
+	@Test
 	public void testImplicitParagrah() {
 		builder.beginDocument();
 		builder.characters("text1");
@@ -326,6 +346,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
 	}
 
+	@Test
 	public void testImplicitParagrahWithSpan() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.STRONG, new Attributes());
@@ -341,6 +362,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("*text1*\n\ntext2\n\n", markup);
 	}
 
+	@Test
 	public void testBoldSpanNoWhitespace_spanAtLineStart() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -358,6 +380,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("*text2* text3\n\n", markup);
 	}
 
+	@Test
 	public void testBoldSpanNoWhitespace_spanAtLineEnd() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -375,6 +398,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text3 **text2**\n\n", markup);
 	}
 
+	@Test
 	public void testBoldSpanNoWhitespace_spanMidLine() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -393,6 +417,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("text3 **text2** text4\n\n", markup);
 	}
 
+	@Test
 	public void testBoldSpanNoWhitespace_adjacentSpans() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -412,6 +437,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("**text2** __text3__\n\n", markup);
 	}
 
+	@Test
 	public void testBoldSpanWithAdjacentPunctuation() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -429,6 +455,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("**text2**!\n\n", markup);
 	}
 
+	@Test
 	public void testBulletedList() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -450,6 +477,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("* text2 **text3**\n* text4\n", markup);
 	}
 
+	@Test
 	public void testBulletedListWithNestedSublist() {
 		builder.beginDocument();
 
@@ -475,6 +503,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("* first\n** first.1\n** first.2\n* second\n", markup);
 	}
 
+	@Test
 	public void testBulletedListWithNestedSublist2() {
 		builder.beginDocument();
 
@@ -510,6 +539,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("* first\n* second\n** second.1\n\n# third\n# fourth\n## fourth.1\n", markup);
 	}
 
+	@Test
 	public void testParagraphListParagraph() {
 		builder.beginDocument();
 		paragraph("para 1");
@@ -538,6 +568,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 	}
 
+	@Test
 	public void testSpanWithAdjacentWhitespace() {
 		builder.beginDocument();
 
@@ -557,6 +588,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("prefix **bolded** suffix\n\n", markup);
 	}
 
+	@Test
 	public void testEmptySpan() {
 		builder.beginDocument();
 
@@ -575,6 +607,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("prefix suffix\n\n", markup);
 	}
 
+	@Test
 	public void testMonospaceSpan() {
 		builder.beginDocument();
 
@@ -593,6 +626,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("prefix %{font-family:monospace;}text% suffix\n\n", markup);
 	}
 
+	@Test
 	public void testTableWithEmptyCells() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());
@@ -615,6 +649,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("|content| |\n\n", markup);
 	}
 
+	@Test
 	public void testDivAfterImplicitParagraph() {
 		builder.beginDocument();
 
@@ -642,6 +677,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("test\n\nmore **text**\n\n# text2\n", markup);
 	}
 
+	@Test
 	public void testDivWithinTableCell() {
 		builder.beginDocument();
 
@@ -676,6 +712,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("|first| content content2|\n\n", markup);
 	}
 
+	@Test
 	public void testEmptyBoldSpan() {
 		builder.beginDocument();
 
@@ -693,6 +730,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("first second\n\n", markup);
 	}
 
+	@Test
 	public void testProtectionAgainstNestedSpans() {
 		builder.beginDocument();
 
@@ -712,6 +750,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("%{color:blue;}first second%\n\n", markup);
 	}
 
+	@Test
 	public void testLineBreak() {
 		builder.beginDocument();
 		builder.characters("line");
@@ -724,6 +763,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("line\nbreak\n\n", markup);
 	}
 
+	@Test
 	public void testLineBreak_ExplicitBlockAfterExtendedBlock() {
 		builder.beginDocument();
 
@@ -744,6 +784,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("bc.. one\n\n\ntwo\n\np. line\nbreak\n\n", markup);
 	}
 
+	@Test
 	public void testLineBreakInFootnote() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.FOOTNOTE, new Attributes());
@@ -758,6 +799,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("fn1. line\nbreak\n\n", markup);
 	}
 
+	@Test
 	public void testLineBreakInPreformatted_Extended() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
@@ -773,6 +815,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("pre.. line\n\nbreak\n\n", markup);
 	}
 
+	@Test
 	public void testLineBreakInPreformatted() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
@@ -787,6 +830,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("pre. line\nbreak\n\n", markup);
 	}
 
+	@Test
 	public void testLink() {
 		builder.beginDocument();
 
@@ -801,6 +845,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a \"link to foo\":#foo test\n\n", markup);
 	}
 
+	@Test
 	public void testExternalLink() {
 		builder.beginDocument();
 
@@ -815,6 +860,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("an \"external link\":http://example.com/ test\n\n", markup);
 	}
 
+	@Test
 	public void testLinkWithNullHref() {
 		builder.beginDocument();
 
@@ -829,6 +875,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a \"link text\": test\n\n", markup);
 	}
 
+	@Test
 	public void testSpanLinkWithNullHref() {
 		builder.beginDocument();
 
@@ -845,6 +892,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a \"link text\": test\n\n", markup);
 	}
 
+	@Test
 	public void testImageLink() {
 		builder.beginDocument();
 
@@ -859,6 +907,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a !fooImage.png!:#foo test\n\n", markup);
 	}
 
+	@Test
 	public void testImage() {
 		builder.beginDocument();
 
@@ -873,6 +922,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a !fooImage.png! test\n\n", markup);
 	}
 
+	@Test
 	public void testImageNoUrl() {
 		builder.beginDocument();
 		builder.characters("a ");
@@ -885,6 +935,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a test\n\n", markup);
 	}
 
+	@Test
 	public void testSpanOpensImplicitParagraph() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.CODE, new Attributes());
@@ -901,62 +952,77 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("bc. // some code\n\n-redacted- text\n\n", markup);
 	}
 
+	@Test
 	public void testSpanSuperscript() {
 		assertSpan("begin ^span text^ end\n\n", SpanType.SUPERSCRIPT);
 	}
 
+	@Test
 	public void testSpanSubscript() {
 		assertSpan("begin ~span text~ end\n\n", SpanType.SUBSCRIPT);
 	}
 
+	@Test
 	public void testSpanBold() {
 		assertSpan("begin **span text** end\n\n", SpanType.BOLD);
 	}
 
+	@Test
 	public void testSpanCitation() {
 		assertSpan("begin??span text??end\n\n", SpanType.CITATION);
 	}
 
+	@Test
 	public void testSpanCode() {
 		assertSpan("begin @span text@ end\n\n", SpanType.CODE);
 	}
 
+	@Test
 	public void testSpanDeleted() {
 		assertSpan("begin -span text- end\n\n", SpanType.DELETED);
 	}
 
+	@Test
 	public void testSpanEmphasis() {
 		assertSpan("begin _span text_ end\n\n", SpanType.EMPHASIS);
 	}
 
+	@Test
 	public void testSpanMark() {
 		assertSpan("begin _span text_ end\n\n", SpanType.MARK);
 	}
 
+	@Test
 	public void testSpanInserted() {
 		assertSpan("begin +span text+ end\n\n", SpanType.INSERTED);
 	}
 
+	@Test
 	public void testSpanItalic() {
 		assertSpan("begin __span text__ end\n\n", SpanType.ITALIC);
 	}
 
+	@Test
 	public void testSpanMonospace() {
 		assertSpan("begin %{font-family:monospace;}span text% end\n\n", SpanType.MONOSPACE);
 	}
 
+	@Test
 	public void testSpanQuote() {
 		assertSpan("begin %span text% end\n\n", SpanType.QUOTE);
 	}
 
+	@Test
 	public void testSpanSpan() {
 		assertSpan("begin %span text% end\n\n", SpanType.SPAN);
 	}
 
+	@Test
 	public void testSpanStrong() {
 		assertSpan("begin *span text* end\n\n", SpanType.STRONG);
 	}
 
+	@Test
 	public void testSpanUnderlined() {
 		assertSpan("begin %{text-decoration:underline;}span text% end\n\n", SpanType.UNDERLINED);
 	}

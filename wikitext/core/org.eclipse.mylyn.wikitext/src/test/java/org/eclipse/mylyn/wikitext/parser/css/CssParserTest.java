@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.wikitext.parser.css;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,20 +26,21 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class CssParserTest extends TestCase {
+public class CssParserTest {
 	private CssParser parser;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		parser = new CssParser();
 	}
 
+	@Test
 	public void testDetectStyles() {
 		String css = "a: b and more; c: d ; e: fg; h i: j";
 		String[] expectedRuleNames = new String[] { "a", "c", "e", "i" };
@@ -50,6 +56,7 @@ public class CssParserTest extends TestCase {
 		assertEquals(expectedRuleNames.length, count);
 	}
 
+	@Test
 	public void testSimple() throws IOException {
 
 		Stylesheet stylesheet = parser.parse(readFully(CssParserTest.class.getSimpleName() + "_0.css"));
@@ -58,20 +65,18 @@ public class CssParserTest extends TestCase {
 	}
 
 	private String readFully(String resourceName) throws IOException {
-		InputStream stream = CssParserTest.class.getResourceAsStream(resourceName);
-		try {
-			Reader reader = new InputStreamReader(stream);
+		try (InputStream stream = CssParserTest.class.getResourceAsStream(resourceName);
+				Reader reader = new InputStreamReader(stream)) {
 			int i;
 			StringWriter writer = new StringWriter();
 			while ((i = reader.read()) != -1) {
 				writer.write(i);
 			}
 			return writer.toString();
-		} finally {
-			stream.close();
 		}
 	}
 
+	@Test
 	public void testSimpleId() {
 		Selector selector = parser.parseSelector("#id");
 		assertNotNull(selector);
@@ -80,6 +85,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("id", ((IdSelector) selector).getId());
 	}
 
+	@Test
 	public void testSimpleClass() {
 		Selector selector = parser.parseSelector(".className");
 		assertNotNull(selector);
@@ -88,6 +94,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("className", ((CssClassSelector) selector).getCssClass());
 	}
 
+	@Test
 	public void testSimpleElement() {
 		Selector selector = parser.parseSelector("body");
 		assertNotNull(selector);
@@ -96,6 +103,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("body", ((NameSelector) selector).getName());
 	}
 
+	@Test
 	public void testNumericElementName() {
 		Selector selector = parser.parseSelector("h1");
 		assertNotNull(selector);
@@ -104,6 +112,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("h1", ((NameSelector) selector).getName());
 	}
 
+	@Test
 	public void testCompoundIdElement() {
 		Selector selector = parser.parseSelector("#foo a");
 		assertNotNull(selector);
@@ -127,6 +136,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("a", ((NameSelector) secondComponent).getName());
 	}
 
+	@Test
 	public void testCompoundIdElement2() {
 		Selector selector = parser.parseSelector("#foo, a");
 		assertNotNull(selector);
@@ -147,6 +157,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("a", ((NameSelector) secondComponent).getName());
 	}
 
+	@Test
 	public void testCompoundElementWithJoin() {
 		Selector selector = parser.parseSelector("table tr");
 		assertNotNull(selector);
@@ -170,6 +181,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("tr", ((NameSelector) secondComponent).getName());
 	}
 
+	@Test
 	public void testCompoundElementUsingDot() {
 		Selector selector = parser.parseSelector("table.summaryTable");
 		assertNotNull(selector);
@@ -190,6 +202,7 @@ public class CssParserTest extends TestCase {
 		assertEquals("summaryTable", ((CssClassSelector) secondComponent).getCssClass());
 	}
 
+	@Test
 	public void testCompoundElementUsingDotAndJoin() {
 		Selector selector = parser.parseSelector("table.summaryTable tr.a1");
 		assertNotNull(selector);
@@ -203,6 +216,7 @@ public class CssParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testComments() {
 		Stylesheet stylesheet = parser.parse("tr { /* font-size: 115%; */ font-size: 100%; } /* foo { sdf: sdf; } */");
 		List<Block> blocks = stylesheet.getBlocks();

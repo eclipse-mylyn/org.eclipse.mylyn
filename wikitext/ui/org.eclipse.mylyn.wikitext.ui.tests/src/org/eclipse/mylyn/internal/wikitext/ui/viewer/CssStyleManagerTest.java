@@ -12,28 +12,34 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @HeadRequired
-public class CssStyleManagerTest extends TestCase {
+public class CssStyleManagerTest {
 
 	private CssStyleManager cssStyleManager;
 
-	@Override
+	@Before
 	public void setUp() {
 		cssStyleManager = new CssStyleManager();
 	}
 
+	@Test
 	public void testColorToRgb() {
 		Integer white = CssStyleManager.cssColorRgb("white");
 		assertNotNull(white);
@@ -58,6 +64,7 @@ public class CssStyleManagerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testProcessCssStyles() {
 		FontState defaultState = new FontState();
 		FontState state = new FontState();
@@ -71,12 +78,13 @@ public class CssStyleManagerTest extends TestCase {
 		assertTrue(state.isUnderline());
 	}
 
+	@Test
 	public void testProcessCssStylesNoStyles() {
 		FontState defaultState = new FontState();
 
 		FontState state = new FontState();
 
-		assertEquals(1.0f, state.sizeFactor);
+		assertEquals(1.0f, state.sizeFactor, 0);
 		assertEquals(null, state.background);
 		assertEquals(null, state.foreground);
 		assertFalse(state.isBold());
@@ -91,7 +99,7 @@ public class CssStyleManagerTest extends TestCase {
 
 		processCssStyles(state, defaultState, "");
 
-		assertEquals(1.0f, state.sizeFactor);
+		assertEquals(1.0f, state.sizeFactor, 0);
 		assertEquals(null, state.background);
 		assertEquals(null, state.foreground);
 		assertFalse(state.isBold());

@@ -14,6 +14,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,14 +39,14 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  * @author Torkild U. Resheim
  */
-public class HtmlDocumentBuilder2Test extends TestCase {
+public class HtmlDocumentBuilder2Test {
 
 	private MarkupParser parser;
 
@@ -51,7 +56,7 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 	private final Map<File, URL> fileToUrl = new HashMap<File, URL>();
 
-	@Override
+	@Before
 	public void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
@@ -83,36 +88,40 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 	private void assertContainsPattern(String pattern) {
 		Pattern p = Pattern.compile(pattern);
 		String html = out.toString();
-		
+
 		assertTrue(p.matcher(html).find());
 	}
 
+	@Test
 	public void testRelativeUrlWithBase() throws URISyntaxException {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		
+
 		assertTrue(html.contains("<a href=\"http://www.foo.bar/baz/foo/bar.html\">An URL</a>"));
 	}
 
+	@Test
 	public void testAbsoluteUrlWithBase() throws URISyntaxException {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":http://www.baz.ca/foo/bar.html");
 		String html = out.toString();
-		
+
 		assertTrue(html.contains("<a href=\"http://www.baz.ca/foo/bar.html\">An URL</a>"));
 	}
 
+	@Test
 	public void testRelativeUrlWithFileBase() throws URISyntaxException {
 		final File file = new File("/base/2/with space/");
 		builder.setBase(file.toURI());
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		
+
 		Pattern pattern = Pattern.compile("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo/bar.html\">An URL</a>");
 		assertTrue(pattern.matcher(html).find());
 	}
 
+	@Test
 	public void testHtmlFilenameFormat() throws URISyntaxException {
 		final File file = new File("/base/2/with space/");
 		builder.setHtmlFilenameFormat("$1.html");
@@ -121,6 +130,7 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo.bar/bar.html\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlFilenameFormat_Image() throws URISyntaxException {
 		final File file = new File("/base/2/with space/");
 		builder.setHtmlFilenameFormat("$1.html");
@@ -129,6 +139,7 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo.bar/bar.jpg\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlFilenameFormat_WithAnchor() throws URISyntaxException {
 		final File file = new File("/base/2/with space/");
 		builder.setHtmlFilenameFormat("$1.html");
@@ -137,34 +148,39 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo/bar.html#bar\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlFilenameFormat_Internal() throws URISyntaxException {
 		builder.setHtmlFilenameFormat("$1.html");
 		parser.parse("\"An URL\":#bar");
 		assertContainsPattern("<a href=\"#bar\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlFilenameFormat_Directory() throws URISyntaxException {
 		builder.setHtmlFilenameFormat("$1.html");
 		parser.parse("\"An URL\":one/two/");
 		assertContainsPattern("<a href=\"one/two/\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlFilenameFormat_Absolute() throws URISyntaxException {
 		builder.setHtmlFilenameFormat("$1.html");
 		parser.parse("\"An URL\":http://example.com/one/two");
 		assertContainsPattern("<a href=\"http://example.com/one/two\">An URL</a>");
 	}
 
+	@Test
 	public void testHtmlLinkWithNullHref() {
-		//Bug 492302
+		// Bug 492302
 		LinkAttributes attributes = new LinkAttributes();
 		attributes.setId("lorem");
 		builder.link(attributes, null, "");
 		assertContainsPattern("<a id=\"lorem\"></a>");
 	}
 
+	@Test
 	public void testHtmlBeginSpanWithId() {
-		//Bug 492302
+		// Bug 492302
 		LinkAttributes attributes = new LinkAttributes();
 		attributes.setId("lorem");
 		builder.beginSpan(SpanType.LINK, attributes);
@@ -172,6 +188,7 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		assertContainsPattern("<a id=\"lorem\"></a>");
 	}
 
+	@Test
 	public void testSetHtmlFilenameFormat() {
 		builder.setHtmlFilenameFormat("$1.thtml");
 		assertEquals("$1.thtml", builder.getHtmlFilenameFormat());
@@ -187,6 +204,7 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNoGratuitousWhitespace() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -201,15 +219,14 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
-		assertTrue(html.indexOf('\r') == -1);
-		assertTrue(html.indexOf('\n') == -1);
+		assertEquals(-1, html.indexOf('\r'));
+		assertEquals(-1, html.indexOf('\n'));
 		assertEquals(
 				"<?xml version='1.0' encoding='utf-8' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body><p>some para text<br/>more para text</p><p>second para</p></body></html>",
 				html);
 	}
 
+	@Test
 	public void testCssStylesheetAsLink() {
 		builder.addCssStylesheet(new Stylesheet("styles/test.css"));
 		builder.beginDocument();
@@ -219,18 +236,17 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-		
 
-		assertTrue(html.contains("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><link type=\"text/css\" rel=\"stylesheet\" href=\"styles/test.css\"/></head>"));
+		assertTrue(html.contains(
+				"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><link type=\"text/css\" rel=\"stylesheet\" href=\"styles/test.css\"/></head>"));
 	}
 
+	@Test
 	public void testCssStylesheetEmbedded() throws Exception {
 		URL cssResource = HtmlDocumentBuilder2Test.class.getResource("resources/test.css");
 		File cssFile = new File(cssResource.toURI().getPath());
 
 		fileToUrl.put(cssFile, cssResource);
-
-		
 
 		builder.addCssStylesheet(new Stylesheet(cssFile));
 		builder.beginDocument();
@@ -240,17 +256,15 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-		
 
 		html = html.replace("&#xd;", "");
 
 		assertTrue(Pattern.compile(
 				"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><style type=\"text/css\">\\s*body\\s+\\{\\s+background-image: test-content.png;\\s+\\}\\s*</style></head>",
-				Pattern.MULTILINE)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE).matcher(html).find());
 	}
 
+	@Test
 	public void testDefaultTargetForExternalLinks() throws Exception {
 		builder.setDefaultAbsoluteLinkTarget("_external");
 		builder.beginDocument();
@@ -261,11 +275,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"http://www.example.com\" target=\"_external\">test</a>"));
 	}
 
+	@Test
 	public void testDefaultTargetForExternalLinks2() throws Exception {
 		builder.setBase(new URI("http://www.notexample.com"));
 		builder.setDefaultAbsoluteLinkTarget("_external");
@@ -277,11 +290,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"http://www.example.com\" target=\"_external\">test</a>"));
 	}
 
+	@Test
 	public void testDefaultTargetForInternalLinks() throws Exception {
 		builder.setDefaultAbsoluteLinkTarget("_external");
 		builder.beginDocument();
@@ -292,11 +304,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"foo\">test</a>"));
 	}
 
+	@Test
 	public void testDefaultTargetForInternalLinks2() throws Exception {
 		builder.setBase(new URI("http://www.example.com/"));
 		builder.setDefaultAbsoluteLinkTarget("_external");
@@ -308,11 +319,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"http://www.example.com/foo.html\">test</a>"));
 	}
 
+	@Test
 	public void testSuppressInlineStyles() throws Exception {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
@@ -327,12 +337,11 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<body><div class=\"note\"><p>foo</p></div></body>"));
 		assertTrue(html.contains("<style type=\"text/css\">"));
 	}
 
+	@Test
 	public void testSuppressBuiltInlineStyles() throws Exception {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
@@ -347,12 +356,11 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<body><div class=\"note\"><p>foo</p></div></body>"));
 		assertTrue(!html.contains("<style type=\"text/css\">"));
 	}
 
+	@Test
 	public void testLinkRel() throws Exception {
 		// link-specific rel
 		StringWriter out = new StringWriter();
@@ -366,8 +374,6 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-
-		
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
 
@@ -383,8 +389,6 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		builder.endDocument();
 
 		html = out.toString();
-
-		
 
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
 
@@ -402,8 +406,6 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"foobar nofollow\">Foo Bar</a>"));
 
 		// no rel at all
@@ -418,11 +420,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		html = out.toString();
 
-		
-
 		assertTrue(html.contains("<a href=\"http://www.foo.bar\">Foo Bar</a>"));
 	}
 
+	@Test
 	public void testStylesheetWithAttributes() {
 		Stylesheet stylesheet = new Stylesheet("a/test.css");
 		stylesheet.getAttributes().put("foo", "bar");
@@ -433,11 +434,10 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\" foo=\"bar\"/>"));
 	}
 
+	@Test
 	public void testStylesheetWithNoAttributes() {
 		builder.addCssStylesheet(new Stylesheet("a/test.css"));
 
@@ -446,21 +446,22 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 
 		String html = out.toString();
 
-		
-
 		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\"/>"));
 	}
 
+	@Test
 	public void testFilterEntityReferences_FiltersKnown() {
 		builder.setFilterEntityReferences(true);
 
 		doEntityReferenceTest("yen", "&#165;");
 	}
 
+	@Test
 	public void testFilterEntityReferences_DisabledFilter() {
 		doEntityReferenceTest("yen", "&yen;");
 	}
 
+	@Test
 	public void testFilterEntityReferences_FiltersUnknown() {
 		builder.setFilterEntityReferences(true);
 
@@ -473,8 +474,6 @@ public class HtmlDocumentBuilder2Test extends TestCase {
 		builder.endDocument();
 
 		String html = out.toString();
-
-		
 
 		assertTrue(html.contains(expected));
 	}

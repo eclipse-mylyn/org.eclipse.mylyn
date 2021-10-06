@@ -13,22 +13,24 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @EclipseRuntimeRequired
-public class OutlineItemAdapterFactoryTest extends TestCase {
-
+public class OutlineItemAdapterFactoryTest {
+	@Test
 	public void testAdaptsToIWorkbenchAdapter() {
-		Object adapter = Platform.getAdapterManager().getAdapter(new OutlineItem(null, 0, "id", 0, 10, "ID"),
-				IWorkbenchAdapter.class);
+		Object adapter = Platform.getAdapterManager()
+				.getAdapter(new OutlineItem(null, 0, "id", 0, 10, "ID"), IWorkbenchAdapter.class);
 		assertNotNull(adapter);
 		assertTrue(IWorkbenchAdapter.class.isAssignableFrom(adapter.getClass()));
 	}

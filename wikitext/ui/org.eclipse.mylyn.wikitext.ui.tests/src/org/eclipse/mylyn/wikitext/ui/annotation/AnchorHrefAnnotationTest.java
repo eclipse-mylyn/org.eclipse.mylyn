@@ -12,16 +12,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.annotation;
 
-import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @HeadRequired
-public class AnchorHrefAnnotationTest extends TestCase {
-
+public class AnchorHrefAnnotationTest {
+	@Test
 	public void testSimple() {
 		String href = "http://foo.bar";
 		AnchorHrefAnnotation annotation = new AnchorHrefAnnotation(href);

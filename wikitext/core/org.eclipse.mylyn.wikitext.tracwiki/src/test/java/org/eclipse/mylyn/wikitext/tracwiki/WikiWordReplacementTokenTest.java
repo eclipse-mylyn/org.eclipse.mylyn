@@ -13,17 +13,22 @@
 
 package org.eclipse.mylyn.wikitext.tracwiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.tracwiki.internal.token.WikiWordReplacementToken;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Holger Voormann
  */
-public class WikiWordReplacementTokenTest extends TestCase {
+public class WikiWordReplacementTokenTest {
 
 	private static final String SUFFIX = ". And so on...";
 
@@ -31,16 +36,17 @@ public class WikiWordReplacementTokenTest extends TestCase {
 
 	private Pattern pattern;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		pattern = new TestWikiWordReplacementToken().createPattern();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		pattern = null;
 	}
 
+	@Test
 	public void testRegex() throws Exception {
 		assertIsWikiWord("WikiWord");
 		assertIsWikiWord("WikiWordExtra");

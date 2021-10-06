@@ -12,18 +12,20 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.parser.markup.token.EntityWrappingReplacementToken;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class EntityWrappingReplacementTokenTest extends TestCase {
-
+public class EntityWrappingReplacementTokenTest {
+	@Test
 	public void testFindQuotesAtStartOfLine() {
 		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"", "<", ">");
 
@@ -33,6 +35,7 @@ public class EntityWrappingReplacementTokenTest extends TestCase {
 		assertEquals(0, matcher.start());
 	}
 
+	@Test
 	public void testFindQuotesOffsetInLine() {
 		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"", "<", ">");
 

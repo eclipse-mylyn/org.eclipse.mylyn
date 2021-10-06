@@ -20,18 +20,16 @@ import java.io.Reader;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 
-import junit.framework.TestCase;
-
 /**
  * @author David Green
  */
-public abstract class AbstractDocumentTest extends TestCase {
+public abstract class AbstractDocumentTest {
 
 	protected IDocument createDocument(String resource) throws IOException {
 		Document document = new Document();
 
-		Reader reader = new BufferedReader(new InputStreamReader(
-				FastMarkupPartitionerTest.class.getResourceAsStream(resource)));
+		Reader reader = new BufferedReader(
+				new InputStreamReader(FastMarkupPartitionerTest.class.getResourceAsStream(resource)));
 		try {
 			int i;
 			StringBuilder buf = new StringBuilder(4096);
