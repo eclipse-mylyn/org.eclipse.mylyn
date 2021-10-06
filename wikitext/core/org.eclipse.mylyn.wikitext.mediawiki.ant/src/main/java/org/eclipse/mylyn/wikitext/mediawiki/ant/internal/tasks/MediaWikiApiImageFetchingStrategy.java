@@ -75,7 +75,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 
 		ImageFetchingContentHandler contentHandler = new ImageFetchingContentHandler();
 		String gimcontinue = null;
-		Set<String> filenames = new HashSet<String>();
+		Set<String> filenames = new HashSet<>();
 		final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 		parserFactory.setNamespaceAware(true);
 		parserFactory.setValidating(false);
@@ -194,7 +194,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 
 	private class ImageFetchingContentHandler implements ContentHandler {
 
-		private final Map<String, String> imageTitleToUrl = new HashMap<String, String>();
+		private final Map<String, String> imageTitleToUrl = new HashMap<>();
 
 		private String currentPage = null;
 
@@ -210,6 +210,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 			return gimcontinue;
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 			if ("page".equals(localName)) { //$NON-NLS-1$
 				currentPage = atts.getValue("title"); //$NON-NLS-1$
@@ -222,6 +223,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 			}
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if ("page".equals(localName)) { //$NON-NLS-1$
 				currentPage = null;
@@ -230,30 +232,39 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 			}
 		}
 
+		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 		}
 
+		@Override
 		public void endDocument() throws SAXException {
 		}
 
+		@Override
 		public void endPrefixMapping(String prefix) throws SAXException {
 		}
 
+		@Override
 		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 		}
 
+		@Override
 		public void processingInstruction(String target, String data) throws SAXException {
 		}
 
+		@Override
 		public void setDocumentLocator(Locator locator) {
 		}
 
+		@Override
 		public void skippedEntity(String name) throws SAXException {
 		}
 
+		@Override
 		public void startDocument() throws SAXException {
 		}
 
+		@Override
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {
 		}
 

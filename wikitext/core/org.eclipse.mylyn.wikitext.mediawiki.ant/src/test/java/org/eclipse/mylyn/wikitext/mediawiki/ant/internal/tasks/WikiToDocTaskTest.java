@@ -42,7 +42,7 @@ public class WikiToDocTaskTest {
 	@Before
 	public void before() throws IOException {
 		task = new TestWikiToDocTask();
-		HashMap<String, String> serverContent = new HashMap<String, String>();
+		HashMap<String, String> serverContent = new HashMap<>();
 		serverContent.put(
 				"http://wiki.eclipse.org/api.php?action=query&titles=GEF%2FGEF4%2FCommon&generator=images&prop=imageinfo&iiprop=url&format=xml",
 				"<api batchcomplete=\"\"><query><pages></pages></query></api>");

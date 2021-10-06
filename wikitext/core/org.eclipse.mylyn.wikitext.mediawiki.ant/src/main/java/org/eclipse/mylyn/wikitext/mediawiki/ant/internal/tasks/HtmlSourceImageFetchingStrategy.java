@@ -50,7 +50,7 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 		if (base.endsWith("/")) { //$NON-NLS-1$
 			base = base.substring(0, base.length() - 1);
 		}
-		Set<String> filenames = new HashSet<String>();
+		Set<String> filenames = new HashSet<>();
 
 		Pattern fragmentUrlPattern = Pattern.compile("src=\"([^\"]+)\""); //$NON-NLS-1$
 		Pattern imagePattern = Pattern.compile("alt=\"Image:([^\"]*)\"([^>]+)", Pattern.MULTILINE); //$NON-NLS-1$
@@ -99,14 +99,11 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 
 	private String readSrc() throws IOException {
 		StringBuilder buf = new StringBuilder((int) src.length());
-		Reader reader = new BufferedReader(new FileReader(src));
-		try {
+		try (Reader reader = new BufferedReader(new FileReader(src))) {
 			int i;
 			while ((i = reader.read()) != -1) {
 				buf.append((char) i);
 			}
-		} finally {
-			reader.close();
 		}
 		return buf.toString();
 	}

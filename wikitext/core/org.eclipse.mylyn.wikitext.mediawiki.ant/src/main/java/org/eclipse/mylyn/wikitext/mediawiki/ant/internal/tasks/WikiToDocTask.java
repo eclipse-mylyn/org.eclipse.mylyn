@@ -94,13 +94,13 @@ public class WikiToDocTask extends MarkupTask {
 
 	private String wikiBaseUrl;
 
-	private List<Path> paths = new ArrayList<Path>();
+	private List<Path> paths = new ArrayList<>();
 
 	private File dest;
 
 	private PageAppendum pageAppendum;
 
-	private final List<Stylesheet> stylesheets = new ArrayList<Stylesheet>();
+	private final List<Stylesheet> stylesheets = new ArrayList<>();
 
 	protected String linkRel;
 
@@ -156,7 +156,7 @@ public class WikiToDocTask extends MarkupTask {
 			setInternalLinkPattern(computeDefaultInternalLinkPattern());
 		}
 
-		Set<String> pathNames = new HashSet<String>();
+		Set<String> pathNames = new HashSet<>();
 		for (Path path : paths) {
 			if (path.name == null) {
 				throw new ConfigurationException(Messages.getString("WikiToDocTask_path_must_have_name")); //$NON-NLS-1$
@@ -224,26 +224,21 @@ public class WikiToDocTask extends MarkupTask {
 			tocFile = new File(dest, "toc.xml"); //$NON-NLS-1$
 		}
 
-		Map<String, String> pathNameToContent = new HashMap<String, String>();
-		Map<String, SplitOutlineItem> pathNameToOutline = new HashMap<String, SplitOutlineItem>();
+		Map<String, String> pathNameToContent = new HashMap<>();
+		Map<String, SplitOutlineItem> pathNameToOutline = new HashMap<>();
 		for (Path path : paths) {
 			getProject().log(
 					MessageFormat.format(Messages.getString("WikiToDocTask_fetching_content_for_page"), path.name), //$NON-NLS-1$
 					Project.MSG_VERBOSE);
 			URL pathUrl = computeRawUrl(path.name);
-			try {
-				Reader input = createInputReader(pathUrl);
-				try {
-					String content = readFully(input);
-					content = preprocessMarkup(path, content);
-					pathNameToContent.put(path.name, content);
-					final File targetFile = computeHtmlOutputFile(path);
-					SplitOutlineItem outline = computeOutline(path, markupLanguage, targetFile, content);
-					outline.setResourcePath(targetFile.getAbsolutePath());
-					pathNameToOutline.put(path.name, outline);
-				} finally {
-					input.close();
-				}
+			try (Reader input = createInputReader(pathUrl)) {
+				String content = readFully(input);
+				content = preprocessMarkup(path, content);
+				pathNameToContent.put(path.name, content);
+				final File targetFile = computeHtmlOutputFile(path);
+				SplitOutlineItem outline = computeOutline(path, markupLanguage, targetFile, content);
+				outline.setResourcePath(targetFile.getAbsolutePath());
+				pathNameToOutline.put(path.name, outline);
 			} catch (final IOException e) {
 				final String message = MessageFormat.format("Cannot read from {0}: {1}", pathUrl, e.getMessage()); //$NON-NLS-1$
 				throw new BuildException(message, e);
@@ -325,14 +320,9 @@ public class WikiToDocTask extends MarkupTask {
 
 		File tocFile = new File(dest, path.name.replaceAll("[^a-zA-Z0-9]", "-") + "-toc.xml"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-		try {
-			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
-					StandardCharsets.UTF_8);
-			try {
-				writer.write(tocContents);
-			} finally {
-				writer.close();
-			}
+		try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
+				StandardCharsets.UTF_8)) {
+			writer.write(tocContents);
 		} catch (IOException e) {
 			String message = MessageFormat.format("Cannot write {0}: {1}", tocFile, e.getMessage()); //$NON-NLS-1$
 			throw new BuildException(message, e);
@@ -387,8 +377,8 @@ public class WikiToDocTask extends MarkupTask {
 				Project.MSG_VERBOSE);
 		final OutlineItem rootItem = new OutlineItem(null, 0, "<root>", 0, -1, //$NON-NLS-1$
 				title == null ? computeTitle(paths.get(0)) : title);
-		final Map<OutlineItem, Path> outlineItemToPath = new HashMap<OutlineItem, Path>();
-		final Map<String, OutlineItem> nameToItem = new HashMap<String, OutlineItem>();
+		final Map<OutlineItem, Path> outlineItemToPath = new HashMap<>();
+		final Map<String, OutlineItem> nameToItem = new HashMap<>();
 
 		// create root-level items
 		for (Path path : paths) {
@@ -430,14 +420,9 @@ public class WikiToDocTask extends MarkupTask {
 		markupToEclipseToc.setHtmlFile(computeTocRelativeFile(outlineItemToPath, rootItem.getChildren().get(0)));
 		String tocContents = markupToEclipseToc.createToc(rootItem);
 
-		try {
-			Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
-					StandardCharsets.UTF_8);
-			try {
-				writer.write(tocContents);
-			} finally {
-				writer.close();
-			}
+		try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocFile)),
+				StandardCharsets.UTF_8)) {
+			writer.write(tocContents);
 		} catch (IOException e) {
 			String message = MessageFormat.format("Cannot write {0}: {1}", tocFile, e.getMessage()); //$NON-NLS-1$
 			throw new BuildException(message, e);
@@ -784,7 +769,7 @@ public class WikiToDocTask extends MarkupTask {
 
 		private String url;
 
-		private final Map<String, String> attributes = new HashMap<String, String>();
+		private final Map<String, String> attributes = new HashMap<>();
 
 		public File getFile() {
 			return file;
@@ -832,7 +817,7 @@ public class WikiToDocTask extends MarkupTask {
 	private class PathPageMapping implements PageMapping {
 		private final Path currentPath;
 
-		private final Map<String, Path> nameToPath = new HashMap<String, Path>();
+		private final Map<String, Path> nameToPath = new HashMap<>();
 
 		private final Map<String, SplitOutlineItem> pathNameToOutline;
 
@@ -844,6 +829,7 @@ public class WikiToDocTask extends MarkupTask {
 			}
 		}
 
+		@Override
 		public String mapPageNameToHref(String pageName) {
 			Matcher matcher = PAGE_NAME_PATTERN.matcher(pageName);
 			if (matcher.matches()) {
