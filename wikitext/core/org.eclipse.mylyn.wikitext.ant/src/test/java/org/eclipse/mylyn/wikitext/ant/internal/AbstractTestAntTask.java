@@ -24,18 +24,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.junit.After;
+import org.junit.Before;
 
-import junit.framework.TestCase;
-
-public abstract class AbstractTestAntTask extends TestCase {
+public abstract class AbstractTestAntTask {
 
 	protected File tempFolder;
 
 	protected String languageName = computeLanguageName();
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		tempFolder = File.createTempFile(getClass().getSimpleName(), ".tmp");
 		tempFolder.delete();
 		tempFolder.mkdirs();
@@ -49,9 +48,8 @@ public abstract class AbstractTestAntTask extends TestCase {
 		return TextileLanguage.class.getName();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		delete(tempFolder);
 	}
 

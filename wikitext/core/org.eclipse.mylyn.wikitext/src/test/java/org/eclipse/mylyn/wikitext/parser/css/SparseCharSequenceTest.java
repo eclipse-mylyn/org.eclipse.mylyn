@@ -13,22 +13,25 @@
 
 package org.eclipse.mylyn.wikitext.parser.css;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class SparseCharSequenceTest extends TestCase {
+public class SparseCharSequenceTest {
 
 	private SparseCharSequence sequence;
 
 	private String testData;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		configureTest("one /* two\n\n three */ four\n/* five */");
 	}
 
@@ -37,10 +40,12 @@ public class SparseCharSequenceTest extends TestCase {
 		sequence = new SparseCharSequence(testData, Pattern.compile("/\\*.*?\\*/", Pattern.MULTILINE | Pattern.DOTALL));
 	}
 
+	@Test
 	public void testLength() {
 		assertEquals(10, sequence.length());
 	}
 
+	@Test
 	public void testCharAt() {
 		for (int x = 0; x < 4; ++x) {
 			char c = sequence.charAt(x);
@@ -52,6 +57,7 @@ public class SparseCharSequenceTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testOriginalOffsetOf() {
 		for (int x = 0; x < sequence.length(); ++x) {
 			int originalOffset = x;
@@ -62,6 +68,7 @@ public class SparseCharSequenceTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSubSequence() {
 		assertEquals("", sequence.subSequence(0, 0).toString());
 		assertEquals("one ", sequence.subSequence(0, 4).toString());
@@ -71,10 +78,12 @@ public class SparseCharSequenceTest extends TestCase {
 		assertEquals("four\n", sequence.subSequence(5, 10).toString());
 	}
 
+	@Test
 	public void testToString() {
 		assertEquals("one  four\n", sequence.toString());
 	}
 
+	@Test
 	public void testCharAtOutOfBounds() {
 		for (int x = -1; x < (testData.length() + 2); ++x) {
 			if (x < 0 || x >= sequence.length()) {

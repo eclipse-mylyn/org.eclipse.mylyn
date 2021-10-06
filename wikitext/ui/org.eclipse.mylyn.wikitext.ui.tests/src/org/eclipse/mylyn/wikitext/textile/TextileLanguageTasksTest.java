@@ -22,10 +22,10 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.google.common.io.Resources;
-
-import junit.framework.TestCase;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.
@@ -33,15 +33,14 @@ import junit.framework.TestCase;
  * @author David Green
  */
 @EclipseRuntimeRequired
-public class TextileLanguageTasksTest extends TestCase {
+public class TextileLanguageTasksTest {
 
 	private MarkupParser parser;
 
 	private TextileLanguage markupLanguage;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		initParser();
 	}
 
@@ -55,6 +54,7 @@ public class TextileLanguageTasksTest extends TestCase {
 		parser.setMarkupLanguage(markupLanguage);
 	}
 
+	@Test
 	public void testSubversiveBugReport() throws IOException {
 
 		StringWriter out = new StringWriter();

@@ -13,22 +13,24 @@
 
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class MarkupLanguageConfigurationTest extends TestCase {
+public class MarkupLanguageConfigurationTest {
 
 	private MarkupLanguageConfiguration configuration;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		configuration = new MarkupLanguageConfiguration();
 	}
 
+	@Test
 	public void testCloneWithLocale() {
 		configuration.setLocale(Locale.ENGLISH);
 		MarkupLanguageConfiguration copy = configuration.clone();

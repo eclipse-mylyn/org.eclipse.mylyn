@@ -13,10 +13,17 @@
 
 package org.eclipse.mylyn.wikitext.ant.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
@@ -25,7 +32,8 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 	private File topicsFolder;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		ditaTask = new MarkupToDitaTask();
@@ -90,6 +98,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	@Test
 	public void testCreatesMapbook() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -125,6 +134,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<p>some content</p>"));
 	}
 
+	@Test
 	public void testCreatesMapbookNoFormatting() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -160,6 +170,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 				"<topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic>"));
 	}
 
+	@Test
 	public void testCreatesSingleTopic() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -186,6 +197,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<p>some more content</p>"));
 	}
 
+	@Test
 	public void testCreatesSingleTopicNoFormatting() throws IOException {
 		File markupFile = createSimpleTextileMarkup();
 		ditaTask.setBookTitle("Sample Title");
@@ -209,6 +221,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 				"<topic><title>Sample Title</title><topic id=\"FirstHeading\"><title>First Heading</title><body><p>some content</p></body></topic><topic id=\"SecondHeading\"><title>Second Heading</title><body><p>some more content</p></body></topic></topic>"));
 	}
 
+	@Test
 	public void testMapbookXRef() throws IOException {
 		File markupFile = createTextileMarkupWithXref();
 		ditaTask.setBookTitle("Sample Title");
@@ -231,6 +244,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(secondTopicContent.contains("<xref href=\"#Id2\">ref to 2</xref>"));
 	}
 
+	@Test
 	public void testMapbookXRef_H2() throws IOException {
 		File markupFile = createTextileMarkupWithXref(2);
 		ditaTask.setBookTitle("Sample Title");
@@ -254,6 +268,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(secondTopicContent.contains("<xref href=\"#Id2\">ref to 2</xref>"));
 	}
 
+	@Test
 	public void testCreatesSingleTopicXref() throws IOException {
 		File markupFile = createTextileMarkupWithXref();
 		ditaTask.setBookTitle("Sample Title");
@@ -280,6 +295,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<xref href=\"#Id1\">ref to 1</xref>"));
 	}
 
+	@Test
 	public void testCreatesSingleTopicXref_HL2() throws IOException {
 		File markupFile = createTextileMarkupWithXref(2);
 		ditaTask.setBookTitle("Sample Title");
@@ -309,6 +325,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 	/**
 	 * test for bug 269147
 	 */
+	@Test
 	public void testFileNaming() throws IOException {
 		File markupFile = createSimpleTextileMarkupWithFQNHeadings();
 		ditaTask.setBookTitle("Sample Title");
@@ -345,6 +362,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		assertTrue(firstTopicContent.contains("<p>some content</p>"));
 	}
 
+	@Test
 	public void testTaskdef() {
 		assertEquals(MarkupToDitaTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-dita"));
 	}

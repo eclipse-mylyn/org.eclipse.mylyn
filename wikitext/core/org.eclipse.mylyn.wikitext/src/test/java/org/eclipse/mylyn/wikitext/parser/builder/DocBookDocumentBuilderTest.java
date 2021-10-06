@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -20,13 +23,13 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class DocBookDocumentBuilderTest extends TestCase {
+public class DocBookDocumentBuilderTest {
 
 	private final static String DOCBOOK_BEGIN = "<?xml version='1.0' ?><!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"><book><title></title>";
 
@@ -40,13 +43,14 @@ public class DocBookDocumentBuilderTest extends TestCase {
 
 	private DocBookDocumentBuilder builder;
 
-	@Override
+	@Before
 	public void setUp() {
 		out = new StringWriter();
 		builder = new DocBookDocumentBuilder(out);
 
 	}
 
+	@Test
 	public void testLink() {
 		builder.beginDocument();
 
@@ -62,6 +66,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
+	@Test
 	public void testExternalLink() {
 		builder.beginDocument();
 
@@ -77,6 +82,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
+	@Test
 	public void testLinkWithNullHref() {
 		builder.beginDocument();
 
@@ -95,6 +101,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 
 	}
 
+	@Test
 	public void testSpanLinkWithNullHref() {
 		builder.beginDocument();
 
@@ -113,6 +120,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
+	@Test
 	public void testDefinitionList() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DEFINITION_LIST, new Attributes());
@@ -142,10 +150,12 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testAutomaticGlossaryOnByDefault() {
 		assertTrue(builder.isAutomaticGlossary());
 	}
 
+	@Test
 	public void testNestedListsCreatesValidDocbook() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
@@ -194,6 +204,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testOrderedListArabicType() {
 		builder.beginDocument();
 		ListAttributes listAttributes = new ListAttributes();
@@ -212,6 +223,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testOrderedListLoweralphaType() {
 		builder.beginDocument();
 		ListAttributes listAttributes = new ListAttributes();
@@ -230,6 +242,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testOrderedListUpperalphaType() {
 		builder.beginDocument();
 		ListAttributes listAttributes = new ListAttributes();
@@ -248,6 +261,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testOrderedListLowerromanType() {
 		builder.beginDocument();
 		ListAttributes listAttributes = new ListAttributes();
@@ -266,6 +280,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testOrderedListUpperromanType() {
 		builder.beginDocument();
 		ListAttributes listAttributes = new ListAttributes();
@@ -284,6 +299,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testDiv() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DIV, new Attributes());
@@ -305,6 +321,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testSpanLink() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DIV, new Attributes());
@@ -328,6 +345,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testTableClass() {
 		builder.beginDocument();
 		TableAttributes tableAttributes = new TableAttributes();
@@ -351,6 +369,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	@Test
 	public void testMarked() {
 		builder.beginDocument();
 		builder.characters("normal text ");

@@ -13,10 +13,16 @@
 
 package org.eclipse.mylyn.wikitext.ant.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
@@ -26,7 +32,8 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 	private HtmlToMarkupTask task;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		task = createTask();
 		task.setMarkupLanguage(languageName);
@@ -36,6 +43,7 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 		return new HtmlToMarkupTask();
 	}
 
+	@Test
 	public void testSimpleOutput() throws IOException {
 		File markup = createSimpleHtmlMarkup();
 		task.setFile(markup);
@@ -48,7 +56,7 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 
 		String content = getContent(markupFile);
 
-		assertTrue(content.equals("h1. First Heading\n\nsome content\n\nh1. Second Heading\n\nsome more content\n\n"));
+		assertEquals("h1. First Heading\n\nsome content\n\nh1. Second Heading\n\nsome more content\n\n", content);
 	}
 
 	private File createSimpleHtmlMarkup() throws IOException {
@@ -63,6 +71,7 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 		return htmlFile;
 	}
 
+	@Test
 	public void testTaskdef() {
 		assertEquals(HtmlToMarkupTask.class.getName(), loadTaskdefBundle().getString("html-to-wikitext"));
 	}

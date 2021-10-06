@@ -12,19 +12,20 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
 import org.eclipse.jface.text.Document;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class DialectDocumentProviderTest extends TestCase {
-
+public class DialectDocumentProviderTest {
+	@Test
 	public void testCleanUpEolMarkers() {
 		String[] lines = new String[] { "one", "two", "three" };
 		doTestCleanUpEolMarkers(lines, "\r");

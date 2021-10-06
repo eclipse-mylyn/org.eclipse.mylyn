@@ -12,25 +12,32 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class OutlineParserTest extends TestCase {
+public class OutlineParserTest {
 
 	private OutlineParser outlineParser;
 
-	@Override
+	@Before
 	public void setUp() {
 		outlineParser = new OutlineParser(new TextileLanguage());
 	}
 
+	@Test
 	public void testSimple() {
 		OutlineItem outline = outlineParser.parse("h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n");
 
@@ -39,6 +46,7 @@ public class OutlineParserTest extends TestCase {
 		assertEquals(0, outline.getChildren().get(1).getChildren().size());
 	}
 
+	@Test
 	public void testNearestItem() {
 		String textile = "h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n";
 		OutlineItem outline = outlineParser.parse(textile);
@@ -66,6 +74,7 @@ public class OutlineParserTest extends TestCase {
 		assertSame(h2Item, h2Item2);
 	}
 
+	@Test
 	public void testPrevious() {
 		String textile = "h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n";
 		OutlineItem outline = outlineParser.parse(textile);
@@ -77,6 +86,7 @@ public class OutlineParserTest extends TestCase {
 		assertSame(outline.getChildren().get(0), outline.getChildren().get(0).getChildren().get(0).getPrevious());
 	}
 
+	@Test
 	public void testMoveChildren() {
 		String textile = "h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n";
 		OutlineItem outline = outlineParser.parse(textile);
@@ -104,11 +114,13 @@ public class OutlineParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testHeadersWithHtmlTags() {
 		// bug 374019
 		outlineParser = new OutlineParser(new MediaWikiLanguage());
 
-		OutlineItem outline = outlineParser.parse("= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
+		OutlineItem outline = outlineParser
+				.parse("= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
 
 		assertEquals(1, outline.getChildren().size());
 

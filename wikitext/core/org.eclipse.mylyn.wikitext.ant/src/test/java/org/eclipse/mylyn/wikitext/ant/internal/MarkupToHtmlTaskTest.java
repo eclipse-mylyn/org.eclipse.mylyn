@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.wikitext.ant.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,6 +24,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.regex.Pattern;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
@@ -31,7 +37,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 	protected MarkupToHtmlTask task;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		task = createTask();
 		task.setFormatOutput(true);
@@ -42,6 +49,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		return new MarkupToHtmlTask();
 	}
 
+	@Test
 	public void testSimpleOutput() throws IOException {
 		File markup = createSimpleTextileMarkup();
 		task.setFile(markup);
@@ -62,6 +70,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("</body>"));
 	}
 
+	@Test
 	public void testSimpleOutputStrictXHTML() throws IOException {
 		File markup = createSimpleTextileMarkupWithImage();
 		task.setFile(markup);
@@ -79,6 +88,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(Pattern.compile("<img.*?alt=\"\"").matcher(content).find());
 	}
 
+	@Test
 	public void testSimpleOutputAlternateTitle() throws IOException {
 		File markup = createSimpleTextileMarkup();
 		task.setFile(markup);
@@ -100,6 +110,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("</body>"));
 	}
 
+	@Test
 	public void testMultipleFiles() throws IOException {
 		File markup = createSimpleTextileMarkup();
 		task.setFile(markup);
@@ -137,6 +148,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(Pattern.compile("<td[^>]*>First Heading</td>").matcher(content2).find());
 	}
 
+	@Test
 	public void testMultipleFilesWithCrossReferences() throws IOException {
 		File markup = createTextileMarkupFile(
 				"h1. Heading One\n\n\"link to two\":#HeadingTwo\n\n\"link to two point one\":#HeadingTwoPointOne\n\nh1. Heading Two\n\nh2. Heading Two Point One\n\n\"link to one\":#HeadingOne\n");
@@ -162,6 +174,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content2.contains("<a href=\"markup.html#HeadingOne\">link to one</a>"));
 	}
 
+	@Test
 	public void testTocFilenameCorrectnessSingleFile() throws IOException {
 		File markup = createTextileMarkupFile(
 				"{toc}\n\nh1. Heading One\n\nh1. Heading Two\n\nh2. Heading Two Point One");
@@ -180,6 +193,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("<a href=\"#HeadingTwo\">Heading Two</a>"));
 	}
 
+	@Test
 	public void testTocFilenameCorrectnessMultipleFiles() throws IOException {
 		File markup = createTextileMarkupFile(
 				"{toc}\n\nh1. Heading One\n\nh1. Heading Two\n\nh2. Heading Two Point One\n\n\"link\":#HeadingOne");
@@ -210,6 +224,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("<a href=\"markup.html#HeadingOne\">link</a>"));
 	}
 
+	@Test
 	public void testWithJavadocLink() throws IOException {
 		File markup = createTextileMarkupFile("\"Test\":@.Test");
 		task.setFile(markup);
@@ -264,10 +279,12 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	@Test
 	public void testTaskdef() {
 		assertEquals(MarkupToHtmlTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-html"));
 	}
 
+	@Test
 	public void testMultipleFiles_LinkToConvertedMarkupDocument() throws IOException {
 		File markup = createTextileMarkupFile(
 				"h1. Heading One\n\n\"a link\":foo#bar\n\nh1. Heading Two\n\n\"a link\":foo#bar\n");

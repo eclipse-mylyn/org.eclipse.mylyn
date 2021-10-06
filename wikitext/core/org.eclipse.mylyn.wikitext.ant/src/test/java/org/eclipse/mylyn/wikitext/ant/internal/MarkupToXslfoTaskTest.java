@@ -13,22 +13,30 @@
 
 package org.eclipse.mylyn.wikitext.ant.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
 	private MarkupToXslfoTask task;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		task = new MarkupToXslfoTask();
 		task.setMarkupLanguage(languageName);
 	}
 
+	@Test
 	public void testSimpleOutput() throws IOException {
 		File markup = createSimpleTextileMarkup();
 		task.setFile(markup);
@@ -66,6 +74,7 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	@Test
 	public void testTaskdef() {
 		assertEquals(MarkupToXslfoTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-xslfo"));
 	}

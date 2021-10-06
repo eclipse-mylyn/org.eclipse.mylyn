@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,35 +23,38 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.TestResources;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author David Green
  * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  */
-public class TextileToDocbookTest extends TestCase {
+public class TextileToDocbookTest {
 
 	private MarkupToDocbook textileToDocbook;
 
-	@Override
+	@Before
 	public void setUp() {
 		textileToDocbook = new MarkupToDocbook();
 		textileToDocbook.setMarkupLanguage(new TextileLanguage());
 	}
 
+	@Test
 	public void testHeader() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n");
 		assertContent(book);
 	}
 
+	@Test
 	public void testMultipleNestedElements() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("h1. title1\n\nContent para 1\n* a\n* list of\n* items\n");
 		assertContent(book);
 	}
 
+	@Test
 	public void testNestedHeaders() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook
@@ -56,6 +63,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(Pattern.compile("</chapter>\\s*<chapter", Pattern.MULTILINE).matcher(book).find());
 	}
 
+	@Test
 	public void testHeaderWithAcronym() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook
@@ -66,6 +74,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(Pattern.compile("<glossdef>\\s*<para>To Be Announced", Pattern.MULTILINE).matcher(book).find());
 	}
 
+	@Test
 	public void testBlockCode() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("h1. A\n\nsome content\n\nbc. public class Foo {\n}\n");
@@ -73,6 +82,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(Pattern.compile("<literallayout>\\s*<code>", Pattern.MULTILINE).matcher(book).find());
 	}
 
+	@Test
 	public void testBlockCodeExtended() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook
@@ -81,6 +91,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(Pattern.compile("<literallayout>\\s*<code>", Pattern.MULTILINE).matcher(book).find());
 	}
 
+	@Test
 	public void testFootnotes() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("something[1] with a footnote\n\nfn1. the footnote text");
@@ -97,6 +108,7 @@ public class TextileToDocbookTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testImageScaling() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("Here comes an !{width:80%}imageUrl! with more text");
@@ -105,6 +117,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(matcher.find());
 	}
 
+	@Test
 	public void testImageWidth() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("Here comes an !{width:80px}imageUrl! with more text");
@@ -113,6 +126,7 @@ public class TextileToDocbookTest extends TestCase {
 		assertTrue(matcher.find());
 	}
 
+	@Test
 	public void testImageWidthDepth() throws Exception {
 		textileToDocbook.setBookTitle("Test");
 		String book = textileToDocbook.parse("Here comes an !{width:80px;height:90px;}imageUrl! with more text");

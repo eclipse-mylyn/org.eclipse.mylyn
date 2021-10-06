@@ -13,14 +13,17 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class WikiTemplateResolverTest extends TestCase {
+public class WikiTemplateResolverTest {
 
 	private static final String BUG_TEMPLATE_CONTENT = "[https://bugs.eclipse.org/{{{1}}} Bug {{{1}}}]";
 
@@ -32,9 +35,8 @@ public class WikiTemplateResolverTest extends TestCase {
 
 	private TemplateProcessor templateProcessor;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		TestWikiTemplateResolver resolverUnderTest = new TestWikiTemplateResolver();
 		resolverUnderTest.setWikiBaseUrl("http://wiki.eclipse.org");
@@ -52,6 +54,7 @@ public class WikiTemplateResolverTest extends TestCase {
 		this.resolver = resolverUnderTest;
 	}
 
+	@Test
 	public void testResolveTemplateDefault() {
 		Template template = resolver.resolveTemplate("bug");
 		assertNotNull(template);
@@ -59,12 +62,14 @@ public class WikiTemplateResolverTest extends TestCase {
 		assertEquals(BUG_TEMPLATE_CONTENT, template.getTemplateMarkup().trim());
 	}
 
+	@Test
 	public void testResolveTemplateNoNamespace() {
 		Template template = resolver.resolveTemplate(":Test");
 		assertNotNull(template);
 		assertEquals(TEST_TEMPLATE_CONTENT, template.getTemplateMarkup().trim());
 	}
 
+	@Test
 	public void testResolveTemplateOtherNamespace() {
 		Template template = resolver.resolveTemplate("Other:Test");
 		assertNotNull(template);
@@ -72,16 +77,19 @@ public class WikiTemplateResolverTest extends TestCase {
 		assertEquals(OTHER_TEMPLATE_CONTENT, template.getTemplateMarkup().trim());
 	}
 
+	@Test
 	public void testProcessTemplatesDefault() {
 		String markup = templateProcessor.processTemplates("See {{bug|468237}}!");
 		assertEquals("See [https://bugs.eclipse.org/468237 Bug 468237]!", markup);
 	}
 
+	@Test
 	public void testProcessTemplatesNoNamespace() {
 		String markup = templateProcessor.processTemplates("Include {{:Test}} content!");
 		assertEquals("Include XXX content!", markup);
 	}
 
+	@Test
 	public void testProcessTemplatesOtherNamespace() {
 		String markup = templateProcessor.processTemplates("Include {{Other:Test}} content!");
 		assertEquals("Include alt content!", markup);

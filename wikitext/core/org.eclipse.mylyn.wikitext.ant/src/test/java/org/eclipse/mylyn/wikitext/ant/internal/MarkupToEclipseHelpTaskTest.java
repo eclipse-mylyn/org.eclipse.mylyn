@@ -13,10 +13,15 @@
 
 package org.eclipse.mylyn.wikitext.ant.internal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.junit.Test;
 
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
@@ -26,6 +31,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 	}
 
 	@Override
+	@Test
 	public void testSimpleOutput() throws IOException {
 		super.testSimpleOutput();
 
@@ -40,6 +46,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 	}
 
 	@Override
+	@Test
 	public void testMultipleFiles() throws IOException {
 		super.testMultipleFiles();
 
@@ -54,6 +61,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 	}
 
 	@Override
+	@Test
 	public void testSimpleOutputAlternateTitle() throws IOException {
 		super.testSimpleOutputAlternateTitle();
 
@@ -67,6 +75,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 		assertTrue(tocContent.contains("<topic href=\"markup.html#SecondHeading\" label=\"Second Heading\""));
 	}
 
+	@Test
 	public void testMultipleFilesWithMultiLevelHeadings() throws IOException {
 		File markup = createSimpleTextileMarkupWithMultiLevelHeadings();
 		task.setFile(markup);
@@ -114,6 +123,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 	}
 
 	@Override
+	@Test
 	public void testTaskdef() {
 		assertEquals(MarkupToEclipseHelpTask.class.getName(),
 				loadTaskdefBundle().getString("wikitext-to-eclipse-help"));

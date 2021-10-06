@@ -12,16 +12,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.annotation;
 
-import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+import org.junit.Test;
 
 /**
  * @author David Green
  */
 @HeadRequired
-public class TitleAnnotationTest extends TestCase {
-
+public class TitleAnnotationTest {
+	@Test
 	public void testSimple() {
 		TitleAnnotation annotation = new TitleAnnotation("title", "type");
 		assertEquals("title", annotation.getTitle());
