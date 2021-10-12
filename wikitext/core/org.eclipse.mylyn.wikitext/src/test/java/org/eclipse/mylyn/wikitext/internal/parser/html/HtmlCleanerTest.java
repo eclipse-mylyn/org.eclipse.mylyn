@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Tasktop Technologies.
+ * Copyright (c) 2012, 2021 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -127,7 +127,7 @@ public class HtmlCleanerTest {
 				"<p><span> </span><span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">a link to somewhere  </a></span> <span>  </span></p>");
 
 		assertEquals(
-				"<body><p>&nbsp;<span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">a link to somewhere</a></span> &nbsp; </p></body>",
+				"<body><p> <span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">a link to somewhere</a></span> </p></body>",
 				result);
 	}
 
@@ -137,7 +137,7 @@ public class HtmlCleanerTest {
 				"<p><span> </span><span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">  </a></span> <span>  </span></p>");
 
 		assertEquals(
-				"<body><p>&nbsp;<span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\"></a></span> &nbsp; </p></body>",
+				"<body><p> <span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\"></a></span> </p></body>",
 				result);
 	}
 
@@ -328,10 +328,10 @@ public class HtmlCleanerTest {
 	public void testTrailingWhitespaceBodyNoBlock_WhitespaceOutsideBody2() {
 		// bug 406943
 		Document document = Document.createShell("");
-		document.body().appendChild(new TextNode("\n", ""));
-		document.body().appendChild(new TextNode("text", ""));
-		document.body().appendChild(new TextNode("\n", ""));
-		document.body().appendChild(new TextNode("\n", ""));
+		document.body().appendChild(new TextNode("\n"));
+		document.body().appendChild(new TextNode("text"));
+		document.body().appendChild(new TextNode("\n"));
+		document.body().appendChild(new TextNode("\n"));
 		String result = cleanToBody(document);
 
 		assertEquals("<body>text</body>", result);

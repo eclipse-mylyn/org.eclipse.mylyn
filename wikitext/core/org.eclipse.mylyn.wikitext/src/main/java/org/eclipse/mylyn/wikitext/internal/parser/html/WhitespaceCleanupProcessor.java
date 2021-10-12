@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Tasktop Technologies.
+ * Copyright (c) 2011, 2021 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jsoup.helper.StringUtil;
+import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableSet;
  */
 class WhitespaceCleanupProcessor extends DocumentProcessor {
 
-	private final Set<String> CHILD_TAGS = ImmutableSet.of("li", "th", "tr", "td"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final Set<String> CHILD_TAGS = ImmutableSet.of("li", "th", "tr", "td"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	@Override
 	public void process(Document document) {

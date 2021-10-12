@@ -16,7 +16,7 @@ package org.eclipse.mylyn.wikitext.internal.parser.html;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsoup.helper.StringUtil;
+import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
