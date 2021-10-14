@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext.core</artifactId>
-    <version>3.0.40</version>
+    <version>3.0.41-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
@@ -15,17 +15,17 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext</artifactId>
-        <version>3.0.40</version>
+        <version>3.0.41-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
-        <version>3.0.40</version>
+        <version>3.0.41-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.mediawiki</artifactId>
-        <version>3.0.40</version>
+        <version>3.0.41-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -50,7 +50,7 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
-        <version>3.0.40</version>
+        <version>3.0.41-SNAPSHOT</version>
         <scope>test</scope>
     </dependency>
   </dependencies>
