@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>wikitext</artifactId>
-        <version>3.0.40-SNAPSHOT</version>
+        <version>3.0.41-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -119,7 +119,7 @@
                             <groupId>org.eclipse.mylyn.docs</groupId>
                             <artifactId>wikitext.ui.target</artifactId>
                             <classifier>wikitext</classifier>
-                            <version>3.0.40-SNAPSHOT</version>
+                            <version>3.0.41-SNAPSHOT</version>
                         </artifact>
                     </target>
                 </configuration>
