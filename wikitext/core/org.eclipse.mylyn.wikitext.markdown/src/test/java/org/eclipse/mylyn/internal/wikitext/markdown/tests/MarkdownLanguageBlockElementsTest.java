@@ -261,6 +261,13 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	}
 
 	@Test
+	public void testUnorderedListTabWhichIsNested() {
+		String markup = "*   Item 1\n\t*   Item 1.1";
+		String expectedHtml = "<ul><li>Item 1</li><ul><li>Item 1.1</li></ul></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	@Test
 	public void testUnorderedListWhichIsNestedUsingMixedMarkers() {
 		String markup = "*   Item 1\n    +   Item 1.1\n        -   Item 1.1.1\n    *   Item 1.2\n*   Item 2";
 		String expectedHtml = "<ul><li>Item 1</li><ul><li>Item 1.1</li><ul><li>Item 1.1.1</li></ul>"

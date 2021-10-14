@@ -29,7 +29,8 @@ public class ListBlock extends NestableBlock {
 
 	private static final Pattern itemStartPattern = Pattern.compile(" {0,3}(?:([\\*\\+\\-])|([0-9]+\\.))\\s+(.+?)"); //$NON-NLS-1$
 
-	private static final Pattern nestedItemStartPattern = Pattern.compile("( +)(?:([\\*\\+\\-])|([0-9]+\\.))\\s+(.+?)"); //$NON-NLS-1$
+	private static final Pattern nestedItemStartPattern = Pattern
+			.compile("(( +)|(\t+))(?:([\\*\\+\\-])|([0-9]+\\.))\\s+(.+?)"); //$NON-NLS-1$
 
 	private static final Pattern indentedParagraphPattern = Pattern.compile("( +).*"); //$NON-NLS-1$
 
