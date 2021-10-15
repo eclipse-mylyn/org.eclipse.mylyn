@@ -33,7 +33,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<id>wikitext-local-p2</id>
-			<url>${project.baseUri}../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/site/</url>
+			<url>${project.baseUri}../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/repository/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -41,7 +41,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<id>epub-local-p2</id>
-			<url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/site/</url>
+			<url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/repository/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -72,7 +72,7 @@
 						<enabled>true</enabled>
 					</snapshots>
 					<id>wikitext-local-p2</id>
-					<url>${project.baseUri}../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/site/</url>
+					<url>${project.baseUri}../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/repository/</url>
 					<layout>p2</layout>
 				</repository>
 				<repository>
@@ -80,7 +80,7 @@
 						<enabled>true</enabled>
 					</snapshots>
 					<id>epub-local-p2</id>
-					<url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/site/</url>
+					<url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/repository/</url>
 					<layout>p2</layout>
 				</repository>
 				<repository>

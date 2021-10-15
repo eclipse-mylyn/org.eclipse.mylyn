@@ -9,6 +9,6 @@
     <version>3.0.41-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext-site</artifactId>
-  <packaging>eclipse-update-site</packaging>
+  <packaging>eclipse-repository</packaging>
   <name>Mylyn WikiText Site</name>
 </project>

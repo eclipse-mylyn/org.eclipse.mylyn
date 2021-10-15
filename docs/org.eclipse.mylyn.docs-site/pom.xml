@@ -9,6 +9,6 @@
     <version>2.11.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.docs-site</artifactId>
-  <packaging>eclipse-update-site</packaging>
+  <packaging>eclipse-repository</packaging>
   <name>Mylyn Docs</name>
 </project>
