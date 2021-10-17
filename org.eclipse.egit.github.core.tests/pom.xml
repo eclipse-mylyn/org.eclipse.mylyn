@@ -26,6 +26,11 @@
 
   <name>Eclipse EGit GitHub API Test Plug-in</name>
 
+  <properties>
+    <java-version>1.8</java-version>
+    <java-release>8</java-release>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
