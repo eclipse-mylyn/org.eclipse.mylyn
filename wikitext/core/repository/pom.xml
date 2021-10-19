@@ -73,7 +73,7 @@
                                     <arg value="--silent" />
                                     <arg value="--show-error" />
                                     <arg value="--fail" />
-                                    <arg value="http://build.eclipse.org:31338/sign" />
+                                    <arg value="https://cbi.eclipse.org/jarsigner/sign" />
 
                                     <fileset dir="${project.build.directory}/repository/plugins">
                                         <include name="*.jar" />
