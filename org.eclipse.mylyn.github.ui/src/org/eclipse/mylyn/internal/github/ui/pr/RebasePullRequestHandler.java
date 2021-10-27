@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.RebaseOperation;
 import org.eclipse.egit.github.core.PullRequest;
@@ -55,39 +55,49 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				PullRequestComposite prComp = PullRequestConnector
-						.getPullRequest(data);
-				if (prComp == null)
-					return Status.CANCEL_STATUS;
-				PullRequest request = prComp.getRequest();
-				Repository repo = PullRequestUtils.getRepository(request);
-				if (repo == null)
-					return Status.CANCEL_STATUS;
-				String branchName = PullRequestUtils.getBranchName(request);
 				try {
-					String target = request.getBase().getRef();
-					Ref targetRef = repo.findRef(request.getBase().getRef());
-					if (targetRef != null) {
-						if (!PullRequestUtils.isCurrentBranch(branchName, repo)) {
-							monitor.setTaskName(MessageFormat
-									.format(Messages.RebasePullRequestHandler_TaskCheckout,
-											branchName));
-							BranchOperationUI.checkout(repo, branchName).run(
-									new SubProgressMonitor(monitor, 1));
+					PullRequestComposite prComp = PullRequestConnector
+							.getPullRequest(data);
+					if (prComp == null)
+						return Status.CANCEL_STATUS;
+					PullRequest request = prComp.getRequest();
+					Repository repo = PullRequestUtils.getRepository(request);
+					if (repo == null)
+						return Status.CANCEL_STATUS;
+					String branchName = PullRequestUtils.getBranchName(request);
+					try {
+						String target = request.getBase().getRef();
+						Ref targetRef = repo
+								.findRef(request.getBase().getRef());
+						if (targetRef != null) {
+							SubMonitor progress = SubMonitor.convert(monitor,
+									2);
+							if (!PullRequestUtils.isCurrentBranch(branchName,
+									repo)) {
+								progress.subTask(MessageFormat.format(
+										Messages.RebasePullRequestHandler_TaskCheckout,
+										branchName));
+								BranchOperationUI.checkout(repo, branchName)
+										.run(progress.newChild(1));
+							}
+							progress.subTask(MessageFormat.format(
+									Messages.RebasePullRequestHandler_TaskRebase,
+									branchName, target));
+							new RebaseOperation(repo, targetRef)
+									.execute(progress.newChild(1));
+							executeCallback(event);
 						}
-						monitor.setTaskName(MessageFormat.format(
-								Messages.RebasePullRequestHandler_TaskRebase,
-								branchName, target));
-						new RebaseOperation(repo, targetRef)
-								.execute(new SubProgressMonitor(monitor, 1));
-						executeCallback(event);
+					} catch (IOException e) {
+						GitHubUi.logError(e);
+					} catch (CoreException e) {
+						GitHubUi.logError(e);
 					}
-				} catch (IOException e) {
-					GitHubUi.logError(e);
-				} catch (CoreException e) {
-					GitHubUi.logError(e);
+					return Status.OK_STATUS;
+				} finally {
+					if (monitor != null) {
+						monitor.done();
+					}
 				}
-				return Status.OK_STATUS;
 			}
 		};
 		schedule(job, event);
