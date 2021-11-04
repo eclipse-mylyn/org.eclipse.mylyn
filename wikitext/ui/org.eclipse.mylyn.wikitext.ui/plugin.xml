@@ -153,6 +153,22 @@
 				</with>
 			</activeWhen>
 		</handler>
+		<handler commandId="org.eclipse.ui.navigate.nextSubTab"
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.SwitchSubTabCommand">
+			<activeWhen>
+				<with variable="activePartId">
+					<equals value="org.eclipse.mylyn.wikitext.ui.editor.markupEditor"/>
+				</with>
+			</activeWhen>
+		</handler>
+		<handler commandId="org.eclipse.ui.navigate.previousSubTab"
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.SwitchSubTabCommand">
+			<activeWhen>
+				<with variable="activePartId">
+					<equals value="org.eclipse.mylyn.wikitext.ui.editor.markupEditor"/>
+				</with>
+			</activeWhen>
+		</handler>
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">

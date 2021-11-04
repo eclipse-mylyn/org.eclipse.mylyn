@@ -237,6 +237,17 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		sourceViewerConfiguration.initializeDefaultFonts();
 		tabFolder = new CTabFolder(parent, SWT.BOTTOM);
 
+		// Disable next/previous page traversal in tab folder. Instead the
+		// workbench commands nextSubTab and previousSubTab are used. These
+		// events swallow the key combo Ctrl+PgDn/PgUp which brakes normal
+		// editor tab switching in the default key binding scheme. This
+		// solution is similar to how MultiPageEditorPart works.
+		tabFolder.addTraverseListener(e -> {
+			if (e.detail == SWT.TRAVERSE_PAGE_NEXT || e.detail == SWT.TRAVERSE_PAGE_PREVIOUS) {
+				e.doit = false;
+			}
+		});
+
 		{
 			sourceTab = new CTabItem(tabFolder, SWT.NONE);
 			updateSourceTabLabel();
@@ -1383,5 +1394,16 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	@Override
 	protected boolean getInitialWordWrapStatus() {
 		return true;
+	}
+
+	/**
+	 * Switches between source and preview editor sub-tabs.
+	 */
+	public void switchSubTab() {
+		if (isShowingPreview()) {
+			tabFolder.setSelection(sourceTab);
+		} else {
+			showPreview(getNearestMatchingOutlineItem());
+		}
 	}
 }
