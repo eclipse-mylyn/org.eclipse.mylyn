@@ -25,7 +25,7 @@
 		<test.uservmargs></test.uservmargs>
 		<test.osvmargs></test.osvmargs>
 
-		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
+		<tycho.scmUrl>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
 
