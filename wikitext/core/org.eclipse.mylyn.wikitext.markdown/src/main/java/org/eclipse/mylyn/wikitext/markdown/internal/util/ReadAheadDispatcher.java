@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
  * Adapter {@link NestableBlock} for {@link ReadAheadBlock}s.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class ReadAheadDispatcher extends NestableBlock {
@@ -102,7 +102,7 @@ public class ReadAheadDispatcher extends NestableBlock {
 	}
 
 	private List<NestableBlock> cloneBlocks(List<NestableBlock> blocks) {
-		List<NestableBlock> clonedBlocks = new ArrayList<NestableBlock>();
+		List<NestableBlock> clonedBlocks = new ArrayList<>();
 		for (NestableBlock block : blocks) {
 			clonedBlocks.add(block.clone());
 		}

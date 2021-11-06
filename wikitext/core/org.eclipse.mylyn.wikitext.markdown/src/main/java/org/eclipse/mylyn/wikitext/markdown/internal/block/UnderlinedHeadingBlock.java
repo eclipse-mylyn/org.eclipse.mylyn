@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 
 /**
  * Markdown underlined headings.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class UnderlinedHeadingBlock extends NestableBlock implements ReadAheadBlock {
@@ -34,6 +34,7 @@ public class UnderlinedHeadingBlock extends NestableBlock implements ReadAheadBl
 
 	private int level;
 
+	@Override
 	public boolean canStart(String line, int lineOffset, LookAheadReader lookAheadReader) {
 		blockLineCount = 0;
 		level = 0;

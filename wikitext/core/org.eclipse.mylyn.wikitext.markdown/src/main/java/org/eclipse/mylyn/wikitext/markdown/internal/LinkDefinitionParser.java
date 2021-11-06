@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 /**
  * Parser for link definitions in Markdown.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class LinkDefinitionParser {
@@ -36,7 +36,7 @@ public class LinkDefinitionParser {
 	private Map<String, LinkDefinition> linkDefinitions;
 
 	public void parse(String markupContent) {
-		linkDefinitions = new HashMap<String, LinkDefinition>();
+		linkDefinitions = new HashMap<>();
 		Matcher matcher = LINK_DEFINITION_PATTERN.matcher(markupContent);
 		while (matcher.find()) {
 			String id = matcher.group(2);

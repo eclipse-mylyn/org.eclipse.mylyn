@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
 
 /**
  * This class tracks which link definitions are used, unused, and missing.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class LinkDefinitionUsageTracker {
@@ -40,8 +40,8 @@ public class LinkDefinitionUsageTracker {
 	public LinkDefinitionUsageTracker(Locator locator, LinkDefinitionParser linkDefinitionParser) {
 		this.locator = locator;
 		this.linkDefinitionParser = linkDefinitionParser;
-		usedLinkDefinitionIds = new HashSet<String>();
-		missingLinkDefinitionPositions = new ArrayList<LinkDefinitionUsageTracker.Position>();
+		usedLinkDefinitionIds = new HashSet<>();
+		missingLinkDefinitionPositions = new ArrayList<>();
 	}
 
 	public void linkDefinitionRequested(String id) {
@@ -58,7 +58,7 @@ public class LinkDefinitionUsageTracker {
 	}
 
 	public List<Position> getUnusedLinkDefinitionPositions() {
-		List<Position> usedLinkDefinitionPositions = new ArrayList<Position>();
+		List<Position> usedLinkDefinitionPositions = new ArrayList<>();
 		Map<String, LinkDefinition> linkDefinitions = linkDefinitionParser.getLinkDefinitions();
 		for (Entry<String, LinkDefinition> entry : linkDefinitions.entrySet()) {
 			String id = entry.getKey();

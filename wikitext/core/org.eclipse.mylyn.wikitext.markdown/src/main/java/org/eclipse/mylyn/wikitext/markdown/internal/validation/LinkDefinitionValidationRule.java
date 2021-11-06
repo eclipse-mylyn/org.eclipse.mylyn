@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinitionUsageTracker;
-import org.eclipse.mylyn.wikitext.markdown.internal.MarkdownContentState;
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinitionUsageTracker.Position;
+import org.eclipse.mylyn.wikitext.markdown.internal.MarkdownContentState;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
  * {@link ValidationRule} that finds missing and unused link definitions.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class LinkDefinitionValidationRule extends ValidationRule {
@@ -51,20 +51,22 @@ public class LinkDefinitionValidationRule extends ValidationRule {
 		MarkdownContentState markdownContentState = builder.markdownContentState;
 		LinkDefinitionUsageTracker linkDefinitionUsageTracker = markdownContentState.getLinkDefinitionUsageTracker();
 
-		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
+		List<ValidationProblem> problems = new ArrayList<>();
 
 		List<Position> missingLinkDefinitionPositions = linkDefinitionUsageTracker.getMissingLinkDefinitionPositions();
 		for (Position position : missingLinkDefinitionPositions) {
-			problems.add(new ValidationProblem(Severity.ERROR, MessageFormat.format(
-					Messages.getString("LinkDefinitionValidationRule.missing"), //$NON-NLS-1$
-					position.getId()), position.getOffset(), position.getLength()));
+			problems.add(new ValidationProblem(Severity.ERROR,
+					MessageFormat.format(Messages.getString("LinkDefinitionValidationRule.missing"), //$NON-NLS-1$
+							position.getId()),
+					position.getOffset(), position.getLength()));
 		}
 
 		List<Position> unusedLinkDefinitionPositions = linkDefinitionUsageTracker.getUnusedLinkDefinitionPositions();
 		for (Position position : unusedLinkDefinitionPositions) {
-			problems.add(new ValidationProblem(Severity.WARNING, MessageFormat.format(
-					Messages.getString("LinkDefinitionValidationRule.unused"),//$NON-NLS-1$
-					position.getId()), position.getOffset(), position.getLength()));
+			problems.add(new ValidationProblem(Severity.WARNING,
+					MessageFormat.format(Messages.getString("LinkDefinitionValidationRule.unused"), //$NON-NLS-1$
+							position.getId()),
+					position.getOffset(), position.getLength()));
 		}
 
 		return problems;
