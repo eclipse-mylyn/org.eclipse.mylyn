@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,9 @@
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
@@ -65,8 +65,8 @@ public class OutlineItemWorkbenchAdapterTest {
 
 	@Test
 	public void testGetLabel() {
-		assertTrue(adapter.getLabel(outline).indexOf(outline.getLabel()) != -1);
-		assertTrue(adapter.getLabel(child1).indexOf(child1.getLabel()) != -1);
-		assertTrue(adapter.getLabel(child2).indexOf(child2.getLabel()) != -1);
+		assertNotEquals(-1, adapter.getLabel(outline).indexOf(outline.getLabel()));
+		assertNotEquals(-1, adapter.getLabel(child1).indexOf(child1.getLabel()));
+		assertNotEquals(-1, adapter.getLabel(child2).indexOf(child2.getLabel()));
 	}
 }
