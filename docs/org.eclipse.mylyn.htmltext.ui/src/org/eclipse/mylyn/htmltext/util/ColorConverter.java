@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2021 Tom Seidel, Remus Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.RGB;
 public final class ColorConverter {
 
 	public static String convertRgbToHex(RGB rgb) {
-		return new StringBuffer(toHex(rgb.red)).append(toHex(rgb.green)).append(toHex(rgb.blue)).toString();
+		return new StringBuilder(toHex(rgb.red)).append(toHex(rgb.green)).append(toHex(rgb.blue)).toString();
 	}
 
 	private static String toHex(int color) {
