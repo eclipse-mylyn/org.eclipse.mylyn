@@ -59,9 +59,8 @@ public class QuickOutlinePopupDialog extends PopupDialog
 
 	private PatternFilter patternFilter;
 
-	@SuppressWarnings("deprecation")
 	public QuickOutlinePopupDialog(Shell parent, IShowInTarget showInTarget) {
-		super(parent, SWT.RESIZE, true, true, false, false, null, null);
+		super(parent, SWT.RESIZE, true, true, true, false, false, null, null);
 		this.showInTarget = showInTarget;
 		setInfoText(Messages.QuickOutlinePopupDialog_infoText);
 		create();
@@ -78,7 +77,7 @@ public class QuickOutlinePopupDialog extends PopupDialog
 	protected Control createDialogArea(Composite parent) {
 		patternFilter = new PatternFilter();
 		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter,
-				true);
+				true, true);
 
 		int heightHint = (filteredTree.getViewer().getTree().getItemHeight() * 12)
 				+ Math.max(filteredTree.getFilterControl().getSize().y, 12);
