@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -41,8 +42,6 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	private IProject project;
@@ -56,7 +55,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	@Test
 	public void testNoHyperlinkInDocument() throws CoreException {
-		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		List<String> fileRefPatterns = List.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
 
 		ITextViewer mockTextViewer = mock(ITextViewer.class);
@@ -70,7 +69,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	@Test
 	public void testFileDoesNotExist() throws CoreException {
-		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		List<String> fileRefPatterns = List.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
 
 		ITextViewer mockTextViewer = mock(ITextViewer.class);
@@ -89,7 +88,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		file.create(new ByteArrayInputStream("== Writing tests is kinda documentation".getBytes()), true,
 				new NullProgressMonitor());
 
-		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		List<String> fileRefPatterns = List.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(file.getParent(),
 				fileRefPatterns);
 
@@ -139,7 +138,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 			articleFile.create(new ByteArrayInputStream("== Overview".getBytes()), true, new NullProgressMonitor());
 		}
 
-		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		List<String> fileRefPatterns = List.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(fileInNestedFolder.getParent(),
 				fileRefPatterns);
 

@@ -41,8 +41,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 
 public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 
@@ -107,13 +105,13 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 			image.dispose();
 			gc.dispose();
 
-			dumpControlHierarchy(0, ImmutableList.of(shell));
+			dumpControlHierarchy(0, List.of(shell));
 		}
 	}
 
 	private void dumpControlHierarchy(int level, List<Control> controls) {
 		for (Control control : controls) {
-			String indent = Strings.repeat("  ", level);
+			String indent = "  ".repeat(level);
 			System.out.println(indent + description(control));
 			if (control instanceof Composite) {
 				dumpControlHierarchy(level + 1, Arrays.asList(((Composite) control).getChildren()));

@@ -29,8 +29,6 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 @EclipseRuntimeRequired
 public class EclipseServiceLocatorTest {
 
@@ -50,7 +48,7 @@ public class EclipseServiceLocatorTest {
 	@Test
 	public void getAllMarkupLanguages() {
 		Set<MarkupLanguage> allMarkupLanguages = ServiceLocator.getInstance().getAllMarkupLanguages();
-		Set<String> names = ImmutableSet
+		Set<String> names = Set
 				.copyOf(allMarkupLanguages.stream().map(MarkupLanguage::getName).collect(Collectors.toSet()));
 		assertEquals(WikiText.getMarkupLanguageNames(), names);
 	}
