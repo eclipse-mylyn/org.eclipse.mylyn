@@ -42,7 +42,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 
 	@Override
-	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
+	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) {
 		monitor.beginTask(Messages.ResourceMarkerMarkupValidator_clearingMarkers, 1);
 		// nothing to do: we do all of this in the createProblems method
 		monitor.done();

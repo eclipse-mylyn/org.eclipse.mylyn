@@ -57,7 +57,7 @@ public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentPr
 	}
 
 	@Override
-	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException {
+	protected IAnnotationModel createAnnotationModel(Object element) {
 		if (element instanceof IAdaptable) {
 			IFile file = ((IAdaptable) element).getAdapter(IFile.class);
 			if (file != null) {

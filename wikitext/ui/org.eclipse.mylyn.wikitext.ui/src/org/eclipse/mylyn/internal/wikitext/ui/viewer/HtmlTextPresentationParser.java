@@ -472,7 +472,7 @@ public class HtmlTextPresentationParser {
 		private final StringBuilder elementText = new StringBuilder();
 
 		@Override
-		public void characters(char[] ch, int start, int length) throws SAXException {
+		public void characters(char[] ch, int start, int length) {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
 				if (elementState.noWhitespaceTextContainer
@@ -639,7 +639,7 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void endElement(String uri, String localName, String name) throws SAXException {
+		public void endElement(String uri, String localName, String name) {
 			ElementState elementState = state.peek();
 
 			emitText(elementState, true);
@@ -744,7 +744,7 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
+		public void startElement(String uri, String localName, String name, Attributes atts) {
 			final ElementState parentElementState = state.peek();
 
 			emitText(parentElementState, false);
@@ -861,7 +861,7 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+		public void ignorableWhitespace(char[] ch, int start, int length) {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
 				if (!elementState.skipWhitespace) {
@@ -872,7 +872,7 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void endDocument() throws SAXException {
+		public void endDocument() {
 			// ORDER DEPENDENCY: do this first
 			if (annotationModel != null) {
 				for (Map.Entry<Annotation, Position> a : annotationToPosition.entrySet()) {
@@ -932,18 +932,18 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void startDocument() throws SAXException {
+		public void startDocument() {
 			ElementState elementState = state.push(new ElementState(null, "<document>", new FontState(), getOffset())); //$NON-NLS-1$
 			elementState.fontState.foreground = defaultForeground == null ? null : defaultForeground.getRGB();
 			elementState.fontState.background = defaultBackground == null ? null : defaultBackground.getRGB();
 		}
 
 		@Override
-		public void processingInstruction(String target, String data) throws SAXException {
+		public void processingInstruction(String target, String data) {
 		}
 
 		@Override
-		public void skippedEntity(String name) throws SAXException {
+		public void skippedEntity(String name) {
 		}
 
 		@Override
@@ -951,11 +951,11 @@ public class HtmlTextPresentationParser {
 		}
 
 		@Override
-		public void startPrefixMapping(String prefix, String uri) throws SAXException {
+		public void startPrefixMapping(String prefix, String uri) {
 		}
 
 		@Override
-		public void endPrefixMapping(String prefix) throws SAXException {
+		public void endPrefixMapping(String prefix) {
 		}
 
 		private void emitStyles() {

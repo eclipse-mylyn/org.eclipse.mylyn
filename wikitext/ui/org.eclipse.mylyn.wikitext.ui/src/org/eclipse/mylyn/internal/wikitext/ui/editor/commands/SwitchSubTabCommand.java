@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -24,7 +23,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class SwitchSubTabCommand extends AbstractHandler {
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(ExecutionEvent event) {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 
 		if (editor instanceof MarkupEditor) {

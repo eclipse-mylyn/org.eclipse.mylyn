@@ -34,7 +34,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 public class AnnotationMarkupValidator extends DocumentRegionValidator {
 
 	@Override
-	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
+	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) {
 		monitor.beginTask(Messages.AnnotationMarkupValidator_clearingProblems, 100);
 		// nothing to do: we do this all in the createProblems method.
 		monitor.done();
@@ -42,7 +42,7 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 
 	@Override
 	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
-			List<ValidationProblem> problems) throws CoreException {
+			List<ValidationProblem> problems) {
 		Object lockObject;
 		if (annotationModel instanceof ISynchronizable) {
 			lockObject = ((ISynchronizable) annotationModel).getLockObject();

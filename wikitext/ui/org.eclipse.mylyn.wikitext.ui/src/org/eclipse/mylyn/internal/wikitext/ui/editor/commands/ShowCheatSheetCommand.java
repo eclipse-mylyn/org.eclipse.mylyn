@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.information.InformationPresenter;
@@ -54,7 +53,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 public class ShowCheatSheetCommand extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(ExecutionEvent event) {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
 		if (activeFocusControl instanceof Control) {
 			Control control = (Control) activeFocusControl;

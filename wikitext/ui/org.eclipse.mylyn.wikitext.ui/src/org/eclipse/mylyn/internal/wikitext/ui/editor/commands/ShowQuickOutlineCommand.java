@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Control;
@@ -32,7 +31,7 @@ public class ShowQuickOutlineCommand extends AbstractHandler {
 	public static final int QUICK_OUTLINE = 513; // magic number from PDE quick outline see PDEProjectionViewer
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(ExecutionEvent event) {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
 		if (activeFocusControl instanceof Control) {
 			Control control = (Control) activeFocusControl;

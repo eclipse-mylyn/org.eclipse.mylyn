@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,7 +42,7 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 	static final String COMMAND_ID = "org.eclipse.mylyn.wikitext.ui.convertToMarkupCommand"; //$NON-NLS-1$
 
 	@Override
-	protected void handleFile(ExecutionEvent event, IFile file, String name) throws ExecutionException {
+	protected void handleFile(ExecutionEvent event, IFile file, String name) {
 		MarkupLanguage targetMmarkupLanguage = ServiceLocator.getInstance()
 				.getMarkupLanguage(event.getParameter(PARAM_MARKUP_LANGUAGE));
 
@@ -108,7 +107,7 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 	}
 
 	@Override
-	protected void handleFile(IFile file, String name) throws ExecutionException {
+	protected void handleFile(IFile file, String name) {
 		throw new UnsupportedOperationException();
 	}
 

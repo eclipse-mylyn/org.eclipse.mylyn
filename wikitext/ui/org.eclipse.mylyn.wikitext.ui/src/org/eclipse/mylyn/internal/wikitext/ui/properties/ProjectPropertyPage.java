@@ -119,8 +119,7 @@ public class ProjectPropertyPage extends PropertyPage {
 		ok[0] = false;
 		WorkspaceModifyOperation operation = new WorkspaceModifyOperation(ResourcesPlugin.getWorkspace().getRoot()) {
 			@Override
-			protected void execute(IProgressMonitor monitor)
-					throws CoreException, InvocationTargetException, InterruptedException {
+			protected void execute(IProgressMonitor monitor) throws CoreException {
 				if (project.hasNature(WikiTextNature.ID) != wantNature) {
 					if (wantNature) {
 						WikiTextNature.install(project, monitor);
