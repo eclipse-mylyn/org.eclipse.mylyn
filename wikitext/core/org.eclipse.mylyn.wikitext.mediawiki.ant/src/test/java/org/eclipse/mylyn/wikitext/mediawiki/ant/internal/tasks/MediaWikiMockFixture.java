@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Jeremie Bresson and others.
+ * Copyright (c) 2017, 2021 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -23,16 +23,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.toolkit.TestResources;
-
-import com.google.common.base.Preconditions;
 
 class MediaWikiMockFixture {
 	private final File serverFolder;
 
 	public MediaWikiMockFixture(File serverFolder) {
-		Preconditions.checkNotNull(serverFolder);
+		Objects.requireNonNull(serverFolder);
 		this.serverFolder = serverFolder;
 	}
 
