@@ -135,7 +135,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 
 		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
 		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(menuManager -> contextMenuAboutToShow(menuManager));
+		manager.addMenuListener(this::contextMenuAboutToShow);
 		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
 
 		site.registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
