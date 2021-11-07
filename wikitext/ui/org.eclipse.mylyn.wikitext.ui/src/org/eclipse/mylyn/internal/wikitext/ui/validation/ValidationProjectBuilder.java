@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,23 +53,6 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	public static final String ID = "org.eclipse.mylyn.wikitext.ui.wikiTextValidationBuilder"; //$NON-NLS-1$
 
 	private static final IProject[] NO_PROJECTS = new IProject[0];
-
-	private static int CHECK_ANCESTORS;
-
-	private static Method RESOURCE_DERIVED_WITH_FLAGS_METHOD;
-	static {
-		try {
-			CHECK_ANCESTORS = ((Integer) IResource.class.getDeclaredField("CHECK_ANCESTORS").get(null)).intValue(); //$NON-NLS-1$
-		} catch (Exception e) {
-			CHECK_ANCESTORS = 0;
-		}
-		try {
-			RESOURCE_DERIVED_WITH_FLAGS_METHOD = IResource.class.getDeclaredMethod("isDerived", //$NON-NLS-1$
-					new Class[] { int.class });
-		} catch (Exception e) {
-			RESOURCE_DERIVED_WITH_FLAGS_METHOD = null;
-		}
-	}
 
 	public ValidationProjectBuilder() {
 	}
@@ -173,17 +155,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private void visit(final List<ValidationInfo> files, IFile file) {
-		boolean derived = false;
-		// bug 258154 - avoid 3.4 API compilation dependency
-		if (RESOURCE_DERIVED_WITH_FLAGS_METHOD != null) {
-			try {
-				derived = ((Boolean) RESOURCE_DERIVED_WITH_FLAGS_METHOD.invoke(file, CHECK_ANCESTORS));
-			} catch (Exception e) {
-				derived = file.isDerived();
-			}
-		} else {
-			derived = file.isDerived();
-		}
+		boolean derived = file.isDerived(IResource.CHECK_ANCESTORS);
 		if (derived) {
 			return;
 		}
