@@ -50,7 +50,7 @@ public class Configuration {
 	 */
 	public void addConfigurationNode(ConfigurationElement element) {
 		if (configNodes == null) {
-			configNodes = new ArrayList<ConfigurationElement>();
+			configNodes = new ArrayList<>();
 		}
 		configNodes.add(element);
 	}

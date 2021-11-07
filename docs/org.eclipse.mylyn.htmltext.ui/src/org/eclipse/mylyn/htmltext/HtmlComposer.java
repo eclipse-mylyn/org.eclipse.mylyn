@@ -187,9 +187,9 @@ public class HtmlComposer {
 	 * A list of listeners which fire if the selected node within the html is
 	 * changed.
 	 */
-	private transient List<NodeSelectionChangeListener> selectionListenerList = new ArrayList<NodeSelectionChangeListener>();
+	private transient List<NodeSelectionChangeListener> selectionListenerList = new ArrayList<>();
 
-	private transient List<ModifyListener> modifyListenerList = new ArrayList<ModifyListener>();
+	private transient List<ModifyListener> modifyListenerList = new ArrayList<>();
 
 	/**
 	 * a temporary collection of commands that are executed before the ckeditor
@@ -205,17 +205,17 @@ public class HtmlComposer {
 	 * A map of commands that were executed before the widget was initialized
 	 * and their appending listeners which are still waiting for an event.
 	 */
-	private Map<Command, List<ModifyListener>> pendingListeners = new HashMap<Command, List<ModifyListener>>();
+	private Map<Command, List<ModifyListener>> pendingListeners = new HashMap<>();
 
 	/**
 	 * A map of callback-Ids and their appended Listeners. This is
 	 */
-	private Map<String, List<ModifyListener>> pendingListenerCallBackMap = new HashMap<String, List<ModifyListener>>();
+	private Map<String, List<ModifyListener>> pendingListenerCallBackMap = new HashMap<>();
 
 	/**
 	 * Tracked {@link Command}s.
 	 */
-	private final Map<String, Command> trackedCommands = new HashMap<String, Command>();
+	private final Map<String, Command> trackedCommands = new HashMap<>();
 
 	/**
 	 * Flag if the ckeditor finishes its initialization and is ready for
@@ -424,7 +424,7 @@ public class HtmlComposer {
 				execute(command.getCommand());
 			}
 		} else {
-			pendingListeners.put(command, new ArrayList<ModifyListener>(
+			pendingListeners.put(command, new ArrayList<>(
 					modifyListenerList));
 			pendingCommands.add(command);
 		}

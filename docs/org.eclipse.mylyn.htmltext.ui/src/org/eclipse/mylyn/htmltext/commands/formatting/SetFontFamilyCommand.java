@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2021 Tom Seidel, Remus Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -44,9 +44,9 @@ public class SetFontFamilyCommand extends Command {
 	public Map<String, String> getAvailableFontfamilies() {
 		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableFonts();"));
 		String[] split = sizeString.split(";");
-		Map<String, String> returnValue = new HashMap<String, String>();
-		for (int i = 0, n = split.length; i < n; i++) {
-			returnValue.put(split[i].split("/")[0], split[i].split("/")[1]);
+		Map<String, String> returnValue = new HashMap<>();
+		for (String element : split) {
+			returnValue.put(element.split("/")[0], element.split("/")[1]);
 		}
 		return returnValue;
 
