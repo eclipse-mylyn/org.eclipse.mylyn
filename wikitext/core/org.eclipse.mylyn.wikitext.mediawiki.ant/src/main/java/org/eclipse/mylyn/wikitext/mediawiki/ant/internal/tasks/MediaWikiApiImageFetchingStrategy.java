@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -172,7 +171,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		return filenames;
 	}
 
-	protected Reader createInputReader(URL apiUrl) throws UnsupportedEncodingException, IOException {
+	protected Reader createInputReader(URL apiUrl) throws IOException {
 		return new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), StandardCharsets.UTF_8);
 	}
 
@@ -211,7 +210,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+		public void startElement(String uri, String localName, String qName, Attributes atts) {
 			if ("page".equals(localName)) { //$NON-NLS-1$
 				currentPage = atts.getValue("title"); //$NON-NLS-1$
 			} else if ("images".equals(localName) || "continue".equals(localName)) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -224,7 +223,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		}
 
 		@Override
-		public void endElement(String uri, String localName, String qName) throws SAXException {
+		public void endElement(String uri, String localName, String qName) {
 			if ("page".equals(localName)) { //$NON-NLS-1$
 				currentPage = null;
 			} else if ("imageinfo".equals(localName)) { //$NON-NLS-1$
@@ -233,23 +232,23 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		}
 
 		@Override
-		public void characters(char[] ch, int start, int length) throws SAXException {
+		public void characters(char[] ch, int start, int length) {
 		}
 
 		@Override
-		public void endDocument() throws SAXException {
+		public void endDocument() {
 		}
 
 		@Override
-		public void endPrefixMapping(String prefix) throws SAXException {
+		public void endPrefixMapping(String prefix) {
 		}
 
 		@Override
-		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+		public void ignorableWhitespace(char[] ch, int start, int length) {
 		}
 
 		@Override
-		public void processingInstruction(String target, String data) throws SAXException {
+		public void processingInstruction(String target, String data) {
 		}
 
 		@Override
@@ -257,15 +256,15 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		}
 
 		@Override
-		public void skippedEntity(String name) throws SAXException {
+		public void skippedEntity(String name) {
 		}
 
 		@Override
-		public void startDocument() throws SAXException {
+		public void startDocument() {
 		}
 
 		@Override
-		public void startPrefixMapping(String prefix, String uri) throws SAXException {
+		public void startPrefixMapping(String prefix, String uri) {
 		}
 
 	}

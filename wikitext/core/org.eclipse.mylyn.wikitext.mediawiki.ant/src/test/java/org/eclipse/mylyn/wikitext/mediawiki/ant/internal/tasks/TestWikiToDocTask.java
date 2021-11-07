@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Jeremie Bresson and others.
+ * Copyright (c) 2016, 2021 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
@@ -51,7 +50,7 @@ class TestWikiToDocTask extends WikiToDocTask {
 	}
 
 	@Override
-	protected Reader createInputReader(URL pathUrl) throws IOException {
+	protected Reader createInputReader(URL pathUrl) {
 		if (serverContent == null) {
 			throw new IllegalStateException(
 					"Please specify some server content used during the tests. See: TestWikiToDocTask.setServerContent(Map<String, String>)");

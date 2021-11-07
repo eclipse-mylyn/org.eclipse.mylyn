@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class MediaWikiImageFetcherTest {
 	private final TestMediaWikiImageFetcher task = new TestMediaWikiImageFetcher();
 
 	@Before
-	public void before() throws IOException {
+	public void before() {
 		task.setDest(temporaryFolder.getRoot());
 		task.setProject(new Project());
 	}

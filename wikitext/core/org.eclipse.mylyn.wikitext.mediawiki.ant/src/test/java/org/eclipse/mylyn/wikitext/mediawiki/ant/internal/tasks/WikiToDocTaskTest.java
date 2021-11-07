@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class WikiToDocTaskTest {
 	private TestWikiToDocTask task;
 
 	@Before
-	public void before() throws IOException {
+	public void before() {
 		task = new TestWikiToDocTask();
 		HashMap<String, String> serverContent = new HashMap<>();
 		serverContent.put(

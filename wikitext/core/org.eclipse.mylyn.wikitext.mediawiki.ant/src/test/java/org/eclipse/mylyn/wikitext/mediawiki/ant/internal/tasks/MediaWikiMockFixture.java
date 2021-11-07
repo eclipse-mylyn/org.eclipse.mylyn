@@ -45,7 +45,7 @@ class MediaWikiMockFixture {
 		}
 	}
 
-	public Map<String, String> createImageServerContent(String scheme) throws IOException {
+	public Map<String, String> createImageServerContent(String scheme) {
 		Map<String, String> map = new HashMap<>();
 		map.put(scheme
 				+ "://wiki.eclipse.org/api.php?action=query&titles=Some%2FMy_Page&generator=images&prop=imageinfo&iiprop=url&format=xml",
@@ -56,7 +56,7 @@ class MediaWikiMockFixture {
 		return map;
 	}
 
-	private String createServerEntry(String resourcePath) throws IOException {
+	private String createServerEntry(String resourcePath) {
 		String content = TestResources.load(this.getClass(), resourcePath);
 		content = content.replaceAll("__TEMP-DIR-URL__/", serverFolder.toPath().toUri().toString());
 		return content;

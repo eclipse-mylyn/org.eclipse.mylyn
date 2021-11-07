@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Tasktop Technologies and others.
+ * Copyright (c) 2016, 2021 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 
@@ -39,7 +38,7 @@ public class WikiToDocTaskIntegrationTest {
 	private TestWikiToDocTask task;
 
 	@Before
-	public void before() throws IOException {
+	public void before() {
 		task = new TestWikiToDocTask();
 		task.setDest(temporaryFolder.getRoot());
 		task.setProject(new Project());

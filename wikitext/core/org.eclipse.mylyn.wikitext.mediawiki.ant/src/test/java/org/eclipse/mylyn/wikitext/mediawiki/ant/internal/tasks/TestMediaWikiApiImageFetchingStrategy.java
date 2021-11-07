@@ -15,7 +15,6 @@ package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
@@ -34,7 +33,7 @@ public class TestMediaWikiApiImageFetchingStrategy extends MediaWikiApiImageFetc
 	}
 
 	@Override
-	protected Reader createInputReader(URL apiUrl) throws IOException {
+	protected Reader createInputReader(URL apiUrl) {
 		String key = apiUrl.toString();
 		if (!serverContent.containsKey(key)) {
 			throw new IllegalStateException("Please define a server content used during the tests for the key: " + key);
