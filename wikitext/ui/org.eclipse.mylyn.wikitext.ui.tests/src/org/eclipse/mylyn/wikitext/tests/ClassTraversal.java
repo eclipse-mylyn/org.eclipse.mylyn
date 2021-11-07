@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,9 +17,9 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,11 +54,7 @@ public class ClassTraversal {
 			String protocol = url.getProtocol();
 			if (protocol.equals("file")) {
 				String file = url.getFile();
-				try {
-					file = URLDecoder.decode(file.substring(0, file.indexOf(resourceOfClass)), "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					throw new IllegalStateException(e);
-				}
+				file = URLDecoder.decode(file.substring(0, file.indexOf(resourceOfClass)), StandardCharsets.UTF_8);
 				visitClasses(loader, new File(file), new File(file), visitor);
 
 			} else if (protocol.equals("bundleresource")) {
