@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,10 @@
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
@@ -52,7 +52,7 @@ public class OutlineParserTest {
 		OutlineItem outline = outlineParser.parse(textile);
 
 		int idxOfH2 = textile.indexOf("h2. Second");
-		assertTrue(idxOfH2 != -1);
+		assertNotEquals(-1, idxOfH2);
 
 		OutlineItem h2Item = outline.findNearestMatchingOffset(idxOfH2);
 		assertNotNull(h2Item);

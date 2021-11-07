@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2021 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -40,7 +40,7 @@ public class AsciiDocTemplateResolverTest {
 
 	@Test
 	public void hasTemplates() {
-		assertTrue("Should have non-zero templates", templates.getTemplate().size() != 0);
+		assertNotEquals("Should have non-zero templates", 0, templates.getTemplate().size());
 	}
 
 	@Test
