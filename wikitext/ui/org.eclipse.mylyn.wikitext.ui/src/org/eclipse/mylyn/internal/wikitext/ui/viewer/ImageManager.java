@@ -290,149 +290,6 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		stop();
 	}
 
-	private void updateImage(String imgSrc, ImageData imageData) {
-		if (display.isDisposed() || viewer.getTextWidget().isDisposed()) {
-			return;
-		}
-		Image image = imageData == null
-				? imageCache.getMissingImage()
-				: ImageDescriptor.createFromImageData(imageData).createImage();
-		imageCache.putImage(imgSrc, image);
-
-		Set<ImageAnnotation> modifiedAnnotations = new HashSet<>();
-
-		AnnotationModel annotationModel = (AnnotationModel) viewer.getAnnotationModel();
-		Object annotationLockObject = annotationModel.getLockObject();
-		if (annotationLockObject == null) {
-			annotationLockObject = annotationModel;
-		}
-		synchronized (annotationLockObject) {
-			Iterator<Annotation> iterator = annotationModel.getAnnotationIterator();
-			while (iterator.hasNext()) {
-				Annotation annotation = iterator.next();
-				if (annotation instanceof ImageAnnotation) {
-					ImageAnnotation imageAnnotation = (ImageAnnotation) annotation;
-					if (imgSrc.equals(imageAnnotation.getUrl())) {
-						imageAnnotation.setImage(image);
-						modifiedAnnotations.add(imageAnnotation);
-					}
-				}
-			}
-		}
-
-		if (!modifiedAnnotations.isEmpty()) {
-			computingChanges = true;
-			try {
-				boolean rangesAdjusted = false;
-				List<StyleRange> ranges = new ArrayList<>();
-
-				Iterator<?> allStyleRangeIterator = viewer.getTextPresentation().getAllStyleRangeIterator();
-				while (allStyleRangeIterator.hasNext()) {
-					StyleRange range = (StyleRange) allStyleRangeIterator.next();
-					ranges.add((StyleRange) range.clone());
-				}
-
-				GC gc = new GC(viewer.getTextWidget());
-				try {
-					viewer.getTextWidget().setRedraw(false);
-					TextPresentation textPresentation = viewer.getTextPresentation();
-					//			textPresentation.
-					for (ImageAnnotation annotation : modifiedAnnotations) {
-						int height = annotation.getImage().getBounds().height;
-						Position position = annotationModel.getPosition(annotation);
-						String widgetText = viewer.getTextWidget().getText();
-						Font font = null;
-						if (widgetText.length() > 0 && widgetText.length() > position.offset) {
-							StyleRange styleRange = viewer.getTextWidget().getStyleRangeAtOffset(position.offset);
-							if (styleRange != null) {
-								font = styleRange.font;
-							}
-						}
-						if (font == null) {
-							font = viewer.getTextWidget().getFont();
-						}
-						gc.setFont(font);
-						Point extent = gc.textExtent("\n"); //$NON-NLS-1$
-						if (extent.y > 0) {
-							int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
-							final int originalNewlines = numNewlines;
-							IDocument document = viewer.getDocument();
-							try {
-								for (int x = position.offset; x < document.getLength(); ++x) {
-									if (document.getChar(x) == '\n') {
-										if (x != position.offset
-												&& Util.annotationsIncludeOffset(viewer.getAnnotationModel(), x)) {
-											break;
-										}
-										--numNewlines;
-									} else {
-										break;
-									}
-								}
-								if (numNewlines > 0) {
-									String newlines = ""; //$NON-NLS-1$
-									for (int x = 0; x < numNewlines; ++x) {
-										newlines += "\n"; //$NON-NLS-1$
-									}
-									document.replace(position.offset + 1, 0, newlines);
-								} else if (numNewlines < 0) {
-									document.replace(position.offset, -numNewlines, ""); //$NON-NLS-1$
-								}
-								if (numNewlines != 0) {
-									// no need to fixup other annotation positions, since the annotation model is hooked into the document.
-
-									// fix up styles
-									for (StyleRange range : ranges) {
-										if (range.start > position.offset) {
-											range.start += numNewlines;
-											rangesAdjusted = true;
-										} else if (range.start + range.length > position.offset) {
-											range.length += numNewlines;
-											rangesAdjusted = true;
-										}
-									}
-								}
-
-								// bug# 248643: update the annotation size to reflect the full size of the image
-								//              so that it gets repainted when some portion of the image is exposed
-								//              as a result of scrolling
-								if (position.getLength() != originalNewlines) {
-									annotationModel.modifyAnnotationPosition(annotation,
-											new Position(position.offset, originalNewlines));
-								}
-							} catch (BadLocationException e) {
-								// ignore
-							}
-						}
-					}
-					if (rangesAdjusted) {
-						TextPresentation presentation = new TextPresentation();
-						if (textPresentation.getDefaultStyleRange() != null) {
-							StyleRange defaultStyleRange = (StyleRange) textPresentation.getDefaultStyleRange().clone();
-							if (viewer.getDocument() != null) {
-								if (defaultStyleRange.length < viewer.getDocument().getLength()) {
-									defaultStyleRange.length = viewer.getDocument().getLength();
-								}
-							}
-							presentation.setDefaultStyleRange(defaultStyleRange);
-						}
-						for (StyleRange range : ranges) {
-							presentation.addStyleRange(range);
-						}
-						viewer.setTextPresentation(presentation);
-						viewer.invalidateTextPresentation();
-					}
-				} finally {
-					viewer.getTextWidget().setRedraw(true);
-					gc.dispose();
-				}
-				viewer.getTextWidget().redraw();
-			} finally {
-				computingChanges = false;
-			}
-		}
-	}
-
 	private static final AtomicInteger resolverIdSeed = new AtomicInteger(1);
 
 	private class ImageResolver extends Thread {
@@ -480,6 +337,150 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 				}
 			} finally {
 				imageResolver = null;
+			}
+		}
+
+		private void updateImage(String imgSrc, ImageData imageData) {
+			if (display.isDisposed() || viewer.getTextWidget().isDisposed()) {
+				return;
+			}
+			Image image = imageData == null
+					? imageCache.getMissingImage()
+					: ImageDescriptor.createFromImageData(imageData).createImage();
+			imageCache.putImage(imgSrc, image);
+
+			Set<ImageAnnotation> modifiedAnnotations = new HashSet<>();
+
+			AnnotationModel annotationModel = (AnnotationModel) viewer.getAnnotationModel();
+			Object annotationLockObject = annotationModel.getLockObject();
+			if (annotationLockObject == null) {
+				annotationLockObject = annotationModel;
+			}
+			synchronized (annotationLockObject) {
+				Iterator<Annotation> iterator = annotationModel.getAnnotationIterator();
+				while (iterator.hasNext()) {
+					Annotation annotation = iterator.next();
+					if (annotation instanceof ImageAnnotation) {
+						ImageAnnotation imageAnnotation = (ImageAnnotation) annotation;
+						if (imgSrc.equals(imageAnnotation.getUrl())) {
+							imageAnnotation.setImage(image);
+							modifiedAnnotations.add(imageAnnotation);
+						}
+					}
+				}
+			}
+
+			if (!modifiedAnnotations.isEmpty()) {
+				computingChanges = true;
+				try {
+					boolean rangesAdjusted = false;
+					List<StyleRange> ranges = new ArrayList<>();
+
+					Iterator<?> allStyleRangeIterator = viewer.getTextPresentation().getAllStyleRangeIterator();
+					while (allStyleRangeIterator.hasNext()) {
+						StyleRange range = (StyleRange) allStyleRangeIterator.next();
+						ranges.add((StyleRange) range.clone());
+					}
+
+					GC gc = new GC(viewer.getTextWidget());
+					try {
+						viewer.getTextWidget().setRedraw(false);
+						TextPresentation textPresentation = viewer.getTextPresentation();
+						//			textPresentation.
+						for (ImageAnnotation annotation : modifiedAnnotations) {
+							int height = annotation.getImage().getBounds().height;
+							Position position = annotationModel.getPosition(annotation);
+							String widgetText = viewer.getTextWidget().getText();
+							Font font = null;
+							if (widgetText.length() > 0 && widgetText.length() > position.offset) {
+								StyleRange styleRange = viewer.getTextWidget().getStyleRangeAtOffset(position.offset);
+								if (styleRange != null) {
+									font = styleRange.font;
+								}
+							}
+							if (font == null) {
+								font = viewer.getTextWidget().getFont();
+							}
+							gc.setFont(font);
+							Point extent = gc.textExtent("\n"); //$NON-NLS-1$
+							if (extent.y > 0) {
+								int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
+								final int originalNewlines = numNewlines;
+								IDocument document = viewer.getDocument();
+								try {
+									for (int x = position.offset; x < document.getLength(); ++x) {
+										if (document.getChar(x) == '\n') {
+											if (x != position.offset
+													&& Util.annotationsIncludeOffset(viewer.getAnnotationModel(), x)) {
+												break;
+											}
+											--numNewlines;
+										} else {
+											break;
+										}
+									}
+									if (numNewlines > 0) {
+										String newlines = ""; //$NON-NLS-1$
+										for (int x = 0; x < numNewlines; ++x) {
+											newlines += "\n"; //$NON-NLS-1$
+										}
+										document.replace(position.offset + 1, 0, newlines);
+									} else if (numNewlines < 0) {
+										document.replace(position.offset, -numNewlines, ""); //$NON-NLS-1$
+									}
+									if (numNewlines != 0) {
+										// no need to fixup other annotation positions, since the annotation model is hooked into the document.
+
+										// fix up styles
+										for (StyleRange range : ranges) {
+											if (range.start > position.offset) {
+												range.start += numNewlines;
+												rangesAdjusted = true;
+											} else if (range.start + range.length > position.offset) {
+												range.length += numNewlines;
+												rangesAdjusted = true;
+											}
+										}
+									}
+
+									// bug# 248643: update the annotation size to reflect the full size of the image
+									//              so that it gets repainted when some portion of the image is exposed
+									//              as a result of scrolling
+									if (position.getLength() != originalNewlines) {
+										annotationModel.modifyAnnotationPosition(annotation,
+												new Position(position.offset, originalNewlines));
+									}
+								} catch (BadLocationException e) {
+									// ignore
+								}
+							}
+						}
+						if (rangesAdjusted) {
+							TextPresentation presentation = new TextPresentation();
+							if (textPresentation.getDefaultStyleRange() != null) {
+								StyleRange defaultStyleRange = (StyleRange) textPresentation.getDefaultStyleRange()
+										.clone();
+								if (viewer.getDocument() != null) {
+									if (defaultStyleRange.length < viewer.getDocument().getLength()) {
+										defaultStyleRange.length = viewer.getDocument().getLength();
+									}
+								}
+								presentation.setDefaultStyleRange(defaultStyleRange);
+							}
+							for (StyleRange range : ranges) {
+								presentation.addStyleRange(range);
+							}
+							viewer.setTextPresentation(presentation);
+							viewer.invalidateTextPresentation();
+						}
+					} finally {
+						viewer.getTextWidget().setRedraw(true);
+						gc.dispose();
+					}
+					viewer.getTextWidget().redraw();
+				} finally {
+					computingChanges = false;
+				}
 			}
 		}
 	}

@@ -204,6 +204,25 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			return new PartitioningResult(offset, length, partitioning.toArray(new ITypedRegion[partitioning.size()]));
 		}
 
+		/**
+		 * save markup content to a temporary file to facilitate analysis of the problem
+		 *
+		 * @return the absolute path to the saved file, or null if the file was not saved
+		 */
+		private static String saveToTempFile(MarkupLanguage markupLanguage, String markupContent) {
+			String markupSavePath = null;
+			try {
+				File file = File.createTempFile("markup-content-", "." //$NON-NLS-1$ //$NON-NLS-2$
+						+ markupLanguage.getName().toLowerCase().replaceAll("[^a-z]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+				try (Writer writer = new FileWriter(file)) {
+					writer.write(markupContent);
+				}
+				markupSavePath = file.getAbsolutePath();
+			} catch (IOException e) {
+			}
+			return markupSavePath;
+		}
+
 		public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 			this.markupLanguage = markupLanguage;
 		}
@@ -539,22 +558,4 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	}
 
-	/**
-	 * save markup content to a temporary file to facilitate analysis of the problem
-	 *
-	 * @return the absolute path to the saved file, or null if the file was not saved
-	 */
-	private static String saveToTempFile(MarkupLanguage markupLanguage, String markupContent) {
-		String markupSavePath = null;
-		try {
-			File file = File.createTempFile("markup-content-", "." //$NON-NLS-1$ //$NON-NLS-2$
-					+ markupLanguage.getName().toLowerCase().replaceAll("[^a-z]", "")); //$NON-NLS-1$ //$NON-NLS-2$
-			try (Writer writer = new FileWriter(file)) {
-				writer.write(markupContent);
-			}
-			markupSavePath = file.getAbsolutePath();
-		} catch (IOException e) {
-		}
-		return markupSavePath;
-	}
 }
