@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
  * An abstract base class for all editor outlines to be used with {@link WikiTextSourceEditor}.
- * 
+ *
  * @author David Green
  * @since 1.3
  */
@@ -26,7 +26,7 @@ public abstract class AbstractWikiTextSourceEditorOutline extends ContentOutline
 
 	private IEditorPart editor;
 
-	private final IPropertyListener editorPropertyListener = (source, propId) -> editorPropertyChanged(source, propId);
+	private final IPropertyListener editorPropertyListener = AbstractWikiTextSourceEditorOutline.this::editorPropertyChanged;
 
 	public void setEditor(IEditorPart editor) {
 		if (this.editor != null) {

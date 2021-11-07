@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -42,12 +42,12 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 /**
  * a default source editor outline view that presents a structured outline in a tree view based on the
  * {@link OutlineItem heading-based outline}.
- * 
+ *
  * @author David Green
  * @since 1.3
  */
-public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEditorOutline implements IShowInSource,
-		IShowInTarget {
+public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEditorOutline
+		implements IShowInSource, IShowInTarget {
 
 	private boolean disableReveal;
 
@@ -118,7 +118,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 
 		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
 		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(menuManager -> contextMenuAboutToShow(menuManager));
+		manager.addMenuListener(this::contextMenuAboutToShow);
 		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
 
 	}
@@ -147,7 +147,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 			if (firstElement instanceof OutlineItem) {
 				OutlineItem item = (OutlineItem) firstElement;
 				if (getEditor() != null) {
-					IShowInTarget target = (IShowInTarget) getEditor().getAdapter(IShowInTarget.class);
+					IShowInTarget target = getEditor().getAdapter(IShowInTarget.class);
 					if (target != null) {
 						target.show(new ShowInContext(null, new StructuredSelection(item)));
 					}
@@ -168,7 +168,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 
 	public ShowInContext getShowInContext() {
 		if (getEditor() != null) {
-			IShowInSource source = (IShowInSource) getEditor().getAdapter(IShowInSource.class);
+			IShowInSource source = getEditor().getAdapter(IShowInSource.class);
 			if (source != null) {
 				return source.getShowInContext();
 			}
@@ -178,7 +178,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 
 	public boolean show(ShowInContext context) {
 		if (getEditor() != null) {
-			IShowInTarget target = (IShowInTarget) getEditor().getAdapter(IShowInTarget.class);
+			IShowInTarget target = getEditor().getAdapter(IShowInTarget.class);
 			if (target != null) {
 				return target.show(context);
 			}
@@ -219,7 +219,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		if (getEditor() == null) {
 			return;
 		}
-		IShowInSource source = (IShowInSource) getEditor().getAdapter(IShowInSource.class);
+		IShowInSource source = getEditor().getAdapter(IShowInSource.class);
 		if (source != null) {
 			ShowInContext showInContext = source.getShowInContext();
 			if (showInContext != null) {
