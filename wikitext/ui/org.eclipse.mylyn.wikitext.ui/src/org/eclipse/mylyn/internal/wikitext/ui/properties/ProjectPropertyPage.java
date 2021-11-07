@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -42,10 +41,10 @@ import org.eclipse.ui.dialogs.PropertyPage;
 /**
  * A properties page for IProject that allow for configuration of WikiText settings such as the presence of a
  * {@link WikiTextNature}.
- * 
+ *
  * @author David Green
  */
-public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
+public class ProjectPropertyPage extends PropertyPage {
 
 	private IProject project;
 
@@ -73,10 +72,10 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 			buf.append(Messages.ProjectPropertyPage_4);
 			buf.append(extension);
 		}
-		wikiTextNatureButton.setToolTipText(NLS.bind(Messages.ProjectPropertyPage_validation_tooltip,
-				new Object[] { buf.toString() }));
+		wikiTextNatureButton.setToolTipText(
+				NLS.bind(Messages.ProjectPropertyPage_validation_tooltip, new Object[] { buf.toString() }));
 
-		project = (IProject) getElement().getAdapter(IProject.class);
+		project = getElement().getAdapter(IProject.class);
 
 		try {
 			if (project.hasNature(WikiTextNature.ID)) {
@@ -120,8 +119,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		ok[0] = false;
 		WorkspaceModifyOperation operation = new WorkspaceModifyOperation(ResourcesPlugin.getWorkspace().getRoot()) {
 			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
+			protected void execute(IProgressMonitor monitor)
+					throws CoreException, InvocationTargetException, InterruptedException {
 				if (project.hasNature(WikiTextNature.ID) != wantNature) {
 					if (wantNature) {
 						WikiTextNature.install(project, monitor);

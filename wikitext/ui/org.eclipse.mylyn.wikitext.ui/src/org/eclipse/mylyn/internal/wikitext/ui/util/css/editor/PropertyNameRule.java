@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,17 +15,16 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css.editor;
 
 import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IPredicateRule;
-import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 /**
  * detects property name by finding word characters that are terminated by whitespace followed by a colon. the trailing
  * colon is not included in the name.
- * 
+ *
  * @author David Green
  */
-class PropertyNameRule implements IRule, IPredicateRule {
+class PropertyNameRule implements IPredicateRule {
 
 	private final Token token;
 
