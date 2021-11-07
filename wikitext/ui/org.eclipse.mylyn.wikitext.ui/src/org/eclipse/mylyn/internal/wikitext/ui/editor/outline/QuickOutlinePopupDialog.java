@@ -24,11 +24,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -88,30 +86,15 @@ public class QuickOutlinePopupDialog extends PopupDialog
 		filteredTree.getViewer().setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		filteredTree.getViewer().setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
 
-		filteredTree.getViewer().getTree().addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				handleSelection();
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// nothing to do
-			}
-		});
+		filteredTree.getViewer()
+				.getTree()
+				.addSelectionListener(SelectionListener.widgetDefaultSelectedAdapter(e -> handleSelection()));
 		// dispose when escape is pressed
-		filteredTree.getViewer().getTree().addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.character == 0x1B) {
-					dispose();
-				}
+		filteredTree.getViewer().getTree().addKeyListener(KeyListener.keyPressedAdapter(e -> {
+			if (e.character == 0x1B) {
+				dispose();
 			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-		});
+		}));
 		// single mouse click causes selection
 		filteredTree.getViewer().getTree().addMouseListener(new MouseAdapter() {
 			@Override

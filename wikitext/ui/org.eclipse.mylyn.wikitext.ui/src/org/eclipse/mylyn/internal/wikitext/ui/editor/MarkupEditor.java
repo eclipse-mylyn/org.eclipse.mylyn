@@ -368,17 +368,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 			}
 		});
-		viewer.getTextWidget().addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateOutlineSelection();
-			}
-
-		});
+		viewer.getTextWidget()
+				.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> updateOutlineSelection()));
 		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
