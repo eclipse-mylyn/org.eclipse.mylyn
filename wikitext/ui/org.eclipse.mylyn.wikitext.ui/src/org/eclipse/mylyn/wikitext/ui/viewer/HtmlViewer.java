@@ -161,9 +161,7 @@ public class HtmlViewer extends SourceViewer {
 			parser.setGC(gc);
 
 			parser.parse(htmlText);
-		} catch (SAXException e) {
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
+		} catch (SAXException | IOException e) {
 			throw new IllegalStateException(e);
 		} finally {
 			gc.dispose();
