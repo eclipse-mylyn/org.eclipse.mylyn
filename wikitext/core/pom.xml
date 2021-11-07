@@ -56,7 +56,7 @@
         <guava.version>${guava.osgi}-jre</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <scm.developerConnection>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</scm.developerConnection>
+        <scm.developerConnection>scm:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</scm.developerConnection>
     </properties>
 
     <modules>
@@ -219,7 +219,7 @@
     </issueManagement>
     <scm>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <connection>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</connection>
+        <connection>scm:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</connection>
         <url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
         <tag>HEAD</tag>
     </scm>

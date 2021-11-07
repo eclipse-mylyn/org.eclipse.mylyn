@@ -264,9 +264,8 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 				String html = parser.parseToHtml(
 						headingMarkup + "\nfirst para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
 
-				assertTrue(Pattern.compile(
-						"<body><h" + x + " id=\"[^\"]+\">heading text</h" + x
-								+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+				assertTrue(Pattern.compile("<body><h" + x + " id=\"[^\"]+\">heading text</h" + x
+						+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 						Pattern.MULTILINE).matcher(html).find());
 			}
 		}
@@ -642,8 +641,8 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup("<p>a <a href=\"irc://example.com\">Example Title</a> hyperlink</p>",
 				"a [irc://example.com Example Title] hyperlink");
 		assertMarkup(
-				"<p>git clone on <a href=\"git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git\">repo</a></p>",
-				"git clone on [git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git repo]");
+				"<p>git clone on <a href=\"https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git\">repo</a></p>",
+				"git clone on [https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git repo]");
 	}
 
 	@Test
