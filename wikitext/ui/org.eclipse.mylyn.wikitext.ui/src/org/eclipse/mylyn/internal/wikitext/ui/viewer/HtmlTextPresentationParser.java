@@ -315,13 +315,8 @@ public class HtmlTextPresentationParser {
 	private static Stylesheet getDefaultStylesheet() {
 		synchronized (HtmlTextPresentationParser.class) {
 			if (defaultStylesheet == null) {
-				try {
-					Reader reader = getDefaultStylesheetContent();
-					try {
-						defaultStylesheet = new CssParser().parse(reader);
-					} finally {
-						reader.close();
-					}
+				try (Reader reader = getDefaultStylesheetContent()) {
+					defaultStylesheet = new CssParser().parse(reader);
 				} catch (IOException e) {
 					throw new IllegalStateException(e);
 				}

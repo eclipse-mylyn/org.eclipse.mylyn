@@ -742,9 +742,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					xhtml = writer.toString();
 				} catch (Exception e) {
 					StringWriter stackTrace = new StringWriter();
-					PrintWriter writer = new PrintWriter(stackTrace);
-					e.printStackTrace(writer);
-					writer.close();
+					try (PrintWriter writer = new PrintWriter(stackTrace)) {
+						e.printStackTrace(writer);
+					}
 
 					StringWriter documentWriter = new StringWriter();
 					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(documentWriter);

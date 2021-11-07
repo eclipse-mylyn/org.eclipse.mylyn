@@ -549,11 +549,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		try {
 			File file = File.createTempFile("markup-content-", "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ markupLanguage.getName().toLowerCase().replaceAll("[^a-z]", "")); //$NON-NLS-1$ //$NON-NLS-2$
-			Writer writer = new FileWriter(file);
-			try {
+			try (Writer writer = new FileWriter(file)) {
 				writer.write(markupContent);
-			} finally {
-				writer.close();
 			}
 			markupSavePath = file.getAbsolutePath();
 		} catch (IOException e) {

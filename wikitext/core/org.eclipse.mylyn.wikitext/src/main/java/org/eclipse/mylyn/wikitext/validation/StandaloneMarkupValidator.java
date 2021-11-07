@@ -143,26 +143,21 @@ public class StandaloneMarkupValidator {
 	 *            the URL to the plugin.xml that specifies the rules
 	 */
 	public void computeRules(String markupLanguage, URL url) {
-		try {
-			InputStream in = url.openStream();
-			try {
-				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-				dbf.setNamespaceAware(true);
-				dbf.setValidating(false);
-				Document pluginXml = dbf.newDocumentBuilder().parse(in);
+		try (InputStream in = url.openStream()) {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			dbf.setValidating(false);
+			Document pluginXml = dbf.newDocumentBuilder().parse(in);
 
-				computeRules(markupLanguage, pluginXml);
-			} catch (SecurityException e) {
-				// ignore, we can get this during unit testing.  It can happen due to a digest mismatch for resources in a jar file.
-				Logger.getLogger(StandaloneMarkupValidator.class.getName())
-						.log(Level.WARNING, String.format("Ignoring plugin.xml due to security exception: %s", url), e); //$NON-NLS-1$
-			} catch (SAXException e) {
-				throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
-			} catch (ParserConfigurationException e) {
-				throw new IllegalStateException(e);
-			} finally {
-				in.close();
-			}
+			computeRules(markupLanguage, pluginXml);
+		} catch (SecurityException e) {
+			// ignore, we can get this during unit testing.  It can happen due to a digest mismatch for resources in a jar file.
+			Logger.getLogger(StandaloneMarkupValidator.class.getName())
+					.log(Level.WARNING, String.format("Ignoring plugin.xml due to security exception: %s", url), e); //$NON-NLS-1$
+		} catch (SAXException e) {
+			throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
+		} catch (ParserConfigurationException e) {
+			throw new IllegalStateException(e);
 		} catch (IOException e) {
 			// ignore
 		}

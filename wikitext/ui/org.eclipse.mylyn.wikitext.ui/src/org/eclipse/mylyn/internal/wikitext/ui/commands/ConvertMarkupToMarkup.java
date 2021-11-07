@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 David Green and others.
+ * Copyright (c) 2013, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -94,12 +94,12 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 			}
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
-			PrintWriter out = new PrintWriter(message);
-			out.println(NLS.bind(Messages.ConvertMarkupToMarkup_cannot_generate_detail, targetMmarkupLanguage.getName(),
-					e.getMessage()));
-			out.println(Messages.ConvertMarkupToMarkup_details_follow);
-			e.printStackTrace(out);
-			out.close();
+			try (PrintWriter out = new PrintWriter(message)) {
+				out.println(NLS.bind(Messages.ConvertMarkupToMarkup_cannot_generate_detail,
+						targetMmarkupLanguage.getName(), e.getMessage()));
+				out.println(Messages.ConvertMarkupToMarkup_details_follow);
+				e.printStackTrace(out);
+			}
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					NLS.bind(Messages.ConvertMarkupToMarkup_cannot_generate_title, targetMmarkupLanguage.getName()),

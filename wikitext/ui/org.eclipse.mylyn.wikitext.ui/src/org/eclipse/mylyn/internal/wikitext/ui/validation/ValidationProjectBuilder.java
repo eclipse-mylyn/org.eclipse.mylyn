@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -227,17 +227,12 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 		if (validator.getMarkupLanguage() != null) {
 			StringWriter writer = new StringWriter();
 			String charset = file.file.getCharset();
-			try {
-				Reader reader = charset == null
-						? new InputStreamReader(new BufferedInputStream(file.file.getContents()))
-						: new InputStreamReader(new BufferedInputStream(file.file.getContents()), charset);
-				try {
-					int c;
-					while ((c = reader.read()) != -1) {
-						writer.append((char) c);
-					}
-				} finally {
-					reader.close();
+			try (Reader reader = charset == null
+					? new InputStreamReader(new BufferedInputStream(file.file.getContents()))
+					: new InputStreamReader(new BufferedInputStream(file.file.getContents()), charset)) {
+				int c;
+				while ((c = reader.read()) != -1) {
+					writer.append((char) c);
 				}
 			} catch (IOException ioe) {
 				throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(IStatus.ERROR, ioe));

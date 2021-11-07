@@ -454,18 +454,13 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 									? new URL(imgSrc)
 									: new URL(imageCache.getBase(), imgSrc);
 
-							try {
-								InputStream in = new BufferedInputStream(location.openStream());
-								try {
-									urlToImageData.put(imgSrc, new ImageData(in));
-								} catch (SWTException e) {
-									if (e.code != SWT.ERROR_INVALID_IMAGE) {
-										throw e;
-									}
-									urlToImageData.put(imgSrc, null);
-								} finally {
-									in.close();
+							try (InputStream in = new BufferedInputStream(location.openStream())) {
+								urlToImageData.put(imgSrc, new ImageData(in));
+							} catch (SWTException e) {
+								if (e.code != SWT.ERROR_INVALID_IMAGE) {
+									throw e;
 								}
+								urlToImageData.put(imgSrc, null);
 							} catch (Exception e) {
 								if (WikiTextUiPlugin.getDefault() != null) {
 									WikiTextUiPlugin.getDefault()

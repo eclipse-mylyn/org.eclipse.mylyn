@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -92,11 +92,11 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 			}
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
-			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.ConvertMarkupToEclipseHelp_cannotConvert + e.getMessage());
-			out.println(Messages.ConvertMarkupToEclipseHelp_detailsFollow);
-			e.printStackTrace(out);
-			out.close();
+			try (PrintWriter out = new PrintWriter(message)) {
+				out.println(Messages.ConvertMarkupToEclipseHelp_cannotConvert + e.getMessage());
+				out.println(Messages.ConvertMarkupToEclipseHelp_detailsFollow);
+				e.printStackTrace(out);
+			}
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					Messages.ConvertMarkupToEclipseHelp_cannotCompleteOperation, message.toString());
