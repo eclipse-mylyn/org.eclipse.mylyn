@@ -37,7 +37,7 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.eclipse.help,
  org.apache.ant;bundle-version="1.7.0",
  org.jsoup;bundle-version="1.14.3",
- org.mockito;bundle-version="[2.0.0,3.0.0)"
+ org.mockito.mockito-core;bundle-version="[4.0.0,5.0.0)"
 Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.resources;x-internal:=true,

@@ -37,15 +37,8 @@
 <unit id="org.jsoup.source" version="1.14.3.v20211012-1727"/>
 <unit id="org.junit" version="4.13.2.v20211018-1956"/>
 <unit id="org.junit.source" version="4.13.2.v20211018-1956"/>
-<unit id="org.mockito" version="2.23.0.v20200310-1642"/>
-<unit id="org.mockito.source" version="2.23.0.v20200310-1642"/>
-<unit id="net.bytebuddy.byte-buddy" version="0.0.0" />
-<unit id="net.bytebuddy.byte-buddy.source" version="0.0.0" />
-<unit id="net.bytebuddy.byte-buddy-agent" version="0.0.0" />
-<unit id="net.bytebuddy.byte-buddy-agent.source" version="0.0.0" />
 <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
 <unit id="org.hamcrest.source" version="2.2.0.v20210711-0821"/>
-<unit id="org.objenesis" version="0.0.0"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/I20211103235527/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -60,5 +53,45 @@
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <repository location="https://download.eclipse.org/releases/2021-09"/>
 </location>
+<location includeSource="true" missingManifest="generate" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>4.0.0</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
+	<location includeSource="true" missingManifest="generate" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>org.objenesis</groupId>
+				<artifactId>objenesis</artifactId>
+				<version>3.2</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
+	<location includeSource="true" missingManifest="generate" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy</artifactId>
+				<version>1.11.19</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
+	<location includeSource="true" missingManifest="generate" type="Maven">
+		<dependencies>
+			<dependency>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-agent</artifactId>
+				<version>1.11.19</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
 </locations>
 </target>
