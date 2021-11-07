@@ -252,11 +252,6 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		}
 	}
 
-	@Override
-	protected TreeViewer getTreeViewer() {
-		return super.getTreeViewer();
-	}
-
 	private void revealInEditor(ISelection selection, boolean open) {
 		if (disableReveal) {
 			return;
