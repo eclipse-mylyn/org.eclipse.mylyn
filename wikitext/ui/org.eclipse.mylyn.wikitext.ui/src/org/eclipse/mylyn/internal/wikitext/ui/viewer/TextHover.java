@@ -30,7 +30,6 @@ import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
 import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlTextPresenter;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -90,10 +89,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 				// expected in a non-eclipse environment
 			}
 
-			// TODO: prefer e3.4 APIs
-//				return new DefaultInformationControl(parent, tooltipAffordanceString, new HtmlTextPresenter()) {
-// must use 3.3 APIs for now
-			return new DefaultInformationControl(parent, SWT.NONE, new HtmlTextPresenter(), tooltipAffordanceString) {
+			return new DefaultInformationControl(parent, new HtmlTextPresenter()) {
 				@Override
 				public void setLocation(Point location) {
 					// prevent the location from being set to where the cursor is: otherwise the popup is displayed

@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.util;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.DefaultInformationControl.IInformationPresenter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
@@ -27,9 +26,7 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlTextPresenter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author David Green
@@ -130,19 +127,7 @@ public class InformationPresenterUtil {
 		if (presenter == null) {
 
 			informationControlCreator = shell -> {
-				try {
-					// try reflection to access 3.4 APIs
-					// 	DefaultInformationControl(Shell parent, ToolBarManager toolBarManager, IInformationPresenter presenter);
-					return DefaultInformationControl.class
-							.getConstructor(Shell.class, ToolBarManager.class, IInformationPresenter.class)
-							.newInstance(shell, toolBarManager, new HtmlTextPresenter());
-				} catch (NoSuchMethodException e1) {
-					// no way with 3.3 to get V_SCROLL and a ToolBarManager
-					return new DefaultInformationControl(shell, SWT.RESIZE, SWT.V_SCROLL | SWT.H_SCROLL,
-							new HtmlTextPresenter());
-				} catch (Exception e2) {
-					throw new IllegalStateException(e2);
-				}
+					return new DefaultInformationControl(shell, toolBarManager, new HtmlTextPresenter());
 			};
 
 			presenter = new InformationPresenter(informationControlCreator) {
