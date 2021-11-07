@@ -675,8 +675,7 @@ public class CssStyleManager {
 	}
 
 	public FontState createDefaultFontState() {
-		FontState fontState = new FontState();
-		return fontState;
+		return new FontState();
 	}
 
 	public void processCssStyles(FontState fontState, FontState parentFontState, CssRule rule) {

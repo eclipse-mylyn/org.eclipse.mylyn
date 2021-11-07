@@ -438,8 +438,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	protected IInformationControlCreator getOutlineInformationControlCreator() {
 		return parent -> {
-			QuickOutlinePopupDialog dialog = new QuickOutlinePopupDialog(parent, showInTarget);
-			return dialog;
+			return new QuickOutlinePopupDialog(parent, showInTarget);
 		};
 	}
 
