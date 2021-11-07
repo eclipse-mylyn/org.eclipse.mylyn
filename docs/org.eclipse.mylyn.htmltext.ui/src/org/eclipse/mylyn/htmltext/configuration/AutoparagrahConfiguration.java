@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tom Seidel, Remus Software
+ * Copyright (c) 2011, 2021 Tom Seidel, Remus Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -34,9 +34,6 @@ public class AutoparagrahConfiguration extends ConfigurationElement {
 		super("autoParagraph", Boolean.valueOf(value));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.internal.htmltext.configuration.ConfigurationElement#doGetDefaultValue()
-	 */
 	@Override
 	protected Object doGetDefaultValue() {
 		return Boolean.FALSE;
