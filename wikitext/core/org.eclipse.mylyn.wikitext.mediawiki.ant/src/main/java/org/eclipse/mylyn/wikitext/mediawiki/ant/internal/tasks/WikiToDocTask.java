@@ -618,8 +618,7 @@ public class WikiToDocTask extends MarkupTask {
 	protected File computeDestDir(Path path) {
 		String name = path.name;
 		name.replace(' ', '_');
-		File dest = new File(this.dest, name);
-		return dest;
+		return new File(this.dest, name);
 	}
 
 	public File computeHtmlOutputFile(Path path) {
