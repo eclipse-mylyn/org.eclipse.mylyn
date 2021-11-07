@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2021 Tom Seidel, Remus Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
@@ -258,8 +259,7 @@ public class HtmlComposer {
 		new RenderCompleteFunction(browser);
 		URL baseUrl;
 		try {
-			baseUrl = FileLocator.resolve(FileLocator.find(HtmlTextActivator
-					.getDefault().getBundle(), new Path(
+			baseUrl = FileLocator.resolve(FileLocator.find(FrameworkUtil.getBundle(HtmlComposer.class), new Path(
 					"/eclipsebridge/base.html"), Collections.emptyMap()));
 			browser.setUrl(baseUrl.toString() + (config != null ? "?" + config.toQuery() : ""));
 			browser.addProgressListener(new ProgressAdapter() {
