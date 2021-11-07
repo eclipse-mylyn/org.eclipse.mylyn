@@ -90,7 +90,7 @@ class FoldingStructure implements IFoldingStructure {
 		if (collapseRegionContainingCaret) {
 			textOperationTarget.doOperation(ProjectionViewer.COLLAPSE_ALL);
 		} else {
-			operateOnAnnotations(new AbstractItemsAnnotationOperation(new ArrayList<OutlineItem>()) {
+			operateOnAnnotations(new AbstractItemsAnnotationOperation(new ArrayList<>()) {
 				@Override
 				public boolean operateOnSelected(HeadingProjectionAnnotation annotation) {
 					return operateOnUnselected(annotation);
