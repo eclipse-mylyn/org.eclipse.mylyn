@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2021 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * spaces. Markdown is smart enough not to add extra (unwanted) p tags around HTML block-level tags.
 	 */
 	@Test
-	public void testInlineHtml() throws Exception {
+	public void testInlineHtml() {
 		String markup = "aaa\n\n<table>\n <tr>\n  <td>Foo</td>\n </tr>\n</table>\n\nbbb";
 		String expectedHtml = "<p>aaa</p><table> <tr>  <td>Foo</td> </tr></table><p>bbb</p>";
 		parseAndAssert(markup, expectedHtml);
@@ -47,7 +47,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * Markdown-style *emphasis* inside an HTML block.
 	 */
 	@Test
-	public void testNoProcessingWithinInlineHtmlBlockLevelTags() throws Exception {
+	public void testNoProcessingWithinInlineHtmlBlockLevelTags() {
 		String markup = "<div>*Foo*</div>";
 		String expectedHtml = "<div>*Foo*</div>";
 		parseAndAssert(markup, expectedHtml);
@@ -59,7 +59,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * a or img tags instead of Markdown's link or image syntax, go right ahead.
 	 */
 	@Test
-	public void testSpanLevelTags() throws Exception {
+	public void testSpanLevelTags() {
 		String markup = "Image: <img src=\"image.jpg\">some nice image</img>.";
 		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some nice image</img>.</p>";
 		parseAndAssert(markup, expectedHtml);
@@ -69,7 +69,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * Unlike block-level HTML tags, Markdown syntax is processed within span-level tags.
 	 */
 	@Test
-	public void testProcessingInSpanLevelTags() throws Exception {
+	public void testProcessingInSpanLevelTags() {
 		String markup = "Image: <img src=\"image.jpg\">some **nice** image</img>.";
 		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some <strong>nice</strong> image</img>.</p>";
 		parseAndAssert(markup, expectedHtml);
@@ -200,21 +200,21 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * URL or email address, and also have it be a clickable link, you can do this:
 	 */
 	@Test
-	public void testAutomaticLinksAtBeginOfLine() throws Exception {
+	public void testAutomaticLinksAtBeginOfLine() {
 		String markup = "<http://example.com/>";
 		String expectedHtml = "<p><a href=\"http://example.com/\">http://example.com/</a></p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testAutomaticLinksWithinText() throws Exception {
+	public void testAutomaticLinksWithinText() {
 		String markup = "This <http://example.com/> is an automatic link.";
 		String expectedHtml = "<p>This <a href=\"http://example.com/\">http://example.com/</a> is an automatic link.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testNoSpanWithinAutomaticLinks() throws Exception {
+	public void testNoSpanWithinAutomaticLinks() {
 		String markup = "This <http://www.google.de/?q=t_es_t> is an automatic link.";
 		String expectedHtml = "<p>This <a href=\"http://www.google.de/?q=t_es_t\">http://www.google.de/?q=t_es_t</a> is an automatic link.</p>";
 		parseAndAssert(markup, expectedHtml);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2021 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -420,7 +419,7 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	}
 
 	@Test
-	public void testListIndentationWithMultipleLines() throws IOException {
+	public void testListIndentationWithMultipleLines() {
 		String input = "1. one\n\n2. two\na";
 		String expectedHtml = "<ol><li>one</li><li>two\na</li></ol>";
 		parseAndAssert(input, expectedHtml);

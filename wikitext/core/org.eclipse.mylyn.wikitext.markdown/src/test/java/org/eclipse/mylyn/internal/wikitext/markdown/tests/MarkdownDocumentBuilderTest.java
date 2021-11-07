@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2019 Tasktop Technologies
+ * Copyright (c) 2014, 2021 Tasktop Technologies
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public class MarkdownDocumentBuilderTest {
 	private StringWriter out;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		out = new StringWriter();
 		builder = new MarkdownDocumentBuilder(out);
 	}

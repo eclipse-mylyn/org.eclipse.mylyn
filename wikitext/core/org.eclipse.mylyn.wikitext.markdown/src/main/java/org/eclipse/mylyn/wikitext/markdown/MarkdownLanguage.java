@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2019 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2021 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 	/**
 	 * Constructs an instance of MarkdownLanguage, with the choice to enable heuristic features. Currently only extended
 	 * hyperlink detection (without delimiters) is supported as a heuristic feature
-	 * 
+	 *
 	 * @param enableHeuristicFeatures
 	 *            if {@code true} enables heristic features.
 	 */
@@ -168,8 +168,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 	protected Block createParagraphBlock() {
 		ParagraphBlock paragraphBlock = new ParagraphBlock();
 		UnderlinedHeadingBlock headingBlock = new UnderlinedHeadingBlock();
-		ReadAheadDispatcher readAheadBlock = new ReadAheadDispatcher(headingBlock, paragraphBlock);
-		return readAheadBlock;
+		return new ReadAheadDispatcher(headingBlock, paragraphBlock);
 	}
 
 	@Override

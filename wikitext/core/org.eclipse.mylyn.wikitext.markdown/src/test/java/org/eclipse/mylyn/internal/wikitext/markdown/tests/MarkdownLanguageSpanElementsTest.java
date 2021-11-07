@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2019 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2021 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -62,7 +62,7 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	@Test
-	public void testNoSpanWithinInlineLinks() throws Exception {
+	public void testNoSpanWithinInlineLinks() {
 		String markup = "[Test](http://www.google.de/?q=t_es_t)";
 		String expectedHtml = "<p><a href=\"http://www.google.de/?q=t_es_t\">Test</a></p>";
 		parseAndAssert(markup, expectedHtml);
@@ -148,56 +148,56 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	@Test
-	public void testNoSpanWithinReferenceStyleLinks() throws Exception {
+	public void testNoSpanWithinReferenceStyleLinks() {
 		String markup = "[Test][test]\n\n[test]: http://www.google.de/?q=t_es_t";
 		String expectedHtml = "<p><a href=\"http://www.google.de/?q=t_es_t\">Test</a></p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testNoLinkProcessingWithinCodeBlock() throws Exception {
+	public void testNoLinkProcessingWithinCodeBlock() {
 		String markup = "    Code block [no link](http://example.com/).";
 		String expectedHtml = "<pre><code>Code block [no link](http://example.com/).</code></pre>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testNoLinkProcessingWithinInlineHtmlBlock() throws Exception {
+	public void testNoLinkProcessingWithinInlineHtmlBlock() {
 		String markup = "<p>Inline html [no link](http://example.com/).</p>";
 		String expectedHtml = "<p>Inline html [no link](http://example.com/).</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testInlineLinkProcessingWithinAtxStyleHeading() throws Exception {
+	public void testInlineLinkProcessingWithinAtxStyleHeading() {
 		String markup = "# Heading with [link](http://example.com/).";
 		String expectedHtml = "<h1 id=\"heading-with-link-http-example-com\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testReferenceLinkProcessingWithinAtxStyleHeading() throws Exception {
+	public void testReferenceLinkProcessingWithinAtxStyleHeading() {
 		String markup = "# Heading with [link][].\n\n[link]: http://example.com/";
 		String expectedHtml = "<h1 id=\"heading-with-link\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testInlineLinkProcessingWithinUnderlinedHeading() throws Exception {
+	public void testInlineLinkProcessingWithinUnderlinedHeading() {
 		String markup = "Heading with [link](http://example.com/).\n===";
 		String expectedHtml = "<h1 id=\"heading-with-link-http-example-com\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testReferenceLinkProcessingWithinUnderlinedHeading() throws Exception {
+	public void testReferenceLinkProcessingWithinUnderlinedHeading() {
 		String markup = "Heading with [link][].\n===\n\n[link]: http://example.com/";
 		String expectedHtml = "<h1 id=\"heading-with-link\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	@Test
-	public void testLinkProcessingWithinBlockQuote() throws Exception {
+	public void testLinkProcessingWithinBlockQuote() {
 		String markup = "> Block quote [link](http://example.com/).";
 		String expectedHtml = "<blockquote><p>Block quote <a href=\"http://example.com/\">link</a>.</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
@@ -235,7 +235,7 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	@Test
-	public void testNoSpanWithinInlineImage() throws Exception {
+	public void testNoSpanWithinInlineImage() {
 		String markup = "![Alt text](/path/to/my_nice_image.jpg)";
 		String expectedHtml = "<p><img alt=\"Alt text\" border=\"0\" src=\"/path/to/my_nice_image.jpg\"/></p>";
 		parseAndAssert(markup, expectedHtml);
