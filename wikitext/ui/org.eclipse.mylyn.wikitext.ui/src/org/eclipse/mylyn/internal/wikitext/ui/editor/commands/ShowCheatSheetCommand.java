@@ -53,6 +53,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class ShowCheatSheetCommand extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
 		if (activeFocusControl instanceof Control) {

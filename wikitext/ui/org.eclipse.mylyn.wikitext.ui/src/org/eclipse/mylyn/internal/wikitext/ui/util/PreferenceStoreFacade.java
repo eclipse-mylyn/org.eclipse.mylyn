@@ -36,6 +36,7 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 		delegate = preferenceStore;
 	}
 
+	@Override
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.add(listener);
 		if (forwardingListener == null) {
@@ -45,6 +46,7 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 		}
 	}
 
+	@Override
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.remove(listener);
 		if (listeners.isEmpty()) {
@@ -55,6 +57,7 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 		}
 	}
 
+	@Override
 	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
 		if (listeners.isEmpty()) {
 			return;
@@ -82,118 +85,147 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 		}
 	}
 
+	@Override
 	public boolean contains(String name) {
 		return delegate.contains(name);
 	}
 
+	@Override
 	public boolean getBoolean(String name) {
 		return delegate.getBoolean(name);
 	}
 
+	@Override
 	public boolean getDefaultBoolean(String name) {
 		return delegate.getDefaultBoolean(name);
 	}
 
+	@Override
 	public double getDefaultDouble(String name) {
 		return delegate.getDefaultDouble(name);
 	}
 
+	@Override
 	public float getDefaultFloat(String name) {
 		return delegate.getDefaultFloat(name);
 	}
 
+	@Override
 	public int getDefaultInt(String name) {
 		return delegate.getDefaultInt(name);
 	}
 
+	@Override
 	public long getDefaultLong(String name) {
 		return delegate.getDefaultLong(name);
 	}
 
+	@Override
 	public String getDefaultString(String name) {
 		return delegate.getDefaultString(name);
 	}
 
+	@Override
 	public double getDouble(String name) {
 		return delegate.getDouble(name);
 	}
 
+	@Override
 	public float getFloat(String name) {
 		return delegate.getFloat(name);
 	}
 
+	@Override
 	public int getInt(String name) {
 		return delegate.getInt(name);
 	}
 
+	@Override
 	public long getLong(String name) {
 		return delegate.getLong(name);
 	}
 
+	@Override
 	public String getString(String name) {
 		return delegate.getString(name);
 	}
 
+	@Override
 	public boolean isDefault(String name) {
 		return delegate.isDefault(name);
 	}
 
+	@Override
 	public boolean needsSaving() {
 		return delegate.needsSaving();
 	}
 
+	@Override
 	public void putValue(String name, String value) {
 		delegate.putValue(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, boolean value) {
 		delegate.setDefault(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, double value) {
 		delegate.setDefault(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, float value) {
 		delegate.setDefault(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, int value) {
 		delegate.setDefault(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, long value) {
 		delegate.setDefault(name, value);
 	}
 
+	@Override
 	public void setDefault(String name, String defaultObject) {
 		delegate.setDefault(name, defaultObject);
 	}
 
+	@Override
 	public void setToDefault(String name) {
 		delegate.setToDefault(name);
 	}
 
+	@Override
 	public void setValue(String name, boolean value) {
 		delegate.setValue(name, value);
 	}
 
+	@Override
 	public void setValue(String name, double value) {
 		delegate.setValue(name, value);
 	}
 
+	@Override
 	public void setValue(String name, float value) {
 		delegate.setValue(name, value);
 	}
 
+	@Override
 	public void setValue(String name, int value) {
 		delegate.setValue(name, value);
 	}
 
+	@Override
 	public void setValue(String name, long value) {
 		delegate.setValue(name, value);
 	}
 
+	@Override
 	public void setValue(String name, String value) {
 		delegate.setValue(name, value);
 	}

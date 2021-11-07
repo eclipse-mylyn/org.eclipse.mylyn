@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.validation.ValidationProjectBuilde
 
 /**
  * A WikiText nature which configures a project to have the WikiText validation builder.
- * 
+ *
  * @author David Green
  */
 public class WikiTextNature implements IProjectNature {
@@ -53,8 +53,8 @@ public class WikiTextNature implements IProjectNature {
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
 		} else {
-			throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(
-					Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
+			throw new CoreException(WikiTextUiPlugin.getDefault()
+					.createStatus(Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
 		}
 	}
 
@@ -76,13 +76,14 @@ public class WikiTextNature implements IProjectNature {
 				description.setNatureIds(natures);
 				project.setDescription(description, monitor);
 			} else {
-				throw new CoreException(WikiTextUiPlugin.getDefault().createStatus(
-						Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
+				throw new CoreException(WikiTextUiPlugin.getDefault()
+						.createStatus(Messages.WikiTextNature_cannotValidateNatureSet, IStatus.ERROR, null));
 			}
 
 		}
 	}
 
+	@Override
 	public void configure() throws CoreException {
 		// add the WikiText validation builder
 		IProjectDescription desc = project.getDescription();
@@ -109,6 +110,7 @@ public class WikiTextNature implements IProjectNature {
 		}
 	}
 
+	@Override
 	public void deconfigure() throws CoreException {
 		// remove the WikiText validation builder
 		IProjectDescription desc = project.getDescription();
@@ -126,10 +128,12 @@ public class WikiTextNature implements IProjectNature {
 		}
 	}
 
+	@Override
 	public IProject getProject() {
 		return project;
 	}
 
+	@Override
 	public void setProject(IProject project) {
 		this.project = project;
 	}

@@ -23,6 +23,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * and previous sub-tab commands.
  */
 public class SwitchSubTabCommand extends AbstractHandler {
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 

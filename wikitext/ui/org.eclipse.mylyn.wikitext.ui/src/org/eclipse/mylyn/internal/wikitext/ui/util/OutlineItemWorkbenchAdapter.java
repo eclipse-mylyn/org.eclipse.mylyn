@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * A workbench adapter for {@link OutlineItem}
- * 
+ *
  * @author David Green
  * @see OutlineItemAdapterFactory
  */
@@ -29,6 +29,7 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 
 	private static OutlineItemWorkbenchAdapter instance = new OutlineItemWorkbenchAdapter();
 
+	@Override
 	public Object[] getChildren(Object o) {
 		if (o instanceof OutlineItem) {
 			OutlineItem item = (OutlineItem) o;
@@ -39,11 +40,13 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 		return NO_CHILDREN;
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		// no images yet, see bug 260447
 		return null;
 	}
 
+	@Override
 	public String getLabel(Object o) {
 		if (o instanceof OutlineItem) {
 			OutlineItem item = (OutlineItem) o;
@@ -57,6 +60,7 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 		return null;
 	}
 
+	@Override
 	public Object getParent(Object o) {
 		if (o instanceof OutlineItem) {
 			OutlineItem item = (OutlineItem) o;

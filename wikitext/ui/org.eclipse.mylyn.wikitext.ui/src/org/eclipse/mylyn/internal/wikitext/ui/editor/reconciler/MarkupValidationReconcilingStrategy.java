@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,7 @@ public class MarkupValidationReconcilingStrategy implements IReconcilingStrategy
 		this.resource = resource;
 	}
 
+	@Override
 	public void reconcile(IRegion partition) {
 		if (document == null) {
 			return;
@@ -88,14 +89,17 @@ public class MarkupValidationReconcilingStrategy implements IReconcilingStrategy
 		return viewer.getAnnotationModel();
 	}
 
+	@Override
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
 		reconcile(subRegion);
 	}
 
+	@Override
 	public void setDocument(IDocument document) {
 		this.document = document;
 	}
 
+	@Override
 	public void initialReconcile() {
 		if (document == null) {
 			return;
@@ -103,6 +107,7 @@ public class MarkupValidationReconcilingStrategy implements IReconcilingStrategy
 		reconcile(new Region(0, document.getLength()));
 	}
 
+	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		this.monitor = monitor;
 	}

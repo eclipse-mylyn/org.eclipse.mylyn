@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -451,10 +451,12 @@ public class CssStyleManager {
 	}
 
 	private static class ColorRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_COLOR;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			Integer rgb = cssColorRgb(rule.value);
 			if (rgb != null) {
@@ -464,10 +466,12 @@ public class CssStyleManager {
 	}
 
 	private static class BackgroundColorRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_BACKGROUND_COLOR;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			Integer rgb = cssColorRgb(rule.value);
 			if (rgb != null) {
@@ -477,10 +481,12 @@ public class CssStyleManager {
 	}
 
 	private static class FontStyleRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_FONT_STYLE;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
 			for (String part : parts) {
@@ -496,10 +502,12 @@ public class CssStyleManager {
 	}
 
 	private static class FontWeightRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_FONT_WEIGHT;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			if ("bold".equals(rule.value) || "bolder".equals(rule.value)) { //$NON-NLS-1$ //$NON-NLS-2$
 				fontState.setBold(true);
@@ -510,10 +518,12 @@ public class CssStyleManager {
 	}
 
 	private class FontSizeRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_FONT_SIZE;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String cssFontSizeValue = rule.value;
 			if (cssFontSizeValue.endsWith("%")) { //$NON-NLS-1$
@@ -562,10 +572,12 @@ public class CssStyleManager {
 	}
 
 	private static class FontFamilyRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_FONT_FAMILY;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
 			for (String part : parts) {
@@ -583,10 +595,12 @@ public class CssStyleManager {
 	}
 
 	private static class TextDecorationRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_TEXT_DECORATION;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
 			for (String part : parts) {
@@ -603,10 +617,12 @@ public class CssStyleManager {
 	}
 
 	private static class VerticalAlignRuleHandler implements RuleHandler {
+		@Override
 		public String getRuleName() {
 			return RULE_VERTICAL_ALIGN;
 		}
 
+		@Override
 		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
 			if ("super".equals(rule.value)) { //$NON-NLS-1$
 				fontState.setSuperscript(true);

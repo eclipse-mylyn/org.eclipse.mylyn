@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -24,12 +24,13 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A command that moves sections denoted by headings within a document.
- * 
+ *
  * @author David Green
  */
 public class MoveSectionsCommand extends AbstractDocumentCommand {
 
 	public static class OffsetComparator implements Comparator<OutlineItem> {
+		@Override
 		public int compare(OutlineItem o1, OutlineItem o2) {
 			if (o1 == o2) {
 				return 0;
@@ -64,8 +65,7 @@ public class MoveSectionsCommand extends AbstractDocumentCommand {
 
 	private void validate() {
 		// target must not be contained by items to be moved
-		for (int x = 0; x < items.size(); ++x) {
-			OutlineItem item = items.get(x);
+		for (OutlineItem item : items) {
 			if (item.contains(target)) {
 				setProblemText(Messages.MoveSectionsCommand_invalidTargetLocation_self);
 			}

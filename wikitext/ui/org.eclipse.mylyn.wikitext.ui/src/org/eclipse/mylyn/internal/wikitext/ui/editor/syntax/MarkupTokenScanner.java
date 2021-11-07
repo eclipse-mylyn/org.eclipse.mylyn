@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -81,14 +81,17 @@ public class MarkupTokenScanner implements ITokenScanner {
 		preferences = WikiTextUiPlugin.getDefault().getPreferences();
 	}
 
+	@Override
 	public int getTokenLength() {
 		return currentToken == null ? -1 : currentToken.getLength();
 	}
 
+	@Override
 	public int getTokenOffset() {
 		return currentToken == null ? -1 : currentToken.getOffset();
 	}
 
+	@Override
 	public IToken nextToken() {
 		if (tokenIt != null && tokenIt.hasNext()) {
 			currentToken = tokenIt.next();
@@ -100,6 +103,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		return currentToken;
 	}
 
+	@Override
 	public void setRange(IDocument document, int offset, int length) {
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
 		List<Token> tokens = null;

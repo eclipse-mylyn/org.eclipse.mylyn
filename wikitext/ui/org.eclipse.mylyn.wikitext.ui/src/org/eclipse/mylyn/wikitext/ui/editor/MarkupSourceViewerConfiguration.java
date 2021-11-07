@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -525,11 +525,13 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 			this.controlCreator = controlCreator;
 		}
 
+		@Override
 		@Deprecated
 		public String getInformation(ITextViewer textViewer, IRegion subject) {
 			return getInformation2(textViewer, subject).toString();
 		}
 
+		@Override
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 			if (outline == null) {
 				// If the outline was not set then parse it.  This can happen in a task editor
@@ -551,10 +553,12 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 			return outline;
 		}
 
+		@Override
 		public IRegion getSubject(ITextViewer textViewer, int offset) {
 			return new Region(offset, 0);
 		}
 
+		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			return controlCreator;
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -29,17 +29,21 @@ public class OutlineDragSourceListener implements TransferDragSourceListener {
 		this.selectionProvider = selectionProvider;
 	}
 
+	@Override
 	public Transfer getTransfer() {
 		return LocalSelectionTransfer.getTransfer();
 	}
 
+	@Override
 	public void dragFinished(DragSourceEvent event) {
 		LocalSelectionTransfer.getTransfer().setSelection(null);
 	}
 
+	@Override
 	public void dragSetData(DragSourceEvent event) {
 	}
 
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		LocalSelectionTransfer.getTransfer().setSelection(selectionProvider.getSelection());
 	}

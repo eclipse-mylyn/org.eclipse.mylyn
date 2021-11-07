@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DefaultInformationControl.IInformationPresenter;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -62,8 +61,8 @@ public class InformationPresenterUtil {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension,
-			IInformationProviderExtension2 {
+	private static final class InformationProvider
+			implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
 
 		private final IRegion hoverRegion;
 
@@ -77,18 +76,22 @@ public class InformationPresenterUtil {
 			this.controlCreator = controlCreator;
 		}
 
+		@Override
 		public IRegion getSubject(ITextViewer textViewer, int invocationOffset) {
 			return hoverRegion;
 		}
 
+		@Override
 		public String getInformation(ITextViewer textViewer, IRegion subject) {
 			return hoverInfo.toString();
 		}
 
+		@Override
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 			return hoverInfo;
 		}
 
+		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			return controlCreator;
 		}
@@ -103,7 +106,7 @@ public class InformationPresenterUtil {
 	/**
 	 * Get an information presenter to present the provided HTML content. The returned presenter is ready for displaying
 	 * the information, all that is left to do is call {@link InformationPresenter#showInformation()}.
-	 * 
+	 *
 	 * @param viewer
 	 *            the viewer for which the information control should be created
 	 * @param constraint
@@ -126,22 +129,19 @@ public class InformationPresenterUtil {
 		IInformationControlCreator informationControlCreator;
 		if (presenter == null) {
 
-			informationControlCreator = new IInformationControlCreator() {
-				@SuppressWarnings("deprecation")
-				public IInformationControl createInformationControl(Shell shell) {
-					try {
-						// try reflection to access 3.4 APIs
-						// 	DefaultInformationControl(Shell parent, ToolBarManager toolBarManager, IInformationPresenter presenter);
-						return DefaultInformationControl.class.getConstructor(Shell.class, ToolBarManager.class,
-								IInformationPresenter.class)
-								.newInstance(shell, toolBarManager, new HtmlTextPresenter());
-					} catch (NoSuchMethodException e) {
-						// no way with 3.3 to get V_SCROLL and a ToolBarManager
-						return new DefaultInformationControl(shell, SWT.RESIZE, SWT.V_SCROLL | SWT.H_SCROLL,
-								new HtmlTextPresenter());
-					} catch (Exception e) {
-						throw new IllegalStateException(e);
-					}
+			informationControlCreator = shell -> {
+				try {
+					// try reflection to access 3.4 APIs
+					// 	DefaultInformationControl(Shell parent, ToolBarManager toolBarManager, IInformationPresenter presenter);
+					return DefaultInformationControl.class
+							.getConstructor(Shell.class, ToolBarManager.class, IInformationPresenter.class)
+							.newInstance(shell, toolBarManager, new HtmlTextPresenter());
+				} catch (NoSuchMethodException e1) {
+					// no way with 3.3 to get V_SCROLL and a ToolBarManager
+					return new DefaultInformationControl(shell, SWT.RESIZE, SWT.V_SCROLL | SWT.H_SCROLL,
+							new HtmlTextPresenter());
+				} catch (Exception e2) {
+					throw new IllegalStateException(e2);
 				}
 			};
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -141,15 +141,18 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 		private IDocument document;
 
+		@Override
 		public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event,
 				boolean documentPartitioningChanged) {
 			return new Region(0, document.getLength());
 		}
 
+		@Override
 		public void setDocument(IDocument document) {
 			this.document = document;
 		}
 
+		@Override
 		public void createPresentation(TextPresentation presentation, ITypedRegion damage) {
 			TextPresentation viewerPresentation = textPresentation == null
 					? viewer.getTextPresentation()

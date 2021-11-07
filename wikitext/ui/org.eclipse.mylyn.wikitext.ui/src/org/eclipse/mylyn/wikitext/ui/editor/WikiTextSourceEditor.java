@@ -325,9 +325,12 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 			if (document != null) {
 				if (documentListener == null) {
 					documentListener = new IDocumentListener() {
+						@Override
 						public void documentAboutToBeChanged(DocumentEvent event) {
+							// TODO document why this method is empty
 						}
 
+						@Override
 						public void documentChanged(DocumentEvent event) {
 							outlineDirty = true;
 							synchronized (WikiTextSourceEditor.this) {
@@ -528,6 +531,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		}
 	}
 
+	@Override
 	public ShowInContext getShowInContext() {
 		OutlineItem item = getNearestMatchingOutlineItem();
 		return new ShowInContext(getEditorInput(),
@@ -552,6 +556,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		return false;
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
 		if (selection instanceof IStructuredSelection) {

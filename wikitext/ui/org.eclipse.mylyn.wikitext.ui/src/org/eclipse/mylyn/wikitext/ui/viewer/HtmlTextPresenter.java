@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * An information presenter that supports HTML markup. Uses the {@link HtmlTextPresentationParser HTML parser} to parse
  * the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -34,12 +34,14 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 
 	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public String updatePresentation(Display display, String hoverInfo, TextPresentation presentation, int maxWidth,
 			int maxHeight) {
 		return updatePresentation((Drawable) display, hoverInfo, presentation, maxWidth, maxHeight);
 	}
 
+	@Override
 	public String updatePresentation(Drawable drawable, String hoverInfo, TextPresentation presentation, int maxWidth,
 			int maxHeight) {
 		if (hoverInfo == null || hoverInfo.length() == 0) {

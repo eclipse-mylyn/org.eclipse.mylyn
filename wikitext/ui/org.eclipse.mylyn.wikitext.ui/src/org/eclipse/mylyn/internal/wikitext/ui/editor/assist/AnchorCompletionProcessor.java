@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * A content assist implementation that provides proposals for completing document-internal anchor names.
- * 
+ *
  * @author David Green
  */
 public class AnchorCompletionProcessor implements IContentAssistProcessor {
@@ -55,6 +55,7 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 			this.replacementLength = replacementLength;
 		}
 
+		@Override
 		public void apply(IDocument document) {
 			try {
 				document.replace(offset, replacementLength, proposalText);
@@ -63,26 +64,32 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 			}
 		}
 
+		@Override
 		public String getAdditionalProposalInfo() {
 			return null;
 		}
 
+		@Override
 		public IContextInformation getContextInformation() {
 			return null;
 		}
 
+		@Override
 		public String getDisplayString() {
 			return proposalText;
 		}
 
+		@Override
 		public Image getImage() {
 			return null;
 		}
 
+		@Override
 		public Point getSelection(IDocument document) {
 			return new Point(offset + proposalText.length(), 0);
 		}
 
+		@Override
 		public boolean isAutoInsertable() {
 			return true;
 		}
@@ -97,6 +104,7 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 	}
 
 	private static class CompletionProposalComparator implements Comparator<CompletionProposal> {
+		@Override
 		public int compare(CompletionProposal o1, CompletionProposal o2) {
 			if (o1 == o2) {
 				return 0;
@@ -113,6 +121,7 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 
 	private OutlineItem outline;
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		if (outline == null) {
 			return null;
@@ -160,7 +169,7 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 
 	/**
 	 * get a prefix, but only if it is preceded by a '#' character
-	 * 
+	 *
 	 * @return the prefix (which may be the empty string) that is prefixed by '#', otherwise null
 	 */
 	protected String extractPrefix(ITextViewer viewer, int offset) {
@@ -187,22 +196,27 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 		}
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		return null;
 	}
 
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage() {
 		return null;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -93,14 +93,17 @@ public class HtmlViewer extends SourceViewer {
 		ColorRegistry colorRegistry = WikiTextUiResources.getColors();
 
 		IAnnotationAccess annotationAccess = new IAnnotationAccess() {
+			@Override
 			public Object getType(Annotation annotation) {
 				return annotation.getType();
 			}
 
+			@Override
 			public boolean isMultiLine(Annotation annotation) {
 				return true;
 			}
 
+			@Override
 			public boolean isTemporary(Annotation annotation) {
 				return true;
 			}

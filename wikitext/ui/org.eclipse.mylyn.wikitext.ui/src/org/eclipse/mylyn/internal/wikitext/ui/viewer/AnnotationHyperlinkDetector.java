@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.mylyn.wikitext.ui.annotation.IdAnnotation;
 
 public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 
+	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (textViewer instanceof ISourceViewer) {
 
@@ -99,6 +100,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 			this.annotationModel = annotationModel;
 		}
 
+		@Override
 		public int compare(Annotation o1, Annotation o2) {
 			if (o1 == o2) {
 				return 0;
@@ -123,7 +125,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 
 	/**
 	 * A hyperlink implementation that causes the viewer's selection (and scrolling) to adjust to the hyperlink target.
-	 * 
+	 *
 	 * @author David Green
 	 */
 	protected static class DocumentHyperlink implements IHyperlink {
@@ -140,18 +142,22 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 			this.href = href;
 		}
 
+		@Override
 		public IRegion getHyperlinkRegion() {
 			return region;
 		}
 
+		@Override
 		public String getHyperlinkText() {
 			return null;
 		}
 
+		@Override
 		public String getTypeLabel() {
 			return null;
 		}
 
+		@Override
 		public void open() {
 			String lookingFor = href.substring(1); // lose the leading '#'
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 		return strategies.contains(reconcilingStrategy);
 	}
 
+	@Override
 	public void initialReconcile() {
 		for (IReconcilingStrategy strategy : strategies) {
 			if (strategy instanceof IReconcilingStrategyExtension) {
@@ -55,6 +56,7 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 		}
 	}
 
+	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		for (IReconcilingStrategy strategy : strategies) {
 			if (strategy instanceof IReconcilingStrategyExtension) {
@@ -63,18 +65,21 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 		}
 	}
 
+	@Override
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
 		for (IReconcilingStrategy strategy : strategies) {
 			strategy.reconcile(dirtyRegion, subRegion);
 		}
 	}
 
+	@Override
 	public void reconcile(IRegion partition) {
 		for (IReconcilingStrategy strategy : strategies) {
 			strategy.reconcile(partition);
 		}
 	}
 
+	@Override
 	public void setDocument(IDocument document) {
 		for (IReconcilingStrategy strategy : strategies) {
 			strategy.setDocument(document);

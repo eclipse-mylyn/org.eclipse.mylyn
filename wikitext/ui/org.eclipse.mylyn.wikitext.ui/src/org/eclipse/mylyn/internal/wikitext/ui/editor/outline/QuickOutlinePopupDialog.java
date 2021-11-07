@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -50,8 +50,8 @@ import org.eclipse.ui.part.ShowInContext;
  *
  * @author David Green
  */
-public class QuickOutlinePopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
-		IInformationControlExtension2 {
+public class QuickOutlinePopupDialog extends PopupDialog
+		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2 {
 
 	private FilteredTree filteredTree;
 
@@ -90,22 +90,26 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		filteredTree.getViewer().setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
 
 		filteredTree.getViewer().getTree().addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				handleSelection();
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// nothing to do
 			}
 		});
 		// dispose when escape is pressed
 		filteredTree.getViewer().getTree().addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == 0x1B) {
 					dispose();
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 			}
 		});
@@ -128,65 +132,80 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return filteredTree;
 	}
 
+	@Override
 	public void addDisposeListener(DisposeListener listener) {
 		getShell().addDisposeListener(listener);
 	}
 
+	@Override
 	public void addFocusListener(FocusListener listener) {
 		getShell().addFocusListener(listener);
 	}
 
+	@Override
 	public Point computeSizeHint() {
 		return getShell().getSize();
 	}
 
+	@Override
 	public void dispose() {
 		close();
 	}
 
+	@Override
 	public boolean isFocusControl() {
 		return filteredTree.isFocusControl() || filteredTree.getFilterControl().isFocusControl()
 				|| filteredTree.getViewer().getTree().isFocusControl();
 	}
 
+	@Override
 	public void removeDisposeListener(DisposeListener listener) {
 		getShell().removeDisposeListener(listener);
 	}
 
+	@Override
 	public void removeFocusListener(FocusListener listener) {
 		getShell().removeFocusListener(listener);
 	}
 
+	@Override
 	public void setFocus() {
 		getShell().forceFocus();
 		filteredTree.getFilterControl().setFocus();
 	}
 
+	@Override
 	public void setBackgroundColor(Color background) {
 		applyBackgroundColor(background, getContents());
 	}
 
+	@Override
 	public void setForegroundColor(Color foreground) {
 		applyForegroundColor(foreground, getContents());
 	}
 
+	@Override
 	public void setInformation(String information) {
 		// ignore
 	}
 
+	@Override
 	public void setLocation(Point location) {
 		getShell().setLocation(location);
 	}
 
+	@Override
 	public void setSize(int width, int height) {
 		getShell().setSize(width, height);
 	}
 
+	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		// ignore
 
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			open();
@@ -196,6 +215,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		}
 	}
 
+	@Override
 	public boolean hasContents() {
 		if (filteredTree == null || filteredTree.getViewer().getInput() == null) {
 			return false;
@@ -203,6 +223,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return true;
 	}
 
+	@Override
 	public void setInput(Object input) {
 		filteredTree.getViewer().setInput(input);
 	}

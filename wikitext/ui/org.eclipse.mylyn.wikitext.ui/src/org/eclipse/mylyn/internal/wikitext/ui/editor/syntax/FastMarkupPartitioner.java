@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -128,7 +128,9 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			}
 		}
 
-		public void setPartialRange(IDocument document, int offset, int length, String contentType, int partitionOffset) {
+		@Override
+		public void setPartialRange(IDocument document, int offset, int length, String contentType,
+				int partitionOffset) {
 			lastComputed = computeOlp(document, offset, length, partitionOffset);
 			index = -1;
 			updateCache(lastComputed, document.getLength());
@@ -173,7 +175,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			}
 			markupParser.parse(markupContent);
 
-			ITypedRegion[] latestPartitions = partitionBuilder.partitions.toArray(new ITypedRegion[partitionBuilder.partitions.size()]);
+			ITypedRegion[] latestPartitions = partitionBuilder.partitions
+					.toArray(new ITypedRegion[partitionBuilder.partitions.size()]);
 			List<ITypedRegion> partitioning = new ArrayList<>(latestPartitions.length);
 
 			ITypedRegion previous = null;
@@ -183,8 +186,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					continue;
 				}
 				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
-					String message = NLS.bind(Messages.FastMarkupPartitioner_0, new Object[] { region, previous,
-							markupLanguage.getName() });
+					String message = NLS.bind(Messages.FastMarkupPartitioner_0,
+							new Object[] { region, previous, markupLanguage.getName() });
 					if (FastMarkupPartitioner.debug) {
 						String markupSavePath = saveToTempFile(markupLanguage, markupContent);
 						message = NLS.bind(Messages.FastMarkupPartitioner_1, new Object[] { message, markupSavePath });
@@ -205,14 +208,17 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			this.markupLanguage = markupLanguage;
 		}
 
+		@Override
 		public int getTokenLength() {
 			return lastComputed.partitions[index].getLength();
 		}
 
+		@Override
 		public int getTokenOffset() {
 			return lastComputed.partitions[index].getOffset();
 		}
 
+		@Override
 		public IToken nextToken() {
 			if (lastComputed == null || lastComputed.partitions == null || ++index >= lastComputed.partitions.length) {
 				return Token.EOF;
@@ -220,6 +226,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			return new Token(lastComputed.partitions[index].getType());
 		}
 
+		@Override
 		public void setRange(IDocument document, int offset, int length) {
 			setPartialRange(document, offset, length, null, -1);
 		}
@@ -241,14 +248,17 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			this.length = length;
 		}
 
+		@Override
 		public int getOffset() {
 			return offset;
 		}
 
+		@Override
 		public int getLength() {
 			return length;
 		}
 
+		@Override
 		public String getType() {
 			return CONTENT_TYPE_MARKUP;
 		}
@@ -312,8 +322,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		@Override
 		public void beginBlock(BlockType type, Attributes attributes) {
 			final int newBlockOffset = getLocator().getDocumentOffset() + offset;
-			Block newBlock = new Block(type, attributes, newBlockOffset, currentBlock.getLength()
-					- (newBlockOffset - currentBlock.getOffset()));
+			Block newBlock = new Block(type, attributes, newBlockOffset,
+					currentBlock.getLength() - (newBlockOffset - currentBlock.getOffset()));
 			newBlock.setSpansComputed(!blocksOnly);
 			currentBlock.add(newBlock);
 			currentBlock = newBlock;
@@ -326,8 +336,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		@Override
 		public void beginHeading(int level, Attributes attributes) {
 			final int newBlockOffset = getLocator().getDocumentOffset() + offset;
-			Block newBlock = new Block(level, attributes, newBlockOffset, currentBlock.getLength()
-					- (newBlockOffset - currentBlock.getOffset()));
+			Block newBlock = new Block(level, attributes, newBlockOffset,
+					currentBlock.getLength() - (newBlockOffset - currentBlock.getOffset()));
 			newBlock.setSpansComputed(!blocksOnly);
 			currentBlock.add(newBlock);
 			currentBlock = newBlock;
@@ -416,8 +426,8 @@ public class FastMarkupPartitioner extends FastPartitioner {
 								int parentLength = parent.length;
 								parent.length = partition.offset - parent.offset;
 								final int splitOffset = partition.offset + partition.length;
-								MarkupPartition trailer = new MarkupPartition(parent.block, splitOffset, parent.offset
-										+ parentLength - splitOffset);
+								MarkupPartition trailer = new MarkupPartition(parent.block, splitOffset,
+										parent.offset + parentLength - splitOffset);
 								partitions.add(parentIndex + 1, partition);
 								partitions.add(parentIndex + 2, trailer);
 								parent = trailer;
@@ -531,7 +541,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	/**
 	 * save markup content to a temporary file to facilitate analysis of the problem
-	 * 
+	 *
 	 * @return the absolute path to the saved file, or null if the file was not saved
 	 */
 	private static String saveToTempFile(MarkupLanguage markupLanguage, String markupContent) {

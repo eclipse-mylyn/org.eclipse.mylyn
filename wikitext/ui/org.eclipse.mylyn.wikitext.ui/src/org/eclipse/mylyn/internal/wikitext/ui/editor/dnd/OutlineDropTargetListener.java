@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -53,22 +53,27 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 		this.commandManager = commandManager;
 	}
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void dragLeave(DropTargetEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void dragOperationChanged(DropTargetEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void dropAccept(DropTargetEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void dragOver(DropTargetEvent event) {
 		// Based on XMLContentOutlineConfiguration
 		event.feedback = DND.FEEDBACK_SELECT;
@@ -84,6 +89,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 		event.feedback |= DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
 	}
 
+	@Override
 	public void drop(DropTargetEvent event) {
 		List<OutlineItem> dropItems = getDropItems(event);
 		if (dropItems != null) {
@@ -94,15 +100,15 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 			if (command != null) {
 				if (command.isEnabled()) {
 					SafeRunnable.run(new ISafeRunnable() {
+						@Override
 						public void handleException(Throwable exception) {
 							WikiTextUiPlugin.getDefault().log(exception);
-							MessageDialog.openError(
-									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.OutlineDropTargetListener_0,
-									NLS.bind(Messages.OutlineDropTargetListener_1,
+							MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									Messages.OutlineDropTargetListener_0, NLS.bind(Messages.OutlineDropTargetListener_1,
 											new Object[] { exception.getMessage() }));
 						}
 
+						@Override
 						public void run() throws Exception {
 							commandManager.perform(command);
 						}
@@ -174,10 +180,12 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 		}
 	}
 
+	@Override
 	public Transfer getTransfer() {
 		return LocalSelectionTransfer.getTransfer();
 	}
 
+	@Override
 	public boolean isEnabled(DropTargetEvent event) {
 		return getTransfer().isSupportedType(event.currentDataType) && getDropItems(event) != null;
 	}

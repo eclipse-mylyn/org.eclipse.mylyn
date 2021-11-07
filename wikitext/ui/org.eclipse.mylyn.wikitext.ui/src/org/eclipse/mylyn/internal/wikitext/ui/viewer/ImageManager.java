@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -90,18 +90,22 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 			disarm();
 		}
 
+		@Override
 		public void mouseMove(MouseEvent e) {
 			adjust(e);
 		}
 
+		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 			// ignore
 		}
 
+		@Override
 		public void mouseDown(MouseEvent e) {
 			// ignore
 		}
 
+		@Override
 		public void mouseUp(MouseEvent e) {
 			clicked(e);
 		}
@@ -224,10 +228,12 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		}
 	}
 
+	@Override
 	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 		stop();
 	}
 
+	@Override
 	public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 		if (oldInput != null) {
 			oldInput.removeDocumentListener(this);
@@ -275,6 +281,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		}
 	}
 
+	@Override
 	public void widgetDisposed(DisposeEvent e) {
 		if (cursor != null) {
 			cursor.dispose();
@@ -482,6 +489,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		}
 	}
 
+	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
 		if (computingChanges) {
 			return;
@@ -489,6 +497,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		stop();
 	}
 
+	@Override
 	public void documentChanged(DocumentEvent event) {
 		if (computingChanges) {
 			return;
@@ -496,6 +505,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		inspect();
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		GC gc = new GC(viewer.getTextWidget());
 		try {

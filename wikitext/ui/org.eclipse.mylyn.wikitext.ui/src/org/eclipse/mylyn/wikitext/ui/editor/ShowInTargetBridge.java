@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.ui.part.ShowInContext;
 
 /**
  * A means of briding a {@link SourceViewer} with {@link IShowInTarget}.
- * 
+ *
  * @author David Green
  * @since 1.1
  */
@@ -36,6 +36,7 @@ public class ShowInTargetBridge implements IShowInTarget {
 		this.viewer = viewer;
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
 		if (selection instanceof IStructuredSelection) {

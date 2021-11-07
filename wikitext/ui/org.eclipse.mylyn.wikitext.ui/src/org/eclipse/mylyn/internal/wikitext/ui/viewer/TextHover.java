@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.Iterator;
 
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DefaultTextHover;
-import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHoverExtension;
@@ -34,12 +33,11 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
 /**
  * A text hover implementation that finds regions based on annotations, and supports HTML markup in the tooltip string.
- * 
+ *
  * @author David Green
  */
 public class TextHover extends DefaultTextHover implements ITextHoverExtension {
@@ -52,7 +50,8 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 
 	@Override
 	protected boolean isIncluded(Annotation annotation) {
-		if (annotation.getType().equals(TitleAnnotation.TYPE) || annotation.getType().equals(AnchorHrefAnnotation.TYPE)) {
+		if (annotation.getType().equals(TitleAnnotation.TYPE)
+				|| annotation.getType().equals(AnchorHrefAnnotation.TYPE)) {
 			return true;
 		}
 		return false;
@@ -80,38 +79,32 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 		return super.getHoverRegion(textViewer, offset);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.ITextHoverExtension#getHoverControlCreator()
-	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		return new IInformationControlCreator() {
+		return parent -> {
 
-			@SuppressWarnings("deprecation")
-			public IInformationControl createInformationControl(Shell parent) {
+			String tooltipAffordanceString = null;
+			try {
+				tooltipAffordanceString = EditorsUI.getTooltipAffordanceString();
+			} catch (Exception e) {
+				// expected in a non-eclipse environment
+			}
 
-				String tooltipAffordanceString = null;
-				try {
-					tooltipAffordanceString = EditorsUI.getTooltipAffordanceString();
-				} catch (Exception e) {
-					// expected in a non-eclipse environment
-				}
-
-				// TODO: prefer e3.4 APIs
+			// TODO: prefer e3.4 APIs
 //				return new DefaultInformationControl(parent, tooltipAffordanceString, new HtmlTextPresenter()) {
 // must use 3.3 APIs for now
-				return new DefaultInformationControl(parent, SWT.NONE, new HtmlTextPresenter(), tooltipAffordanceString) {
-					@Override
-					public void setLocation(Point location) {
-						// prevent the location from being set to where the cursor is: otherwise the popup is displayed
-						// and then hidden immediately.
-						Point cursorLocation = Display.getCurrent().getCursorLocation();
-						if (cursorLocation.y + 12 >= location.y) {
-							location.y = cursorLocation.y + 13;
-						}
-						super.setLocation(location);
+			return new DefaultInformationControl(parent, SWT.NONE, new HtmlTextPresenter(), tooltipAffordanceString) {
+				@Override
+				public void setLocation(Point location) {
+					// prevent the location from being set to where the cursor is: otherwise the popup is displayed
+					// and then hidden immediately.
+					Point cursorLocation = Display.getCurrent().getCursorLocation();
+					if (cursorLocation.y + 12 >= location.y) {
+						location.y = cursorLocation.y + 13;
 					}
-				};
-			}
+					super.setLocation(location);
+				}
+			};
 		};
 	}
 

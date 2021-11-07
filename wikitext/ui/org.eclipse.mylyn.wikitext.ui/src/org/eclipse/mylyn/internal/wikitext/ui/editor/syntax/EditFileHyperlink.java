@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 David Green and others.
+ * Copyright (c) 2010, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -36,18 +36,22 @@ public class EditFileHyperlink implements IHyperlink {
 		this.region = region;
 	}
 
+	@Override
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
 
+	@Override
 	public String getTypeLabel() {
 		return null;
 	}
 
+	@Override
 	public String getHyperlinkText() {
 		return NLS.bind(Messages.MarkupHyperlinkDetector_openFileInEditor, file.getName());
 	}
 
+	@Override
 	public void open() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage activePage = window.getActivePage();

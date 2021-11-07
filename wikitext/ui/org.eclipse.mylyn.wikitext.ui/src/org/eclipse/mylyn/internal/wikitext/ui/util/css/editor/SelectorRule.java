@@ -33,10 +33,12 @@ class SelectorRule implements IPredicateRule {
 		this.token = token;
 	}
 
+	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		return evaluate(scanner, false);
 	}
 
+	@Override
 	public IToken evaluate(ICharacterScanner scanner, boolean resume) {
 		readCount = 0;
 		if (resume) {
@@ -90,6 +92,7 @@ class SelectorRule implements IPredicateRule {
 		return scanner.read();
 	}
 
+	@Override
 	public IToken getSuccessToken() {
 		return token;
 	}

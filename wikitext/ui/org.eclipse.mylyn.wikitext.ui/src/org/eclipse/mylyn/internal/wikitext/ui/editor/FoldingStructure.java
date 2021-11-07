@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,7 @@ class FoldingStructure implements IFoldingStructure {
 			return ids;
 		}
 
+		@Override
 		public final boolean operate(HeadingProjectionAnnotation annotation) {
 			if (ids.contains(annotation.getHeadingId())) {
 				return operateOnSelected(annotation);
@@ -78,9 +79,10 @@ class FoldingStructure implements IFoldingStructure {
 
 	public FoldingStructure(MarkupEditor editor) {
 		viewer = (ProjectionViewer) editor.getViewer();
-		textOperationTarget = (ITextOperationTarget) editor.getAdapter(ITextOperationTarget.class);
+		textOperationTarget = editor.getAdapter(ITextOperationTarget.class);
 	}
 
+	@Override
 	public void collapseAll(boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
@@ -106,6 +108,7 @@ class FoldingStructure implements IFoldingStructure {
 		}
 	}
 
+	@Override
 	public void collapseElements(Collection<OutlineItem> items, final boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
@@ -125,6 +128,7 @@ class FoldingStructure implements IFoldingStructure {
 		}, collapseRegionContainingCaret);
 	}
 
+	@Override
 	public void expandAll() {
 		if (!isFoldingEnabled()) {
 			return;
@@ -132,6 +136,7 @@ class FoldingStructure implements IFoldingStructure {
 		textOperationTarget.doOperation(ProjectionViewer.EXPAND_ALL);
 	}
 
+	@Override
 	public void expandElements(Collection<OutlineItem> items) {
 		if (!isFoldingEnabled()) {
 			return;
@@ -151,6 +156,7 @@ class FoldingStructure implements IFoldingStructure {
 		}, true);
 	}
 
+	@Override
 	public void expandElementsExclusive(Collection<OutlineItem> items, boolean collapseRegionContainingCaret) {
 		if (!isFoldingEnabled()) {
 			return;
@@ -238,6 +244,7 @@ class FoldingStructure implements IFoldingStructure {
 		}
 	}
 
+	@Override
 	public final boolean isFoldingEnabled() {
 		return viewer.getProjectionAnnotationModel() != null;
 	}

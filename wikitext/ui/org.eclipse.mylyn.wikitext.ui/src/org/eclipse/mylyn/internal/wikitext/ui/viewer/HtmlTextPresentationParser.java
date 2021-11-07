@@ -259,18 +259,22 @@ public class HtmlTextPresentationParser {
 			prefixAnnotations.add(annotation);
 		}
 
+		@Override
 		public String getLocalName() {
 			return elementName;
 		}
 
+		@Override
 		public ElementInfo getParent() {
 			return parent;
 		}
 
+		@Override
 		public boolean hasCssClass(String cssClass) {
 			return cssClasses != null && Arrays.binarySearch(cssClasses, cssClass) >= 0;
 		}
 
+		@Override
 		public boolean hasId(String id) {
 			return id != null && id.equals(this.id);
 		}
@@ -472,6 +476,7 @@ public class HtmlTextPresentationParser {
 
 		private final StringBuilder elementText = new StringBuilder();
 
+		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
@@ -638,6 +643,7 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String name) throws SAXException {
 			ElementState elementState = state.peek();
 
@@ -742,6 +748,7 @@ public class HtmlTextPresentationParser {
 			return false;
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
 			final ElementState parentElementState = state.peek();
 
@@ -858,6 +865,7 @@ public class HtmlTextPresentationParser {
 			return bulletChars[Math.min(indentLevel - 1, bulletChars.length - 1)];
 		}
 
+		@Override
 		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
@@ -868,6 +876,7 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
+		@Override
 		public void endDocument() throws SAXException {
 			// ORDER DEPENDENCY: do this first
 			if (annotationModel != null) {
@@ -927,24 +936,30 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
+		@Override
 		public void startDocument() throws SAXException {
 			ElementState elementState = state.push(new ElementState(null, "<document>", new FontState(), getOffset())); //$NON-NLS-1$
 			elementState.fontState.foreground = defaultForeground == null ? null : defaultForeground.getRGB();
 			elementState.fontState.background = defaultBackground == null ? null : defaultBackground.getRGB();
 		}
 
+		@Override
 		public void processingInstruction(String target, String data) throws SAXException {
 		}
 
+		@Override
 		public void skippedEntity(String name) throws SAXException {
 		}
 
+		@Override
 		public void setDocumentLocator(Locator locator) {
 		}
 
+		@Override
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {
 		}
 
+		@Override
 		public void endPrefixMapping(String prefix) throws SAXException {
 		}
 

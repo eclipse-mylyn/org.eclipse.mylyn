@@ -266,6 +266,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			browser = new Browser(tabFolder, SWT.NONE);
 			// bug 260479: open hyperlinks in a browser
 			browser.addLocationListener(new LocationListener() {
+				@Override
 				public void changed(LocationEvent event) {
 					event.doit = false;
 				}
@@ -296,6 +297,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					return false;
 				}
 
+				@Override
 				public void changing(LocationEvent event) {
 					// if it looks like an absolute URL
 					if (event.location.matches("([a-zA-Z]{3,8})://?.*")) { //$NON-NLS-1$
@@ -354,10 +356,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 		tabFolder.addSelectionListener(new SelectionListener() {
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent selectionevent) {
 				widgetSelected(selectionevent);
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent selectionevent) {
 				if (isShowingPreview()) {
 					updatePreview();
@@ -365,9 +369,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 		viewer.getTextWidget().addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateOutlineSelection();
 			}
@@ -474,11 +480,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		syncProjectionModeWithPreferences();
 
 		viewer.addProjectionListener(new IProjectionListener() {
+			@Override
 			public void projectionDisabled() {
 				projectionAnnotationById = null;
 				saveProjectionPreferences();
 			}
 
+			@Override
 			public void projectionEnabled() {
 				saveProjectionPreferences();
 				updateProjectionAnnotations();
@@ -589,9 +597,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			if (document != null) {
 				if (documentListener == null) {
 					documentListener = new IDocumentListener() {
+						@Override
 						public void documentAboutToBeChanged(DocumentEvent event) {
 						}
 
+						@Override
 						public void documentChanged(DocumentEvent event) {
 							previewDirty = true;
 							outlineDirty = true;
@@ -1327,6 +1337,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return viewer.getProjectionAnnotationModel() != null;
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
 		if (selection instanceof IStructuredSelection) {
@@ -1361,6 +1372,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				item.getId(), item.getId()));
 	}
 
+	@Override
 	public ShowInContext getShowInContext() {
 		OutlineItem item = getNearestMatchingOutlineItem();
 		return new ShowInContext(getEditorInput(),
@@ -1377,6 +1389,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		updatePreview(outlineItem);
 	}
 
+	@Override
 	public void perform(AbstractDocumentCommand command) throws CoreException {
 		disableReveal = true;
 		try {

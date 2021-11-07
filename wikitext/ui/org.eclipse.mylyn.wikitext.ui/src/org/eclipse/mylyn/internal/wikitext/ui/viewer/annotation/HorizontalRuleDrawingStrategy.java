@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
@@ -29,6 +29,7 @@ public class HorizontalRuleDrawingStrategy implements IDrawingStrategy {
 		shadowForeground = WikiTextUiResources.getColors().get(WikiTextUiResources.COLOR_HR_SHADOW);
 	}
 
+	@Override
 	public void draw(Annotation annotation, GC gc, StyledText textWidget, int offset, int length, Color color) {
 		if (gc != null) {
 			final Color foreground = gc.getForeground();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 David Green and others.
+ * Copyright (c) 2010, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * A hyperlink detector that can detect hyperlinks in markup source.
- * 
+ *
  * @author dgreen
  */
 public class MarkupHyperlinkDetector implements IHyperlinkDetector {
@@ -52,6 +52,7 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 		this.markupLanguage = markupLanguage;
 	}
 
+	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (markupLanguage == null || file == null) {
 			return null;
@@ -76,7 +77,7 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 					contentOffset = lineOffset;
 					content = document.get(lineOffset, regionLength);
 				} else {
-					// the line starts after region, may never happen 
+					// the line starts after region, may never happen
 					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
 					contentOffset = region.getOffset();
 					content = document.get(contentOffset, regionLength);
@@ -132,7 +133,8 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 							continue;
 						}
 					} else {
-						if (!(hyperlinkRegion.getOffset() <= region.getOffset() && (hyperlinkRegion.getOffset() + hyperlinkRegion.getLength()) >= region.getOffset())) {
+						if (!(hyperlinkRegion.getOffset() <= region.getOffset()
+								&& (hyperlinkRegion.getOffset() + hyperlinkRegion.getLength()) >= region.getOffset())) {
 							continue;
 						}
 					}
@@ -148,7 +150,8 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 							if (parent.exists()) {
 								String nameNoExtension = targetFile.getName();
 								if (nameNoExtension.indexOf('.') != -1) {
-									nameNoExtension = nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.') + 1);
+									nameNoExtension = nameNoExtension.substring(0,
+											nameNoExtension.lastIndexOf('.') + 1);
 								}
 								IResource[] members = parent.members();
 								for (IResource resource : members) {

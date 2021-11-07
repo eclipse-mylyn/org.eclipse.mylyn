@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others .
+ * Copyright (c) 2009, 2021 David Green and others .
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 
 /**
  * A filter that filters hyperlink detectors by their descriptor {@link HyperlinkDetectorDescriptor#getId() id}.
- * 
+ *
  * @author David Green
  * @since 1.1
  */
@@ -31,6 +31,7 @@ public class DefaultHyperlinkDetectorDescriptorFilter implements HyperlinkDetect
 		this.filteredId = filteredId;
 	}
 
+	@Override
 	public boolean filter(HyperlinkDetectorDescriptor descriptor) {
 		String id = descriptor.getId();
 		if (filteredId.equals(id)) {

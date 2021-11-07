@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -132,16 +132,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		blockGroup.setFont(getFieldEditorParent().getFont());
 		phraseModifierGroup.setFont(getFieldEditorParent().getFont());
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				"org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
+		PlatformUI.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(), "org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 }

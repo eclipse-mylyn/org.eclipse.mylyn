@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * A drawing strategy that can draw images for {@link ImageAnnotation}.
- * 
+ *
  * @author David Green
  */
 public class ImageDrawingStrategy implements IDrawingStrategy {
@@ -37,6 +37,7 @@ public class ImageDrawingStrategy implements IDrawingStrategy {
 		this.viewer = viewer;
 	}
 
+	@Override
 	public void draw(Annotation annotation, GC gc, StyledText textWidget, int offset, int length, Color color) {
 		if (gc != null) {
 			Position position = viewer.getAnnotationModel().getPosition(annotation);

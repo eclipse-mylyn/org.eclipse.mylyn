@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,7 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 		}
 	}
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		ICompletionProposal[] allProposals = null;
 		for (IContentAssistProcessor delegate : delegates) {
@@ -79,6 +80,7 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 		return information;
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		IContextInformation[] allInformation = null;
 		for (IContentAssistProcessor delegate : delegates) {
@@ -88,14 +90,17 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 		return allInformation;
 	}
 
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return autoActivationCharacters;
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return contextInformationCharacters;
 	}
 
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		List<IContextInformationValidator> validators = null;
 		for (IContentAssistProcessor delegate : delegates) {
@@ -113,6 +118,7 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage() {
 		for (IContentAssistProcessor delegate : delegates) {
 			String message = delegate.getErrorMessage();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2021 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * Implementation based on {@link org.eclipse.ui.texteditor.IncrementalFindTarget}
- * 
+ *
  * @author David Green
  */
 public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTargetExtension, VerifyKeyListener,
@@ -106,31 +106,38 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		}
 	}
 
+	@Override
 	public boolean canPerformFind() {
 		return findReplaceTarget.canPerformFind();
 	}
 
+	@Override
 	public int findAndSelect(int widgetOffset, String findString, boolean searchForward, boolean caseSensitive,
 			boolean wholeWord) {
 		return findReplaceTarget.findAndSelect(widgetOffset, findString, searchForward, caseSensitive, wholeWord);
 	}
 
+	@Override
 	public Point getSelection() {
 		return findReplaceTarget.getSelection();
 	}
 
+	@Override
 	public String getSelectionText() {
 		return findReplaceTarget.getSelectionText();
 	}
 
+	@Override
 	public boolean isEditable() {
 		return findReplaceTarget.isEditable();
 	}
 
+	@Override
 	public void replaceSelection(String text) {
 		findReplaceTarget.replaceSelection(text);
 	}
 
+	@Override
 	public void beginSession() {
 		if (installed) {
 			next();
@@ -253,12 +260,14 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		searching = false;
 	}
 
+	@Override
 	public void endSession() {
 		if (findReplaceTargetExtension != null) {
 			findReplaceTargetExtension.endSession();
 		}
 	}
 
+	@Override
 	public IRegion getScope() {
 		if (findReplaceTargetExtension != null) {
 			return findReplaceTargetExtension.getScope();
@@ -266,12 +275,14 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		return null;
 	}
 
+	@Override
 	public void setScope(IRegion scope) {
 		if (findReplaceTargetExtension != null) {
 			findReplaceTargetExtension.setScope(scope);
 		}
 	}
 
+	@Override
 	public Point getLineSelection() {
 		if (findReplaceTargetExtension != null) {
 			return findReplaceTargetExtension.getLineSelection();
@@ -279,6 +290,7 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		return null;
 	}
 
+	@Override
 	public void setSelection(int offset, int length) {
 
 		if (findReplaceTargetExtension != null) {
@@ -286,12 +298,14 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		}
 	}
 
+	@Override
 	public void setScopeHighlightColor(Color color) {
 		if (findReplaceTargetExtension != null) {
 			findReplaceTargetExtension.setScopeHighlightColor(color);
 		}
 	}
 
+	@Override
 	public void setReplaceAllMode(boolean replaceAll) {
 		if (findReplaceTargetExtension != null) {
 			findReplaceTargetExtension.setReplaceAllMode(replaceAll);
@@ -322,7 +336,7 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 			textWidget.addVerifyKeyListener(this);
 		}
 
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 		if (commandService != null) {
 			commandService.addExecutionListener(this);
 		}
@@ -367,57 +381,68 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 			textWidget.removeVerifyKeyListener(this);
 		}
 
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 		if (commandService != null) {
 			commandService.removeExecutionListener(this);
 		}
 		installed = false;
 	}
 
+	@Override
 	public void notHandled(String commandId, NotHandledException exception) {
 		// ignore
 	}
 
+	@Override
 	public void postExecuteFailure(String commandId, ExecutionException exception) {
 		// ignore
 	}
 
+	@Override
 	public void postExecuteSuccess(String commandId, Object returnValue) {
 		// ignore
 	}
 
+	@Override
 	public void preExecute(String commandId, ExecutionEvent event) {
 		if (!IWorkbenchActionDefinitionIds.FIND_INCREMENTAL.equals(commandId)) {
 			stop();
 		}
 	}
 
+	@Override
 	public void textChanged(TextEvent event) {
 		if (event.getDocumentEvent() != null) {
 			stop();
 		}
 	}
 
+	@Override
 	public void focusGained(FocusEvent e) {
 		stop();
 	}
 
+	@Override
 	public void focusLost(FocusEvent e) {
 		stop();
 	}
 
+	@Override
 	public void mouseDoubleClick(MouseEvent e) {
 		stop();
 	}
 
+	@Override
 	public void mouseDown(MouseEvent e) {
 		stop();
 	}
 
+	@Override
 	public void mouseUp(MouseEvent e) {
 		stop();
 	}
 
+	@Override
 	public void verifyKey(VerifyEvent event) {
 		if (!event.doit) {
 			return;
@@ -461,6 +486,7 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		}
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		if (!searching) {
 			stop();

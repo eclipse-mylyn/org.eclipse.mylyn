@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -175,7 +175,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 	private void configureActionBars(IPageSite site) {
 		IActionBars actionBars = site.getActionBars();
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		IHandlerService handlerService = (IHandlerService) site.getService(IHandlerService.class);
+		IHandlerService handlerService = site.getService(IHandlerService.class);
 
 		CollapseAllAction collapseAllAction = new CollapseAllAction(getTreeViewer());
 		toolBarManager.add(collapseAllAction);
@@ -292,10 +292,12 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		}
 	}
 
+	@Override
 	public ShowInContext getShowInContext() {
 		return editor.getShowInContext();
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		return editor.show(context);
 	}

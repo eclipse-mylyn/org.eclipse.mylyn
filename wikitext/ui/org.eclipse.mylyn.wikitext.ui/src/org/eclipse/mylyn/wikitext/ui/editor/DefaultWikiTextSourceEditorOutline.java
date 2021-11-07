@@ -166,6 +166,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		}
 	}
 
+	@Override
 	public ShowInContext getShowInContext() {
 		if (getEditor() != null) {
 			IShowInSource source = getEditor().getAdapter(IShowInSource.class);
@@ -176,6 +177,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		return null;
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		if (getEditor() != null) {
 			IShowInTarget target = getEditor().getAdapter(IShowInTarget.class);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009, 2021 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.swt.custom.StyleRange;
 
 /**
  * based on the XML editor example
- * 
+ *
  * @author David Green
  */
 class CommentDamagerRepairer implements IPresentationDamager, IPresentationRepairer {
@@ -41,6 +41,7 @@ class CommentDamagerRepairer implements IPresentationDamager, IPresentationRepai
 		this.defaultTextAttribute = defaultTextAttribute;
 	}
 
+	@Override
 	public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event, boolean documentPartitioningChanged) {
 		if (!documentPartitioningChanged) {
 			try {
@@ -89,14 +90,16 @@ class CommentDamagerRepairer implements IPresentationDamager, IPresentationRepai
 		}
 	}
 
+	@Override
 	public void setDocument(IDocument document) {
 		this.document = document;
 	}
 
+	@Override
 	public void createPresentation(TextPresentation presentation, ITypedRegion damage) {
-		presentation.addStyleRange(new StyleRange(damage.getOffset(), damage.getLength(),
-				defaultTextAttribute.getForeground(), defaultTextAttribute.getBackground(),
-				defaultTextAttribute.getStyle()));
+		presentation.addStyleRange(
+				new StyleRange(damage.getOffset(), damage.getLength(), defaultTextAttribute.getForeground(),
+						defaultTextAttribute.getBackground(), defaultTextAttribute.getStyle()));
 	}
 
 }
