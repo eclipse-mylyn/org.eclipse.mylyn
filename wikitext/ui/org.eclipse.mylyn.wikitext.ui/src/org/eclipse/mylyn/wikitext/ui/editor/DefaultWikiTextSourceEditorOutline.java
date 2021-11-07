@@ -99,8 +99,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 			@Override
 			protected boolean shouldCreateToolTip(Event event) {
 				final Object eventItem = getToolTipItem(new Point(event.x, event.y));
-				boolean shouldCreate = eventItem != null && eventItem instanceof OutlineItem
-						&& super.shouldCreateToolTip(event);
+				boolean shouldCreate = eventItem instanceof OutlineItem && super.shouldCreateToolTip(event);
 				if (!shouldCreate) {
 					hide();
 				}
