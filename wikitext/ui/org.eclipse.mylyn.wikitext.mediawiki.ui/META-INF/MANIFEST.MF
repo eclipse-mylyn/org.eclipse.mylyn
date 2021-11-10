@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.mediawiki.ui;singleton:=true
-Bundle-Version: 3.0.41.qualifier
+Bundle-Version: 3.0.42.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.41",
- org.eclipse.mylyn.wikitext.mediawiki;bundle-version="3.0.41",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.41"
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.42",
+ org.eclipse.mylyn.wikitext.mediawiki;bundle-version="3.0.42",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.42"
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.mylyn.internal.wikitext.mediawiki.ui;x-internal:=true
