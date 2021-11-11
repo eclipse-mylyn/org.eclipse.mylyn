@@ -115,12 +115,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                     <target>
-                        <artifact>
-                            <groupId>org.eclipse.mylyn.docs</groupId>
-                            <artifactId>wikitext.ui.target</artifactId>
-                            <classifier>wikitext</classifier>
-                            <version>3.0.42-SNAPSHOT</version>
-                        </artifact>
+                        <file>../targets/wikitext.target</file>
                     </target>
                 </configuration>
             </plugin>
