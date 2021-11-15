@@ -27,7 +27,7 @@ echo Begin Signing
 
 for file in `/usr/bin/find -name "*$3*.jar"`; do
 	echo Signing $file
-	curl -o $file -F file=@$file http://build.eclipse.org:31338/sign
+	curl -o $file -F file=@$file https://cbi.eclipse.org/jarsigner/sign
 done
 
 echo Completed Signing
