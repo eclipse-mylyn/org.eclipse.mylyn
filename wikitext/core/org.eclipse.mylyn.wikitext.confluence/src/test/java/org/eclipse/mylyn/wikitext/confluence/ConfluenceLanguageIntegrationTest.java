@@ -53,14 +53,28 @@ public class ConfluenceLanguageIntegrationTest {
 
 	@Test
 	public void tableWithMultiLineCellContent() {
-		String table = "|line one\\\\line two\\\\line three|\n\n";
+		String table = "|line one\nline two\nline three|\n\n";
 		assertRoundTripExact(table);
 		assertRoundTrip("|line one\nline two\nline three|", table);
 	}
 
+
+	@Test
+	public void tableWithMultiLineCellContentOldLineBreakStyle() {
+		assertRoundTrip("|line one\\\\line two\\\\line three|\n\n",
+				"|line one\nline two\nline three|\n\n");
+	}
+
+
 	@Test
 	public void preformattedWithCurlyBraces() {
 		assertRoundTrip("{noformat}{something}{noformat}\n\n", "{noformat}{something}\n{noformat}\n\n");
+	}
+
+	@Test
+	public void escapedCharacters() {
+		assertRoundTrip("Exclamation\\!", "Exclamation\\!\n\n");
+		assertRoundTrip("\\| Pipe", "\\| Pipe\n\n");
 	}
 
 	@Test
@@ -88,9 +102,10 @@ public class ConfluenceLanguageIntegrationTest {
 		assertRoundTripExact("sample@sample.com @codeHere@ another@another.com\n\n");
 	}
 
+
 	@Test
 	public void builderParserSymmetricalWithProblemCharacters() {
-		String characterContent = "\"`&amp;{}!@$%^&*()_-+=[]\\|;:',.<>/?~/+&#160;ˇ";
+		String characterContent = "\"`&amp;{}\\!@$%^&*()_-+=[]\\|;:',.<>/?~/+&#160;ˇ";
 
 		String markup = toMarkup(characterContent);
 		String text = toText(parseToEvents(markup));

@@ -147,7 +147,13 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		public void writeLineBreak() throws IOException {
 			++consecutiveLineBreakCount;
-			if (consecutiveLineBreakCount == 1 || isBlockTypePreservingWhitespace()) {
+			if (isTableCellBlock()) {
+				if (consecutiveLineBreakCount == 1 ) {
+					ConfluenceDocumentBuilder.this.emitContent('\n');
+				} else {
+					ConfluenceDocumentBuilder.this.emitContent("\u00A0\n"); // 'NO-BREAK SPACE'
+				}
+			} else if (consecutiveLineBreakCount == 1 || isBlockTypePreservingWhitespace()) {
 				if (isPrefixedBlockTerminatedByNewlines()) {
 					ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
 				} else {
@@ -246,6 +252,10 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private boolean isBlockTypePreservingWhitespace() {
 			return getBlockType() == BlockType.CODE || getBlockType() == BlockType.PREFORMATTED;
+		}
+
+		private boolean isTableCellBlock() {
+			return currentBlock instanceof TableCellBlock;
 		}
 	}
 
@@ -443,7 +453,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected boolean isSeparator(int i) {
-		return !isSpanMarkup((char) i) && super.isSeparator(i);
+		return !isSpanMarkup((char) i) && (super.isSeparator(i) || isEscapeCharacter(i));
+	}
+
+	private boolean isEscapeCharacter(int i) {
+		return (char) i == '\\';
 	}
 
 	private boolean isSpanMarkup(char character) {
@@ -504,10 +518,10 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (url != null) {
 			assertOpenBlock();
 			try {
-				currentBlock.write('!');
+				super.emitContent('!');
 				currentBlock.write(url);
 				writeImageAttributes(attributes);
-				currentBlock.write('!');
+				super.emitContent('!');
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -529,11 +543,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
 		assertOpenBlock();
 		try {
-			currentBlock.write('!');
+			super.emitContent('!');
 			currentBlock.write(imageUrl);
 			writeImageAttributes(imageAttributes);
-			currentBlock.write('!');
-			currentBlock.write(':');
+			super.emitContent('!');
+			super.emitContent(':');
 			currentBlock.write(href);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -583,7 +597,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	void emitEscapeCharacter(int c) throws IOException {
-		if ((c == '#' && getLastChar() == '&') || (c == '{' || c == '\\' || c == '[' || c == ']')) {
+		if ((c == '#' && getLastChar() == '&') || (c == '{' || c == '\\' || c == '[' || c == ']'|| c == '!' || c == '|') ) {
 			if (getLastChar() == '\\') {
 				super.emitContent(' ');
 			}
@@ -610,7 +624,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				attributeMarkup += "title=\"" + imageAttributes.getTitle() + "\"";
 			}
 			if (!attributeMarkup.isEmpty()) {
-				currentBlock.write('|');
+				super.emitContent('|');
 				currentBlock.write(attributeMarkup);
 			}
 		}

@@ -164,6 +164,12 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testLenientTableParsing() {
+		assertMarkup("<table><tr><td>table text</td></tr></table>", "| table text");
+	}
+
+
+	@Test
 	public void testBlockQuoteExtendedWithNestedBlockEndingAtStartOfLine() {
 		assertMarkup(
 				"<blockquote><h1 id=\"Headline1\">Headline 1</h1><h2 id=\"Headline2\">Headline 2</h2></blockquote>",
@@ -1354,6 +1360,16 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void testEmailBeforeAndAfterCode() {
 		assertMarkup("<p>sampleEmail@sample.com <code>this</code> another@another.com</p>",
 				"sampleEmail@sample.com @this@ another@another.com");
+	}
+
+	@Test
+	public void testEscapedExclamation() {
+		assertMarkup("<p>Exclamation! Exclamation!</p>", "Exclamation\\! Exclamation!");
+	}
+
+	@Test
+	public void testEscapedPipe() {
+		assertMarkup("<p>Pipe | Pipe |</p>", "Pipe | Pipe \\|");
 	}
 
 	@Test

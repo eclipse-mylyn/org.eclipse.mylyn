@@ -372,14 +372,31 @@ public class ConfluenceDocumentBuilderTest {
 
 		assertEquals("prefix *bolded* suffix\n\n", markup);
 	}
-
 	@Test
 	public void boldSpanWithAdjacentPunctuation() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 
 		builder.beginSpan(SpanType.BOLD, new Attributes());
-		builder.characters("text2");
+		builder.characters("bold");
+		builder.endSpan();
+		builder.characters(".");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("*bold*.\n\n", markup);
+	}
+
+	@Test
+	public void boldSpanWithEscapedExclamation() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
 		builder.endSpan();
 		builder.characters("!");
 
@@ -388,8 +405,45 @@ public class ConfluenceDocumentBuilderTest {
 
 		String markup = out.toString();
 
-		assertEquals("*text2*!\n\n", markup);
+		assertEquals("*bold*\\!\n\n", markup);
 	}
+
+	@Test
+	public void boldSpanWithEscapedBrackets() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
+		builder.endSpan();
+		builder.characters("{");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("*bold*\\{\n\n", markup);
+	}
+
+	@Test
+	public void boldSpanWithEscapedPipe() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
+		builder.endSpan();
+		builder.characters("|");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("*bold*\\|\n\n", markup);
+	}
+
 
 	@Test
 	public void emptySpan() {
@@ -629,12 +683,24 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
-	public void tableWithLineBreaks() {
-		assertTableRow("| |abc\\\\ \\\\def| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
+	public void tableWithEmptyLineBreaks() {
+		// In the case of an empty line break in a Table cell Jira expects an 'NO-BREAK SPACE' character
+		assertTableRow("| |abc\n\u00A0\ndef| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
 			builder.characters("abc");
 			builder.lineBreak();
 			builder.lineBreak();
 			builder.characters("def");
+		});
+	}
+
+	@Test
+	public void tableWithMultipleLineBreaks() {
+		assertTableRow("| |a\nb\nc| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
+			builder.characters("a");
+			builder.lineBreak();
+			builder.characters("b");
+			builder.lineBreak();
+			builder.characters("c");
 		});
 	}
 
@@ -1513,6 +1579,17 @@ public class ConfluenceDocumentBuilderTest {
 	public void parapgraphWithEscapableChars() {
 		assertParagraphWithContent("&\\#unknown\n\n", "&#unknown");
 	}
+
+	@Test
+	public void paragraphWithEscapedExclamation() {
+		assertParagraphWithContent("Exclamation\\!\n\n", "Exclamation!");
+	}
+
+	@Test
+	public void paragraphWithEscapedPipe() {
+		assertParagraphWithContent("Pipe\\|\n\n", "Pipe|");
+	}
+
 
 	@Test
 	public void italicBoldItalic() {
