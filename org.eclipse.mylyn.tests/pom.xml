@@ -5,10 +5,10 @@
   <parent>
     <artifactId>org.eclipse.mylyn-aggregator</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
-    <version>3.25.2-SNAPSHOT</version>
+    <version>3.25.3-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.tests</artifactId>
-  <version>3.25.2-SNAPSHOT</version>
+  <version>3.25.3-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
     <test.integration.suite>org.eclipse.mylyn.tests.AllTests</test.integration.suite>

@@ -101,37 +101,6 @@
 	</exec>
   </target>
 
-  <target name="pack" unless="_pack.skip">	
-	<delete file="${site}/content.jar" />
-	<delete file="${site}/artifacts.jar" />
-	
-	<path id="jarprocessor.classpath">
-	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-bundles-external">
-		<include name="*/eclipse/plugins/org.eclipse.equinox.p2.jarprocessor_*.jar" />
-	  </fileset>
-	</path>		
-
-	<echo>Using ${pack200} for packing</echo>
-
-	<!-- pack200 -->
-	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.internal.p2.jarprocessor.Main"
-			  fork="true" classpathref="jarprocessor.classpath" failonerror="true" maxmemory="512m"
-		  dir="${projectDir}/site">
-	  <jvmarg line="-Dorg.eclipse.update.jarprocessor.pack200=${pack200}" />
-	  <arg line="-verbose ${args}" />
-	  <arg line="-outputDir ${site} ${site}" />
-	</java>
-	
-	<!-- remove corrupted jars -->
-	<!--
-	<delete>
-	  <fileset dir="${projectDir}/site">
-		<include name="plugins/com.google.gwt*.pack.gz"/>
-	  </fileset>
-	</delete>
-	-->
-  </target>
-
   <target name="add-mirrors-url" unless="_promote.skip">	
 	<replace file="${projectDir}/../site.xml">
 	  <replacetoken><![CDATA[<site pack200="true">]]></replacetoken>

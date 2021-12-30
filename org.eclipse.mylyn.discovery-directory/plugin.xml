@@ -77,8 +77,8 @@
             license="%connectorDescriptor.license.bugzilla"
             name="%connectorDescriptor.name.bugzilla"
             provider="%connectorDescriptor.provider.bugzilla"
-            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.24"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/org.eclipse.mylyn.bugzilla">
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.bugzilla">
          <icon
                image32="images/bugzilla32.png">
          </icon>
@@ -98,8 +98,8 @@
             license="%connectorDescriptor.license.trac"
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
-            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.24"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/org.eclipse.mylyn.trac">
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.trac">
          <icon
                image32="images/trac32.png"
                image64="images/trac64.png">
@@ -120,7 +120,7 @@
             name="%connectorDescriptor.name.mantis"
             provider="%connectorDescriptor.provider.mantis"
             siteUrl="http://mylyn-mantis.sourceforge.net/eclipse/update/"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/com.itsolut.mantis">
+            statsUrl="http://stats.mylyn.org/discovery/3.25/com.itsolut.mantis">
          <icon
                image32="images/mantis-32.png"></icon>
          <overview
@@ -139,7 +139,7 @@
             name="%connectorDescriptor.name.foglyn"
             provider="%connectorDescriptor.provider.foglyn"
             siteUrl="http://update.foglyn.com/stable"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/com.foglyn">
+            statsUrl="http://stats.mylyn.org/discovery/3.25/com.foglyn">
          <icon
                image128="images/foglyn-128.png"
                image32="images/foglyn-32.png"
@@ -162,7 +162,7 @@
             name="%connectorDescriptor.name.tuleap"
             provider="%connectorDescriptor.provider.tuleap"
             siteUrl="http://eclipse.tuleap.net/mylyn.tasks/stable"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/org.tuleap">
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.tuleap">
          <icon
                image32="images/tuleap-32.png"
                image64="images/tuleap-64.png"
@@ -183,8 +183,8 @@
             license="%connectorDescriptor.license.gerrit"
             name="%connectorDescriptor.name.gerrit"
             provider="%connectorDescriptor.provider.gerrit"
-            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.24"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/org.eclipse.mylyn.gerrit">
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.gerrit">
          <icon
                image32="images/gerrit32.png">
          </icon>
@@ -203,8 +203,8 @@
             license="%connectorDescriptor.license.hudson"
             name="%connectorDescriptor.name.hudson"
             provider="%connectorDescriptor.provider.hudson"
-            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.24"
-            statsUrl="http://stats.mylyn.org/discovery/3.24/org.eclipse.mylyn.hudson">
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.hudson">
          <icon
                image32="images/hudson-32.png">
          </icon>
