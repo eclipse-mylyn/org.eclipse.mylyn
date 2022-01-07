@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi
-Bundle-Version: 3.0.42.qualifier
+Bundle-Version: 3.0.43.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: META-INF/l10n/bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.42"
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.43"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi
 Import-Package: org.osgi.framework;version="1.5.0",
  com.google.common.base;version="[27.1.0,31.0.0)"
