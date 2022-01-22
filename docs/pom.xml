@@ -127,7 +127,6 @@
 	</profiles>
 
 	<modules>
-		<module>targets</module>
 		<module>org.eclipse.mylyn.docs.development-feature</module>
 		<module>org.eclipse.mylyn.docs.sdk-feature</module>
 

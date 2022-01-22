@@ -79,7 +79,6 @@
 	</profiles>
 
 	<modules>
-		<module>targets</module>
 		<module>org.eclipse.mylyn.docs.epub.help</module>
 		<module>org.eclipse.mylyn.docs.epub.ui</module>
 		<module>org.eclipse.mylyn.docs.epub-feature</module>

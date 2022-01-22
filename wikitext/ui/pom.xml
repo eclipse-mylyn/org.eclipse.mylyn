@@ -76,7 +76,6 @@
     </profiles>
 
     <modules>
-        <module>targets</module>
         <module>org.eclipse.mylyn.wikitext.help.ui</module>
         <module>org.eclipse.mylyn.wikitext.help.sdk</module>
         <module>org.eclipse.mylyn.wikitext.asciidoc.tests</module>
