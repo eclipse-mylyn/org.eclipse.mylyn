@@ -1410,4 +1410,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			showPreview(getNearestMatchingOutlineItem());
 		}
 	}
+
+	@Override
+	public void setFocus() {
+		if (isShowingPreview()) {
+			browser.setFocus();
+		} else {
+			getViewer().getTextWidget().setFocus();
+		}
+	}
 }
