@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Automatic-Module-Name: org.eclipse.egit.github.core.tests
 Bundle-SymbolicName: org.eclipse.egit.github.core.tests
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.1.0.202202221755-m3
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.google.gson;version="[1.6.0,3.0.0]",
