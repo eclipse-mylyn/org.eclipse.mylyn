@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Automatic-Module-Name: org.eclipse.mylyn.github.ui
 Bundle-SymbolicName: org.eclipse.mylyn.github.ui;singleton:=true
 Bundle-Activator: org.eclipse.mylyn.internal.github.ui.GitHubUi
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.1.0.202202221755-m3
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
