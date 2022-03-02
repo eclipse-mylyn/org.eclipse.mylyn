@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse EGit Mylyn GitHub Tests
 Automatic-Module-Name: org.eclipse.mylyn.github.tests
 Bundle-SymbolicName: org.eclipse.mylyn.github.tests
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.1.0.202203021511-rc1
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.jface.text;bundle-version="[3.16.400,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.20.0,4.0.0)",
