@@ -6,15 +6,20 @@
     <name>Mylyn Docs: EPUB</name>
     <version>4.0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
+	<parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>docs.main</artifactId>
+        <version>3.0.43-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tycho-version>2.7.0</tycho-version>
     </properties>
 
     <modules>
         <module>core</module>
-        <module>ui-pom.xml</module>
+        <module>ui</module>
     </modules>
 
     <profiles>
@@ -26,15 +31,4 @@
         </profile>
     </profiles>
 
-    <licenses>
-        <license>
-            <name>Eclipse Public License Version 2.0</name>
-            <url>https://www.eclipse.org/legal/epl-2.0/</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <organization>
-        <name>Eclipse Mylyn</name>
-        <url>http://eclipse.org/mylyn</url>
-    </organization>
 </project>

@@ -18,4 +18,11 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>org.eclipse.mylyn.wikitext.creole</artifactId>
+        <version>3.0.43-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>

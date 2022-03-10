@@ -17,7 +17,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho-version>2.7.0</tycho-version>
 
 		<test.skip>${maven.test.skip}</test.skip>
 		<test.ui.skip>${test.skip}</test.ui.skip>
@@ -87,59 +86,8 @@
 	</modules>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<target>
-						<file>../targets/epub.target</file>
-					</target>
-					<resolver>p2</resolver>
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-					<pomDependencies>consider</pomDependencies>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<extensions>true</extensions>
-			</plugin>
-		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-source-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<executions>
-						<execution>
-							<id>attach-source</id>
-							<phase>process-classes</phase>
-							<goals>
-								<goal>plugin-source</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
@@ -213,6 +161,45 @@
 						</dependency-resolution>
 					</configuration>
 				</plugin>
+				<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>generate-pde-source-header</id>
+						<goals>
+							<goal>generate-pde-source-header</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attached-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+						<configuration>
+							<supportedProjectTypes>
+								<value>bundle</value>
+								<value>jar</value>
+							</supportedProjectTypes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

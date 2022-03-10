@@ -29,7 +29,7 @@
 	<target name="build" description="generate plugin help documentation">
 		<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties">
 			<classpath id="wikitext-core-classpath">
-				<fileset dir="../../../wikitext/core/repository/target/repository/plugins/">
+				<fileset dir="../../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/repository/plugins/">
 					<include name="*.jar"/>
 				</fileset>
 			</classpath>

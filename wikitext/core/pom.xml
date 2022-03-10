@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.eclipse.mylyn.docs</groupId>
+     <parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>wikitext</artifactId>
+        <version>3.0.43-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
     <artifactId>wikitext.core</artifactId>
-    <version>3.0.43-SNAPSHOT</version>
     <name>Mylyn Docs: WikiText: Core</name>
     <description>
         Mylyn WikiText provides an extensible framework and tools for parsing, editing and presenting lightweight markup. WikiText has parsers for AsciiDoc, CommonMark, Markdown, MediaWiki, Textile, Confluence, Creole, HTML, TracWiki and TWiki markup, and
@@ -56,7 +59,6 @@
         <guava.version>${guava.osgi}-jre</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <scm.developerConnection>scm:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</scm.developerConnection>
     </properties>
 
     <modules>
@@ -77,8 +79,6 @@
         <module>org.eclipse.mylyn.wikitext.mediawiki.ant</module>
         <module>org.eclipse.mylyn.wikitext.tracwiki</module>
         <module>org.eclipse.mylyn.wikitext.twiki</module>
-
-        <module>repository</module>
     </modules>
 
     <build>
@@ -100,7 +100,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>5.1.4</version>
+                <version>5.1.5</version>
                 <extensions>true</extensions>
                 <configuration>
                     <manifestLocation>META-INF</manifestLocation>
@@ -111,20 +111,6 @@
                         <Import-Package>com.google.common*; version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
                     </instructions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -201,32 +187,5 @@
 		    </dependency>
     	</dependencies>
     </dependencyManagement>
-
-    <licenses>
-        <license>
-            <name>Eclipse Public License Version 2.0</name>
-            <url>https://www.eclipse.org/legal/epl-2.0/</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <organization>
-        <name>Eclipse Mylyn</name>
-        <url>http://eclipse.org/mylyn</url>
-    </organization>
-    <issueManagement>
-        <system>Bugzilla</system>
-        <url>https://bugs.eclipse.org/</url>
-    </issueManagement>
-    <scm>
-        <developerConnection>${scm.developerConnection}</developerConnection>
-        <connection>scm:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</connection>
-        <url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
-        <tag>HEAD</tag>
-    </scm>
-    <developers>
-        <developer>
-            <url>https://projects.eclipse.org/projects/mylyn.docs/who</url>
-        </developer>
-    </developers>
 
 </project>
