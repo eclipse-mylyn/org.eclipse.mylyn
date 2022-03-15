@@ -124,7 +124,7 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 
 	public void setImageNames(Set<String> imageNames) {
 		if (imageMapping == null) {
-			imageMapping = new HashMap<String, String>();
+			imageMapping = new HashMap<>();
 		} else {
 			imageMapping.clear();
 		}

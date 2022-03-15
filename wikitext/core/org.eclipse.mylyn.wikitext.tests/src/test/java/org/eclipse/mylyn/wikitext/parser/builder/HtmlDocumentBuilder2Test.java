@@ -54,7 +54,7 @@ public class HtmlDocumentBuilder2Test {
 
 	private HtmlDocumentBuilder builder;
 
-	private final Map<File, URL> fileToUrl = new HashMap<File, URL>();
+	private final Map<File, URL> fileToUrl = new HashMap<>();
 
 	@Before
 	public void setUp() {

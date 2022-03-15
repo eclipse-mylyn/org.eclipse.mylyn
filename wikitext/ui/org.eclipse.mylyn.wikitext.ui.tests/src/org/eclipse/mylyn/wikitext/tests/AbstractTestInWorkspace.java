@@ -46,7 +46,7 @@ public abstract class AbstractTestInWorkspace {
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-	private final List<IProject> temporaryProjects = new ArrayList<IProject>();
+	private final List<IProject> temporaryProjects = new ArrayList<>();
 
 	@Before
 	public void before() {
