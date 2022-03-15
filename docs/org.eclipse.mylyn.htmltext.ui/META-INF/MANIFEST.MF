@@ -7,7 +7,7 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  javax.annotation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.commands,

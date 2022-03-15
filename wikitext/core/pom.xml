@@ -88,8 +88,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -106,7 +106,7 @@
                     <manifestLocation>META-INF</manifestLocation>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
                         <Export-Package>${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
                         <Import-Package>com.google.common*; version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
                     </instructions>
