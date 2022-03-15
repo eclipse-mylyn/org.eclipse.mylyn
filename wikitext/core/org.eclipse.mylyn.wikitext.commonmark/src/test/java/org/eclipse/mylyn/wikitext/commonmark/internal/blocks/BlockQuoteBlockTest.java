@@ -16,10 +16,10 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class BlockQuoteBlockTest {
 
@@ -61,7 +61,7 @@ public class BlockQuoteBlockTest {
 
 	@Test
 	public void blockQuoteParagraphNewlines() {
-		for (String newline : ImmutableList.of("\n", "\r", "\r\n")) {
+		for (String newline : List.of("\n", "\r", "\r\n")) {
 			assertContent(
 					"<blockquote><p>p1 first p1 second p1 third</p></blockquote><blockquote><p>p2 first</p></blockquote>",
 					"> p1 first" + newline + "> p1 second" + newline + "> p1 third" + newline + newline + "> p2 first");

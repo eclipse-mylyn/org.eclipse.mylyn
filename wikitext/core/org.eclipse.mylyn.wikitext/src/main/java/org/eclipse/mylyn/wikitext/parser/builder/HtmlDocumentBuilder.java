@@ -1505,6 +1505,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private List<UriProcessor> defaultLinkUriProcessors() {
-		return ImmutableList.of(this::applyHtmlFilenameFormat, this::makeUrlAbsolute);
+		return List.of(this::applyHtmlFilenameFormat, this::makeUrlAbsolute);
 	}
 }

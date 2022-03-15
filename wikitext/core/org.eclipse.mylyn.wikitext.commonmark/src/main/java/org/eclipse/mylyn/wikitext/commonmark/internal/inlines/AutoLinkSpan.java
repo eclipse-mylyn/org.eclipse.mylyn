@@ -13,12 +13,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.net.UrlEscapers;
 
 public class AutoLinkSpan extends SourceSpan {
@@ -62,7 +62,7 @@ public class AutoLinkSpan extends SourceSpan {
 				int endOffset = cursor.getOffset(matcher.end(3));
 				int linkLength = endOffset - cursor.getOffset();
 				return Optional.of(new Link(cursor.getLineAtOffset(), cursor.getOffset(), linkLength, escapeUri(link),
-						null, ImmutableList.<Inline> of(new Characters(cursor.getLineAtOffset(), cursor.getOffset() + 1,
+						null, List.<Inline> of(new Characters(cursor.getLineAtOffset(), cursor.getOffset() + 1,
 								linkLength - 2, href))));
 			}
 		}

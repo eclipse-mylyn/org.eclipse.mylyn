@@ -17,10 +17,10 @@ import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.a
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class ParagraphBlockTest {
 
@@ -42,7 +42,7 @@ public class ParagraphBlockTest {
 
 	@Test
 	public void paragraphNewlines() {
-		for (String newline : ImmutableList.of("\n", "\r", "\r\n")) {
+		for (String newline : List.of("\n", "\r", "\r\n")) {
 			assertContent("<p>p1 first p1 second p1 third</p><p>p2 first</p>",
 					"p1 first" + newline + "p1 second" + newline + "p1 third" + newline + newline + "p2 first");
 		}

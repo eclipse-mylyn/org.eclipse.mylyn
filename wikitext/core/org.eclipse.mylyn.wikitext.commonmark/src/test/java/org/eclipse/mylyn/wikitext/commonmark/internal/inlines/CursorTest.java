@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +26,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class CursorTest {
 
@@ -172,13 +171,13 @@ public class CursorTest {
 		cursor.advance(4);
 		assertEquals(5, cursor.getOffset());
 
-		cursor = new Cursor(new TextSegment(ImmutableList.of(new Line(1, 10, "abc"))));
+		cursor = new Cursor(new TextSegment(List.of(new Line(1, 10, "abc"))));
 		assertEquals(12, cursor.getOffset(2));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void toCursorOffset() {
-		Cursor cursor = new Cursor(new TextSegment(ImmutableList.of(new Line(1, 10, "abc"))));
+		Cursor cursor = new Cursor(new TextSegment(List.of(new Line(1, 10, "abc"))));
 		assertEquals(0, cursor.toCursorOffset(10));
 		assertEquals(2, cursor.toCursorOffset(12));
 		cursor.toCursorOffset(9);

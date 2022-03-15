@@ -28,8 +28,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.eclipse.mylyn.wikitext.commonmark.internal.spec.SimplifiedHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
-import com.google.common.collect.ImmutableList;
-
 abstract class AbstractSourceSpanTest {
 
 	protected final SourceSpan span;
@@ -65,7 +63,7 @@ abstract class AbstractSourceSpanTest {
 
 		InlineParser parser = new InlineParser(span, new AllCharactersSpan());
 		List<Inline> inlines = parser.parse(ProcessingContext.builder().build(),
-				new TextSegment(ImmutableList.of(new Line(1, 0, markup))));
+				new TextSegment(List.of(new Line(1, 0, markup))));
 		for (Inline inline : inlines) {
 			inline.emit(builder);
 		}

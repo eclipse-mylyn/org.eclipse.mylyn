@@ -30,8 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class SourceBlocksTest {
 
 	private final SourceBlock block1 = mockBlock(BlockType.QUOTE, "b1");
@@ -61,7 +59,7 @@ public class SourceBlocksTest {
 		EventDocumentBuilder builder = new EventDocumentBuilder();
 		sourceBlocks.process(ProcessingContext.builder().build(), builder,
 				LineSequence.create("one\nb2\nmore\n\nb1 and\n\n\nb2"));
-		ImmutableList<DocumentBuilderEvent> expectedEvents = ImmutableList.of(//
+		List<DocumentBuilderEvent> expectedEvents = List.of(//
 				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()), //
 				new CharactersEvent("b2"), //
 				new CharactersEvent("more"), //

@@ -70,8 +70,6 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
 import org.eclipse.ui.themes.IThemeManager;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * A source viewer configuration suitable for installing on a markup editor
  *
@@ -152,7 +150,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 			Map<String, List<String>> hyperlinkDectectorFileRefRegexes = WikiTextUiPlugin.getDefault()
 					.getHyperlinkDectectorFileRefRegexes();
 			List<String> fileRefHyperlinkRegexes = hyperlinkDectectorFileRefRegexes
-					.getOrDefault(markupLanguage.getName(), ImmutableList.of());
+					.getOrDefault(markupLanguage.getName(), List.of());
 			fileRefHyperlinkDetector = new FileRefHyperlinkDetector(file.getParent(), fileRefHyperlinkRegexes);
 		}
 		detectors.add(markupHyperlinkDetector);

@@ -20,12 +20,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.SourceSpan;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class ProcessingContextTest {
 
@@ -77,7 +77,7 @@ public class ProcessingContextTest {
 
 	@Test
 	public void inlineParser() {
-		InlineParser inlineParser = new InlineParser(ImmutableList.<SourceSpan> of());
+		InlineParser inlineParser = new InlineParser(List.<SourceSpan> of());
 		ProcessingContext context = ProcessingContext.builder().inlineParser(inlineParser).build();
 		assertSame(inlineParser, context.getInlineParser());
 		assertNotNull(ProcessingContext.builder().build().getInlineParser());

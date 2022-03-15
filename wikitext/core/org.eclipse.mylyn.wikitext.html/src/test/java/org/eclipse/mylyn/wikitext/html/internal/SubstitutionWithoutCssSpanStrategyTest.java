@@ -24,8 +24,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class SubstitutionWithoutCssSpanStrategyTest {
 
 	@Test(expected = NullPointerException.class)
@@ -39,7 +37,6 @@ public class SubstitutionWithoutCssSpanStrategyTest {
 		EventDocumentBuilder builder = new EventDocumentBuilder();
 		strategy.beginSpan(builder, SpanType.ITALIC, new Attributes("1", "class", "style", "lang"));
 		List<DocumentBuilderEvent> events = builder.getDocumentBuilderEvents().getEvents();
-		assertEquals(ImmutableList.of(new BeginSpanEvent(SpanType.BOLD, new Attributes("1", "class", null, "lang"))),
-				events);
+		assertEquals(List.of(new BeginSpanEvent(SpanType.BOLD, new Attributes("1", "class", null, "lang"))), events);
 	}
 }

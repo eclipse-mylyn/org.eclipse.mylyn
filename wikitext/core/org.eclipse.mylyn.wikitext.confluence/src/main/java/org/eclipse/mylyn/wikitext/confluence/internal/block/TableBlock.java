@@ -22,7 +22,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
@@ -33,7 +32,7 @@ public class TableBlock extends Block {
 
 	private static final int LINE_PROCESSED_INDICATOR = -1;
 
-	private static final List<Class<?>> NESTABLE_CELL_BLOCKS = ImmutableList.of(ListBlock.class);
+	private static final List<Class<?>> NESTABLE_CELL_BLOCKS = List.of(ListBlock.class);
 
 	private static final Pattern START_PATTERN = Pattern.compile("\\s*(\\|\\|?.*$)"); //$NON-NLS-1$
 

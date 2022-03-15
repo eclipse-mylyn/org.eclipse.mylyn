@@ -26,8 +26,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class BlockStrategiesTest {
 
 	@Test(expected = NullPointerException.class)
@@ -107,7 +105,7 @@ public class BlockStrategiesTest {
 	@Test
 	public void fallBackToNoOp() {
 		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
-		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.BULLETED_LIST,
+		List<BlockType> unsupportedBlockTypes = List.of(BlockType.TABLE, BlockType.BULLETED_LIST,
 				BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
 		for (BlockType blockType : unsupportedBlockTypes) {
 			BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
@@ -118,9 +116,9 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void fallBack() {
-		for (BlockType supportedType : ImmutableList.of(BlockType.PARAGRAPH, BlockType.DIV)) {
+		for (BlockType supportedType : List.of(BlockType.PARAGRAPH, BlockType.DIV)) {
 
-			List<BlockType> fallBackTypes = ImmutableList.of(BlockType.CODE, BlockType.DEFINITION_ITEM,
+			List<BlockType> fallBackTypes = List.of(BlockType.CODE, BlockType.DEFINITION_ITEM,
 					BlockType.DEFINITION_TERM, BlockType.FOOTNOTE, BlockType.INFORMATION, BlockType.LIST_ITEM,
 					BlockType.NOTE, BlockType.PREFORMATTED, BlockType.QUOTE, BlockType.TABLE_CELL_HEADER,
 					BlockType.TABLE_CELL_NORMAL, BlockType.TIP, BlockType.WARNING);

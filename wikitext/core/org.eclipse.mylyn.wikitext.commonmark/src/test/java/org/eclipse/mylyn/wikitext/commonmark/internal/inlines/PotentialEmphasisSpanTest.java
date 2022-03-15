@@ -16,11 +16,11 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class PotentialEmphasisSpanTest extends AbstractSourceSpanTest {
 
@@ -144,7 +144,7 @@ public class PotentialEmphasisSpanTest extends AbstractSourceSpanTest {
 	}
 
 	private Cursor createCursor(String markup, int offset) {
-		TextSegment segment = new TextSegment(ImmutableList.of(new Line(1, 0, markup)));
+		TextSegment segment = new TextSegment(List.of(new Line(1, 0, markup)));
 		Cursor cursor = new Cursor(segment);
 		cursor.advance(offset);
 		return cursor;

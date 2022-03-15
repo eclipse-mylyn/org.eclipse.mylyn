@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -25,8 +26,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class CompositeSpanStrategyTest {
 
@@ -45,7 +44,7 @@ public class CompositeSpanStrategyTest {
 		strategy.endSpan(builder);
 		DocumentBuilderEvents events = builder.getDocumentBuilderEvents();
 		assertEquals(
-				ImmutableList.of(new BeginSpanEvent(SpanType.BOLD, new Attributes()),
+				List.of(new BeginSpanEvent(SpanType.BOLD, new Attributes()),
 						new BeginSpanEvent(SpanType.ITALIC, new Attributes()), new EndSpanEvent(), new EndSpanEvent()),
 				events.getEvents());
 

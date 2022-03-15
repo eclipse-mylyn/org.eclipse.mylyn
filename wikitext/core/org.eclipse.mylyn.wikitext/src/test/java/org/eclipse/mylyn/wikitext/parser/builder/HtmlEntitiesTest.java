@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Test;
+import java.util.List;
 
-import com.google.common.collect.ImmutableList;
+import org.junit.Test;
 
 public class HtmlEntitiesTest {
 	private final HtmlEntities instance = HtmlEntities.instance();
@@ -32,14 +32,14 @@ public class HtmlEntitiesTest {
 
 	@Test
 	public void nameToEntityReferencesUnknownName() {
-		assertEquals(ImmutableList.of(), instance.nameToEntityReferences("asdf"));
-		assertEquals(ImmutableList.of(), instance.nameToEntityReferences(null));
+		assertEquals(List.of(), instance.nameToEntityReferences("asdf"));
+		assertEquals(List.of(), instance.nameToEntityReferences(null));
 	}
 
 	@Test
 	public void nameToEntityReferences() {
-		assertEquals(ImmutableList.of("#160"), instance.nameToEntityReferences("nbsp"));
-		assertEquals(ImmutableList.of("#8807", "#824"), instance.nameToEntityReferences("ngE"));
-		assertEquals(ImmutableList.of("#8817"), instance.nameToEntityReferences("nge"));
+		assertEquals(List.of("#160"), instance.nameToEntityReferences("nbsp"));
+		assertEquals(List.of("#8807", "#824"), instance.nameToEntityReferences("ngE"));
+		assertEquals(List.of("#8817"), instance.nameToEntityReferences("nge"));
 	}
 }

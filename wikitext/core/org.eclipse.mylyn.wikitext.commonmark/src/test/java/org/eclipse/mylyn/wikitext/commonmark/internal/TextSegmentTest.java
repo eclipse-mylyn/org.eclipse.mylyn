@@ -17,10 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 
 public class TextSegmentTest {
 
@@ -31,7 +32,7 @@ public class TextSegmentTest {
 
 	@Test
 	public void getText() {
-		assertEquals("", new TextSegment(ImmutableList.<Line> of()).getText());
+		assertEquals("", new TextSegment(List.of()).getText());
 		assertEquals("one\ntwo", new TextSegment(createLines("one\r\ntwo")).getText());
 		assertEquals("one\ntwo\nthree", new TextSegment(createLines("one\r\ntwo\nthree")).getText());
 	}
@@ -50,7 +51,7 @@ public class TextSegmentTest {
 
 	@Test
 	public void toTextOffset() {
-		TextSegment segment = new TextSegment(ImmutableList.of(new Line(1, 10, "abc"), new Line(2, 15, "def")));
+		TextSegment segment = new TextSegment(List.of(new Line(1, 10, "abc"), new Line(2, 15, "def")));
 		assertEquals(0, segment.toTextOffset(10));
 		assertEquals(2, segment.toTextOffset(12));
 		assertEquals(4, segment.toTextOffset(15));
@@ -71,7 +72,7 @@ public class TextSegmentTest {
 
 	@Test
 	public void getLineAtOffset() {
-		ImmutableList<Line> lines = ImmutableList.of(new Line(1, 10, "abc"), new Line(2, 15, "def"));
+		List<Line> lines = List.of(new Line(1, 10, "abc"), new Line(2, 15, "def"));
 		TextSegment segment = new TextSegment(lines);
 		assertEquals(lines.get(0), segment.getLineAtOffset(0));
 		assertEquals(lines.get(0), segment.getLineAtOffset(3));

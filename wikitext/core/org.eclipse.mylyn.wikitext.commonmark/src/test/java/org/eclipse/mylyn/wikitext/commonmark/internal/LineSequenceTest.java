@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class LineSequenceTest {
 
 	@Test(expected = NullPointerException.class)
@@ -77,7 +75,7 @@ public class LineSequenceTest {
 		for (Line line : LineSequence.create("a\nb\nc\na").with(input -> !input.getText().equals("c"))) {
 			strings.add(line.getText());
 		}
-		assertEquals(ImmutableList.of("a", "b"), strings);
+		assertEquals(List.of("a", "b"), strings);
 	}
 
 	@Test
