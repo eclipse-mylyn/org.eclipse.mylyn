@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +29,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import com.google.common.io.Files;
 
 public class WikiToDocTaskTest {
 
@@ -94,7 +93,7 @@ public class WikiToDocTaskTest {
 		task.execute();
 
 		File result = task.computeHtmlOutputFile(path);
-		String content = Files.toString(result, StandardCharsets.UTF_8);
+		String content = Files.readString(result.toPath(), StandardCharsets.UTF_8);
 		assertTrue(content.contains(
 				"<p>Link to <a href=\"#IActivatable\" title=\"GEF/GEF4/Common#IActivatable\">IActivatable</a> is here</p>"));
 	}
@@ -137,7 +136,7 @@ public class WikiToDocTaskTest {
 		assertEquals("'Installation.html' page exists", true, installationPage.exists());
 		File taskListPage = new File(mainPage.getParentFile(), "Task-List.html");
 		assertEquals("'Task-List.html' page exists", true, taskListPage.exists());
-		String content = Files.toString(taskListPage, StandardCharsets.UTF_8);
+		String content = Files.readString(taskListPage.toPath(), StandardCharsets.UTF_8);
 		assertTrue(content.contains(
 				"<a href=\"Installation.html#Recommended_GTK_Setup_for_KDE\" title=\"Mylyn/FAQ#Recommended_GTK_Setup_for_KDE\">Recommended GTK Setup for KDE</a> section."));
 	}

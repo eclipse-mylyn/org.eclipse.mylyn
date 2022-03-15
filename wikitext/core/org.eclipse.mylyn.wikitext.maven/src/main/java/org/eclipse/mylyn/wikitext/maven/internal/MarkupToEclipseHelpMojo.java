@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2022 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,8 +48,6 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingMarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.splitter.SplittingOutlineParser;
 import org.eclipse.mylyn.wikitext.splitter.SplittingStrategy;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-
-import com.google.common.io.Files;
 
 @Mojo(name = "eclipse-help", defaultPhase = LifecyclePhase.COMPILE)
 public class MarkupToEclipseHelpMojo extends AbstractMojo {
@@ -237,7 +236,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		ensureFolderExists("target folder", targetFolder, true);
 		File targetFile = new File(targetFolder, sourceFile.getName());
 		try {
-			Files.copy(sourceFile, targetFile);
+			Files.copy(sourceFile.toPath(), targetFile.toPath());
 		} catch (IOException e) {
 			throw new BuildFailureException(
 					format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile, e.getMessage()), e);
@@ -460,7 +459,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 	protected String readFully(File inputFile) {
 		try {
-			return Files.toString(inputFile, Charset.forName(sourceEncoding));
+			return Files.readString(inputFile.toPath(), Charset.forName(sourceEncoding));
 		} catch (IOException e) {
 			throw new BuildFailureException(format("Cannot read source file {0}: {1}", inputFile, e.getMessage()), e);
 		}
