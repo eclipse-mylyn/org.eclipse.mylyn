@@ -17,11 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Set;
+
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 public class IdGeneratorTest {
 
@@ -52,7 +52,7 @@ public class IdGeneratorTest {
 		assertEquals("def", generator.newId("h1", "def"));
 
 		assertTrue(generator.hasAnchorNames());
-		assertEquals(ImmutableSet.of("abc", "abc2", "abc3", "def"), generator.getAnchorNames());
+		assertEquals(Set.of("abc", "abc2", "abc3", "def"), generator.getAnchorNames());
 	}
 
 	@Test

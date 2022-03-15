@@ -25,14 +25,13 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Green
  */
 class WhitespaceCleanupProcessor extends DocumentProcessor {
 
-	private static final Set<String> CHILD_TAGS = ImmutableSet.of("li", "th", "tr", "td"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final Set<String> CHILD_TAGS = Set.of("li", "th", "tr", "td"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	@Override
 	public void process(Document document) {

@@ -23,14 +23,12 @@ import java.util.Set;
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 public class MarkupLanguageProviderTest {
 
 	static class TestLanguageProvider extends MarkupLanguageProvider {
 		@Override
 		protected Set<MarkupLanguage> loadMarkupLanguages() {
-			return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage("Test"));
+			return Set.of(new MockMarkupLanguage("Test"));
 		}
 	}
 
@@ -61,7 +59,7 @@ public class MarkupLanguageProviderTest {
 
 			@Override
 			protected Set<MarkupLanguage> loadMarkupLanguages() {
-				return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
+				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
 			}
 		};
 		IllegalStateException ise = assertThrows(IllegalStateException.class, () -> provider.getMarkupLanguages());
@@ -76,7 +74,7 @@ public class MarkupLanguageProviderTest {
 			protected Set<MarkupLanguage> loadMarkupLanguages() {
 				MockMarkupLanguage language = new MockMarkupLanguage();
 				language.setName(null);
-				return ImmutableSet.<MarkupLanguage> of(language);
+				return Set.of(language);
 			}
 		};
 		NullPointerException npe = assertThrows(NullPointerException.class, () -> provider.getMarkupLanguages());

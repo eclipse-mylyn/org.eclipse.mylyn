@@ -39,8 +39,6 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * Tests for {@link ServiceLocator}
  *
@@ -287,7 +285,7 @@ public class ServiceLocatorTest {
 		};
 		Set<MarkupLanguage> markupLanguages = locator.getAllMarkupLanguages();
 		assertEquals(3, markupLanguages.size());
-		assertTrue(markupLanguages.containsAll(ImmutableSet.of(language1, language1b)));
+		assertTrue(markupLanguages.containsAll(Set.of(language1, language1b)));
 		assertTrue(markupLanguages.contains(language2) || markupLanguages.contains(language2b));
 	}
 

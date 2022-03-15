@@ -43,7 +43,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 
@@ -55,9 +54,9 @@ public class CommonMarkSpecTest {
 	private static final URI COMMONMARK_SPEC_URI = URI
 			.create(String.format("https://raw.githubusercontent.com/jgm/CommonMark/%s/spec.txt", SPEC_VERSION));
 
-	private static final Set<String> HEADING_EXCLUSIONS = ImmutableSet.of();
+	private static final Set<String> HEADING_EXCLUSIONS = Set.of();
 
-	private static final Set<Integer> LINE_EXCLUSIONS = ImmutableSet.of(//
+	private static final Set<Integer> LINE_EXCLUSIONS = Set.of(//
 			281, // Tabs
 			2478, // Link reference definitions
 			2515, // Link reference definitions

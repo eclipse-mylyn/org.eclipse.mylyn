@@ -13,8 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
 
+import static java.util.Map.entry;
+
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -33,8 +34,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
  *
@@ -47,99 +46,84 @@ public abstract class AbstractSaxHtmlParser {
 	/**
 	 * element names for block elements
 	 */
-	private static Set<String> blockElements;
+	private static Set<String> blockElements = Set.of("div", //$NON-NLS-1$
+			"dl", //$NON-NLS-1$
+			"form", //$NON-NLS-1$
+			"h1", //$NON-NLS-1$
+			"h2", //$NON-NLS-1$
+			"h3", //$NON-NLS-1$
+			"h4", //$NON-NLS-1$
+			"h5", //$NON-NLS-1$
+			"h6", //$NON-NLS-1$
+			"ol", //$NON-NLS-1$
+			"p", //$NON-NLS-1$
+			"pre", //$NON-NLS-1$
+			"table", //$NON-NLS-1$
+			"textarea", //$NON-NLS-1$
+			"td", //$NON-NLS-1$
+			"tr", //$NON-NLS-1$
+			"ul", //$NON-NLS-1$
+			"tbody", //$NON-NLS-1$
+			"thead", //$NON-NLS-1$
+			"tfoot", //$NON-NLS-1$
+			"li", //$NON-NLS-1$
+			"dd", //$NON-NLS-1$
+			"dt", //$NON-NLS-1$
+			"blockquote" //$NON-NLS-1$
+	);
 
 	/**
 	 * element names for elements that cause adjacent whitespace to be collapsed
 	 */
-	private static Set<String> whitespaceCollapsingElements;
+	private static Set<String> whitespaceCollapsingElements = Set.of("br", "hr");//$NON-NLS-1$ //$NON-NLS-2$
 
-	private static Set<String> noCharacterContentElements;
-	static {
-		ImmutableSet.Builder<String> blockElementsBuilder = ImmutableSet.builder();
-		blockElementsBuilder.add("div"); //$NON-NLS-1$
-		blockElementsBuilder.add("dl"); //$NON-NLS-1$
-		blockElementsBuilder.add("form"); //$NON-NLS-1$
-		blockElementsBuilder.add("h1"); //$NON-NLS-1$
-		blockElementsBuilder.add("h2"); //$NON-NLS-1$
-		blockElementsBuilder.add("h3"); //$NON-NLS-1$
-		blockElementsBuilder.add("h4"); //$NON-NLS-1$
-		blockElementsBuilder.add("h5"); //$NON-NLS-1$
-		blockElementsBuilder.add("h6"); //$NON-NLS-1$
-		blockElementsBuilder.add("ol"); //$NON-NLS-1$
-		blockElementsBuilder.add("p"); //$NON-NLS-1$
-		blockElementsBuilder.add("pre"); //$NON-NLS-1$
-		blockElementsBuilder.add("table"); //$NON-NLS-1$
-		blockElementsBuilder.add("textarea"); //$NON-NLS-1$
-		blockElementsBuilder.add("td"); //$NON-NLS-1$
-		blockElementsBuilder.add("tr"); //$NON-NLS-1$
-		blockElementsBuilder.add("ul"); //$NON-NLS-1$
-		blockElementsBuilder.add("tbody"); //$NON-NLS-1$
-		blockElementsBuilder.add("thead"); //$NON-NLS-1$
-		blockElementsBuilder.add("tfoot"); //$NON-NLS-1$
-		blockElementsBuilder.add("li"); //$NON-NLS-1$
-		blockElementsBuilder.add("dd"); //$NON-NLS-1$
-		blockElementsBuilder.add("dt"); //$NON-NLS-1$
-		blockElementsBuilder.add("blockquote"); //$NON-NLS-1$
-		blockElements = blockElementsBuilder.build();
+	private static Set<String> noCharacterContentElements = Set.of("ul", //$NON-NLS-1$
+			"ol", //$NON-NLS-1$
+			"table", //$NON-NLS-1$
+			"tbody", //$NON-NLS-1$
+			"thead", //$NON-NLS-1$
+			"tr" //$NON-NLS-1$
+	);
 
-		ImmutableSet.Builder<String> whitespaceCollapsingElementsBuilder = ImmutableSet.builder();
-		whitespaceCollapsingElementsBuilder.add("br"); //$NON-NLS-1$
-		whitespaceCollapsingElementsBuilder.add("hr"); //$NON-NLS-1$
-		whitespaceCollapsingElements = whitespaceCollapsingElementsBuilder.build();
+	private static final Map<String, SpanType> elementNameToSpanType = Map.ofEntries(entry("a", SpanType.LINK), //$NON-NLS-1$
+			entry("b", SpanType.BOLD), //$NON-NLS-1$
+			entry("cite", SpanType.CITATION), //$NON-NLS-1$
+			entry("i", SpanType.ITALIC), //$NON-NLS-1$
+			entry("em", SpanType.EMPHASIS), //$NON-NLS-1$
+			entry("strong", SpanType.STRONG), //$NON-NLS-1$
+			entry("del", SpanType.DELETED), //$NON-NLS-1$
+			entry("strike", SpanType.DELETED), //$NON-NLS-1$
+			entry("s", SpanType.DELETED), //$NON-NLS-1$
+			entry("ins", SpanType.INSERTED), //$NON-NLS-1$
+			entry("q", SpanType.QUOTE), //$NON-NLS-1$
+			entry("u", SpanType.UNDERLINED), //$NON-NLS-1$
+			entry("sup", SpanType.SUPERSCRIPT), //$NON-NLS-1$
+			entry("sub", SpanType.SUBSCRIPT), //$NON-NLS-1$
+			entry("span", SpanType.SPAN), //$NON-NLS-1$
+			entry("font", SpanType.SPAN), //$NON-NLS-1$
+			entry("code", SpanType.CODE), //$NON-NLS-1$
+			entry("tt", SpanType.MONOSPACE), //$NON-NLS-1$
+			entry("mark", SpanType.MARK) //$NON-NLS-1$
+	);
 
-		ImmutableSet.Builder<String> noCharacterContentElementsBuilder = ImmutableSet.builder();
-		noCharacterContentElementsBuilder.add("ul"); //$NON-NLS-1$
-		noCharacterContentElementsBuilder.add("ol"); //$NON-NLS-1$
-		noCharacterContentElementsBuilder.add("table"); //$NON-NLS-1$
-		noCharacterContentElementsBuilder.add("tbody"); //$NON-NLS-1$
-		noCharacterContentElementsBuilder.add("thead"); //$NON-NLS-1$
-		noCharacterContentElementsBuilder.add("tr"); //$NON-NLS-1$
-		noCharacterContentElements = noCharacterContentElementsBuilder.build();
-	}
-
-	private static final Map<String, SpanType> elementNameToSpanType = new HashMap<>();
-	static {
-		elementNameToSpanType.put("a", SpanType.LINK); //$NON-NLS-1$
-		elementNameToSpanType.put("b", SpanType.BOLD); //$NON-NLS-1$
-		elementNameToSpanType.put("cite", SpanType.CITATION); //$NON-NLS-1$
-		elementNameToSpanType.put("i", SpanType.ITALIC); //$NON-NLS-1$
-		elementNameToSpanType.put("em", SpanType.EMPHASIS); //$NON-NLS-1$
-		elementNameToSpanType.put("strong", SpanType.STRONG); //$NON-NLS-1$
-		elementNameToSpanType.put("del", SpanType.DELETED); //$NON-NLS-1$
-		elementNameToSpanType.put("strike", SpanType.DELETED); //$NON-NLS-1$
-		elementNameToSpanType.put("s", SpanType.DELETED); //$NON-NLS-1$
-		elementNameToSpanType.put("ins", SpanType.INSERTED); //$NON-NLS-1$
-		elementNameToSpanType.put("q", SpanType.QUOTE); //$NON-NLS-1$
-		elementNameToSpanType.put("u", SpanType.UNDERLINED); //$NON-NLS-1$
-		elementNameToSpanType.put("sup", SpanType.SUPERSCRIPT); //$NON-NLS-1$
-		elementNameToSpanType.put("sub", SpanType.SUBSCRIPT); //$NON-NLS-1$
-		elementNameToSpanType.put("span", SpanType.SPAN); //$NON-NLS-1$
-		elementNameToSpanType.put("font", SpanType.SPAN); //$NON-NLS-1$
-		elementNameToSpanType.put("code", SpanType.CODE); //$NON-NLS-1$
-		elementNameToSpanType.put("tt", SpanType.MONOSPACE); //$NON-NLS-1$
-		elementNameToSpanType.put("mark", SpanType.MARK); //$NON-NLS-1$
-	}
-
-	private static final Map<String, BlockType> elementNameToBlockType = new HashMap<>();
-	static {
-		elementNameToBlockType.put("ul", BlockType.BULLETED_LIST); //$NON-NLS-1$
-		elementNameToBlockType.put("code", BlockType.CODE); //$NON-NLS-1$
-		elementNameToBlockType.put("div", BlockType.DIV); //$NON-NLS-1$
-		elementNameToBlockType.put("footnote", BlockType.FOOTNOTE); //$NON-NLS-1$
-		elementNameToBlockType.put("li", BlockType.LIST_ITEM); //$NON-NLS-1$
-		elementNameToBlockType.put("ol", BlockType.NUMERIC_LIST); //$NON-NLS-1$
-		elementNameToBlockType.put("dl", BlockType.DEFINITION_LIST); //$NON-NLS-1$
-		elementNameToBlockType.put("dt", BlockType.DEFINITION_TERM); //$NON-NLS-1$
-		elementNameToBlockType.put("dd", BlockType.DEFINITION_ITEM); //$NON-NLS-1$
-		elementNameToBlockType.put("p", BlockType.PARAGRAPH); //$NON-NLS-1$
-		elementNameToBlockType.put("pre", BlockType.PREFORMATTED); //$NON-NLS-1$
-		elementNameToBlockType.put("blockquote", BlockType.QUOTE); //$NON-NLS-1$
-		elementNameToBlockType.put("table", BlockType.TABLE); //$NON-NLS-1$
-		elementNameToBlockType.put("th", BlockType.TABLE_CELL_HEADER); //$NON-NLS-1$
-		elementNameToBlockType.put("td", BlockType.TABLE_CELL_NORMAL); //$NON-NLS-1$
-		elementNameToBlockType.put("tr", BlockType.TABLE_ROW); //$NON-NLS-1$
-	}
+	private static final Map<String, BlockType> elementNameToBlockType = Map.ofEntries(
+			entry("ul", BlockType.BULLETED_LIST), //$NON-NLS-1$
+			entry("code", BlockType.CODE), //$NON-NLS-1$
+			entry("div", BlockType.DIV), //$NON-NLS-1$
+			entry("footnote", BlockType.FOOTNOTE), //$NON-NLS-1$
+			entry("li", BlockType.LIST_ITEM), //$NON-NLS-1$
+			entry("ol", BlockType.NUMERIC_LIST), //$NON-NLS-1$
+			entry("dl", BlockType.DEFINITION_LIST), //$NON-NLS-1$
+			entry("dt", BlockType.DEFINITION_TERM), //$NON-NLS-1$
+			entry("dd", BlockType.DEFINITION_ITEM), //$NON-NLS-1$
+			entry("p", BlockType.PARAGRAPH), //$NON-NLS-1$
+			entry("pre", BlockType.PREFORMATTED), //$NON-NLS-1$
+			entry("blockquote", BlockType.QUOTE), //$NON-NLS-1$
+			entry("table", BlockType.TABLE), //$NON-NLS-1$
+			entry("th", BlockType.TABLE_CELL_HEADER), //$NON-NLS-1$
+			entry("td", BlockType.TABLE_CELL_NORMAL), //$NON-NLS-1$
+			entry("tr", BlockType.TABLE_ROW) //$NON-NLS-1$
+	);
 
 	private static final class ElementState {
 		@SuppressWarnings("unused")

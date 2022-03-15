@@ -18,8 +18,6 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * Heuristic replacement for bare hyperlinks (e.g. http://www.eclipse.org) without &lt; and &gt; delimiters to links in
  * the output. <br>
@@ -56,7 +54,7 @@ public class ExtendedAutomaticLinkReplacementToken extends PatternBasedElement {
 	 */
 	private static final String AUTOMATIC_LINK_REGEX = "(?<=^|\\s|\\p{Punct})((https?://(?!/)|www\\.)[a-zA-Z0-9:/?#\\[\\]@!$&'\\(\\)\\*+,;=\\-\\._~%]+)(?=$|\"|\\s|<)"; //$NON-NLS-1$
 
-	private static final Set<String> EMPTY_LINKS = ImmutableSet.of("www.", "http://", "https://");
+	private static final Set<String> EMPTY_LINKS = Set.of("www.", "http://", "https://");
 
 	@Override
 	protected String getPattern(int groupOffset) {

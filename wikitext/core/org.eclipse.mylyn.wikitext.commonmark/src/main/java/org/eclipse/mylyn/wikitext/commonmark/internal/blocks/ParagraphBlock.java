@@ -32,11 +32,9 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
-import com.google.common.collect.ImmutableSet;
-
 public class ParagraphBlock extends SourceBlock {
 
-	private final Set<Class<? extends SourceBlock>> INTERRUPTION_EXCLUSIONS = ImmutableSet.of(IndentedCodeBlock.class,
+	private final Set<Class<? extends SourceBlock>> INTERRUPTION_EXCLUSIONS = Set.of(IndentedCodeBlock.class,
 			SetextHeaderBlock.class, HtmlType7Block.class);
 
 	@Override

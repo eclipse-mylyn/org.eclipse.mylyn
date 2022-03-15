@@ -18,13 +18,11 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 
-import com.google.common.collect.ImmutableSet;
-
 public class MockMarkupLanguageProvider extends MarkupLanguageProvider {
 
 	@Override
 	protected Set<MarkupLanguage> loadMarkupLanguages() {
-		return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage());
+		return Set.of(new MockMarkupLanguage());
 	}
 
 }

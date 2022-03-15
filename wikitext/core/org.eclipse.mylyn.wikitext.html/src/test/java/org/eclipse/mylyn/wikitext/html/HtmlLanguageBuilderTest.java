@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
+import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -29,8 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 public class HtmlLanguageBuilderTest {
 
@@ -100,8 +99,8 @@ public class HtmlLanguageBuilderTest {
 		assertTrue(language instanceof HtmlSubsetLanguage);
 
 		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) language;
-		assertEquals(ImmutableSet.of(BlockType.PARAGRAPH, BlockType.CODE), subsetLanguage.getSupportedBlockTypes());
-		assertEquals(ImmutableSet.of(SpanType.SUPERSCRIPT, SpanType.BOLD), subsetLanguage.getSupportedSpanTypes());
+		assertEquals(Set.of(BlockType.PARAGRAPH, BlockType.CODE), subsetLanguage.getSupportedBlockTypes());
+		assertEquals(Set.of(SpanType.SUPERSCRIPT, SpanType.BOLD), subsetLanguage.getSupportedSpanTypes());
 		assertEquals(0, subsetLanguage.getSupportedHeadingLevel());
 	}
 
