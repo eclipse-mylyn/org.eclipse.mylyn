@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
  */
 public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 
-	private final Map<String, Integer> anchorReferenceCount = new HashMap<String, Integer>();
+	private final Map<String, Integer> anchorReferenceCount = new HashMap<>();
 
 	@Override
 	public String generateId(String headingText) {
@@ -35,7 +35,7 @@ public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 		// anchor = escapeId( headingText )
 		// ++refCount(anchor)
 		// if (refCount(anchor) > 1) {
-		//   anchor = anchor + '_' + refCount(anchor) 
+		//   anchor = anchor + '_' + refCount(anchor)
 		// }
 
 		String anchor = headingTextToId(headingText);
@@ -51,7 +51,7 @@ public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 
 	/**
 	 * encode a page name or anchor following MediaWiki encoding behaviour
-	 * 
+	 *
 	 * @param headingText
 	 *            the heading text, page name or anchor text
 	 * @return an encoded id
@@ -60,11 +60,7 @@ public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 		// implementation based on Sanitizer.php line 629
 		String escaped = headingText.replaceAll("\\s", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: decode entity and char references
-		try {
-			escaped = URLEncoder.encode(escaped, "utf-8"); //$NON-NLS-1$
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException(e);
-		}
+		escaped = URLEncoder.encode(escaped, StandardCharsets.UTF_8);
 		return escaped.replace("%3A", ":").replace('%', '.'); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

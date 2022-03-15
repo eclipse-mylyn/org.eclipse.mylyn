@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Tom Seidel, Remus Software
+ * Copyright (c) 2011, 2022 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
@@ -44,16 +44,9 @@ public abstract class ConfigurationElement {
 	public String toQuery() {
 		StringBuilder sb = new StringBuilder();
 		if (value != null && !value.equals(getDefaultValue())) {
-			String valueForEditor;
-			try {
-				valueForEditor = URLEncoder
-						.encode(getValueForEditor(), "UTF-8");
-				if (valueForEditor != null) {
-					sb.append(ckConfigElement).append("=")
-							.append(valueForEditor);
-				}
-			} catch (UnsupportedEncodingException e) {
-				throw new IllegalStateException(e);
+			String valueForEditor = URLEncoder.encode(getValueForEditor(), StandardCharsets.UTF_8);
+			if (valueForEditor != null) {
+				sb.append(ckConfigElement).append("=").append(valueForEditor);
 			}
 		}
 		return sb.toString();
