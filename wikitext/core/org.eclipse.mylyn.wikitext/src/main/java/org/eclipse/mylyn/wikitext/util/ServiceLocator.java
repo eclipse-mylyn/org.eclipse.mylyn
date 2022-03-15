@@ -39,7 +39,6 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
@@ -310,7 +309,7 @@ public class ServiceLocator {
 				paths.add(prefix + suffix);
 			}
 		}
-		return ImmutableList.copyOf(paths);
+		return List.copyOf(paths);
 	}
 
 	/**

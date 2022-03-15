@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,15 +20,13 @@ import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 
-import com.google.common.collect.ImmutableList;
-
 public abstract class InlineWithNestedContents extends Inline {
 
 	private final List<Inline> contents;
 
 	public InlineWithNestedContents(Line line, int offset, int length, List<Inline> contents) {
 		super(line, offset, length);
-		this.contents = ImmutableList.copyOf(contents);
+		this.contents = List.copyOf(contents);
 	}
 
 	public List<Inline> getContents() {

@@ -23,8 +23,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * A markup language, which knows its formatting rules and is able to process content based on {@link Block},
  * {@link PatternBasedElementProcessor} and {@link PatternBasedElement} concepts. All markup languages supported by
@@ -130,7 +128,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	public void setFileExtensions(Set<String> fileExtensions) {
 		Objects.requireNonNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
 		checkArgument(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
-		this.fileExtensions = ImmutableSet.copyOf(fileExtensions);
+		this.fileExtensions = Set.copyOf(fileExtensions);
 	}
 
 	/**

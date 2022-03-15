@@ -23,7 +23,6 @@ import org.eclipse.mylyn.wikitext.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 
 public class ProcessingContextBuilder {
 
@@ -49,7 +48,7 @@ public class ProcessingContextBuilder {
 	}
 
 	public ProcessingContext build() {
-		return new ProcessingContext(getInlineParser(), ImmutableMap.copyOf(linkByName), idGenerator());
+		return new ProcessingContext(getInlineParser(), Map.copyOf(linkByName), idGenerator());
 	}
 
 	public ProcessingContextBuilder inlineParser(InlineParser inlineParser) {

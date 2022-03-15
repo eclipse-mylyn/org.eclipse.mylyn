@@ -23,9 +23,6 @@ import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementStrategy, HtmlElementStrategyType extends HtmlElementStrategy<ElementType>> {
 
 	private Map<ElementType, ElementStrategy> elementStrategyByElementType;
@@ -36,7 +33,7 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 			List<HtmlElementStrategyType> elementStrategies) {
 		requireNonNull(elementTypeClass);
 		requireNonNull(elementTypes);
-		this.elementStrategies = ImmutableList.copyOf(requireNonNull(elementStrategies));
+		this.elementStrategies = List.copyOf(requireNonNull(elementStrategies));
 
 		initialize(elementTypeClass, elementTypes);
 	}
@@ -70,7 +67,7 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 		}
 		elementStrategyByElementType.putAll(alternativesByElementType);
 
-		this.elementStrategyByElementType = ImmutableMap.copyOf(elementStrategyByElementType);
+		this.elementStrategyByElementType = Map.copyOf(elementStrategyByElementType);
 	}
 
 	abstract void addImplicitElementTypes(Map<ElementType, ElementStrategy> blockStrategyByElementType,

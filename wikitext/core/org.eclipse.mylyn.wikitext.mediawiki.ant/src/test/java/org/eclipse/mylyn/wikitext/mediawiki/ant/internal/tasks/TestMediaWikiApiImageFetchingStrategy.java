@@ -20,8 +20,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 public class TestMediaWikiApiImageFetchingStrategy extends MediaWikiApiImageFetchingStrategy {
 
 	private final Map<String, String> serverContent;
@@ -29,7 +27,7 @@ public class TestMediaWikiApiImageFetchingStrategy extends MediaWikiApiImageFetc
 	public TestMediaWikiApiImageFetchingStrategy(Map<String, String> serverContent) {
 		requireNonNull(serverContent,
 				"Please specify some server content for images used during the tests. See: TestMediaWikiApiImageFetchingStrategy#serverContent");
-		this.serverContent = ImmutableMap.copyOf(serverContent);
+		this.serverContent = Map.copyOf(serverContent);
 	}
 
 	@Override

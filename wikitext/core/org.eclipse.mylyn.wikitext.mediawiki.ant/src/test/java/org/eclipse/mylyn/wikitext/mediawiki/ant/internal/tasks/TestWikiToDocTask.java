@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.apache.tools.ant.Project;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  * Extension of the {@link WikiToDocTask} for test purposes.
  */
@@ -46,7 +44,7 @@ class TestWikiToDocTask extends WikiToDocTask {
 	}
 
 	public void setImageServerContent(Map<String, String> imageServerContent) {
-		this.imageServerContent = ImmutableMap.copyOf(imageServerContent);
+		this.imageServerContent = Map.copyOf(imageServerContent);
 	}
 
 	@Override

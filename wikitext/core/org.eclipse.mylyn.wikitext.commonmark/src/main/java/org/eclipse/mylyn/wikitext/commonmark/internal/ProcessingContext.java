@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,10 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Map;
+
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.parser.IdGenerator;
-
-import com.google.common.collect.ImmutableMap;
 
 public class ProcessingContext {
 
@@ -55,12 +55,11 @@ public class ProcessingContext {
 
 	private final InlineParser inlineParser;
 
-	private final ImmutableMap<String, NamedUriWithTitle> links;
+	private final Map<String, NamedUriWithTitle> links;
 
 	private final IdGenerator idGenerator;
 
-	ProcessingContext(InlineParser inlineParser, ImmutableMap<String, NamedUriWithTitle> links,
-			IdGenerator idGenerator) {
+	ProcessingContext(InlineParser inlineParser, Map<String, NamedUriWithTitle> links, IdGenerator idGenerator) {
 		this.inlineParser = requireNonNull(inlineParser);
 		this.links = requireNonNull(links);
 		this.idGenerator = requireNonNull(idGenerator);

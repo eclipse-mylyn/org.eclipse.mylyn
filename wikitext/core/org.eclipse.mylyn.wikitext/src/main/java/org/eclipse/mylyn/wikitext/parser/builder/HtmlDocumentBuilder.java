@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -110,7 +110,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 					"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;")) //$NON-NLS-1$
 	);
 
-	private Map<SpanType, String> spanTypeToElementName = ImmutableMap.copyOf(defaultSpanTypeToElementName);
+	private Map<SpanType, String> spanTypeToElementName = Map.copyOf(defaultSpanTypeToElementName);
 
 	private String htmlNsUri = "http://www.w3.org/1999/xhtml"; //$NON-NLS-1$
 

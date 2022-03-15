@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ class InlinesSubstitution {
 	public InlinesSubstitution(Inline first, Inline last, List<Inline> substitution) {
 		this.first = requireNonNull(first);
 		this.last = requireNonNull(last);
-		this.substitution = ImmutableList.copyOf(substitution);
+		this.substitution = List.copyOf(substitution);
 	}
 
 	public List<Inline> apply(List<Inline> inlines) {

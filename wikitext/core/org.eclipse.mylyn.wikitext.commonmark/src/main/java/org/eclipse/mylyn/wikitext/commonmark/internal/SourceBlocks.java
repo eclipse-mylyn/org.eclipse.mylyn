@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2022 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,6 @@ import java.util.function.Predicate;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
-
-import com.google.common.collect.ImmutableList;
 
 public class SourceBlocks extends SourceBlock {
 
@@ -61,7 +59,7 @@ public class SourceBlocks extends SourceBlock {
 	}
 
 	SourceBlocks(List<SourceBlock> supportedBlocks) {
-		this.supportedBlocks = ImmutableList.copyOf(supportedBlocks);
+		this.supportedBlocks = List.copyOf(supportedBlocks);
 	}
 
 	private interface SourceBlockRunnable {

@@ -19,7 +19,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 class CompositeSpanStrategy implements SpanStrategy {
@@ -27,7 +26,7 @@ class CompositeSpanStrategy implements SpanStrategy {
 	private final List<SpanStrategy> delegates;
 
 	CompositeSpanStrategy(List<SpanStrategy> delegates) {
-		this.delegates = ImmutableList.copyOf(delegates);
+		this.delegates = List.copyOf(delegates);
 	}
 
 	@Override

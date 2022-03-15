@@ -28,10 +28,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private final Set<BlockType> supportedBlockTypes;
@@ -57,10 +53,10 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
 		this.headingLevel = headingLevel;
-		this.supportedBlockTypes = ImmutableSet.copyOf(requireNonNull(blockTypes));
-		this.supportedSpanTypes = ImmutableSet.copyOf(requireNonNull(spanTypes));
-		this.tagNameSubstitutions = ImmutableMap.copyOf(requireNonNull(tagNameSubstitutions));
-		this.spanElementStrategies = ImmutableList.copyOf(requireNonNull(spanElementStrategies));
+		this.supportedBlockTypes = Set.copyOf(requireNonNull(blockTypes));
+		this.supportedSpanTypes = Set.copyOf(requireNonNull(spanTypes));
+		this.tagNameSubstitutions = Map.copyOf(requireNonNull(tagNameSubstitutions));
+		this.spanElementStrategies = List.copyOf(requireNonNull(spanElementStrategies));
 		this.xhtmlStrict = xhtmlStrict;
 		this.supportsImages = supportsImages;
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 David Green.
+ * Copyright (c) 2015, 2022 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
-import com.google.common.collect.ImmutableList;
-
 public class InlineParser {
 
 	private final List<SourceSpan> spans;
@@ -38,7 +36,7 @@ public class InlineParser {
 	}
 
 	public InlineParser(List<SourceSpan> spans) {
-		this.spans = ImmutableList.copyOf(spans);
+		this.spans = List.copyOf(spans);
 	}
 
 	public void emit(ProcessingContext context, DocumentBuilder builder, TextSegment textSegment) {
@@ -76,7 +74,7 @@ public class InlineParser {
 	}
 
 	static List<Inline> secondPass(List<Inline> inlines) {
-		List<Inline> processedInlines = ImmutableList.copyOf(inlines);
+		List<Inline> processedInlines = List.copyOf(inlines);
 		Optional<InlinesSubstitution> substitution = Optional.empty();
 		do {
 			for (Inline inline : processedInlines) {

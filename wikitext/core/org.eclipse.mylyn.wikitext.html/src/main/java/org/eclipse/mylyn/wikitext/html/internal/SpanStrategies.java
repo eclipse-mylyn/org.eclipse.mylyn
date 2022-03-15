@@ -33,7 +33,6 @@ import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
 
@@ -48,7 +47,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 		addAlternatives(alternatives, SpanType.INSERTED, SpanType.UNDERLINED);
 		addAlternatives(alternatives, SpanType.ITALIC, SpanType.EMPHASIS);
 		addAlternatives(alternatives, SpanType.MONOSPACE, SpanType.CODE);
-		return ImmutableMap.copyOf(alternatives);
+		return Map.copyOf(alternatives);
 	}
 
 	private static void addAlternatives(Map<SpanType, List<SpanType>> alternatives, SpanType spanType,
@@ -124,7 +123,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 				}
 			}
 		}
-		strategies = ImmutableList.copyOf(strategies.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+		strategies = List.copyOf(strategies.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 		if (strategies.isEmpty()) {
 			return null;
 		} else if (strategies.size() == 1) {

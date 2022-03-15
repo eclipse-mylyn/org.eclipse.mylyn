@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2022 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,6 @@ import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * A provider of {@link MarkupLanguage}.
  *
@@ -37,7 +35,7 @@ public abstract class MarkupLanguageProvider {
 	 * @return the markup languages, or an empty set if there are none
 	 */
 	public final Set<MarkupLanguage> getMarkupLanguages() {
-		Set<MarkupLanguage> languages = ImmutableSet
+		Set<MarkupLanguage> languages = Set
 				.copyOf(Objects.requireNonNull(loadMarkupLanguages(), "loadMarkupLanguages() must not return null")); //$NON-NLS-1$
 		assertLanguageNames(languages);
 		return languages;

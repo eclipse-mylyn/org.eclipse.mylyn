@@ -25,7 +25,6 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlElementStrategy<BlockType>> {
 
@@ -52,7 +51,7 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 		addAlternatives(alternatives, BlockType.TABLE_CELL_NORMAL, BlockType.PARAGRAPH, BlockType.DIV);
 		addAlternatives(alternatives, BlockType.TIP, BlockType.PARAGRAPH, BlockType.DIV);
 		addAlternatives(alternatives, BlockType.WARNING, BlockType.PARAGRAPH, BlockType.DIV);
-		return ImmutableMap.copyOf(alternatives);
+		return Map.copyOf(alternatives);
 	}
 
 	private static void addAlternatives(Map<BlockType, List<BlockType>> alternatives, BlockType blockType,

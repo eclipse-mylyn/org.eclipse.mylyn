@@ -15,13 +15,11 @@ package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 public class TestMediaWikiImageFetcher extends MediaWikiImageFetcher {
 	private Map<String, String> imageServerContent;
 
 	public void setImageServerContent(Map<String, String> serverContent) {
-		this.imageServerContent = ImmutableMap.copyOf(serverContent);
+		this.imageServerContent = Map.copyOf(serverContent);
 	}
 
 	@Override
