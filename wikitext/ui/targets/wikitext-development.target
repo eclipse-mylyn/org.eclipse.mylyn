@@ -9,8 +9,6 @@
 <unit id="org.jsoup.source" version="1.14.3.v20211012-1727"/>
 <unit id="org.junit" version="4.13.2.v20211018-1956"/>
 <unit id="org.junit.source" version="4.13.2.v20211018-1956"/>
-<unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
-<unit id="org.hamcrest.source" version="2.2.0.v20210711-0821"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">

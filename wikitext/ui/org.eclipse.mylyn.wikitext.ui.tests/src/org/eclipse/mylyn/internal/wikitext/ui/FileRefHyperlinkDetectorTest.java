@@ -13,10 +13,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,7 +62,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(7, 15),
 				false);
 
-		assertThat(detectHyperlinks, is(nullValue()));
+		assertNull(detectHyperlinks);
 	}
 
 	@Test
@@ -78,7 +76,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(7, 15),
 				false);
 
-		assertThat(detectHyperlinks, is(nullValue()));
+		assertNull(detectHyperlinks);
 	}
 
 	@Test
@@ -98,7 +96,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(9, 17),
 				false);
 
-		assertThat(detectHyperlinks.length, is(1));
+		assertEquals(1, detectHyperlinks.length);
 
 		IHyperlink hyperlink = detectHyperlinks[0];
 
@@ -113,7 +111,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		if (editorInput instanceof IFileEditorInput) {
 			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
 
-			assertThat(file, equalTo(editorFile));
+			assertEquals(file, editorFile);
 		}
 	}
 
@@ -148,7 +146,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(9, 17),
 				false);
 
-		assertThat(detectHyperlinks.length, is(1));
+		assertEquals(1, detectHyperlinks.length);
 
 		IHyperlink hyperlink = detectHyperlinks[0];
 
@@ -163,7 +161,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		if (editorInput instanceof IFileEditorInput) {
 			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
 
-			assertThat(articleFile, equalTo(editorFile));
+			assertEquals(articleFile, editorFile);
 		}
 	}
 
