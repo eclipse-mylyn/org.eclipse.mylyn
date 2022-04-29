@@ -45,7 +45,7 @@
                     <manifestLocation>META-INF</manifestLocation>
                     <instructions>                    	
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
                         <Export-Package>org.eclipse.mylyn.docs.epub.internal*;x-internal:=true,org.eclipse.mylyn.docs.epub.core.*, org.eclipse.mylyn.docs.epub.*</Export-Package>
                         <Import-Package>org.apache.tika.*;version="0", org.eclipse.emf.*, org.eclipse.mylyn.wikitext.*</Import-Package>
                     </instructions>
