@@ -39,7 +39,7 @@
 <unit id="org.junit.source" version="4.13.2.v20211018-1956"/>
 <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
 <unit id="org.hamcrest.source" version="2.2.0.v20210711-0821"/>
-<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/I20211103235527/repository"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
@@ -51,7 +51,7 @@
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.source.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2021-12"/>
+<repository location="https://download.eclipse.org/releases/2022-03"/>
 </location>
 <location includeSource="true" missingManifest="generate" type="Maven">
 		<dependencies>
