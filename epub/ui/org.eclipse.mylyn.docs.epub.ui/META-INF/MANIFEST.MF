@@ -21,3 +21,4 @@ Bundle-Activator: org.eclipse.mylyn.internal.docs.epub.ui.EPUBUIPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.docs.epub.ui;x-internal:=true,
  org.eclipse.mylyn.internal.docs.epub.ui.commands;x-internal:=true
+Automatic-Module-Name: org.eclipse.mylyn.docs.epub.ui
