@@ -52,13 +52,6 @@
 	  </fileset>
 	</zip>
 
-	<!-- pack200  -->
-	
-	<antcall target="pack">
-	  <param name="args" value="-pack"/>
-	  <param name="site" value="${projectDir}/site"/>
-	</antcall>
-
 	<!-- does not work
 	<antcall target="add-mirrors-url"/>
 	-->
