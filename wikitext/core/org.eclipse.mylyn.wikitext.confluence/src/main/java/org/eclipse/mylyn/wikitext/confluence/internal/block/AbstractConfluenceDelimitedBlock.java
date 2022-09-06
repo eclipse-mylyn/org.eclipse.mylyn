@@ -69,12 +69,12 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 			setClosed(true);
 		}
 
-		return finalOffset(line.length(), endOfContent, contentOffset);
+		return finalOffset(line.length(), endOfContent, contentOffset, offset);
 	}
 
-	private int finalOffset(int lineLength, int endOfContent, int contentOffset) {
-		int finalOffset = contentOffset;
-		if (contentOffset == lineLength) {
+	private int finalOffset(int lineLength, int endOfContent, int contentOffset, int initialOffset) {
+		int finalOffset = contentOffset == -1 ? -1 : initialOffset + contentOffset;
+		if (finalOffset == lineLength) {
 			finalOffset = -1;
 		} else if (endOfContent != lineLength) {
 			finalOffset = endOfContent;
