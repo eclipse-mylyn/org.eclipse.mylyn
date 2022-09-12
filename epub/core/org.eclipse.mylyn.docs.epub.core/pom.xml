@@ -89,6 +89,14 @@
 					<groupId>org.jboss.spec.javax.rmi</groupId>
 					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.jacorb</groupId>
+					<artifactId>jacorb-omgapi</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>edu.ucar</groupId>
+					<artifactId>cdm</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
