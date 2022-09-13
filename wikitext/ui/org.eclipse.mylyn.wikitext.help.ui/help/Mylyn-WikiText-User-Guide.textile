@@ -681,7 +681,7 @@ Mylyn WikiText adds the following extensions to Textile:
 
 h2. Examples
 
-This document was written in Textile markup.  The original source code for this document "is available here":http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git/plain/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide.textile
+This document was written in Textile markup.  The original source code for this document "is available here":https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git/tree/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide.textile
 
 h2. Textile Reference
 
