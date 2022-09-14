@@ -144,7 +144,9 @@
 		<system>Bugzilla</system>
 		<url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn;product=Mylyn%20Docs</url>
 	</issueManagement>
-	<scm>
+	<scm child.scm.connection.inherit.append.path="false"  
+	     child.scm.developerConnection.inherit.append.path="false"  
+	     child.scm.url.inherit.append.path="false">
 		<developerConnection>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</developerConnection>
 		<connection>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</connection>
 		<url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
