@@ -4,11 +4,10 @@
      <parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>wikitext</artifactId>
-        <version>3.0.43-SNAPSHOT</version>
+        <version>3.0.44-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>wikitext.core</artifactId>
-  <version>3.0.44-SNAPSHOT</version>
     <name>Mylyn Docs: WikiText: Core</name>
     <description>
         Mylyn WikiText provides an extensible framework and tools for parsing, editing and presenting lightweight markup. WikiText has parsers for AsciiDoc, CommonMark, Markdown, MediaWiki, Textile, Confluence, Creole, HTML, TracWiki and TWiki markup, and

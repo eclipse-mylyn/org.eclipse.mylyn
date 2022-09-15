@@ -5,7 +5,7 @@
 	<groupId>org.eclipse.mylyn.docs</groupId>
 	<artifactId>docs.main</artifactId>
 	<name>Mylyn Docs</name>
-	<version>3.0.43-SNAPSHOT</version>
+	<version>3.0.44-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<tycho-version>3.0.0-SNAPSHOT</tycho-version>

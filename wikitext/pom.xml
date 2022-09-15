@@ -4,12 +4,12 @@
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext</artifactId>
     <name>Mylyn Docs: WikiText</name>
-    <version>3.0.43-SNAPSHOT</version>
+    <version>3.0.44-SNAPSHOT</version>
     <packaging>pom</packaging>
 	<parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>docs.main</artifactId>
-        <version>3.0.43-SNAPSHOT</version>
+        <version>3.0.44-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <properties>
