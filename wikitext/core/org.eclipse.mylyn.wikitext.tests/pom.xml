@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext.core</artifactId>
-    <version>3.0.43-SNAPSHOT</version>
+    <version>3.0.43</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext.tests</artifactId>
@@ -35,19 +35,19 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.textile</artifactId>
-        <version>3.0.43-SNAPSHOT</version>
+        <version>3.0.43</version>
         <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
-        <version>3.0.43-SNAPSHOT</version>
+        <version>3.0.43</version>
         <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.mediawiki</artifactId>
-        <version>3.0.43-SNAPSHOT</version>
+        <version>3.0.43</version>
         <scope>test</scope>
     </dependency>
   </dependencies>

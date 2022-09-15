@@ -8,6 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>wikitext.core</artifactId>
+  <version>3.0.43</version>
     <name>Mylyn Docs: WikiText: Core</name>
     <description>
         Mylyn WikiText provides an extensible framework and tools for parsing, editing and presenting lightweight markup. WikiText has parsers for AsciiDoc, CommonMark, Markdown, MediaWiki, Textile, Confluence, Creole, HTML, TracWiki and TWiki markup, and
@@ -188,4 +189,8 @@
     	</dependencies>
     </dependencyManagement>
 
+
+  <scm>
+    <tag>wikitext.core-3.0.43</tag>
+  </scm>
 </project>
