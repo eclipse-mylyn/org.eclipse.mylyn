@@ -8,7 +8,7 @@
 	<version>3.0.44-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>3.0.0-SNAPSHOT</tycho-version>
+		<tycho-version>3.0.0</tycho-version>
 		<tycho.scmUrl>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
 	</properties>
 	<build>
