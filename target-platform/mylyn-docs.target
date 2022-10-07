@@ -35,34 +35,28 @@
 					<version>4.8.0</version>
 					<type>jar</type>
 				</dependency>
-			</dependencies>
-		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
 				<dependency>
 					<groupId>org.objenesis</groupId>
 					<artifactId>objenesis</artifactId>
 					<version>3.2</version>
 					<type>jar</type>
 				</dependency>
-			</dependencies>
-		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy</artifactId>
 					<version>1.12.14</version>
 					<type>jar</type>
 				</dependency>
-			</dependencies>
-		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy-agent</artifactId>
 					<version>1.12.14</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.jsoup</groupId>
+					<artifactId>jsoup</artifactId>
+					<version>1.15.3</version>
 					<type>jar</type>
 				</dependency>
 			</dependencies>
