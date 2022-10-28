@@ -4,12 +4,12 @@
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>epub</artifactId>
     <name>Mylyn Docs: EPUB</name>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.0.7${qualifier}</version>
     <packaging>pom</packaging>
 	<parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>docs.main</artifactId>
-        <version>3.0.44-SNAPSHOT</version>
+        <version>${releaseVersion}${qualifier}</version>
         <relativePath>..</relativePath>
     </parent>
 

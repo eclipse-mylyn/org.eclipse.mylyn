@@ -4,13 +4,13 @@
 	<parent>
 		<artifactId>epub.ui</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.0.7-SNAPSHOT</version>
+		<version>4.0.7${qualifier}</version>
 		<relativePath>..</relativePath>
 	</parent>
 
 	<artifactId>org.eclipse.mylyn.docs.epub.ui</artifactId>
 	<groupId>org.eclipse.mylyn.docs</groupId>
-	<version>4.0.7-SNAPSHOT</version>
+	<version>4.0.7${qualifier}</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
@@ -29,12 +29,12 @@
 		<dependency>
 			<artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
 			<groupId>org.eclipse.mylyn.docs</groupId>
-			<version>4.0.7-SNAPSHOT</version>
+			<version>4.0.7${qualifier}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
 			<artifactId>org.eclipse.mylyn.wikitext</artifactId>
-			<version>3.0.44-SNAPSHOT</version>
+			<version>${releaseVersion}${qualifier}</version>
 		</dependency>
 	</dependencies>
 

@@ -7,11 +7,11 @@
 	<parent>
 		<artifactId>epub.ui</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.0.7-SNAPSHOT</version>
+		<version>4.0.7${qualifier}</version>
 	</parent>
 
 	<artifactId>org.eclipse.mylyn.docs.epub.sdk</artifactId>
-	<version>4.0.7-SNAPSHOT</version>
+	<version>4.0.7${qualifier}</version>
 	<packaging>eclipse-feature</packaging>
 
 </project>

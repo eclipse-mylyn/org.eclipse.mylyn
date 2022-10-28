@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>epub.core</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.0.7-SNAPSHOT</version>
+		<version>4.0.7${qualifier}</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
 			<artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
-			<version>4.0.7-SNAPSHOT</version>
+			<version>4.0.7${qualifier}</version>
 		</dependency>
 	</dependencies>
 </project>

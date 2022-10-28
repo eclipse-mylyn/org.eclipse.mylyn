@@ -5,9 +5,9 @@
   <parent>
     <artifactId>wikitext.ui</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>3.0.44-SNAPSHOT</version>
+    <version>${releaseVersion}${qualifier}</version>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext_feature</artifactId>
-  <version>3.0.44-SNAPSHOT</version>
+  <version>${releaseVersion}${qualifier}</version>
   <packaging>eclipse-feature</packaging>
 </project>

@@ -7,14 +7,14 @@
 	<parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>docs.main</artifactId>
-        <version>3.0.44-SNAPSHOT</version>
+        <version>${releaseVersion}${qualifier}</version>
         <relativePath>..</relativePath>
     </parent>
 	
 	<groupId>org.eclipse.mylyn.docs</groupId>
 	<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
 	<name>Mylyn Docs</name>
-	<version>2.11.0-SNAPSHOT</version>
+	<version>2.11.0${qualifier}</version>
 	<packaging>pom</packaging>
 	<properties>
 		<sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>

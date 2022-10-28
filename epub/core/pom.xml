@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>org.eclipse.mylyn.docs</groupId>
 		<artifactId>epub</artifactId>
-		<version>4.0.7-SNAPSHOT</version>
+		<version>4.0.7${qualifier}</version>
 		<relativePath>..</relativePath>
 	</parent>
 
 	<groupId>org.eclipse.mylyn.docs</groupId>
 	<artifactId>epub.core</artifactId>
-	<version>4.0.7-SNAPSHOT</version>
+	<version>4.0.7${qualifier}</version>
 	<name>Mylyn Docs: EPUB Core</name>
 	<description>The EPUB framework in Mylyn Docs offers API to create, manipulate, read and write EPUB formatted files. There is also an Ant task for creating EPUBs.</description>
 	<url>https://projects.eclipse.org/projects/mylyn.docs</url>

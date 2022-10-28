@@ -6,7 +6,7 @@
   <parent>
     <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>2.11.0-SNAPSHOT</version>
+    <version>2.11.0${qualifier}</version>
   </parent>
   <artifactId>org.eclipse.mylyn.docs-site</artifactId>
   <packaging>eclipse-repository</packaging>

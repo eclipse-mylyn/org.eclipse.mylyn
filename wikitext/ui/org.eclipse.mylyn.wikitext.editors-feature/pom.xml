@@ -5,21 +5,21 @@
   <parent>
     <artifactId>wikitext.ui</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>3.0.44-SNAPSHOT</version>
+    <version>${releaseVersion}${qualifier}</version>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext.editors_feature</artifactId>
-  <version>3.0.44-SNAPSHOT</version>
+  <version>${releaseVersion}${qualifier}</version>
   <packaging>eclipse-feature</packaging>
   <dependencies>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
-        <version>3.0.44-SNAPSHOT</version>
+        <version>${releaseVersion}${qualifier}</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.html</artifactId>
-        <version>3.0.44-SNAPSHOT</version>
+        <version>${releaseVersion}${qualifier}</version>
     </dependency>
   </dependencies>
 </project>
