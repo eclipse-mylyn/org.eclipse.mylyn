@@ -100,10 +100,13 @@ public class SplittingHtmlDocumentBuilderTest {
 
 	private void assertFileContents(String resource, File outputFile) throws IOException {
 		String resourcePath = "resources/SplittingHtmlDocumentBuilderTest_" + resource;
-		String resourceContents = Resources.toString(SplittingHtmlDocumentBuilderTest.class.getResource(resourcePath),
-				StandardCharsets.UTF_8);
+		String resourceContents = convertToUnixLineEndings(Resources
+				.toString(SplittingHtmlDocumentBuilderTest.class.getResource(resourcePath), StandardCharsets.UTF_8));
 		String actualContents = Resources.toString(outputFile.toURI().toURL(), StandardCharsets.UTF_8);
 		assertEquals(format("Resource {0} differs", resourcePath), resourceContents, actualContents);
 	}
 
+	private String convertToUnixLineEndings(String resource) {
+		return resource.replaceAll("\\r\\n?", "\n");
+	}
 }

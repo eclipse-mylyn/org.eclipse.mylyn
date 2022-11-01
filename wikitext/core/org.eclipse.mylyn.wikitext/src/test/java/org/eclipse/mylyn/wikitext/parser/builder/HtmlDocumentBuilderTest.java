@@ -405,9 +405,13 @@ public class HtmlDocumentBuilderTest {
 		try {
 			String fileName = HtmlDocumentBuilderTest.class.getSimpleName() + '_' + resourceName + ".xml";
 			URL resource = HtmlDocumentBuilderTest.class.getResource(fileName);
-			return Resources.toString(resource, StandardCharsets.UTF_8);
+			return convertToUnixLineEndings(Resources.toString(resource, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String convertToUnixLineEndings(String resource) {
+		return resource.replaceAll("\\r\\n?", "\n");
 	}
 }

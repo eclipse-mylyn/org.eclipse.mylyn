@@ -160,10 +160,14 @@ public class HtmlLanguageTest {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName;
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
-			return Resources.toString(resource, StandardCharsets.UTF_8);
+			return convertToUnixLineEndings(Resources.toString(resource, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String convertToUnixLineEndings(String resource) {
+		return resource.replaceAll("\\r\\n?", "\n");
 	}
 
 	protected void assertProcessContent(String expectedHtml, String sourceHtml, boolean asDocument,

@@ -29,9 +29,13 @@ public class TestResources {
 		try {
 			URL url = relativeToClass.getResource(path);
 			requireNonNull(url, String.format("Resource %s not found relative to %s", path, relativeToClass.getName()));
-			return Resources.toString(url, StandardCharsets.UTF_8);
+			return convertToUnixLineEndings(Resources.toString(url, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private static String convertToUnixLineEndings(String resource) {
+		return resource.replaceAll("\\r\\n?", "\n");
 	}
 }
