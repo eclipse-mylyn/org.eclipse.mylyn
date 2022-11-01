@@ -80,7 +80,7 @@ public class TestEPUB extends AbstractTest {
 		Container container = epub.getContainer();
 		RootFiles rootfiles = container.getRootfiles();
 		EList<RootFile> files = rootfiles.getRootfiles();
-		assertEquals(true, files.get(0).getFullPath().equals("SVG+XML/drawing.svg"));
+		assertEquals(true, files.get(0).getFullPath().equals("SVG+XML" + File.separator + "drawing.svg"));
 		assertEquals(true, files.get(0).getMediaType().equals("image/svg+xml"));
 		assertEquals(true, files.get(0).getPublication() == drawing);
 	}
@@ -103,7 +103,7 @@ public class TestEPUB extends AbstractTest {
 		EList<RootFile> files = rootfiles.getRootfiles();
 		files.get(0).setPublication(null);
 		try {
-			epub.pack(epubFile);
+			epub.pack(getEpubFile());
 			fail();
 		} catch (Exception e) {
 		}
@@ -172,7 +172,7 @@ public class TestEPUB extends AbstractTest {
 		epub.add(oebps);
 		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
-		File tempFolder = epub.pack(epubFile);
+		File tempFolder = epub.pack(getEpubFile());
 		assertEquals(false, tempFolder.exists());
 	}
 
@@ -192,16 +192,16 @@ public class TestEPUB extends AbstractTest {
 		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile, epubFolder);
+		epub.pack(getEpubFile(), getEpubFolder());
 		// Make sure all required files are present
-		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
+		File metaFolder = new File(getEpubFolder().getAbsolutePath() + File.separator + "META-INF");
 		assertEquals(true, metaFolder.exists());
 		assertEquals(true, metaFolder.isDirectory());
 		File containerFile = new File(
-				epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
+				getEpubFolder().getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
 		assertEquals(true, containerFile.exists());
 		assertEquals(false, containerFile.isDirectory());
-		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
+		File oebpsFolder = new File(getEpubFolder().getAbsolutePath() + File.separator + "OEBPS");
 		assertEquals(true, oebpsFolder.exists());
 		assertEquals(true, oebpsFolder.isDirectory());
 	}
@@ -221,7 +221,7 @@ public class TestEPUB extends AbstractTest {
 		Publication oebps = new OPSPublication();
 		epub.add(oebps);
 		try {
-			epub.pack(epubFile, workingFolder);
+			epub.pack(getEpubFile(), workingFolder);
 			fail();
 		} catch (Exception e) {
 		}
@@ -238,7 +238,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testPackMissingPublication() throws Exception {
 		try {
-			epub.pack(epubFile);
+			epub.pack(getEpubFile());
 			fail();
 		} catch (Exception e) {
 		}
@@ -258,9 +258,9 @@ public class TestEPUB extends AbstractTest {
 		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile, epubFolder);
+		epub.pack(getEpubFile(), getEpubFolder());
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile);
+		epub2.unpack(getEpubFile());
 		assertEquals(1, epub2.getOPSPublications().size());
 	}
 
@@ -276,22 +276,22 @@ public class TestEPUB extends AbstractTest {
 		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile, epubFolder);
-		deleteFolder(epubFolder);
+		epub.pack(getEpubFile(), getEpubFolder());
+		deleteFolder(getEpubFolder());
 
 		// Then check for some contents when unpacked
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 
 		// Make sure all required files are present
-		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
+		File metaFolder = new File(getEpubFolder().getAbsolutePath() + File.separator + "META-INF");
 		assertEquals(true, metaFolder.exists());
 		assertEquals(true, metaFolder.isDirectory());
 		File containerFile = new File(
-				epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
+				getEpubFolder().getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
 		assertEquals(true, containerFile.exists());
 		assertEquals(false, containerFile.isDirectory());
-		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
+		File oebpsFolder = new File(getEpubFolder().getAbsolutePath() + File.separator + "OEBPS");
 		assertEquals(true, oebpsFolder.exists());
 		assertEquals(true, oebpsFolder.isDirectory());
 	}
@@ -375,8 +375,8 @@ public class TestEPUB extends AbstractTest {
 		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile, epubFolder);
-		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF"); //$NON-NLS-1$
+		epub.pack(getEpubFile(), getEpubFolder());
+		File metaFolder = new File(getEpubFolder().getAbsolutePath() + File.separator + "META-INF"); //$NON-NLS-1$
 		File containerFile = new File(metaFolder.getAbsolutePath() + File.separator + "container.xml"); //$NON-NLS-1$
 		BufferedReader br = new BufferedReader(new FileReader(containerFile));
 		String in = null;

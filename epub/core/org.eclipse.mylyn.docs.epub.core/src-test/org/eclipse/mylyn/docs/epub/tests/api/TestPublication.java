@@ -564,8 +564,8 @@ public class TestPublication extends AbstractTest {
 	public final void testPack_Empty() throws Exception {
 		epub.add(new OPSPublication());
 		try {
-			epubFile.delete();
-			epub.pack(epubFile);
+			getEpubFile().delete();
+			epub.pack(getEpubFile());
 			fail();
 		} catch (ValidationException e) {
 		}
@@ -609,10 +609,10 @@ public class TestPublication extends AbstractTest {
 		oebps.addItem(new File("testdata/plain-page_link.xhtml"));
 		epub.add(oebps);
 		// Included resources will only be added when we pack
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
@@ -641,9 +641,9 @@ public class TestPublication extends AbstractTest {
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_380016/chapter.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "style.css");
@@ -663,10 +663,10 @@ public class TestPublication extends AbstractTest {
 		oebps.addItem(new File("testdata/plain-page_link.html"));
 		epub.add(oebps);
 		// Included resources will only be added when we pack
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
@@ -706,15 +706,16 @@ public class TestPublication extends AbstractTest {
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(htmlFile);
 		epub.add(oebps);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
+		Item drawingSvg = oebps.getItemById("image-drawing");
 
 		htmlFile.delete();
 
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
-		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
+		File svg = new File(root.getAbsolutePath() + File.separator + drawingSvg.getHref());
 		Assert.assertTrue(svg.exists());
 
 	}
@@ -735,7 +736,7 @@ public class TestPublication extends AbstractTest {
 		oebps.addItem(new File("testdata/circular/file-a.xhtml"));
 		oebps.addItem(new File("testdata/circular/file-b.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		EList<Item> items = oebps.getPackage().getManifest().getItems();
 		// File A, B, C and the NCX
 		assertEquals(4, items.size());

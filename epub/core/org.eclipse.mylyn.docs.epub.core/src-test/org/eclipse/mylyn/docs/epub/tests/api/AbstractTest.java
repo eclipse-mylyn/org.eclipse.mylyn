@@ -23,8 +23,9 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.ILogger;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 @SuppressWarnings("nls")
 public abstract class AbstractTest {
@@ -63,13 +64,16 @@ public abstract class AbstractTest {
 		}
 	}
 
+	@Rule
+	public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
 	protected static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
 	protected EPUB epub;
 
-	protected final File epubFile = new File("test" + File.separator + "test.epub");
+	private File epubFile;
 
-	protected final File epubFolder = new File("test" + File.separator + "epub");
+	private File epubFolder;
 
 	protected final StdOutLogger logger = new StdOutLogger();
 
@@ -112,19 +116,17 @@ public abstract class AbstractTest {
 
 	@Before
 	public void setUp() throws Exception {
-		if (epubFile.exists()) {
-			epubFile.delete();
-		}
-		if (epubFolder.exists()) {
-			deleteFolder(epubFolder);
-		}
-		epubFolder.mkdirs();
+		epubFolder = temporaryFolder.newFolder("epub");
+		epubFile = new File(temporaryFolder.getRoot(), "test.epub");
 		epub = new EPUB(logger);
 	}
 
-	@After
-	public void tearDown() {
-		epubFile.delete();
+	public File getEpubFile() {
+		return epubFile;
+	}
+
+	public File getEpubFolder() {
+		return epubFolder;
 	}
 
 	/* Bug 454932 - fix or remove failing EPUB test

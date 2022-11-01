@@ -72,10 +72,10 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.setCover(new File("testdata/drawing.svg"), "Title");
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 
 		EPUB epub2 = new EPUB();
-		epub2.unpack(epubFile, epubFolder);
+		epub2.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
@@ -135,7 +135,7 @@ public class TestOPSPublication extends AbstractTest {
 	public final void testGenerateTableOfContents() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		assertTrue(oebps.getTableOfContents() != null);
 		assertTrue(oebps.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps.getTableOfContents();
@@ -143,7 +143,7 @@ public class TestOPSPublication extends AbstractTest {
 		NavPoint h1_2 = ncx.getNavMap().getNavPoints().get(1);
 		assertEquals("First item", getText(h1_1));
 		assertEquals("Second item", getText(h1_2));
-		epubFile.delete();
+		getEpubFile().delete();
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class TestOPSPublication extends AbstractTest {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		oebps.setGenerateToc(false);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		assertTrue(oebps.getTableOfContents() != null);
 		assertTrue(oebps.getTableOfContents() instanceof Ncx);
 	}
@@ -188,10 +188,10 @@ public class TestOPSPublication extends AbstractTest {
 	public final void testReadTableOfContents() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 
 		EPUB epub_in = new EPUB();
-		epub_in.unpack(epubFile, epubFolder);
+		epub_in.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps_in = epub_in.getOPSPublications().get(0);
 		assertTrue(oebps_in.getTableOfContents() != null);
 		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
@@ -212,9 +212,9 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.setTableOfContents(new File("testdata/toc.ncx"));
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		EPUB epub_in = new EPUB();
-		epub_in.unpack(epubFile, epubFolder);
+		epub_in.unpack(getEpubFile(), getEpubFolder());
 		Publication oebps_in = epub_in.getOPSPublications().get(0);
 		assertTrue(oebps_in.getTableOfContents() != null);
 		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
@@ -243,7 +243,7 @@ public class TestOPSPublication extends AbstractTest {
 	public final void testValidateContents() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page_warnings.xhtml"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
@@ -265,12 +265,12 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.setIncludeReferencedResources(true);
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/chapter-1.xhtml"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		// Two XHTML files, one with a warning. One CSS file and the NCX.
 		assertEquals(4, oebps.getPackage().getManifest().getItems().size());
 		// Should be exactly two warning.
 		assertEquals(1, oebps.getValidationMessages().size());
-		epubFile.delete();
+		getEpubFile().delete();
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class TestOPSPublication extends AbstractTest {
 	public final void test_Bug358671_Illegal_Item() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
 		assertEquals(true, msg.getMessage()
@@ -310,7 +310,7 @@ public class TestOPSPublication extends AbstractTest {
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"), null, null, true,
 				true, false);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
 		assertEquals(true, msg.getMessage()
@@ -333,7 +333,7 @@ public class TestOPSPublication extends AbstractTest {
 		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/plain-page.xhtml"), null, null, true, true, false);
-		epub.pack(epubFile);
+		epub.pack(getEpubFile());
 		assertEquals(3, oebps.getPackage().getManifest().getItems().size());
 		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
