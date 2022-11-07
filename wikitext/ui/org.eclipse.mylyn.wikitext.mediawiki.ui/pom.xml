@@ -22,7 +22,7 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.mediawiki</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

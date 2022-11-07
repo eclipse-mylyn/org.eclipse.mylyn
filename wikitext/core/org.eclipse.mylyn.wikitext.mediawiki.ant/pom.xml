@@ -15,17 +15,17 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.mediawiki</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -50,7 +50,7 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
         <scope>test</scope>
     </dependency>
   </dependencies>

@@ -52,7 +52,7 @@
 						<executions>
 							<execution>
 								<id>sign</id>
-								<phase>verify</phase>
+								<phase>package</phase>
 								<goals>
 									<goal>sign</goal>
 								</goals>

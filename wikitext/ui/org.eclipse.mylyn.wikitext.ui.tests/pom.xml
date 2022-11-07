@@ -34,17 +34,17 @@
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.html</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
+        <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
