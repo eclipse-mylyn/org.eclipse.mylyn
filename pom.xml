@@ -13,7 +13,7 @@
     </description>
     <url>https://projects.eclipse.org/projects/mylyn.docs</url>
     <properties>
-        <releaseVersion>3.0.44</releaseVersion>
+        <releaseVersion>3.0.45</releaseVersion>
         <qualifier>-SNAPSHOT</qualifier>
         <tycho-version>3.0.0</tycho-version>
         <tycho.scmUrl>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
