@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn WikiText Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi.tests
-Fragment-Host: org.eclipse.mylyn.wikitext.osgi;bundle-version="3.0.45"
-Bundle-Version: 3.0.45.qualifier
+Fragment-Host: org.eclipse.mylyn.wikitext.osgi;bundle-version="3.0.46"
+Bundle-Version: 3.0.46.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.45",
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.46",
  org.junit;bundle-version="4.8",
  org.mockito.mockito-core;bundle-version="[4.0.0,5.0.0)",
  net.bytebuddy.byte-buddy,

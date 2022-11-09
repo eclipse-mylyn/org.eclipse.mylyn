@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.tasks.ui;singleton:=true
-Bundle-Version: 3.0.45.qualifier
+Bundle-Version: 3.0.46.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.45",
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.46",
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.editors,
@@ -19,18 +19,18 @@ Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.45",
  org.eclipse.mylyn.commons.workbench;bundle-version="3.7.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.7.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.7.0",
- org.eclipse.mylyn.wikitext.confluence;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.confluence.ui;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.mediawiki;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.mediawiki.ui;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.textile;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.textile.ui;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.tracwiki;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.tracwiki.ui;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.twiki;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.twiki.ui;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.markdown;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.markdown.ui;bundle-version="3.0.45"
+ org.eclipse.mylyn.wikitext.confluence;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.confluence.ui;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.mediawiki;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.mediawiki.ui;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.textile;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.textile.ui;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.tracwiki;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.tracwiki.ui;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.twiki;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.twiki.ui;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.markdown;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.markdown.ui;bundle-version="3.0.46"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

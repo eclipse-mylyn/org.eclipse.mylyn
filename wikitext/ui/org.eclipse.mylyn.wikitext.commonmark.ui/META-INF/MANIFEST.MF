@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark.ui;singleton:=true
-Bundle-Version: 3.0.45.qualifier
+Bundle-Version: 3.0.46.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.mylyn.wikitext.commonmark;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.45"
+Require-Bundle: org.eclipse.mylyn.wikitext.commonmark;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.46"
 Bundle-Localization: META-INF/l10n/bundle
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.commonmark.ui

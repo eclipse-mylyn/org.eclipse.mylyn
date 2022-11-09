@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.markdown.ui;singleton:=true
-Bundle-Version: 3.0.45.qualifier
+Bundle-Version: 3.0.46.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.markdown;bundle-version="3.0.45",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.45"
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.markdown;bundle-version="3.0.46",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.46"
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.markdown.ui
