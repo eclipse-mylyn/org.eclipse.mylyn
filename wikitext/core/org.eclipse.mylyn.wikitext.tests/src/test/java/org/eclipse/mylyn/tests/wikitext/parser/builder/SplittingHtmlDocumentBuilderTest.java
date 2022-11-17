@@ -11,7 +11,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.wikitext.parser.builder;
 
 import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertEquals;
@@ -25,6 +25,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
 import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
 import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;

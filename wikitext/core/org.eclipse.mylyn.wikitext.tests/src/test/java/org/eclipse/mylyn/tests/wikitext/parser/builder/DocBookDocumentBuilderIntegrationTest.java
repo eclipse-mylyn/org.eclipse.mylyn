@@ -10,7 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.wikitext.parser.builder;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,6 +18,7 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.junit.Before;
 import org.junit.Test;

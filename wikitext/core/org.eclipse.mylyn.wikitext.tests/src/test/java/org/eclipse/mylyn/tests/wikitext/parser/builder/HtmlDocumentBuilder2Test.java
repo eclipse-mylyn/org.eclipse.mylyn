@@ -12,7 +12,7 @@
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *     Jeremie Bresson - Bug 492302
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.wikitext.parser.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -37,6 +37,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.junit.Before;

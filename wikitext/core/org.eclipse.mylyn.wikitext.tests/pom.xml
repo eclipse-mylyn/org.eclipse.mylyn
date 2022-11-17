@@ -10,7 +10,7 @@
   <artifactId>org.eclipse.mylyn.wikitext.tests</artifactId>
   <name>Mylyn WikiText Integration Tests</name>
   <packaging>bundle</packaging>
-
+    
   <dependencies>
     <dependency>
         <groupId>org.jsoup</groupId>

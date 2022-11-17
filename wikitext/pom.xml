@@ -17,15 +17,5 @@
     <modules>
         <module>core</module>
         <module>ui</module>
-    </modules>
-
-    <profiles>
-        <profile>
-            <id>sign</id>
-            <properties>
-                <artifacts.sign>true</artifacts.sign>
-            </properties>
-        </profile>
-    </profiles>
-    
+    </modules>    
 </project>

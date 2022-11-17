@@ -10,7 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.wikitext.parser.builder;
 
 import java.util.ArrayList;
 

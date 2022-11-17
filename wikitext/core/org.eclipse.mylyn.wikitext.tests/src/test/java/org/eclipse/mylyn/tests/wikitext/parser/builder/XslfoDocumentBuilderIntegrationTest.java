@@ -12,7 +12,7 @@
  *     Torkild U. Resheim - bugs 336592 and 336813
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.wikitext.parser.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;

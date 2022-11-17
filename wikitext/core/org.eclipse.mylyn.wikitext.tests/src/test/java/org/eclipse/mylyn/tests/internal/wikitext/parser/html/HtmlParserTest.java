@@ -11,7 +11,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.parser.html;
+package org.eclipse.mylyn.tests.internal.wikitext.parser.html;
 
 import java.io.IOException;
 

@@ -11,7 +11,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.parser.builder;
+package org.eclipse.mylyn.tests.internal.wikitext.parser.builder;
 
 import static org.junit.Assert.assertTrue;
 

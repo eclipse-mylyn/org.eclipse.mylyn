@@ -33,14 +33,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>sign</id>
-            <properties>
-                <artifacts.sign>true</artifacts.sign>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
