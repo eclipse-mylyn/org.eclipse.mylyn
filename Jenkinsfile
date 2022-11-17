@@ -19,8 +19,8 @@ pipeline {
 			}
 			post {
 				always {
-					archiveArtifacts artifacts: '*/target/repository/**/*,*/target/*.zip,*/target/work/data/.metadata/.log'
-					junit '*/target/surefire-reports/TEST-*.xml'
+					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
+					junit '**/target/surefire-reports/TEST-*.xml'
 				}
 			}
 		}
