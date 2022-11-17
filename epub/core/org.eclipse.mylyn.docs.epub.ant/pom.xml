@@ -27,7 +27,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
                         <Export-Package>org.eclipse.mylyn.docs.epub.ant.*</Export-Package>
-                        <Import-Package>org.apache.tools.ant.*, org.eclipse.mylyn.docs.epub.*, org.eclipse.mylyn.wikitext.*</Import-Package>
+                        <Import-Package>!java.*, org.apache.tools.ant.*, org.eclipse.mylyn.docs.epub.*, org.eclipse.mylyn.wikitext.*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

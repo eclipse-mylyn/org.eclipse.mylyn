@@ -52,7 +52,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
                         <Export-Package>${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
-                        <Import-Package>com.google.common*; version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
+                        <Import-Package>!java.*, com.google.common*; version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
