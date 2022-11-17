@@ -321,7 +321,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		try {
 			String uriWithoutHtmlEntities = replaceHtmlEntities(uriWithoutBackslashEscapes,
 					UrlEscapers.urlFormParameterEscaper());
-			String decoded = URLDecoder.decode(uriWithoutHtmlEntities, StandardCharsets.UTF_8.name());
+			String decoded = URLDecoder.decode(uriWithoutHtmlEntities, StandardCharsets.UTF_8);
 			Escaper escaper = UrlEscapers.urlFragmentEscaper();
 			int indexOfHash = decoded.indexOf('#');
 			if (indexOfHash != -1) {

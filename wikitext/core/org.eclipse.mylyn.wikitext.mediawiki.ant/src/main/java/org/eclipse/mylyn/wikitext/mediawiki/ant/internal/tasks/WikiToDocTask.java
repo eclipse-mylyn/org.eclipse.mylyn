@@ -643,7 +643,7 @@ public class WikiToDocTask extends MarkupTask {
 				qualifiedUrl += "/"; //$NON-NLS-1$
 			}
 			// ignore titleParameter here, we always reference index.php when getting the raw page content
-			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8") + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, StandardCharsets.UTF_8) + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
 			throw new BuildException(
@@ -659,14 +659,7 @@ public class WikiToDocTask extends MarkupTask {
 			qualifiedUrl += "/"; //$NON-NLS-1$
 		}
 		if (titleParameter) {
-			try {
-				qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
-			} catch (IOException e) {
-				throw new BuildException(
-						MessageFormat.format(Messages.getString("WikiToDocTask_cannot_compute_url"), path, //$NON-NLS-1$
-								e.getMessage()),
-						e);
-			}
+			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, StandardCharsets.UTF_8); //$NON-NLS-1$
 		} else {
 			qualifiedUrl += path;
 		}

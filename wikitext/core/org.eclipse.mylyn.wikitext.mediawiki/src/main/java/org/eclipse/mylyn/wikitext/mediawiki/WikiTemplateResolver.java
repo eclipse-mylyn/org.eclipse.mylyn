@@ -80,11 +80,12 @@ public class WikiTemplateResolver extends TemplateResolver {
 			if (!qualifiedUrl.endsWith("/")) { //$NON-NLS-1$
 				qualifiedUrl += "/"; //$NON-NLS-1$
 			}
-			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8") + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, StandardCharsets.UTF_8) + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
-			Logger.getLogger(WikiTemplateResolver.class.getName()).log(Level.WARNING,
-					MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$
+			Logger.getLogger(WikiTemplateResolver.class.getName())
+					.log(Level.WARNING,
+							MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$
 			return null;
 		}
 	}
