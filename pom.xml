@@ -14,7 +14,7 @@
   <name>Mylyn Versions</name>
   <packaging>pom</packaging>
   <properties>
-    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.versions.git</tycho.scmUrl>
+    <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.versions.git</tycho.scmUrl>
   </properties>
   <mailingLists>
     <mailingList>
@@ -72,8 +72,6 @@
     </profile>
   </profiles>
   <modules>
-    <module>org.eclipse.mylyn.cvs-feature</module>
-    <module>org.eclipse.mylyn.cvs.core</module>
     <module>org.eclipse.mylyn.git-feature</module>
     <module>org.eclipse.mylyn.git.core</module>
     <module>org.eclipse.mylyn.git.ui</module>
