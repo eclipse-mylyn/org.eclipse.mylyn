@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.core.internal.runtime.AuthorizationHandler;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
@@ -72,7 +72,7 @@ public abstract class KeyringMigrator<T> {
 	@SuppressWarnings("deprecation")
 	protected Map<String, String> getAuthorizationInfo(URL url, String realm, String scheme)
 			throws MalformedURLException {
-		return Platform.getAuthorizationInfo(url, realm, scheme);
+		return AuthorizationHandler.getAuthorizationInfo(url, realm, scheme);
 	}
 
 	protected void putProperties(Map<String, String> properties, T location) {

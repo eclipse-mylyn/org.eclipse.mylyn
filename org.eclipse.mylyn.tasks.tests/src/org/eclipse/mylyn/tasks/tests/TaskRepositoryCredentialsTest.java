@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -17,8 +17,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
+import org.eclipse.core.internal.runtime.AuthorizationHandler;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -28,6 +27,8 @@ import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.util.TestUtils;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -86,9 +87,9 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 			return;
 		}
 		URL url = new URL("http://mylyn");
-		Platform.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
+		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
 		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",
-				Platform.getAuthorizationInfo(url, "", ""));
+				AuthorizationHandler.getAuthorizationInfo(url, "", ""));
 	}
 
 	public void testLabel() {
@@ -104,7 +105,8 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		assertCredentials(AuthenticationType.REPOSITORY);
 
 		// test old API
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
+				true);
 		assertEquals("user", taskRepository.getUserName());
 		assertEquals("pwd", taskRepository.getPassword());
 
@@ -211,7 +213,8 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	public void testDoNotPersistCredentials() throws Exception {
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
+				true);
 		assertEquals("pwd", taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
 
 		taskRepository.setShouldPersistCredentials(false);
@@ -224,7 +227,8 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	public void testSetCredentialsDoesNotAffectExistingRepositoryWhenShouldNotPersistIsSetToTrue() throws Exception {
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
+				true);
 		assertEquals("pwd", taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
 
 		TaskRepository newRepository = new TaskRepository("kind", "http://url");
@@ -241,7 +245,8 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	public void testSetCredentialsAffectExistingRepository() throws Exception {
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
+				true);
 		assertEquals("pwd", taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
 
 		TaskRepository newRepository = new TaskRepository("kind", "http://url");

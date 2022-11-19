@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -22,10 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.eclipse.core.internal.runtime.AuthorizationHandler;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
@@ -47,6 +45,8 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.util.TestUtils;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -109,8 +109,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testsUseSecureStorage() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository2/");
 		flushAuthenticationCredentials(repository);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
-				"testPassword"), true);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("testUserName", "testPassword"), true);
 
 		repository.setCredentials(AuthenticationType.HTTP,
 				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
@@ -124,8 +124,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	public void testsSaveCredentials() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository3/");
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
-				"testPassword"), true);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("testUserName", "testPassword"), true);
 
 		repository.setCredentials(AuthenticationType.HTTP,
 				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
@@ -145,14 +145,17 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
 		flushAuthenticationCredentials(repository);
-		Platform.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
-		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME).migrateCredentials(Collections.singleton(repository));
+		AuthorizationHandler.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
+		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
+				.migrateCredentials(Collections.singleton(repository));
 		assertCredentialsMigrated(repository);
 
 		repository = new TaskRepository("bugzilla", "I am not a url.");
 		flushAuthenticationCredentials(repository);
-		Platform.addAuthorizationInfo(new URL("http://eclipse.org/mylyn"), repository.getUrl(), AUTH_SCHEME, authInfo);
-		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME).migrateCredentials(Collections.singleton(repository));
+		AuthorizationHandler.addAuthorizationInfo(new URL("http://eclipse.org/mylyn"), repository.getUrl(), AUTH_SCHEME,
+				authInfo);
+		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
+				.migrateCredentials(Collections.singleton(repository));
 		assertCredentialsMigrated(repository);
 	}
 
@@ -165,11 +168,12 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
 		flushAuthenticationCredentials(repository);
-		Platform.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
+		AuthorizationHandler.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
 
 		assertNull(repository.getUserName());
 
-		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME).migrateCredentials(Collections.singleton(repository));
+		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
+				.migrateCredentials(Collections.singleton(repository));
 		assertNotNull(repository.getUserName());
 		assertTrue(repository.getUserName().equals("testuser"));
 		assertCredentialsMigrated(repository);
@@ -203,8 +207,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertCredentialsMigrated(repository);
 	}
 
-	private void assertCredentialsMigrated(TaskRepository repository) throws CoreException, MalformedURLException,
-			StorageException {
+	private void assertCredentialsMigrated(TaskRepository repository)
+			throws CoreException, MalformedURLException, StorageException {
 		assertEquals("testuser", repository.getProperty(AUTH_USERNAME));
 
 		ISecurePreferences securePreferences = getSecurePreferences(repository);
@@ -370,8 +374,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository repository = new TaskRepository("eclipse.technology.mylar",
 				"abc://news.eclipse.org/eclipse.technology.mylar");
 
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUser",
-				"testPassword"), true);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("testUser", "testPassword"), true);
 
 		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 		assertNotNull(credentials);
