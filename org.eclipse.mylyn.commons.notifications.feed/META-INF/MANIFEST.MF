@@ -10,8 +10,7 @@ Export-Package: org.eclipse.mylyn.commons.notifications.feed;x-internal:=true,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.notifications.core,
- com.sun.xml.bind;bundle-version="[2.3.3,2.3.4)"
-Import-Package: javax.xml.bind;bundle-version="[2.3.3,2.3.4)"
+ jakarta.xml.bind;bundle-version="2.3.3"
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

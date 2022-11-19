@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -50,7 +50,7 @@ public class FeedReader {
 	public IStatus parse(InputStream in, IProgressMonitor monitor) {
 
 		try {
-			JAXBContext jc = com.sun.xml.bind.v2.ContextFactory.createContext(new Class[] { RSS.class }, null);
+			JAXBContext jc = JAXBContext.newInstance(RSS.class);
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
 			JAXBElement<RSS> rss = unmarshaller.unmarshal(new StreamSource(in), RSS.class);
 
@@ -79,7 +79,8 @@ public class FeedReader {
 			}
 			return Status.OK_STATUS;
 		} catch (Exception e) {
-			return new Status(IStatus.ERROR, INotificationsFeed.ID_PLUGIN, IStatus.ERROR, "Failed to parse RSS feed", e); //$NON-NLS-1$ 
+			return new Status(IStatus.ERROR, INotificationsFeed.ID_PLUGIN, IStatus.ERROR, "Failed to parse RSS feed", //$NON-NLS-1$
+					e);
 		} finally {
 			try {
 				in.close();
