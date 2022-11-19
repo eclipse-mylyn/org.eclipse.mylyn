@@ -9,7 +9,6 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.runtime,
  org.eclipse.jface,
  org.eclipse.team.core,
- org.eclipse.team.cvs.ui,
  org.eclipse.team.ui,
  org.eclipse.ui,
  org.eclipse.ui.ide,
@@ -24,7 +23,6 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.tests,
- org.eclipse.mylyn.team.cvs,
  org.eclipse.mylyn.team.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.mylyn.team.tests;x-internal:=true

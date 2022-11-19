@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,10 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
-import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
-import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**
  * @author Mik Kersten
@@ -40,8 +37,6 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private ContextActiveChangeSetManager changeSetManager;
-
-	private ActiveChangeSetManager collector;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -51,7 +46,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				.getContextChangeSetManagers()
 				.iterator()
 				.next();
-		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
 		assertNull(TasksUiPlugin.getTaskActivityManager().getActiveTask());
 	}
@@ -61,53 +55,53 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		super.tearDown();
 	}
 
-	public void testDisabledMode() {
-		ChangeSet[] sets = collector.getSets();
-		for (ChangeSet set : sets) {
-			collector.remove(set);
-		}
-
-		assertEquals(0, collector.getSets().length);
-		manager.deactivateContext(taskId);
-		changeSetManager.clearActiveChangeSets();
-		assertEquals(0, changeSetManager.getActiveChangeSets().size());
-
-		changeSetManager.disable();
-
-		AbstractTask task1 = new LocalTask("task1", "label");
-		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
-		assertEquals(0, changeSetManager.getActiveChangeSets().size());
-		assertEquals(0, collector.getSets().length);
-
-		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
-		changeSetManager.enable();
-	}
-
-	public void testSingleContextActivation() {
-		ChangeSet[] sets = collector.getSets();
-		for (ChangeSet set : sets) {
-			collector.remove(set);
-		}
-
-		assertEquals(0, collector.getSets().length);
-		manager.deactivateContext(taskId);
-		changeSetManager.clearActiveChangeSets();
-		assertEquals(0, changeSetManager.getActiveChangeSets().size());
-
-		AbstractTask task1 = new LocalTask("task1", "label");
-		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
-		assertEquals(1, changeSetManager.getActiveChangeSets().size());
-		assertEquals(1, collector.getSets().length);
-
-		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
-		assertFalse(ContextCore.getContextManager().isContextActive());
-		assertEquals(0, changeSetManager.getActiveChangeSets().size());
-		assertEquals(0, collector.getSets().length); // deleted because no
-		// active resources
-		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
-
-		// TODO: test with resource
-	}
+//	public void testDisabledMode() {
+//		ChangeSet[] sets = collector.getSets();
+//		for (ChangeSet set : sets) {
+//			collector.remove(set);
+//		}
+//
+//		assertEquals(0, collector.getSets().length);
+//		manager.deactivateContext(taskId);
+//		changeSetManager.clearActiveChangeSets();
+//		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+//
+//		changeSetManager.disable();
+//
+//		AbstractTask task1 = new LocalTask("task1", "label");
+//		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
+//		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+//		assertEquals(0, collector.getSets().length);
+//
+//		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
+//		changeSetManager.enable();
+//	}
+//
+//	public void testSingleContextActivation() {
+//		ChangeSet[] sets = collector.getSets();
+//		for (ChangeSet set : sets) {
+//			collector.remove(set);
+//		}
+//
+//		assertEquals(0, collector.getSets().length);
+//		manager.deactivateContext(taskId);
+//		changeSetManager.clearActiveChangeSets();
+//		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+//
+//		AbstractTask task1 = new LocalTask("task1", "label");
+//		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
+//		assertEquals(1, changeSetManager.getActiveChangeSets().size());
+//		assertEquals(1, collector.getSets().length);
+//
+//		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
+//		assertFalse(ContextCore.getContextManager().isContextActive());
+//		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+//		assertEquals(0, collector.getSets().length); // deleted because no
+//		// active resources
+//		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
+//
+//		// TODO: test with resource
+//	}
 
 	public void testContentsAfterDecay() throws CoreException {
 		IFile file = project.getProject().getFile(new Path("foo.txt"));
@@ -117,8 +111,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		IInteractionElement fileElement = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement fileElement = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
 		List<IContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();

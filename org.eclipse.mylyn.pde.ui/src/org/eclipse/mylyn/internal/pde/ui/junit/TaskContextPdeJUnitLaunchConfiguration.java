@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.java.ui.junit.InteractionContextTestUtil;
-import org.eclipse.pde.ui.launcher.JUnitLaunchConfigurationDelegate;
+import org.eclipse.pde.launching.JUnitLaunchConfigurationDelegate;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -40,8 +40,7 @@ public class TaskContextPdeJUnitLaunchConfiguration extends JUnitLaunchConfigura
 		if (contextTestCases.isEmpty()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(
-							Display.getCurrent().getActiveShell(),
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							Messages.TaskContextPdeJUnitLaunchConfiguration_Context_Test_Suite,
 							Messages.TaskContextPdeJUnitLaunchConfiguration_No_test_types_found_in_the_active_task_context);
 				}
