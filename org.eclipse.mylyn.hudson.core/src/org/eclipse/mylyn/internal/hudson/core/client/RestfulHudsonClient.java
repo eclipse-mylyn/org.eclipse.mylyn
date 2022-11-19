@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2016 Markus Knittig and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
@@ -452,7 +452,7 @@ public class RestfulHudsonClient {
 	}
 
 	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
-		JAXBContext ctx = com.sun.xml.bind.v2.ContextFactory.createContext(new Class[] { clazz }, null);
+		JAXBContext ctx = JAXBContext.newInstance(clazz);
 
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 

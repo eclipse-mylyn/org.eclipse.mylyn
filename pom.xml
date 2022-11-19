@@ -14,7 +14,7 @@
   <name>Mylyn Builds</name>
   <packaging>pom</packaging>
   <properties>
-    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.builds.git</tycho.scmUrl>
+    <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds.git</tycho.scmUrl>
   </properties>
   <mailingLists>
     <mailingList>
