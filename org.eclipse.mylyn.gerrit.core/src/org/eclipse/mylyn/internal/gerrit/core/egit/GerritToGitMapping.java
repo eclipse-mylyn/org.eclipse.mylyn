@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 SAP and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sascha Scholz (SAP) - initial API and implementation
@@ -198,12 +198,12 @@ public class GerritToGitMapping {
 
 	RepositoryCache getRepositoryCache() {
 		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
-		return egit.getRepositoryCache();
+		return RepositoryCache.INSTANCE;
 	}
 
 	RepositoryUtil getRepositoryUtil() {
 		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
-		return egit.getRepositoryUtil();
+		return RepositoryUtil.INSTANCE;
 	}
 
 }

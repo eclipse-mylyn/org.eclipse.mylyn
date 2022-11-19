@@ -28,9 +28,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.ui.ShellDragSupport;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -119,7 +119,7 @@ public class CommentPopupDialogTest extends TestCase {
 		TasksUiPlugin.getTaskList().deleteTask(task);
 		shell.dispose();
 
-		IJobManager jobManager = Platform.getJobManager();
+		IJobManager jobManager = Job.getJobManager();
 		jobManager.cancel(InlineCommentSubmitter.JOB_FAMILY);
 	}
 
@@ -752,14 +752,14 @@ public class CommentPopupDialogTest extends TestCase {
 	 */
 	private void assertSavingComment(Button button, String description, boolean isDraft, boolean isDiscard)
 			throws Exception {
-		doReturn(Status.OK_STATUS).when(behavior).addComment(any(IReviewItem.class), any(IComment.class),
-				any(IProgressMonitor.class));
-		doReturn(Status.OK_STATUS).when(behavior).discardComment(any(IReviewItem.class), any(IComment.class),
-				any(IProgressMonitor.class));
+		doReturn(Status.OK_STATUS).when(behavior)
+				.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+		doReturn(Status.OK_STATUS).when(behavior)
+				.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 
 		pressButton(button);
 
-		IJobManager jobManager = Platform.getJobManager();
+		IJobManager jobManager = Job.getJobManager();
 		jobManager.join(InlineCommentSubmitter.JOB_FAMILY, null);
 
 		if (isDiscard) {

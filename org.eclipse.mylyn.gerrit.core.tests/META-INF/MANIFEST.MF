@@ -8,7 +8,8 @@ Fragment-Host: org.eclipse.mylyn.gerrit.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.5.0",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
- org.hamcrest;bundle-version="[1.0.0,2.0.0)"
+ org.hamcrest;bundle-version="[1.0.0,2.0.0)",
+ com.google.gson;bundle-version="[2.7.0,2.9.0)"
 Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.egit;x-internal:=true,

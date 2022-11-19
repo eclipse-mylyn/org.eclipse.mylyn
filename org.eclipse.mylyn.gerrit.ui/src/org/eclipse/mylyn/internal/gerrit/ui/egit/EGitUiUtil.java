@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,11 +21,9 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
+import org.eclipse.egit.core.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.ui.internal.clone.AbstractGitCloneWizard;
 import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
-import org.eclipse.egit.ui.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
 import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
@@ -72,8 +70,7 @@ public class EGitUiUtil {
 			RefSpec refSpec) throws URISyntaxException, CoreException, MissingObjectException,
 			IncorrectObjectTypeException, IOException {
 		List<RefSpec> refSpecs = Collections.singletonList(refSpec);
-		FetchOperationUI op = new FetchOperationUI(repository, remote.getURIs().get(0), refSpecs,
-				Activator.getDefault().getPreferenceStore().getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT), false);
+		FetchOperationUI op = new FetchOperationUI(repository, remote.getURIs().get(0), refSpecs, false);
 		op.setCredentialsProvider(new EGitCredentialsProvider());
 		FetchResult result = op.execute(monitor);
 		ObjectId resultRef = result.getAdvertisedRef(refSpec.getSource()).getObjectId();
