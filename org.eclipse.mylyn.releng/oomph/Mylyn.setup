@@ -244,7 +244,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -282,7 +282,45 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
+        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn/.project">
+      <description>Mylyn All Maven Project</description>
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+        &lt;projectDescription>
+        	&lt;name>org.eclipse.mylyn&lt;/name>
+        	&lt;comment>&lt;/comment>
+        	&lt;projects>
+        	&lt;/projects>
+        	&lt;buildSpec>
+        		&lt;buildCommand>
+        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
+        			&lt;arguments>
+        			&lt;/arguments>
+        		&lt;/buildCommand>
+        	&lt;/buildSpec>
+        	&lt;natures>
+        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
+        	&lt;/natures>
+        	&lt;filteredResources>
+        		&lt;filter>
+        			&lt;id>1592159300227&lt;/id>
+        			&lt;name>&lt;/name>
+        			&lt;type>10&lt;/type>
+        			&lt;matcher>
+        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+        			&lt;/matcher>
+        		&lt;/filter>
+        	&lt;/filteredResources>
+        &lt;/projectDescription>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        excludedTriggers="BOOTSTRAP"
+        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.builds/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -320,7 +358,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.commons/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -358,7 +396,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.context/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -396,7 +434,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.reviews/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -434,7 +472,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.tasks/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -481,7 +519,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.tasks/connector-bugzilla-rest/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -519,7 +557,7 @@
         xsi:type="setup:ResourceCreationTask"
         excludedTriggers="BOOTSTRAP"
         predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.13"
+        successor="//@projects[name='Maintainer']/@setupTasks.14"
         targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.versions/.project">
       <description>Mylyn All Maven Project</description>
       <content>
@@ -623,7 +661,7 @@
     </setupTask>
     <setupTask
         xsi:type="launching:LaunchTask"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.13"
+        predecessor="//@projects[name='Maintainer']/@setupTasks.14"
         launcher="submodulConfig"/>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
