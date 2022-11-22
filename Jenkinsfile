@@ -31,6 +31,12 @@ pipeline {
 			}
 			steps {
 				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
+					DOWNLOAD_AREA=home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/docs/
+					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
+					ssh genie.mylyn@projects-storage.eclipse.org "\
+						rm -rf  ${DOWNLOAD_AREA}/* && \
+						mkdir -p ${DOWNLOAD_AREA}"
+					scp -r docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyne@projects-storage.eclipse.org:${DOWNLOAD_AREA}
 				}
 			}
 		}
