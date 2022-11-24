@@ -32,7 +32,7 @@ public class XmlRpcOperationTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		port = XmlRpcTestServer.start();
-		client = new CommonXmlRpcClient(new WebLocation("http://localhost:" + port + "/xmlrpc"));
+		client = new CommonXmlRpcClient(new WebLocation("https://localhost:" + port + "/xmlrpc"));
 	}
 
 	public void testExecute() throws Exception {

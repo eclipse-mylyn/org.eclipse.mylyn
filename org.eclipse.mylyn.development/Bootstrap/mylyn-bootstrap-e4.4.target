@@ -13,7 +13,7 @@
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="4.4.1.M20140925-0400"/>
-<repository location="http://download.eclipse.org/releases/luna"/>
+<repository location="https://download.eclipse.org/releases/luna"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gerrit.common" version="2.1.5.v201112241444"/>
@@ -68,11 +68,11 @@
 <unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20170306214312/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/S20170306214312/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/swtbot/snapshots/"/>
+<repository location="https://download.eclipse.org/technology/swtbot/snapshots/"/>
 </location>
 </locations>
 <launcherArgs>

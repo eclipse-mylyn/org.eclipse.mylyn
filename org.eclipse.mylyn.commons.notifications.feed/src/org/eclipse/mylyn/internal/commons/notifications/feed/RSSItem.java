@@ -141,7 +141,7 @@ public class RSSItem {
 	/**
 	 * @return the creator
 	 */
-	@XmlElement(name = "creator", namespace = "http://purl.org/dc/elements/1.1/")
+	@XmlElement(name = "creator", namespace = "https://purl.org/dc/elements/1.1/")
 	public String getCreator() {
 		return creator;
 	}
@@ -157,7 +157,7 @@ public class RSSItem {
 	/**
 	 * @return the subject
 	 */
-	@XmlElement(name = "subject", namespace = "http://purl.org/dc/elements/1.1/")
+	@XmlElement(name = "subject", namespace = "https://purl.org/dc/elements/1.1/")
 	public List<String> getSubjects() {
 		if (subjects == null) {
 			synchronized (this) {

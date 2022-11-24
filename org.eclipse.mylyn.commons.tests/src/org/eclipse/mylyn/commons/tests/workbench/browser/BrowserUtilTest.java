@@ -82,7 +82,7 @@ public class BrowserUtilTest extends TestCase {
 			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityNullHandle() to avoid browser crash");
 			return;
 		}
-		BrowserUtil.openUrl("http://mylyn.org", 0);
+		BrowserUtil.openUrl("https://mylyn.org", 0);
 		assertTrue(LowPriorityHandler.queried);
 		assertTrue(HighPriorityHandler.queried);
 	}
@@ -94,7 +94,7 @@ public class BrowserUtilTest extends TestCase {
 		}
 		LowPriorityHandler.handle = new EditorHandle();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		Object result = BrowserUtil.openUrl(page, "http://mylyn.org", 0);
+		Object result = BrowserUtil.openUrl(page, "https://mylyn.org", 0);
 		assertSame(result, LowPriorityHandler.handle);
 		assertTrue(LowPriorityHandler.queried);
 		assertTrue(HighPriorityHandler.queried);
@@ -108,7 +108,7 @@ public class BrowserUtilTest extends TestCase {
 		LowPriorityHandler.handle = new EditorHandle();
 		HighPriorityHandler.handle = new EditorHandle();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		Object result = BrowserUtil.openUrl(page, "http://mylyn.org", 0);
+		Object result = BrowserUtil.openUrl(page, "https://mylyn.org", 0);
 		assertSame(result, HighPriorityHandler.handle);
 		assertFalse(LowPriorityHandler.queried);
 		assertTrue(HighPriorityHandler.queried);

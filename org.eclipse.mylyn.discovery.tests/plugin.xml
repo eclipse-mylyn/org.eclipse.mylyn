@@ -28,7 +28,7 @@
             license="UTL (Unit Test License)"
             name="Test Connector"
             provider="UnitTesting"
-            siteUrl="http://foo.nodomain/site">
+            siteUrl="https://foo.nodomain/site">
       </connectorDescriptor>
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
@@ -38,8 +38,8 @@
             license="License"
             name="Installable Test Connector"
             provider="Eclipse Mylyn"
-            siteUrl="http://localhost/discovery/"
-            statsUrl="http://localhost/stats/">
+            siteUrl="https://localhost/discovery/"
+            statsUrl="https://localhost/stats/">
       </connectorDescriptor>
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
@@ -49,8 +49,8 @@
             license="License"
             name="Trac Test Connector"
             provider="Eclipse Mylyn"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
-            statsUrl="http://localhost/stats/">
+            siteUrl="https://download.eclipse.org/tools/mylyn/update/e3.4"
+            statsUrl="https://localhost/stats/">
          <iu
                id="org.eclipse.mylyn.trac_feature">
          </iu>
@@ -63,8 +63,8 @@
             license="License"
             name="Uninstallable Trac Test Connector"
             provider="Eclipse Mylyn"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
-            statsUrl="http://localhost/stats/">
+            siteUrl="https://download.eclipse.org/tools/mylyn/update/e3.4"
+            statsUrl="https://localhost/stats/">
          <iu
                id="org.eclipse.mylyn.trac_feature">
          </iu>
@@ -81,7 +81,7 @@
             license="License"
             name="2 Installable Test Connector"
             provider="Eclipse Mylyn"
-            siteUrl="http://localhost/discovery/">
+            siteUrl="https://localhost/discovery/">
          <iu
                id="org.eclipse.mylyn.discovery.test1">
          </iu>

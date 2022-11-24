@@ -30,15 +30,15 @@
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201505121915"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jdt.annotation" version="1.0.1.v20130111-135246"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
+<repository location="https://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.ecf.core.feature.feature.group" version="1.2.0.v20151130-0157"/>
@@ -66,15 +66,15 @@
 <unit id="org.eclipse.emf.edit.ui.feature.group" version="2.11.1.v20160208-0841"/>
 <unit id="org.eclipse.osgi" version="3.10.102.v20160118-1700"/>
 <unit id="org.eclipse.sdk.ide" version="4.5.2.M20160212-1500"/>
-<repository location="http://download.eclipse.org/releases/mars"/>
+<repository location="https://download.eclipse.org/releases/mars"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.context.core" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/snapshots/3.9"/>
+<repository location="https://download.eclipse.org/mylyn/snapshots/3.9"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
-<repository location="http://download.eclipse.org/cbi/updates/license"/>
+<repository location="https://download.eclipse.org/cbi/updates/license"/>
 </location>
 </locations>
 </target>

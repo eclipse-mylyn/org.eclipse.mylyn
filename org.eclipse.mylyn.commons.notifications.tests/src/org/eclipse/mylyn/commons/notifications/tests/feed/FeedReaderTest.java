@@ -61,7 +61,7 @@ public class FeedReaderTest extends TestCase {
 		assertEquals("Mylyn 3.6 is now available", entry.getTitle());
 		assertEquals("1.5.0", entry.getFilter("runtimeVersion"));
 		assertEquals(
-				"Mylyn 3.7 is now available. <a href=\"http://eclipse.org/mylyn/new/\">See New and Noteworthy</a> for details.",
+				"Mylyn 3.7 is now available. <a href=\"https://eclipse.org/mylyn/new/\">See New and Noteworthy</a> for details.",
 				entry.getDescription());
 	}
 

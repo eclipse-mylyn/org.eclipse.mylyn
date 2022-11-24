@@ -370,7 +370,7 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		URI[] knownRepositories = repositoryTracker.getKnownRepositories(session);
 		if (knownRepositories != null) {
 			for (URI uri : knownRepositories) {
-				if (Pattern.matches("http://download.eclipse.org/releases/.*", uri.toString())) { //$NON-NLS-1$
+				if (Pattern.matches("https://download.eclipse.org/releases/.*", uri.toString())) { //$NON-NLS-1$
 					repositoryLocations.add(uri);
 				}
 			}

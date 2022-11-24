@@ -33,7 +33,7 @@ public class DiscoveryConnectorMockFactory extends AbstractMockFactory<Discovery
 		getMockObject().setSource(source);
 
 		name("Connector " + seed).id(DiscoveryConnectorMockFactory.class.getPackage().getName() + ".connector" + seed)
-				.siteUrl("http://example.nodomain/some/path/updateSite3.x/")
+				.siteUrl("https://example.nodomain/some/path/updateSite3.x/")
 				.kind(ConnectorDescriptorKind.TASK)
 				.license(seed % 2 == 0 ? "EPL 1.0" : "APL 2.0")
 				.description("a connector for the Example Task System versions 1.0 - 5.3")
@@ -49,7 +49,7 @@ public class DiscoveryConnectorMockFactory extends AbstractMockFactory<Discovery
 		Overview overview = new Overview();
 		overview.setScreenshot("images/screenshot-main.png");
 		overview.setSummary("some long text that summarizes the connector");
-		overview.setUrl("http://example.nodomain/some/path/updateSite3.x/overview.html");
+		overview.setUrl("https://example.nodomain/some/path/updateSite3.x/overview.html");
 
 		icon(icon).overview(overview);
 		overview.setConnectorDescriptor(getMockObject());

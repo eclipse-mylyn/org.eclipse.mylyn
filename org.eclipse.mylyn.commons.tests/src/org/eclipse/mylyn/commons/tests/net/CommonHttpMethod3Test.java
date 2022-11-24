@@ -46,7 +46,7 @@ public class CommonHttpMethod3Test extends TestCase {
 	void openStreamAndCancel(CommonHttpMethod3 method) throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://mylyn.org/";
+		String url = "https://mylyn.org/";
 		WebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 

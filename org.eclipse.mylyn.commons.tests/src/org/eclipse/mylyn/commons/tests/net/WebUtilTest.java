@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
@@ -262,7 +262,7 @@ public class WebUtilTest extends TestCase {
 		}
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
@@ -288,7 +288,7 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testLocationConnect() throws Exception {
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
@@ -322,7 +322,7 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testLocationConnectProxy() throws Exception {
-		String url = "http://foo/bar";
+		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		AbstractWebLocation location = new WebLocation(url, null, null, new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
@@ -338,11 +338,11 @@ public class WebUtilTest extends TestCase {
 		assertEquals(200, statusCode);
 
 		Message request = server.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
+		assertEquals("GET https://foo/bar HTTP/1.1", request.request);
 	}
 
 	public void testLocationConnectProxyHttpAuth() throws Exception {
-		String url = "http://foo/bar";
+		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		WebLocation location = new WebLocation(url, "", "", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
@@ -363,12 +363,12 @@ public class WebUtilTest extends TestCase {
 		assertEquals(401, statusCode);
 
 		Message request = server.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
+		assertEquals("GET https://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
 
 	public void testLocationConnectProxyNoProxyCredentials() throws Exception {
-		String url = "http://foo/bar";
+		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		AbstractWebLocation location = new WebLocation(url, "user", "pass", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
@@ -387,13 +387,13 @@ public class WebUtilTest extends TestCase {
 		assertEquals(407, statusCode);
 
 		Message request = server.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
+		assertEquals("GET https://foo/bar HTTP/1.1", request.request);
 
 		assertFalse("Expected HttpClient to close connection", server.hasRequest());
 	}
 
 	public void testLocationConnectProxyProxyCredentials() throws Exception {
-		String url = "http://foo/bar";
+		String url = "https://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		AbstractWebLocation location = new WebLocation(url, "user", "pass", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
@@ -413,12 +413,12 @@ public class WebUtilTest extends TestCase {
 		assertEquals(407, statusCode);
 
 		Message request = server.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
+		assertEquals("GET https://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
 
 	public void testLocationConnectProxyProxyCredentialsHttpAuth() throws Exception {
-		String url = "http://foo/bar";
+		String url = "https://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebLocation location = new WebLocation(url, "", "", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
@@ -437,7 +437,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals(200, statusCode);
 
 		Message request = server.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
+		assertEquals("GET https://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
@@ -581,12 +581,12 @@ public class WebUtilTest extends TestCase {
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("/folder/file.txt", WebUtil.getRequestPath(url));
 
-		url = "http://example.com/";
+		url = "https://example.com/";
 		assertEquals(80, WebUtil.getPort(url));
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("/", WebUtil.getRequestPath(url));
 
-		url = "http://example.com";
+		url = "https://example.com";
 		assertEquals(80, WebUtil.getPort(url));
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("", WebUtil.getRequestPath(url));
@@ -624,11 +624,11 @@ public class WebUtilTest extends TestCase {
 				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));
 		// disabled: fails in environments where the DNS resolver redirects for unknown hosts
 		//		try {
-//			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
+//			String title = WebUtil.getTitleFromUrl(new WebLocation("https://invalidurl"), null);
 //			fail("Expected UnknownHostException, got: " + title);
 //		} catch (UnknownHostException e) {
 //		}
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		server.addResponse(MockServer.OK);
 		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
@@ -642,7 +642,7 @@ public class WebUtilTest extends TestCase {
 				+ "Content-Type: text/html; charset=UTF-8\n" + "Content-Length: 30\n" + "\n"
 				+ "<html><title>\u00C3\u00BC</title></html>";
 		server.addResponse(message);
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		assertEquals("\u00FC", WebUtil.getTitleFromUrl(new WebLocation(url) {
 			@Override
 			public Proxy getProxyForHost(String host, String proxyType) {

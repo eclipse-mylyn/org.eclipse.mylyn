@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:tns="http://www.eclipse.org/mylyn/discovery/directory/" 
+<schema xmlns:tns="https://www.eclipse.org/mylyn/discovery/directory/" 
 	xmlns="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.eclipse.org/mylyn/discovery/directory/">
+	targetNamespace="https://www.eclipse.org/mylyn/discovery/directory/">
 	
 	<annotation>
 		<documentation>

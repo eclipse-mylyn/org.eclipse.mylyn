@@ -176,12 +176,12 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInId() {
-		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/test 1");
-		assertEquals("http://ci.mylyn.org/test 1", store.getId());
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore("https://ci.mylyn.org/test 1");
+		assertEquals("https://ci.mylyn.org/test 1", store.getId());
 		assertEquals("http:\\2f\\2fci.mylyn.org\\2ftest 1", store.getSecurePreferences().name());
 
-		store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
-		assertEquals("http://ci.mylyn.org/\u00E7\u00F1\u00FC", store.getId());
+		store = createStubSecureCredentialsStore("https://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		assertEquals("https://ci.mylyn.org/\u00E7\u00F1\u00FC", store.getId());
 		assertEquals("http%3A%2F%2Fci.mylyn.org%2F%C3%A7%C3%B1%C3%BC", store.getSecurePreferences().name());
 
 		store = createStubSecureCredentialsStore("\uABCD  \u1F00");
@@ -223,7 +223,7 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValue() {
-		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore("https://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", false);
 		assertEquals("[key]", Arrays.toString(store.getSecurePreferences().keys()));
 		assertEquals("value", store.get("key", null));
@@ -231,7 +231,7 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValueNoPersist() {
-		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore("https://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", false, false);
 		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
 		assertEquals("value", store.get("key", null));
@@ -239,7 +239,7 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValueEncrypt() {
-		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore("https://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", true);
 		assertEquals("[key]", Arrays.toString(store.getSecurePreferences().keys()));
 		assertEquals("value", store.get("key", null));
@@ -247,7 +247,7 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValueEncryptNoPersist() {
-		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore("https://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", true, false);
 		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
 		assertEquals("value", store.get("key", null));

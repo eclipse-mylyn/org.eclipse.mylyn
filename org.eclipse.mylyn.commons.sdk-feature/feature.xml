@@ -20,7 +20,7 @@
       license-feature="org.eclipse.license"
       license-feature-version="2.0.2">
 
-   <description url="http://eclipse.org/mylyn/commons/">
+   <description url="https://eclipse.org/mylyn/commons/">
       %description
    </description>
 

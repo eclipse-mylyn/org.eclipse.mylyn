@@ -32,7 +32,7 @@ public abstract class DiscoveryCore {
 	public static String getDiscoveryUrl() {
 		Version v = CoreUtil.getFrameworkVersion();
 		String defaultUrl = NLS.bind(
-				"http://www.eclipse.org/mylyn/discovery/directory-{0}.{1}.xml", v.getMajor(), v.getMinor()); //$NON-NLS-1$
+				"https://www.eclipse.org/mylyn/discovery/directory-{0}.{1}.xml", v.getMajor(), v.getMinor()); //$NON-NLS-1$
 		return System.getProperty(DiscoveryCore.SYSTEM_PROPERTY_DIRECTORY_URL, defaultUrl);
 	}
 }

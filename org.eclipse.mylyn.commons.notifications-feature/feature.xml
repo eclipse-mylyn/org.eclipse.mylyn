@@ -20,7 +20,7 @@
       license-feature="org.eclipse.license"
       license-feature-version="2.0.2">
 
-   <description url="http://eclipse.org/mylyn">
+   <description url="https://eclipse.org/mylyn">
       %description
    </description>
 
@@ -33,13 +33,11 @@
    </license>
 
    <requires>
-      <!-- Java 11 compatibility -->
-      <import plugin="javax.activation" version="1.2.2" match="equivalent"/>
+      <import plugin="javax.activation" version="1.2.2" match="greaterOrEqual"/>
       <import plugin="jakarta.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="com.sun.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="equivalent"/>
-            
-      <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="greaterOrEqual"/>      
+      <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
