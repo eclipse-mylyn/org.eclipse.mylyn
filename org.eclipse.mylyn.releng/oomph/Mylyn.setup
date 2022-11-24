@@ -210,7 +210,7 @@
     <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.mylyn"
-        value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+        value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/master/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
         vm="true"/>
     <setupTask
         xsi:type="git:GitCloneTask"
@@ -699,54 +699,6 @@
         name="master"
         label="Master"/>
     <description>Maintaining Mylyn</description>
-  </project>
-  <project name="web"
-      label="Website">
-    <setupTask
-        xsi:type="git:GitCloneTask"
-        id="git.clone.mylyn.web"
-        remoteURI="www.eclipse.org/mylyn.git">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/InducedChoices">
-        <detail
-            key="inherit">
-          <value>eclipse.git.gerrit.remoteURIs</value>
-        </detail>
-        <detail
-            key="label">
-          <value>Mylyn Web Git or Gerrit Repository</value>
-        </detail>
-        <detail
-            key="target">
-          <value>remoteURI</value>
-        </detail>
-      </annotation>
-      <configSections
-          name="core">
-        <properties
-            key="autocrlf"
-            value="false"/>
-      </configSections>
-      <description>Mylyn Website</description>
-    </setupTask>
-    <setupTask
-        xsi:type="projects:ProjectsImportTask">
-      <sourceLocator
-          rootFolder="${git.clone.mylyn.web.location}"/>
-    </setupTask>
-    <setupTask
-        xsi:type="setup.workingsets:WorkingSetTask">
-      <workingSet
-          name="Mylyn Website">
-        <predicate
-            xsi:type="predicates:RepositoryPredicate"
-            project="mylyn"/>
-      </workingSet>
-    </setupTask>
-    <stream
-        name="master"
-        label="Master"/>
-    <description>Mylyn Website</description>
   </project>
   <project name="DeveloperAddons"
       label="Developer Addons">
