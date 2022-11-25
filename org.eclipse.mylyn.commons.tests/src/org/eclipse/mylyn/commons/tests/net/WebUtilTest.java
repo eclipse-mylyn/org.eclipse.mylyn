@@ -581,13 +581,13 @@ public class WebUtilTest extends TestCase {
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("/folder/file.txt", WebUtil.getRequestPath(url));
 
-		url = "https://example.com/";
+		url = "http://example.com/";
 		assertEquals(80, WebUtil.getPort(url));
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("/", WebUtil.getRequestPath(url));
 
 		url = "https://example.com";
-		assertEquals(80, WebUtil.getPort(url));
+		assertEquals(443, WebUtil.getPort(url));
 		assertEquals("example.com", WebUtil.getHost(url));
 		assertEquals("", WebUtil.getRequestPath(url));
 

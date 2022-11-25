@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -16,22 +16,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.net.NetUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 public class NetUtilTest extends TestCase {
 
-	static final int /*NetUtil.*/MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
+	static final int /*NetUtil.*/ MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
 
-	static final int /*NetUtil.*/MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
+	static final int /*NetUtil.*/ MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
 
-	private static final String /*NetUtil.*/PROPERTY_MAX_HTTP_HOST_CONNECTIONS = "org.eclipse.mylyn.http.connections.per.host";
+	private static final String /*NetUtil.*/ PROPERTY_MAX_HTTP_HOST_CONNECTIONS = "org.eclipse.mylyn.http.connections.per.host";
 
-	private static final String /*NetUtil.*/PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS = "org.eclipse.mylyn.http.total.connections";
+	private static final String /*NetUtil.*/ PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS = "org.eclipse.mylyn.http.total.connections";
 
 	public void testGetHostDefault() {
 		String url = "https://example.com/";
@@ -65,12 +65,12 @@ public class NetUtilTest extends TestCase {
 
 	public void testGetPortDefault() {
 		String url = "https://example.com/";
-		assertEquals(80, NetUtil.getPort(url));
+		assertEquals(443, NetUtil.getPort(url));
 	}
 
 	public void testGetPortEmptyPath() {
 		String url = "https://example.com";
-		assertEquals(80, NetUtil.getPort(url));
+		assertEquals(443, NetUtil.getPort(url));
 	}
 
 	public void testGetPortEmptyPathPort() {
@@ -155,7 +155,7 @@ public class NetUtilTest extends TestCase {
 	}
 
 	public void testIsUrlHttpsHttpUrl() {
-		assertFalse(NetUtil.isUrlHttps("https://"));
+		assertTrue(NetUtil.isUrlHttps("https://"));
 	}
 
 	public void testIsUrlHttpsInvalid() {
