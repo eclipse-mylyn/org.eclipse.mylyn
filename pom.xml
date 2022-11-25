@@ -25,7 +25,38 @@
     <tycho-version>2.7.5</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
     <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.tck,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.development</sonar.skippedModules>
-  </properties>	  
+    <tycho.testArgLine></tycho.testArgLine>
+    <analysis.skip>true</analysis.skip>
+
+    <sign.skip>true</sign.skip>
+    <sign.alias>default</sign.alias>
+
+    <coverage.skip>true</coverage.skip>
+    <coverage.filter></coverage.filter>
+    <coverage.destFile>../target/jacoco.exec</coverage.destFile>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.jacoco.reportPath>${coverage.destFile}</sonar.jacoco.reportPath>
+
+    <test.skip>${maven.test.skip}</test.skip>
+    <test.linux.skip>true</test.linux.skip>
+    <test.osx.skip>true</test.osx.skip>
+    <test.windows.skip>true</test.windows.skip>
+    <test.component.skip>${test.skip}</test.component.skip>
+    <test.integration.skip>${test.all.skip}</test.integration.skip>
+    <test.performance.skip>${test.skip}</test.performance.skip>
+    <test.system.skip>${test.skip}</test.system.skip>
+
+    <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
+    <test.uservmargs></test.uservmargs>
+    <test.osvmargs></test.osvmargs>
+    <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password} ${test.userargs}</test.args>
+    <test.userargs></test.userargs>
+    <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
+    <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
+
+
+  </properties>
   <mailingLists>
     <mailingList>
       <name>Mylyn Commons Mailing List</name>
@@ -96,34 +127,34 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho-version}</version>
-                <configuration>
-                    <resolver>p2</resolver>
-                    <environments>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>macosx</os>
-                            <ws>cocoa</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                    </environments>
-                    <target>
-                        <artifact>
-                            <groupId>org.eclipse.mylyn.commons</groupId>
-                            <artifactId>org.eclipse.mylyn.commons-target</artifactId>
-                            <version>${project.parent.version}</version>
-                        </artifact>
-                    </target>
-                    <pomDependencies>consider</pomDependencies>
-                </configuration>
+        <configuration>
+            <resolver>p2</resolver>
+            <environments>
+                <environment>
+                    <os>win32</os>
+                    <ws>win32</ws>
+                    <arch>x86_64</arch>
+                </environment>
+                <environment>
+                    <os>linux</os>
+                    <ws>gtk</ws>
+                    <arch>x86_64</arch>
+                </environment>
+                <environment>
+                    <os>macosx</os>
+                    <ws>cocoa</ws>
+                    <arch>x86_64</arch>
+                </environment>
+            </environments>
+            <target>
+                <artifact>
+                    <groupId>org.eclipse.mylyn.commons</groupId>
+                    <artifactId>org.eclipse.mylyn.commons-target</artifactId>
+                    <version>${project.parent.version}</version>
+                </artifact>
+            </target>
+            <pomDependencies>consider</pomDependencies>
+        </configuration>
       </plugin>
     </plugins>
     <pluginManagement>
