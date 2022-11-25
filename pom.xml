@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
   <properties>
     <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
-    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
+    <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
   </properties>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>

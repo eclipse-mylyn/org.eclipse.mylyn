@@ -5,7 +5,7 @@
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # which accompanies this distribution, and is available at
-# http://www.eclipse.org/legal/epl-v10.html
+# https://www.eclipse.org/legal/epl-v10.html
 #
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ echo Begin Signing
 
 for file in `/usr/bin/find -name "*$3*.jar"`; do
 	echo Signing $file
-	curl -o $file -F file=@$file http://build.eclipse.org:31338/sign
+	curl -o $file -F file=@$file https://build.eclipse.org:31338/sign
 done
 
 echo Completed Signing

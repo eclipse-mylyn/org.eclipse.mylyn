@@ -40,11 +40,11 @@
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="8.3.0.201402142303"/>
@@ -59,7 +59,7 @@
 <unit id="org.eclipse.egit.feature.group" version="3.2.0.201312181205-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.2.0.201312181205-r"/>
 <unit id="org.eclipse.sdk.ide" version="4.3.2.M20140221-1700"/>
-<repository location="http://download.eclipse.org/releases/kepler"/>
+<repository location="https://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
@@ -70,11 +70,11 @@
 <unit id="org.eclipse.osgi" version="3.8.2.v20130124-134944"/>
 <unit id="org.eclipse.core.runtime.compatibility.auth" version="3.2.300.v20120523-2004"/>
 <unit id="org.eclipse.jdt.annotation" version="1.0.1.v20130111-135246"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
+<repository location="https://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
-<repository location="http://download.eclipse.org/cbi/updates/license"/>
+<repository location="https://download.eclipse.org/cbi/updates/license"/>
 </location>
 </locations>
 </target>

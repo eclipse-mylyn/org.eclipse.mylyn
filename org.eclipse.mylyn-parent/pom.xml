@@ -4,7 +4,7 @@
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v2.0
     which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v20.html
+    https://www.eclipse.org/legal/epl-v20.html
 
     Contributors:
          Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>1.5.0</tycho-version>
+    <tycho-version>2.7.5</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
 
     <mylyn-test-append></mylyn-test-append>
@@ -66,22 +66,22 @@
     <dist.snapshots.url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</dist.snapshots.url>
 
     <target-platform>mylyn-e${target-version}</target-platform>
-    <egit-repository-url>http://download.eclipse.org/egit/updates-5.8/</egit-repository-url>
-    <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+    <egit-repository-url>https://download.eclipse.org/egit/updates-5.8/</egit-repository-url>
+    <swtbot-repository-url>https://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
 
     <alt-target-version>4.7</alt-target-version>
-    <alt-platform-repository-url>http://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
+    <alt-platform-repository-url>https://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
 
-    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/</orbit-repository-url>
-    <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
-    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
-    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
-    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
-    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
-    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
-    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
-    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
+    <orbit-repository-url>https://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/</orbit-repository-url>
+    <jdt-annotation-repository-url>https://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
+    <mylyn-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
+    <mylyn-builds-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
+    <mylyn-commons-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
+    <mylyn-context-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
+    <mylyn-docs-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
+    <mylyn-reviews-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
+    <mylyn-tasks-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
+    <mylyn-versions-repository-url>https://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
@@ -90,7 +90,7 @@
       <post>mylyn-dev@eclipse.org</post>
       <subscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</subscribe>
       <unsubscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</unsubscribe>
-      <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-dev</archive>
+      <archive>https://dev.eclipse.org/mhonarc/lists/mylyn-dev</archive>
     </mailingList>
   </mailingLists>
 
@@ -131,7 +131,7 @@
   <licenses>
     <license>
       <name>Eclipse Public License v2.0</name>
-      <url>http://www.eclipse.org/legal/epl-v20.html</url>
+      <url>https://www.eclipse.org/legal/epl-v20.html</url>
       <distribution>repo</distribution>
       <comments>
         All rights reserved.
@@ -139,14 +139,14 @@
         This program and the accompanying materials are made
         available under the terms of the Eclipse Public License v2.0
         which accompanies this distribution, and is available at
-        http://www.eclipse.org/legal/epl-v10.htm
+        https://www.eclipse.org/legal/epl-v10.htm
       </comments>
     </license>
   </licenses>
 
   <organization>
     <name>Eclipse Foundation</name>
-    <url>http://www.eclipse.org/</url>
+    <url>https://www.eclipse.org/</url>
   </organization>
 
   <profiles>
@@ -307,7 +307,7 @@
       <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
         <target-version>4.14</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/2019-12/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/2022-12/</platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -320,9 +320,9 @@
       </activation>
       <properties>
         <target-version>4.2</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/juno/201303010900/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/juno/201303010900/</platform-repository-url>
         <alt-target-version>4.2</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/juno/201303010900/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/juno/201303010900/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -335,9 +335,9 @@
       </activation>
       <properties>
         <target-version>4.3</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/kepler/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/kepler/</platform-repository-url>
         <alt-target-version>4.3</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/kepler/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/kepler/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -350,9 +350,9 @@
       </activation>
       <properties>
         <target-version>4.4</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/luna/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/luna/</platform-repository-url>
         <alt-target-version>4.4</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/luna/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/luna/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -365,9 +365,9 @@
       </activation>
       <properties>
         <target-version>4.5</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/mars/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/mars/</platform-repository-url>
         <alt-target-version>4.5</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/mars/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/mars/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -380,9 +380,9 @@
       </activation>
       <properties>
         <target-version>4.6</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/neon/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/neon/</platform-repository-url>
         <alt-target-version>4.6</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/neon/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/neon/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -395,9 +395,9 @@
       </activation>
       <properties>
         <target-version>4.7</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/oxygen/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/oxygen/</platform-repository-url>
         <alt-target-version>4.7</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -410,9 +410,9 @@
       </activation>
       <properties>
         <target-version>4.8</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/photon/</platform-repository-url>
         <alt-target-version>4.photon</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/photon/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/photon/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -425,9 +425,9 @@
       </activation>
       <properties>
         <target-version>4.14</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/2019-12/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/2019-12/</platform-repository-url>
         <alt-target-version>4.14</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/2019-12/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/2019-12/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -440,9 +440,9 @@
       </activation>
       <properties>
         <target-version>maintenance</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/maintenance/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/maintenance/</platform-repository-url>
         <alt-target-version>maintenance</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/maintenance/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/maintenance/</alt-platform-repository-url>
       </properties>
     </profile>
     <profile>
@@ -455,9 +455,9 @@
       </activation>
       <properties>
         <target-version>staging</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+        <platform-repository-url>https://download.eclipse.org/releases/staging/</platform-repository-url>
         <alt-target-version>staging</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/staging/</alt-platform-repository-url>
+        <alt-platform-repository-url>https://download.eclipse.org/releases/staging/</alt-platform-repository-url>
       </properties>
     </profile>
 

@@ -67,6 +67,26 @@
                   <classifier>mylyn-e4.14</classifier>
                 </artifact>
                 <artifact>
+                  <file>mylyn-e4.24.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.24</classifier>
+                </artifact>
+                <artifact>
+                  <file>mylyn-e4.25.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.25</classifier>
+                </artifact>
+                <artifact>
+                  <file>mylyn-e4.26.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.26</classifier>
+                </artifact>
+                <artifact>
+                  <file>mylyn-e4.latest.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.latest</classifier>
+                </artifact>
+                <artifact>
                   <file>mylyn-emaintenance.target</file>
                   <type>target</type>
                   <classifier>mylyn-emaintenance</classifier>

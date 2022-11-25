@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
@@ -19,7 +19,7 @@ class mylyn {
   $requirements = [
     "apache2",
     "libfile-find-rule-perl-perl",
-#  for local testing of the mylyn website (see http://wiki.eclipse.org/Mylyn/Website)
+#  for local testing of the mylyn website (see https://wiki.eclipse.org/Mylyn/Website)
 #    "libapache2-mod-php5",
 #    "php5",
     ]
@@ -53,7 +53,7 @@ class mylyn {
     require => Package[$requirements],
   }  
 
-#  for local testing of the mylyn website (see http://wiki.eclipse.org/Mylyn/Website)
+#  for local testing of the mylyn website (see https://wiki.eclipse.org/Mylyn/Website)
 #  file { "/var/www/html/mylyn":
 #    ensure  => directory, # so make this a directory
 #    recurse => true, # enable recursive directory management

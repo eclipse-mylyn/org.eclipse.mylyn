@@ -9,13 +9,13 @@
 <unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201505121915"/>
 <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
 <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
 <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170919201930/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20170919201930/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
@@ -51,11 +51,11 @@
 <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="9.0.0.201606062011"/>
@@ -80,7 +80,7 @@
 <unit id="org.eclipse.osgi" version="3.11.0.v20160603-1336"/>
 <unit id="org.eclipse.jdt.annotation" version="1.1.100.v20160418-1457"/>
 <unit id="org.eclipse.sdk.ide" version="4.6.1.M20160907-1200"/>
-<repository location="http://download.eclipse.org/releases/neon"/>
+<repository location="https://download.eclipse.org/releases/neon"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
@@ -89,11 +89,11 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.core.runtime.compatibility.auth" version="3.2.300.v20120523-2004"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
+<repository location="https://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
-<repository location="http://download.eclipse.org/cbi/updates/license"/>
+<repository location="https://download.eclipse.org/cbi/updates/license"/>
 </location>
 </locations>
 </target>

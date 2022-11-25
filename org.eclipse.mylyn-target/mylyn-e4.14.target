@@ -8,7 +8,7 @@
 			<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/releases/2019-12"/>
+			<repository location="https://download.eclipse.org/releases/2019-12"/>
 			<unit id="org.eclipse.e4.rcp.feature.group" version="4.14.0.v20191204-0601"/>
 			<unit id="org.eclipse.e4.rcp.source.feature.group" version="4.14.0.v20191204-0601"/>
 			<unit id="org.eclipse.platform.source.feature.group" version="4.14.0.v20191210-0610"/>
@@ -25,11 +25,11 @@
 			<unit id="org.eclipse.cdt.sdk.feature.group" version="9.10.0.201912051559"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
 			<unit id="javax.servlet" version="3.0.0.v201112011016"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
 			<unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
 			<unit id="com.google.guava.source" version="21.0.0.v20170206-1425"/>
 			<unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>

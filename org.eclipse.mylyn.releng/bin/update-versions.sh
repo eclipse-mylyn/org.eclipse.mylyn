@@ -15,7 +15,7 @@ find . -name feature.xml | xargs sed -i~ -e "s/\(mylyn.* version=\"\)$OLD\(\" ma
 updateSnapshotSitesForSR() {
 MAJOR_MINOR=$1
 echo "Updating snapshot sites to $MAJOR_MINOR"
-sed -i~ -e "s#http://download.eclipse.org/mylyn/snapshots/nightly.*/<#http://download.eclipse.org/mylyn/snapshots/$MAJOR_MINOR/<#" \
+sed -i~ -e "s#https://download.eclipse.org/mylyn/snapshots/nightly.*/<#https://download.eclipse.org/mylyn/snapshots/$MAJOR_MINOR/<#" \
 org.eclipse.mylyn/org.eclipse.mylyn-parent/pom.xml
 }
 
