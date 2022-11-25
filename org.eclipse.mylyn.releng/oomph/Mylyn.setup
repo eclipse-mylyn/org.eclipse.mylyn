@@ -288,7 +288,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn&lt;/name>
+        	&lt;name>org.eclipse.mylyn-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -326,7 +326,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.builds&lt;/name>
+        	&lt;name>org.eclipse.mylyn.builds-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -364,7 +364,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.commons&lt;/name>
+        	&lt;name>org.eclipse.mylyn.commons-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -402,7 +402,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.context&lt;/name>
+        	&lt;name>org.eclipse.mylyn.context-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -440,7 +440,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.reviews&lt;/name>
+        	&lt;name>org.eclipse.mylyn.reviews-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -478,7 +478,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.tasks&lt;/name>
+        	&lt;name>org.eclipse.mylyn.tasks-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -525,7 +525,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>connector-bugzilla-rest&lt;/name>
+        	&lt;name>connector-bugzilla-rest-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
@@ -563,7 +563,7 @@
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.versions&lt;/name>
+        	&lt;name>org.eclipse.mylyn.versions-parent&lt;/name>
         	&lt;comment>&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
