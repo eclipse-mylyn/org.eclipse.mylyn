@@ -41,13 +41,12 @@
 			<unit id="jakarta.xml.bind" version="0.0.0"/>
 			<unit id="org.apache.commons.lang" version="0.0.0"/>
 			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
+			<unit id="org.apache.xerces" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.client" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.common" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.server" version="0.0.0"/>
-			<unit id="org.objenesis" version="0.0.0"/>
-			<unit id="org.apache.xerces" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
-			<unit id="com.google.gson" version="0.0.0"/>
+			<unit id="org.objenesis" version="0.0.0"/>
 		</location>
 	</locations>
 </target>
