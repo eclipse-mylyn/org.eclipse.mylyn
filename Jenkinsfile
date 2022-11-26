@@ -37,7 +37,7 @@ pipeline {
 					ssh genie.mylyn@projects-storage.eclipse.org "\
 						rm -rf  ${DOWNLOAD_AREA}/* && \
 						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r commons/org.eclipse.mylyn.commons-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
+					scp -r org.eclipse.mylyn.commons-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
 				'''
 				}
 			}
