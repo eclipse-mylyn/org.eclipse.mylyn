@@ -153,7 +153,7 @@ public class CommonHttpClientTest {
 
 	@Test
 	public void testExecuteGet() throws IOException {
-		RepositoryLocation location = new RepositoryLocation("https://mylyn.org");
+		RepositoryLocation location = new RepositoryLocation("http://mylyn.org");
 		CommonHttpClient client = new CommonHttpClient(location);
 		Integer result = client.executeGet("/", null, new HttpRequestProcessor<Integer>() {
 			@Override
@@ -167,7 +167,7 @@ public class CommonHttpClientTest {
 	@Test
 	public void testGetRequest() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/");
+		location.setUrl("http://mylyn.org/");
 
 		HttpGet request = new HttpGet(location.getUrl());
 		CommonHttpClient client = new CommonHttpClient(location);
@@ -182,7 +182,7 @@ public class CommonHttpClientTest {
 	@Test
 	public void testHttpAuthenticationTypeHttp() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/");
+		location.setUrl("http://mylyn.org/");
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("username", "password"));
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -200,7 +200,7 @@ public class CommonHttpClientTest {
 	@Test
 	public void testHttpAuthenticationTypeRepository() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/");
+		location.setUrl("http://mylyn.org/");
 		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("username", "password"));
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -229,7 +229,7 @@ public class CommonHttpClientTest {
 
 	@Test
 	public void testHttpContextPerThread() throws Exception {
-		RepositoryLocation location = new RepositoryLocation("https://mylyn.org/");
+		RepositoryLocation location = new RepositoryLocation("http://mylyn.org/");
 		final CommonHttpClient client = new CommonHttpClient(location);
 		final AtomicReference<HttpContext> otherThreadContext = new AtomicReference<HttpContext>();
 		Thread t = new Thread() {
