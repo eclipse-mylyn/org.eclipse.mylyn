@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.dialog.DialogPageSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -403,7 +403,7 @@ public class RepositoryLocationPart {
 	 * <p>
 	 * This information is typically used by the wizard to set the enablement of the validation UI affordance.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> if this page can be validated, and <code>false</code> otherwise
 	 * @see #needsValidation()
 	 * @see IWizardContainer#updateButtons()
@@ -470,7 +470,7 @@ public class RepositoryLocationPart {
 
 	@SuppressWarnings("unchecked")
 	public <T> T getContainer(Class<T> clazz) {
-		return (T) getServiceLocator().getAdapter(clazz);
+		return getServiceLocator().getAdapter(clazz);
 	}
 
 	public IPartContainer getPartContainer() {
@@ -478,7 +478,7 @@ public class RepositoryLocationPart {
 	}
 
 	public boolean isValidUrl(String url) {
-		if (url.startsWith("https://") || url.startsWith("http://")) { //$NON-NLS-1$//$NON-NLS-2$
+		if (url.startsWith("https://") || url.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
 			try {
 				new URI(url);
 				return true;
@@ -568,10 +568,10 @@ public class RepositoryLocationPart {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
 							Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
-					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+							StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -587,8 +587,8 @@ public class RepositoryLocationPart {
 	}
 
 	private CertificateCredentialsListener bindCertificateCredentials(
-			AuthenticationType<CertificateCredentials> authType, Button enabledButton, Text userText,
-			Text passwordText, Button savePasswordButton) {
+			AuthenticationType<CertificateCredentials> authType, Button enabledButton, Text userText, Text passwordText,
+			Button savePasswordButton) {
 		CertificateCredentialsListener listener = new CertificateCredentialsListener(authType, enabledButton, userText,
 				passwordText, savePasswordButton);
 		listener.restore();
@@ -856,8 +856,9 @@ public class RepositoryLocationPart {
 	}
 
 	protected void bind(Button button, String property) {
-		ISWTObservableValue uiElement = SWTObservables.observeSelection(button);
-		IObservableValue modelElement = new RepositoryLocationValueProperty(property, Boolean.FALSE.toString()).observe(workingCopy);
+		ISWTObservableValue uiElement = WidgetProperties.buttonSelection().observe(button);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property, Boolean.FALSE.toString())
+				.observe(workingCopy);
 		bindingContext.bindValue(uiElement, modelElement, null, null);
 	}
 
@@ -867,7 +868,7 @@ public class RepositoryLocationPart {
 
 	protected void bind(Text text, String property, UpdateValueStrategy targetObservableValue,
 			UpdateValueStrategy modelObservableValue) {
-		ISWTObservableValue uiElement = SWTObservables.observeText(text, SWT.Modify);
+		ISWTObservableValue uiElement = WidgetProperties.text(SWT.Modify).observe(text);
 		IObservableValue modelElement = new RepositoryLocationValueProperty(property, null).observe(workingCopy);
 		bindingContext.bindValue(uiElement, modelElement, targetObservableValue, modelObservableValue);
 	}

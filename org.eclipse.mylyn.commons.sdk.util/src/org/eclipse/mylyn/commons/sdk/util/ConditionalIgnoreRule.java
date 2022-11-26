@@ -24,9 +24,9 @@ import org.junit.runners.model.Statement;
 import com.google.common.base.Throwables;
 
 /**
- * Cobbled together from: http://www.codeaffine.com/2013/11/18/a-junit-rule-to-conditionally-ignore-tests/
- * https://gist.github.com/yinzara/9980184 http://cwd.dhemery.com/2010/12/junit-rules/
- * (http://stackoverflow.com/questions/28145735/androidjunit4-class-org-junit-assume-assumetrue-assumptionviolatedexception/
+ * Cobbled together from: https://www.codeaffine.com/2013/11/18/a-junit-rule-to-conditionally-ignore-tests/
+ * https://gist.github.com/yinzara/9980184 https://cwd.dhemery.com/2010/12/junit-rules/
+ * (https://stackoverflow.com/questions/28145735/androidjunit4-class-org-junit-assume-assumetrue-assumptionviolatedexception/
  */
 
 public class ConditionalIgnoreRule implements TestRule {

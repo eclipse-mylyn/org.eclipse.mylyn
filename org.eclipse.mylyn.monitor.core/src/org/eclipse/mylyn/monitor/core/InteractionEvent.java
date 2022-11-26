@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Immutable. Encapsulates interaction made by the user or on behalf of the user. Also see:
- * http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
+ * https://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
  * 
  * @author Mik Kersten
  * @since 2.0

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2022 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Red Hat, Inc - Bug 412953.
+ *     ArSysOp - adapt to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.notifications.feed;
@@ -35,6 +36,32 @@ import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
  */
 public class FeedReader {
 
+	private final class FilterableAdapter implements IAdaptable {
+		private final FeedEntry entry;
+
+		private FilterableAdapter(FeedEntry entry) {
+			this.entry = entry;
+		}
+
+		public <T> T getAdapter(Class<T> adapter) {
+			if (adapter == IFilterable.class) {
+				IFilterable filterable = new IFilterable() {
+					public List<String> getFilters(String key) {
+						return entry.getFilters(key);
+					}
+
+					public String getFilter(String key) {
+						return entry.getFilter(key);
+					}
+				};
+				return adapter.cast(filterable);
+			} else if (adapter == FeedEntry.class) {
+				return adapter.cast(entry);
+			}
+			return null;
+		}
+	}
+
 	private final NotificationEnvironment environment;
 
 	private final List<FeedEntry> entries;
@@ -56,24 +83,7 @@ public class FeedReader {
 
 			for (RSSItem rssItem : rss.getValue().getItems()) {
 				final FeedEntry entry = createEntry(rssItem);
-				if (environment.matches(new IAdaptable() {
-					public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-						if (adapter == IFilterable.class) {
-							return new IFilterable() {
-								public List<String> getFilters(String key) {
-									return entry.getFilters(key);
-								}
-
-								public String getFilter(String key) {
-									return entry.getFilter(key);
-								}
-							};
-						} else if (adapter == FeedEntry.class) {
-							return entry;
-						}
-						return null;
-					}
-				}, monitor)) {
+				if (environment.matches(new FilterableAdapter(entry), monitor)) {
 					entries.add(entry);
 				}
 			}

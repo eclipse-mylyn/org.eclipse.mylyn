@@ -4,13 +4,15 @@ Bundle-Name: Mylyn Commons Notifications Tests
 Bundle-SymbolicName: org.eclipse.mylyn.commons.notifications.tests;singleton:=true
 Bundle-Version: 1.18.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Require-Bundle: org.eclipse.core.runtime,
- org.junit;bundle-version="4.8.2",
+Require-Bundle: com.sun.xml.bind;bundle-version="2.3.3",
+ org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.commons.notifications.core,
- org.eclipse.mylyn.commons.notifications.feed
+ org.eclipse.mylyn.commons.notifications.feed,
+ org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.commons.notifications.tests;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.core;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.feed;x-internal:=true
+Import-Package: javax.activation;version="1.2.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -30,6 +28,8 @@ import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.osgi.framework.Version;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -87,8 +87,8 @@ public class NotificationEnvironmentTest extends TestCase {
 
 	public void testGetRuntimeVersion() {
 		Version runtimeVersion = environment.getRuntimeVersion();
-		assertTrue("Expected value between 1.5-1.9, got " + runtimeVersion,
-				new VersionRange("[1.5.0,1.9.0)").isIncluded(runtimeVersion));
+		assertTrue("Expected value between 11.0-18.0, got " + runtimeVersion,
+				new VersionRange("[11.0.0,18.0.0)").isIncluded(runtimeVersion));
 	}
 
 	public void testGetPlatformVersion() {

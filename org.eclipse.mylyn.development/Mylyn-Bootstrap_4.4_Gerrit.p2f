@@ -4,12 +4,12 @@
   <ius size='2'>
     <iu id='org.eclipse.egit.feature.group' name='Eclipse Git Team Provider' version='3.2.0.201311130903-m3'>
       <repositories size='1'>
-        <repository location='http://download.eclipse.org/releases/luna'/>
+        <repository location='https://download.eclipse.org/releases/luna'/>
       </repositories>
     </iu>
     <iu id='org.eclipse.mylyn.gerrit.feature.feature.group' name='Mylyn Reviews Connector: Gerrit' version='2.1.0.20131025-1517'>
       <repositories size='1'>
-        <repository location='http://download.eclipse.org/releases/luna'/>
+        <repository location='https://download.eclipse.org/releases/luna'/>
       </repositories>
     </iu>
   </ius>
