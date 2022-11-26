@@ -144,11 +144,14 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="mylyn.target.platform"
-        defaultValue="mylyn-e4.23"
+        defaultValue="mylyn-e4.26"
         storageURI="scope://Workspace"
         label="Mylyn Target Platform">
       <annotation
           source="http://www.eclipse.org/oomph/setup/GlobalVariable"/>
+      <choice
+          value="mylyn-e4.26"
+          label="2022-12 - 4.26"/>
       <choice
           value="mylyn-e4.25"
           label="2022-09 - 4.25"/>
