@@ -38,7 +38,7 @@ public class TestWebBrowserDialog {
 
 		final Text locationText = new Text(shell, SWT.BORDER);
 		locationText.setLayoutData(new RowData(200, SWT.DEFAULT));
-		locationText.setText("https://localhost");
+		locationText.setText("http://localhost");
 
 		Button userButton = new Button(shell, SWT.PUSH);
 		userButton.setText("Open");

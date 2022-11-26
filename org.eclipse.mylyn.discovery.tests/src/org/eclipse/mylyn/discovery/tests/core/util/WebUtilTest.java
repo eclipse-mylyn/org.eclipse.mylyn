@@ -26,13 +26,13 @@ public class WebUtilTest extends TestCase {
 	public void testGetFileNameForUrl() throws Exception {
 		assertEquals(
 				"org.eclipse.mylyn.discovery_3.10.jar",
-				WebUtil.getFileNameFor("https://www.eclipse.org/downloads/download.php?file=/mylyn/discovery/org.eclipse.mylyn.discovery-3.10.jar"));
+				WebUtil.getFileNameFor("http://www.eclipse.org/downloads/download.php?file=/mylyn/discovery/org.eclipse.mylyn.discovery-3.10.jar"));
 	}
 
 	public void testGetFileNameForUrlWithQuery() throws Exception {
 		assertEquals(
 				"org.eclipse.mylyn.discovery_3.10.jar_r_1_protocol_http",
-				WebUtil.getFileNameFor("https://www.eclipse.org/downloads/download.php?file=/mylyn/discovery/org.eclipse.mylyn.discovery-3.10.jar&r=1&protocol=http"));
+				WebUtil.getFileNameFor("http://www.eclipse.org/downloads/download.php?file=/mylyn/discovery/org.eclipse.mylyn.discovery-3.10.jar&r=1&protocol=http"));
 	}
 
 	public void testGetFileNameForUrlEndingWithSlash() throws Exception {

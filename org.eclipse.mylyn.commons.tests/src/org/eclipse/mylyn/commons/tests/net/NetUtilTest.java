@@ -34,17 +34,17 @@ public class NetUtilTest extends TestCase {
 	private static final String /*NetUtil.*/ PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS = "org.eclipse.mylyn.http.total.connections";
 
 	public void testGetHostDefault() {
-		String url = "https://example.com/";
+		String url = "http://example.com/";
 		assertEquals("example.com", NetUtil.getHost(url));
 	}
 
 	public void testGetHostEmptyPath() {
-		String url = "https://example.com";
+		String url = "http://example.com";
 		assertEquals("example.com", NetUtil.getHost(url));
 	}
 
 	public void testGetHostEmptyPathPort() {
-		String url = "https://example.com";
+		String url = "http://example.com";
 		assertEquals("example.com", NetUtil.getHost(url));
 	}
 
@@ -64,17 +64,17 @@ public class NetUtilTest extends TestCase {
 	}
 
 	public void testGetPortDefault() {
-		String url = "https://example.com/";
-		assertEquals(443, NetUtil.getPort(url));
+		String url = "http://example.com/";
+		assertEquals(80, NetUtil.getPort(url));
 	}
 
 	public void testGetPortEmptyPath() {
-		String url = "https://example.com";
-		assertEquals(443, NetUtil.getPort(url));
+		String url = "http://example.com";
+		assertEquals(80, NetUtil.getPort(url));
 	}
 
 	public void testGetPortEmptyPathPort() {
-		String url = "https://example.com:321";
+		String url = "http://example.com:321";
 		assertEquals(321, NetUtil.getPort(url));
 	}
 
@@ -111,12 +111,12 @@ public class NetUtilTest extends TestCase {
 	}
 
 	public void testGetRequestPathEmpty() {
-		String url = "https://example.com";
+		String url = "http://example.com";
 		assertEquals("", NetUtil.getRequestPath(url));
 	}
 
 	public void testGetRequestPathEmptyPort() {
-		String url = "https://example.com:321";
+		String url = "http://example.com:321";
 		assertEquals("", NetUtil.getRequestPath(url));
 	}
 
@@ -146,7 +146,7 @@ public class NetUtilTest extends TestCase {
 	}
 
 	public void testGetRequestPathSlash() {
-		String url = "https://example.com/";
+		String url = "http://example.com/";
 		assertEquals("/", NetUtil.getRequestPath(url));
 	}
 
@@ -155,7 +155,7 @@ public class NetUtilTest extends TestCase {
 	}
 
 	public void testIsUrlHttpsHttpUrl() {
-		assertTrue(NetUtil.isUrlHttps("https://"));
+		assertFalse(NetUtil.isUrlHttps("http://"));
 	}
 
 	public void testIsUrlHttpsInvalid() {

@@ -31,7 +31,7 @@ public class XmlRpcClientTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		port = XmlRpcTestServer.start();
-		client = new CommonXmlRpcClient(new WebLocation("https://localhost:" + port + "/xmlrpc"));
+		client = new CommonXmlRpcClient(new WebLocation("http://localhost:" + port + "/xmlrpc"));
 	}
 
 	@Override
