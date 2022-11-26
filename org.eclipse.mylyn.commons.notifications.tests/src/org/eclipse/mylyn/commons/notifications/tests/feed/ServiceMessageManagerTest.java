@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  */
 public class ServiceMessageManagerTest extends TestCase {
 
-	private static final String MESSAGE_XML_URL = "https://mylyn.org/message.xml";
+	private static final String MESSAGE_XML_URL = "http://mylyn.org/message.xml";
 
 	@Override
 	@Before
@@ -47,7 +47,7 @@ public class ServiceMessageManagerTest extends TestCase {
 		assertEquals("1", message.getId());
 		assertEquals("140 character description here....", message.getDescription());
 		assertEquals("Mylyn 3.4 now available!", message.getTitle());
-		assertEquals("https://eclipse.org/mylyn/downloads", message.getUrl());
+		assertEquals("http://eclipse.org/mylyn/downloads", message.getUrl());
 		assertEquals("dialog_messasge_info_image", message.getImage());
 	}
 
