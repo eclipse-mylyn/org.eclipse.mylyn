@@ -678,7 +678,7 @@
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
-        targetURL="&quot;${workspace.location}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
+        targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
         encoding="UTF-8">
       <description>show Workingsets</description>
       <content>
