@@ -523,9 +523,9 @@ public class CommonTestUtil {
 			info = info.replaceFirst(Pattern.quote("${" + entry.getKey() + "}"), entry.getValue().toString());
 		}
 		out.println(info);
-		out.print("HTTP Proxy : " + WebUtil.getProxyForUrl("https://mylyn.org") + " (Platform)");
+		out.print("HTTP Proxy : " + WebUtil.getProxyForUrl("http://mylyn.org") + " (Platform)");
 		try {
-			out.print(" / " + ProxySelector.getDefault().select(new URI("https://mylyn.org")) + " (Java)");
+			out.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.org")) + " (Java)");
 		} catch (URISyntaxException e) {
 			// ignore
 		}
@@ -552,7 +552,7 @@ public class CommonTestUtil {
 	 */
 	public static boolean isHttpsProxyBroken() {
 		// checks if http and https proxy configuration matches
-		Proxy httpProxy = WebUtil.getProxyForUrl("https://mylyn.org");
+		Proxy httpProxy = WebUtil.getProxyForUrl("http://mylyn.org");
 		Proxy httpsProxy = WebUtil.getProxyForUrl("https://mylyn.org");
 		return CoreUtil.areEqual(httpProxy, httpsProxy);
 	}

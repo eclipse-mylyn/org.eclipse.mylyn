@@ -27,15 +27,15 @@ public class TestUrl {
 
 	public static final TestUrl DEFAULT = probeLocalhost();
 
-	private final String URL_HTTP_404_NOT_FOUND = "https://mylyn.org/notfound";
+	private final String URL_HTTP_404_NOT_FOUND = "http://mylyn.org/notfound";
 
-	private final String URL_HTTP_CONNECTION_REFUSED = "https://mylyn.org:9999/";
+	private final String URL_HTTP_CONNECTION_REFUSED = "http://mylyn.org:9999/";
 
-	private final String URL_HTTP_CONNECTION_TIMEOUT = "https://google.com:9999/";
+	private final String URL_HTTP_CONNECTION_TIMEOUT = "http://google.com:9999/";
 
 	private final String URL_HTTP_OK = "http://mylyn.org/";
 
-	private final String URL_HTTP_UNKNOWN_HOST = "https://nonexistant.mylyn.org";
+	private final String URL_HTTP_UNKNOWN_HOST = "http://nonexistant.mylyn.org";
 
 	private final String URL_HTTPS_OK = "https://mylyn.org/";
 

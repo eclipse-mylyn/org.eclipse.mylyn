@@ -325,11 +325,11 @@ public class MockServer implements Runnable {
 
 	public String getUrl() {
 		InetSocketAddress address = new InetSocketAddress("localhost", serverSocket.getLocalPort());
-		return "https://" + address.getHostName() + ":" + address.getPort() + "/";
+		return "http://" + address.getHostName() + ":" + address.getPort() + "/";
 //		try {
-//			return "https://" + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort();
+//			return "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort();
 //		} catch (UnknownHostException e) {
-//			return "https://localhost:" + serverSocket.getLocalPort();
+//			return "http://localhost:" + serverSocket.getLocalPort();
 //		}
 	}
 
