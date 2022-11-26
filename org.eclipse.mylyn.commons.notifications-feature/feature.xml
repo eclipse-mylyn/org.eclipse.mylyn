@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2010 Tasktop Technologies and others.
+    Copyright (c) 2010, 2022 Tasktop Technologies and others.
  
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,6 +10,7 @@
 
     Contributors:
          Tasktop Technologies - initial API and implementation
+         ArSysOp - porting to SimRel 2022-12
  -->
 <feature
       id="org.eclipse.mylyn.commons.notifications"
@@ -18,9 +19,9 @@
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.commons.core"
       license-feature="org.eclipse.license"
-      license-feature-version="2.0.2">
+      license-feature-version="0.0.0">
 
-   <description url="http://eclipse.org/mylyn">
+   <description url="https://eclipse.org/mylyn">
       %description
    </description>
 
@@ -33,13 +34,11 @@
    </license>
 
    <requires>
-      <!-- Java 11 compatibility -->
-      <import plugin="javax.activation" version="1.2.2" match="equivalent"/>
+      <import plugin="jakarta.activation" version="1.2.2" match="greaterOrEqual"/>
       <import plugin="jakarta.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="com.sun.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="equivalent"/>
-            
-      <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="greaterOrEqual"/>      
+      <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

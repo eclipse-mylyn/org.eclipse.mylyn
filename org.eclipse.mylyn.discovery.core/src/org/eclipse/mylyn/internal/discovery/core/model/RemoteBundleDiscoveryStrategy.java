@@ -227,7 +227,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			String bundleUrl = entry.getLocation();
 			for (int attemptCount = 0; attemptCount < maxDiscoveryJarDownloadAttempts; ++attemptCount) {
 				try {
-					if (!bundleUrl.startsWith("http://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
+					if (!bundleUrl.startsWith("https://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
 						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
 								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
 						continue;

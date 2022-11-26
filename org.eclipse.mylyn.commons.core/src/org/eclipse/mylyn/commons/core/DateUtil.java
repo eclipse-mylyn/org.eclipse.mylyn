@@ -46,7 +46,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @return Time formatted according to: http://www.iso.org/iso/date_and_time_format
+	 * @return Time formatted according to: https://www.iso.org/iso/date_and_time_format
 	 */
 	public static String getIsoFormattedDateTime(Calendar calendar) {
 		return getIsoFormattedDate(calendar) + "T" + calendar.get(Calendar.HOUR) + "-" + calendar.get(Calendar.MINUTE) //$NON-NLS-1$ //$NON-NLS-2$

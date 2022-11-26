@@ -191,7 +191,7 @@ public class HtmlTag {
 
 					if (target.startsWith("news:") || (target.indexOf("://") != -1 && target.length() >= 7)) { //$NON-NLS-1$ //$NON-NLS-2$
 						// Absolute URL
-						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0) { //$NON-NLS-1$
+						if (target.substring(0, 7).compareToIgnoreCase("https://") == 0) { //$NON-NLS-1$
 							sb.append(target);
 						}
 					} else {

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2022 ArSysOp and others
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
+<site>
+	<category-def
+		name="org.eclipse.mylyn.commons.features.category"
+		label="Mylyn Commons Features"
+	>
+		<description>
+			Tools.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.commons">
+		<category name="org.eclipse.mylyn.commons.features.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.commons.integrations.category"
+		label="Mylyn Commons Integrations"
+	>
+		<description>
+			Connectors that integrate with ALM systems.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.commons.activity">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.identity">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.notifications">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.repositories">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.repositories.http">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.discovery">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.monitor">
+		<category name="org.eclipse.mylyn.commons.integrations.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.commons.sdk.category"
+		label="Mylyn Commons SDK and Framework"
+	>
+		<description>
+			Source code and documentation for integrators.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.commons.sdk">
+		<category name="org.eclipse.mylyn.commons.sdk.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.tck">
+		<category name="org.eclipse.mylyn.commons.sdk.category" />
+	</feature>
+</site>

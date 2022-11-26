@@ -138,7 +138,7 @@ public abstract class XmlRpcOperation<T> {
 		} catch (XmlRpcIllegalContentTypeException e) {
 			throw e;
 		} catch (XmlRpcException e) {
-			// XXX work-around for http://trac-hacks.org/ticket/5848 
+			// XXX work-around for https://trac-hacks.org/ticket/5848 
 			if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage()) //$NON-NLS-1$
 					|| e.code == XML_FAULT_PERMISSION_DENIED) {
 				handleAuthenticationException(HttpStatus.SC_FORBIDDEN, null);
