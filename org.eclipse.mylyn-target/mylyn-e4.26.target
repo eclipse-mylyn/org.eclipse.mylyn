@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="mylyn-e4.23">
+<target name="mylyn-e4.26">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/releases/2022-03"/>
-			<unit id="org.eclipse.e4.rcp.feature.group" version="4.23.0.v20220308-0630"/>
-			<unit id="org.eclipse.e4.rcp.source.feature.group" version="4.23.0.v20220308-0630"/>
-			<unit id="org.eclipse.platform.source.feature.group" version="4.23.0.v20220308-0722"/>
-			<unit id="org.eclipse.rcp.feature.group" version="4.23.0.v20220308-0722"/>
-			<unit id="org.eclipse.rcp.sdk.id" version="4.23.0.I20220308-0310"/>
-			<unit id="org.eclipse.egit.feature.group" version="6.1.0.202203080745-r"/>
-			<unit id="org.eclipse.jgit.feature.group" version="6.1.0.202203080745-r"/>
-			<unit id="org.eclipse.ecf.core.feature.group" version="3.14.32.v20220214-2238"/>
-			<unit id="org.eclipse.ecf.core.source.feature.group" version="3.14.32.v20220214-2238"/>
-			<unit id="org.eclipse.sdk.ide" version="4.23.0.I20220308-0310"/>
-			<unit id="org.eclipse.emf.sdk.feature.group" version="2.29.0.v20220226-1304"/>
-			<unit id="org.eclipse.cdt.platform.feature.group" version="10.6.0.202203091838"/>
-			<unit id="org.eclipse.cdt.sdk.feature.group" version="10.6.0.202203091838"/>
+			<repository location="https://download.eclipse.org/releases/2022-12"/>
+			<unit id="org.eclipse.e4.rcp.feature.group" version=""/>
+			<unit id="org.eclipse.e4.rcp.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.platform.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.rcp.sdk.id" version="0.0.0"/>
+			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.ecf.core.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
@@ -77,5 +77,4 @@
 			<unit id="org.apache.xmlrpc.server" version="3.1.3.v20181004-1955"/>
 		</location>
 	</locations>
-	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 </target>
