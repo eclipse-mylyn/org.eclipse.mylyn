@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.common.context.CommonInteractionContextManager;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
@@ -221,7 +222,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (event.getDate().getTime() > 0 && event.getEndDate().getTime() > 0) {
 						if (event.getStructureKind()
-								.equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
+								.equals(CommonInteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
 							taskActivityManager.addWorkingSetElapsedTime(event.getStructureHandle(), event.getDate(),
 									event.getEndDate());
 							if (!isReloading) {

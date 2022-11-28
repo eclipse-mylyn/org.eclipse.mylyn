@@ -1,18 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Mylyn project committers and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.cdt.ui;
-
-import java.util.Iterator;
 
 import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.IBinary;
@@ -21,14 +19,14 @@ import org.eclipse.cdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.context.core.AbstractContextInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
  */
-public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
+public class CDTEditorMonitor extends AbstractContextInteractionMonitor {
 
 	protected ICElement lastSelectedElement = null;
 
@@ -59,8 +57,7 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 
 				// Object selectedObject =
 				// structuredSelection.getFirstElement();
-				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-					Object selectedObject = iterator.next();
+				for (Object selectedObject : structuredSelection) {
 					if (selectedObject instanceof ICElement) {
 						ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((ICElement) selectedObject);
 						if (checkedElement == null) {
