@@ -65,8 +65,8 @@ public class PublishUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
-		return !isAnonymous()
-				&& getTaskData().getAttributeMapper().getBooleanValue(
+		return !isAnonymous() && getTaskData().getAttributeMapper()
+				.getBooleanValue(
 						getTaskData().getRoot().getAttribute(GerritTaskSchema.getDefault().CAN_PUBLISH.getKey()));
 	}
 

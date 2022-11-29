@@ -23,8 +23,8 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Miles Parker
  */
-public abstract class TableStyledLabelProvider extends LabelProvider implements IStyledLabelProvider,
-		ITableLabelProvider {
+public abstract class TableStyledLabelProvider extends LabelProvider
+		implements IStyledLabelProvider, ITableLabelProvider {
 
 	public static class TableColumnProvider extends LabelProvider implements IStyledLabelProvider {
 

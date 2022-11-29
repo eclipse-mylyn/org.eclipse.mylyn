@@ -121,10 +121,10 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
 							"Unexpected error during execution of Gerrit operation", e), //$NON-NLS-1$
-					StatusManager.SHOW | StatusManager.LOG);
+							StatusManager.SHOW | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// cancelled
 			return false;
@@ -165,8 +165,8 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 	protected RichTextEditor createRichTextEditor(Composite composite, String value) {
 		int style = SWT.FLAT | SWT.BORDER | SWT.MULTI | SWT.WRAP;
 
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository);
 
 		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension, task);
@@ -199,8 +199,8 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		if (value != null) {
 			editor.setText(value);
 		}
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		ITasksUiFactory uiFactory = TasksUi.getUiFactory();
 		IContentProposalProvider proposalProvider = uiFactory.createPersonContentProposalProvider(repository);
 		ILabelProvider proposalLabelProvider = uiFactory.createPersonContentProposalLabelProvider(repository);

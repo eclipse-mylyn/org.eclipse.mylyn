@@ -48,8 +48,8 @@ public class GerritOperation<T> extends Job {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (GerritException e) {
-			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
-					Messages.GerritOperation_Operation_Failed, e.getMessage()), e);
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					NLS.bind(Messages.GerritOperation_Operation_Failed, e.getMessage()), e);
 		}
 		return Status.OK_STATUS;
 	}

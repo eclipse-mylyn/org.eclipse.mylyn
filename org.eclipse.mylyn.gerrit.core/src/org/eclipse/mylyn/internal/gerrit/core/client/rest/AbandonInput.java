@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#abandon-input">AbandonInput</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#abandon-input">AbandonInput</a>.
  */
 public class AbandonInput {
 

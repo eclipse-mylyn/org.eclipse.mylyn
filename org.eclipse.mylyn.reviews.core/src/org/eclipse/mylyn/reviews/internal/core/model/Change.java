@@ -226,8 +226,8 @@ public class Change extends EObjectImpl implements IChange {
 		//Protect against case where java.sql.Timestamp is used
 		creationDate = new Date(newCreationDate.getTime());
 		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__CREATION_DATE,
-					oldCreationDate, creationDate));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__CREATION_DATE, oldCreationDate,
+					creationDate));
 		}
 	}
 

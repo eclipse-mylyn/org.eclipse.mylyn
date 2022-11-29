@@ -36,8 +36,8 @@ public class OpenCommitUiFactory extends AbstractPatchSetUiFactory {
 	public void execute() {
 		GerritToGitMapping mapping = getGitRepository(true);
 		if (mapping != null) {
-			final FetchPatchSetJob job = new FetchPatchSetJob(Messages.OpenCommitUiFactory_Opening_Commit_Viewer, mapping.getRepository(),
-					mapping.getRemote(), getPatchSetDetail().getPatchSet());
+			final FetchPatchSetJob job = new FetchPatchSetJob(Messages.OpenCommitUiFactory_Opening_Commit_Viewer,
+					mapping.getRepository(), mapping.getRemote(), getPatchSetDetail().getPatchSet());
 			job.schedule();
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override

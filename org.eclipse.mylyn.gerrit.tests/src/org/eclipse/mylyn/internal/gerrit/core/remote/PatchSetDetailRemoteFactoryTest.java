@@ -78,9 +78,10 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 	@Test
 	public void testUserHasAccessToAdminDraft() throws Exception {
 		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, ImmutableList.of("testFile2.txt", "testFile3.txt"));
-		reviewHarness.getClient().addReviewers(reviewHarness.getShortId(),
-				ImmutableList.of(GerritFixture.current().getCredentials(PrivilegeLevel.USER).getUserName()),
-				new NullProgressMonitor());
+		reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(),
+						ImmutableList.of(GerritFixture.current().getCredentials(PrivilegeLevel.USER).getUserName()),
+						new NullProgressMonitor());
 
 		reviewHarness.retrieve();
 		assertThat(reviewHarness.getReview().getSets().size(), is(2));
@@ -137,8 +138,8 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(),
-				patchSetId, false);
+				= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(),
+						patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		return detail;
 	}

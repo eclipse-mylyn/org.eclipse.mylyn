@@ -204,7 +204,8 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 //		actionsComposite.getParent().layout();
 	}
 
-	protected ImageHyperlink createActionHyperlink(Composite actionsComposite, FormToolkit toolkit, final IAction action) {
+	protected ImageHyperlink createActionHyperlink(Composite actionsComposite, FormToolkit toolkit,
+			final IAction action) {
 
 		if (action instanceof IReviewAction) {
 			((IReviewAction) action).setActionListener(actionListener);

@@ -66,11 +66,12 @@ public class FileItemItemProvider extends ReviewItemItemProvider implements IEdi
 	 * @generated
 	 */
 	protected void addBasePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_FileItem_base_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_FileItem_base_feature", "_UI_FileItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_ITEM__BASE, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileItem_base_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileItem_base_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_ITEM__BASE, true, false, true, null, null, null));
 	}
 
 	/**
@@ -79,11 +80,12 @@ public class FileItemItemProvider extends ReviewItemItemProvider implements IEdi
 	 * @generated
 	 */
 	protected void addTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_FileItem_target_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_FileItem_target_feature", "_UI_FileItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_ITEM__TARGET, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileItem_target_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileItem_target_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_ITEM__TARGET, true, false, true, null, null, null));
 	}
 
 	/**

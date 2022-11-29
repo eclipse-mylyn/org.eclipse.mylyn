@@ -170,7 +170,8 @@ public class CherryPickDialog extends GerritOperationDialog {
 	}
 
 	private IContentProposalProvider createContentProposalProvider() {
-		GerritClient client = ((GerritConnector) TasksUi.getRepositoryConnector(task.getConnectorKind())).getClient(getRepository());
+		GerritClient client = ((GerritConnector) TasksUi.getRepositoryConnector(task.getConnectorKind()))
+				.getClient(getRepository());
 		Set<String> allProjectBranches = client.getCachedBranches(change.getChangeDetail().getChange().getProject());
 		SortedSet<String> proposals = allProjectBranches != null
 				? Sets.newTreeSet(allProjectBranches)

@@ -68,12 +68,12 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addAddedByPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_addedBy_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_addedBy_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__ADDED_BY, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_addedBy_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_addedBy_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__ADDED_BY, true, false, true, null, null, null));
 	}
 
 	/**
@@ -82,13 +82,12 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addCommittedByPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_committedBy_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReviewItem_committedBy_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__COMMITTED_BY, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_committedBy_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_committedBy_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__COMMITTED_BY, true, false, true, null, null, null));
 	}
 
 	/**
@@ -97,12 +96,12 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addReviewPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_review_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_review_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__REVIEW, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_review_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_review_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__REVIEW, true, false, true, null, null, null));
 	}
 
 	/**
@@ -111,13 +110,13 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_name_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_name_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__NAME, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_name_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_name_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__NAME, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -126,13 +125,13 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_id_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_id_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__ID, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_id_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_id_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -141,14 +140,13 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	 * @generated
 	 */
 	protected void addReferencePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ReviewItem_reference_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReviewItem_reference_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW_ITEM__REFERENCE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ReviewItem_reference_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_reference_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ReviewItem_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REVIEW_ITEM__REFERENCE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**

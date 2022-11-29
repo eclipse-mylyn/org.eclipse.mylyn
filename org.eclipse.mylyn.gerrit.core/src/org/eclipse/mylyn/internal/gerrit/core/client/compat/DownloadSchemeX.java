@@ -16,6 +16,7 @@ import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 public enum DownloadSchemeX {
 	ANON_HTTP(DownloadScheme.ANON_HTTP), HTTP(DownloadScheme.HTTP), GIT(DownloadScheme.ANON_GIT), SSH(
 			DownloadScheme.SSH);
+
 	private final DownloadScheme downloadScheme;
 
 	private DownloadSchemeX(DownloadScheme scheme) {

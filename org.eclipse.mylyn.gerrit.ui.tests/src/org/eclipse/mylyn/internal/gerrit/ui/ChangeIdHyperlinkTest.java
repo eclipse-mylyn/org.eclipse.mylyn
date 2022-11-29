@@ -45,8 +45,8 @@ public class ChangeIdHyperlinkTest {
 	}
 
 	private String getHyperlinkedText(String text, IHyperlink hyperlink) {
-		return text.substring(hyperlink.getHyperlinkRegion().getOffset(), hyperlink.getHyperlinkRegion().getOffset()
-				+ hyperlink.getHyperlinkRegion().getLength());
+		return text.substring(hyperlink.getHyperlinkRegion().getOffset(),
+				hyperlink.getHyperlinkRegion().getOffset() + hyperlink.getHyperlinkRegion().getLength());
 	}
 
 	@Before

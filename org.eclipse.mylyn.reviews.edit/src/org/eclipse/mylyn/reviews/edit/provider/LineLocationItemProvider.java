@@ -73,14 +73,13 @@ public class LineLocationItemProvider extends LocationItemProvider implements IE
 	 * @generated
 	 */
 	protected void addRangeMinPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_LineLocation_rangeMin_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_LineLocation_rangeMin_feature", "_UI_LineLocation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.LINE_LOCATION__RANGE_MIN, false, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_LineLocation_rangeMin_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_LineLocation_rangeMin_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_LineLocation_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.LINE_LOCATION__RANGE_MIN, false, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -89,14 +88,13 @@ public class LineLocationItemProvider extends LocationItemProvider implements IE
 	 * @generated
 	 */
 	protected void addRangeMaxPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_LineLocation_rangeMax_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_LineLocation_rangeMax_feature", "_UI_LineLocation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.LINE_LOCATION__RANGE_MAX, false, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_LineLocation_rangeMax_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_LineLocation_rangeMax_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_LineLocation_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.LINE_LOCATION__RANGE_MAX, false, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#label-info">LabelInfo</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#label-info">LabelInfo</a>.
  */
 public class LabelInfo {
 

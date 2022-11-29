@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 
-class TestCollectionObjectRemoteFactory extends
-		AbstractRemoteEmfFactory<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> {
+class TestCollectionObjectRemoteFactory
+		extends AbstractRemoteEmfFactory<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> {
 
 	public TestCollectionObjectRemoteFactory() {
 		super(new TestRemoteFactoryProvider(), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,

@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#restore-input">RestoreInput</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#restore-input">RestoreInput</a>.
  */
 public class RestoreInput {
 

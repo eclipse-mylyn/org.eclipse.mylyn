@@ -52,7 +52,8 @@ public class GerritChange {
 		this.patchSetDetails = patchSets;
 	}
 
-	void setPatchSetPublishDetailByPatchSetId(Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId) {
+	void setPatchSetPublishDetailByPatchSetId(
+			Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId) {
 		this.publishDetailByPatchSetId = patchSetPublishDetailByPatchSetId;
 	}
 

@@ -94,8 +94,9 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 				GerritCompareUi.openCompareEditor(createCompareEditorInput(compareSet));
 				dispose();
 			} else {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor", //$NON-NLS-1$
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+								"Couldn't load content for compare editor", //$NON-NLS-1$
 								status.getException()), StatusManager.SHOW | StatusManager.LOG);
 			}
 		}
@@ -157,7 +158,8 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 						for (final IReviewItemSet otherSet : getModelObject().getReview().getSets()) {
 							if (otherSet != getModelObject()) {
 								MenuItem item = new MenuItem(menu, SWT.NONE);
-								item.setText(NLS.bind(Messages.CompareWithUiFactory_Compare_with_X, otherSet.getName()));
+								item.setText(
+										NLS.bind(Messages.CompareWithUiFactory_Compare_with_X, otherSet.getName()));
 								item.addSelectionListener(new SelectionAdapter() {
 									@Override
 									public void widgetSelected(SelectionEvent e) {
@@ -199,12 +201,12 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		String basePatchSetLabel = content.getBase() != null
 				? Integer.toString(content.getBase().getPatchSetId())
 				: Messages.CompareWithUiFactory_Base;
-		compareSet.setName(NLS.bind(Messages.CompareWithUiFactory_Compare_Patch_Set_X_with_Y, content.getTarget()
-				.getPatchSetId(), basePatchSetLabel));
+		compareSet.setName(NLS.bind(Messages.CompareWithUiFactory_Compare_Patch_Set_X_with_Y,
+				content.getTarget().getPatchSetId(), basePatchSetLabel));
 		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(
 				getGerritFactoryProvider());
-		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, PatchSetContent, Long> consumer = remoteFactory.getConsumerForRemoteObject(
-				compareSet, content);
+		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, PatchSetContent, Long> consumer = remoteFactory
+				.getConsumerForRemoteObject(compareSet, content);
 		consumer.setUiJob(true);
 		consumer.addObserver(new ItemListClient(baseSet, targetSet, compareSet));
 		int delimiterIndex = consumer.getLocalKey().indexOf(',');

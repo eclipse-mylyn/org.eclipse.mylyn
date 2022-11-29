@@ -89,7 +89,8 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 		}
 		return ((element instanceof ICommentContainer) && ((ICommentContainer) element).getAllComments().size() > 0)
 				|| (element instanceof IReview && ((IReview) element).getSets().size() > 0)
-				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview()) || (element instanceof IReviewItemSet))
+				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview())
+						|| (element instanceof IReviewItemSet))
 				|| hasCollectionChildren(element);
 	}
 

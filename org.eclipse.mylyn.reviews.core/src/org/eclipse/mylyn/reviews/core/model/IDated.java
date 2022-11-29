@@ -68,8 +68,8 @@ public interface IDated extends EObject {
 	Date getModificationDate();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate
-	 * <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate <em>Modification
+	 * Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Modification Date</em>' attribute.

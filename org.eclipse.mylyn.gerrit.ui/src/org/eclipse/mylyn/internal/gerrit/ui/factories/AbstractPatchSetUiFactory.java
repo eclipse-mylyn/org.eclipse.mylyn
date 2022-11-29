@@ -58,7 +58,8 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected PatchSetDetail getPatchSetDetail(IReviewItemSet set) {
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = getGerritFactoryProvider().getReviewItemSetFactory()
+		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = getGerritFactoryProvider()
+				.getReviewItemSetFactory()
 				.getConsumerForModel(getModelObject().getReview(), set);
 		//This is not really a remote call, we're just ensuring we have the patch set detail available.
 		if (consumer.getRemoteObject() == null) {
@@ -76,7 +77,8 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected GerritChange getChange() {
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = getGerritFactoryProvider().getReviewFactory()
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = getGerritFactoryProvider()
+				.getReviewFactory()
 				.getConsumerForModel(getModelObject().getReview().getRepository(), getModelObject().getReview());
 		GerritChange remoteObject = consumer.getRemoteObject();
 		consumer.release();
@@ -111,7 +113,8 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 				return mapper;
 			} else if (mapper.getGerritProject() != null) {
 				if (displayCloneDialog) {
-					boolean create = MessageDialog.openQuestion(getShell(), Messages.AbstractPatchSetUiFactory_Clone_Git_Repository,
+					boolean create = MessageDialog.openQuestion(getShell(),
+							Messages.AbstractPatchSetUiFactory_Clone_Git_Repository,
 							Messages.AbstractPatchSetUiFactory_Git_repository_not_found_in_workspace);
 					if (create) {
 						int response = EGitUiUtil.openCloneRepositoryWizard(getShell(), getTaskRepository(),
@@ -124,12 +127,11 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 			} else {
 				String message = NLS.bind(Messages.AbstractPatchSetUiFactory_No_Git_repository_found_for_fetching,
 						getTask().getTaskKey());
-				String reason = NLS.bind(
-						Messages.AbstractPatchSetUiFactory_No_remote_config_found_with_fetch_URL,
+				String reason = NLS.bind(Messages.AbstractPatchSetUiFactory_No_remote_config_found_with_fetch_URL,
 						mapper.getGerritHost(), mapper.getGerritProjectName());
 				GerritCorePlugin.logError(message, null);
-				ErrorDialog.openError(getShell(), Messages.AbstractPatchSetUiFactory_Gerrit_Fetch_Change_Error, message, new Status(IStatus.ERROR,
-						GerritUiPlugin.PLUGIN_ID, reason));
+				ErrorDialog.openError(getShell(), Messages.AbstractPatchSetUiFactory_Gerrit_Fetch_Change_Error, message,
+						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, reason));
 			}
 		} catch (IOException e) {
 			Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Error accessing Git repository", e); //$NON-NLS-1$

@@ -109,8 +109,8 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 				drafts.add(comment);
 			}
 		}
-		return new EObjectEList.UnmodifiableEList<IComment>(this,
-				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS, drafts.size(), drafts.toArray());
+		return new EObjectEList.UnmodifiableEList<IComment>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS,
+				drafts.size(), drafts.toArray());
 	}
 
 	/**

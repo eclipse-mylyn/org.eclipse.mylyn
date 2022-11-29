@@ -35,8 +35,10 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 	}
 
 	@Override
-	public PatchSetContent pull(IReviewItemSet parentObject, String key, IProgressMonitor monitor) throws CoreException {
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = getGerritProvider().getReviewItemSetFactory()
+	public PatchSetContent pull(IReviewItemSet parentObject, String key, IProgressMonitor monitor)
+			throws CoreException {
+		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = getGerritProvider()
+				.getReviewItemSetFactory()
 				.getConsumerForLocalKey(parentObject.getReview(), key);
 		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
 		if (detail == null) {

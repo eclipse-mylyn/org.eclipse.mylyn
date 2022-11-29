@@ -143,8 +143,8 @@ public interface IFileVersion extends IReviewItem {
 	IFileRevision getFileRevision();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision
-	 * <em>File Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision <em>File
+	 * Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>File Revision</em>' attribute.
@@ -168,8 +168,8 @@ public interface IFileVersion extends IReviewItem {
 	byte[] getBinaryContent();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent
-	 * <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary
+	 * Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Binary Content</em>' attribute.

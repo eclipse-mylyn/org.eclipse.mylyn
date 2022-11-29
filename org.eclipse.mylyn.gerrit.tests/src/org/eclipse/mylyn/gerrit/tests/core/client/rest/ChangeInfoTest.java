@@ -324,7 +324,8 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(permissionLabels, not(empty()));
 		assertThat(permissionLabels.size(), is(1));
 		PermissionLabel crvwAllowed = permissionLabels.get(0);
-		assertThat(crvwAllowed.getName(), is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
+		assertThat(crvwAllowed.getName(),
+				is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
 		assertThat(crvwAllowed.getMin(), is(-1));
 		assertThat(crvwAllowed.getMax(), is(1));
 	}

@@ -20,8 +20,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
  * 
  * @author Miles Parker
  */
-public abstract class AbstractRemoteEmfFactoryProvider<ERootObject extends EObject, EChildObject> extends
-		AbstractRemoteFactoryProvider {
+public abstract class AbstractRemoteEmfFactoryProvider<ERootObject extends EObject, EChildObject>
+		extends AbstractRemoteFactoryProvider {
 
 	public abstract ERootObject open();
 

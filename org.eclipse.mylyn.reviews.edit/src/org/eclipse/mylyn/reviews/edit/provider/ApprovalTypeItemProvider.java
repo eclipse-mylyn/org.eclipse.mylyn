@@ -69,13 +69,13 @@ public class ApprovalTypeItemProvider extends ItemProviderAdapter implements IEd
 	 * @generated
 	 */
 	protected void addKeyPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ApprovalType_key_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_ApprovalType_key_feature", "_UI_ApprovalType_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.APPROVAL_TYPE__KEY, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ApprovalType_key_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ApprovalType_key_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ApprovalType_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.APPROVAL_TYPE__KEY, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -84,14 +84,13 @@ public class ApprovalTypeItemProvider extends ItemProviderAdapter implements IEd
 	 * @generated
 	 */
 	protected void addNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ApprovalType_name_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_ApprovalType_name_feature", "_UI_ApprovalType_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.APPROVAL_TYPE__NAME, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ApprovalType_name_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ApprovalType_name_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ApprovalType_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.APPROVAL_TYPE__NAME, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**

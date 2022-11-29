@@ -76,11 +76,10 @@ public class CommentContainerItemProvider extends ItemProviderAdapter implements
 	 */
 	protected void addAllCommentsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 				getString("_UI_CommentContainer_allComments_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_CommentContainer_allComments_feature", "_UI_CommentContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getString("_UI_PropertyDescriptor_description", "_UI_CommentContainer_allComments_feature", //$NON-NLS-1$//$NON-NLS-2$
+						"_UI_CommentContainer_type"), //$NON-NLS-1$
 				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, false, false, false, null, null, null));
 	}
 
@@ -90,13 +89,12 @@ public class CommentContainerItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addAllDraftsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_CommentContainer_allDrafts_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_CommentContainer_allDrafts_feature", "_UI_CommentContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS, false, false, false, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_CommentContainer_allDrafts_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_CommentContainer_allDrafts_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_CommentContainer_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS, false, false, false, null, null, null));
 	}
 
 	/**

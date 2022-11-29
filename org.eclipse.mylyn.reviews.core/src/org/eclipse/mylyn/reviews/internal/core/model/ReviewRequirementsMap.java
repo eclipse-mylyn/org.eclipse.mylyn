@@ -133,11 +133,11 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 			value = (IRequirementEntry) eResolveProxy(oldValue);
 			if (value != oldValue) {
 				InternalEObject newValue = (InternalEObject) value;
-				NotificationChain msgs = oldValue.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, null);
+				NotificationChain msgs = oldValue.eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, null);
 				if (newValue.eInternalContainer() == null) {
-					msgs = newValue.eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-							- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
+					msgs = newValue.eInverseAdd(this,
+							EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
 				}
 				if (msgs != null) {
 					msgs.dispatch();
@@ -189,12 +189,12 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 		if (newValue != value) {
 			NotificationChain msgs = null;
 			if (value != null) {
-				msgs = ((InternalEObject) value).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
+				msgs = ((InternalEObject) value).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
 			}
 			if (newValue != null) {
-				msgs = ((InternalEObject) newValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
+				msgs = ((InternalEObject) newValue).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
 			}
 			msgs = basicSetTypedValue(newValue, msgs);
 			if (msgs != null) {
@@ -371,7 +371,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 		EObject container = eContainer();
 		return container == null
 				? null
-						: (EMap<IApprovalType, IRequirementEntry>) container.eGet(eContainmentFeature());
+				: (EMap<IApprovalType, IRequirementEntry>) container.eGet(eContainmentFeature());
 	}
 
 } //ReviewRequirementsMap

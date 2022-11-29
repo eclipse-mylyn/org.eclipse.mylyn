@@ -72,13 +72,13 @@ public class LocationItemProvider extends ItemProviderAdapter implements IEditin
 	 * @generated
 	 */
 	protected void addIndexPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Indexed_index_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Indexed_index_feature", "_UI_Indexed_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.INDEXED__INDEX, false, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Indexed_index_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Indexed_index_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Indexed_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.INDEXED__INDEX, false, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**

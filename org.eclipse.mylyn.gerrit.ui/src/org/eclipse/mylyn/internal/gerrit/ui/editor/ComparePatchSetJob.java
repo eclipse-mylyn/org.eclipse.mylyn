@@ -77,8 +77,8 @@ public class ComparePatchSetJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private String fetchParent(PatchSet patchSet, IProgressMonitor monitor) throws URISyntaxException, CoreException,
-			IOException {
+	private String fetchParent(PatchSet patchSet, IProgressMonitor monitor)
+			throws URISyntaxException, CoreException, IOException {
 		RevCommit targetCommit = EGitUiUtil.getRevCommit(repository, patchSet);
 		RevCommit parentCommit = targetCommit.getParents()[0];
 		return parentCommit.getName();

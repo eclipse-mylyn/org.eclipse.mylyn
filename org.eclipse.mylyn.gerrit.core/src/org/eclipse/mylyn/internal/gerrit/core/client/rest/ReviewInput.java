@@ -22,8 +22,8 @@ import org.eclipse.osgi.util.NLS;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input">ReviewInput</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input">ReviewInput</a>.
  */
 public class ReviewInput {
 
@@ -58,9 +58,9 @@ public class ReviewInput {
 		for (ApprovalCategoryValue.Id approval : approvals) {
 			String labelName = ApprovalUtil.findCategoryNameById(approval.getParentKey().get());
 			if (labelName == null) {
-				GerritCorePlugin.logWarning(
-						NLS.bind(
-								"Couldn't find label name for {0}. (Expected approval IDs are {1})", approval.getParentKey().get(), ApprovalUtil.BY_ID.keySet()), null); //$NON-NLS-1$
+				GerritCorePlugin
+						.logWarning(NLS.bind("Couldn't find label name for {0}. (Expected approval IDs are {1})", //$NON-NLS-1$
+								approval.getParentKey().get(), ApprovalUtil.BY_ID.keySet()), null);
 				continue;
 			}
 			labelName = labelName.replace(' ', '-');

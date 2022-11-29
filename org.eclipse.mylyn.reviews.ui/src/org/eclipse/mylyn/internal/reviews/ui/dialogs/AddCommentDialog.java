@@ -120,10 +120,10 @@ public class AddCommentDialog extends ProgressDialog {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 							"Unexpected error during execution of operation", e), //$NON-NLS-1$
-					StatusManager.SHOW | StatusManager.LOG);
+							StatusManager.SHOW | StatusManager.LOG);
 			return false;
 		} catch (InterruptedException e) {
 			// cancelled
@@ -144,14 +144,16 @@ public class AddCommentDialog extends ProgressDialog {
 			}
 			if (file != null && file.getReview() != null) {
 				//Update any review item set observers IFF we belong to a review. (The set might represent a compare, in which case we won't have a relevant model object.)
-				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-						reviewBehavior.getTask().getConnectorKind(), reviewBehavior.getTask().getRepositoryUrl());
-				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(reviewBehavior.getTask()
-						.getConnectorKind());
-				IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector.getReviewClient(
-						taskRepository)
+				TaskRepository taskRepository = TasksUi.getRepositoryManager()
+						.getRepository(reviewBehavior.getTask().getConnectorKind(),
+								reviewBehavior.getTask().getRepositoryUrl());
+				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin
+						.getConnector(reviewBehavior.getTask().getConnectorKind());
+				IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector
+						.getReviewClient(taskRepository)
 						.getFactoryProvider();
-				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider.getReviewItemSetContentFactory()
+				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider
+						.getReviewItemSetContentFactory()
 						.getConsumerForLocalKey(file.getSet(), file.getSet().getId());
 				consumer.updateObservers();
 				consumer.release();
@@ -189,8 +191,8 @@ public class AddCommentDialog extends ProgressDialog {
 	protected RichTextEditor createRichTextEditor(Composite composite, String value) {
 		int style = SWT.FLAT | SWT.BORDER | SWT.MULTI | SWT.WRAP;
 
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository);
 
 		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension, task);

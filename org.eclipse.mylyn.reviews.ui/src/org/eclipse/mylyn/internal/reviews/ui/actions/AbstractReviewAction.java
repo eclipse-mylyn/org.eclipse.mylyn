@@ -28,8 +28,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  * 
  * @author Thomas Ehrnhoefer
  */
-public abstract class AbstractReviewAction extends BaseSelectionListenerAction implements
-		IWorkbenchWindowActionDelegate {
+public abstract class AbstractReviewAction extends BaseSelectionListenerAction
+		implements IWorkbenchWindowActionDelegate {
 
 	protected IWorkbenchWindow workbenchWindow;
 

@@ -64,20 +64,20 @@ public class GerritConnectorTest {
 
 	@Test
 	public void testGetRepositoryUrlFromTaskUrlOld() {
-		assertEquals(
-				"http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#change,13492")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("http://review.source.android.com", //$NON-NLS-1$
+				connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#change,13492")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testGetRepositoryUrlFromTaskUrlNew() {
-		assertEquals(
-				"http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals(
-				"http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals(
-				"http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/1")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals(
-				"http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/1/2")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("http://review.source.android.com", //$NON-NLS-1$
+				connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492")); //$NON-NLS-1$
+		assertEquals("http://review.source.android.com", //$NON-NLS-1$
+				connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/")); //$NON-NLS-1$
+		assertEquals("http://review.source.android.com", //$NON-NLS-1$
+				connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/1")); //$NON-NLS-1$
+		assertEquals("http://review.source.android.com", //$NON-NLS-1$
+				connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#/c/13492/1/2")); //$NON-NLS-1$
 	}
 
 	@Test
@@ -190,8 +190,9 @@ public class GerritConnectorTest {
 	private boolean hasTaskChanged(int localDate, int repositoryDate) {
 		ITask task = mock(ITask.class);
 		when(task.getModificationDate()).thenReturn(new Date(localDate));
-		TaskData taskData = new TaskData(new TaskAttributeMapper(new TaskRepository(GerritConnector.CONNECTOR_KIND,
-				"http://mock")), GerritConnector.CONNECTOR_KIND, "http://mock", "1");
+		TaskData taskData = new TaskData(
+				new TaskAttributeMapper(new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://mock")),
+				GerritConnector.CONNECTOR_KIND, "http://mock", "1");
 		taskData.getRoot()
 				.createMappedAttribute(TaskAttribute.DATE_MODIFICATION)
 				.setValue(String.valueOf(repositoryDate));

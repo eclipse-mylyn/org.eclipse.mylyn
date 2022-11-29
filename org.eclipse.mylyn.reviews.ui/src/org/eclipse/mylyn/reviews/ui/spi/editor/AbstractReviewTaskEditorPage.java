@@ -73,8 +73,8 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 
 		checkIfModelIsCached();
 
-		reviewConsumer = getFactoryProvider().getReviewFactory().getConsumerForLocalKey(getFactoryProvider().getRoot(),
-				getTask().getTaskId());
+		reviewConsumer = getFactoryProvider().getReviewFactory()
+				.getConsumerForLocalKey(getFactoryProvider().getRoot(), getTask().getTaskId());
 		reviewConsumer.addObserver(reviewObserver);
 		reviewConsumer.open();
 		if (reviewConsumer.getRemoteObject() == null) {
@@ -150,12 +150,13 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new Action(Messages.AbstractReviewTaskEditorPage_Show_Review_Navigator, ReviewsImages.REVIEW) {
-			@Override
-			public void run() {
-				WorkbenchUtil.showViewInActiveWindow(ReviewsUiConstants.REVIEW_EXPLORER_ID);
-			}
-		});
+		toolBarManager
+				.add(new Action(Messages.AbstractReviewTaskEditorPage_Show_Review_Navigator, ReviewsImages.REVIEW) {
+					@Override
+					public void run() {
+						WorkbenchUtil.showViewInActiveWindow(ReviewsUiConstants.REVIEW_EXPLORER_ID);
+					}
+				});
 		super.fillToolBar(toolBarManager);
 	}
 }

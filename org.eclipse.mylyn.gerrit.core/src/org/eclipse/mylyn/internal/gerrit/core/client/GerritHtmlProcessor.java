@@ -40,8 +40,8 @@ public class GerritHtmlProcessor {
 			JSonSupport support = new JSonSupport();
 			return support.parseResponse(token, GerritConfigX.class);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
-					"Failed to deserialize Gerrit configuration: ''{0}''", token), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					NLS.bind("Failed to deserialize Gerrit configuration: ''{0}''", token), e)); //$NON-NLS-1$
 			return null;
 		}
 	}

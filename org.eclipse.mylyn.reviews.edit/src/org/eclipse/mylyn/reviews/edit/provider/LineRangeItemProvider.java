@@ -73,13 +73,13 @@ public class LineRangeItemProvider extends ItemProviderAdapter implements IEditi
 	 * @generated
 	 */
 	protected void addStartPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_LineRange_start_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_LineRange_start_feature", "_UI_LineRange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.LINE_RANGE__START, true, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_LineRange_start_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_LineRange_start_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_LineRange_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.LINE_RANGE__START, true, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -88,13 +88,13 @@ public class LineRangeItemProvider extends ItemProviderAdapter implements IEditi
 	 * @generated
 	 */
 	protected void addEndPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_LineRange_end_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_LineRange_end_feature", "_UI_LineRange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.LINE_RANGE__END, true, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_LineRange_end_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_LineRange_end_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_LineRange_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.LINE_RANGE__END, true, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**

@@ -124,8 +124,8 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		provider.setDataLocator(testDataLocator);
 		String filePath = testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EPackage"
 				+ File.separator + "EPackage.ecore";
-		File parentDir = new File(testDataLocator.getModelPath() + File.separator + "Container" + File.separator
-				+ "EPackage");
+		File parentDir = new File(
+				testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EPackage");
 		parentDir.mkdirs();
 		File file = new File(filePath);
 		file.createNewFile();

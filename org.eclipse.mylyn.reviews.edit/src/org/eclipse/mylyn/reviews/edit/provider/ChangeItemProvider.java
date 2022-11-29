@@ -82,13 +82,13 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addCreationDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Dated_creationDate_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Dated_creationDate_feature", "_UI_Dated_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.DATED__CREATION_DATE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Dated_creationDate_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Dated_creationDate_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Dated_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.DATED__CREATION_DATE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -97,13 +97,13 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addModificationDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Dated_modificationDate_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Dated_modificationDate_feature", "_UI_Dated_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.DATED__MODIFICATION_DATE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Dated_modificationDate_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Dated_modificationDate_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Dated_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.DATED__MODIFICATION_DATE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -112,13 +112,12 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Change_id_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_id_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Change_id_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Change_id_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ReviewsPackage.Literals.CHANGE__ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -127,13 +126,12 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addKeyPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Change_key_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_key_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__KEY, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Change_key_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Change_key_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ReviewsPackage.Literals.CHANGE__KEY, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -142,13 +140,13 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addSubjectPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Change_subject_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_subject_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__SUBJECT, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Change_subject_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Change_subject_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Change_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.CHANGE__SUBJECT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -157,13 +155,13 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Change_message_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_message_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__MESSAGE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Change_message_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Change_message_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Change_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.CHANGE__MESSAGE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -172,11 +170,11 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * @generated
 	 */
 	protected void addOwnerPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Change_owner_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_owner_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__OWNER, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Change_owner_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Change_owner_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ReviewsPackage.Literals.CHANGE__OWNER, true, false, true, null, null, null));
 	}
 
 	/**

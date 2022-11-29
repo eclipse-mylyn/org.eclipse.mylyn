@@ -79,14 +79,13 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	protected void addTaskRepositoryUrlPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Repository_taskRepositoryUrl_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_Repository_taskRepositoryUrl_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY_URL, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Repository_taskRepositoryUrl_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Repository_taskRepositoryUrl_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Repository_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY_URL, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -96,14 +95,13 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	protected void addTaskConnectorKindPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Repository_taskConnectorKind_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_Repository_taskConnectorKind_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REPOSITORY__TASK_CONNECTOR_KIND, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Repository_taskConnectorKind_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Repository_taskConnectorKind_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Repository_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REPOSITORY__TASK_CONNECTOR_KIND, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -112,14 +110,13 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	protected void addTaskRepositoryPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Repository_taskRepository_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_Repository_taskRepository_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Repository_taskRepository_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Repository_taskRepository_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Repository_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -128,12 +125,12 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	protected void addAccountPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Repository_account_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Repository_account_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REPOSITORY__ACCOUNT, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Repository_account_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Repository_account_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Repository_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REPOSITORY__ACCOUNT, true, false, true, null, null, null));
 	}
 
 	/**
@@ -142,14 +139,13 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	protected void addDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Repository_description_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_Repository_description_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REPOSITORY__DESCRIPTION, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Repository_description_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Repository_description_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Repository_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REPOSITORY__DESCRIPTION, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -249,8 +245,8 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEWS,
 				IReviewsFactory.INSTANCE.createReview()));
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__USERS,
-				IReviewsFactory.INSTANCE.createUser()));
+		newChildDescriptors.add(
+				createChildParameter(ReviewsPackage.Literals.REPOSITORY__USERS, IReviewsFactory.INSTANCE.createUser()));
 	}
 
 	/**

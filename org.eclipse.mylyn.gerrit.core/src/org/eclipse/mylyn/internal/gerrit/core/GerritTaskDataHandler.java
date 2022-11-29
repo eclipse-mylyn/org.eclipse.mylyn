@@ -164,11 +164,12 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
 		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider
-				.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
+				.getReviewFactory()
+				.getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
 
 		consumer.addObserver(reviewObserver);
 		if (!consumer.isRetrieving()) {

@@ -56,7 +56,8 @@ public class PatchSetContentCompareRemoteFactory extends PatchSetContentRemoteFa
 
 	@Override
 	public PatchSetContent getRemoteKeyForLocalKey(IReviewItemSet parentObject, String localKey) {
-		PatchSetDetailRemoteFactory itemSetFactory = ((GerritRemoteFactoryProvider) getFactoryProvider()).getReviewItemSetFactory();
+		PatchSetDetailRemoteFactory itemSetFactory = ((GerritRemoteFactoryProvider) getFactoryProvider())
+				.getReviewItemSetFactory();
 		PatchSetDetail detail = itemSetFactory.getRemoteKeyForLocalKey(parentObject.getReview(), localKey);
 		if (detail != null) {
 			return new PatchSetContent((PatchSet) null, detail);

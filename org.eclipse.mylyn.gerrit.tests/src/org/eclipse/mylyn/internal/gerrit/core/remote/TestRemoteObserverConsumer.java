@@ -21,27 +21,27 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
  * Extends TestRemoteObserver so that it wraps a consumer and provides delegate methods for common operations.
  */
 public class TestRemoteObserverConsumer<EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, //
-ObjectCurrentType> extends TestRemoteObserver<EParentObject, EObjectType, LocalKey, ObjectCurrentType> {
+		ObjectCurrentType> extends TestRemoteObserver<EParentObject, EObjectType, LocalKey, ObjectCurrentType> {
 
 	RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer;
 
 	public static <EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
-	TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
-	retrieveForLocalKey(
-			AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
-			EParentObject item, LocalKey localKey, boolean expectUpdate) {
+			TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
+			retrieveForLocalKey(
+					AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
+					EParentObject item, LocalKey localKey, boolean expectUpdate) {
 		RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer //
-		= factory.getConsumerForLocalKey(item, localKey);
+				= factory.getConsumerForLocalKey(item, localKey);
 		return retrieve(factory, consumer, expectUpdate);
 	}
 
 	public static <EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
-	TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
-	retrieveForRemoteKey(
-			AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
-			EParentObject item, RemoteKey remoteKey, boolean expectUpdate) {
+			TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
+			retrieveForRemoteKey(
+					AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
+					EParentObject item, RemoteKey remoteKey, boolean expectUpdate) {
 		RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer //
-		= factory.getConsumerForRemoteKey(item, remoteKey);
+				= factory.getConsumerForRemoteKey(item, remoteKey);
 		return retrieve(factory, consumer, expectUpdate);
 	}
 
@@ -51,7 +51,7 @@ ObjectCurrentType> extends TestRemoteObserver<EParentObject, EObjectType, LocalK
 			RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer,
 			boolean expectUpdate) {
 		TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> observer //
-		= create(factory, consumer);
+				= create(factory, consumer);
 		consumer.addObserver(observer);
 		consumer.retrieve(false);
 		observer.waitForResponse(expectUpdate);
@@ -59,9 +59,9 @@ ObjectCurrentType> extends TestRemoteObserver<EParentObject, EObjectType, LocalK
 	}
 
 	public static <EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> // 
-	TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
-	create(AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
-			RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer) {
+			TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
+			create(AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
+					RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer) {
 		return new TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType>(
 				factory, consumer);
 	}

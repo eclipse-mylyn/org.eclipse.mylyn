@@ -42,8 +42,9 @@ public class ReviewCompareAnnotationSupportTest extends TestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		MockitoAnnotations.initMocks(this);
-		doNothing().when(rcaSupportspy).moveToAnnotation((MergeSourceViewer) Matchers.any(),
-				(MergeSourceViewer) Matchers.any(), (Position) Matchers.any());
+		doNothing().when(rcaSupportspy)
+				.moveToAnnotation((MergeSourceViewer) Matchers.any(), (MergeSourceViewer) Matchers.any(),
+						(Position) Matchers.any());
 
 	}
 

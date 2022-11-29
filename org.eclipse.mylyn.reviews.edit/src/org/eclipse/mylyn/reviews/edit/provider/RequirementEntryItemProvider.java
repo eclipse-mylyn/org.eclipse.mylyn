@@ -74,14 +74,13 @@ public class RequirementEntryItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addStatusPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_RequirementEntry_status_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_RequirementEntry_status_feature", "_UI_RequirementEntry_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REQUIREMENT_ENTRY__STATUS, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_RequirementEntry_status_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_RequirementEntry_status_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_RequirementEntry_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REQUIREMENT_ENTRY__STATUS, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -90,13 +89,12 @@ public class RequirementEntryItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addByPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_RequirementEntry_by_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_RequirementEntry_by_feature", "_UI_RequirementEntry_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REQUIREMENT_ENTRY__BY, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_RequirementEntry_by_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_RequirementEntry_by_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_RequirementEntry_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.REQUIREMENT_ENTRY__BY, true, false, true, null, null, null));
 	}
 
 	/**

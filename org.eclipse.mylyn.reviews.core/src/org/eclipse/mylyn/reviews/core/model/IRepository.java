@@ -63,8 +63,8 @@ public interface IRepository extends EObject {
 	String getTaskRepositoryUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl
-	 * <em>Task Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task
+	 * Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Repository Url</em>' attribute.
@@ -88,8 +88,8 @@ public interface IRepository extends EObject {
 	String getTaskConnectorKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind
-	 * <em>Task Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task
+	 * Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Connector Kind</em>' attribute.
@@ -113,8 +113,8 @@ public interface IRepository extends EObject {
 	TaskRepository getTaskRepository();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository
-	 * <em>Task Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task
+	 * Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Repository</em>' attribute.

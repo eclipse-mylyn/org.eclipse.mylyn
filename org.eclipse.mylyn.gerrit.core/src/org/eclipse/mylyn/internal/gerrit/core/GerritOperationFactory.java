@@ -41,7 +41,8 @@ public class GerritOperationFactory {
 	public GerritClient getClient(ITask review) {
 		TaskRepository repository = repositoryManager.getRepository(review.getConnectorKind(),
 				review.getRepositoryUrl());
-		GerritConnector connector = (GerritConnector) repositoryManager.getRepositoryConnector(repository.getConnectorKind());
+		GerritConnector connector = (GerritConnector) repositoryManager
+				.getRepositoryConnector(repository.getConnectorKind());
 		GerritClient client = connector.getClient(repository);
 		return client;
 	}

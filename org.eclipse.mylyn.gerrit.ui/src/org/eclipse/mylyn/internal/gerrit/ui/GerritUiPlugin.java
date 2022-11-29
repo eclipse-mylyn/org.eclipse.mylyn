@@ -65,8 +65,8 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-				GerritConnector.CONNECTOR_KIND);
+		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager()
+				.getRepositories(GerritConnector.CONNECTOR_KIND);
 		for (TaskRepository repository : repositories) {
 			GerritClient client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
 			client.getFactoryProvider().close();

@@ -83,13 +83,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addIndexPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Indexed_index_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Indexed_index_feature", "_UI_Indexed_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.INDEXED__INDEX, false, false, false,
-				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Indexed_index_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Indexed_index_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Indexed_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.INDEXED__INDEX, false, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -98,13 +98,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addCreationDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Dated_creationDate_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Dated_creationDate_feature", "_UI_Dated_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.DATED__CREATION_DATE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Dated_creationDate_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Dated_creationDate_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Dated_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.DATED__CREATION_DATE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -113,13 +113,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addModificationDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Dated_modificationDate_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Dated_modificationDate_feature", "_UI_Dated_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.DATED__MODIFICATION_DATE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Dated_modificationDate_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Dated_modificationDate_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Dated_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.DATED__MODIFICATION_DATE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -128,11 +128,12 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addAuthorPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Comment_author_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_author_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__AUTHOR, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_author_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_author_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Comment_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT__AUTHOR, true, false, true, null, null, null));
 	}
 
 	/**
@@ -141,13 +142,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Comment_description_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_description_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__DESCRIPTION, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_description_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_description_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Comment_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT__DESCRIPTION, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -156,13 +157,12 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Comment_id_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_id_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_id_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_id_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ReviewsPackage.Literals.COMMENT__ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -171,13 +171,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addDraftPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Comment_draft_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_draft_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__DRAFT, true, false, false, ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_draft_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_draft_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Comment_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT__DRAFT, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -186,11 +186,12 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addReviewPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Comment_review_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_review_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__REVIEW, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_review_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_review_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Comment_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT__REVIEW, true, false, true, null, null, null));
 	}
 
 	/**
@@ -199,13 +200,13 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addTitlePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Comment_title_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_title_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__TITLE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_title_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_title_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_Comment_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.COMMENT__TITLE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -214,13 +215,12 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * @generated
 	 */
 	protected void addMinePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Comment_mine_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_mine_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__MINE, false, false, false, ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_mine_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_mine_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ReviewsPackage.Literals.COMMENT__MINE, false, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**

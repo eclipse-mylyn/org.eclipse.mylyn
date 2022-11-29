@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.util.List;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-changes-info"
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-changes-info"
  * >RelatedChangesInfo</a>.
  */
 public class RelatedChangesInfo {

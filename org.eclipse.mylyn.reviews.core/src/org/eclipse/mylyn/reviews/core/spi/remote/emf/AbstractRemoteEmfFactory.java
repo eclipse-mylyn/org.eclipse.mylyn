@@ -159,8 +159,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	}
 
 	/**
-	 * Returns unique consumer for a model object that matches a given local key.
-	 * <em>Must be called from EMF safe (e.g. UI) thread.</em>
+	 * Returns unique consumer for a model object that matches a given local key. <em>Must be called from EMF safe (e.g.
+	 * UI) thread.</em>
 	 * 
 	 * @param parentObject
 	 *            The object that contains or will contain the remote object type
@@ -266,8 +266,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	}
 
 	private RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> assignConsumer(
-			EParentObjectType parentObject,
-			LocalKeyType localKey,
+			EParentObjectType parentObject, LocalKeyType localKey,
 			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer) {
 		UniqueLocalReference<EParentObjectType, LocalKeyType> key = new UniqueLocalReference<EParentObjectType, LocalKeyType>(
 				parentObject, localKey);
@@ -361,8 +360,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Override to perform request to remote API. This request is fully managed by remote service and could be invoked
-	 * directly, but is typically invoked through a consumer.
-	 * <em>This method may block or fail, and must not be called from UI thread.</em>
+	 * directly, but is typically invoked through a consumer. <em>This method may block or fail, and must not be called
+	 * from UI thread.</em>
 	 * 
 	 * @param parentObject
 	 *            The object that contains the model object
@@ -398,8 +397,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to create an EObject from remote object. (Consumers should use
 	 * {@link #get(EParentObjectType parent, RemoteType remoteObject)}, which ensures that any cached objects will be
-	 * returned instead.)
-	 * <em>Must be called from EMF safe (e.g. UI) thread and should have very fast execution time.</em>
+	 * returned instead.) <em>Must be called from EMF safe (e.g. UI) thread and should have very fast execution
+	 * time.</em>
 	 * 
 	 * @param parentObject
 	 *            the parent EMF object that the new child object will be referenced from
@@ -428,8 +427,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Updates the values for the supplied EMF object based on any values that have changed in the remote object since
 	 * the last call to {@link #retrieve(String, EObject, EReference, Object)} or {@link #update(Object)}. The object
-	 * must have been previously retrieved using this factory.
-	 * <em>Must be called from EMF safe (e.g. UI) thread and should have very fast execution time.</em>
+	 * must have been previously retrieved using this factory. <em>Must be called from EMF safe (e.g. UI) thread and
+	 * should have very fast execution time.</em>
 	 * 
 	 * @param parentObject
 	 *            the parent EMF object that the new child object is referenced from

@@ -105,8 +105,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Pulls the results from the factory, populating the remote object with the latest state from the remote API.
-	 * Blocks until the remote API call completes. Does nothing if a retrieval is already occurring.
-	 * <em>This method must not be called from the UI thread.</em>
+	 * Blocks until the remote API call completes. Does nothing if a retrieval is already occurring. <em>This method
+	 * must not be called from the UI thread.</em>
 	 *
 	 * @param force
 	 *            pull from remote even when API doesn't require
@@ -151,8 +151,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	}
 
 	/**
-	 * Apply the remote object to the local model object.
-	 * <em>This method must be called from the EMF managed (e.g.) UI thread.</em>
+	 * Apply the remote object to the local model object. <em>This method must be called from the EMF managed (e.g.) UI
+	 * thread.</em>
 	 *
 	 * @param force
 	 *            apply the changes even when API doesn't require

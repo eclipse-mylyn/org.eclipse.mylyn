@@ -43,7 +43,8 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 	}
 
 	@Override
-	public PatchSetDetail pull(IReview parent, PatchSetDetail remoteKey, IProgressMonitor monitor) throws CoreException {
+	public PatchSetDetail pull(IReview parent, PatchSetDetail remoteKey, IProgressMonitor monitor)
+			throws CoreException {
 		return remoteKey;
 	}
 
@@ -87,9 +88,10 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 
 	@Override
 	public PatchSetDetail getRemoteObjectForLocalKey(IReview parentObject, String localKey) {
-		GerritReviewRemoteFactory reviewFactory = ((GerritRemoteFactoryProvider) getFactoryProvider()).getReviewFactory();
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> reviewConsumer = reviewFactory.getConsumerForModel(
-				parentObject.getRepository(), parentObject);
+		GerritReviewRemoteFactory reviewFactory = ((GerritRemoteFactoryProvider) getFactoryProvider())
+				.getReviewFactory();
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> reviewConsumer = reviewFactory
+				.getConsumerForModel(parentObject.getRepository(), parentObject);
 		try {
 			if (reviewConsumer != null) {
 				GerritChange change = reviewConsumer.getRemoteObject();

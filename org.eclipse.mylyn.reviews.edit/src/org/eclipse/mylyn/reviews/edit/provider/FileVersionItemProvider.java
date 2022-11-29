@@ -70,13 +70,13 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	 * @generated
 	 */
 	protected void addPathPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_FileVersion_path_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_path_feature", "_UI_FileVersion_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_VERSION__PATH, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileVersion_path_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_path_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileVersion_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_VERSION__PATH, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -85,14 +85,13 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	 * @generated
 	 */
 	protected void addDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_FileVersion_description_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_FileVersion_description_feature", "_UI_FileVersion_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_VERSION__DESCRIPTION, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileVersion_description_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_description_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileVersion_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_VERSION__DESCRIPTION, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -101,14 +100,13 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	 * @generated
 	 */
 	protected void addContentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_FileVersion_content_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_FileVersion_content_feature", "_UI_FileVersion_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_VERSION__CONTENT, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileVersion_content_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_content_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileVersion_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_VERSION__CONTENT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -117,12 +115,12 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	 * @generated
 	 */
 	protected void addFilePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_FileVersion_file_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_file_feature", "_UI_FileVersion_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_VERSION__FILE, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileVersion_file_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_file_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileVersion_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_VERSION__FILE, true, false, true, null, null, null));
 	}
 
 	/**
@@ -131,14 +129,13 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	 * @generated
 	 */
 	protected void addFileRevisionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_FileVersion_fileRevision_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_FileVersion_fileRevision_feature", "_UI_FileVersion_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.FILE_VERSION__FILE_REVISION, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FileVersion_fileRevision_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_FileVersion_fileRevision_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_FileVersion_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.FILE_VERSION__FILE_REVISION, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**

@@ -102,8 +102,8 @@ public class PublishDialog extends GerritOperationDialog {
 		String changeId = publishDetail.getChange().getKey().abbreviate();
 
 		setTitle(Messages.PublishDialog_Publish_Comments);
-		setMessage(NLS.bind(Messages.PublishDialog_Change_X_dash_Y, changeId, publishDetail.getPatchSetInfo()
-				.getSubject()));
+		setMessage(NLS.bind(Messages.PublishDialog_Change_X_dash_Y, changeId,
+				publishDetail.getPatchSetInfo().getSubject()));
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));

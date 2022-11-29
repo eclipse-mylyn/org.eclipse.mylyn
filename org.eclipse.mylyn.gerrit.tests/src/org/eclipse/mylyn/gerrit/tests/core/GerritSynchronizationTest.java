@@ -199,8 +199,8 @@ public class GerritSynchronizationTest extends TestCase {
 
 		// validate that task data was fully synchronized
 		TaskData taskData = taskDataManager.getTaskData(task);
-		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> comments = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 		TaskCommentMapper lastComment = TaskCommentMapper.createFrom(comments.get(comments.size() - 1));
 		assertEquals("Failure on " + GerritFixture.current().getRepositoryUrl() + "/" + task.getTaskId(), //$NON-NLS-1$
 				"Patch Set 1:\n\n" + message, lastComment.getText());
@@ -237,8 +237,8 @@ public class GerritSynchronizationTest extends TestCase {
 	private void synchronizeQuery(RepositoryQuery query, boolean user) throws InterruptedException {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(repository.getConnectorKind());
-		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeQueriesJob(connector, repository,
-				Collections.singleton(query));
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory()
+				.createSynchronizeQueriesJob(connector, repository, Collections.singleton(query));
 		job.setUser(user);
 		job.schedule();
 		job.join();
@@ -256,8 +256,9 @@ public class GerritSynchronizationTest extends TestCase {
 	}
 
 	private void synchronizeTask(ITask task, boolean user) throws InterruptedException {
-		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeTasksJob(
-				TasksUi.getRepositoryConnector(repository.getConnectorKind()), repository, Collections.singleton(task));
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory()
+				.createSynchronizeTasksJob(TasksUi.getRepositoryConnector(repository.getConnectorKind()), repository,
+						Collections.singleton(task));
 		job.setUser(user);
 		job.schedule();
 		boolean synchronizing = true;

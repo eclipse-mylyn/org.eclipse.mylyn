@@ -185,8 +185,8 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 		ITask task = getBehavior().getTask();
 
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository);
 

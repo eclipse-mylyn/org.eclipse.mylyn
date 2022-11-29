@@ -34,8 +34,8 @@ public enum ReviewTableDefinition {
 	STARRED("", 20, false, true, SWT.LEFT), //$NON-NLS-1$
 	ID(Messages.ReviewTableDefinition_id, 80, false, true, SWT.LEFT), //
 	SUBJECT(Messages.ReviewTableDefinition_subject, 200, true, true, SWT.LEFT), //
-	STATUS(Messages.ReviewTableDefinition_status, 100, true, true, SWT.LEFT),
-	OWNER(Messages.ReviewTableDefinition_owner, 140, true, true, SWT.LEFT), //
+	STATUS(Messages.ReviewTableDefinition_status, 100, true, true,
+			SWT.LEFT), OWNER(Messages.ReviewTableDefinition_owner, 140, true, true, SWT.LEFT), //
 	PROJECT(Messages.ReviewTableDefinition_project, 200, true, true, SWT.LEFT), //
 	BRANCH(Messages.ReviewTableDefinition_branch, 100, true, true, SWT.LEFT), //
 	UPDATED(Messages.ReviewTableDefinition_updated, 100, true, true, SWT.RIGHT), // 

@@ -72,8 +72,8 @@ public class GerritRepositorySearchPageContentProvider implements ITreeContentPr
 	}
 
 	private static TaskRepository[] getGerritTaskRepositories() {
-		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-				GerritConnector.CONNECTOR_KIND);
+		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager()
+				.getRepositories(GerritConnector.CONNECTOR_KIND);
 		for (Iterator<TaskRepository> it = repositories.iterator(); it.hasNext();) {
 			TaskRepository repository = it.next();
 			if (repository.isOffline()) {

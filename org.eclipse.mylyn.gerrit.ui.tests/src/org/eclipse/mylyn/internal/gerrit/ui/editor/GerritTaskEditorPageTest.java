@@ -72,8 +72,8 @@ public class GerritTaskEditorPageTest extends TestCase {
 			IEditorSite editorSite = mock(IEditorSite.class);
 			IHandlerService service = mock(IHandlerService.class);
 			when(editorSite.getService(IHandlerService.class)).thenReturn(service);
-			TaskEditorInput taskEditorInput = new TaskEditorInput(repository, new TaskTask(
-					GerritConnector.CONNECTOR_KIND, "mock", "mock"));
+			TaskEditorInput taskEditorInput = new TaskEditorInput(repository,
+					new TaskTask(GerritConnector.CONNECTOR_KIND, "mock", "mock"));
 			when(getTaskEditor().getTaskEditorInput()).thenReturn(taskEditorInput);
 			init(editorSite, taskEditorInput);
 		}
@@ -100,13 +100,13 @@ public class GerritTaskEditorPageTest extends TestCase {
 	}
 
 	public void testCreatePartDescriptorsCustomOrder() {
-		Iterable<Class<?>> partClasses = ImmutableList.copyOf(Iterables.transform(
-				descriptors.subList(descriptors.size() - 4, descriptors.size()),
-				new Function<TaskEditorPartDescriptor, Class<?>>() {
-					public Class<?> apply(TaskEditorPartDescriptor o) {
-						return o.createPart().getClass();
-					}
-				}));
+		Iterable<Class<?>> partClasses = ImmutableList
+				.copyOf(Iterables.transform(descriptors.subList(descriptors.size() - 4, descriptors.size()),
+						new Function<TaskEditorPartDescriptor, Class<?>>() {
+							public Class<?> apply(TaskEditorPartDescriptor o) {
+								return o.createPart().getClass();
+							}
+						}));
 		assertEquals(ImmutableList.of(GerritReviewDetailSection.class, PatchSetSection.class,
 				TaskEditorCommentPart.class, TaskEditorNewCommentPart.class), partClasses);
 		List<String> ids = Lists.transform(descriptors, new Function<TaskEditorPartDescriptor, String>() {
@@ -145,7 +145,8 @@ public class GerritTaskEditorPageTest extends TestCase {
 		});
 	}
 
-	private Optional<TaskEditorPartDescriptor> findById(ArrayList<TaskEditorPartDescriptor> descriptors, final String id) {
+	private Optional<TaskEditorPartDescriptor> findById(ArrayList<TaskEditorPartDescriptor> descriptors,
+			final String id) {
 		return Iterables.tryFind(descriptors, new Predicate<TaskEditorPartDescriptor>() {
 			public boolean apply(TaskEditorPartDescriptor descriptor) {
 				return descriptor.getId().equals(id);
@@ -159,8 +160,8 @@ public class GerritTaskEditorPageTest extends TestCase {
 				.getRoot()
 				.createAttribute(TaskAttribute.USER_ASSIGNED);
 		assigneeAttribute.getMetaData().setReadOnly(true);
-		PersonAttributeEditor editor = (PersonAttributeEditor) page.createAttributeEditorFactory().createEditor(
-				TaskAttribute.TYPE_PERSON, assigneeAttribute);
+		PersonAttributeEditor editor = (PersonAttributeEditor) page.createAttributeEditorFactory()
+				.createEditor(TaskAttribute.TYPE_PERSON, assigneeAttribute);
 		assertTrue(editor.isReadOnly());
 
 		assigneeAttribute.setValue("joel.user");

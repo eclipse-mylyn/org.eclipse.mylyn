@@ -34,8 +34,8 @@ public class FileItemCompareEditorInput extends ReviewItemCompareEditorInput {
 	public FileItemCompareEditorInput(CompareConfiguration configuration, IFileItem file, ReviewBehavior behavior) {
 		super(configuration, behavior);
 		this.file = file;
-		setTitle(NLS.bind(Messages.FileItemCompareEditorInput_Compare_X_Y_and_Z, new Object[] { file.getName(),
-				file.getBase().getDescription(), file.getTarget().getDescription() }));
+		setTitle(NLS.bind(Messages.FileItemCompareEditorInput_Compare_X_Y_and_Z,
+				new Object[] { file.getName(), file.getBase().getDescription(), file.getTarget().getDescription() }));
 	}
 
 	@Override

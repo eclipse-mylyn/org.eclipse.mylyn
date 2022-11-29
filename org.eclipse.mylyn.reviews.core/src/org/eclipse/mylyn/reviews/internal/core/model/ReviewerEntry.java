@@ -87,8 +87,8 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap()).basicRemove(
-					otherEnd, msgs);
+			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
+					.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -121,7 +121,8 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap()).set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
+					.set(newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);

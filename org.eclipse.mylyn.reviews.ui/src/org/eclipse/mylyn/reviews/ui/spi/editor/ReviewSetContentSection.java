@@ -131,8 +131,10 @@ public class ReviewSetContentSection {
 				.getConsumerForLocalKey(set, set.getId());
 		itemListObserver.setConsumer(itemSetConsumer);
 		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection()
-				.getReviewEditorPage().getFactoryProvider().getReviewFactory().getConsumerForModel(
-						set.getReview().getRepository(), set.getReview());
+				.getReviewEditorPage()
+				.getFactoryProvider()
+				.getReviewFactory()
+				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
 		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
 			public void updated(boolean modified) {
@@ -471,8 +473,8 @@ public class ReviewSetContentSection {
 			for (Control oldActionControl : actionContainer.getChildren()) {
 				oldActionControl.dispose();
 			}
-			getParentSection().getUiFactoryProvider().createControls(getParentSection(), actionContainer,
-					getParentSection().getToolkit(), set);
+			getParentSection().getUiFactoryProvider()
+					.createControls(getParentSection(), actionContainer, getParentSection().getToolkit(), set);
 			actionContainer.layout();
 			reflow();
 		}

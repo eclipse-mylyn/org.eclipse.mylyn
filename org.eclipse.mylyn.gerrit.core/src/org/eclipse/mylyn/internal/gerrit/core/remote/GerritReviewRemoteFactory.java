@@ -138,8 +138,9 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			pull(parent, detail, detail.getNeededBy(), monitor);
 			return gerritChange;
 		} catch (GerritException e) {
-			throw GerritCorePlugin.getDefault().getConnector().toCoreException(parent.getTaskRepository(),
-					"Problem while retrieving Gerrit review.", e); //$NON-NLS-1$
+			throw GerritCorePlugin.getDefault()
+					.getConnector()
+					.toCoreException(parent.getTaskRepository(), "Problem while retrieving Gerrit review.", e); //$NON-NLS-1$
 		}
 	}
 
@@ -389,7 +390,8 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 					review.getReviewerApprovals().put(reviewer, reviewerEntry);
 				}
 				for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval
-						.getApprovalMap().entrySet()) {
+						.getApprovalMap()
+						.entrySet()) {
 					String remoteType = remoteMap.getValue().getCategoryId().get();
 					IApprovalType approvalType = typeForKey.get(remoteType);
 					if (approvalType == null) {

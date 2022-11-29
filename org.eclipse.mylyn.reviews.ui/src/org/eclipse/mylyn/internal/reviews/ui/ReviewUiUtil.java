@@ -114,8 +114,8 @@ public final class ReviewUiUtil {
 	private static LineRange getLineRange(ISelection selection) {
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = ((TextSelection) selection);
-			return new LineRange(textSelection.getStartLine() + 1, textSelection.getEndLine()
-					- textSelection.getStartLine() + 1);
+			return new LineRange(textSelection.getStartLine() + 1,
+					textSelection.getEndLine() - textSelection.getStartLine() + 1);
 		}
 		return null;
 	}

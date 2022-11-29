@@ -89,11 +89,13 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 	public void testGlobalComments() throws Exception {
 		String message1 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, message1,
-				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
+		reviewHarness.getClient()
+				.publishComments(reviewHarness.getShortId(), 1, message1,
+						Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		String message2 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, message2,
-				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
+		reviewHarness.getClient()
+				.publishComments(reviewHarness.getShortId(), 1, message2,
+						Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		reviewHarness.retrieve();
 		List<IComment> comments = getReview().getComments();
 		assertThat(comments.size(), is(3));
@@ -151,9 +153,10 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		assertThat(codeReviewApproval.getName(), is(CRVW.getCategory().getName()));
 
 		String approvalMessage = "approval, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, approvalMessage,
-				new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 1).getId())),
-				new NullProgressMonitor());
+		reviewHarness.getClient()
+				.publishComments(reviewHarness.getShortId(), 1, approvalMessage,
+						new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 1).getId())),
+						new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertThat(getReview().getReviewerApprovals().size(), is(1));
 		Entry<IUser, IReviewerEntry> reviewerEntry = getReview().getReviewerApprovals().entrySet().iterator().next();
@@ -207,8 +210,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	public void testAbandonChange() throws Exception {
 		String message1 = "abandon, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 
-		ChangeDetail changeDetail = reviewHarness.getClient().abandon(reviewHarness.getShortId(), 1, message1,
-				new NullProgressMonitor());
+		ChangeDetail changeDetail = reviewHarness.getClient()
+				.abandon(reviewHarness.getShortId(), 1, message1, new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
@@ -277,8 +280,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 	@Test
 	public void testAddEmptyReviewers() throws Exception {
-		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(),
-				Collections.<String> emptyList(), new NullProgressMonitor());
+		ReviewerResult reviewerResult = reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(), Collections.<String> emptyList(), new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
@@ -290,8 +293,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	public void testAddInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "foo" });
 
-		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
-				new NullProgressMonitor());
+		ReviewerResult reviewerResult = reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(), reviewers, new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().size(), is(1));
@@ -308,8 +311,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		List<String> reviewers = Arrays.asList(new String[] { "admin", "foo" });
 		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 }); //user id for tests
 
-		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
-				new NullProgressMonitor());
+		ReviewerResult reviewerResult = reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(), reviewers, new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertReviewerResult(reviewerResult, "foo", userid);
 	}
@@ -328,8 +331,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		addAdminToReviewAndVerify();
 
 		String reviewer = "admin";
-		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
-				reviewer, new NullProgressMonitor());
+		ReviewerResult removeReviewerResult = reviewHarness.getClient()
+				.removeReviewer(reviewHarness.getShortId(), reviewer, new NullProgressMonitor());
 		reviewHarness.retrieve();
 
 		//I went through the checks after we add a reviewer and reversed them to look for empty rather than for a new reviewer
@@ -350,8 +353,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		//Foo isnt a valid user
 		String reviewer = "foo";
 
-		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
-				reviewer, new NullProgressMonitor());
+		ReviewerResult removeReviewerResult = reviewHarness.getClient()
+				.removeReviewer(reviewHarness.getShortId(), reviewer, new NullProgressMonitor());
 
 		reviewHarness.retrieve();
 
@@ -372,8 +375,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 		String reviewer = "tests";
 
-		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
-				reviewer, new NullProgressMonitor());
+		ReviewerResult removeReviewerResult = reviewHarness.getClient()
+				.removeReviewer(reviewHarness.getShortId(), reviewer, new NullProgressMonitor());
 
 		reviewHarness.retrieve();
 
@@ -391,8 +394,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	private void addAdminToReviewAndVerify() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "admin" });
 		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 });
-		ReviewerResult addReviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
-				new NullProgressMonitor());
+		ReviewerResult addReviewerResult = reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(), reviewers, new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertReviewerResult(addReviewerResult, null, userid);
 	}
@@ -402,8 +405,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		List<String> reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
 		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 }); //user id for tests
 
-		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
-				new NullProgressMonitor());
+		ReviewerResult reviewerResult = reviewHarness.getClient()
+				.addReviewers(reviewHarness.getShortId(), reviewers, new NullProgressMonitor());
 		reviewHarness.retrieve();
 		assertReviewerResult(reviewerResult, null, userid);
 	}
@@ -482,9 +485,11 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	public void testUnpermittedApproval() throws Exception {
 		String approvalMessage = "approval, time: " + System.currentTimeMillis();
 		try {
-			reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, approvalMessage,
-					new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 2).getId())),
-					new NullProgressMonitor());
+			reviewHarness.getClient()
+					.publishComments(reviewHarness.getShortId(), 1, approvalMessage,
+							new HashSet<ApprovalCategoryValue.Id>(
+									Collections.singleton(CRVW.getValue((short) 2).getId())),
+							new NullProgressMonitor());
 			fail("Expected to fail when trying to vote +2 when it's not permitted");
 		} catch (GerritException e) {
 			assertEquals("Applying label \"Code-Review\": 2 is restricted", e.getMessage());
@@ -496,8 +501,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 		PatchSet.Id id = new PatchSet.Id(new Change.Id(reviewId), 1);
 
-		PatchSetPublishDetailX patchSetDetail = reviewHarness.getClient().getPatchSetPublishDetail(id,
-				new NullProgressMonitor());
+		PatchSetPublishDetailX patchSetDetail = reviewHarness.getClient()
+				.getPatchSetPublishDetail(id, new NullProgressMonitor());
 
 		assertThat(patchSetDetail, notNullValue());
 		List<PermissionLabel> allowed = patchSetDetail.getLabels();
@@ -568,8 +573,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		createBranchIfNonExistent(branchName);
 		String refSpec = "refs/heads/" + branchName;
 
-		ChangeDetail changeDetail = reviewHarness.getClient().cherryPick(reviewHarness.getShortId(), 1, testMessage,
-				refSpec, new NullProgressMonitor());
+		ChangeDetail changeDetail = reviewHarness.getClient()
+				.cherryPick(reviewHarness.getShortId(), 1, testMessage, refSpec, new NullProgressMonitor());
 		Change change = changeDetail.getChange();
 
 		IReview review = reviewHarness.getReview();
@@ -606,8 +611,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 	private void failedCherryPick(String message, String dest, String errMsg) {
 		try {
-			reviewHarness.getClient().cherryPick(reviewHarness.getShortId(), 1, message, dest,
-					new NullProgressMonitor());
+			reviewHarness.getClient()
+					.cherryPick(reviewHarness.getShortId(), 1, message, dest, new NullProgressMonitor());
 			fail("Expected to get an exception when cherry picking");
 		} catch (GerritException e) {
 			String receivedMessage = CharMatcher.JAVA_ISO_CONTROL.removeFrom(e.getMessage());
@@ -659,8 +664,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		String approvalMessage = "approval, time: " + System.currentTimeMillis();
 		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(
 				Collections.singleton(CRVW.getValue((short) 2).getId()));
-		reviewHarness.getAdminClient().publishComments(newReviewShortId, 1, approvalMessage, approvals,
-				new NullProgressMonitor());
+		reviewHarness.getAdminClient()
+				.publishComments(newReviewShortId, 1, approvalMessage, approvals, new NullProgressMonitor());
 		reviewHarness.getAdminClient().submit(newReviewShortId, 1, new NullProgressMonitor());
 
 		newReviewConsumer.retrieve(false);
@@ -768,19 +773,19 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 	private void createBranchIfNonExistent(String branchName) throws GerritException {
 		if (!branchExists(branchName)) {
-			reviewHarness.getAdminClient().createRemoteBranch(GerritProject.PROJECT, branchName, null,
-					new NullProgressMonitor());
+			reviewHarness.getAdminClient()
+					.createRemoteBranch(GerritProject.PROJECT, branchName, null, new NullProgressMonitor());
 		}
 	}
 
 	private void deleteBranch(String branchName) throws GerritException {
-		reviewHarness.getAdminClient().deleteRemoteBranch(GerritProject.PROJECT, branchName, null,
-				new NullProgressMonitor());
+		reviewHarness.getAdminClient()
+				.deleteRemoteBranch(GerritProject.PROJECT, branchName, null, new NullProgressMonitor());
 	}
 
 	private boolean branchExists(String branchName) throws GerritException {
-		BranchInfo[] branches = reviewHarness.getAdminClient().getRemoteProjectBranches(GerritProject.PROJECT,
-				new NullProgressMonitor());
+		BranchInfo[] branches = reviewHarness.getAdminClient()
+				.getRemoteProjectBranches(GerritProject.PROJECT, new NullProgressMonitor());
 		for (BranchInfo branch : branches) {
 			String branchRef = StringUtils.trimToEmpty(StringUtils.substringAfterLast(branch.getRef(), "/"));
 			if (branchRef.equals(branchName)) {
@@ -802,8 +807,8 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		//create a commit w/ -2, resulting in no labels
 		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(
 				Collections.singleton(CRVW.getValue((short) -2).getId()));
-		reviewHarness.getAdminClient().publishComments(reviewHarness.getShortId(), 1, "", approvals,
-				new NullProgressMonitor());
+		reviewHarness.getAdminClient()
+				.publishComments(reviewHarness.getShortId(), 1, "", approvals, new NullProgressMonitor());
 		reviewHarness.retrieve();
 	}
 }

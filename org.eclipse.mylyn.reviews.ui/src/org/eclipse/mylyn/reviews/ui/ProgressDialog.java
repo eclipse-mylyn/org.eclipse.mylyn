@@ -205,8 +205,8 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 	 * completes executing. Any attempt to change the UI state of the wizard in the long-running operation will be
 	 * nullified when original UI state is restored.
 	 */
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		// The operation can only be canceled if it is executed in a separate
 		// thread.
 		// Otherwise the UI is blocked anyway.

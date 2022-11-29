@@ -68,8 +68,8 @@ public interface IReviewItem extends ICommentContainer {
 	IUser getCommittedBy();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getCommittedBy
-	 * <em>Committed By</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getCommittedBy <em>Committed
+	 * By</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Committed By</em>' reference.

@@ -22,8 +22,8 @@ import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#reviewer-info">ReviewerInfo</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#reviewer-info">ReviewerInfo</a>.
  */
 public class ReviewerInfo extends AccountInfo {
 
@@ -47,8 +47,9 @@ public class ReviewerInfo extends AccountInfo {
 			for (Entry<String, String> entry : map.entrySet()) {
 				ApprovalCategory.Id categoryId = ApprovalUtil.findCategoryIdByName(entry.getKey().replace('-', ' '));
 				if (categoryId != null) {
-					PatchSetApproval patchSetApproval = new PatchSetApproval(new PatchSetApproval.Key(
-							currentPatchSet.getId(), accountId, categoryId), ApprovalUtil.parseShort(entry.getValue()));
+					PatchSetApproval patchSetApproval = new PatchSetApproval(
+							new PatchSetApproval.Key(currentPatchSet.getId(), accountId, categoryId),
+							ApprovalUtil.parseShort(entry.getValue()));
 					approvalDetail.add(patchSetApproval);
 				}
 			}

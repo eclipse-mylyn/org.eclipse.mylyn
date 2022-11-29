@@ -136,10 +136,9 @@ public class GerritTask extends AbstractTask {
 	 *            the Gerrit task data
 	 */
 	public GerritTask(final TaskData taskData) {
-		super(taskData.getRepositoryUrl(), taskData.getTaskId(), taskData.getRoot()
-				.getAttribute(TaskAttribute.SUMMARY)
-				.getValue()
-				+ " [" + taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+		super(taskData.getRepositoryUrl(), taskData.getTaskId(),
+				taskData.getRoot().getAttribute(TaskAttribute.SUMMARY).getValue() + " [" //$NON-NLS-1$
+						+ taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue() + "]"); //$NON-NLS-1$
 
 		fConnectorKind = taskData.getConnectorKind();
 
@@ -231,7 +230,8 @@ public class GerritTask extends AbstractTask {
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(date);
 
-		boolean sameDay = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)));
+		boolean sameDay = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)));
 
 		return sameDay;
 	}
@@ -289,7 +289,9 @@ public class GerritTask extends AbstractTask {
 		buffer.append(Messages.GerritTask_updated)
 				.append(getAttributeAsDate(GerritTask.DATE_MODIFICATION))
 				.append('\n');
-		buffer.append(Messages.GerritTask_star).append(getAttribute(GerritTask.IS_STARRED)).append(", CRVW = ") //$NON-NLS-1$
+		buffer.append(Messages.GerritTask_star)
+				.append(getAttribute(GerritTask.IS_STARRED))
+				.append(", CRVW = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.REVIEW_STATE))
 				.append(", VRIF = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.VERIFY_STATE))

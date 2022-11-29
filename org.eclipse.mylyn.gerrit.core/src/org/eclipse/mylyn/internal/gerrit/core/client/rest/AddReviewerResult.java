@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.util.List;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#add-reviewer-result"
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#add-reviewer-result"
  * >AddReviewerResult</a>.
  */
 public class AddReviewerResult {

@@ -51,7 +51,8 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 
 	@Override
 	public EditorHandle openUrl(IWorkbenchPage page, String url, int customFlags) {
-		for (TaskRepository repository : TasksUi.getRepositoryManager().getRepositories(GerritConnector.CONNECTOR_KIND)) {
+		for (TaskRepository repository : TasksUi.getRepositoryManager()
+				.getRepositories(GerritConnector.CONNECTOR_KIND)) {
 			String taskId = getTaskId(repository, url);
 			if (taskId != null) {
 				int patchSetNumber = getPatchSetNumber(repository, url, taskId);
@@ -133,8 +134,8 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 	}
 
 	private String extractUrlQualifiers(TaskRepository repository, String url, String taskId) {
-		String taskUrl = TasksUi.getRepositoryConnector(GerritConnector.CONNECTOR_KIND).getTaskUrl(repository.getUrl(),
-				taskId);
+		String taskUrl = TasksUi.getRepositoryConnector(GerritConnector.CONNECTOR_KIND)
+				.getTaskUrl(repository.getUrl(), taskId);
 		return StringUtils.remove(url, taskUrl);
 	}
 

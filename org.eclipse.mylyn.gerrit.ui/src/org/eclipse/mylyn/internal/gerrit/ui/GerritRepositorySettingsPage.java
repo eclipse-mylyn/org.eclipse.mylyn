@@ -112,8 +112,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 		openIdProviders.add(new OpenIdProvider(Messages.GerritRepositorySettingsPage_Google_Account,
 				"https://www.google.com/accounts/o8/id")); //$NON-NLS-1$
-		openIdProviders.add(new OpenIdProvider(Messages.GerritRepositorySettingsPage_Yahoo_Account,
-				"https://me.yahoo.com")); //$NON-NLS-1$
+		openIdProviders
+				.add(new OpenIdProvider(Messages.GerritRepositorySettingsPage_Yahoo_Account, "https://me.yahoo.com")); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("restriction")
@@ -155,10 +155,10 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 						gerritValidator.getInfo().getVersion());
 			}
 
-			setMessage(NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z, new String[] {
-					getMessage(), gerritValidator.getInfo().getFullName(), warning }), warning.isEmpty()
-					? IMessageProvider.INFORMATION
-					: IMessageProvider.WARNING);
+			setMessage(
+					NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z,
+							new String[] { getMessage(), gerritValidator.getInfo().getFullName(), warning }),
+					warning.isEmpty() ? IMessageProvider.INFORMATION : IMessageProvider.WARNING);
 		}
 	}
 
@@ -192,7 +192,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		});
 
 		if (repository != null) {
-			openIdButton.setSelection(Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED)));
+			openIdButton.setSelection(
+					Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED)));
 			String value = repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_PROVIDER);
 			openIdCombo.setText((value != null) ? value : ""); //$NON-NLS-1$
 

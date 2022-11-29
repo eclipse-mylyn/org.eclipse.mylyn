@@ -70,13 +70,12 @@ public class ApprovalValueMapItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addKeyPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ApprovalValueMap_key_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_ApprovalValueMap_key_feature", "_UI_ApprovalValueMap_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.APPROVAL_VALUE_MAP__KEY, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ApprovalValueMap_key_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ApprovalValueMap_key_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ApprovalValueMap_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.APPROVAL_VALUE_MAP__KEY, true, false, true, null, null, null));
 	}
 
 	/**
@@ -85,14 +84,13 @@ public class ApprovalValueMapItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addValuePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ApprovalValueMap_value_feature"), //$NON-NLS-1$
-				getString(
-						"_UI_PropertyDescriptor_description", "_UI_ApprovalValueMap_value_feature", "_UI_ApprovalValueMap_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.APPROVAL_VALUE_MAP__VALUE, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ApprovalValueMap_value_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", "_UI_ApprovalValueMap_value_feature", //$NON-NLS-1$//$NON-NLS-2$
+								"_UI_ApprovalValueMap_type"), //$NON-NLS-1$
+						ReviewsPackage.Literals.APPROVAL_VALUE_MAP__VALUE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**

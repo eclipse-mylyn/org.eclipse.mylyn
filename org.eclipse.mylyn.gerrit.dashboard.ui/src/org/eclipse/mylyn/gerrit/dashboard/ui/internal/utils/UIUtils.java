@@ -37,9 +37,9 @@ public class UIUtils {
 	 */
 	public static void notInplementedDialog(String aSt) {
 		GerritUi.Ftracer.traceWarning(Messages.UIUtils_notImplemented);
-		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInformation, NLS.bind(
-				Messages.UIUtils_methodNotReady, aSt), new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0,
-				Messages.UIUtils_notImplemented, null), IStatus.INFO);
+		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInformation,
+				NLS.bind(Messages.UIUtils_methodNotReady, aSt),
+				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, Messages.UIUtils_notImplemented, null), IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();
@@ -58,8 +58,8 @@ public class UIUtils {
 	 */
 	public static void showErrorDialog(String aMsg, String aReason) {
 		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason);
-		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInfo, aMsg, new Status(IStatus.INFO,
-				GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
+		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInfo, aMsg,
+				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();

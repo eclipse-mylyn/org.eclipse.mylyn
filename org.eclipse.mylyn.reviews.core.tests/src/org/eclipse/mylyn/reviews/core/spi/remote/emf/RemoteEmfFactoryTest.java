@@ -184,12 +184,12 @@ public class RemoteEmfFactoryTest {
 	public void testGetConsumerForDifferentParentSameLocalKey() throws CoreException {
 		EPackage parent1 = EcoreFactory.eINSTANCE.createEPackage();
 		TestEClassRemoteFactory factory = new TestEClassRemoteFactory();
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
-				parent1, REMOTE_KEY_1);
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory
+				.getConsumerForRemoteKey(parent1, REMOTE_KEY_1);
 
 		EPackage parent2 = EcoreFactory.eINSTANCE.createEPackage();
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer2 = factory.getConsumerForRemoteKey(
-				parent2, REMOTE_KEY_1);
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer2 = factory
+				.getConsumerForRemoteKey(parent2, REMOTE_KEY_1);
 
 		assertThat(consumer1, not(sameInstance(consumer2)));
 	}
@@ -296,8 +296,8 @@ public class RemoteEmfFactoryTest {
 		create2.setName("Object 2");
 		create2.setInstanceClassName(LOCAL_KEY_2);
 		parent.getEClassifiers().add(create2);
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer = factory.getConsumerForLocalKey(
-				parent, LOCAL_KEY_2);
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer = factory
+				.getConsumerForLocalKey(parent, LOCAL_KEY_2);
 		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener1 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
 				consumer);
 		consumer.retrieve(false);
@@ -326,8 +326,8 @@ public class RemoteEmfFactoryTest {
 				throw new CoreException(errorStatus);
 			}
 		};
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
-				parent, "object1");
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory
+				.getConsumerForRemoteKey(parent, "object1");
 		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
 				consumer1);
 		consumer1.retrieve(false);
@@ -352,8 +352,8 @@ public class RemoteEmfFactoryTest {
 	public void testRemoteProcessCollectionRequestAndUpdate() throws CoreException {
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 		TestCollectionObjectRemoteFactory factory = new TestCollectionObjectRemoteFactory();
-		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
-				parent, REMOTE_KEY_1);
+		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer1 = factory
+				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
 		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
 				consumer1);
 		consumer1.retrieve(false);
@@ -485,8 +485,8 @@ public class RemoteEmfFactoryTest {
 	@Test
 	public void testParentConsumerCollectionUpdate() {
 		TestCollectionObjectRemoteFactory factory = new TestCollectionObjectRemoteFactory();
-		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory.getConsumerForRemoteKey(
-				parent, REMOTE_KEY_1);
+		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory
+				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
 		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
 				consumer);
 		consumer.retrieve(false);
@@ -511,8 +511,8 @@ public class RemoteEmfFactoryTest {
 				throw new CoreException(errorStatus);
 			}
 		};
-		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory.getConsumerForRemoteKey(
-				parent, REMOTE_KEY_1);
+		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory
+				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
 		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
 				consumer);
 		consumer.retrieve(false);

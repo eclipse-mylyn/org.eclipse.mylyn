@@ -84,9 +84,8 @@ public class InlineCommentSubmitter {
 	 */
 	public void saveComment() {
 		if (!commentEditor.getState().equals(CommentEditorState.VIEW)
-				&& (commentEditor.getState().equals(CommentEditorState.DISCARD) || StringUtils.isNotEmpty(commentEditor.getCommentEditorText()
-						.getText()
-						.trim()))) {
+				&& (commentEditor.getState().equals(CommentEditorState.DISCARD)
+						|| StringUtils.isNotEmpty(commentEditor.getCommentEditorText().getText().trim()))) {
 			IComment comment = IReviewsFactory.INSTANCE.createComment();
 			comment.setDescription(commentEditor.getCommentEditorText().getText().trim());
 
@@ -235,15 +234,18 @@ public class InlineCommentSubmitter {
 	 */
 	private void updateConsumer(IFileItem file) {
 		final ReviewBehavior reviewBehavior = annotationInput.getBehavior();
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-				reviewBehavior.getTask().getConnectorKind(), reviewBehavior.getTask().getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(reviewBehavior.getTask().getConnectorKind(),
+						reviewBehavior.getTask().getRepositoryUrl());
 		@SuppressWarnings("restriction")
-		ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(reviewBehavior.getTask()
-				.getConnectorKind());
-		IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector.getReviewClient(
-				taskRepository).getFactoryProvider();
+		ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin
+				.getConnector(reviewBehavior.getTask().getConnectorKind());
+		IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector
+				.getReviewClient(taskRepository)
+				.getFactoryProvider();
 
-		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider.getReviewItemSetContentFactory()
+		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider
+				.getReviewItemSetContentFactory()
 				.getConsumerForLocalKey(file.getSet(), file.getSet().getId());
 		consumer.updateObservers();
 		consumer.release();

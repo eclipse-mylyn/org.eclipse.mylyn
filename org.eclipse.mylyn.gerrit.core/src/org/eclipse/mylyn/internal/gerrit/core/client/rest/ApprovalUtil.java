@@ -38,12 +38,12 @@ public final class ApprovalUtil {
 		vrifCategory.setAbbreviatedName("V"); //$NON-NLS-1$
 		vrifCategory.setPosition((short) 0);
 		List<ApprovalCategoryValue> vrifValues = new ArrayList<ApprovalCategoryValue>(3);
-		vrifValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) -1),
-				"Fails")); //$NON-NLS-1$
-		vrifValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) 0),
-				"No score")); //$NON-NLS-1$
-		vrifValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) 1),
-				"Verified")); //$NON-NLS-1$
+		vrifValues.add(
+				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) -1), "Fails")); //$NON-NLS-1$
+		vrifValues.add(
+				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) 0), "No score")); //$NON-NLS-1$
+		vrifValues.add(
+				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) 1), "Verified")); //$NON-NLS-1$
 		VRIF = new ApprovalType(vrifCategory, vrifValues);
 
 		ApprovalCategory crvwCategory = new ApprovalCategory(new ApprovalCategory.Id("CRVW"), "Code Review"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -54,8 +54,8 @@ public final class ApprovalUtil {
 				"Do not submit")); //$NON-NLS-1$
 		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) -1),
 				"I would prefer that you didn\u0027t submit this")); //$NON-NLS-1$
-		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) 0),
-				"No score")); //$NON-NLS-1$
+		crvwValues.add(
+				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) 0), "No score")); //$NON-NLS-1$
 		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) 1),
 				"Looks good to me, but someone else must approve")); //$NON-NLS-1$
 		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) 2),
@@ -68,8 +68,8 @@ public final class ApprovalUtil {
 		List<ApprovalCategoryValue> ipclValues = new ArrayList<ApprovalCategoryValue>(3);
 		ipclValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(ipclCategory.getId(), (short) -1),
 				"Unclean IP, do not check in")); //$NON-NLS-1$
-		ipclValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(ipclCategory.getId(), (short) 0),
-				"No score")); //$NON-NLS-1$
+		ipclValues.add(
+				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(ipclCategory.getId(), (short) 0), "No score")); //$NON-NLS-1$
 		ipclValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(ipclCategory.getId(), (short) 1),
 				"IP review completed")); //$NON-NLS-1$
 		IPCL = new ApprovalType(ipclCategory, ipclValues);

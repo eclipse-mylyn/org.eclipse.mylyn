@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 
-class TestEClassRemoteFactory extends
-		AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteEClass, String, Integer> {
+class TestEClassRemoteFactory
+		extends AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteEClass, String, Integer> {
 
 	static TestRemoteEClass remote1 = new TestRemoteEClass("Remote Object 1");
 

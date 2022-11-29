@@ -91,8 +91,8 @@ public class FileItem extends ReviewItem implements IFileItem {
 			base = (IFileVersion) eResolveProxy(oldBase);
 			if (base != oldBase) {
 				InternalEObject newBase = (InternalEObject) base;
-				NotificationChain msgs = oldBase.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__BASE, null, null);
+				NotificationChain msgs = oldBase.eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null, null);
 				if (newBase.eInternalContainer() == null) {
 					msgs = newBase.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null,
 							msgs);
@@ -147,12 +147,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (newBase != base) {
 			NotificationChain msgs = null;
 			if (base != null) {
-				msgs = ((InternalEObject) base).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+				msgs = ((InternalEObject) base).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null, msgs);
 			}
 			if (newBase != null) {
-				msgs = ((InternalEObject) newBase).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+				msgs = ((InternalEObject) newBase).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null, msgs);
 			}
 			msgs = basicSetBase(newBase, msgs);
 			if (msgs != null) {
@@ -192,8 +192,8 @@ public class FileItem extends ReviewItem implements IFileItem {
 			target = (IFileVersion) eResolveProxy(oldTarget);
 			if (target != oldTarget) {
 				InternalEObject newTarget = (InternalEObject) target;
-				NotificationChain msgs = oldTarget.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__TARGET, null, null);
+				NotificationChain msgs = oldTarget.eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null, null);
 				if (newTarget.eInternalContainer() == null) {
 					msgs = newTarget.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null,
 							msgs);
@@ -248,12 +248,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
 			if (target != null) {
-				msgs = ((InternalEObject) target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+				msgs = ((InternalEObject) target).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
 			}
 			if (newTarget != null) {
-				msgs = ((InternalEObject) newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+				msgs = ((InternalEObject) newTarget).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
 			}
 			msgs = basicSetTarget(newTarget, msgs);
 			if (msgs != null) {
@@ -319,8 +319,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public void setSet(IReviewItemSet newSet) {
 		if (newSet != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET && newSet != null)) {
-			if (EcoreUtil.isAncestor(this, newSet))
-			 {
+			if (EcoreUtil.isAncestor(this, newSet)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
 			NotificationChain msgs = null;

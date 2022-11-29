@@ -71,7 +71,8 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 				return;
 			}
 
-			TaskAttribute statusAttribute = currentBuildAttribute.getAttribute(TaskBuildStatusMapper.STATUS_ATTRIBUTE_KEY);
+			TaskAttribute statusAttribute = currentBuildAttribute
+					.getAttribute(TaskBuildStatusMapper.STATUS_ATTRIBUTE_KEY);
 			TaskAttribute urlAttribute = currentBuildAttribute.getAttribute(TaskBuildStatusMapper.URL_ATTRIBUTE_KEY);
 			if (statusAttribute == null || urlAttribute == null) {
 				return;

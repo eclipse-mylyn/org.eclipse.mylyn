@@ -19,8 +19,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
-public abstract class ReviewItemSetRemoteFactory<RemoteType, RemoteKeyType> extends
-		AbstractRemoteEmfFactory<IReview, IReviewItemSet, String, RemoteType, RemoteKeyType, String> {
+public abstract class ReviewItemSetRemoteFactory<RemoteType, RemoteKeyType>
+		extends AbstractRemoteEmfFactory<IReview, IReviewItemSet, String, RemoteType, RemoteKeyType, String> {
 
 	public ReviewItemSetRemoteFactory(AbstractRemoteEmfFactoryProvider<IRepository, IReview> factoryProvider) {
 		super(factoryProvider, ReviewsPackage.Literals.REVIEW__SETS, ReviewsPackage.Literals.REVIEW_ITEM__ID);

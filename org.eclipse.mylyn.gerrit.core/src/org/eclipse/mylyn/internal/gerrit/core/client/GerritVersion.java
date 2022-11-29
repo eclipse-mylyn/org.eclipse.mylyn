@@ -30,10 +30,12 @@ public class GerritVersion {
 	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("V?\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
 
 	// e.g. 2.6-rc3
-	private static final Pattern MAJOR_MINOR_QUALIFIER_VERSION_PATTERN = Pattern.compile("V?(\\d+)\\.(\\d+)-([-\\w]+).*"); //$NON-NLS-1$
+	private static final Pattern MAJOR_MINOR_QUALIFIER_VERSION_PATTERN = Pattern
+			.compile("V?(\\d+)\\.(\\d+)-([-\\w]+).*"); //$NON-NLS-1$
 
 	// e.g. 2.6.1-rc1, 2.8.6.1
-	private static final Pattern MAJOR_MINOR_MICRO_QUALIFIER_VERSION_PATTERN = Pattern.compile("V?(\\d+)\\.(\\d+)\\.(\\d+)[-\\.]([-\\w]+).*"); //$NON-NLS-1$
+	private static final Pattern MAJOR_MINOR_MICRO_QUALIFIER_VERSION_PATTERN = Pattern
+			.compile("V?(\\d+)\\.(\\d+)\\.(\\d+)[-\\.]([-\\w]+).*"); //$NON-NLS-1$
 
 	private GerritVersion() {
 	}

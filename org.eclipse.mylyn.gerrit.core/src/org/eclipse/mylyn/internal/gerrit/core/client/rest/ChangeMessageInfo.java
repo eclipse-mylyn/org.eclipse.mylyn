@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.sql.Timestamp;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info"
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info"
  * >ChangeMessageInfo</a>.
  */
 public class ChangeMessageInfo {

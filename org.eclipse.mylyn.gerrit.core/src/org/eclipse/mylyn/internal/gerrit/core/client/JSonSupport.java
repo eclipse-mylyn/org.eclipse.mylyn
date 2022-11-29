@@ -106,8 +106,8 @@ public class JSonSupport {
 
 			public boolean shouldSkipField(FieldAttributes f) {
 				// commentLinks requires instantiation of com.google.gwtexpui.safehtml.client.RegexFindReplace which is not on classpath
-				if (f.getDeclaredClass() == List.class
-						&& f.getName().equals("commentLinks") && f.getDeclaringClass() == GerritConfig.class) { //$NON-NLS-1$
+				if (f.getDeclaredClass() == List.class && f.getName().equals("commentLinks") //$NON-NLS-1$
+						&& f.getDeclaringClass() == GerritConfig.class) {
 					return true;
 				}
 				if (f.getDeclaredClass() == Map.class && f.getName().equals("given")) { //$NON-NLS-1$
@@ -132,8 +132,8 @@ public class JSonSupport {
 						if (json.isJsonArray()) {
 							JsonArray array = json.getAsJsonArray();
 							if (array.size() == 4) {
-								return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(), array.get(2)
-										.getAsInt(), array.get(3).getAsInt());
+								return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(),
+										array.get(2).getAsInt(), array.get(3).getAsInt());
 							}
 						}
 						return new Edit(0, 0);

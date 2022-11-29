@@ -109,7 +109,8 @@ public class ReviewExplorer extends CommonNavigator {
 		}
 	};
 
-	private class RemoteItemSetContentObserver extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> {
+	private class RemoteItemSetContentObserver
+			extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> {
 		@Override
 		public void updated(boolean modified) {
 			if (showList) {
@@ -468,8 +469,8 @@ public class ReviewExplorer extends CommonNavigator {
 			reviewConsumer.removeObserver(reviewObserver);
 		}
 		if (review != null) {
-			ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(review.getRepository()
-					.getTaskConnectorKind());
+			ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin
+					.getConnector(review.getRepository().getTaskConnectorKind());
 			ReviewsClient reviewsClient = connector.getReviewClient(review.getRepository().getTaskRepository());
 			factoryProvider = (IReviewRemoteFactoryProvider) reviewsClient.getFactoryProvider();
 			reviewConsumer = factoryProvider.getReviewFactory().getConsumerForModel(factoryProvider.getRoot(), review);
@@ -496,7 +497,8 @@ public class ReviewExplorer extends CommonNavigator {
 			RemoteItemSetContentObserver client = patchSetObservers.get(set);
 			if (client == null) {
 				RemoteItemSetContentObserver patchSetObserver = new RemoteItemSetContentObserver();
-				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider.getReviewItemSetContentFactory()
+				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider
+						.getReviewItemSetContentFactory()
 						.getConsumerForLocalKey(set, set.getId());
 				patchSetObserver.setConsumer(consumer);
 				patchSetObservers.put(set, patchSetObserver);

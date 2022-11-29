@@ -265,10 +265,10 @@ public class ReviewCompareAnnotationSupport {
 		if (direction == Direction.FORWARDS) {
 			if (nextLeftPosition.offset == nextRightPosition.offset) {
 				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-				rightSourceViewer.getSourceViewer().revealRange(nextLeftPosition.offset - 1,
-						nextLeftPosition.length - 1);
-				rightSourceViewer.getSourceViewer().setSelectedRange(nextLeftPosition.offset - 1,
-						nextLeftPosition.length - 1);
+				rightSourceViewer.getSourceViewer()
+						.revealRange(nextLeftPosition.offset - 1, nextLeftPosition.length - 1);
+				rightSourceViewer.getSourceViewer()
+						.setSelectedRange(nextLeftPosition.offset - 1, nextLeftPosition.length - 1);
 				return LEFT_SIDE;
 			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)
 					|| (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
@@ -374,8 +374,10 @@ public class ReviewCompareAnnotationSupport {
 
 		commentPopupDialog.setHeightBasedOnMouse(sourceViewer.getSourceViewer().getControl().toDisplay(0, 0).y);
 
-		Point location = sourceViewer.getSourceViewer().getControl().toDisplay(
-				sourceViewer.getSourceViewer().getControl().getSize().x, sourceViewer.getViewportHeight() / 3);
+		Point location = sourceViewer.getSourceViewer()
+				.getControl()
+				.toDisplay(sourceViewer.getSourceViewer().getControl().getSize().x,
+						sourceViewer.getViewportHeight() / 3);
 		commentPopupDialog.setLocation(location);
 		commentPopupDialog.open();
 		commentPopupDialog.setFocus();

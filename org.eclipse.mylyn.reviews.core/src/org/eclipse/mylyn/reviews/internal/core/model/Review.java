@@ -60,7 +60,8 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRepository <em>Repository</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getParents <em>Parents</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getChildren <em>Children</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewerApprovals <em>Reviewer Approvals</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewerApprovals <em>Reviewer
+ * Approvals</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRequirements <em>Requirements</em>}</li>
  * </ul>
  * </p>
@@ -302,8 +303,8 @@ public class Review extends CommentContainer implements IReview {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
 		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__CREATION_DATE,
-					oldCreationDate, creationDate));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__CREATION_DATE, oldCreationDate,
+					creationDate));
 		}
 	}
 
@@ -385,8 +386,7 @@ public class Review extends CommentContainer implements IReview {
 	public void setRepository(IRepository newRepository) {
 		if (newRepository != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY && newRepository != null)) {
-			if (EcoreUtil.isAncestor(this, newRepository))
-			 {
+			if (EcoreUtil.isAncestor(this, newRepository)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
 			NotificationChain msgs = null;
@@ -675,11 +675,11 @@ public class Review extends CommentContainer implements IReview {
 		case ReviewsPackage.REVIEW__CHILDREN:
 			return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap()).basicRemove(
-					otherEnd, msgs);
+			return ((InternalEList<?>) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap())
+					.basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements()).eMap()).basicRemove(
-					otherEnd, msgs);
+			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
+					.eMap()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -802,10 +802,12 @@ public class Review extends CommentContainer implements IReview {
 			getChildren().addAll((Collection<? extends IChange>) newValue);
 			return;
 		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap()).set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap())
+					.set(newValue);
 			return;
 		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements()).eMap()).set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
+					.eMap()).set(newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
