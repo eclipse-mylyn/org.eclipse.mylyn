@@ -20,4 +20,4 @@ jobs:
     with:
       projectId: technology.tycho
     secrets:
-      gitlabAPIToken: ${{ secrets.MYLYN_GITLAB_API_TOKEN }}
+      gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
