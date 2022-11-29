@@ -406,8 +406,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 					}
 
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
-								"Unexpected error during listener invocation: {0}", listener.getClass()), e)); //$NON-NLS-1$
+						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
+								NLS.bind("Unexpected error during listener invocation: {0}", listener.getClass()), e)); //$NON-NLS-1$
 					}
 				});
 			}

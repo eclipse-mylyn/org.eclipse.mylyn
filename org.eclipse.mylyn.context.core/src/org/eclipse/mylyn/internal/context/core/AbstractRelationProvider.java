@@ -110,8 +110,8 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 	 * Public for testing
 	 */
 	public void createEdge(IInteractionElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement) ContextCore.getContextManager().getElement(
-				targetHandle);
+		CompositeContextElement targetNode = (CompositeContextElement) ContextCore.getContextManager()
+				.getElement(targetHandle);
 		if (targetNode == null) {
 			return;
 		}

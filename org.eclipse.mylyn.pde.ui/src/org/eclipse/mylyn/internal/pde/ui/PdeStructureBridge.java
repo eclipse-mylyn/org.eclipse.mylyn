@@ -329,8 +329,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
 					PluginObjectNode node = PdeEditingMonitor.getNode(d, file, offset, false);
-					String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor.getStringOfNode(
-							node).hashCode()).getHandle();
+					String handle = new XmlNodeHelper(file.getFullPath().toString(),
+							PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 					return handle;
 				}
 			} catch (Exception e) {

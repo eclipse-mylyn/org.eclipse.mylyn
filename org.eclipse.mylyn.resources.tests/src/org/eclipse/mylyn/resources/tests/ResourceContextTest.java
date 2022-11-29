@@ -78,8 +78,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ContextCore.getContextManager().setContextCapturePaused(false);
 
@@ -98,8 +98,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
@@ -114,8 +114,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
@@ -131,8 +131,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile(".boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 
 		file = project.getProject().getFile("boring");
@@ -150,8 +150,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -160,8 +160,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		folder.create(true, true, null);
 		assertTrue(folder.exists());
 
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(folder));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(folder));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -231,8 +231,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(structureBridge.canFilter(workingSet));
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		IInteractionElement element = ContextCore.getContextManager().getElement(
-				structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCore.getContextManager()
+				.getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 		assertFalse(structureBridge.canFilter(workingSet));
 	}

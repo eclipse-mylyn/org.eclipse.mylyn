@@ -37,7 +37,8 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 			if (element.getClass().getSimpleName().equals("MarkerCategory")) { //$NON-NLS-1$
 				try {
 					if (markerCategoryMethod == null) {
-						Class<?> markerCategoryClass = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory"); //$NON-NLS-1$ 
+						Class<?> markerCategoryClass = Class
+								.forName("org.eclipse.ui.internal.views.markers.MarkerCategory"); //$NON-NLS-1$ 
 						markerCategoryMethod = markerCategoryClass.getDeclaredMethod("getChildren", new Class[] {}); //$NON-NLS-1$ 
 						markerCategoryMethod.setAccessible(true);
 					}

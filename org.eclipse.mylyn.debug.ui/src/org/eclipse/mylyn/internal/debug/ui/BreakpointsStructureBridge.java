@@ -64,8 +64,8 @@ public class BreakpointsStructureBridge extends AbstractContextStructureBridge {
 				object.getMarker().setAttribute(ATTRIBUTE_ID, "breakpoint[" + (Math.random() * 10000) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
 				IResource resource = object.getMarker().getResource();
-				StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, NLS.bind(
-						"Breakpoint could not be updated for resource {0} ", resource.getFullPath()))); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
+						NLS.bind("Breakpoint could not be updated for resource {0} ", resource.getFullPath()))); //$NON-NLS-1$
 			}
 		}
 	}

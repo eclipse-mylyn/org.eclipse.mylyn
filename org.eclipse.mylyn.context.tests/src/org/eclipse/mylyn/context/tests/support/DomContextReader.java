@@ -93,11 +93,16 @@ public class DomContextReader implements IInteractionContextReader {
 			String kind = e.getAttribute("Kind");
 			String startDate = e.getAttribute("StartDate");
 			String endDate = e.getAttribute("EndDate");
-			String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("OriginId"));
-			String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("StructureKind"));
-			String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("StructureHandle"));
-			String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Navigation"));
-			String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Delta"));
+			String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
+					.convertXmlToString(e.getAttribute("OriginId"));
+			String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
+					.convertXmlToString(e.getAttribute("StructureKind"));
+			String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
+					.convertXmlToString(e.getAttribute("StructureHandle"));
+			String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
+					.convertXmlToString(e.getAttribute("Navigation"));
+			String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
+					.convertXmlToString(e.getAttribute("Delta"));
 			String interest = e.getAttribute("Interest");
 			String numEventsString = e.getAttribute("NumEvents");
 			int numEvents = 1;

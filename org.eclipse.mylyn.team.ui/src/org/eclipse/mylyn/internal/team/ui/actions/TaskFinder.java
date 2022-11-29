@@ -230,8 +230,8 @@ public class TaskFinder {
 			info = (AbstractTaskReference) ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
 		}
 		if (info == null) {
-			info = (AbstractTaskReference) Platform.getAdapterManager().getAdapter(element,
-					AbstractTaskReference.class);
+			info = (AbstractTaskReference) Platform.getAdapterManager()
+					.getAdapter(element, AbstractTaskReference.class);
 		}
 
 		if (info != null) {

@@ -42,8 +42,8 @@ public abstract class AbstractMarkerInterestFilter extends InterestFilter {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN, NLS.bind(
-					"Unable to get handle for marker: {0}", marker.getResource()), t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
+					NLS.bind("Unable to get handle for marker: {0}", marker.getResource()), t)); //$NON-NLS-1$
 		}
 		return false;
 	}

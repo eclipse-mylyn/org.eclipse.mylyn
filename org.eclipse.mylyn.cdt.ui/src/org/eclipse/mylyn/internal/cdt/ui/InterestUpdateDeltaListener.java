@@ -67,15 +67,15 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			}
 
 			if (added != null && removed != null) {
-				IInteractionElement element = ContextCore.getContextManager().getElement(
-						CDTStructureBridge.getHandleForElement(removed));
+				IInteractionElement element = ContextCore.getContextManager()
+						.getElement(CDTStructureBridge.getHandleForElement(removed));
 				if (element != null) {
 					resetHandle(element, CDTStructureBridge.getHandleForElement(added));
 				}
 			} else if (removed != null) {
 
-				IInteractionElement element = ContextCore.getContextManager().getElement(
-						CDTStructureBridge.getHandleForElement(removed));
+				IInteractionElement element = ContextCore.getContextManager()
+						.getElement(CDTStructureBridge.getHandleForElement(removed));
 				if (element != null) {
 					delete(element);
 				}

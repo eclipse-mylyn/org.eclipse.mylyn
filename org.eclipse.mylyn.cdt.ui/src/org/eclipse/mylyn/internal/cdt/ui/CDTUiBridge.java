@@ -70,11 +70,11 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 			}
 			EditorUtility.openInEditor(cElement);
 		} catch (CModelException t) {
-			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
-					"Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
 		} catch (PartInitException t) {
-			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
-					"Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
 		}
 	}
 
@@ -131,8 +131,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				try {
 					viewers.add((TreeViewer) cOutlineField.get(page));
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-							"Could not get Outline viewer.", e)); //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "Could not get Outline viewer.", e)); //$NON-NLS-1$
 				}
 			}
 		}

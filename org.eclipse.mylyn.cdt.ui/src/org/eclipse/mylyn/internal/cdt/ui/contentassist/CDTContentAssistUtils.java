@@ -73,8 +73,8 @@ public class CDTContentAssistUtils {
 	public static void updateDefaultPreference(IPreferenceStore cdtPrefs) {
 		// the Task-Focused category should be disabled if the user reverts to the default 
 		String defaultValue = cdtPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		cdtPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, defaultValue + ASSIST_MYLYN_TYPE
-				+ SEPARATOR_CODEASSIST);
+		cdtPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
+				defaultValue + ASSIST_MYLYN_TYPE + SEPARATOR_CODEASSIST);
 	}
 
 }

@@ -110,9 +110,8 @@ public class InterestFilter extends ViewerFilter {
 					}
 
 					// if we can't find the element, check the parent bridge
-					if (element == null
-							|| (element instanceof CompositeContextElement && ((CompositeContextElement) element).getNodes()
-									.isEmpty())) {
+					if (element == null || (element instanceof CompositeContextElement
+							&& ((CompositeContextElement) element).getNodes().isEmpty())) {
 						String parentContentType = bridge.getParentContentType();
 						AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 						if (parentBridge != null) {

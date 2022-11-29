@@ -131,9 +131,9 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 				} catch (Exception e) {
 					if (!reflectionErrorLogged) {
 						reflectionErrorLogged = true;
-						StatusManager.getManager().handle(
-								new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", e), //$NON-NLS-1$
-								StatusManager.LOG);
+						StatusManager.getManager()
+								.handle(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", //$NON-NLS-1$
+										e), StatusManager.LOG);
 					}
 				}
 				return Status.OK_STATUS;
@@ -193,9 +193,9 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 							IRegion line = document.getLineInformation(lineNumber);
 							textEditor.selectAndReveal(line.getOffset(), line.getLength());
 						} catch (BadLocationException e) {
-							MessageDialog.openInformation(PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow()
-									.getShell(), Messages.JavaStackTraceFileHyperlink_Open_Type,
+							MessageDialog.openInformation(
+									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									Messages.JavaStackTraceFileHyperlink_Open_Type,
 									Messages.JavaStackTraceFileHyperlink_Line_not_found_in_type);
 						}
 						provider.disconnect(editorInput);

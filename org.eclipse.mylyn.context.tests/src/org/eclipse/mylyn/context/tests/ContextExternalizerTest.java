@@ -150,9 +150,8 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(edge);
 		assertEquals(1, node.getRelations().size());
 		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay() * 3));
-		assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3")
-				.getInterest()
-				.isLandmark());
+		assertTrue("interest: " + context.get("3").getInterest().getValue(),
+				context.get("3").getInterest().isLandmark());
 		float doi = node.getInterest().getValue();
 		assertNotNull(context.getLandmarks());
 
@@ -257,8 +256,8 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		// TODO: fix up directory refs
 		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
-		File zippedContextFile = new File(contextsDirectory, contextToWrite.getHandleIdentifier()
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+		File zippedContextFile = new File(contextsDirectory,
+				contextToWrite.getHandleIdentifier() + InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
 		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);

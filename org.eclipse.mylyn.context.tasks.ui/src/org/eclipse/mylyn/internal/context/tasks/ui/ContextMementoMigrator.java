@@ -119,10 +119,11 @@ public class ContextMementoMigrator {
 								newMemnto.putMemento(oldMemento);
 
 								// migrate perspective
-								String perspectiveId = perspectivePreferenceStore.getString(PREFIX_TASK_TO_PERSPECTIVE
-										+ contextHandle);
+								String perspectiveId = perspectivePreferenceStore
+										.getString(PREFIX_TASK_TO_PERSPECTIVE + contextHandle);
 								if (perspectiveId != null && perspectiveId.length() > 0) {
-									IMemento perspectiveMemento = state.createMemento(PerspectiveStateParticipant.MEMENTO_PERSPECTIVE);
+									IMemento perspectiveMemento = state
+											.createMemento(PerspectiveStateParticipant.MEMENTO_PERSPECTIVE);
 									perspectiveMemento.putString(PerspectiveStateParticipant.KEY_ACTIVE_ID,
 											perspectiveId);
 								}
@@ -132,8 +133,8 @@ public class ContextMementoMigrator {
 									write(state, task);
 								}
 							} catch (Exception e) {
-								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, NLS.bind(
-										"Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
+								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
+										NLS.bind("Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
 							}
 						}
 
@@ -148,7 +149,8 @@ public class ContextMementoMigrator {
 				}
 				progress.done();
 			} catch (BackingStoreException e) {
-				status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Reading of editor mementos failed", e)); //$NON-NLS-1$
+				status.add(
+						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Reading of editor mementos failed", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -170,7 +172,8 @@ public class ContextMementoMigrator {
 								ContextState state = stateManager.createMemento(context, contextHandle);
 
 								// migrate perspective
-								IMemento perspectiveMemento = state.createMemento(PerspectiveStateParticipant.MEMENTO_PERSPECTIVE);
+								IMemento perspectiveMemento = state
+										.createMemento(PerspectiveStateParticipant.MEMENTO_PERSPECTIVE);
 								perspectiveMemento.putString(PerspectiveStateParticipant.KEY_ACTIVE_ID, perspectiveId);
 
 								ITask task = TasksUi.getRepositoryModel().getTask(contextHandle);
@@ -178,8 +181,8 @@ public class ContextMementoMigrator {
 									write(state, task);
 								}
 							} catch (Exception e) {
-								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, NLS.bind(
-										"Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
+								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
+										NLS.bind("Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
 							}
 						}
 

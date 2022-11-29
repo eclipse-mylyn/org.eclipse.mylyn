@@ -214,7 +214,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
 		}
 	}
 

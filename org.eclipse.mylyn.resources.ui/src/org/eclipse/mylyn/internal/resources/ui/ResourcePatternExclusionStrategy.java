@@ -70,8 +70,8 @@ public class ResourcePatternExclusionStrategy implements IResourceExclusionStrat
 		String pathString = path.toPortableString();
 		for (String pattern : excludedPatterns) {
 
-			if (resource != null
-					&& pattern.startsWith("file:/") && isUriExcluded(resource.getLocationURI().toString(), pattern)) { //$NON-NLS-1$
+			if (resource != null && pattern.startsWith("file:/") //$NON-NLS-1$
+					&& isUriExcluded(resource.getLocationURI().toString(), pattern)) {
 				return true;
 			} else if (SelectorUtils.matchPath(pattern, pathString, false)
 					|| SelectorUtils.match(pattern, pathString, false)) {

@@ -63,9 +63,9 @@ public class BreakpointListener implements IAnnotationModelListener, IAnnotation
 					if (handleIdentifier != null) {
 						PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 							public void run() {
-								ContextCore.getContextManager().processInteractionEvent(
-										new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge.getContentType(),
-												handleIdentifier, editor.getSite().getId()));
+								ContextCore.getContextManager()
+										.processInteractionEvent(new InteractionEvent(InteractionEvent.Kind.SELECTION,
+												bridge.getContentType(), handleIdentifier, editor.getSite().getId()));
 							}
 						});
 					}

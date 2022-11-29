@@ -48,8 +48,8 @@ public class ResourcesUiExtensionPointReader {
 	}
 
 	private static void readExtensions() {
-		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
-				ResourcesUiBridgePlugin.ID_PLUGIN + '.' + EXTENSION_CHANGE_MONITORING);
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry()
+				.getExtensionPoint(ResourcesUiBridgePlugin.ID_PLUGIN + '.' + EXTENSION_CHANGE_MONITORING);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
