@@ -40,8 +40,8 @@ public class CompoundContextComputationStrategy extends ContextComputationStrate
 
 		SubMonitor progress = SubMonitor.convert(monitor);
 		int workPerDelegate = 1000;
-		progress.beginTask(Messages.CompoundContextComputationStrategy_Computing_Context_Task_Label,
-				delegates.size() * workPerDelegate);
+		progress.beginTask(Messages.CompoundContextComputationStrategy_Computing_Context_Task_Label, delegates.size()
+				* workPerDelegate);
 		try {
 			for (ContextComputationStrategy delegate : delegates) {
 				if (progress.isCanceled()) {

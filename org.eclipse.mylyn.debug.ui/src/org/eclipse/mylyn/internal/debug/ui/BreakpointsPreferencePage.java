@@ -58,8 +58,8 @@ public class BreakpointsPreferencePage extends PreferencePage implements IWorkbe
 
 		manageBreakpointsButton = new Button(composite, SWT.CHECK);
 		manageBreakpointsButton.setText(Messages.BreakpointsPreferencePage_Manage_breakpoints);
-		manageBreakpointsButton
-				.setSelection(getPreferenceStore().getBoolean(BreakpointsContextContributor.AUTO_MANAGE_BREAKPOINTS));
+		manageBreakpointsButton.setSelection(getPreferenceStore().getBoolean(
+				BreakpointsContextContributor.AUTO_MANAGE_BREAKPOINTS));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(manageBreakpointsButton);
 
 		Group warningGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);

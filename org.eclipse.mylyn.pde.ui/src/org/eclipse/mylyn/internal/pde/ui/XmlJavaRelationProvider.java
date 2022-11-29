@@ -133,8 +133,8 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 						IPath path = new Path(filename);
 						element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
 					} catch (Exception e) {
-						StatusHandler.log(
-								new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Scope creation failed", e)); //$NON-NLS-1$
+						StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
+								"Scope creation failed", e)); //$NON-NLS-1$
 					}
 					l.add(element);
 				}

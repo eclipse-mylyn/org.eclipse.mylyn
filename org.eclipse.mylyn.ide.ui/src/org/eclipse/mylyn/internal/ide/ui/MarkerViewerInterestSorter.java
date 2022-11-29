@@ -40,12 +40,12 @@ public class MarkerViewerInterestSorter extends ViewerSorter {
 				return 1;
 			} else {
 				if (ContextCore.getContextManager().isContextActive()) {
-					AbstractContextStructureBridge bridge = ContextCore
-							.getStructureBridge(marker1.getResource().getFileExtension());
-					IInteractionElement node1 = ContextCore.getContextManager()
-							.getElement(bridge.getHandleForOffsetInObject(marker1, 0));
-					IInteractionElement node2 = ContextCore.getContextManager()
-							.getElement(bridge.getHandleForOffsetInObject(marker2, 0));
+					AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(marker1.getResource()
+							.getFileExtension());
+					IInteractionElement node1 = ContextCore.getContextManager().getElement(
+							bridge.getHandleForOffsetInObject(marker1, 0));
+					IInteractionElement node2 = ContextCore.getContextManager().getElement(
+							bridge.getHandleForOffsetInObject(marker2, 0));
 					return interestComparator.compare(node1, node2);
 				}
 			}

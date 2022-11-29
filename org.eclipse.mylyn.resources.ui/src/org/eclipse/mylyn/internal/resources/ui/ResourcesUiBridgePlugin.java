@@ -101,8 +101,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 		MonitorUi.getSelectionMonitors().add(resourceInteractionMonitor);
 
-		ResourcesPlugin.getWorkspace()
-				.addResourceChangeListener(resourceChangeMonitor, IResourceChangeEvent.POST_CHANGE);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
+				IResourceChangeEvent.POST_CHANGE);
 
 		interestEditorTracker.install(PlatformUI.getWorkbench());
 
@@ -192,8 +192,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	private void updateResourceMonitorEnablement() {
-		resourceChangeMonitor.setEnabled(
-				getPreferenceStore().getBoolean(ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED));
+		resourceChangeMonitor.setEnabled(getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED));
 	}
 
 	public boolean isStarted() {

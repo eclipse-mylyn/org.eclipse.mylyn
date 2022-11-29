@@ -124,8 +124,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 										IInteractionElement node = (IInteractionElement) item;
 										AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
 												.getStructureBridge(node.getContentType());
-										objectToRefresh = structureBridge
-												.getObjectForHandle(node.getHandleIdentifier());
+										objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 									}
 									if (objectToRefresh != null) {
 										viewer.update(objectToRefresh, null);
@@ -195,8 +194,8 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				Set<IInteractionElement> emptySet = Collections.emptySet();
 				refreshViewer(emptySet, true, viewer, true);
 			} catch (Exception e) {
-				StatusHandler.log(
-						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not initialize focused viewer", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not initialize focused viewer", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -310,10 +309,9 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				 */
 				ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 				for (IInteractionElement interactionElement : event.getElements()) {
-					AbstractContextStructureBridge structureBridge = ContextCore
-							.getStructureBridge(interactionElement.getContentType());
-					IInteractionElement parent = ContextCore.getContextManager()
-							.getElement(structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
+					AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
+					IInteractionElement parent = ContextCore.getContextManager().getElement(
+							structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
 					if (parent != null) {
 						toRefresh.add(parent);
 					}
@@ -399,7 +397,9 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
-		if (viewer instanceof TreeViewer && filteredViewers.contains(viewer) && hasInterestFilter(viewer, true)
+		if (viewer instanceof TreeViewer
+				&& filteredViewers.contains(viewer)
+				&& hasInterestFilter(viewer, true)
 				&& ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {

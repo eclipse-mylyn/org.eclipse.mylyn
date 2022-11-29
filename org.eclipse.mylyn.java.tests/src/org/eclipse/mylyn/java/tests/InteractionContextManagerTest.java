@@ -251,8 +251,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(node.getInterest().isInteresting());
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
-		IInteractionElement parent = ContextCore.getContextManager()
-				.getElement(bridge.getParentHandle(node.getHandleIdentifier()));
+		IInteractionElement parent = ContextCore.getContextManager().getElement(
+				bridge.getParentHandle(node.getHandleIdentifier()));
 		assertTrue(parent.getInterest().isInteresting());
 		assertTrue(parent.getInterest().isPropagated());
 
@@ -349,8 +349,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			level++;
 			IInteractionElement parentNode = ContextCore.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
-				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(),
-						parentNode.getInterest().getValue());
+				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(), parentNode.getInterest()
+						.getValue());
 			}
 			parent = parent.getParent();
 		} while (parent != null);
@@ -376,11 +376,11 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			IInteractionElement parentNode = ContextCore.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
 				assertTrue(parentNode.getInterest().isInteresting());
-				ContextCore.getContextManager()
-						.processInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(),
-								-2 * parentNode.getInterest().getValue()));
-				IInteractionElement updatedParent = ContextCore.getContextManager()
-						.getElement(parent.getHandleIdentifier());
+				ContextCore.getContextManager().processInteractionEvent(
+						mockInterestContribution(parentNode.getHandleIdentifier(), -2
+								* parentNode.getInterest().getValue()));
+				IInteractionElement updatedParent = ContextCore.getContextManager().getElement(
+						parent.getHandleIdentifier());
 				assertFalse(updatedParent.getInterest().isInteresting());
 			}
 			parent = parent.getParent();
@@ -421,15 +421,20 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			monitor.selectionChanged(part, sm1);
 			manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling.getLandmark()));
 			// packages can't be landmarks
-			manager.processInteractionEvent(mockInterestContribution(
-					m1.getCompilationUnit().getParent().getHandleIdentifier(), scaling.getLandmark()));
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
 			// source folders can't be landmarks
-			manager.processInteractionEvent(mockInterestContribution(
-					m1.getCompilationUnit().getParent().getParent().getHandleIdentifier(), scaling.getLandmark()));
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
 			// projects can't be landmarks
-			manager.processInteractionEvent(mockInterestContribution(
-					m1.getCompilationUnit().getParent().getParent().getParent().getHandleIdentifier(),
-					scaling.getLandmark()));
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getParent()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
 
 			assertEquals(1, ContextCore.getContextManager().getActiveLandmarks().size());
 			assertEquals(1, listener.numAdditions);
@@ -448,8 +453,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCorePlugin.getContextManager()
-				.processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
+		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION,
+				MOCK_ORIGIN, context);
 		assertEquals(9, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
@@ -462,9 +467,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCorePlugin.getContextManager()
-				.processInteractionEvent(new String("non existent"), InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
-						context);
+		ContextCorePlugin.getContextManager().processInteractionEvent(new String("non existent"),
+				InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
@@ -585,15 +589,15 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 			assertEquals(0, listener.explicitDeletionEventCount);
 			assertEquals(0, listener.elementCount);
-			IInteractionElement originalElement = ContextCorePlugin.getContextManager()
-					.getElement(element.getHandleIdentifier());
+			IInteractionElement originalElement = ContextCorePlugin.getContextManager().getElement(
+					element.getHandleIdentifier());
 			assertEquals(element, originalElement);
 			assertTrue(originalElement instanceof CompositeContextElement);
 			assertEquals(1, ((CompositeContextElement) originalElement).getNodes().size());
 
 			ContextCorePlugin.getContextManager().deleteElements(Arrays.asList(new IInteractionElement[] { element }));
-			IInteractionElement deletedElement = ContextCorePlugin.getContextManager()
-					.getElement(element.getHandleIdentifier());
+			IInteractionElement deletedElement = ContextCorePlugin.getContextManager().getElement(
+					element.getHandleIdentifier());
 			assertTrue(deletedElement instanceof CompositeContextElement);
 			assertEquals(0, ((CompositeContextElement) deletedElement).getNodes().size());
 		} finally {

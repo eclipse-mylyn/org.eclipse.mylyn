@@ -41,25 +41,21 @@ public class StrategiesExtensionPointReader {
 	public static List<ContextComputationStrategy> readContextComputationStrategies() {
 		List<ContextComputationStrategy> strategies = new ArrayList<ContextComputationStrategy>();
 
-		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
-				.getExtensionPoint(STRATEGIES_EXTENSION_POINT_ID);
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+				STRATEGIES_EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] configurationElements = extension.getConfigurationElements();
 			for (IConfigurationElement element : configurationElements) {
 				if (element.getName().equals(CONTEXT_COMPUTATION_STRATEGY)) {
 					try {
-						ContextComputationStrategy strategy = (ContextComputationStrategy) element
-								.createExecutableExtension(ATTRIBUTE_CLASS);
+						ContextComputationStrategy strategy = (ContextComputationStrategy) element.createExecutableExtension(ATTRIBUTE_CLASS);
 						strategies.add(strategy);
 					} catch (Throwable t) {
-						StatusHandler
-								.log(new Status(
-										IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, NLS
-												.bind("Cannot instantiate {0} from bundle {1}: {2}", //$NON-NLS-1$
-														new Object[] { element.getAttribute(ATTRIBUTE_CLASS),
-																extension.getContributor().getName(), t.getMessage() }),
-										t));
+						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, NLS.bind(
+								"Cannot instantiate {0} from bundle {1}: {2}", //$NON-NLS-1$
+								new Object[] { element.getAttribute(ATTRIBUTE_CLASS),
+										extension.getContributor().getName(), t.getMessage() }), t));
 					}
 				}
 			}

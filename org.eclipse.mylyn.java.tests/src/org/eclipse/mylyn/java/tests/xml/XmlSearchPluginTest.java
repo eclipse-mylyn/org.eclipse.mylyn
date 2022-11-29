@@ -208,8 +208,8 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		// add a java element from a different project, should get non null
 		// result, but 0 size
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
-				dos, 0, false);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
+				searchNode, dos, 0, false);
 
 		// add the plugin.xml from the same project to the taskscape, should
 		// have results

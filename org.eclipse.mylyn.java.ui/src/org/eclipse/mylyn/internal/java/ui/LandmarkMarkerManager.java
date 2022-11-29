@@ -112,8 +112,8 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 			}
 			updateJob.updateMarkers(runnables);
 		} catch (Throwable t) {
-			StatusHandler.log(
-					new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update landmark markers", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
+					"Could not update landmark markers", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -146,8 +146,8 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 						return runnable;
 					}
 				} catch (JavaModelException e) {
-					StatusHandler
-							.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update marker", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
+							"Could not update marker", e)); //$NON-NLS-1$
 				}
 			}
 		}

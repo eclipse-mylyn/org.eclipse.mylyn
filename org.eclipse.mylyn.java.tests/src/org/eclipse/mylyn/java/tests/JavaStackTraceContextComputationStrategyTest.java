@@ -50,8 +50,8 @@ public class JavaStackTraceContextComputationStrategyTest extends TestCase {
 				"org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider", "getAttachmentId")));
 		assertTrue(contextObjects.contains(new Element(
 				"org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider", "getColumnText")));
-		assertTrue(contextObjects
-				.contains(new Element("org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable", "run")));
+		assertTrue(contextObjects.contains(new Element(
+				"org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable", "run")));
 	}
 
 	/**

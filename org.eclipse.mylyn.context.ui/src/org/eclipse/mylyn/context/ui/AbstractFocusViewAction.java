@@ -65,8 +65,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @since 2.0
  */
-public abstract class AbstractFocusViewAction extends Action
-		implements IViewActionDelegate, IActionDelegate2, ISelectionListener {
+public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
+		ISelectionListener {
 
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter."; //$NON-NLS-1$
 
@@ -448,8 +448,8 @@ public abstract class AbstractFocusViewAction extends Action
 		}
 		if (cachedPreservedFilters == null && cacheFilters) {
 			try {
-				cachedPreservedFilters = ContextUiPlugin.getDefault()
-						.getPreservedFilterClasses(viewPart.getSite().getId());
+				cachedPreservedFilters = ContextUiPlugin.getDefault().getPreservedFilterClasses(
+						viewPart.getSite().getId());
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 						"Could not determine preserved filters", e)); //$NON-NLS-1$

@@ -154,14 +154,14 @@ public class ContextEditorFormPage extends FormPage {
 				break;
 			case DEACTIVATED:
 				if (context.isForSameTaskAs(event.getContext())) {
-					context.setWrappedContext(
-							ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
+					context.setWrappedContext(ContextCorePlugin.getContextStore().loadContext(
+							task.getHandleIdentifier()));
 				}
 				break;
 			case CLEARED:
 				if (context.isForSameTaskAs(event.getContextHandle())) {// context may be null so check handle
-					context.setWrappedContext(
-							ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
+					context.setWrappedContext(ContextCorePlugin.getContextStore().loadContext(
+							task.getHandleIdentifier()));
 					refresh();//in this case the context has actually changed so refresh
 				}
 				break;
@@ -232,8 +232,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createActionsSection(Composite composite) {
-		Section section = toolkit.createSection(composite,
-				ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Actions);
 
 		section.setLayout(new GridLayout());
@@ -407,8 +406,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createContentSection(Composite composite) {
-		Section section = toolkit.createSection(composite,
-				ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Elements);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 

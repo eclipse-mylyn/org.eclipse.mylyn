@@ -190,8 +190,8 @@ public class InvisibleContextElementsPart {
 						final Collection<Object> allVisible = getAllVisibleElementsInContextPage();
 						PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 
-							public void run(IProgressMonitor monitor)
-									throws InvocationTargetException, InterruptedException {
+							public void run(IProgressMonitor monitor) throws InvocationTargetException,
+									InterruptedException {
 								monitor.beginTask(Messages.InvisibleContextElementsPart_Collecting_all_invisible,
 										IProgressMonitor.UNKNOWN);
 								if (allVisible != null) {
@@ -248,8 +248,7 @@ public class InvisibleContextElementsPart {
 	}
 
 	public Control createControl(FormToolkit toolkit, Composite composite) {
-		invisibleSection = toolkit.createSection(composite,
-				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		invisibleSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		invisibleSection.setText(NLS.bind(Messages.InvisibleContextElementsPart_Invisible_elements, "0")); //$NON-NLS-1$
 		invisibleSection.setEnabled(false);
 
@@ -276,8 +275,8 @@ public class InvisibleContextElementsPart {
 		TableColumnLayout layout = new TableColumnLayout();
 		tableComposite.setLayout(layout);
 
-		invisibleTable = new TableViewer(tableComposite,
-				SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
+		invisibleTable = new TableViewer(tableComposite, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
 		invisibleTable.setColumnProperties(new String[] { Messages.InvisibleContextElementsPart_Structure_handle,
 				Messages.InvisibleContextElementsPart_Structure_kind });
 		invisibleTable.getTable().setHeaderVisible(true);
@@ -410,8 +409,7 @@ public class InvisibleContextElementsPart {
 
 	}
 
-	private List<IInteractionElement> getAllInvisibleElements(IInteractionContext context,
-			Collection<Object> allVisible) {
+	private List<IInteractionElement> getAllInvisibleElements(IInteractionContext context, Collection<Object> allVisible) {
 		if (context == null || allVisible == null) {
 			return Collections.emptyList();
 		}
@@ -419,9 +417,7 @@ public class InvisibleContextElementsPart {
 
 		List<IInteractionElement> allVisibleElements = new ArrayList<IInteractionElement>();
 		for (Object visibleObject : allVisible) {
-			for (AbstractContextStructureBridge bridge : ContextCorePlugin.getDefault()
-					.getStructureBridges()
-					.values()) {
+			for (AbstractContextStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
 //			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(visibleObject);
 				if (bridge != null) {
 					String handle = bridge.getHandleIdentifier(visibleObject);
@@ -433,8 +429,8 @@ public class InvisibleContextElementsPart {
 					}
 				}
 			}
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
-					.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					ContextCore.CONTENT_TYPE_RESOURCE);
 			if (bridge != null) {
 				String handle = bridge.getHandleIdentifier(visibleObject);
 				if (handle != null) {

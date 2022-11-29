@@ -75,8 +75,8 @@ public class PerspectiveRestoreTest extends TestCase {
 
 	@Test
 	public void testHasActiveWorkbenchWindow() throws Exception {
-		assertNotNull("No active workbench window. Following tests are likely to fail.",
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		assertNotNull("No active workbench window. Following tests are likely to fail.", PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
 	}
 
 	@Test

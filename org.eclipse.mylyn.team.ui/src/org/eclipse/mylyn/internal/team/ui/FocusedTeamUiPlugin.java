@@ -82,8 +82,8 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					StatusHandler.log(
-							new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Mylyn Team start failed", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
+							"Mylyn Team start failed", e)); //$NON-NLS-1$
 				}
 			}
 		});

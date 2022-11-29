@@ -38,8 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Sebastian Schmidt
  */
-public abstract class AbstractInterestManipulationAction
-		implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+public abstract class AbstractInterestManipulationAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
 	public static final String SOURCE_ID = "org.eclipse.mylyn.ui.interest.user"; //$NON-NLS-1$
 
@@ -98,9 +97,8 @@ public abstract class AbstractInterestManipulationAction
 						// ignore
 					}
 				}
-				boolean manipulated = ContextCorePlugin.getContextManager()
-						.manipulateInterestForElements(nodes, increment, false, preserveUninteresting, SOURCE_ID,
-								context, true);
+				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElements(nodes,
+						increment, false, preserveUninteresting, SOURCE_ID, context, true);
 				if (!manipulated) {
 					AbstractInterestManipulationAction.displayInterestManipulationFailure();
 				}
@@ -108,9 +106,8 @@ public abstract class AbstractInterestManipulationAction
 		} else {
 			IInteractionElement node = ContextCore.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = ContextCorePlugin.getContextManager()
-						.manipulateInterestForElement(node, increment, false, false, SOURCE_ID,
-								ContextCore.getContextManager().getActiveContext(), true);
+				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+						increment, false, false, SOURCE_ID, ContextCore.getContextManager().getActiveContext(), true);
 				if (!manipulated) {
 					AbstractInterestManipulationAction.displayInterestManipulationFailure();
 				}

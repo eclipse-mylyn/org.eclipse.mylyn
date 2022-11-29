@@ -114,7 +114,8 @@ public class InteractionContext implements IInteractionContext {
 			numUserEvents += ((AggregateInteractionEvent) event).getNumCollapsedEvents() - 1;
 		}
 
-		if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null //$NON-NLS-1$
+		if (event.getNavigation() != null
+				&& !event.getNavigation().equals("null") && lastEdgeEvent != null //$NON-NLS-1$
 				&& lastEdgeNode != null && lastEdgeEvent.getStructureHandle() != null
 				&& event.getKind() != InteractionEvent.Kind.PROPAGATION
 				&& event.getKind() != InteractionEvent.Kind.PREDICTION) {
@@ -122,8 +123,8 @@ public class InteractionContext implements IInteractionContext {
 			if (navigationSource != null) {
 				InteractionContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
 				if (edge == null) {
-					edge = new InteractionContextRelation(event.getStructureKind(), event.getNavigation(), lastEdgeNode,
-							node, this);
+					edge = new InteractionContextRelation(event.getStructureKind(), event.getNavigation(),
+							lastEdgeNode, node, this);
 					lastEdgeNode.addEdge(edge);
 				}
 				DegreeOfInterest doi = (DegreeOfInterest) edge.getInterest();

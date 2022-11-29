@@ -74,14 +74,15 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		UiTestUtil.closeAllEditors();
 		ContextUiPlugin.getDefault()
 				.getPreferenceStore()
-				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+				.setValue(
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
 						ContextUiPlugin.getDefault()
 								.getPreferenceStore()
 								.getDefaultBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
-	public void testInterestCapturedForResourceOnFocus()
-			throws CoreException, InvocationTargetException, InterruptedException {
+	public void testInterestCapturedForResourceOnFocus() throws CoreException, InvocationTargetException,
+			InterruptedException {
 
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		ContextCore.getContextManager().setContextCapturePaused(true);
@@ -94,10 +95,10 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 
 		AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(fileA);
 
-		IInteractionElement elementA = ContextCore.getContextManager()
-				.getElement(structureBridge.getHandleIdentifier(fileA));
-		IInteractionElement elementB = ContextCore.getContextManager()
-				.getElement(structureBridge.getHandleIdentifier(fileB));
+		IInteractionElement elementA = ContextCore.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(fileA));
+		IInteractionElement elementB = ContextCore.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(fileB));
 
 		assertFalse(elementA.getInterest().isInteresting());
 		assertFalse(elementB.getInterest().isInteresting());

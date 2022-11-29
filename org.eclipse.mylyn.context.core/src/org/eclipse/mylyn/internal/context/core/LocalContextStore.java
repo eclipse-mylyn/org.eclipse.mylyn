@@ -236,8 +236,8 @@ public class LocalContextStore implements IContextStore {
 			File contextFile = new File(contextDirectory, encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(
-					new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not determine path for context", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
+					"Could not determine path for context", e)); //$NON-NLS-1$
 		}
 		return null;
 	}

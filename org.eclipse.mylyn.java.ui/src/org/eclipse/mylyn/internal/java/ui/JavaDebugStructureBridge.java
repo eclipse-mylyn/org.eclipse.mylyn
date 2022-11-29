@@ -70,8 +70,8 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 						indexOfCurrentFrame = i;
 					}
 
-					IInteractionElement correspondingElement = ContextCore.getContextManager()
-							.getElement(getHandleIdentifier(frame));
+					IInteractionElement correspondingElement = ContextCore.getContextManager().getElement(
+							getHandleIdentifier(frame));
 					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
 						indexOfInterestingFrame = i;
 					}

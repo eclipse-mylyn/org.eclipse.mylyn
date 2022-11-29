@@ -44,8 +44,7 @@ public class AggregateInteractionEvent extends InteractionEvent {
 			String navigatedRelation, String delta, float interestContribution, Date startDate, Date endDate,
 			int numCollapsedEvents, int eventCountOnCreation) {
 
-		super(kind, structureKind, handle, originId, navigatedRelation, delta, interestContribution, startDate,
-				endDate);
+		super(kind, structureKind, handle, originId, navigatedRelation, delta, interestContribution, startDate, endDate);
 		this.numCollapsedEvents = numCollapsedEvents;
 		this.eventCountOnCreation = eventCountOnCreation;
 	}

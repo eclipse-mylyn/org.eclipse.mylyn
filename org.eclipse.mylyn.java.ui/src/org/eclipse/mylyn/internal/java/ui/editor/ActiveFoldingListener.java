@@ -45,8 +45,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private IJavaFoldingStructureProviderExtension updater;
 
-	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCore
-			.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
+	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCore.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 
@@ -108,8 +107,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					ICompilationUnit compilationUnit = (ICompilationUnit) element;
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCore.getContextManager()
-								.getElement(bridge.getHandleIdentifier(child));
+						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
+								bridge.getHandleIdentifier(child));
 						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
 						} else {
@@ -123,8 +122,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusHandler
-						.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}

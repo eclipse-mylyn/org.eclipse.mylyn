@@ -69,8 +69,8 @@ public class TestUtil {
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
 				if (Platform.isRunning()) {
-					URL localURL = FileLocator.toFileURL(
-							Platform.getBundle("org.eclipse.mylyn.context.tests").getEntry("credentials.properties"));
+					URL localURL = FileLocator.toFileURL(Platform.getBundle("org.eclipse.mylyn.context.tests")
+							.getEntry("credentials.properties"));
 					filename = localURL.getFile();
 				} else {
 					URL localURL = TestUtil.class.getResource("");

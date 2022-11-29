@@ -77,11 +77,11 @@ public class ContextStateManager {
 					reader.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(
-						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore context state", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Failed to restore context state", e)); //$NON-NLS-1$
 			} catch (CoreException e) {
-				StatusHandler.log(
-						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore context state", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Failed to restore context state", e)); //$NON-NLS-1$
 			}
 		}
 

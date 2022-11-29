@@ -32,9 +32,8 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
-		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		ContextCore.getContextManager().processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection("h1"), false, false);
 		assertEquals(1, context.getAllElements().size());
@@ -53,9 +52,8 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
-		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		ContextCore.getContextManager().processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, context1.getAllElements().size());
 		assertEquals(0, context2.getAllElements().size());
@@ -66,9 +64,8 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 
 		context.getContextMap().remove(context2.getHandleIdentifier());
 
-		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		ContextCore.getContextManager().processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(1, context.getAllElements().size());
 		assertEquals(1, context1.getAllElements().size());
 		assertEquals(1, context2.getAllElements().size());

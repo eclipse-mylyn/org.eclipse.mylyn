@@ -143,8 +143,8 @@ public abstract class AbstractContextListener implements IContextListener {
 			elementsDeleted(event.getElements());
 			break;
 		default:
-			StatusHandler
-					.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unknown context changed event type")); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
+					"Unknown context changed event type")); //$NON-NLS-1$
 		}
 
 	}

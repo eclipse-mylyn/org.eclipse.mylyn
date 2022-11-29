@@ -80,8 +80,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 		resourceMonitoringButton = new Button(composite, SWT.CHECK | SWT.WRAP);
 		resourceMonitoringButton.setText(Messages.FocusedResourcesPreferencePage__Enable_file_change_monitoring_Label);
-		boolean resourceModificationsEnabled = getPreferenceStore()
-				.getBoolean(ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED);
+		boolean resourceModificationsEnabled = getPreferenceStore().getBoolean(
+				ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED);
 		resourceMonitoringButton.setSelection(resourceModificationsEnabled);
 		resourceMonitoringButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		resourceMonitoringButton.addSelectionListener(new SelectionAdapter() {
@@ -129,8 +129,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 
 		Label l1 = new Label(composite, SWT.NULL);
-		l1.setText(
-				Messages.FocusedResourcesPreferencePage_Matching_file_or_directory_names_will_not_be_added_automatically_to_the_context);
+		l1.setText(Messages.FocusedResourcesPreferencePage_Matching_file_or_directory_names_will_not_be_added_automatically_to_the_context);
 		GridData data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
 		l1.setLayoutData(data);

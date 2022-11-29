@@ -265,9 +265,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			String repString = repStringBuff.toString();
 			String descString = descStringBuff.toString();
 
-			CCompletionProposal proposal = createProposal(repString, descString, prefix.length(), image,
-					baseRelevance + RelevanceConstants.MACRO_TYPE_RELEVANCE, context, getCElement(macro),
-					macro.getName().toString());
+			CCompletionProposal proposal = createProposal(repString, descString, prefix.length(), image, baseRelevance
+					+ RelevanceConstants.MACRO_TYPE_RELEVANCE, context, getCElement(macro), macro.getName().toString());
 			if (!context.isContextInformationStyle()) {
 				proposal.setCursorPosition(repString.length() - 1);
 			}
@@ -280,9 +279,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 
 			proposals.add(proposal);
 		} else {
-			proposals.add(createProposal(macroName, macroName, prefix.length(), image,
-					baseRelevance + RelevanceConstants.MACRO_TYPE_RELEVANCE, context, getCElement(macro),
-					macro.getName().toString()));
+			proposals.add(createProposal(macroName, macroName, prefix.length(), image, baseRelevance
+					+ RelevanceConstants.MACRO_TYPE_RELEVANCE, context, getCElement(macro), macro.getName().toString()));
 		}
 	}
 
@@ -306,22 +304,22 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 				if (binding instanceof IVariable) {
 					handleVariable((IVariable) binding, cContext, baseRelevance, proposals);
 				} else if (binding instanceof ITypedef) {
-					proposals.add(createProposal(name, name, getImage(binding),
-							baseRelevance + RelevanceConstants.TYPEDEF_TYPE_RELEVANCE, cContext, getCElement(binding),
+					proposals.add(createProposal(name, name, getImage(binding), baseRelevance
+							+ RelevanceConstants.TYPEDEF_TYPE_RELEVANCE, cContext, getCElement(binding),
 							binding.getName()));
 				} else if (binding instanceof ICPPNamespace) {
 					handleNamespace((ICPPNamespace) binding, astContext, cContext, baseRelevance, proposals);
 				} else if (binding instanceof IEnumeration) {
-					proposals.add(createProposal(name, name, getImage(binding),
-							baseRelevance + RelevanceConstants.ENUMERATION_TYPE_RELEVANCE, cContext,
-							getCElement(binding), binding.getName()));
+					proposals.add(createProposal(name, name, getImage(binding), baseRelevance
+							+ RelevanceConstants.ENUMERATION_TYPE_RELEVANCE, cContext, getCElement(binding),
+							binding.getName()));
 				} else if (binding instanceof IEnumerator) {
-					proposals.add(createProposal(name, name, getImage(binding),
-							baseRelevance + RelevanceConstants.ENUMERATOR_TYPE_RELEVANCE, cContext,
-							getCElement(binding), binding.getName()));
+					proposals.add(createProposal(name, name, getImage(binding), baseRelevance
+							+ RelevanceConstants.ENUMERATOR_TYPE_RELEVANCE, cContext, getCElement(binding),
+							binding.getName()));
 				} else {
-					proposals.add(createProposal(name, name, getImage(binding),
-							baseRelevance + RelevanceConstants.DEFAULT_TYPE_RELEVANCE, cContext, getCElement(binding),
+					proposals.add(createProposal(name, name, getImage(binding), baseRelevance
+							+ RelevanceConstants.DEFAULT_TYPE_RELEVANCE, cContext, getCElement(binding),
 							binding.getName()));
 				}
 			}
@@ -364,13 +362,12 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			if (astContext instanceof IASTName && !(astContext instanceof ICPPASTQualifiedName)) {
 				IASTName name = (IASTName) astContext;
 				if (name.getParent() instanceof IASTDeclarator) {
-					proposals.add(createProposal(classType.getName() + "::", classType.getName(), getImage(classType), //$NON-NLS-1$
-							baseRelevance + relevance, context, getCElement(classType), classType.getName()));
+					proposals.add(createProposal(
+							classType.getName() + "::", classType.getName(), getImage(classType), baseRelevance + relevance, context, getCElement(classType), classType.getName())); //$NON-NLS-1$
 				}
 			}
-			proposals.add(createProposal(classType.getName(), classType.getName(), getImage(classType),
-					baseRelevance + RelevanceConstants.CLASS_TYPE_RELEVANCE, context, getCElement(classType),
-					classType.getName()));
+			proposals.add(createProposal(classType.getName(), classType.getName(), getImage(classType), baseRelevance
+					+ RelevanceConstants.CLASS_TYPE_RELEVANCE, context, getCElement(classType), classType.getName()));
 		}
 	}
 
@@ -455,9 +452,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		final int relevance = function instanceof ICPPMethod
 				? RelevanceConstants.METHOD_TYPE_RELEVANCE
 				: RelevanceConstants.FUNCTION_TYPE_RELEVANCE;
-		CCompletionProposal proposal = createProposal(repString, dispString, idString,
-				context.getCompletionNode().getLength(), image, baseRelevance + relevance, context,
-				getCElement(function), function.getName());
+		CCompletionProposal proposal = createProposal(repString, dispString, idString, context.getCompletionNode()
+				.getLength(), image, baseRelevance + relevance, context, getCElement(function), function.getName());
 		if (!context.isContextInformationStyle()) {
 			proposal.setCursorPosition(repString.length() - 1);
 		}
@@ -503,9 +499,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 				: isField(variable)
 						? RelevanceConstants.FIELD_TYPE_RELEVANCE
 						: RelevanceConstants.VARIABLE_TYPE_RELEVANCE;
-		CCompletionProposal proposal = createProposal(repString, dispString, idString,
-				context.getCompletionNode().getLength(), image, baseRelevance + relevance, context,
-				getCElement(variable), variable.getName());
+		CCompletionProposal proposal = createProposal(repString, dispString, idString, context.getCompletionNode()
+				.getLength(), image, baseRelevance + relevance, context, getCElement(variable), variable.getName());
 		proposals.add(proposal);
 	}
 
@@ -553,9 +548,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		}
 
 		String repString = repStringBuff.toString();
-		proposals.add(createProposal(repString, namespace.getName(), getImage(namespace),
-				baseRelevance + RelevanceConstants.NAMESPACE_TYPE_RELEVANCE, cContext, getCElement(namespace),
-				namespace.getName()));
+		proposals.add(createProposal(repString, namespace.getName(), getImage(namespace), baseRelevance
+				+ RelevanceConstants.NAMESPACE_TYPE_RELEVANCE, cContext, getCElement(namespace), namespace.getName()));
 	}
 
 	private ICElement getCElement(ICPPNamespace namespace) {
@@ -581,8 +575,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			try {
 				return getCElement(macro.getFileLocation().getFileName(), macro.getFileLocation().getNodeOffset());
 			} catch (Exception e) {
-				StatusHandler.log(
-						new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "Unable to get CElement for Macro", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+						"Unable to get CElement for Macro", e)); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -604,8 +598,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		}
 		if (definition != null && definition.getFileLocation() != null) {
 			try {
-				return getCElement(definition.getFileLocation().getFileName(),
-						definition.getFileLocation().getNodeOffset());
+				return getCElement(definition.getFileLocation().getFileName(), definition.getFileLocation()
+						.getNodeOffset());
 			} catch (CModelException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
 						"Unable to get CElement for Binding", e)); //$NON-NLS-1$
@@ -648,8 +642,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 	}
 
 	private CCompletionProposal createProposal(String repString, String dispString, String idString, int prefixLength,
-			Image image, int relevance, CContentAssistInvocationContext context, ICElement element,
-			String bindingName) {
+			Image image, int relevance, CContentAssistInvocationContext context, ICElement element, String bindingName) {
 		int parseOffset = context.getParseOffset();
 		int invocationOffset = context.getInvocationOffset();
 		boolean doReplacement = !context.isContextInformationStyle();

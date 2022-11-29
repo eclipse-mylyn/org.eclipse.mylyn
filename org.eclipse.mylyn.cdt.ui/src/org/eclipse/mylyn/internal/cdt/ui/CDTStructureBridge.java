@@ -93,8 +93,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 						}
 					}
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
-					if (parentBridge != null
-							&& ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
+					if (parentBridge != null && ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
 						// TODO: Make sure line below is correct
 						if (element.getElementType() < ICElement.C_NAMESPACE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
@@ -203,8 +202,8 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 				Object[] elements = grouping.getChildren(grouping);
 				if (elements != null) {
 					for (Object adaptable : elements) {
-						IInteractionElement element = ContextCore.getContextManager()
-								.getElement(getHandleIdentifier(adaptable));
+						IInteractionElement element = ContextCore.getContextManager().getElement(
+								getHandleIdentifier(adaptable));
 						if (element != null && element.getInterest().isInteresting()) {
 							return false;
 						}
@@ -248,8 +247,8 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 				IFile file = (IFile) resource;
 				if (CoreModel.isValidTranslationUnitName(null, file.getName())) {
 					ICElement element = CoreModel.getDefault().create(file);
-					translationUnit = CoreModel.getDefault()
-							.createTranslationUnitFrom(element.getCProject(), element.getPath());
+					translationUnit = CoreModel.getDefault().createTranslationUnitFrom(element.getCProject(),
+							element.getPath());
 				} else {
 					return null;
 				}

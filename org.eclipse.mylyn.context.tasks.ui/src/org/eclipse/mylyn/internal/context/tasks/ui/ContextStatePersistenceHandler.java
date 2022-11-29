@@ -67,9 +67,8 @@ public class ContextStatePersistenceHandler {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						NLS.bind("Unexpected error restoring the context state for {0}", context.getHandleIdentifier()), //$NON-NLS-1$
-						e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error restoring the context state for {0}", context.getHandleIdentifier()), e)); //$NON-NLS-1$
 			} finally {
 				storable.release();
 			}
@@ -88,8 +87,8 @@ public class ContextStatePersistenceHandler {
 		try {
 			storable.delete(FILE_NAME);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					NLS.bind("Unexpected error deleting the context state for {0}", task.getHandleIdentifier()), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+					"Unexpected error deleting the context state for {0}", task.getHandleIdentifier()), e)); //$NON-NLS-1$
 		} finally {
 			storable.release();
 		}
@@ -144,9 +143,8 @@ public class ContextStatePersistenceHandler {
 					out.close();
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						NLS.bind("Unexpected error saving the context state for {0}", context.getHandleIdentifier()), //$NON-NLS-1$
-						e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error saving the context state for {0}", context.getHandleIdentifier()), e)); //$NON-NLS-1$
 			} finally {
 				storable.release();
 			}
@@ -179,9 +177,8 @@ public class ContextStatePersistenceHandler {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					NLS.bind("Unexpected error saving the context state for {0}", targetTask.getHandleIdentifier()), //$NON-NLS-1$
-					e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+					"Unexpected error saving the context state for {0}", targetTask.getHandleIdentifier()), e)); //$NON-NLS-1$
 		} finally {
 			targetStorable.release();
 		}

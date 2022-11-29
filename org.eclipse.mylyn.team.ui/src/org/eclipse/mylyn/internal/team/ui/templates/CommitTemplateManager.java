@@ -139,8 +139,8 @@ public class CommitTemplateManager {
 	public String getHandlerDescription(final String keyword) {
 		return (String) new ExtensionProcessor() {
 			@Override
-			protected Object processContribution(IConfigurationElement element, String foundKeyword, String description,
-					String className) throws Exception {
+			protected Object processContribution(IConfigurationElement element, String foundKeyword,
+					String description, String className) throws Exception {
 				return keyword.equals(foundKeyword) ? description : null;
 			}
 		}.run();
@@ -149,11 +149,10 @@ public class CommitTemplateManager {
 	public AbstractCommitTemplateVariable createHandler(final String keyword) {
 		return (AbstractCommitTemplateVariable) new ExtensionProcessor() {
 			@Override
-			protected Object processContribution(IConfigurationElement element, String foundKeyword, String description,
-					String className) throws Exception {
+			protected Object processContribution(IConfigurationElement element, String foundKeyword,
+					String description, String className) throws Exception {
 				if (keyword.equals(foundKeyword)) {
-					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element
-							.createExecutableExtension(ATTR_CLASS);
+					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
 					if (handler != null) {
 						handler.setDescription(description);
 						handler.setRecognizedKeyword(foundKeyword);
@@ -238,8 +237,8 @@ public class CommitTemplateManager {
 	 */
 	private static class ExtensionProcessor {
 		public Object run() {
-			IExtensionPoint extPoint = Platform.getExtensionRegistry()
-					.getExtensionPoint(FocusedTeamUiPlugin.ID_PLUGIN, EXT_POINT_TEMPLATE_HANDLERS);
+			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.ID_PLUGIN,
+					EXT_POINT_TEMPLATE_HANDLERS);
 			IExtension[] extensions = extPoint.getExtensions();
 			for (IExtension extension : extensions) {
 				IConfigurationElement[] elements = extension.getConfigurationElements();

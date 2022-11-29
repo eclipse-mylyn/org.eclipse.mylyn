@@ -52,8 +52,8 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 		TableViewer viewer = new TableViewer(new Table(problemsPart.getViewSite().getShell(), SWT.NULL));
 		viewer.setSorter(new MarkerViewerInterestSorter());
 
-		IMarker[] markers = type1.getResource()
-				.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
+		IMarker[] markers = type1.getResource().findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false,
+				IResource.DEPTH_INFINITE);
 		List<ProblemMarker> problemMarkers = new ArrayList<ProblemMarker>();
 		for (IMarker marker2 : markers) {
 			ProblemMarker marker = new ProblemMarker(marker2);

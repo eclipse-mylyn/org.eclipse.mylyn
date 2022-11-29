@@ -18,7 +18,6 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.context.tasks.ui.messages"; //$NON-NLS-1$
 
 	public static String ContextMementoMigrator_0;
-
 	public static String TaskActivityMonitor_Deactivate_and_Save_Some;
 
 	public static String TaskActivityMonitor_Deactivate_Task_and_Save_All;

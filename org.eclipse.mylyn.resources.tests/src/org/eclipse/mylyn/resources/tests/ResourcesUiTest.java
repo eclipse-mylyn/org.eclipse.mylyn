@@ -60,8 +60,8 @@ public class ResourcesUiTest extends AbstractResourceContextTest {
 		assertEquals(Collections.singleton(project.getProject()), projects);
 	}
 
-	public void testGetProjectsInWithInvalidProject()
-			throws CoreException, InvocationTargetException, InterruptedException {
+	public void testGetProjectsInWithInvalidProject() throws CoreException, InvocationTargetException,
+			InterruptedException {
 		Set<IProject> projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
 		assertEquals(Collections.emptySet(), projects);
 

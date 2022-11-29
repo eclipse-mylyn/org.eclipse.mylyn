@@ -211,8 +211,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 							&& visitor.getNumAddedFolders() <= MAX_NEW_FOLDER_DELTA_SIZE) {
 						ResourcesUi.addResourceToContext(visitor.getChangedResources(),
 								InteractionEvent.Kind.PREDICTION);
-						ResourcesUi.addResourceToContext(visitor.getAddedResources(),
-								InteractionEvent.Kind.PROPAGATION);
+						ResourcesUi.addResourceToContext(visitor.getAddedResources(), InteractionEvent.Kind.PROPAGATION);
 					}
 				}
 			} catch (CoreException e) {

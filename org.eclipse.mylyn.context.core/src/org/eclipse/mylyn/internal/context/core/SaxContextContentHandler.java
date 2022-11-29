@@ -87,20 +87,15 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	@SuppressWarnings({ "deprecation", "restriction" })
 	private InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
-		String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
-				.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
+		String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
 		String endDate = attributes.getValue(InteractionContextExternalizer.ATR_END_DATE);
 		String interest = attributes.getValue(InteractionContextExternalizer.ATR_INTEREST);
 		String kind = attributes.getValue(InteractionContextExternalizer.ATR_KIND);
-		String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
-				.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
-		String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
-				.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
+		String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
+		String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
 		String startDate = attributes.getValue(InteractionContextExternalizer.ATR_START_DATE);
-		String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
-				.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
-		String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter
-				.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
+		String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
+		String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
 
 		// the number of events and event count on creation are needed to ensure that the context that is read in is the same as what was written out
 		String numEventsString = attributes.getValue(InteractionContextExternalizer.ATR_NUM_EVENTS);

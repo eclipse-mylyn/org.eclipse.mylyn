@@ -72,8 +72,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
 		project.build();
 		IInteractionElement node = ContextCore.getContextManager().getElement(type.getHandleIdentifier());
-		IInteractionElement parentNode = ContextCore.getContextManager()
-				.getElement(type.getParent().getHandleIdentifier());
+		IInteractionElement parentNode = ContextCore.getContextManager().getElement(
+				type.getParent().getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		assertTrue(parentNode.getInterest().isInteresting());
 
@@ -90,8 +90,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		IInteractionElement oldParentNode = ContextCore.getContextManager()
 				.getElement(parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
-		IInteractionElement newParentNode = ContextCore.getContextManager()
-				.getElement(newType.getParent().getHandleIdentifier());
+		IInteractionElement newParentNode = ContextCore.getContextManager().getElement(
+				newType.getParent().getHandleIdentifier());
 		assertTrue(newParentNode.getInterest().isInteresting());
 	}
 

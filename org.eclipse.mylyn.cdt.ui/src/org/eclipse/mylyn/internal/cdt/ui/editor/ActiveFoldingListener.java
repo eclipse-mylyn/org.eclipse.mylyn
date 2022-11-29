@@ -54,8 +54,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private ICFoldingStructureProvider updater;
 
-	private static CDTStructureBridge bridge = (CDTStructureBridge) ContextCore
-			.getStructureBridge(CDTStructureBridge.CONTENT_TYPE);
+	private static CDTStructureBridge bridge = (CDTStructureBridge) ContextCore.getStructureBridge(CDTStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 
@@ -137,8 +136,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					ITranslationUnit compilationUnit = (ITranslationUnit) element;
 					List<ICElement> allChildren = getAllChildren(compilationUnit);
 					for (ICElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCore.getContextManager()
-								.getElement(bridge.getHandleIdentifier(child));
+						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
+								bridge.getHandleIdentifier(child));
 						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
 						} else {
@@ -154,8 +153,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					editor.getViewer().revealRange(selectedRange.x, selectedRange.y);
 				}
 			} catch (Exception e) {
-				StatusHandler
-						.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -259,9 +257,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		switch (event.getEventKind()) {
 		case ACTIVATED:
 		case DEACTIVATED:
-			if (CDTUIBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			if (CDTUIBridgePlugin.getDefault().getPreferenceStore().getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				updateFolding();
 			}
 			break;

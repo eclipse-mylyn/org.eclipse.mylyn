@@ -106,8 +106,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	@Override
 	public boolean performCancel() {
-		autoFocusNavigatorsButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS));
+		autoFocusNavigatorsButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS));
 		return true;
 	}
 
@@ -136,15 +136,14 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		groupViews.setText(Messages.ContextUiPreferencePage_Views);
 
 		autoFocusNavigatorsButton = new Button(groupViews, SWT.CHECK);
-		autoFocusNavigatorsButton
-				.setText(Messages.ContextUiPreferencePage_Auto_focus_navigator_views_on_task_activation);
-		autoFocusNavigatorsButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS));
+		autoFocusNavigatorsButton.setText(Messages.ContextUiPreferencePage_Auto_focus_navigator_views_on_task_activation);
+		autoFocusNavigatorsButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS));
 
 		manageExpansionButton = new Button(groupViews, SWT.CHECK);
 		manageExpansionButton.setText(Messages.ContextUiPreferencePage_Auto_expand_tree_views_when_focused);
-		manageExpansionButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION));
+		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION));
 
 		Group groupEditors = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupEditors.setLayout(new GridLayout(1, false));
@@ -153,8 +152,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 
 		manageEditorsButton = new Button(groupEditors, SWT.CHECK);
 		manageEditorsButton.setText(Messages.ContextUiPreferencePage_Manage_open_editors_to_match_task_context);
-		manageEditorsButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
+		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
 			String message = Messages.ContextUiPreferencePage_will_be_toggled_with_activation;
@@ -164,8 +163,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 
 		mapCloseToRemoveButton = new Button(groupEditors, SWT.CHECK);
 		mapCloseToRemoveButton.setText(Messages.ContextUiPreferencePage_Remove_file_from_context_when_editor_is_closed);
-		mapCloseToRemoveButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE));
+		mapCloseToRemoveButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE));
 
 		Group groupPerspectives = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupPerspectives.setLayout(new GridLayout(1, false));
@@ -173,10 +172,9 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		groupPerspectives.setText(Messages.ContextUiPreferencePage_Perspectives);
 
 		managePerspectivesButton = new Button(groupPerspectives, SWT.CHECK);
-		managePerspectivesButton
-				.setText(Messages.ContextUiPreferencePage_Open_last_used_perspective_on_task_activation);
-		managePerspectivesButton
-				.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES));
+		managePerspectivesButton.setText(Messages.ContextUiPreferencePage_Open_last_used_perspective_on_task_activation);
+		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES));
 
 		return;
 	}

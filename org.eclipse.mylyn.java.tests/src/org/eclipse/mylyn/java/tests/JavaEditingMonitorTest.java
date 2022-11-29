@@ -114,8 +114,9 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 
 		// select callee
-		TextSelection calleeSelection = new TextSelection(document,
-				typeFoo.getCompilationUnit().getSource().indexOf("callee()"), "callee".length());
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("callee()"), "callee".length());
 		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
 
 		// clear last selected element on e4
@@ -145,8 +146,9 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 		// select callee
-		TextSelection calleeSelection = new TextSelection(document,
-				typeFoo.getCompilationUnit().getSource().indexOf("callee()"), "callee".length());
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("callee()"), "callee".length());
 		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
 
 		// reset in case opening the editor caused selection events
@@ -159,8 +161,9 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		assertEquals(0, editingCount);
 		assertEquals(1, selectingCount);
 
-		TextSelection callerSelection = new TextSelection(document,
-				typeFoo.getCompilationUnit().getSource().indexOf("caller()"), "caller".length());
+		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("caller()"), "caller".length());
 		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		// select a different element
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
@@ -190,16 +193,18 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		selectingCount = 0;
 
 		// select callee once
-		TextSelection calleeSelection = new TextSelection(document,
-				typeFoo.getCompilationUnit().getSource().indexOf("callee()"), "callee".length());
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("callee()"), "callee".length());
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
 		assertEquals(0, editingCount);
 		assertEquals(1, selectingCount);
 
 		// select a different element
-		TextSelection callerSelection = new TextSelection(document,
-				typeFoo.getCompilationUnit().getSource().indexOf("caller()"), "caller".length());
+		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("caller()"), "caller".length());
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
 		// on e4 the selectionCount is 3 due to handling of a navigation which propagated as a selection event

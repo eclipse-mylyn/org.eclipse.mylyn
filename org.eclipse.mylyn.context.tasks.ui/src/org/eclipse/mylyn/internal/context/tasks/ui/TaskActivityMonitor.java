@@ -75,8 +75,12 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 					// If the only dirty editor is the active task and the editor is active, do not display the dialog below
 					TaskEditor editor = ((TaskEditor) part);
 					TaskEditorInput input = editor.getTaskEditorInput();
-					if (input != null && task.equals(input.getTask()) && editor.equals(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor())) {
+					if (input != null
+							&& task.equals(input.getTask())
+							&& editor.equals(PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.getActiveEditor())) {
 						return true;
 					}
 				}
@@ -112,8 +116,8 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		}
 
 		public int openTaskDeactivationDialog(List<IEditorReference> dirtyRefs) {
-			String editors = Joiner.on('\n')
-					.join(Iterables.transform(dirtyRefs, new Function<IEditorReference, String>() {
+			String editors = Joiner.on('\n').join(
+					Iterables.transform(dirtyRefs, new Function<IEditorReference, String>() {
 						@Override
 						public String apply(IEditorReference ref) {
 							return ref.getTitle();
@@ -123,8 +127,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 			return new MessageDialog(WorkbenchUtil.getShell(), Messages.TaskActivityMonitor_Task_Deactivation, null,
 					NLS.bind(Messages.TaskActivityMonitor_Task_Deactivation_Message, editors), MessageDialog.QUESTION,
 					new String[] { Messages.TaskActivityMonitor_Deactivate_Task_and_Save_All,
-							Messages.TaskActivityMonitor_Deactivate_and_Save_Some, IDialogConstants.CANCEL_LABEL },
-					1).open();
+							Messages.TaskActivityMonitor_Deactivate_and_Save_Some, IDialogConstants.CANCEL_LABEL }, 1).open();
 		}
 
 		public List<IEditorReference> findDirtyEditors() {
@@ -242,8 +245,8 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(
-					new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error parsing interaction event", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Error parsing interaction event", t)); //$NON-NLS-1$
 		}
 		return false;
 	}

@@ -32,7 +32,7 @@ public class FocusSearchResultsViewAction extends AbstractFocusViewAction {
 	private static final List<String> WHITELISTED_IDS = Arrays
 			.asList(new String[] { "org.eclipse.search.text.FileSearchResultPage", //$NON-NLS-1$
 					"org.eclipse.jdt.ui.JavaSearchResultPage" //$NON-NLS-1$
-			});
+	});
 
 	public FocusSearchResultsViewAction() {
 		super(new SearchInterestFilter(), true, true, true);

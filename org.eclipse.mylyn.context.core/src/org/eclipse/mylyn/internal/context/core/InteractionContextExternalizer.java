@@ -141,8 +141,8 @@ public class InteractionContextExternalizer {
 	/**
 	 * For testing
 	 */
-	public void writeContext(IInteractionContext context, ZipOutputStream outputStream,
-			IInteractionContextWriter writer) throws IOException {
+	public void writeContext(IInteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
+			throws IOException {
 		String handleIdentifier = context.getHandleIdentifier();
 		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 		ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
@@ -162,8 +162,8 @@ public class InteractionContextExternalizer {
 		for (final IContextContributor contributor : getContextContributor()) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(
-							new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Context contribution failed: " //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+							"Context contribution failed: " //$NON-NLS-1$
 									+ contributor.getClass(), e));
 				}
 

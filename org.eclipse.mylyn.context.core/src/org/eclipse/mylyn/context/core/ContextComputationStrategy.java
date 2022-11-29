@@ -28,7 +28,6 @@ public abstract class ContextComputationStrategy {
 	/**
 	 * Computes a list of objects that should be added to the context based on the task data.
 	 */
-	public abstract List<Object> computeContext(IInteractionContext context, IAdaptable input,
-			IProgressMonitor monitor);
+	public abstract List<Object> computeContext(IInteractionContext context, IAdaptable input, IProgressMonitor monitor);
 
 }

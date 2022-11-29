@@ -87,12 +87,12 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 			filterExpressionField2 = clazz1.getDeclaredField("filterExpression"); //$NON-NLS-1$
 			filterExpressionField2.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, "Could not determine filter", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+					"Could not determine filter", e)); //$NON-NLS-1$
 		}
 
-		filterDescriptors = CommonFilterDescriptorManager.getInstance()
-				.findVisibleFilters(commonNavigator.getNavigatorContentService());
+		filterDescriptors = CommonFilterDescriptorManager.getInstance().findVisibleFilters(
+				commonNavigator.getNavigatorContentService());
 
 		return super.installInterestFilter(viewer);
 	}

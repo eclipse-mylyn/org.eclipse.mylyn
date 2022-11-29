@@ -102,8 +102,7 @@ public class InteractionContextTestUtil {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not add all test types", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not add all test types", e)); //$NON-NLS-1$
 		}
 		return testTypes;
 	}

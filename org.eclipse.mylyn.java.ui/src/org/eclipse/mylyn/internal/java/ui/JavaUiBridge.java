@@ -58,11 +58,11 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
 		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
 		} catch (JavaModelException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
 		}
 	}
 
@@ -87,8 +87,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 

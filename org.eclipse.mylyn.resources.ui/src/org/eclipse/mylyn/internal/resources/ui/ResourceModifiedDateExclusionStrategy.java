@@ -29,8 +29,8 @@ import org.eclipse.mylyn.context.core.ContextCore;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
-public class ResourceModifiedDateExclusionStrategy extends AbstractContextListener
-		implements IResourceExclusionStrategy, IPropertyChangeListener, IOperationHistoryListener {
+public class ResourceModifiedDateExclusionStrategy extends AbstractContextListener implements
+		IResourceExclusionStrategy, IPropertyChangeListener, IOperationHistoryListener {
 
 	private transient Date lastActivatedDate = null;
 

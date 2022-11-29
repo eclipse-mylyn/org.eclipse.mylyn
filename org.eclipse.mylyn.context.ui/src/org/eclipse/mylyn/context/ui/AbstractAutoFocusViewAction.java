@@ -89,9 +89,10 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
-					if (ContextCore.getContextManager().isContextActive() && ContextUiPlugin.getDefault()
-							.getPreferenceStore()
-							.getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
+					if (ContextCore.getContextManager().isContextActive()
+							&& ContextUiPlugin.getDefault()
+									.getPreferenceStore()
+									.getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
 						internalSuppressExpandAll = true;
 						update(true);
 					}

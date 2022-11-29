@@ -228,8 +228,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler
-						.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get PDE outline", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get PDE outline", e)); //$NON-NLS-1$
 				return Collections.emptyList();
 			}
 
