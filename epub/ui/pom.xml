@@ -47,7 +47,6 @@
 		<module>org.eclipse.mylyn.docs.epub.ui</module>
 		<module>org.eclipse.mylyn.docs.epub-feature</module>
 		<module>org.eclipse.mylyn.docs.epub.sdk-feature</module>
-		<module>org.eclipse.mylyn.docs.epub-site</module>
 	</modules>
 
 	<build>
