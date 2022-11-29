@@ -12,11 +12,20 @@ pipeline {
 		jdk 'openjdk-jdk17-latest'
 	}
 	stages {
+	    stage('Initialize PGP') {
+			steps {
+				withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
+					sh 'gpg --batch --import "${KEYRING}"'
+					sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
+				}
+			}
+		}
 		stage('Build') {
 			steps {
+				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
 				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh 'mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false'
-				}
+					sh 'mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}"'
+				}}
 			}
 			post {
 				always {

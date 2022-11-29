@@ -11,4 +11,30 @@
   <artifactId>org.eclipse.mylyn.docs-site</artifactId>
   <packaging>eclipse-repository</packaging>
   <name>Mylyn Docs</name>
+  <profiles>
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-gpg-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>pgpsigner</id>
+								<goals>
+									<goal>sign-p2-artifacts</goal>
+								</goals>
+								<configuration>
+									<keyname>0b8ae29554d3b0c1</keyname>
+									<skipIfJarsigned>true</skipIfJarsigned>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
