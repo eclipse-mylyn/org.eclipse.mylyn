@@ -31,6 +31,7 @@
     <tycho-version>3.0.0</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
     <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.tck,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.development</sonar.skippedModules>
+    <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
 
     <coverage.skip>true</coverage.skip>
