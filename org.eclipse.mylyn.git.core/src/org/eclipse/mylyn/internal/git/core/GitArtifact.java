@@ -82,8 +82,8 @@ public class GitArtifact extends ScmArtifact {
 										.openStream();
 							} catch (Exception e) {
 								e.printStackTrace();
-								throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID,
-										e.getMessage()));
+								throw new CoreException(
+										new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
 							}
 						}
 					};

@@ -208,8 +208,8 @@ public class SubclipseConnector extends ScmConnector {
 					oldArtifact = resolveBaseArtifact(repository, newArtifact.getRepositoryURL(), sRevision,
 							isvnLogMessageChangePath, ctype);
 				} catch (MalformedURLException e) {
-					logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
-							"Error resolving an artifact url" //$NON-NLS-1$
+					logger.log(
+							new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID, "Error resolving an artifact url" //$NON-NLS-1$
 									+ isvnLogMessageChangePath.getPath(), e));
 				}
 
@@ -237,8 +237,8 @@ public class SubclipseConnector extends ScmConnector {
 		//TODO: retrieving all revisions per project repository can take really long time, 
 		//need to discuss API to narrow down the list e.g. return an iterator
 		//For the time being we limit the possibility to review commits within the last 20
-		ISVNLogMessage[] messages = resolveChangeSets(repo, repo.getProjectSVNFolder(), SVNRevision.HEAD,
-				firstRevision, false, 20L);
+		ISVNLogMessage[] messages = resolveChangeSets(repo, repo.getProjectSVNFolder(), SVNRevision.HEAD, firstRevision,
+				false, 20L);
 
 		//Convert the messages to ChangeSet
 		List<ChangeSet> changeSets = new ArrayList<ChangeSet>(messages.length);
@@ -412,7 +412,8 @@ public class SubclipseConnector extends ScmConnector {
 		//Resolve the previous commit where this file took part
 		ISVNLogMessage[] filePreviousCommits = null;
 		boolean fetchChangePaths = true;
-		filePreviousCommits = resolveChangeSets(repo, pathUrl, sRevision, eRevision, fetchChangePaths, Long.valueOf(2L));
+		filePreviousCommits = resolveChangeSets(repo, pathUrl, sRevision, eRevision, fetchChangePaths,
+				Long.valueOf(2L));
 
 		String revisionId = null;
 		if (filePreviousCommits != null && filePreviousCommits.length > 1) {
@@ -569,8 +570,8 @@ public class SubclipseConnector extends ScmConnector {
 
 				try {
 					//Resolve the changes for the max chunk size 
-					msgList = resolveChangeSets(repo, repo.getProjectSVNFolder(), startRevision, earliestRevision,
-							true, CHUNKSIZE);
+					msgList = resolveChangeSets(repo, repo.getProjectSVNFolder(), startRevision, earliestRevision, true,
+							CHUNKSIZE);
 
 					//adapt to ChangeSet
 					int size = msgList.length;

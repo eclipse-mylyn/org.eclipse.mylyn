@@ -70,12 +70,10 @@ public class ScmCoreTest {
 				.getRoot()
 				.findMember("/project1/src/org/eclipse/mylar/tests/project1/Project1Plugin.java");
 
-		assertEquals(
-				expectedResource,
-				ScmCore.findResource("/root/level1/level2/project1/src/org/eclipse/mylar/tests/project1/Project1Plugin.java"));
-		assertEquals(
-				expectedResource,
-				ScmCore.findResource("root/level1/level2/project1/src/org/eclipse/mylar/tests/project1/Project1Plugin.java"));
+		assertEquals(expectedResource, ScmCore
+				.findResource("/root/level1/level2/project1/src/org/eclipse/mylar/tests/project1/Project1Plugin.java"));
+		assertEquals(expectedResource, ScmCore
+				.findResource("root/level1/level2/project1/src/org/eclipse/mylar/tests/project1/Project1Plugin.java"));
 
 	}
 
@@ -88,7 +86,8 @@ public class ScmCoreTest {
 
 		assertEquals(expectedResource,
 				ScmCore.findResource("/src/org/eclipse/mylar/tests/project2/Project2Plugin.java"));
-		assertEquals(expectedResource, ScmCore.findResource("src/org/eclipse/mylar/tests/project2/Project2Plugin.java"));
+		assertEquals(expectedResource,
+				ScmCore.findResource("src/org/eclipse/mylar/tests/project2/Project2Plugin.java"));
 	}
 
 	@Test

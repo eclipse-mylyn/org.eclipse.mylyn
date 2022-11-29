@@ -258,8 +258,8 @@ public class GetChangeSetDialog extends FormDialog {
 						try {
 							populateNextChangeSets();
 						} catch (CoreException e1) {
-							StatusHandler.log(new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, IStatus.OK,
-									e.toString(), e1));
+							StatusHandler.log(
+									new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, IStatus.OK, e.toString(), e1));
 							return;
 						}
 						commitList.select(selectedIndex);
@@ -317,8 +317,9 @@ public class GetChangeSetDialog extends FormDialog {
 				}
 				if (repoProject != null && repoProject.equals(inputProject.getName())) {
 					String[] tokens = updatedChangeSet.getMessage().split(NEWLINE, 2);
-					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS) ? tokens[0].substring(0,
-							DIALOG_COMBO_MAX_CHARACTERS - 3) + "..." : tokens[0]);
+					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS)
+							? tokens[0].substring(0, DIALOG_COMBO_MAX_CHARACTERS - 3) + "..."
+							: tokens[0]);
 					filteredChangeSets.add(updatedChangeSet);
 
 					addedCount++;

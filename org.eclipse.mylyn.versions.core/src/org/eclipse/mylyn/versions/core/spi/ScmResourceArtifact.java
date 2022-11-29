@@ -48,8 +48,8 @@ public class ScmResourceArtifact extends ScmArtifact {
 
 	public IFileHistory getFileHistory(IProgressMonitor monitor) {
 		RepositoryProvider provider = RepositoryProvider.getProvider(resource.getProject(), connector.getProviderId());
-		IFileHistory history = provider.getFileHistoryProvider().getFileHistoryFor(resource, IFileHistoryProvider.NONE,
-				monitor);
+		IFileHistory history = provider.getFileHistoryProvider()
+				.getFileHistoryFor(resource, IFileHistoryProvider.NONE, monitor);
 		return history;
 	}
 

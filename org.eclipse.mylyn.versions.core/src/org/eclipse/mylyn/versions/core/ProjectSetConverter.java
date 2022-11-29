@@ -108,8 +108,8 @@ public class ProjectSetConverter {
 			xmlMemento.save(writer);
 			return output;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN,
-					"Unexpected error exporting project sets.", e)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN, "Unexpected error exporting project sets.", e)); //$NON-NLS-1$
 		} finally {
 			if (writer != null) {
 				try {
@@ -142,8 +142,8 @@ public class ProjectSetConverter {
 			}
 			return referenceStrings;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN,
-					"Unexpected error reading project sets.", e)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN, "Unexpected error reading project sets.", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -155,14 +155,14 @@ public class ProjectSetConverter {
 		return new XmlMemento(document, element);
 	}
 
-	private static XmlMemento[] importProjectSet(InputStream input) throws UnsupportedEncodingException,
-			InvocationTargetException {
+	private static XmlMemento[] importProjectSet(InputStream input)
+			throws UnsupportedEncodingException, InvocationTargetException {
 		XmlMemento xmlMemento = parseStream(input);
 		return xmlMemento.getChildren("provider"); //$NON-NLS-1$
 	}
 
-	private static XmlMemento parseStream(InputStream input) throws InvocationTargetException,
-			UnsupportedEncodingException {
+	private static XmlMemento parseStream(InputStream input)
+			throws InvocationTargetException, UnsupportedEncodingException {
 		InputStreamReader reader = new InputStreamReader(input, "UTF-8"); //$NON-NLS-1$
 		try {
 			return XmlMemento.createReadRoot(reader);

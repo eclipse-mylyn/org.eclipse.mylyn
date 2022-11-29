@@ -26,7 +26,8 @@ public class SubclipseRepository extends ScmRepository {
 
 	private final SVNUrl folderUrlStr;
 
-	public SubclipseRepository(SubclipseConnector connector, ISVNRepositoryLocation location, IProject aSelectedProject) {
+	public SubclipseRepository(SubclipseConnector connector, ISVNRepositoryLocation location,
+			IProject aSelectedProject) {
 		this.location = location;
 		setName(location.getLocation());
 		setUrl(location.getUrl().toString());

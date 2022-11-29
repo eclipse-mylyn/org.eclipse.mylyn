@@ -208,7 +208,8 @@ public class SubclipseArtifact extends ScmArtifact {
 		return resource;
 	}
 
-	private IStorage resolveStorage(IProgressMonitor monitor, Long revNo, ISVNRepositoryLocation location, String path) {
+	private IStorage resolveStorage(IProgressMonitor monitor, Long revNo, ISVNRepositoryLocation location,
+			String path) {
 
 		try {
 			final SVNRevision revision = new SVNRevision.Number(revNo.longValue());

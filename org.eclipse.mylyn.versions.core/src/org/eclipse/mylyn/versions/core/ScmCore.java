@@ -117,19 +117,15 @@ public class ScmCore {
 						if (object instanceof ScmConnector) {
 							return (ScmConnector) object;
 						} else {
-							result.add(new Status(
-									IStatus.ERROR,
-									ScmInternal.ID_PLUGIN,
-									NLS.bind(
-											"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-											object.getClass().getCanonicalName(), element.getContributor().getName())));
+							result.add(new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN, NLS.bind(
+									"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+									object.getClass().getCanonicalName(), element.getContributor().getName())));
 						}
 					} catch (Throwable e) {
-						result.add(new Status(
-								IStatus.ERROR,
-								ScmInternal.ID_PLUGIN,
-								NLS.bind(
-										"Connector core failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
+						result.add(new Status(IStatus.ERROR, ScmInternal.ID_PLUGIN,
+								NLS.bind("Connector core failed to load for extension contributed by {0}", //$NON-NLS-1$
+										element.getContributor().getName()),
+								e));
 					}
 				}
 			}

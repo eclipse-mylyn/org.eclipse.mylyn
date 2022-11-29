@@ -307,8 +307,9 @@ public class GetChangeSetDialog extends FormDialog {
 				}
 				if (repoProject != null && repoProject.equals(inputProject.getName())) {
 					String[] tokens = updatedChangeSet.getMessage().split(GIT_NEWLINE, 2);
-					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS) ? tokens[0].substring(0,
-							DIALOG_COMBO_MAX_CHARACTERS - 3) + "..." : tokens[0]);
+					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS)
+							? tokens[0].substring(0, DIALOG_COMBO_MAX_CHARACTERS - 3) + "..."
+							: tokens[0]);
 					filteredChangeSets.add(updatedChangeSet);
 					currentCommitListIndex++;
 
@@ -379,9 +380,8 @@ public class GetChangeSetDialog extends FormDialog {
 		// Author Name
 		final Label authorNameLabel = aToolkit.createLabel(basicSectionClient, "Author Name: ", SWT.WRAP);
 		authorNameLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		authorNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
-				? ""
-				: selectedChangeSet.getAuthor().getName(), SWT.NONE);
+		authorNameText = aToolkit.createLabel(basicSectionClient,
+				selectedChangeSet == null ? "" : selectedChangeSet.getAuthor().getName(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		authorNameText.setLayoutData(textGridData);
@@ -389,9 +389,8 @@ public class GetChangeSetDialog extends FormDialog {
 		// Author Email
 		final Label authorEmailLabel = aToolkit.createLabel(basicSectionClient, "Author Email: ", SWT.WRAP);
 		authorEmailLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		authorEmailText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
-				? ""
-				: selectedChangeSet.getAuthor().getEmail(), SWT.NONE);
+		authorEmailText = aToolkit.createLabel(basicSectionClient,
+				selectedChangeSet == null ? "" : selectedChangeSet.getAuthor().getEmail(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		authorEmailText.setLayoutData(textGridData);
@@ -408,9 +407,8 @@ public class GetChangeSetDialog extends FormDialog {
 		// Repository Name
 		final Label messageLabel = aToolkit.createLabel(basicSectionClient, "Repository: ", SWT.WRAP);
 		messageLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		repositoryNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
-				? ""
-				: selectedChangeSet.getRepository().getName(), SWT.NONE);
+		repositoryNameText = aToolkit.createLabel(basicSectionClient,
+				selectedChangeSet == null ? "" : selectedChangeSet.getRepository().getName(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		repositoryNameText.setLayoutData(textGridData);

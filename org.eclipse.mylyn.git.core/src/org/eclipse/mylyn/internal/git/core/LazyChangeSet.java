@@ -66,8 +66,8 @@ class LazyChangeSet extends ChangeSet {
 			Repository repository = scmRepository.getRepository();
 			RevWalk walk = new RevWalk(repository);
 
-			delegate.addAll(((GitConnector) scmRepository.getConnector()).diffCommit(scmRepository, repository, walk,
-					commit));
+			delegate.addAll(
+					((GitConnector) scmRepository.getConnector()).diffCommit(scmRepository, repository, walk, commit));
 		} catch (IOException e) {
 			e.printStackTrace();
 			// TODO: handle exception
