@@ -78,4 +78,16 @@
 		id="org.eclipse.mylyn.commons.tck">
 		<category name="org.eclipse.mylyn.commons.sdk.category" />
 	</feature>
+	<category-def
+		name="org.eclipse.mylyn.commons.tests.category"
+		label="Mylyn Commons Tests"
+	>
+		<description>
+			Tests for common functionality.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.commons.development">
+		<category name="org.eclipse.mylyn.commons.tests.category" />
+	</feature>
 </site>

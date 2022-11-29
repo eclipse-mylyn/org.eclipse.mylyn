@@ -13,23 +13,26 @@
  *   See git history
  *******************************************************************************
 -->
-<project xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="https://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn.commons</groupId>
   <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
   <name>Mylyn Commons</name>
   <version>3.26.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <properties>
     <tycho-version>3.0.0</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
     <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.tck,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.development</sonar.skippedModules>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
-
-    <sign.skip>true</sign.skip>
-    <sign.alias>default</sign.alias>
 
     <coverage.skip>true</coverage.skip>
     <coverage.filter></coverage.filter>
@@ -46,7 +49,6 @@
     <test.integration.skip>${test.all.skip}</test.integration.skip>
     <test.performance.skip>${test.skip}</test.performance.skip>
     <test.system.skip>${test.skip}</test.system.skip>
-
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
     <test.uservmargs></test.uservmargs>
     <test.osvmargs></test.osvmargs>
@@ -55,8 +57,18 @@
     <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
     <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
 
+    <sign.skip>true</sign.skip>
+    <pack.skip>false</pack.skip>
+    <promote.skip>true</promote.skip>
+
+    <dist.qualifier>'N'yyyyMMdd-HHmm</dist.qualifier>
+    <dist.repository>${project.name}</dist.repository>
+    <dist.archive>${basedir}/target/drops</dist.archive>
+    <dist.site></dist.site>
+    <target-platform>mylyn-commons-e${target-version}</target-platform>
 
   </properties>
+
   <mailingLists>
     <mailingList>
       <name>Mylyn Commons Mailing List</name>
@@ -66,6 +78,7 @@
       <archive>https://dev.eclipse.org/mhonarc/lists/mylyn-commons-dev</archive>
     </mailingList>
   </mailingLists>
+
   <issueManagement>
     <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons/issues</url>
     <system>GitHub Issues</system>
@@ -90,9 +103,38 @@
       <url>https://download.eclipse.org/cbi/updates/license/</url>
     </repository>
   </repositories>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License v2.0</name>
+      <url>http://www.eclipse.org/legal/epl-v20.html</url>
+      <distribution>repo</distribution>
+      <comments>
+        All rights reserved.
+
+        This program and the accompanying materials are made
+        available under the terms of the Eclipse Public License v2.0
+        which accompanies this distribution, and is available at
+        http://www.eclipse.org/legal/epl-v10.htm
+      </comments>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Eclipse Foundation</name>
+    <url>http://www.eclipse.org/</url>
+  </organization>
+
   <profiles>
+    <!-- Target definition profiles -->
+    <!-- Needs to be specified first to allow target profiles to override settings -->
     <profile>
-      <id>strict</id>
+      <id>explicit-target</id>
+      <activation>
+        <property>
+          <name>explicit-target</name>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
@@ -101,12 +143,109 @@
             <version>${tycho-version}</version>
             <configuration>
               <resolver>p2</resolver>
+              <environments>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>ppc64</arch>
+                </environment>
+              </environments>
               <target>
                 <artifact>
                   <groupId>org.eclipse.mylyn.commons</groupId>
                   <artifactId>org.eclipse.mylyn.commons-target</artifactId>
-                  <version>3.26.0-SNAPSHOT</version>
-                  <classifier>mylyn-commons-e4.latest</classifier>
+                  <version>${project.parent.version}</version>
+                  <classifier>${target-platform}</classifier>
+                </artifact>
+              </target>
+              <pomDependencies>consider</pomDependencies>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>implicit-target</id>
+      <activation>
+        <property>
+          <name>!explicit-target</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <resolver>p2</resolver>
+              <dependency-resolution>
+                <optionalDependencies>ignore</optionalDependencies>
+              </dependency-resolution>
+              <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
+              <environments>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>ppc64</arch>
+                </environment>
+              </environments>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.mylyn.commons</groupId>
+                  <artifactId>org.eclipse.mylyn.commons-target</artifactId>
+                  <version>${project.parent.version}</version>
+                  <classifier>${target-platform}</classifier>
                 </artifact>
               </target>
             </configuration>
@@ -114,7 +253,23 @@
         </plugins>
       </build>
     </profile>
+
+    <!-- Target profiles -->
+    <profile>
+      <id>default-target</id>
+      <activation>
+        <property>
+          <name>!target-profile</name>
+        </property>
+      </activation>
+      <!-- Properties get overridden if a specific target profile is activated. -->
+      <properties>
+        <target-version>4.26</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/2022-12/</platform-repository-url>
+      </properties>
+    </profile>
   </profiles>
+
   <build>
     <plugins>
       <plugin>
@@ -122,39 +277,6 @@
         <artifactId>tycho-maven-plugin</artifactId>
         <version>${tycho-version}</version>
         <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-            <resolver>p2</resolver>
-            <environments>
-                <environment>
-                    <os>win32</os>
-                    <ws>win32</ws>
-                    <arch>x86_64</arch>
-                </environment>
-                <environment>
-                    <os>linux</os>
-                    <ws>gtk</ws>
-                    <arch>x86_64</arch>
-                </environment>
-                <environment>
-                    <os>macosx</os>
-                    <ws>cocoa</ws>
-                    <arch>x86_64</arch>
-                </environment>
-            </environments>
-            <target>
-                <artifact>
-                    <groupId>org.eclipse.mylyn.commons</groupId>
-                    <artifactId>org.eclipse.mylyn.commons-target</artifactId>
-                    <version>${project.parent.version}</version>
-                </artifact>
-            </target>
-            <pomDependencies>consider</pomDependencies>
-        </configuration>
       </plugin>
     </plugins>
     <pluginManagement>
@@ -193,11 +315,29 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-packaging-plugin</artifactId>
           <version>${tycho-version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.eclipse.tycho</groupId>
+              <artifactId>tycho-buildtimestamp-jgit</artifactId>
+              <version>${tycho-version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.eclipse.tycho.extras</groupId>
+              <artifactId>tycho-sourceref-jgit</artifactId>
+              <version>${tycho-version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
+            <format>${dist.qualifier}</format>
             <archiveSite>false</archiveSite>
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
             </archive>
+            <sourceReferences>
+              <generate>true</generate>
+            </sourceReferences>
+            <timestampProvider>jgit</timestampProvider>
+            <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
           </configuration>
         </plugin>
         <!-- code analysis -->
@@ -225,7 +365,7 @@
           <configuration>
             <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
-            <targetJdk>1.5</targetJdk>
+            <targetJdk>1.8</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
             <skip>${analysis.skip}</skip>
@@ -245,17 +385,15 @@
           <version>${tycho-version}</version>
           <configuration>
             <skip>${test.skip}</skip>
-            <useUIThread>true</useUIThread>
+            <useUIThread>${test.useUIThread}</useUIThread>
             <useUIHarness>true</useUIHarness>
             <failIfNoTests>true</failIfNoTests>
-            <forkedProcessTimeoutInSeconds>3600</forkedProcessTimeoutInSeconds>
-            <excludes>
-              <exclude>**/Test*java</exclude>
-            </excludes>
+            <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
+            <product>org.eclipse.sdk.ide</product>
+            <application>org.eclipse.ui.ide.workbench</application>
             <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <application>org.eclipse.ui.ide.workbench</application>
-            <!-- <product>org.eclipse.sdk.ide</product> -->
             <dependency-resolution>
               <extraRequirements>
                 <requirement>
