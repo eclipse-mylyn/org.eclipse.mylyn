@@ -98,7 +98,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private static final Pattern ERROR_PATTERN_RPC_METHOD_NOT_FOUND = Pattern.compile("RPC method \".*\" not found"); //$NON-NLS-1$
 
-	private static final Pattern ERROR_PATTERN_MID_AIR_COLLISION = Pattern.compile("Sorry, can not save your changes.*This ticket has been modified by someone else since you started"); //$NON-NLS-1$
+	private static final Pattern ERROR_PATTERN_MID_AIR_COLLISION = Pattern.compile(
+			"Sorry, can not save your changes.*This ticket has been modified by someone else since you started"); //$NON-NLS-1$
 
 	private static final String ERROR_XML_RPC_PRIVILEGES_REQUIRED = "XML_RPC privileges are required to perform this operation"; //$NON-NLS-1$
 
@@ -164,7 +165,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 					probeAuthenticationScheme(monitor);
 				}
 				if (DEBUG_XMLRPC) {
-					System.err.println("Calling " + location.getUrl() + ": " + method + " " + CoreUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					System.err.println(
+							"Calling " + location.getUrl() + ": " + method + " " + CoreUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
 						parameters, monitor);
@@ -244,7 +246,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	private static final boolean DEBUG_XMLRPC = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/xmlrpc")); //$NON-NLS-1$
+	private static final boolean DEBUG_XMLRPC = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/xmlrpc")); //$NON-NLS-1$
 
 	public static final String XMLRPC_URL = "/xmlrpc"; //$NON-NLS-1$
 
@@ -555,18 +558,18 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				majorAPIVersion = (Integer) result[0];
 				minorAPIVersion = (Integer) result[1];
 			} else {
-				throw new TracException(NLS.bind(Messages.TracXmlRpcClient_API_version_unsupported_Error,
-						REQUIRED_REVISION));
+				throw new TracException(
+						NLS.bind(Messages.TracXmlRpcClient_API_version_unsupported_Error, REQUIRED_REVISION));
 			}
 		} catch (TracNoSuchMethodException e) {
-			throw new TracException(NLS.bind(Messages.TracXmlRpcClient_Required_API_calls_missing_Error,
-					REQUIRED_REVISION));
+			throw new TracException(
+					NLS.bind(Messages.TracXmlRpcClient_Required_API_calls_missing_Error, REQUIRED_REVISION));
 		}
 
 		info = new TracRepositoryInfo(epochAPIVersion, majorAPIVersion, minorAPIVersion);
 		if (!info.isApiVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR)) {
-			throw new TracException(NLS.bind(Messages.TracXmlRpcClient_API_version_X_unsupported_Error,
-					info.toString(), REQUIRED_REVISION));
+			throw new TracException(NLS.bind(Messages.TracXmlRpcClient_API_version_X_unsupported_Error, info.toString(),
+					REQUIRED_REVISION));
 		}
 		return info;
 	}
@@ -666,8 +669,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	public void searchForTicketIds(TracSearch query, List<Integer> tickets, IProgressMonitor monitor)
 			throws TracException {
 		// an empty query string is not valid, therefore prepend order
-		Object[] result = (Object[]) call(monitor,
-				"ticket.query", "order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$ //$NON-NLS-2$
+		Object[] result = (Object[]) call(monitor, "ticket.query", //$NON-NLS-1$
+				"order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$
 		for (Object item : result) {
 			tickets.add((Integer) item);
 		}
@@ -676,8 +679,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	@SuppressWarnings("unchecked")
 	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
 		// an empty query string is not valid, therefore prepend order
-		Object[] result = (Object[]) call(monitor,
-				"ticket.query", "order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$ //$NON-NLS-2$
+		Object[] result = (Object[]) call(monitor, "ticket.query", //$NON-NLS-1$
+				"order=id" + query.toQuery(supportsMaxSearchResults(monitor))); //$NON-NLS-1$
 
 		Map<String, Object>[] calls = new Map[result.length];
 		for (int i = 0; i < calls.length; i++) {
@@ -949,8 +952,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				in.close();
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
-						"Error closing attachment stream", e)); //$NON-NLS-1$
+				StatusHandler
+						.log(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN, "Error closing attachment stream", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1090,7 +1093,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			throw new IllegalArgumentException("Wiki page name cannot be null"); //$NON-NLS-1$
 		}
 
-		Object result = (version == LATEST_VERSION) ? call(monitor, "wiki.getPageInfo", pageName) // //$NON-NLS-1$
+		Object result = (version == LATEST_VERSION)
+				? call(monitor, "wiki.getPageInfo", pageName) // //$NON-NLS-1$
 				: call(monitor, "wiki.getPageInfoVersion", pageName, version); //$NON-NLS-1$
 		return parseWikiPageInfo(result);
 	}
@@ -1192,8 +1196,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return page;
 	}
 
-	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes, IProgressMonitor monitor)
-			throws TracException {
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes,
+			IProgressMonitor monitor) throws TracException {
 		Boolean result = (Boolean) call(monitor, "wiki.putPage", pageName, content, attributes); //$NON-NLS-1$
 		return result.booleanValue();
 	}

@@ -55,8 +55,8 @@ public class TaskKeyComparator implements Comparator<String[]> {
 		return compare(a1[0], a1[1], a1[2], a2[0], a2[1], a2[2]);
 	}
 
-	private static int compare(final String component1, final String key1, final String value1,
-			final String component2, final String key2, final String value2) {
+	private static int compare(final String component1, final String key1, final String value1, final String component2,
+			final String key2, final String value2) {
 		if (component1 == null && component2 != null) {
 			return -1;
 		}

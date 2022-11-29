@@ -60,7 +60,8 @@ public class DeleteTasksJob extends TaskJob {
 			monitor.beginTask(Messages.DeleteTasksJob_Deleting_tasks, tasksToDelete.size() * 100);
 			for (ITask task : tasksToDelete) {
 				// delete the task on the server using the repository connector
-				AbstractRepositoryConnector repositoryConnector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
+				AbstractRepositoryConnector repositoryConnector = repositoryManager
+						.getRepositoryConnector(task.getConnectorKind());
 				TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
 				if (repositoryConnector.canDeleteTask(repository, task)) {
@@ -80,11 +81,10 @@ public class DeleteTasksJob extends TaskJob {
 						if (taskId == null) {
 							taskId = task.getTaskId();
 						}
-						status.add(new Status(
-								IStatus.ERROR,
-								ITasksCoreConstants.ID_PLUGIN,
-								NLS.bind(
-										"Internal Error occurred while deleting {0} from {1}.", taskId, task.getRepositoryUrl()), e)); //$NON-NLS-1$
+						status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+								NLS.bind("Internal Error occurred while deleting {0} from {1}.", taskId, //$NON-NLS-1$
+										task.getRepositoryUrl()),
+								e));
 					}
 
 				}

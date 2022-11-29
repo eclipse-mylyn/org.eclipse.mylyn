@@ -63,8 +63,8 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 						+ htmlFooter;
 				return html;
 			} else {
-				throw new CoreException(TracCorePlugin.toStatus(new TracException(
-						"Preview is available only in XML-RPC access mode"), repository)); //$NON-NLS-1$
+				throw new CoreException(TracCorePlugin
+						.toStatus(new TracException("Preview is available only in XML-RPC access mode"), repository)); //$NON-NLS-1$
 			}
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));

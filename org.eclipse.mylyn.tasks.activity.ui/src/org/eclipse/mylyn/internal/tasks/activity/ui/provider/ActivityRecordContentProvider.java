@@ -62,8 +62,8 @@ public class ActivityRecordContentProvider implements ITreeContentProvider {
 		try {
 			activityStream.query(null);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, PLUGIN_ID,
-					"Problem occured when querry the TaskActivityProvider.", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, PLUGIN_ID, "Problem occured when querry the TaskActivityProvider.", e)); //$NON-NLS-1$
 		}
 	}
 }

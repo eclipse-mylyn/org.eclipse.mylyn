@@ -106,8 +106,8 @@ public abstract class AbstractTaskListFilter {
 				ITask containedRepositoryTask = task;
 				if (!containedRepositoryTask.isCompleted()) {
 					return true;
-				} else
-					if (task instanceof ITaskContainer && hasIncompleteDescendant((ITaskContainer) task, depth - 1)) {
+				} else if (task instanceof ITaskContainer
+						&& hasIncompleteDescendant((ITaskContainer) task, depth - 1)) {
 					return true;
 				}
 			}

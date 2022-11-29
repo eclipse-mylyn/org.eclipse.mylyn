@@ -35,8 +35,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class TaskListExternalizationParticipant extends AbstractExternalizationParticipant implements
-		IExternalizationParticipant, ITaskListChangeListener, ITaskActivationListener {
+public class TaskListExternalizationParticipant extends AbstractExternalizationParticipant
+		implements IExternalizationParticipant, ITaskListChangeListener, ITaskActivationListener {
 
 	private static final String DESCRIPTION = Messages.TaskListExternalizationParticipant_Task_List;
 
@@ -115,8 +115,8 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	private void prepareOrphanContainers() {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
-						repository.getRepositoryUrl()));
+				taskList.addUnmatchedContainer(
+						new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getRepositoryUrl()));
 			}
 		}
 	}

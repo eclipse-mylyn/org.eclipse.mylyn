@@ -206,8 +206,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private boolean containsPrefix(ITask task) {
-			String haystack = TasksUiInternal.getTaskPrefix(task.getConnectorKind())
-					+ " " + labelProvider.getText(task); //$NON-NLS-1$
+			String haystack = TasksUiInternal.getTaskPrefix(task.getConnectorKind()) + " " //$NON-NLS-1$
+					+ labelProvider.getText(task);
 			String[] haystackTokens = haystack.split("\\s"); //$NON-NLS-1$
 			String[] needles = prefix.trim().split("\\*"); //$NON-NLS-1$
 			if (haystackTokens.length == 0 || needles.length == 0) {
@@ -365,7 +365,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		// add tasks from activation history
 		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
-		List<AbstractTask> tasks = taskHistory.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskWorkingSetUpdater.getActiveWorkingSets(window)));
+		List<AbstractTask> tasks = taskHistory.getPreviousTasks(
+				TasksUiInternal.getContainersFromWorkingSet(TaskWorkingSetUpdater.getActiveWorkingSets(window)));
 		int count = 0;
 		for (int i = tasks.size() - 1; i >= 0 && count < MAX_ACTIVATED_TASKS; i--) {
 			AbstractTask task = tasks.get(i);

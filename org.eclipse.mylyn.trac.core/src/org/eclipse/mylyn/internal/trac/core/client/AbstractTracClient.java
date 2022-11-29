@@ -51,7 +51,8 @@ public abstract class AbstractTracClient implements ITracClient {
 	 */
 	public static final int SC_CERT_AUTH_FAILED = 499;
 
-	protected static final boolean DEBUG_AUTH = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/authentication")); //$NON-NLS-1$
+	protected static final boolean DEBUG_AUTH = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/authentication")); //$NON-NLS-1$
 
 	protected static final String USER_AGENT = "TracConnector"; //$NON-NLS-1$
 
@@ -112,13 +113,14 @@ public abstract class AbstractTracClient implements ITracClient {
 	}
 
 	public void authenticateAccountManagerInternal(HttpClient httpClient, HostConfiguration hostConfiguration,
-			AuthenticationCredentials credentials, IProgressMonitor monitor, String formToken) throws IOException,
-			TracLoginException {
+			AuthenticationCredentials credentials, IProgressMonitor monitor, String formToken)
+			throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
 		NameValuePair[] data = { new NameValuePair("referer", ""), //$NON-NLS-1$ //$NON-NLS-2$
 				new NameValuePair("user", credentials.getUserName()), //$NON-NLS-1$
-				new NameValuePair("password", credentials.getPassword()), new NameValuePair("__FORM_TOKEN", formToken) }; //$NON-NLS-1$ //$NON-NLS-2$
+				new NameValuePair("password", credentials.getPassword()), //$NON-NLS-1$
+				new NameValuePair("__FORM_TOKEN", formToken) }; //$NON-NLS-1$
 
 		post.setRequestBody(data);
 		try {

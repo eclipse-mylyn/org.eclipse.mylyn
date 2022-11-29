@@ -82,8 +82,8 @@ public class TaskDataStoreTest extends TestCase {
 		mapper.setSummary("summary");
 		mapper.setTaskKind("task kind");
 
-		TaskData oldData = new TaskData(new TaskAttributeMapper(taskRepository),
-				MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
+		TaskData oldData = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
+				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
 
 		state.setRepositoryData(data);
 		state.setLastReadData(oldData);
@@ -247,9 +247,8 @@ public class TaskDataStoreTest extends TestCase {
 		} else {
 			// Java 1.6 is apparently able to parse C1 characters with XML 1.1
 			TaskDataState state2 = storage.getTaskDataState(file);
-			assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData()
-					.getRoot()
-					.toString());
+			assertEquals(state.getRepositoryData().getRoot().toString(),
+					state2.getRepositoryData().getRoot().toString());
 		}
 	}
 

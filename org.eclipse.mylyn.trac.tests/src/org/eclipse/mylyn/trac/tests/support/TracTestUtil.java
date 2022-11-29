@@ -39,8 +39,8 @@ public class TracTestUtil {
 	public static List<ITaskAttachment> getTaskAttachments(ITask task) throws CoreException {
 		TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
 		List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
-		List<TaskAttribute> attributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> attributes = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 		if (attributes != null) {
 			for (TaskAttribute taskAttribute : attributes) {
 				ITaskAttachment taskAttachment = TasksUiPlugin.getRepositoryModel().createTaskAttachment(taskAttribute);

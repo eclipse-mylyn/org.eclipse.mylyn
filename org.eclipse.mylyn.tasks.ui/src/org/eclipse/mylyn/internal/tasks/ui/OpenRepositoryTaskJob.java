@@ -134,8 +134,8 @@ public class OpenRepositoryTaskJob extends Job {
 							MessageFormat.format(
 									Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
 									repositoryUrl) + "\n" + //$NON-NLS-1$
-							MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
-									Messages.TasksUiPlugin_Task_Repositories));
+									MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
+											Messages.TasksUiPlugin_Task_Repositories));
 					TasksUiUtil.openUrl(taskUrl);
 				}
 

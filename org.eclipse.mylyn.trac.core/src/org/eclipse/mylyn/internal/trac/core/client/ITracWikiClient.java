@@ -210,8 +210,8 @@ public interface ITracWikiClient {
 	 * @return <code>true</code> if successful
 	 * @throws TracException
 	 */
-	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes, IProgressMonitor monitor)
-			throws TracException;
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes,
+			IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Gets the list of the names of attachments on a given Wiki page from the repository

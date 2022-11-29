@@ -306,8 +306,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		final AtomicBoolean putTaskData = new AtomicBoolean();
 		final SynchronizationSession synchronizationSession = new SynchronizationSession();
 		TaskDataManager customTaskDataManager = new TaskDataManager(taskDataStore, TasksUi.getRepositoryManager(),
-				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(), new SynchronizationManger(
-						(RepositoryModel) TasksUi.getRepositoryModel())) {
+				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(),
+				new SynchronizationManger((RepositoryModel) TasksUi.getRepositoryModel())) {
 			@Override
 			public void putUpdatedTaskData(ITask itask, TaskData taskData, boolean user, Object token,
 					IProgressMonitor monitor) throws CoreException {
@@ -338,8 +338,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		TaskDataStore taskDataStore = new TaskDataStore(TasksUi.getRepositoryManager());
 		final Status status = new Status(IStatus.ERROR, "bundle", "error");
 		TaskDataManager customTaskDataManager = new TaskDataManager(taskDataStore, TasksUi.getRepositoryManager(),
-				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(), new SynchronizationManger(
-						(RepositoryModel) TasksUi.getRepositoryModel())) {
+				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(),
+				new SynchronizationManger((RepositoryModel) TasksUi.getRepositoryModel())) {
 			@Override
 			public void putUpdatedTaskData(ITask itask, TaskData taskData, boolean user, Object token,
 					IProgressMonitor monitor) throws CoreException {
@@ -432,8 +432,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 
 		final AtomicInteger taskDataPut = new AtomicInteger();
 		TaskDataManager customTaskDataManager = new TaskDataManager(taskDataStore, TasksUi.getRepositoryManager(),
-				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(), new SynchronizationManger(
-						(RepositoryModel) TasksUi.getRepositoryModel())) {
+				taskList, (TaskActivityManager) TasksUi.getTaskActivityManager(),
+				new SynchronizationManger((RepositoryModel) TasksUi.getRepositoryModel())) {
 			@Override
 			public void putUpdatedTaskData(ITask itask, TaskData taskData, boolean user, Object token,
 					IProgressMonitor monitor) throws CoreException {
@@ -631,8 +631,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		taskList.addTask(task);
 		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
 		job.run(new NullProgressMonitor());
-		assertEquals("Synchronization of task 1.sub [http://mockrepository.test] failed", loggedStatus.get()
-				.getMessage());
+		assertEquals("Synchronization of task 1.sub [http://mockrepository.test] failed",
+				loggedStatus.get().getMessage());
 		log.removeLogListener(listener);
 	}
 
@@ -701,9 +701,10 @@ public class SynchronizeTasksJobTest extends TestCase {
 		return new SynchronizeTasksJob(taskList, customTaskDataManager, tasksModel, connector, repository, tasks);
 	}
 
-	private SynchronizeTasksJob createSyncJobWithoutRepository(AbstractRepositoryConnector connector, Set<ITask> tasks) {
-		return new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
-				TasksUi.getRepositoryManager(), tasks);
+	private SynchronizeTasksJob createSyncJobWithoutRepository(AbstractRepositoryConnector connector,
+			Set<ITask> tasks) {
+		return new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector, TasksUi.getRepositoryManager(),
+				tasks);
 	}
 
 	private TaskData createTaskData(String taskId) {

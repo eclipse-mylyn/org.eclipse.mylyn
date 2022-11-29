@@ -67,7 +67,8 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 
 	@Override
 	public void applyTo(TaskRepository repository) {
-		TaskEditorExtensions.setTaskEditorExtensionId(repository, selectedExtensionId == null ? "none" //$NON-NLS-1$
+		TaskEditorExtensions.setTaskEditorExtensionId(repository, selectedExtensionId == null
+				? "none" //$NON-NLS-1$
 				: selectedExtensionId);
 		repository.setProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT,
 				Boolean.toString(avatarSupportButton.getSelection()));
@@ -104,9 +105,8 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	private void createGravatarControl(Composite parent) {
 		avatarSupportButton = new Button(parent, SWT.CHECK);
 		avatarSupportButton.setText(Messages.TaskEditorExtensionSettingsContribution_Avatar_Button_Label);
-		avatarSupportButton.setSelection(getRepository() != null
-				&& Boolean.parseBoolean(getRepository().getProperty(
-						TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT)));
+		avatarSupportButton.setSelection(getRepository() != null && Boolean
+				.parseBoolean(getRepository().getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT)));
 	}
 
 	private void createTaskEditorExtensionsControl(Composite parent) {

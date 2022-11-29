@@ -54,7 +54,8 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 	/**
 	 * @since 3.1
 	 */
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region,
+			boolean canShowMultipleHyperlinks) {
 		IDocument document = textViewer.getDocument();
 		if (document == null || document.getLength() == 0) {
 			return null;

@@ -57,8 +57,8 @@ public class TaskDropHandler {
 				}
 
 				public void handleException(Throwable exception) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, exception.getMessage(),
-							exception));
+					StatusHandler
+							.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, exception.getMessage(), exception));
 				}
 			});
 		}

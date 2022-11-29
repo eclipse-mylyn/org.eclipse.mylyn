@@ -142,8 +142,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static String[] getQueryOptions(String prefId, String[] selectedProducts,
 			RepositoryConfiguration repositoryConfiguration) {
 		List<String> options = new ArrayList<String>();
-		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
-				&& selectedProducts != null) {
+		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION)
+				|| prefId.equals(IBugzillaConstants.VALUES_TARGET)) && selectedProducts != null) {
 			for (String product : selectedProducts) {
 				if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
 					for (String option : repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT,
@@ -162,8 +162,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 					}
 				}
 				if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
-					for (String option : repositoryConfiguration.getProductOptionValues(
-							BugzillaAttribute.TARGET_MILESTONE, product)) {
+					for (String option : repositoryConfiguration
+							.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, product)) {
 						if (!options.contains(option)) {
 							options.add(option);
 						}

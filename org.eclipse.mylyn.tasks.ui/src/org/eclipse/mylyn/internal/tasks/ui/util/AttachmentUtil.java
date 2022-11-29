@@ -109,8 +109,8 @@ public class AttachmentUtil {
 			return contextAttachments;
 		}
 		if (taskData != null) {
-			List<TaskAttribute> taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
-					TaskAttribute.TYPE_ATTACHMENT);
+			List<TaskAttribute> taskAttachments = taskData.getAttributeMapper()
+					.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 			for (TaskAttribute attribute : taskAttachments) {
 				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);
 				taskData.getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
@@ -124,8 +124,8 @@ public class AttachmentUtil {
 
 	public static boolean hasContextAttachment(ITask task) {
 		Assert.isNotNull(task);
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		List<ITaskAttachment> contextAttachments = getContextAttachments(repository, task);
 		return contextAttachments.size() > 0;
 	}
@@ -169,7 +169,8 @@ public class AttachmentUtil {
 			} else {
 				StatusManager.getManager()
 						.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Unexpected error while retrieving context", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
+								"Unexpected error while retrieving context", e), //$NON-NLS-1$
+								StatusManager.SHOW | StatusManager.LOG);
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -186,8 +187,8 @@ public class AttachmentUtil {
 		TasksUiPlugin.getContextStore().saveActiveContext();
 		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		if (!sourceContextFile.exists()) {
-			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING,
-					TasksUiPlugin.ID_PLUGIN, Messages.AttachmentUtil_The_context_is_empty));
+			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information,
+					new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, Messages.AttachmentUtil_The_context_is_empty));
 			return false;
 		}
 
@@ -195,8 +196,8 @@ public class AttachmentUtil {
 		source.setName(CONTEXT_FILENAME);
 		source.setDescription(CONTEXT_DESCRIPTION);
 		source.setContentType(CONTEXT_CONTENT_TYPE);
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		TaskAttribute taskAttribute = null;
 		try {
 			TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
@@ -207,8 +208,8 @@ public class AttachmentUtil {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error while attaching context. Continuing with task submission.", e)); //$NON-NLS-1$
 		}
-		final SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskAttachmentJob(connector,
-				repository, task, source, comment, taskAttribute);
+		final SubmitJob submitJob = TasksUiInternal.getJobFactory()
+				.createSubmitTaskAttachmentJob(connector, repository, task, source, comment, taskAttribute);
 		try {
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -245,11 +246,11 @@ public class AttachmentUtil {
 	}
 
 	public static boolean canUploadAttachment(ITask task) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
 			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 			if (attachmentHandler != null) {
 				return attachmentHandler.canPostContent(repository, task);
@@ -259,11 +260,11 @@ public class AttachmentUtil {
 	}
 
 	public static boolean canDownloadAttachment(ITask task) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
 			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 			if (attachmentHandler != null) {
 				return attachmentHandler.canGetContent(repository, task);
@@ -277,8 +278,8 @@ public class AttachmentUtil {
 		try {
 			monitor.beginTask(Messages.AttachmentUtil_Downloading_attachment, IProgressMonitor.UNKNOWN);
 
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					attachment.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(attachment.getConnectorKind());
 			AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
 			if (handler == null) {
 				throw new CoreException(new RepositoryStatus(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
@@ -300,7 +301,8 @@ public class AttachmentUtil {
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
 						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: " //$NON-NLS-1$
-								+ e.getMessage(), e));
+								+ e.getMessage(),
+						e));
 			} finally {
 				try {
 					in.close();

@@ -138,8 +138,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	}
 
 	public boolean performSearch() {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskRepository.getConnectorKind());
 		if (connector != null) {
 			try {
 				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), taskRepository, createQuery(), true);

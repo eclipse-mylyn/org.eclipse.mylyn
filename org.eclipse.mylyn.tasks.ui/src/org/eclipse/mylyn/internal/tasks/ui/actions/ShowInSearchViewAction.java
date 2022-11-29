@@ -48,10 +48,10 @@ public class ShowInSearchViewAction extends BaseSelectionListenerAction {
 	private void runWithSelection(Object selectedObject) {
 		if (selectedObject instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) selectedObject;
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					query.getConnectorKind());
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					query.getRepositoryUrl());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(query.getConnectorKind());
+			TaskRepository taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 			if (connector != null) {
 				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), taskRepository, query);
 			}

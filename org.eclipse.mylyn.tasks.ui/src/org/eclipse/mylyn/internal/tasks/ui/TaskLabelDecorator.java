@@ -41,9 +41,8 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			if (!task.isCompleted()
-					&& (TasksUiPlugin.getTaskActivityManager().isDueToday(task) || TasksUiPlugin.getTaskActivityManager()
-							.isOverdue(task))) {
+			if (!task.isCompleted() && (TasksUiPlugin.getTaskActivityManager().isDueToday(task)
+					|| TasksUiPlugin.getTaskActivityManager().isOverdue(task))) {
 				decoration.addOverlay(CommonImages.OVERLAY_DATE_OVERDUE, IDecoration.TOP_RIGHT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
 				decoration.addOverlay(CommonImages.OVERLAY_DATE_DUE, IDecoration.TOP_RIGHT);
@@ -54,13 +53,15 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof ITaskRepositoryElement) {
 			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) element;
 			String repositoryUrl = repositoryElement.getRepositoryUrl();
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-					repositoryElement.getConnectorKind(), repositoryUrl);
+			TaskRepository taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(repositoryElement.getConnectorKind(), repositoryUrl);
 			if (taskRepository != null) {
 				decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else if (element instanceof TaskRepository) {
-			ImageDescriptor overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon((TaskRepository) element);
+			ImageDescriptor overlay = TasksUiPlugin.getDefault()
+					.getBrandManager()
+					.getOverlayIcon((TaskRepository) element);
 			if (overlay != null) {
 				decoration.addOverlay(overlay, IDecoration.BOTTOM_RIGHT);
 			}

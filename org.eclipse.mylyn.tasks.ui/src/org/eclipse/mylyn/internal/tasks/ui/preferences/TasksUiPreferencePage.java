@@ -249,13 +249,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR, getScheduleNewTasksValue());
 
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
-				timeoutEnabledButton.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
-				timeoutMinutes.getSelection() * (60 * 1000));
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60 * 1000));
 
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
-				activityTrackingEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
 
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);

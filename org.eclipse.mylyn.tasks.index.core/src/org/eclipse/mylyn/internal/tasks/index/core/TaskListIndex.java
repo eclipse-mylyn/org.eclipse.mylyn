@@ -871,8 +871,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		TaskData taskData = root.getTaskData();
 
-		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 		for (TaskAttribute commentAttribute : commentAttributes) {
 
 			TaskComment taskComment = new TaskComment(taskData.getAttributeMapper().getTaskRepository(), task,
@@ -889,8 +889,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			}
 		}
 
-		List<TaskAttribute> personAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_PERSON);
+		List<TaskAttribute> personAttributes = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_PERSON);
 		for (TaskAttribute personAttribute : personAttributes) {
 			addIndexedAttribute(document, FIELD_PERSON, personAttribute);
 		}
@@ -899,8 +899,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 				task.getRepositoryUrl());
 
 		if (repository != null) {
-			List<TaskAttribute> attachmentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-					TaskAttribute.TYPE_ATTACHMENT);
+			List<TaskAttribute> attachmentAttributes = taskData.getAttributeMapper()
+					.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 			Set<String> attachmentNames = new HashSet<String>();
 			for (TaskAttribute attribute : attachmentAttributes) {
 				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);

@@ -96,7 +96,8 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 	public SelectRepositoryConnectorPage() {
 		super(Messages.SelectRepositoryConnectorPage_Select_a_task_repository_type);
 		setTitle(Messages.SelectRepositoryConnectorPage_Select_a_task_repository_type);
-		setDescription(Messages.SelectRepositoryConnectorPage_You_can_connect_to_an_existing_account_using_one_of_the_installed_connectors);
+		setDescription(
+				Messages.SelectRepositoryConnectorPage_You_can_connect_to_an_existing_account_using_one_of_the_installed_connectors);
 	}
 
 	@Override
@@ -145,14 +146,15 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			discoveryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-							IHandlerService.class);
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {
-						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
-								new Object[] { e.getMessage() }), e);
+						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind(Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+										new Object[] { e.getMessage() }),
+								e);
 						TasksUiInternal.logAndDisplayStatus(
 								Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
 					}

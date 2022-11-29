@@ -234,7 +234,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			rangeEnd.add(Calendar.HOUR_OF_DAY, 1);
 			// Keep one backup for last 8 hours of today
 			for (int x = 0; x <= startHour && x < 9; x++) {
-				SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(), rangeEnd.getTimeInMillis());
+				SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(),
+						rangeEnd.getTimeInMillis());
 				if (subMap.size() > 1) {
 					while (subMap.size() > 1) {
 						File toDelete = subMap.remove(subMap.firstKey());
@@ -249,7 +250,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			TaskActivityUtil.snapStartOfDay(rangeEnd);
 			rangeStart.add(Calendar.DAY_OF_YEAR, -1);
 			for (int x = 1; x <= 12; x++) {
-				SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(), rangeEnd.getTimeInMillis());
+				SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(),
+						rangeEnd.getTimeInMillis());
 				if (subMap.size() > 1) {
 					while (subMap.size() > 1) {
 						File toDelete = subMap.remove(subMap.firstKey());

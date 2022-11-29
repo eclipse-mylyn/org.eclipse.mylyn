@@ -90,8 +90,8 @@ public class DeleteAction extends BaseSelectionListenerAction {
 				ITask task = (ITask) object;
 				AbstractRepositoryConnector repositoryConnector = TasksUi
 						.getRepositoryConnector(task.getConnectorKind());
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-						task.getRepositoryUrl());
+				TaskRepository repository = TasksUi.getRepositoryManager()
+						.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 				if (repository != null && repositoryConnector != null) {
 					allSupportRepositoryDeletion &= repositoryConnector.canDeleteTask(repository, task);
 				} else {

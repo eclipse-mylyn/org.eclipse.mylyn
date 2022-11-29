@@ -35,7 +35,8 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
  * @author Leo Dos Santos
  * @author Steffen Pingel
  */
-public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbenchWindowPulldownDelegate, IMenuCreator {
+public class ActivateTaskHistoryDropDownAction extends Action
+		implements IWorkbenchWindowPulldownDelegate, IMenuCreator {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous"; //$NON-NLS-1$
 

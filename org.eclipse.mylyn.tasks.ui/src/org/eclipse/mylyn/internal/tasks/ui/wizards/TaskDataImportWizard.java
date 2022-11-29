@@ -98,8 +98,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		final File sourceZipFile = new File(sourceZip);
 
 		if (!sourceZipFile.exists()) {
-			MessageDialog.openError(getShell(), Messages.TaskDataImportWizard_File_not_found, sourceZipFile.toString()
-					+ Messages.TaskDataImportWizard_could_not_be_found);
+			MessageDialog.openError(getShell(), Messages.TaskDataImportWizard_File_not_found,
+					sourceZipFile.toString() + Messages.TaskDataImportWizard_could_not_be_found);
 			return false;
 		} else if (!CoreUtil.TEST_MODE
 				&& !MessageDialog.openConfirm(getShell(), Messages.TaskDataImportWizard_confirm_overwrite,
@@ -126,8 +126,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				WorkbenchUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
 			}
 		} catch (CoreException e) {
-			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-					"Problems encountered importing task data: {0}", e.getMessage()), e); //$NON-NLS-1$
+			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Problems encountered importing task data: {0}", e.getMessage()), e); //$NON-NLS-1$
 			TasksUiInternal.logAndDisplayStatus(Messages.TaskDataImportWizard_task_data_import_failed, status);
 		} catch (OperationCanceledException e) {
 			// canceled
@@ -222,15 +222,15 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
 					ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 			if (taskListFile.exists()) {
-				taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName() + PREFIX_BACKUP
-						+ date));
+				taskListFile.renameTo(
+						new File(taskListFile.getParentFile(), taskListFile.getName() + PREFIX_BACKUP + date));
 			}
 
 			File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
 					AbstractExternalizationParticipant.SNAPSHOT_PREFIX + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 			if (taskListFileSnapshot.exists()) {
-				taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(), taskListFileSnapshot.getName()
-						+ PREFIX_BACKUP + date));
+				taskListFileSnapshot.renameTo(
+						new File(taskListFile.getParentFile(), taskListFileSnapshot.getName() + PREFIX_BACKUP + date));
 			}
 		}
 

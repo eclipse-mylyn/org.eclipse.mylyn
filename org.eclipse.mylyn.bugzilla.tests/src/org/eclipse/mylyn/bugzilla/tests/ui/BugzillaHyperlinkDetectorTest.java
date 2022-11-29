@@ -88,10 +88,12 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 			assertHyperlinks("Created attachment 123",
 					new TaskAttachmentHyperlink(new Region(0, 22), repository, "123"),
 					new TaskAttachmentTableEditorHyperlink(new Region(0, 22), repository, "123"));
-			assertHyperlinks("Created an attachment 123", new TaskAttachmentHyperlink(new Region(0, 25), repository,
-					"123"), new TaskAttachmentTableEditorHyperlink(new Region(0, 25), repository, "123"));
-			assertHyperlinks("Created an attachment (id=123)", new TaskAttachmentHyperlink(new Region(0, 30),
-					repository, "123"), new TaskAttachmentTableEditorHyperlink(new Region(0, 30), repository, "123"));
+			assertHyperlinks("Created an attachment 123",
+					new TaskAttachmentHyperlink(new Region(0, 25), repository, "123"),
+					new TaskAttachmentTableEditorHyperlink(new Region(0, 25), repository, "123"));
+			assertHyperlinks("Created an attachment (id=123)",
+					new TaskAttachmentHyperlink(new Region(0, 30), repository, "123"),
+					new TaskAttachmentTableEditorHyperlink(new Region(0, 30), repository, "123"));
 		} else {
 			assertHyperlinks("attachment 123", new TaskAttachmentHyperlink(new Region(0, 14), repository, "123"));
 			assertHyperlinks("attachment  123", new TaskAttachmentHyperlink(new Region(0, 15), repository, "123"));
@@ -100,10 +102,10 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 			assertHyperlinks("attachment (id=123)", new TaskAttachmentHyperlink(new Region(0, 19), repository, "123"));
 			assertHyperlinks("Created attachment 123",
 					new TaskAttachmentHyperlink(new Region(0, 22), repository, "123"));
-			assertHyperlinks("Created an attachment 123", new TaskAttachmentHyperlink(new Region(0, 25), repository,
-					"123"));
-			assertHyperlinks("Created an attachment (id=123)", new TaskAttachmentHyperlink(new Region(0, 30),
-					repository, "123"));
+			assertHyperlinks("Created an attachment 123",
+					new TaskAttachmentHyperlink(new Region(0, 25), repository, "123"));
+			assertHyperlinks("Created an attachment (id=123)",
+					new TaskAttachmentHyperlink(new Region(0, 30), repository, "123"));
 		}
 
 	}

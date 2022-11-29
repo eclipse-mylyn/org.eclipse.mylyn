@@ -50,8 +50,8 @@ public class BugzillaClientManager implements IRepositoryListener {
 				try {
 					client = createClient(taskRepository);
 				} catch (MalformedURLException e) {
-					throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-							"Malformed Repository Url", e)); //$NON-NLS-1$
+					throw new CoreException(
+							new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "Malformed Repository Url", e)); //$NON-NLS-1$
 				}
 				clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			}

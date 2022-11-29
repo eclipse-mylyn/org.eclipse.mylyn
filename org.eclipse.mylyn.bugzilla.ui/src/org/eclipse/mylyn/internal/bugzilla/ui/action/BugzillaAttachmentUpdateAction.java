@@ -94,9 +94,9 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 						attachmentTask.getTaskId() + "attachment"); //$NON-NLS-1$
 
 				TaskData editTaskData = new TaskData(attachment.getTaskAttribute().getTaskData().getAttributeMapper(),
-						attachment.getTaskAttribute().getTaskData().getConnectorKind(), attachment.getTaskAttribute()
-								.getTaskData()
-								.getRepositoryUrl(), attachment.getTaskAttribute().getTaskData().getTaskId());
+						attachment.getTaskAttribute().getTaskData().getConnectorKind(),
+						attachment.getTaskAttribute().getTaskData().getRepositoryUrl(),
+						attachment.getTaskAttribute().getTaskData().getTaskId());
 				editTaskData.setVersion(attachment.getTaskAttribute().getTaskData().getVersion());
 				TaskAttribute target0 = editTaskData.getRoot();
 				TaskAttribute temp = attachment.getTaskAttribute();
@@ -111,8 +111,8 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 				commentMeta.setLabel(Messages.BugzillaAttachmentUpdateAction_Comment);
 
 				ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(nTask, editTaskData);
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						attachment.getTaskAttribute().getTaskData().getRepositoryUrl());
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+						.getRepository(attachment.getTaskAttribute().getTaskData().getRepositoryUrl());
 				final String repositoryLabel = repository.getRepositoryLabel();
 				final TaskDataModel model = new TaskDataModel(repository, nTask, workingCopy);
 				AttributeEditorFactory factory = new AttributeEditorFactory(model, repository,
@@ -142,11 +142,11 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 					@Override
 					protected IDialogSettings getDialogBoundsSettings() {
 						IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
-						IDialogSettings section = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
-								+ repositoryLabel);
+						IDialogSettings section = settings
+								.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION + repositoryLabel);
 						if (section == null) {
-							section = settings.addNewSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
-									+ repositoryLabel);
+							section = settings.addNewSection(
+									BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION + repositoryLabel);
 						}
 						return section;
 					}

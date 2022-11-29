@@ -106,8 +106,8 @@ public class TaskRepositoryWizardDialog extends EnhancedWizardDialog {
 	 * Overridden to be able to set proper state for our validate button
 	 */
 	@Override
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 
 		HashMap<String, Boolean> savedEnabledState = null;
 		try {

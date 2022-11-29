@@ -109,15 +109,11 @@ public class DefaultTaskSchemaTest extends TestCase {
 				"http://mock", "-1");
 		schema.initialize(testData);
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER));
-		assertFalse("USER_REPORTER should be not required", testData.getRoot()
-				.getAttribute(TaskAttribute.USER_REPORTER)
-				.getMetaData()
-				.isRequired());
+		assertFalse("USER_REPORTER should be not required",
+				testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER).getMetaData().isRequired());
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.PRODUCT));
-		assertTrue("PRODUCT should be required", testData.getRoot()
-				.getAttribute(TaskAttribute.PRODUCT)
-				.getMetaData()
-				.isRequired());
+		assertTrue("PRODUCT should be required",
+				testData.getRoot().getAttribute(TaskAttribute.PRODUCT).getMetaData().isRequired());
 	}
 
 }

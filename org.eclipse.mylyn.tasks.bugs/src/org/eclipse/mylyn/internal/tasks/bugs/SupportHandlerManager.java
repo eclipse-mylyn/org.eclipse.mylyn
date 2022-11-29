@@ -59,7 +59,8 @@ public class SupportHandlerManager {
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
+					StatusHandler
+							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
 				public void run() throws Exception {
@@ -81,7 +82,8 @@ public class SupportHandlerManager {
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
+					StatusHandler
+							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
 				public void run() throws Exception {
@@ -98,7 +100,8 @@ public class SupportHandlerManager {
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
+					StatusHandler
+							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
 				public void run() throws Exception {

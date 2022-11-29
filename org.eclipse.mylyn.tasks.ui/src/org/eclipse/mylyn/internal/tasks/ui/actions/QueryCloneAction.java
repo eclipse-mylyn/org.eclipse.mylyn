@@ -88,10 +88,10 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 		List<RepositoryQuery> clonedQueries = new ArrayList<RepositoryQuery>(queries.size());
 		for (RepositoryQuery query : queries) {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					query.getRepositoryUrl());
-			RepositoryQuery clonedQuery = (RepositoryQuery) TasksUi.getRepositoryModel().createRepositoryQuery(
-					repository);
+			TaskRepository repository = TasksUi.getRepositoryManager()
+					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
+			RepositoryQuery clonedQuery = (RepositoryQuery) TasksUi.getRepositoryModel()
+					.createRepositoryQuery(repository);
 			clonedQuery.setSummary(NLS.bind(Messages.QueryCloneAction_Copy_of_X, query.getSummary()));
 			clonedQuery.setUrl(query.getUrl());
 			Map<String, String> attributes = query.getAttributes();

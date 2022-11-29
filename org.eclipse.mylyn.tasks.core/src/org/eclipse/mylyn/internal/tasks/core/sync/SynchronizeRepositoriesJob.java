@@ -51,7 +51,8 @@ import org.eclipse.osgi.util.NLS;
  */
 public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
-	private static final boolean TRACE_ENABLED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.tasks.core/debug/synchronization")); //$NON-NLS-1$
+	private static final boolean TRACE_ENABLED = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.tasks.core/debug/synchronization")); //$NON-NLS-1$
 
 	private final TaskList taskList;
 
@@ -119,7 +120,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					monitor.setTaskName(MessageFormat.format(Messages.SynchronizeRepositoriesJob_Processing_,
 							repository.getRepositoryLabel()));
 
-					final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
+					final AbstractRepositoryConnector connector = repositoryManager
+							.getRepositoryConnector(repository.getConnectorKind());
 					Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>(
 							taskList.getRepositoryQueries(repository.getRepositoryUrl()));
 					// remove queries that are not configured for auto update
@@ -213,9 +215,10 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
-			monitor.beginTask(MessageFormat.format(
-					Messages.SynchronizeRepositoriesJob_Updating_repository_configuration_for_X,
-					repository.getRepositoryUrl()), 100);
+			monitor.beginTask(
+					MessageFormat.format(Messages.SynchronizeRepositoriesJob_Updating_repository_configuration_for_X,
+							repository.getRepositoryUrl()),
+					100);
 			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
 				if (TRACE_ENABLED) {
 					trace("Updating configuration for " + repository.getRepositoryLabel()); //$NON-NLS-1$
@@ -229,8 +232,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			repository.setStatus(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Updating of repository configuration failed", e)); //$NON-NLS-1$
 		} catch (LinkageError e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-					"Internal error while updating repository configuration for ''{0}''", repository.getUrl()), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					NLS.bind("Internal error while updating repository configuration for ''{0}''", repository.getUrl()), //$NON-NLS-1$
+					e));
 		} finally {
 			monitor.done();
 		}

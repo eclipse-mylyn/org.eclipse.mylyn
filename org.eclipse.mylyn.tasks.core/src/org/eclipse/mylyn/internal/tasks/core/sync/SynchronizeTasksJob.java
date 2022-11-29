@@ -170,12 +170,9 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 								try {
 									task = synchronizeTask(monitor, relation.getTaskId());
 								} catch (CoreException e) {
-									StatusHandler.log(new Status(
-											IStatus.ERROR,
-											ITasksCoreConstants.ID_PLUGIN,
-											NLS.bind(
-													Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,
-													relation.getTaskId(), taskRepository.getRepositoryLabel()), e));
+									StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+											Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,
+											relation.getTaskId(), taskRepository.getRepositoryLabel()), e));
 								}
 							}
 						} else {

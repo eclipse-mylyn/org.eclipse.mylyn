@@ -216,6 +216,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
+
 		@Override
 		public String toString() {
 			switch (this) {
@@ -931,15 +932,18 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (!MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
+		if (!MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
-				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
-						true);
+				MonitorUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
-			MonitorUiPlugin.getDefault().getPreferenceStore().setValue(
-					MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			MonitorUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -1014,8 +1018,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean groupSubtasks(ITaskContainer element) {
-		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
+		boolean groupSubtasks = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (element instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin

@@ -39,7 +39,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
-	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*/buglist.cgi?[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
+	private static final Pattern URL_PATTERN = Pattern.compile(
+			"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*/buglist.cgi?[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	private Text queryText;
 

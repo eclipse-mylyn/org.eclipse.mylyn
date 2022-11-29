@@ -376,8 +376,8 @@ public class ConnectorMigrator {
 		for (ITask task : tasksToSynchronize) {
 			getTaskList().addTask(task);
 		}
-		SynchronizationJob job = tasksState.getTaskJobFactory().createSynchronizeTasksJob(newConnector, newRepository,
-				tasksToSynchronize);
+		SynchronizationJob job = tasksState.getTaskJobFactory()
+				.createSynchronizeTasksJob(newConnector, newRepository, tasksToSynchronize);
 		getSyncTaskJobListener().add(job, new Runnable() {
 			@Override
 			public void run() {

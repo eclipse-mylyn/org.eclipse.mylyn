@@ -62,7 +62,8 @@ public class TaskEditorExtensionReader {
 		try {
 			String id = element.getAttribute(ATTR_ID);
 			String name = element.getAttribute(ATTR_NAME);
-			AbstractTaskEditorExtension extension = (AbstractTaskEditorExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
+			AbstractTaskEditorExtension extension = (AbstractTaskEditorExtension) element
+					.createExecutableExtension("class"); //$NON-NLS-1$
 			TaskEditorExtensions.addTaskEditorExtension(element.getNamespaceIdentifier(), id, name, extension);
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension", //$NON-NLS-1$
@@ -76,8 +77,8 @@ public class TaskEditorExtensionReader {
 			String taskEditorExtension = element.getAttribute(TASK_EDITOR_EXTENSION);
 			TaskEditorExtensions.addRepositoryAssociation(repository, taskEditorExtension);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load repositoryAssociation", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load repositoryAssociation", e)); //$NON-NLS-1$
 		}
 	}
 

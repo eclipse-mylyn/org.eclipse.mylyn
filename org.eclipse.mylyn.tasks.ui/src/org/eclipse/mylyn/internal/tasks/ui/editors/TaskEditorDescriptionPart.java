@@ -105,7 +105,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
 				searchForDuplicates.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						String selectedDetector = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
+						String selectedDetector = duplicateDetectorChooser
+								.getItem(duplicateDetectorChooser.getSelectionIndex());
 						searchForDuplicates(selectedDetector);
 					}
 				});
@@ -173,8 +174,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	private boolean isValidDuplicateDetector(AbstractDuplicateDetector detector) {
-		return (detector.getConnectorKind() == null || detector.getConnectorKind().equals(
-				getTaskEditorPage().getConnectorKind())) //
+		return (detector.getConnectorKind() == null
+				|| detector.getConnectorKind().equals(getTaskEditorPage().getConnectorKind())) //
 				&& detector.canQuery(getTaskData());
 	}
 
@@ -185,9 +186,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 				SearchUtil.runSearchQuery(TasksUiInternal.getTaskList(), getTaskEditorPage().getTaskRepository(),
 						duplicatesQuery);
 			} else {
-				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed,
-						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								Messages.TaskEditorDescriptionPart_The_duplicate_detector_did_not_return_a_valid_query));
+				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, new Status(
+						IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.TaskEditorDescriptionPart_The_duplicate_detector_did_not_return_a_valid_query));
 			}
 		} catch (CoreException e) {
 			TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, e.getStatus());

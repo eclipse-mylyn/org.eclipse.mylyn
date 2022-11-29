@@ -239,19 +239,20 @@ public abstract class AbstractTaskSchema {
 	}
 
 	public enum Flag {
-		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY, /**
-													 * A flag used to indicate that the field is related to a
-													 * description.
-													 *
-													 * @since 3.11
-													 * @see TaskAttribute#KIND_DESCRIPTION
-													 */
-		DESCRIPTION, /**
-						 * A flag used to indicate that the field is required.
-						 *
-						 * @since 3.11
-						 * @see TaskAttribute#META_REQUIRED
-						 */
+		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY,
+		/**
+		 * A flag used to indicate that the field is related to a description.
+		 *
+		 * @since 3.11
+		 * @see TaskAttribute#KIND_DESCRIPTION
+		 */
+		DESCRIPTION,
+		/**
+		 * A flag used to indicate that the field is required.
+		 *
+		 * @since 3.11
+		 * @see TaskAttribute#META_REQUIRED
+		 */
 		REQUIRED
 
 	};

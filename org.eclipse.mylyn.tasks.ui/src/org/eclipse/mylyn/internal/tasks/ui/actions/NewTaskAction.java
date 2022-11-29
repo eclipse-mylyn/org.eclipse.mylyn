@@ -57,8 +57,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  * @author Rob Elves
  */
 @SuppressWarnings("restriction")
-public class NewTaskAction extends BaseSelectionListenerAction implements IMenuCreator, IViewActionDelegate,
-		IExecutableExtension {
+public class NewTaskAction extends BaseSelectionListenerAction
+		implements IMenuCreator, IViewActionDelegate, IExecutableExtension {
 
 	private static final String LABEL_NEW_TASK = Messages.NewTaskAction_new_task;
 
@@ -154,8 +154,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		new Separator().fill(dropDownMenu, -1);
 
 		Set<TaskRepository> includedRepositories = new HashSet<TaskRepository>();
-		TaskRepository localRepository = TasksUi.getRepositoryManager().getRepository(
-				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
+		TaskRepository localRepository = TasksUi.getRepositoryManager()
+				.getRepository(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 
 		addRepositoryAction(localRepository);
 
@@ -169,8 +169,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 				if (iterable_element instanceof RepositoryQuery) {
 					String repositoryUrl = ((RepositoryQuery) iterable_element).getRepositoryUrl();
 					String connectorKind = ((RepositoryQuery) iterable_element).getConnectorKind();
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind,
-							repositoryUrl);
+					TaskRepository repository = TasksUi.getRepositoryManager()
+							.getRepository(connectorKind, repositoryUrl);
 					markForInclusion(includedRepositories, repository);
 
 				}
@@ -228,7 +228,8 @@ public class NewTaskAction extends BaseSelectionListenerAction implements IMenuC
 		ActionContributionItem item = new ActionContributionItem(action);
 		action.setText(repository.getRepositoryLabel());
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon(repository);
-		ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.TASK_NEW, overlay, false, false);
+		ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.TASK_NEW, overlay, false,
+				false);
 		action.setImageDescriptor(compositeDescriptor);
 		item.fill(dropDownMenu, -1);
 		return action;

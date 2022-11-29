@@ -72,8 +72,8 @@ public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 			};
 		};
 		// define 1 repository using "xxx" as task id
-		repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL
-				+ "2");
+		repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
+				MockRepositoryConnector.REPOSITORY_URL + "2");
 		connectorUi2 = new MockRepositoryConnectorUi();
 		TasksUi.getRepositoryManager().addRepository(repository1a);
 		TasksUi.getRepositoryManager().addRepository(repository1b);

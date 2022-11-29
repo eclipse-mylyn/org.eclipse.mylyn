@@ -372,8 +372,10 @@ public class CustomTransitionManager implements Serializable {
 			setValid(true);
 		} catch (XmlRpcException e) {
 			setValid(false);
-			String message = e.linkedException == null ? e.getMessage() : e.getMessage() + ">" //$NON-NLS-1$
-					+ e.linkedException.getMessage();
+			String message = e.linkedException == null
+					? e.getMessage()
+					: e.getMessage() + ">" //$NON-NLS-1$
+							+ e.linkedException.getMessage();
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error parsing xmlrpc response.\n\n" + message, e)); //$NON-NLS-1$
 		}

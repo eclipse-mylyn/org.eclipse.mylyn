@@ -257,8 +257,8 @@ public class TaskAttributeMetaData {
 			try {
 				return TimeUnit.valueOf(precision);
 			} catch (IllegalArgumentException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-						"Could not parse precision '{0}'", precision), e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						NLS.bind("Could not parse precision '{0}'", precision), e)); //$NON-NLS-1$
 			}
 		}
 		return null;

@@ -339,11 +339,13 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		if (!taskSelection.isEmpty()) {
 			selectedTask = (AbstractTask) ((IStructuredSelection) taskSelection).getFirstElement();
 		} else {
-			selectedRepository = (TaskRepository) ((IStructuredSelection) repositoriesViewer.getSelection()).getFirstElement();
+			selectedRepository = (TaskRepository) ((IStructuredSelection) repositoriesViewer.getSelection())
+					.getFirstElement();
 		}
 		shouldAddToTaskList = addToTaskListCheck.getSelection();
 		if (shouldAddToTaskList) {
-			selectedCategory = (AbstractTaskCategory) ((IStructuredSelection) categoryViewer.getSelection()).getFirstElement();
+			selectedCategory = (AbstractTaskCategory) ((IStructuredSelection) categoryViewer.getSelection())
+					.getFirstElement();
 		}
 	}
 

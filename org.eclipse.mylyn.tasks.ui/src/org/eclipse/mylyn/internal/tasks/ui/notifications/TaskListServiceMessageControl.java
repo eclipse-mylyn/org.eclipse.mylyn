@@ -151,14 +151,15 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 					closeMessage();
 					final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
 					if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
-						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-								IHandlerService.class);
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+								.getService(IHandlerService.class);
 						try {
 							handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 						} catch (Exception e1) {
-							IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-									Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
-									new Object[] { e1.getMessage() }), e1);
+							IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+									NLS.bind(Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+											new Object[] { e1.getMessage() }),
+									e1);
 							TasksUiInternal.logAndDisplayStatus(
 									Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
 						}

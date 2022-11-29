@@ -121,10 +121,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 				TasksUiInternal.displayStatus(Messages.NewTaskWizard_Error_creating_new_task,
 						((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								Messages.NewTaskWizard_Error_creating_new_task, e),
-						StatusManager.SHOW | StatusManager.LOG);
+								StatusManager.SHOW | StatusManager.LOG);
 			}
 			return false;
 		} catch (InterruptedException e) {

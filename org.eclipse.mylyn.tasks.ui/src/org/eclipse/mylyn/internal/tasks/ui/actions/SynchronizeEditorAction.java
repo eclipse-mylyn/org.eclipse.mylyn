@@ -59,8 +59,8 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 			return;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(task.getConnectorKind());
 		if (connector == null) {
 			return;
 		}

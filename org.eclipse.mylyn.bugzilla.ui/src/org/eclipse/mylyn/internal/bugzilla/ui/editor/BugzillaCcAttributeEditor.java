@@ -60,7 +60,8 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 		attrRemoveCc = getModel().getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
 
 		if (attrRemoveCc == null) {
-			attrRemoveCc = BugzillaTaskDataHandler.createAttribute(getModel().getTaskData(), BugzillaAttribute.REMOVECC);
+			attrRemoveCc = BugzillaTaskDataHandler.createAttribute(getModel().getTaskData(),
+					BugzillaAttribute.REMOVECC);
 		}
 
 		selectValuesToRemove();

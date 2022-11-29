@@ -119,9 +119,8 @@ class TaskListCellModifier implements ICellModifier {
 			if (disableActivateForParentTasks) {
 				// check if activation column overlaps with tree expander control: element is on second hierarchy level and has children  
 				TreeItem parent = element.getParentItem();
-				if (parent != null
-						&& (parent.getData() instanceof IRepositoryQuery || parent.getData() instanceof AbstractTaskCategory)
-						&& element.getItemCount() > 0) {
+				if (parent != null && (parent.getData() instanceof IRepositoryQuery
+						|| parent.getData() instanceof AbstractTaskCategory) && element.getItemCount() > 0) {
 					return;
 				}
 			}

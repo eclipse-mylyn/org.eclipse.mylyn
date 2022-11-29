@@ -130,8 +130,8 @@ public class TaskWorkingSetTest extends TestCase {
 
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
+			protected void execute(IProgressMonitor monitor)
+					throws CoreException, InvocationTargetException, InterruptedException {
 				IProjectDescription description = new ProjectDescription();
 				description.setName("New Name");
 				project.move(description, true, new NullProgressMonitor());

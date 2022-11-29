@@ -49,8 +49,8 @@ abstract class TracXmlRpcOperation<T> extends XmlRpcOperation<T> {
 				throw e;
 			}
 
-			AuthenticationCredentials credentials = getClient().getLocation().getCredentials(
-					AuthenticationType.REPOSITORY);
+			AuthenticationCredentials credentials = getClient().getLocation()
+					.getCredentials(AuthenticationType.REPOSITORY);
 			if (!credentialsValid(credentials)) {
 				throw e;
 			}

@@ -143,8 +143,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	public void run() {
 		String[] ids = new String[1];
 		ids[0] = TaskWorkingSetUpdater.ID_TASK_WORKING_SET;
-		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow(), ids);
+		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow(), ids);
 		dialog.open();
 	}
 

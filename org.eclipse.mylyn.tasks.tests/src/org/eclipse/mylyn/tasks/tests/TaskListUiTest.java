@@ -168,8 +168,8 @@ public class TaskListUiTest extends TestCase {
 		viewer.expandAll();
 		TreeItem[] items = viewer.getTree().getItems();
 		assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
-		TaskListView.getFromActivePerspective().removeFilter(
-				TaskListView.getFromActivePerspective().getCompleteFilter());
+		TaskListView.getFromActivePerspective()
+				.removeFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
 
 		TaskPriorityFilter filter = TaskListView.getFromActivePerspective().getPriorityFilter();
 		filter.displayPrioritiesAbove("P2");

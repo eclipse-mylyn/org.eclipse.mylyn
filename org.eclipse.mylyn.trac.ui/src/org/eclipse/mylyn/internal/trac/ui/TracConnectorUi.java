@@ -126,7 +126,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
+	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment,
+			boolean includeTask) {
 		if (taskComment == null) {
 			return NLS.bind(Messages.TracConnectorUi_Replying_to__ticket_X_X_, task.getTaskKey(), task.getOwner());
 		} else if (includeTask) {

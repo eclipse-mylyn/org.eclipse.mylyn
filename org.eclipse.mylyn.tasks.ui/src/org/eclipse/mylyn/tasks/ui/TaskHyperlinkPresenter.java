@@ -148,8 +148,8 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 					if (task == null) {
 						String taskLabel = TasksUiInternal.getTaskPrefix(hyperlink.getRepository().getConnectorKind());
 						taskLabel += currentTaskHyperlink.getTaskId();
-						textViewer.getTextWidget().setToolTipText(
-								NLS.bind(Messages.TaskHyperlinkPresenter_Not_In_Task_List, taskLabel));
+						textViewer.getTextWidget()
+								.setToolTipText(NLS.bind(Messages.TaskHyperlinkPresenter_Not_In_Task_List, taskLabel));
 					} else if (task.getTaskKey() == null) {
 						textViewer.getTextWidget().setToolTipText(task.getSummary());
 					} else {

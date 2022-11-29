@@ -29,7 +29,8 @@ import org.xml.sax.SAXParseException;
 public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	@Deprecated
-	public RepositoryConfigurationFactory(InputStream inStream, String encoding, BugzillaRepositoryConnector connector) {
+	public RepositoryConfigurationFactory(InputStream inStream, String encoding,
+			BugzillaRepositoryConnector connector) {
 		super(inStream, encoding);
 	}
 

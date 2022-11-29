@@ -80,7 +80,8 @@ public class BugzillaSearchTest extends TestCase {
 			}
 		};
 
-		IStatus status = connector.performQuery(repository, repositoryQuery, collector, null, new NullProgressMonitor());
+		IStatus status = connector.performQuery(repository, repositoryQuery, collector, null,
+				new NullProgressMonitor());
 		assertEquals(IStatus.OK, status.getCode());
 		return changedTaskData;
 	}

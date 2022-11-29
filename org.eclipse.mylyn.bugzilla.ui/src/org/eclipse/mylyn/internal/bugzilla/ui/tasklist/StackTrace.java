@@ -162,7 +162,8 @@ public class StackTrace {
 					// there wasn't so we are done this stack trace
 					inStackTrace = false;
 					if (stackTrace != null && stackTrace.size() > 1) {
-						stackTraces.add(getStackTrace(stackTrace, charStackStart, charPos[0] - charStackStart, comment));
+						stackTraces
+								.add(getStackTrace(stackTrace, charStackStart, charPos[0] - charStackStart, comment));
 					}
 					stackTrace = null;
 				} else if (stackTrace != null) {

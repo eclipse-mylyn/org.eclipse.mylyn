@@ -201,8 +201,8 @@ public class TaskListToolTip extends GradientToolTip {
 			for (ITask child : container.getChildren()) {
 				if (child instanceof AbstractTask) {
 					estimateTotal += ((AbstractTask) child).getEstimatedTimeHours();
-					activeTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child,
-							container.getDateRange());
+					activeTotal += TasksUiPlugin.getTaskActivityManager()
+							.getElapsedTime(child, container.getDateRange());
 				}
 			}
 			StringBuilder sb = new StringBuilder();
@@ -279,8 +279,8 @@ public class TaskListToolTip extends GradientToolTip {
 		if (element instanceof ITask && !(element instanceof LocalTask)) {
 			ITask task = (ITask) element;
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			if (Strings.isNullOrEmpty(task.getOwner())) {
 				return null;
 			} else if (connector.isOwnedByUser(repository, task)) {

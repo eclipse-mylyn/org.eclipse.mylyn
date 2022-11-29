@@ -59,8 +59,8 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 
 	public TaskCategory createCategory() {
 		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				Messages.NewCategoryAction_Enter_name, Messages.NewCategoryAction_Enter_a_name_for_the_Category,
-				"", null); //$NON-NLS-1$
+				Messages.NewCategoryAction_Enter_name, Messages.NewCategoryAction_Enter_a_name_for_the_Category, "", //$NON-NLS-1$
+				null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();

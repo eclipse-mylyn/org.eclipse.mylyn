@@ -58,7 +58,8 @@ public class PlatformUtil {
 	}
 
 	public static int getToolTipXShift() {
-		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) //$NON-NLS-1$//$NON-NLS-2$
+				|| "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return -26;
 		} else {
 			return -23;

@@ -428,8 +428,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				boolean showAvatar = Boolean.parseBoolean(getModel().getTaskRepository()
 						.getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT));
 				if (showAvatar) {
-					String commentAuthor = getTaskData().getAttributeMapper().mapToRepositoryKey(commentAttribute,
-							TaskAttribute.COMMENT_AUTHOR);
+					String commentAuthor = getTaskData().getAttributeMapper()
+							.mapToRepositoryKey(commentAttribute, TaskAttribute.COMMENT_AUTHOR);
 					TaskAttribute userImageAttribute = commentAttribute.getAttribute(commentAuthor);
 
 					if (userImageAttribute != null) {
@@ -861,8 +861,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		commentAttributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
-				TaskAttribute.TYPE_COMMENT);
+		commentAttributes = getTaskData().getAttributeMapper()
+				.getAttributesByType(getTaskData(), TaskAttribute.TYPE_COMMENT);
 		if (commentAttributes.size() > 0) {
 			for (TaskAttribute commentAttribute : commentAttributes) {
 				if (getModel().hasIncomingChanges(commentAttribute)) {

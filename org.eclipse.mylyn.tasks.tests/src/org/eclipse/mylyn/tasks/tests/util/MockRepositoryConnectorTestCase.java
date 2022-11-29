@@ -99,8 +99,8 @@ public class MockRepositoryConnectorTestCase extends TestCase {
 
 			@Override
 			public String getUrl() {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+						.getRepositoryConnector(getConnectorKind());
 				return connector.getTaskUrl(getRepositoryUrl(), getTaskId());
 			}
 

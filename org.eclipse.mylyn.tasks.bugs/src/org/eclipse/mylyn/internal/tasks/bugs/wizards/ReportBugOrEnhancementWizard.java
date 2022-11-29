@@ -164,11 +164,8 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 			IStatus status = new ProductStatus((IProduct) product);
 			SupportRequest request = reporter.preProcess(status, ((ProductStatus) status).getProduct());
 			if (!((AttributeTaskMapper) request.getDefaultContribution()).isMappingComplete()) {
-				TasksUiInternal.displayStatus(
-						Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement,
-						new Status(
-								IStatus.ERROR,
-								TasksBugsPlugin.ID_PLUGIN,
+				TasksUiInternal.displayStatus(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement,
+						new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
 								Messages.ReportBugOrEnhancementWizard_Support_request_faild_Information_incomplete_Error));
 				return false;
 			}

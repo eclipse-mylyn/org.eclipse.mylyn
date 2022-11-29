@@ -106,7 +106,8 @@ public class AddRepositoryAction extends Action {
 					Messages.AddRepositoryAction_Do_not_show_again, false, preferenceStore, PREF_ADD_QUERY);
 			preferenceStore.setValue(PREF_ADD_QUERY, messageDialog.getToggleState());
 			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+						.getConnectorUi(taskRepository.getConnectorKind());
 				IWizard queryWizard = connectorUi.getQueryWizard(taskRepository, null);
 				if (queryWizard instanceof Wizard) {
 					((Wizard) queryWizard).setForcePreviousAndNextButtons(true);

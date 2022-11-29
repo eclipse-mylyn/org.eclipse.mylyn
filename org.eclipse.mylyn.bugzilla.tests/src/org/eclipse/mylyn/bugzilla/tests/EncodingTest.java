@@ -46,7 +46,8 @@ public class EncodingTest extends AbstractBugzillaTest {
 		charset = BugzillaClient.getCharsetFromString("text/html");
 		assertEquals(null, charset);
 
-		charset = BugzillaClient.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
+		charset = BugzillaClient
+				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
 		assertEquals("iso-8859-2", charset);
 
 		charset = BugzillaClient.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");

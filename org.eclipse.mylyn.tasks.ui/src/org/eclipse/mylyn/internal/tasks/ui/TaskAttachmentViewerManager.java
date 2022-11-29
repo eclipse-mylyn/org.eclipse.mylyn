@@ -125,8 +125,8 @@ public class TaskAttachmentViewerManager {
 			return null;
 		}
 
-		return getPreferencesStore().getString(
-				ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext);//$NON-NLS-1$
+		return getPreferencesStore()
+				.getString(ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext);//$NON-NLS-1$
 	}
 
 	private IPreferenceStore getPreferencesStore() {
@@ -139,8 +139,8 @@ public class TaskAttachmentViewerManager {
 			return;
 		}
 
-		getPreferencesStore().putValue(
-				ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext, handlerID); //$NON-NLS-1$
+		getPreferencesStore().putValue(ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext, //$NON-NLS-1$
+				handlerID);
 	}
 
 	private String getExtension(ITaskAttachment attachment) {

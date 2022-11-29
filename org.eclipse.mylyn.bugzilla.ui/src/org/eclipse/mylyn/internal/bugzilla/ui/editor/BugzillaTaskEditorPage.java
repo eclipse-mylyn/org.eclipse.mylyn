@@ -372,15 +372,16 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					.getRoot()
 					.getMappedAttribute(TaskAttribute.PRODUCT);
 			if (productAttribute != null && productAttribute.getValue().length() > 0) {
-				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION,
-						productAttribute.getValue());
+				getModel().getTaskRepository()
+						.setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION, productAttribute.getValue());
 			}
 			TaskAttribute componentSelectedAttribute = getModel().getTaskData()
 					.getRoot()
 					.getMappedAttribute(TaskAttribute.COMPONENT);
 			if (componentSelectedAttribute != null && componentSelectedAttribute.getValue().length() > 0) {
-				getModel().getTaskRepository().setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
-						componentSelectedAttribute.getValue());
+				getModel().getTaskRepository()
+						.setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
+								componentSelectedAttribute.getValue());
 			}
 		}
 
@@ -543,8 +544,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							AbstractTaskEditorPart part = getPart(ID_PART_ACTIONS);
 							boolean unconfirmedAllowed = repositoryConfiguration
 									.getUnconfirmedAllowed(taskAttribute.getValue());
-							TaskAttribute unconfirmedAttribute = taskAttribute.getTaskData().getRoot().getAttribute(
-									TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+							TaskAttribute unconfirmedAttribute = taskAttribute.getTaskData()
+									.getRoot()
+									.getAttribute(
+											TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
 							if (unconfirmedAttribute != null) {
 								unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed);
 							}
@@ -809,7 +812,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 			final PersonAttributeEditor personEditor = ((PersonAttributeEditor) editor);
 			final PersonProposalProvider personProposalProvider = (PersonProposalProvider) personEditor
-					.getContentAssistCommandAdapter().getContentProposalProvider();
+					.getContentAssistCommandAdapter()
+					.getContentProposalProvider();
 			personProposalProvider.setErrorProposals(newPersonProposalMap);
 
 			editorsWithError.add(personEditor);

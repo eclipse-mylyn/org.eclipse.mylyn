@@ -328,8 +328,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
 
-					taskProgressBar.setToolTipText(Messages.TaskListFilteredTree_Workweek_Progress
-							+ "\n" //$NON-NLS-1$
+					taskProgressBar.setToolTipText(Messages.TaskListFilteredTree_Workweek_Progress + "\n" //$NON-NLS-1$
 							+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
 									completeTime + incompleteTime)
 							+ "\n" //$NON-NLS-1$

@@ -135,8 +135,8 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		setControl(pageArea);
 		Dialog.applyDialogFont(pageArea);
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings attachmentsSettings = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
-				+ repositoryLabel);
+		IDialogSettings attachmentsSettings = settings
+				.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION + repositoryLabel);
 		advancesExpanded = false;
 		if (attachmentsSettings != null) {
 			runInBackgroundButton.setSelection(attachmentsSettings.getBoolean(DIALOG_SETTING_RUN_IN_BACKGROUND));
@@ -156,14 +156,14 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		String type = attribute.getMetaData().getType();
 		if (type != null) {
 			AbstractAttributeEditor editor = factory.createEditor(type, attribute);
-			if (attribute.getId().equals(BugzillaAttribute.TOKEN.getKey())
-					|| attribute.getId().equals("size") || attribute.getId().equals(TaskAttribute.ATTACHMENT_URL)) { //$NON-NLS-1$
+			if (attribute.getId().equals(BugzillaAttribute.TOKEN.getKey()) || attribute.getId().equals("size") //$NON-NLS-1$
+					|| attribute.getId().equals(TaskAttribute.ATTACHMENT_URL)) {
 				editor.setReadOnly(true);
 			} else {
 				editor.setReadOnly(false);
 			}
-			if (editor.hasLabel()
-					&& (!TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId()) && !TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId()))) {
+			if (editor.hasLabel() && (!TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())
+					&& !TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId()))) {
 				editor.createLabelControl(attributeArea, toolkit);
 				Label label = editor.getLabelControl();
 				label.setBackground(attributeArea.getBackground());
@@ -272,8 +272,8 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		if (!flagFound) {
 			return;
 		}
-		advancedExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
+		advancedExpandComposite = toolkit.createExpandableComposite(container,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		advancedExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		advancedExpandComposite.setBackground(container.getBackground());
 		advancedExpandComposite.setText(Messages.BugzillaAttachmentWizardPage_Advanced);
@@ -343,11 +343,11 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 	@Override
 	public void dispose() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings attachmentsSettings = settings.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
-				+ repositoryLabel);
+		IDialogSettings attachmentsSettings = settings
+				.getSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION + repositoryLabel);
 		if (attachmentsSettings == null) {
-			attachmentsSettings = settings.addNewSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION
-					+ repositoryLabel);
+			attachmentsSettings = settings
+					.addNewSection(BugzillaUiPlugin.ATTACHMENT_WIZARD_SETTINGS_SECTION + repositoryLabel);
 		}
 		attachmentsSettings.put(DIALOG_SETTING_RUN_IN_BACKGROUND, runInBackgroundButton.getSelection());
 		if (advancedExpandComposite != null) {

@@ -88,8 +88,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	protected static List<TaskJobListener> loadTaskJobListeners(String connectorKind) {
 		ExtensionPointReader<TaskJobListener> reader = new ExtensionPointReader<TaskJobListener>(
-				ITasksCoreConstants.ID_PLUGIN,
-				"taskJobListeners", "listener", TaskJobListener.class, "connectorKind", connectorKind); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ITasksCoreConstants.ID_PLUGIN, "taskJobListeners", "listener", TaskJobListener.class, "connectorKind", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connectorKind);
 		reader.read();
 		return reader.getItems();
 	}
@@ -121,8 +121,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
 			TaskRepository repository, Set<RepositoryQuery> queries) {
-		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
-				repository, queries);
+		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector, repository,
+				queries);
 		job.setFetchSubtasks(fetchSubtasks);
 		job.setPriority(Job.DECORATE);
 		return job;
@@ -180,9 +180,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return createUpdateRepositoryConfigurationJob(connector, taskRepository, null);
 	}
 
-	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, final ITask task, AbstractTaskAttachmentSource source, String comment,
-			TaskAttribute attachmentAttribute) {
+	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			final ITask task, AbstractTaskAttachmentSource source, String comment, TaskAttribute attachmentAttribute) {
 		SubmitJob job = new SubmitTaskAttachmentJob(taskDataManager, connector, taskRepository, task, source, comment,
 				attachmentAttribute);
 		job.setPriority(Job.INTERACTIVE);

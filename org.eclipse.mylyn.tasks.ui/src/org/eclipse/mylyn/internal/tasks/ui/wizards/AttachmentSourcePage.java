@@ -604,8 +604,8 @@ public class AttachmentSourcePage extends WizardPage {
 
 				} else if (o instanceof ResourceMapping) {
 					try {
-						ResourceTraversal[] travs = ((ResourceMapping) o).getTraversals(
-								ResourceMappingContext.LOCAL_CONTEXT, null);
+						ResourceTraversal[] travs = ((ResourceMapping) o)
+								.getTraversals(ResourceMappingContext.LOCAL_CONTEXT, null);
 						if (travs != null) {
 							for (ResourceTraversal trav : travs) {
 								IResource[] resources = trav.getResources();

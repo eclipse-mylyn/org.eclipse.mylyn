@@ -39,8 +39,8 @@ public class TaskUrlHandler extends AbstractUrlHandler {
 		Assert.isNotNull(url);
 		AbstractTask task = TasksUiInternal.getTaskByUrl(url);
 		if (task != null && !(task instanceof LocalTask)) {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			return TasksUiUtil.openTaskWithResult(repository, task.getTaskId());
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -50,8 +50,8 @@ public class TaskUrlHandler extends AbstractUrlHandler {
 				if (repositoryUrl != null) {
 					String id = connector.getTaskIdFromTaskUrl(url);
 					if (id != null) {
-						TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-								connector.getConnectorKind(), repositoryUrl);
+						TaskRepository repository = TasksUi.getRepositoryManager()
+								.getRepository(connector.getConnectorKind(), repositoryUrl);
 						if (repository != null) {
 							return TasksUiUtil.openTaskWithResult(repository, id);
 						}

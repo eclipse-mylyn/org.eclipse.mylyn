@@ -61,7 +61,8 @@ public class DownloadAttachmentJob extends Job {
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
 						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error writing attachment: " //$NON-NLS-1$
-								+ e.getMessage(), e));
+								+ e.getMessage(),
+						e));
 			}
 		} catch (final CoreException e) {
 			TasksUiInternal.asyncDisplayStatus(Messages.DownloadAttachmentJob_Copy_Attachment_to_Clipboard,

@@ -70,7 +70,8 @@ public class TaskAttachmentTest extends TestCase {
 
 		TaskData taskData = new TaskData(new TaskAttributeMapper(repository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, "1");
-		attachment = new TaskAttachment(repository, new MockTask("1"), taskData.getRoot().createAttribute("attachment"));
+		attachment = new TaskAttachment(repository, new MockTask("1"),
+				taskData.getRoot().createAttribute("attachment"));
 	}
 
 	@Override

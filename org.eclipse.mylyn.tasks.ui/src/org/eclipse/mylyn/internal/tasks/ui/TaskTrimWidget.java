@@ -271,8 +271,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private boolean contributeObjectActionsOld(IMenuManager manager) {
 		try {
 			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
-					new Object[] { null, manager, activeTaskSelectionProvider }, new Class[] { IWorkbenchPart.class,
-				IMenuManager.class, ISelectionProvider.class });
+					new Object[] { null, manager, activeTaskSelectionProvider },
+					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class });
 		} catch (NoSuchMethodException e) {
 			return false;
 		} catch (IllegalAccessException e) {
@@ -286,8 +286,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private boolean contributeObjectActionsNew(IMenuManager manager) {
 		try {
 			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
-					new Object[] { null, manager, activeTaskSelectionProvider, Collections.EMPTY_SET }, new Class[] {
-				IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class });
+					new Object[] { null, manager, activeTaskSelectionProvider, Collections.EMPTY_SET },
+					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class });
 		} catch (NoSuchMethodException e) {
 			return false;
 		} catch (IllegalAccessException e) {

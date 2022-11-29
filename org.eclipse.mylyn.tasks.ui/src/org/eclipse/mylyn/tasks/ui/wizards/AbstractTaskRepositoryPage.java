@@ -219,9 +219,10 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 					@Override
 					public void handleException(Throwable e) {
 						section.dispose();
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-								"Problems occured when creating control for contribution \"{0}\"", //$NON-NLS-1$
-								contribution.getId()), e));
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("Problems occured when creating control for contribution \"{0}\"", //$NON-NLS-1$
+										contribution.getId()),
+								e));
 					}
 				});
 			}
@@ -323,8 +324,9 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 				@Override
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-							"Problems occured when validating contribution \"{0}\"", contribution.getId()), e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							NLS.bind("Problems occured when validating contribution \"{0}\"", contribution.getId()), //$NON-NLS-1$
+							e));
 				}
 			});
 		}

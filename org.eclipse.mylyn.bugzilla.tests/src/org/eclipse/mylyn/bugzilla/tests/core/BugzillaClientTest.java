@@ -123,8 +123,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 
 	public void testValidateInvalidProxy() throws Exception {
 		TaskRepository repository = BugzillaFixture.current().repository();
-		AbstractWebLocation location = BugzillaFixture.current().location(PrivilegeLevel.USER,
-				new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)));
+		AbstractWebLocation location = BugzillaFixture.current()
+				.location(PrivilegeLevel.USER, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)));
 
 		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
 		try {
@@ -192,8 +192,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(),
 				BugzillaFixture.current().getRepositoryUrl(), "");
 
-		assertTrue(connector.getTaskDataHandler().initializeTaskData(repository, newData, null,
-				new NullProgressMonitor()));
+		assertTrue(connector.getTaskDataHandler()
+				.initializeTaskData(repository, newData, null, new NullProgressMonitor()));
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");
 		newData.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("TestComponent");

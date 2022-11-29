@@ -285,7 +285,8 @@ public class ConnectorMigrationUi {
 			}, monitor);
 			tasksState.getRepositoryModel().clear();
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, Messages.ConnectorMigrationUi_Error_deleting_task, e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					Messages.ConnectorMigrationUi_Error_deleting_task, e));
 		}
 	}
 
@@ -305,7 +306,8 @@ public class ConnectorMigrationUi {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openInformation(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Connector_Migration_Complete,
+				MessageDialog.openInformation(WorkbenchUtil.getShell(),
+						Messages.ConnectorMigrationUi_Connector_Migration_Complete,
 						Messages.ConnectorMigrationUi_Connector_migration_completed_successfully_You_may_resume_using_the_task_list);
 			}
 		});

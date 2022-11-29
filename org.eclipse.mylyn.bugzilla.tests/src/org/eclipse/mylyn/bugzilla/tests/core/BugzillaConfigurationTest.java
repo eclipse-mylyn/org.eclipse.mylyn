@@ -68,7 +68,8 @@ public class BugzillaConfigurationTest extends TestCase {
 		connector.readRepositoryConfigurationFile();
 		assertNotNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
 		assertNotNull(connector.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		RepositoryConfiguration testLoadedConfig = connector.getRepositoryConfiguration(configuration1.getRepositoryUrl());
+		RepositoryConfiguration testLoadedConfig = connector
+				.getRepositoryConfiguration(configuration1.getRepositoryUrl());
 		assertEquals(1, testLoadedConfig.getOptionValues(BugzillaAttribute.PRODUCT).size());
 		assertEquals(configuration1.getOptionValues(BugzillaAttribute.PRODUCT).get(0),
 				testLoadedConfig.getOptionValues(BugzillaAttribute.PRODUCT).get(0));
@@ -148,8 +149,8 @@ public class BugzillaConfigurationTest extends TestCase {
 			RepositoryConfiguration config = contentHandler.getConfiguration();
 			assertNotNull(config);
 
-			assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT).contains(
-					"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+			assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT)
+					.contains("Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 		} finally {
 			if (inCleaned != null) {
 				inCleaned.close();

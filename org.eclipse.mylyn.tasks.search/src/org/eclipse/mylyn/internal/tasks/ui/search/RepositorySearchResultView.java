@@ -101,7 +101,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				action.setChecked(false);
 			}
 
-			SearchResultTreeContentProvider contentProvider = (SearchResultTreeContentProvider) getViewer().getContentProvider();
+			SearchResultTreeContentProvider contentProvider = (SearchResultTreeContentProvider) getViewer()
+					.getContentProvider();
 			if (contentProvider.getSelectedGroup() == groupBy) {
 				contentProvider.setSelectedGroup(GroupBy.NONE);
 			} else {
@@ -230,9 +231,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		searchResultProvider = new SearchResultTreeContentProvider();
 		viewer.setContentProvider(searchResultProvider);
 
-		styledLabelProvider = new DecoratingPatternStyledCellLabelProvider(new SearchResultsLabelProvider(
-				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
-				null);
+		styledLabelProvider = new DecoratingPatternStyledCellLabelProvider(
+				new SearchResultsLabelProvider(searchResultProvider, viewer),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null);
 		viewer.setLabelProvider(styledLabelProvider);
 		viewer.setSorter(searchResultSorter);
 
@@ -349,10 +350,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// Add to Task List menu
 		// HACK: this should be a contribution
-		final MenuManager subMenuManager = new MenuManager(MessageFormat.format(
-				Messages.RepositorySearchResultView_Add_to_X_Category, TaskListView.LABEL_VIEW));
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
-				.getCategories());
+		final MenuManager subMenuManager = new MenuManager(
+				MessageFormat.format(Messages.RepositorySearchResultView_Add_to_X_Category, TaskListView.LABEL_VIEW));
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
+				TasksUiInternal.getTaskList().getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
 			if (!(category instanceof UnmatchedTaskContainer)) {//.equals(TasksUiPlugin.getTaskList().getArchiveContainer())) {

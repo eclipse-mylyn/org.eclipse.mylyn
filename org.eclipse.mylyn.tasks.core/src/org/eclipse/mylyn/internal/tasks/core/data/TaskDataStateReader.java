@@ -103,8 +103,8 @@ public class TaskDataStateReader extends DefaultHandler {
 					attribute.getMetaData()
 							.putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_MULTI_SELECT);
 				} else {
-					attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE,
-							TaskAttribute.TYPE_SINGLE_SELECT);
+					attribute.getMetaData()
+							.putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
 				}
 			}
 		}
@@ -267,8 +267,9 @@ public class TaskDataStateReader extends DefaultHandler {
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_OPERATION + ++id);
 			attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_OPERATION);
-			attribute.getMetaData().putValue(TaskAttribute.META_LABEL,
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+			attribute.getMetaData()
+					.putValue(TaskAttribute.META_LABEL,
+							getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
 			attribute.setValue(operationId);
 

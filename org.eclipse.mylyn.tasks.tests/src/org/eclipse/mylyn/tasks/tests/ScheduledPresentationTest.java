@@ -79,8 +79,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testuser",
-				"testpassword"), false);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("testuser", "testpassword"), false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		MockTask mockTask = new MockTask(MockRepositoryConnector.REPOSITORY_URL, "123", "mock task");
@@ -126,8 +126,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 		// Scheduled and Due for a day next week 
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		TasksUiPlugin.getTaskActivityManager().setDueDate(mockTask,
-				TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
+		TasksUiPlugin.getTaskActivityManager()
+				.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
 		populateResults(results, false);
 		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
 		assertEquals("Next Week", results.get(mockTask).getSummary());
@@ -162,8 +162,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 		// Scheduled for NEXT WEEK AND DUE on date next week
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		TasksUiPlugin.getTaskActivityManager().setDueDate(mockTask,
-				TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
+		TasksUiPlugin.getTaskActivityManager()
+				.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
 		TasksUiPlugin.getTaskActivityManager().setScheduledFor(mockTask, TaskActivityUtil.getNextWeek());
 		mockTask.setOwner("testuser");
 		results.put(mockTask, null);

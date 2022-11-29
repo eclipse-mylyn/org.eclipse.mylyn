@@ -51,7 +51,8 @@ public class BugzillaAttachmentWizard extends Wizard {
 	private final String repositoryLabel;
 
 	public BugzillaAttachmentWizard(Shell parentShell, AttributeEditorFactory factory,
-			TaskAttribute attachmentAttribute, TaskEditor taskEditor, ITaskAttachment attachment, String repositoryLabel) {
+			TaskAttribute attachmentAttribute, TaskEditor taskEditor, ITaskAttachment attachment,
+			String repositoryLabel) {
 		super();
 		this.factory = factory;
 		this.attachmentAttribute = attachmentAttribute;
@@ -122,7 +123,8 @@ public class BugzillaAttachmentWizard extends Wizard {
 			return true;
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, "Unexpected error", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
+					.handle(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, "Unexpected error", e), //$NON-NLS-1$
+							StatusManager.SHOW | StatusManager.LOG);
 			return false;
 		} catch (InterruptedException e) {
 			// canceled

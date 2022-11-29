@@ -91,14 +91,14 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		float total = 0;
 		try {
-			TaskAttribute attrActualTime = getTaskData().getRoot().getMappedAttribute(
-					BugzillaAttribute.ACTUAL_TIME.getKey());
+			TaskAttribute attrActualTime = getTaskData().getRoot()
+					.getMappedAttribute(BugzillaAttribute.ACTUAL_TIME.getKey());
 			float actual = 0;
 			if (attrActualTime != null) {
 				actual = Float.parseFloat(attrActualTime.getValue());
 			}
-			TaskAttribute attrRemainingTime = getTaskData().getRoot().getMappedAttribute(
-					BugzillaAttribute.REMAINING_TIME.getKey());
+			TaskAttribute attrRemainingTime = getTaskData().getRoot()
+					.getMappedAttribute(BugzillaAttribute.REMAINING_TIME.getKey());
 			float remaining = 0;
 			if (attrRemainingTime != null) {
 				remaining = Float.parseFloat(attrRemainingTime.getValue());
@@ -123,8 +123,8 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		}
 
 		// Add Time
-		TaskAttribute addTimeAttribute = getTaskData().getRoot().getMappedAttribute(
-				BugzillaAttribute.WORK_TIME.getKey());
+		TaskAttribute addTimeAttribute = getTaskData().getRoot()
+				.getMappedAttribute(BugzillaAttribute.WORK_TIME.getKey());
 		if (addTimeAttribute == null) {
 			addTimeAttribute = BugzillaTaskDataHandler.createAttribute(getTaskData(), BugzillaAttribute.WORK_TIME);
 

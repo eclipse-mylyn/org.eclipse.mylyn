@@ -42,6 +42,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				Messages.CopyTaskDetailsAction_Url_Menu_Label), ID_SUMMARY(
 						Messages.CopyTaskDetailsAction_ID_Summary_Menu_Label), ID_SUMMARY_URL(
 								Messages.CopyTaskDetailsAction_ID_Summary_and_Url_Menu_Label);
+
 		/**
 		 * @deprecated Use {@link #ID_SUMMARY} instead
 		 */

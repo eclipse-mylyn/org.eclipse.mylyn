@@ -41,8 +41,8 @@ public class TaskRepositoryPropertyTester extends PropertyTester {
 			if (PROPERTY_CONNECTOR_KIND.equals(property)) {
 				return repository.getConnectorKind().equals(expectedValue);
 			} else if (PROPERTY_USER_MANAGED.equals(property)) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repository.getConnectorKind());
 				return equals(connector != null && connector.isUserManaged(), expectedValue);
 			} else if (PROPERTY_DISCONNECTED.equals(property)) {
 				return equals(!repository.isOffline(), expectedValue);

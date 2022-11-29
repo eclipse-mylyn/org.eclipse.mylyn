@@ -217,7 +217,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 	}
 
 	public void testPerformQuery() throws Exception {
-		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		RepositoryConfiguration repositoryConfiguration = connector
+				.getRepositoryConfiguration(repository.getRepositoryUrl());
 		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		final String priority = priorities.get(0);
 		final String severity = "trivial";
@@ -253,8 +254,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		String bug_status = BugzillaFixture.current()
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
-				? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
-				: "&bug_status=UNCONFIRMED&bug_status=CONFIRMED";
+						? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
+						: "&bug_status=UNCONFIRMED&bug_status=CONFIRMED";
 		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?priority=" + priority
 				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="
 				+ severity + bug_status + "&type0-0-1=equals&value0-0-1=tests%40mylyn.eclipse.org&email1=" + email
@@ -262,10 +263,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				+ descriptionNotNull + "&longdesc_type=casesubstring";
 
 		// make sure initial task is not P1/trivial
-		assertFalse(taskData.getRoot()
-				.getMappedAttribute(BugzillaAttribute.PRIORITY.getKey())
-				.getValue()
-				.equals(priority));
+		assertFalse(
+				taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue().equals(priority));
 		assertFalse(taskData.getRoot()
 				.getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey())
 				.getValue()

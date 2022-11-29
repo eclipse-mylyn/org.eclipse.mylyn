@@ -103,8 +103,8 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testProxy() throws Exception {
-		client = fixture.connect(fixture.getRepositoryUrl(), "", "", new Proxy(Type.HTTP, new InetSocketAddress(
-				"invalidhostname", 8080)));
+		client = fixture.connect(fixture.getRepositoryUrl(), "", "",
+				new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
 		try {
 			client.validate(new NullProgressMonitor());
 			fail("Expected IOException");
@@ -195,7 +195,8 @@ public class TracClientTest extends TestCase {
 			assertEquals(1, result.size());
 			TracTestUtil.assertTicketEquals(ticket, result.get(0));
 		} catch (TracRemoteException e) {
-			if ("'Query filter requires field and constraints separated by a \"=\"' while executing 'ticket.query()'".equals(e.getMessage())
+			if ("'Query filter requires field and constraints separated by a \"=\"' while executing 'ticket.query()'"
+					.equals(e.getMessage())
 					&& (fixture.getVersion().equals("0.10") || fixture.getVersion().equals("0.11"))) {
 				// ignore upstream problem, see bug 162094
 			} else {

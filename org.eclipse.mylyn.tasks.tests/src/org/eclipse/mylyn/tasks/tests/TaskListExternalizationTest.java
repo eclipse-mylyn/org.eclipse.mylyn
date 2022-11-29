@@ -451,10 +451,11 @@ public class TaskListExternalizationTest extends TestCase {
 		task.setTaskKind("kind");
 		TasksUiPlugin.getTaskList().addTask(task);
 		TaskTestUtil.saveAndReadTasklist();
-		assertEquals(1, TasksUiPlugin.getTaskList()
-				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
-				.getChildren()
-				.size());
+		assertEquals(1,
+				TasksUiPlugin.getTaskList()
+						.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
+						.getChildren()
+						.size());
 		ITask readTask = TasksUiPlugin.getTaskList()
 				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
 				.getChildren()

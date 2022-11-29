@@ -53,8 +53,8 @@ public class ActivityPart extends AbstractTaskEditorSection {
 		Composite activityComposite = toolkit.createComposite(parent);
 		activityComposite.setLayout(EditorUtil.createSectionClientLayout());
 
-		TreeViewer viewer = new TreeViewer(toolkit.createTree(activityComposite, SWT.SINGLE | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.FULL_SELECTION));
+		TreeViewer viewer = new TreeViewer(
+				toolkit.createTree(activityComposite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION));
 		GridDataFactory.fillDefaults().hint(500, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ActivityRecordContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ActivityRecordLabelProvider(), null, null));

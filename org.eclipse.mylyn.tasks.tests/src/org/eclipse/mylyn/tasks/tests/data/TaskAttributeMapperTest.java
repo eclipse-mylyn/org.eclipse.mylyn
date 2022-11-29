@@ -69,7 +69,8 @@ public class TaskAttributeMapperTest extends TestCase {
 		comment.applyTo(attributeNew);
 		assertEquals("", attributeNew.getValue());
 
-		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew, mapper.equals(attributeNew, attributeOld));
+		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew,
+				mapper.equals(attributeNew, attributeOld));
 		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
 				mapper.equals(attributeOld, attributeNew));
 	}
@@ -95,7 +96,8 @@ public class TaskAttributeMapperTest extends TestCase {
 		// Mylyn 3.7 before release with ID sub-attribute
 		TaskAttribute idAttribute = attributeOld.createAttribute("task.common.comment.id");
 		idAttribute.setValue("2");
-		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew, mapper.equals(attributeNew, attributeOld));
+		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew,
+				mapper.equals(attributeNew, attributeOld));
 
 		// IDs should now be unequal
 		idAttribute.setValue("3");

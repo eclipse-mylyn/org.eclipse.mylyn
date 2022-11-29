@@ -71,11 +71,11 @@ public class ExportAction implements IViewActionDelegate {
 			try {
 				ImportExportUtil.export(file, (IStructuredSelection) selection);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Problems encountered during export", e)); //$NON-NLS-1$
-				TasksUiInternal.displayStatus(Messages.ExportAction_Dialog_Title, new MultiStatus(
-						ITasksCoreConstants.ID_PLUGIN, 0, new IStatus[] { e.getStatus() },
-						Messages.ExportAction_Problems_encountered, e));
+				StatusHandler.log(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problems encountered during export", e)); //$NON-NLS-1$
+				TasksUiInternal.displayStatus(Messages.ExportAction_Dialog_Title,
+						new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, new IStatus[] { e.getStatus() },
+								Messages.ExportAction_Problems_encountered, e));
 			}
 		}
 	}

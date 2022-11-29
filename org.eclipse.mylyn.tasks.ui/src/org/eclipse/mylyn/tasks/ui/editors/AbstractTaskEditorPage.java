@@ -696,8 +696,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			// XXX retry once to work around bug 235479
 			taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
 		}
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskDataState.getConnectorKind(),
-				taskDataState.getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(taskDataState.getConnectorKind(), taskDataState.getRepositoryUrl());
 
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
 	}
@@ -939,9 +939,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			boolean expandLastComment = newCommentAttribute != null
 					&& getModel().getChangedAttributes().contains(newCommentAttribute);
 
-			SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
-					getModel().getTaskRepository(), task, getModel().getTaskData(),
-					getModel().getChangedOldAttributes());
+			SubmitJob submitJob = TasksUiInternal.getJobFactory()
+					.createSubmitTaskJob(connector, getModel().getTaskRepository(), task, getModel().getTaskData(),
+							getModel().getChangedOldAttributes());
 			submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext(), expandLastComment));
 			submitJob.schedule();
 		} catch (RuntimeException e) {
@@ -1725,8 +1725,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			return;
 		}
 
-		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 		if (commentAttributes.size() > 0) {
 			selectReveal(commentAttributes.get(commentAttributes.size() - 1).getId());
 		}

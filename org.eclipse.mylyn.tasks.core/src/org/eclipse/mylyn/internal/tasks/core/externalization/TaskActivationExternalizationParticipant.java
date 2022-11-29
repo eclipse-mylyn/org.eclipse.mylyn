@@ -35,8 +35,8 @@ import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 /**
  * @author Steffen Pingel
  */
-public class TaskActivationExternalizationParticipant extends AbstractExternalizationParticipant implements
-		ITaskActivationListener {
+public class TaskActivationExternalizationParticipant extends AbstractExternalizationParticipant
+		implements ITaskActivationListener {
 
 	private final ExternalizationManager externalizationManager;
 

@@ -307,8 +307,8 @@ public class TasksUiInternal {
 				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
 
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind,
-						task.getRepositoryUrl());
+				TaskRepository repository = TasksUi.getRepositoryManager()
+						.getRepository(repositoryKind, task.getRepositoryUrl());
 				if (repository == null) {
 					displayStatus(Messages.TasksUiInternal_Failed_to_open_task, new Status(IStatus.ERROR,
 							TasksUiPlugin.ID_PLUGIN, Messages.TasksUiInternal_No_repository_found));
@@ -356,8 +356,8 @@ public class TasksUiInternal {
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(taskRepository.getConnectorKind());
-		final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector,
-				taskRepository, null);
+		final TaskJob job = TasksUiInternal.getJobFactory()
+				.createUpdateRepositoryConfigurationJob(connector, taskRepository, null);
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -395,8 +395,8 @@ public class TasksUiInternal {
 		}
 		taskList.notifySynchronizationStateChanged(queries);
 
-		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeQueriesJob(connector, repository,
-				queries);
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory()
+				.createSynchronizeQueriesJob(connector, repository, queries);
 		job.setUser(force);
 		if (force) {
 			// show the progress in the system task bar if this is a user job (i.e. forced)
@@ -428,8 +428,8 @@ public class TasksUiInternal {
 	 */
 	public static final Job synchronizeQuery(AbstractRepositoryConnector connector, RepositoryQuery repositoryQuery,
 			IJobChangeListener listener, boolean force) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryQuery.getConnectorKind(),
-				repositoryQuery.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(repositoryQuery.getConnectorKind(), repositoryQuery.getRepositoryUrl());
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
 	}
 
@@ -479,8 +479,8 @@ public class TasksUiInternal {
 		synchronizationScheduler.schedule(task, new Synchronizer<Job>() {
 			@Override
 			public Job createJob() {
-				SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeTasksJob(connector,
-						Collections.singleton(task));
+				SynchronizationJob job = TasksUiPlugin.getTaskJobFactory()
+						.createSynchronizeTasksJob(connector, Collections.singleton(task));
 				job.setUser(false);
 				job.setSystem(true);
 				return job;
@@ -740,8 +740,8 @@ public class TasksUiInternal {
 	 */
 	public static boolean openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, final IRepositoryQuery query) {
 		try {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					query.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager()
+					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 			if (repository == null) {
 				return false;
 			}
@@ -817,8 +817,8 @@ public class TasksUiInternal {
 		if (page == null) {
 			return;
 		}
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		IEditorInput input = new TaskEditorInput(taskRepository, task);
 		IEditorPart editor = page.findEditor(input);
 		if (editor != null) {
@@ -828,8 +828,8 @@ public class TasksUiInternal {
 
 	public static void closeTaskEditorInAllPages(ITask task, boolean save) {
 		Assert.isNotNull(task);
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		IEditorInput input = new TaskEditorInput(taskRepository, task);
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow window : windows) {
@@ -844,8 +844,8 @@ public class TasksUiInternal {
 	}
 
 	public static boolean hasLocalCompletionState(ITask task) {
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(task.getConnectorKind());
 		return connector.hasLocalCompletionState(taskRepository, task);
@@ -905,11 +905,11 @@ public class TasksUiInternal {
 		}
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
 		workingCopy.save(null, null);
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskData.getConnectorKind(),
-				taskData.getRepositoryUrl());
+		TaskRepository taskRepository = TasksUi.getRepositoryManager()
+				.getRepository(taskData.getConnectorKind(), taskData.getRepositoryUrl());
 		connector.updateNewTaskFromTaskData(taskRepository, task, taskData);
-		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository localTaskRepository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, null);
 	}
@@ -968,8 +968,8 @@ public class TasksUiInternal {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskIdOrKey);
 
-		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
-				taskIdOrKey);
+		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList()
+				.getTask(repository.getRepositoryUrl(), taskIdOrKey);
 		if (task == null) {
 			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskIdOrKey);
 		}
@@ -980,8 +980,8 @@ public class TasksUiInternal {
 		Assert.isNotNull(task);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			TaskRepository taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			boolean openWithBrowser = !TasksUiPlugin.getDefault()
 					.getPreferenceStore()
 					.getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
@@ -1355,11 +1355,11 @@ public class TasksUiInternal {
 							NLS.bind("The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
-				TasksUiInternal
-						.displayStatus(title,
-								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										"Command service is not available to execute command with the id ''{0}''.", //$NON-NLS-1$
-										commandId), new Exception()));
+				TasksUiInternal.displayStatus(title,
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("Command service is not available to execute command with the id ''{0}''.", //$NON-NLS-1$
+										commandId),
+								new Exception()));
 			}
 		} else {
 			TasksUiInternal.displayStatus(title,
@@ -1521,8 +1521,8 @@ public class TasksUiInternal {
 	}
 
 	public static boolean canGetTaskHistory(ITask task) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(repository.getConnectorKind());
 		return connector.canGetTaskHistory(repository, task);

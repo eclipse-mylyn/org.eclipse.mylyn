@@ -69,17 +69,18 @@ public class CreateQueryFromSearchAction extends Action {
 			if (structuredSelection.getFirstElement() instanceof ITask) {
 				ISearchQuery[] queries = NewSearchUI.getQueries();
 				ITask task = (ITask) structuredSelection.getFirstElement();
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						task.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(task.getConnectorKind());
 				if (queries.length != 0 && connector != null) {
 					SearchHitCollector searchHitCollector = (SearchHitCollector) queries[0];
 					IRepositoryQuery query = searchHitCollector.getRepositoryQuery();
-					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getShell(), Messages.CreateQueryFromSearchAction_CLEAR_QUERY, MessageFormat.format(
-							Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X,
-							TaskListView.LABEL_VIEW)
-							+ ": ", "", null); //$NON-NLS-1$ //$NON-NLS-2$
+					InputDialog dialog = new InputDialog(
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							Messages.CreateQueryFromSearchAction_CLEAR_QUERY,
+							MessageFormat.format(
+									Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X,
+									TaskListView.LABEL_VIEW) + ": ", //$NON-NLS-1$
+							"", null); //$NON-NLS-1$
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {
 						query.setSummary(dialog.getValue());

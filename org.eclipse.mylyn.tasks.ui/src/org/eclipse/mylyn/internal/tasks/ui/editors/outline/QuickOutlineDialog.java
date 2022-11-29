@@ -77,8 +77,8 @@ import org.eclipse.ui.forms.editor.IFormPage;
  * @author Frank Becker
  * @author Steffen Pingel
  */
-public class QuickOutlineDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
-		IInformationControlExtension2, DisposeListener {
+public class QuickOutlineDialog extends PopupDialog
+		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
 	public final class Filter extends PatternFilter {
 		@Override
@@ -93,8 +93,8 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 			if (element instanceof TaskEditorOutlineNode) {
 				TaskEditorOutlineNode node = (TaskEditorOutlineNode) element;
 				if (node.getTaskRelation() != null) {
-					return NLS.bind(Messages.QuickOutlineDialog_Node_Label_Decoration, text, node.getTaskRelation()
-							.toString());
+					return NLS.bind(Messages.QuickOutlineDialog_Node_Label_Decoration, text,
+							node.getTaskRelation().toString());
 				}
 			}
 			return null;

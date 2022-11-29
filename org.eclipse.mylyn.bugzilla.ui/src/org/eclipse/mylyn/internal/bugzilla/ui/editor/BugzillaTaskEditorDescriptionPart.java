@@ -39,18 +39,18 @@ public class BugzillaTaskEditorDescriptionPart extends TaskEditorDescriptionPart
 
 		@Override
 		public void run() {
-			TaskAttribute isPrivateAttribute = getAttribute().getAttribute(
-					IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+			TaskAttribute isPrivateAttribute = getAttribute()
+					.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
 			// isPrivateAttribute can not be null because we only add the Action when the Attribute exists
 			TaskAttribute idAttribute = getAttribute().getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
 			boolean oldValue = "1".compareTo(isPrivateAttribute.getValue()) == 0; //$NON-NLS-1$
 			isPrivateAttribute.setValue(!oldValue ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 			String value = idAttribute.getValue();
-			TaskAttribute definedIsPrivate = getAttribute().getAttribute(
-					IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+			TaskAttribute definedIsPrivate = getAttribute()
+					.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 			if (definedIsPrivate == null) {
-				definedIsPrivate = getAttribute().createAttribute(
-						IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+				definedIsPrivate = getAttribute()
+						.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 			}
 			TaskAttribute isPrivate = getAttribute().getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 			if (isPrivate == null) {

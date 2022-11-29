@@ -203,8 +203,9 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 				currentColumn++;
 			}
 			attributeEditor.createControl(attributesComposite, toolkit);
-			attributeEditor.getControl().setBackground(
-					attributesComposite.getParent().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+			attributeEditor.getControl()
+					.setBackground(
+							attributesComposite.getParent().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			attributeEditor.getControl().setForeground(attributesComposite.getForeground());
 			LayoutHint layoutHint = attributeEditor.getLayoutHint();
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);

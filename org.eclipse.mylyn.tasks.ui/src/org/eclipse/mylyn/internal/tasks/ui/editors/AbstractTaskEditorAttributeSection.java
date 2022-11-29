@@ -256,9 +256,9 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 			@Override
 			public void run() {
 				getTaskEditorPage().showEditorBusy(true);
-				final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(
-						getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository(),
-						getTaskEditorPage().getTask());
+				final TaskJob job = TasksUiInternal.getJobFactory()
+						.createUpdateRepositoryConfigurationJob(getTaskEditorPage().getConnector(),
+								getTaskEditorPage().getTaskRepository(), getTaskEditorPage().getTask());
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
@@ -266,9 +266,10 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 							public void run() {
 								getTaskEditorPage().showEditorBusy(false);
 								if (job.getStatus() != null) {
-									getTaskEditorPage().getTaskEditor().setStatus(
-											Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
-											Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
+									getTaskEditorPage().getTaskEditor()
+											.setStatus(
+													Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
+													Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
 								} else {
 									getTaskEditorPage().refresh();
 								}

@@ -112,12 +112,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	private static final String[] patternOperationText = { Messages.BugzillaSearchPage_OperationText_allwordssubstr,
 			Messages.BugzillaSearchPage_OperationText_anywordssubstr,
 			Messages.BugzillaSearchPage_OperationText_substring,
-			Messages.BugzillaSearchPage_OperationText_casesubstring,
-			Messages.BugzillaSearchPage_OperationText_allwords, Messages.BugzillaSearchPage_OperationText_anywords,
-			Messages.BugzillaSearchPage_OperationText_regexp, Messages.BugzillaSearchPage_OperationText_notregexp };
+			Messages.BugzillaSearchPage_OperationText_casesubstring, Messages.BugzillaSearchPage_OperationText_allwords,
+			Messages.BugzillaSearchPage_OperationText_anywords, Messages.BugzillaSearchPage_OperationText_regexp,
+			Messages.BugzillaSearchPage_OperationText_notregexp };
 
-	private static final String[] patternOperationValues = {
-			"allwordssubstr", "anywordssubstr", "substring", "casesubstring", "allwords", "anywords", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "substring", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			"casesubstring", "allwords", "anywords", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	private static final String[] emailOperationText = { Messages.BugzillaSearchPage_EmailOperation_substring,
 			Messages.BugzillaSearchPage_EmailOperation_exact, Messages.BugzillaSearchPage_EmailOperation_notequals,
@@ -540,10 +540,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 				handleWidgetSelected(emailPattern, emailOperation, previousEmailPatterns);
 			}
 		});
-		IContentProposalProvider proposalProvider = TasksUi.getUiFactory().createPersonContentProposalProvider(
-				getTaskRepository());
-		ILabelProvider proposalLabelProvider = TasksUi.getUiFactory().createPersonContentProposalLabelProvider(
-				getTaskRepository());
+		IContentProposalProvider proposalProvider = TasksUi.getUiFactory()
+				.createPersonContentProposalProvider(getTaskRepository());
+		ILabelProvider proposalLabelProvider = TasksUi.getUiFactory()
+				.createPersonContentProposalLabelProvider(getTaskRepository());
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(emailPattern, new ComboContentAdapter(),
 				proposalProvider, ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
@@ -779,13 +779,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 				handleWidgetSelected(emailPattern2, emailOperation2, previousEmailPatterns2);
 			}
 		});
-		IContentProposalProvider proposalProvider = TasksUi.getUiFactory().createPersonContentProposalProvider(
-				getTaskRepository());
-		ILabelProvider proposalLabelProvider = TasksUi.getUiFactory().createPersonContentProposalLabelProvider(
-				getTaskRepository());
-		ContentAssistCommandAdapter adapter2 = new ContentAssistCommandAdapter(emailPattern2,
-				new ComboContentAdapter(), proposalProvider, ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS,
-				new char[0], true);
+		IContentProposalProvider proposalProvider = TasksUi.getUiFactory()
+				.createPersonContentProposalProvider(getTaskRepository());
+		ILabelProvider proposalLabelProvider = TasksUi.getUiFactory()
+				.createPersonContentProposalLabelProvider(getTaskRepository());
+		ContentAssistCommandAdapter adapter2 = new ContentAssistCommandAdapter(emailPattern2, new ComboContentAdapter(),
+				proposalProvider, ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
 		adapter2.setLabelProvider(proposalLabelProvider);
 		adapter2.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
@@ -1211,12 +1210,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 								NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer, days),
 								IMessageProvider.ERROR);
 					} else {
-						ErrorDialog.openError(
-								getShell(),
-								Messages.BugzillaSearchPage_ValidationTitle,
+						ErrorDialog.openError(getShell(), Messages.BugzillaSearchPage_ValidationTitle,
 								Messages.BugzillaSearchPage_Number_of_days_is_invalid,
 								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
-										Messages.BugzillaSearchPage_days_must_be_an_positve_integer_value_but_is, days)));
+										Messages.BugzillaSearchPage_days_must_be_an_positve_integer_value_but_is,
+										days)));
 
 					}
 					return false;
@@ -1238,18 +1236,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 					final ControlDecoration decoration = new ControlDecoration(emailPattern, SWT.LEFT | SWT.DOWN);
 					decoration.setImage(fieldDecoration.getImage());
-					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
-							Messages.BugzillaSearchPage_Email.replace('&', ' '), Messages.BugzillaSearchPage_owner,
-							Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
-							Messages.BugzillaSearchPage_commenter, Messages.BugzillaSearchPage_qacontact }));
+					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage,
+							new String[] { Messages.BugzillaSearchPage_Email.replace('&', ' '),
+									Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
+									Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
+									Messages.BugzillaSearchPage_qacontact }));
 					errorDecorations.add(decoration);
 					if (getContainer() != null) {
-						setMessage(
-								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
-										Messages.BugzillaSearchPage_Email.replace('&', ' '),
+						setMessage(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage,
+								new String[] { Messages.BugzillaSearchPage_Email.replace('&', ' '),
 										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
 										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
-										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
+										Messages.BugzillaSearchPage_qacontact }),
+								IMessageProvider.ERROR);
 					}
 					return false;
 				}
@@ -1270,18 +1269,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 					final ControlDecoration decoration = new ControlDecoration(emailPattern, SWT.LEFT | SWT.DOWN);
 					decoration.setImage(fieldDecoration.getImage());
-					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
-							Messages.BugzillaSearchPage_Email_2.replace('&', ' '), Messages.BugzillaSearchPage_owner,
-							Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
-							Messages.BugzillaSearchPage_commenter, Messages.BugzillaSearchPage_qacontact }));
+					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage,
+							new String[] { Messages.BugzillaSearchPage_Email_2.replace('&', ' '),
+									Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
+									Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
+									Messages.BugzillaSearchPage_qacontact }));
 					errorDecorations.add(decoration);
 					if (getContainer() != null) {
-						setMessage(
-								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
-										Messages.BugzillaSearchPage_Email_2.replace('&', ' '),
+						setMessage(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage,
+								new String[] { Messages.BugzillaSearchPage_Email_2.replace('&', ' '),
 										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
 										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
-										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
+										Messages.BugzillaSearchPage_qacontact }),
+								IMessageProvider.ERROR);
 					}
 					return false;
 				}
@@ -1560,11 +1560,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 			updateAttributesBasedOnProductSelection(selectedProducts, repositoryConfiguration);
 
-			status.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)));
-			resolution.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.RESOLUTION)));
-			severity.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_SEVERITY)));
-			priority.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY)));
-			hardware.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.REP_PLATFORM)));
+			status.setItems(
+					convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)));
+			resolution.setItems(
+					convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.RESOLUTION)));
+			severity.setItems(
+					convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_SEVERITY)));
+			priority.setItems(
+					convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY)));
+			hardware.setItems(
+					convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.REP_PLATFORM)));
 			os.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.OP_SYS)));
 
 			setSelection(product, selectedProducts);
@@ -2078,8 +2083,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					comboField.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
-									chartColumn);
+							ChartExpression chartExpression = charts.get(chartNum)
+									.getChartExpression(chartRow, chartColumn);
 							chartExpression.setFieldName(comboField.getSelectionIndex());
 							comboField.getShell().layout(true);
 							comboField.getShell().redraw();
@@ -2095,8 +2100,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					comboOperation.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
-									chartColumn);
+							ChartExpression chartExpression = charts.get(chartNum)
+									.getChartExpression(chartRow, chartColumn);
 							chartExpression.setOperation(comboOperation.getSelectionIndex());
 						}
 					});
@@ -2107,8 +2112,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					comboValue.addModifyListener(new ModifyListener() {
 
 						public void modifyText(ModifyEvent e) {
-							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
-									chartColumn);
+							ChartExpression chartExpression = charts.get(chartNum)
+									.getChartExpression(chartRow, chartColumn);
 							chartExpression.setValue(comboValue.getText());
 							if (isControlCreated()) {
 								setPageComplete(isPageComplete());

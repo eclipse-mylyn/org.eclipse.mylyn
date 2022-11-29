@@ -34,9 +34,9 @@ public class OpenTasksUiPreferencesAction extends Action {
 
 	@Override
 	public void run() {
-		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), TasksUiPreferencePage.ID, new String[] { TasksUiPreferencePage.ID }, null);
+		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), TasksUiPreferencePage.ID,
+				new String[] { TasksUiPreferencePage.ID }, null);
 		dlg.open();
 	}
 }

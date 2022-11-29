@@ -124,8 +124,8 @@ public class CommentGroupStrategyTest extends TestCase {
 			comments.add(mockComment(i + 1, "OtherPerson", new Date(i + 1)));
 		}
 		// not even the latest comment
-		comments.add(mockComment(CommentGroupStrategy.MAX_CURRENT + 1, "OtherPerson", new Date(
-				CommentGroupStrategy.MAX_CURRENT + 1)));
+		comments.add(mockComment(CommentGroupStrategy.MAX_CURRENT + 1, "OtherPerson",
+				new Date(CommentGroupStrategy.MAX_CURRENT + 1)));
 
 		List<CommentGroup> group = strategy.groupComments(comments, MOCK_CURRENT_PERSON_ID);
 
@@ -218,10 +218,8 @@ public class CommentGroupStrategyTest extends TestCase {
 			comments.add(mockComment(i + 1, MOCK_CURRENT_PERSON_ID, new Date(i + 1)));
 		}
 
-		boolean isCurrent = strategy.isCurrent(
-				comments,
-				mockComment(CommentGroupStrategy.MAX_CURRENT + 1, MOCK_CURRENT_PERSON_ID, new Date(
-						CommentGroupStrategy.MAX_CURRENT + 1)), MOCK_CURRENT_PERSON_ID);
+		boolean isCurrent = strategy.isCurrent(comments, mockComment(CommentGroupStrategy.MAX_CURRENT + 1,
+				MOCK_CURRENT_PERSON_ID, new Date(CommentGroupStrategy.MAX_CURRENT + 1)), MOCK_CURRENT_PERSON_ID);
 		assertEquals(false, isCurrent);
 	}
 

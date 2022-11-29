@@ -150,16 +150,22 @@ public class BugzillaFlagPart extends AbstractTaskEditorPart {
 		}
 
 		if (used > 0) {
-			infoOverlayText = NLS.bind(
-					" " + Messages.BugzillaFlagPart_Fleg_Section_Title, "" + (unused + used), "" + used); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+			infoOverlayText = NLS.bind(" " + Messages.BugzillaFlagPart_Fleg_Section_Title, "" + (unused + used), //$NON-NLS-1$//$NON-NLS-2$
+					"" + used); //$NON-NLS-1$ 
 		} else {
 			infoOverlayText = NLS.bind(" " + Messages.BugzillaFlagPart_Fleg_Section_Title_Short, "" + (unused + used)); //$NON-NLS-1$ //$NON-NLS-2$ 
 		}
 
-		usedDetail = NLS.bind(
-				"{0} {1}", used == 1 ? Messages.BugzillaFlagPart_used_flag + Messages.BugzillaFlagPart_is : Messages.BugzillaFlagPart_used_flags + Messages.BugzillaFlagPart_are, usedDetail); //$NON-NLS-1$
-		unusedDetail = NLS.bind(
-				"{0} {1}", unused == 1 ? Messages.BugzillaFlagPart_unused_flag + Messages.BugzillaFlagPart_is : Messages.BugzillaFlagPart_unused_flags + Messages.BugzillaFlagPart_are, unusedDetail); //$NON-NLS-1$ 
+		usedDetail = NLS.bind("{0} {1}", //$NON-NLS-1$
+				used == 1
+						? Messages.BugzillaFlagPart_used_flag + Messages.BugzillaFlagPart_is
+						: Messages.BugzillaFlagPart_used_flags + Messages.BugzillaFlagPart_are,
+				usedDetail);
+		unusedDetail = NLS.bind("{0} {1}", //$NON-NLS-1$
+				unused == 1
+						? Messages.BugzillaFlagPart_unused_flag + Messages.BugzillaFlagPart_is
+						: Messages.BugzillaFlagPart_unused_flags + Messages.BugzillaFlagPart_are,
+				unusedDetail);
 		if (used > 0 && unused > 0) {
 			infoOverlayTooltipText = NLS.bind("{0}\n{1}", usedDetail, unusedDetail); //$NON-NLS-1$
 		} else {

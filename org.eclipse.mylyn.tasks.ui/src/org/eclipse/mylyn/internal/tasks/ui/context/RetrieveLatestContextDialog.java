@@ -48,8 +48,8 @@ import com.ibm.icu.text.DateFormat;
 public class RetrieveLatestContextDialog extends MessageDialog {
 
 	public static boolean openQuestion(Shell shell, ITask task) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		List<ITaskAttachment> contextAttachments = AttachmentUtil.getContextAttachments(repository, task);
 		Collections.sort(contextAttachments, new TaskAttachmentComparator());
 		if (contextAttachments.size() > 0) {
@@ -76,8 +76,8 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 			int style = SWT.NONE;
 
 			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell,
-					Messages.RetrieveLatestContextDialog_Dialog_Title, null, message, kind, new String[] {
-							IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task, attachment);
+					Messages.RetrieveLatestContextDialog_Dialog_Title, null, message, kind,
+					new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task, attachment);
 			style &= SWT.SHEET;
 			dialog.setShellStyle(dialog.getShellStyle() | style);
 			return dialog.open() == 0;

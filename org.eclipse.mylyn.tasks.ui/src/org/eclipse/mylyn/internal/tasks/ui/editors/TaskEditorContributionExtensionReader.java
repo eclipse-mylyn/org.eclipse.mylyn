@@ -101,8 +101,8 @@ public class TaskEditorContributionExtensionReader {
 		try {
 			localContributions.add(new LocalTaskEditorContributionDescriptor(element));
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Unable to read local editor contribution", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to read local editor contribution", e)); //$NON-NLS-1$
 		}
 
 	}

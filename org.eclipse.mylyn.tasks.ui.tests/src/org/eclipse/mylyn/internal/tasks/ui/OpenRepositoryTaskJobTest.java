@@ -22,14 +22,15 @@ public class OpenRepositoryTaskJobTest {
 
 	@Test
 	public void setsNameFromTaskId() {
-		assertEquals("Opening repository task 123", new OpenRepositoryTaskJob("kind", "http://mock", "123",
-				"http://mock/123", null).getName());
+		assertEquals("Opening repository task 123",
+				new OpenRepositoryTaskJob("kind", "http://mock", "123", "http://mock/123", null).getName());
 	}
 
 	@Test
 	public void setsNameFromTaskKey() {
-		assertEquals("Opening repository task 123", new OpenRepositoryTaskJob(
-				new TaskRepository("kind", "http://mock"), "123", "http://mock/123", null).getName());
+		assertEquals("Opening repository task 123",
+				new OpenRepositoryTaskJob(new TaskRepository("kind", "http://mock"), "123", "http://mock/123", null)
+						.getName());
 	}
 
 }

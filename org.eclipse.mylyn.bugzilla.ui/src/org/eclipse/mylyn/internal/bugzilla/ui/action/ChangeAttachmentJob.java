@@ -69,8 +69,8 @@ public class ChangeAttachmentJob extends Job {
 		if (!task.getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
 			return Status.OK_STATUS;
 		}
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(task.getConnectorKind());
 		monitor.beginTask(Messages.UpdateAttachmentJob_update_attachments, 20);
 		try {
 			((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
@@ -91,8 +91,9 @@ public class ChangeAttachmentJob extends Job {
 											IFormPage formPage = editor.getActivePageInstance();
 											if (formPage instanceof BugzillaTaskEditorPage) {
 												BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-												Control control = bugzillaPage.getPart(
-														AbstractTaskEditorPage.ID_PART_ATTACHMENTS).getControl();
+												Control control = bugzillaPage
+														.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS)
+														.getControl();
 												if (control instanceof Section) {
 													Section section = (Section) control;
 													CommonFormUtil.setExpanded(section, true);
@@ -122,8 +123,8 @@ public class ChangeAttachmentJob extends Job {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Update of an Attachment failed", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Update of an Attachment failed", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}

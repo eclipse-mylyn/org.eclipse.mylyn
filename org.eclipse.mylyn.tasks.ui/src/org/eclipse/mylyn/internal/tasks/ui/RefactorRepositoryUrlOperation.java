@@ -49,8 +49,8 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 	}
 
 	@Override
-	protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-			InterruptedException {
+	protected void operations(IProgressMonitor monitor)
+			throws CoreException, InvocationTargetException, InterruptedException {
 		try {
 			//TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 			monitor.beginTask(Messages.RefactorRepositoryUrlOperation_Repository_URL_update, IProgressMonitor.UNKNOWN);

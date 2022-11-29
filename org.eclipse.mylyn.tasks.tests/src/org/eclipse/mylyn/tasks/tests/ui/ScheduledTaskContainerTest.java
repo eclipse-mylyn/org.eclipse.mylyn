@@ -199,8 +199,8 @@ public class ScheduledTaskContainerTest extends TestCase {
 		ITask taskIndianComoroDue = createTaskDueForDay(instant, "Indian/Comoro");
 		ITask taskAsiaTokyoDue = createTaskDueForDay(instant, "Asia/Tokyo");
 		ITask taskAustraliaSydneyDue = createTaskDueForDay(instant, "Australia/Sydney");
-		ScheduledTaskContainer dayContainer = new ScheduledTaskContainer(taskActivityManager, getDayOf(instant,
-				localTimezone));
+		ScheduledTaskContainer dayContainer = new ScheduledTaskContainer(taskActivityManager,
+				getDayOf(instant, localTimezone));
 		// check scheduled tasks are contained
 		assertTrue(dayContainer.getChildren().contains(taskUSHawaii));
 		assertTrue(dayContainer.getChildren().contains(taskCanadaPacific));
@@ -239,8 +239,8 @@ public class ScheduledTaskContainerTest extends TestCase {
 		ITask taskIndianComoro = createTaskScheduledForWeek(instant, "Indian/Comoro");
 		ITask taskAsiaTokyo = createTaskScheduledForWeek(instant, "Asia/Tokyo");
 		ITask taskAustraliaSydney = createTaskScheduledForWeek(instant, "Australia/Sydney");
-		ScheduledTaskContainer weekContainer = new ScheduledTaskContainer(taskActivityManager, getWeekOf(instant,
-				localTimezone));
+		ScheduledTaskContainer weekContainer = new ScheduledTaskContainer(taskActivityManager,
+				getWeekOf(instant, localTimezone));
 		assertTrue(weekContainer.getChildren().contains(taskUSHawaii));
 		assertTrue(weekContainer.getChildren().contains(taskCanadaPacific));
 		assertTrue(weekContainer.getChildren().contains(taskCanadaEastern));

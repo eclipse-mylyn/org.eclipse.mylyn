@@ -42,8 +42,8 @@ public class CopyContextHandler extends AbstractTaskHandler {
 
 	public static void run(ITask sourceTask) {
 		if (sourceTask == null) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, Messages.CopyContextHandler_No_source_task_selected);
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), TITLE_DIALOG,
+					Messages.CopyContextHandler_No_source_task_selected);
 			return;
 		}
 
@@ -70,12 +70,12 @@ public class CopyContextHandler extends AbstractTaskHandler {
 				final int CANCEL = 2;
 				int action = REPLACE;
 				if (TasksUiPlugin.getContextStore().hasContext(targetTask)) {
-					MessageDialog dialog2 = new MessageDialog(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getShell(), TITLE_DIALOG, null,
+					MessageDialog dialog2 = new MessageDialog(
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), TITLE_DIALOG, null,
 							Messages.CopyContextHandler_SELECTED_TASK_ALREADY_HAS_CONTEXT, MessageDialog.QUESTION,
 							new String[] { Messages.CopyContextHandler_Replace, Messages.CopyContextHandler_Merge,
-									IDialogConstants.CANCEL_LABEL }, 1);
+									IDialogConstants.CANCEL_LABEL },
+							1);
 					action = dialog2.open();
 				}
 
@@ -98,8 +98,8 @@ public class CopyContextHandler extends AbstractTaskHandler {
 				TasksUiInternal.activateTaskThroughCommand(targetTask);
 			}
 		} else {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, Messages.CopyContextHandler_No_target_task_selected);
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), TITLE_DIALOG,
+					Messages.CopyContextHandler_No_target_task_selected);
 		}
 	}
 

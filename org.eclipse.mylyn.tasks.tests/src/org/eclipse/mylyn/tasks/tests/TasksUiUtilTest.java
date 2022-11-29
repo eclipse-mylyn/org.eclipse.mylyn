@@ -134,7 +134,8 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(WebBrowserEditor.class, editor2.getClass());
 		assertEquals(WebBrowserEditorInput.class, editor2.getEditorInput().getClass());
 		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
-		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
+		assertEquals("http://eclipse.org/mylyn",
+				((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
 	}
 
 	public void testFlagNoRichEditor() throws Exception {
@@ -170,7 +171,8 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(WebBrowserEditor.class, editor2.getClass());
 		assertEquals(WebBrowserEditorInput.class, editor2.getEditorInput().getClass());
 		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
-		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
+		assertEquals("http://eclipse.org/mylyn",
+				((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
 		input = ((WebBrowserEditorInput) editor.getEditorInput());
 		f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);
@@ -183,8 +185,8 @@ public class TasksUiUtilTest extends TestCase {
 		editor = activePage.getEditorReferences()[2].getEditor(true);
 		assertEquals(WebBrowserEditor.class, editor.getClass());
 		assertEquals(WebBrowserEditorInput.class, editor.getEditorInput().getClass());
-		assertEquals("http://eclipse.org/mylyn/test", ((WebBrowserEditorInput) editor.getEditorInput()).getURL()
-				.toString());
+		assertEquals("http://eclipse.org/mylyn/test",
+				((WebBrowserEditorInput) editor.getEditorInput()).getURL().toString());
 		input = ((WebBrowserEditorInput) editor.getEditorInput());
 		f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);

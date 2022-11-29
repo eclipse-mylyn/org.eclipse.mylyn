@@ -119,8 +119,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public static final String XML_RESPONSE_WEB_TIME = "web_time"; //$NON-NLS-1$
 
-	public static final String[] XML_BUGZILLA_TIME_RESPONSE_TO_REMOVE = {
-			"tz_offset", "tz_short_name", "web_time_utc", "tz_name" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	public static final String[] XML_BUGZILLA_TIME_RESPONSE_TO_REMOVE = { "tz_offset", "tz_short_name", "web_time_utc", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			"tz_name" }; //$NON-NLS-1$
 
 	public static final String XML_RESPONSE_VERSION = "version"; //$NON-NLS-1$
 
@@ -353,9 +353,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_SELECTABLE, (token == null)
-						? null
-						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_SELECTABLE,
+						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -367,9 +366,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ENTERABLE, (token == null)
-						? null
-						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ENTERABLE,
+						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -381,9 +379,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ACCESSIBLE, (token == null)
-						? null
-						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ACCESSIBLE,
+						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -785,7 +782,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				taskIds.removeAll(idsToRetrieve);
 				taskDataMap.clear();
 			} catch (XmlRpcException e) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "XmlRpcException: ", e)); //$NON-NLS-1$
+				throw new CoreException(
+						new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "XmlRpcException: ", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -895,8 +893,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					e.printStackTrace();
 				}
 
-				TaskAttribute attachmentAttribute = taskData.getRoot().createAttribute(
-						TaskAttribute.PREFIX_ATTACHMENT + id);
+				TaskAttribute attachmentAttribute = taskData.getRoot()
+						.createAttribute(TaskAttribute.PREFIX_ATTACHMENT + id);
 				BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
 				attachmentMapper.setAttachmentId(id.toString());
 				IRepositoryPerson author = taskData.getAttributeMapper().getTaskRepository().createPerson(creator);
@@ -937,18 +935,20 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 						if (useIsPrivate) {
 							Boolean is_private = (Boolean) commentHash.get("is_private"); //$NON-NLS-1$
 							Integer commentID = (Integer) commentHash.get("id"); //$NON-NLS-1$
-							TaskAttribute idAttribute = description.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
+							TaskAttribute idAttribute = description
+									.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
 							idAttribute.setValue(commentID.toString());
 							if (useIsPrivate) {
-								TaskAttribute isprivateAttribute = description.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+								TaskAttribute isprivateAttribute = description
+										.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
 								isprivateAttribute.setValue(is_private ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 						commentNum++;
 						continue;
 					}
-					TaskAttribute attribute = taskData.getRoot().createAttribute(
-							TaskAttribute.PREFIX_COMMENT + commentNum);
+					TaskAttribute attribute = taskData.getRoot()
+							.createAttribute(TaskAttribute.PREFIX_COMMENT + commentNum);
 					TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 					Integer commentID = (Integer) commentHash.get("id"); //$NON-NLS-1$
 					Date time = (Date) commentHash.get("time"); //$NON-NLS-1$
@@ -985,8 +985,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					commentNum++;
 				}
 				// Need to set LONGDESCLENGTH to number of comments + 1 for description
-				TaskAttribute numCommentsAttribute = taskData.getRoot().getMappedAttribute(
-						BugzillaAttribute.LONGDESCLENGTH.getKey());
+				TaskAttribute numCommentsAttribute = taskData.getRoot()
+						.getMappedAttribute(BugzillaAttribute.LONGDESCLENGTH.getKey());
 				if (numCommentsAttribute == null) {
 					numCommentsAttribute = BugzillaTaskDataHandler.createAttribute(taskData,
 							BugzillaAttribute.LONGDESCLENGTH);
@@ -1081,8 +1081,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		if (repURL.indexOf("/xmlrpc.cgi") == -1) { //$NON-NLS-1$
 			return;
 		}
-		RepositoryConfiguration config = bugzillaClient.getConnector().getRepositoryConfiguration(
-				repURL.substring(0, repURL.indexOf("/xmlrpc.cgi"))); //$NON-NLS-1$
+		RepositoryConfiguration config = bugzillaClient.getConnector()
+				.getRepositoryConfiguration(repURL.substring(0, repURL.indexOf("/xmlrpc.cgi"))); //$NON-NLS-1$
 		if (config != null) {
 			for (BugzillaCustomField bugzillaCustomField : config.getCustomFields()) {
 
@@ -1127,8 +1127,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	private void updateAttachmentMetaData(TaskData taskData) {
-		List<TaskAttribute> taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> taskAttachments = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 		String repURL = taskData.getRepositoryUrl();
 		if (repURL.indexOf("/xmlrpc.cgi") == -1) { //$NON-NLS-1$
 			return;

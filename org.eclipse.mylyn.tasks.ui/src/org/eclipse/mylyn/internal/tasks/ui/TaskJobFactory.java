@@ -75,9 +75,8 @@ public class TaskJobFactory extends org.eclipse.mylyn.internal.tasks.core.TaskJo
 	}
 
 	@Override
-	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
-			TaskAttribute attachmentAttribute) {
+	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			ITask task, AbstractTaskAttachmentSource source, String comment, TaskAttribute attachmentAttribute) {
 		return decorateJob(super.createSubmitTaskAttachmentJob(connector, taskRepository, task, source, comment,
 				attachmentAttribute), TasksUiImages.REPOSITORY_SUBMIT);
 	}

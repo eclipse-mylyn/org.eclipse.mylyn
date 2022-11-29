@@ -63,9 +63,10 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 
 	public void openAttachment(final IWorkbenchPage page, final ITaskAttachment attachment) throws CoreException {
 		if (promptToConfirmOpen(attachment)) {
-			DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(MessageFormat.format(
-					Messages.TaskAttachmentEditorViewer_openingAttachment,
-					AttachmentUtil.getAttachmentFilename(attachment)), attachment, page, descriptor.getId());
+			DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(
+					MessageFormat.format(Messages.TaskAttachmentEditorViewer_openingAttachment,
+							AttachmentUtil.getAttachmentFilename(attachment)),
+					attachment, page, descriptor.getId());
 			WorkbenchUtil.busyCursorWhile(job);
 		}
 	}
@@ -74,12 +75,11 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 		if (isSystem()) {
 			IPreferenceStore store = TasksUiPlugin.getDefault().getPreferenceStore();
 			if (!store.getBoolean(PREF_DO_NOT_WARN_BEFORE_OPENING_ATTACHMENTS)) {
-				MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(
-						WorkbenchUtil.getShell(),
+				MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(WorkbenchUtil.getShell(),
 						Messages.TaskAttachmentEditorViewer_Open_Attachment,
 						NLS.bind(Messages.TaskAttachmentEditorViewer_Some_files_can_harm_your_computer,
-								attachment.getFileName()), Messages.TaskAttachmentEditorViewer_Do_not_warn_me_again,
-						false, null, null);
+								attachment.getFileName()),
+						Messages.TaskAttachmentEditorViewer_Do_not_warn_me_again, false, null, null);
 				if (dialog.getReturnCode() == IDialogConstants.YES_ID) {
 					if (dialog.getToggleState()) {
 						store.setValue(PREF_DO_NOT_WARN_BEFORE_OPENING_ATTACHMENTS, true);

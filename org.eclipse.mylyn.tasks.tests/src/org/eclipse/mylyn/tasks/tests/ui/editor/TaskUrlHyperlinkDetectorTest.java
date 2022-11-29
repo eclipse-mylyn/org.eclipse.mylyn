@@ -188,7 +188,8 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 	 */
 	public void testDetectionNoRepositoryRepositoryUrl() {
 		repository = null;
-		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://repo1.test/foo");
+		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
+				"http://repo1.test/foo");
 		try {
 			TasksUi.getRepositoryManager().addRepository(repository1);
 
@@ -207,7 +208,8 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 	 */
 	public void testDetectionNoRepositoryMultipleRepositoryUrls() {
 		repository = null;
-		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://repo1.test/foo");
+		TaskRepository repository1 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
+				"http://repo1.test/foo");
 		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://repo2.test");
 		try {
 			TasksUi.getRepositoryManager().addRepository(repository1);

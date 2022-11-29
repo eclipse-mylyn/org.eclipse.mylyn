@@ -199,8 +199,8 @@ public class ConnectorMigrationWizardTest {
 	@Test
 	public void performFinishSetsErrorMessage() throws InvocationTargetException, InterruptedException, IOException {
 		IWizardContainer container = createWizard(new ConnectorMigrationWizard(migrator));
-		doThrow(new InvocationTargetException(new IOException("Backup failed"))).when(container).run(any(Boolean.class),
-				any(Boolean.class), any(IRunnableWithProgress.class));
+		doThrow(new InvocationTargetException(new IOException("Backup failed"))).when(container)
+				.run(any(Boolean.class), any(Boolean.class), any(IRunnableWithProgress.class));
 		wizard.performFinish();
 		assertEquals("Backup failed", container.getCurrentPage().getErrorMessage());
 	}

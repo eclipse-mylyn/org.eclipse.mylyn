@@ -81,7 +81,8 @@ public class TaskDataModel {
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {
@@ -178,7 +179,8 @@ public class TaskDataModel {
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {

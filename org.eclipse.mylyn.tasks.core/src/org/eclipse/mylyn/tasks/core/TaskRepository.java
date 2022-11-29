@@ -235,7 +235,8 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	@Deprecated
-	public TaskRepository(String connectorKind, String repositoryUrl, String version, String encoding, String timeZoneId) {
+	public TaskRepository(String connectorKind, String repositoryUrl, String version, String encoding,
+			String timeZoneId) {
 		Assert.isNotNull(connectorKind);
 		Assert.isNotNull(repositoryUrl);
 		setProperty(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, connectorKind);
@@ -594,9 +595,8 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void setCharacterEncoding(String characterEncoding) {
-		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null
-				? DEFAULT_CHARACTER_ENCODING
-				: characterEncoding);
+		properties.put(IRepositoryConstants.PROPERTY_ENCODING,
+				characterEncoding == null ? DEFAULT_CHARACTER_ENCODING : characterEncoding);
 	}
 
 	/**
@@ -623,7 +623,8 @@ public final class TaskRepository extends PlatformObject {
 	 *            memory only
 	 * @since 3.0
 	 */
-	public void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials, boolean savePassword) {
+	public void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
+			boolean savePassword) {
 		String key = getKeyPrefix(authType);
 
 		setBooleanProperty(key + SAVE_PASSWORD, savePassword);
@@ -719,9 +720,8 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void setTimeZoneId(String timeZoneId) {
-		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null
-				? TimeZone.getDefault().getID()
-				: timeZoneId);
+		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE,
+				timeZoneId == null ? TimeZone.getDefault().getID() : timeZoneId);
 	}
 
 	/**

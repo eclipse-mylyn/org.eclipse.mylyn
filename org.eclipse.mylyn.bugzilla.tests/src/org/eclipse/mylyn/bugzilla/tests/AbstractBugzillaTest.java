@@ -94,8 +94,9 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected void submit(TaskDataModel model) {
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
-				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
+		SubmitJob submitJob = TasksUiInternal.getJobFactory()
+				.createSubmitTaskJob(connector, model.getTaskRepository(), model.getTask(), model.getTaskData(),
+						model.getChangedOldAttributes());
 		submitJob.schedule();
 		try {
 			submitJob.join();

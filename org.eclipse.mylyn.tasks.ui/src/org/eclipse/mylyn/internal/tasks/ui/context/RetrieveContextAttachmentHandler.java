@@ -25,7 +25,8 @@ public class RetrieveContextAttachmentHandler extends AbstractTaskAttachmentComm
 
 	@Override
 	protected void execute(ExecutionEvent event, ITaskAttachment attachment) {
-		AttachmentUtil.downloadContext(attachment.getTask(), attachment, PlatformUI.getWorkbench().getProgressService());
+		AttachmentUtil.downloadContext(attachment.getTask(), attachment,
+				PlatformUI.getWorkbench().getProgressService());
 	}
 
 }

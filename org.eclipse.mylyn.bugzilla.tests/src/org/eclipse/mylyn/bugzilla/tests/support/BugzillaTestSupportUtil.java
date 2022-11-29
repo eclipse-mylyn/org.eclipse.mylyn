@@ -23,8 +23,8 @@ public abstract class BugzillaTestSupportUtil {
 				|| e.getMessage().indexOf("untrusted authentication request:") != -1
 				|| e.getMessage().indexOf("An unknown repository error has occurred: file is empty") != -1
 				|| e.getMessage()
-				.indexOf(
-						"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.") != -1;
+						.indexOf(
+								"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.") != -1;
 	}
 
 }

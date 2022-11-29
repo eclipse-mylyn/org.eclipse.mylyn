@@ -31,8 +31,8 @@ public class MyTasksFilter extends AbstractTaskListFilter {
 		}
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			if (repository != null) {
 				return TasksUi.getRepositoryConnector(task.getConnectorKind()).isOwnedByUser(repository, task);
 			}

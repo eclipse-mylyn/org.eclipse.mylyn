@@ -46,8 +46,8 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
 			GridDataFactory.defaultsFor(editor.getLabelControl())
-			.indent(COLUMN_MARGIN, 0)
-			.applyTo(editor.getLabelControl());
+					.indent(COLUMN_MARGIN, 0)
+					.applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 

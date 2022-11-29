@@ -99,8 +99,8 @@ public class TaskListFilterTest extends TestCase {
 
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
 		taskList.addTask(taskScheduledLastWeek);
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek,
-				TaskActivityUtil.getCurrentWeek().previous());
+		TasksUiPlugin.getTaskActivityManager()
+				.setScheduledFor(taskScheduledLastWeek, TaskActivityUtil.getCurrentWeek().previous());
 
 		taskCompleteAndOverdue = new LocalTask("7", "t-completeandoverdue");
 		taskList.addTask(taskCompleteAndOverdue);

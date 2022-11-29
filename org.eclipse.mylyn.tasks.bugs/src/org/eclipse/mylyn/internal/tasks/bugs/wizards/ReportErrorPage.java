@@ -93,8 +93,8 @@ public class ReportErrorPage extends WizardPage {
 			defaultRepositoryButton.setSelection(true);
 			selectedContribution = contributions.get(0);
 			if (contributions.size() == 1) {
-				defaultRepositoryButton.setText(NLS.bind(Messages.ReportErrorPage_Report_to,
-						getLabel(selectedContribution)));
+				defaultRepositoryButton
+						.setText(NLS.bind(Messages.ReportErrorPage_Report_to, getLabel(selectedContribution)));
 				GridDataFactory.fillDefaults().span(2, 1).applyTo(defaultRepositoryButton);
 			} else {
 				defaultRepositoryButton.setText(Messages.ReportErrorPage_Report_to_Label);

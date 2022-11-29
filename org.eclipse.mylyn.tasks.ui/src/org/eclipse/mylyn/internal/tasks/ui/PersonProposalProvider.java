@@ -142,8 +142,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
 		int i = 0;
 		for (final String address : addressSet) {
-			result[i++] = createPersonProposal(address, address.equalsIgnoreCase(currentUser), resultPrefix + address
-					+ resultPostfix, resultPrefix.length() + address.length());
+			result[i++] = createPersonProposal(address, address.equalsIgnoreCase(currentUser),
+					resultPrefix + address + resultPostfix, resultPrefix.length() + address.length());
 		}
 		Arrays.sort(result);
 		return result;
@@ -292,8 +292,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		for (TaskAttribute commentAttribute : comments) {
 			addPerson(data, addressSet, commentAttribute);
 		}
-		List<TaskAttribute> attachments = data.getAttributeMapper().getAttributesByType(data,
-				TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> attachments = data.getAttributeMapper()
+				.getAttributesByType(data, TaskAttribute.TYPE_ATTACHMENT);
 		for (TaskAttribute attachmentAttribute : attachments) {
 			addPerson(data, addressSet, attachmentAttribute);
 		}

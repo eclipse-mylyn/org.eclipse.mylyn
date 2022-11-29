@@ -83,7 +83,8 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 		return containsHelper(children, handle, new HashSet<IRepositoryElement>());
 	}
 
-	private boolean containsHelper(Collection<ITask> children, String handle, Set<IRepositoryElement> visitedContainers) {
+	private boolean containsHelper(Collection<ITask> children, String handle,
+			Set<IRepositoryElement> visitedContainers) {
 		for (ITask child : children) {
 			if (visitedContainers.contains(child)) {
 				continue;

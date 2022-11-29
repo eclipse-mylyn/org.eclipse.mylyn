@@ -54,7 +54,8 @@ public class ConnectorBrandContentProviderTest {
 		BrandManager brandManager = mock(BrandManager.class);
 		ConnectorBrandContentProvider provider = new ConnectorBrandContentProvider(brandManager, connectors);
 
-		assertBrands(provider, new ConnectorBrand(c1, null), new ConnectorBrand(c2, null), new ConnectorBrand(c3, null));
+		assertBrands(provider, new ConnectorBrand(c1, null), new ConnectorBrand(c2, null),
+				new ConnectorBrand(c3, null));
 
 		when(brandManager.getBrands(c1.getConnectorKind())).thenReturn(ImmutableList.of("a", "b", "c"));
 		when(brandManager.getBrands(c2.getConnectorKind())).thenReturn(ImmutableList.<String> of());

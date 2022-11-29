@@ -37,8 +37,8 @@ public abstract class AbstractTaskEditorAction extends BaseSelectionListenerActi
 
 	protected boolean taskDirty(ITask task) {
 		return (((editor != null && editor.isDirty())
-				|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING) || task.getSynchronizationState()
-				.equals(SynchronizationState.CONFLICT)));
+				|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
+				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT)));
 
 	}
 

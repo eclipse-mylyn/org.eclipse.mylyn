@@ -186,16 +186,17 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						TracUiPlugin.ID_PLUGIN, INVALID_REPOSITORY_URL));
 			} catch (TracLoginException e) {
 				if (e.isNtlmAuthRequested()) {
-					AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
+					AuthenticationCredentials credentials = taskRepository
+							.getCredentials(AuthenticationType.REPOSITORY);
 					if (credentials == null || credentials.getUserName() == null || credentials.getPassword() == null) {
 						throw new CoreException(new RepositoryStatus(IStatus.ERROR, TracUiPlugin.ID_PLUGIN,
 								RepositoryStatus.ERROR_EMPTY_PASSWORD,
 								Messages.TracRepositorySettingsPage_auth_failed_missing_credentials, e));
 					}
 					if (!credentials.getUserName().contains("\\")) { //$NON-NLS-1$
-						throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-								TracUiPlugin.ID_PLUGIN,
-								Messages.TracRepositorySettingsPage_NTLM_authentication_requested_Error));
+						throw new CoreException(
+								RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR, TracUiPlugin.ID_PLUGIN,
+										Messages.TracRepositorySettingsPage_NTLM_authentication_requested_Error));
 					}
 				}
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
@@ -208,8 +209,8 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				if (e.getMessage() != null) {
 					message += ": " + e.getMessage(); //$NON-NLS-1$
 				}
-				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.ID_PLUGIN, message));
+				throw new CoreException(
+						RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR, TracUiPlugin.ID_PLUGIN, message));
 			}
 		}
 
@@ -234,8 +235,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						info = client.validate(monitor);
 
 						if (e instanceof TracPermissionDeniedException) {
-							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO,
-									TracUiPlugin.ID_PLUGIN,
+							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.ID_PLUGIN,
 									Messages.TracRepositorySettingsPage_Authentication_credentials_are_valid));
 						}
 					} catch (TracLoginException e2) {
@@ -250,18 +250,15 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			if (version == Version.XML_RPC //
 					&& (info.isApiVersion(1, 0, 0) //
 							|| (info.isApiVersionOrHigher(1, 0, 3) && info.isApiVersionOrSmaller(1, 0, 5)))) {
-				setStatus(RepositoryStatus.createStatus(
-						repositoryUrl,
-						IStatus.INFO,
-						TracUiPlugin.ID_PLUGIN,
+				setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.ID_PLUGIN,
 						Messages.TracRepositorySettingsPage_Authentication_credentials_valid_Update_to_latest_XmlRpcPlugin_Warning));
 			}
 
 			MultiStatus status = new MultiStatus(TracUiPlugin.ID_PLUGIN, 0, NLS.bind("Validation results for {0}", //$NON-NLS-1$
 					taskRepository.getRepositoryLabel()), null);
 			status.add(new Status(IStatus.INFO, TracUiPlugin.ID_PLUGIN, NLS.bind("Version: {0}", info.toString()))); //$NON-NLS-1$
-			status.add(new Status(IStatus.INFO, TracUiPlugin.ID_PLUGIN,
-					NLS.bind("Access Type: {0}", version.toString()))); //$NON-NLS-1$
+			status.add(
+					new Status(IStatus.INFO, TracUiPlugin.ID_PLUGIN, NLS.bind("Access Type: {0}", version.toString()))); //$NON-NLS-1$
 			StatusHandler.log(status);
 		}
 

@@ -34,8 +34,8 @@ public class RepositoryTemplateManagerTest extends TestCase {
 	}
 
 	public void testTemplateDeletion() {
-		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL, "", "",
-				"", "", "", "", false, true);
+		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL, "", "", "",
+				"", "", "", false, true);
 		try {
 			manager.addTemplate(MockRepositoryConnector.CONNECTOR_KIND, template);
 			assertFalse(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
@@ -47,8 +47,8 @@ public class RepositoryTemplateManagerTest extends TestCase {
 	}
 
 	public void testStripSlashes() {
-		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL + "///",
-				"", "", "", "", "", "", false, true);
+		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL + "///", "",
+				"", "", "", "", "", false, true);
 		assertEquals(MockRepositoryConnector.REPOSITORY_URL, template.repositoryUrl);
 	}
 

@@ -47,9 +47,10 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 					AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.PROXY);
 					return WebUtil.createProxy(proxyHost, proxyPortNum, credentials);
 				} catch (NumberFormatException e) {
-					StatusHandler.log(new RepositoryStatus(taskRepository, IStatus.ERROR,
-							ITasksCoreConstants.ID_PLUGIN, 0, "Error occured while configuring proxy. Invalid port \"" //$NON-NLS-1$
-									+ proxyPort + "\" specified.", e)); //$NON-NLS-1$
+					StatusHandler.log(new RepositoryStatus(taskRepository, IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							0, "Error occured while configuring proxy. Invalid port \"" //$NON-NLS-1$
+									+ proxyPort + "\" specified.", //$NON-NLS-1$
+							e));
 				}
 			}
 		}

@@ -369,9 +369,8 @@ public class EditorUtil {
 		Composite layoutAdvisor = page.getEditorComposite();
 		do {
 			layoutAdvisor = layoutAdvisor.getParent();
-		} while (!(layoutAdvisor instanceof CTabFolder || layoutAdvisor.getClass()
-				.getName()
-				.equals("org.eclipse.e4.ui.widgets.CTabFolder"))); //$NON-NLS-1$
+		} while (!(layoutAdvisor instanceof CTabFolder
+				|| layoutAdvisor.getClass().getName().equals("org.eclipse.e4.ui.widgets.CTabFolder"))); //$NON-NLS-1$
 		return layoutAdvisor.getParent();
 	}
 

@@ -26,10 +26,8 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 	public void testGetTaskUrl() {
 		assertEquals("http://mock-repo.com/tickets/123",
 				connectorWithUrl.getTaskUrl(repositoryWithUrl.getRepositoryUrl(), taskWithUrl.getTaskId()));
-		assertEquals(
-				"URI://mock-repo/id/123",
-				connectorWithBrowserUrl.getTaskUrl(repositoryWithBrowserUrl.getRepositoryUrl(),
-						taskWithBrowserUrl.getTaskId()));
+		assertEquals("URI://mock-repo/id/123", connectorWithBrowserUrl
+				.getTaskUrl(repositoryWithBrowserUrl.getRepositoryUrl(), taskWithBrowserUrl.getTaskId()));
 	}
 
 	public void testGetBrowserUrl() {
@@ -70,7 +68,8 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 		assertIsOwnedByUser(null, "joel.user", "joel.user", false);
 	}
 
-	private void assertIsOwnedByUser(String repositoryUserName, String taskOwner, String taskOwnerId, boolean expected) {
+	private void assertIsOwnedByUser(String repositoryUserName, String taskOwner, String taskOwnerId,
+			boolean expected) {
 		// if one parameter is null, test both the null and empty string cases; if multiple are null, don't bother
 		// testing all possible combinations of null and empty
 		if (repositoryUserName == null) {
@@ -92,8 +91,8 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 		TaskRepository repository = new TaskRepository(MockRepositoryWithUrl.CONNECTOR_KIND,
 				MockRepositoryWithUrl.REPOSITORY_URL);
 		if (repositoryUserName != null) {
-			repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(repositoryUserName,
-					""), false);
+			repository.setCredentials(AuthenticationType.REPOSITORY,
+					new AuthenticationCredentials(repositoryUserName, ""), false);
 		}
 		taskWithUrl.setOwner(taskOwner);
 		taskWithUrl.setOwnerId(taskOwnerId);

@@ -59,8 +59,8 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 			taskRepository = (TaskRepository) selectedObject;
 		} else if (selectedObject instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) selectedObject;
-			taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					query.getRepositoryUrl());
+			taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 		}
 
 		if (taskRepository != null && isUserManaged(taskRepository)) {
@@ -70,8 +70,8 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 	}
 
 	protected boolean isUserManaged(TaskRepository taskRepository) {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskRepository.getConnectorKind());
 		return connector != null && connector.isUserManaged();
 	}
 

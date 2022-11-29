@@ -73,8 +73,8 @@ public class UpdateAttachmentJob extends Job {
 		if (!task.getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
 			return Status.OK_STATUS;
 		}
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(task.getConnectorKind());
 		monitor.beginTask(Messages.UpdateAttachmentJob_update_attachments, attachment.size() * 10 + 10);
 		try {
 			for (ITaskAttachment taskAttachment : attachment) {
@@ -120,8 +120,9 @@ public class UpdateAttachmentJob extends Job {
 											IFormPage formPage = editor.getActivePageInstance();
 											if (formPage instanceof BugzillaTaskEditorPage) {
 												BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-												Control control = bugzillaPage.getPart(
-														AbstractTaskEditorPage.ID_PART_ATTACHMENTS).getControl();
+												Control control = bugzillaPage
+														.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS)
+														.getControl();
 												if (control instanceof Section) {
 													Section section = (Section) control;
 													CommonFormUtil.setExpanded(section, true);

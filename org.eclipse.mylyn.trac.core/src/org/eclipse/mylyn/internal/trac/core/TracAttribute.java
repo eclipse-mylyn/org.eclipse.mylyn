@@ -62,7 +62,8 @@ public enum TracAttribute {
 
 	SUMMARY(Key.SUMMARY, Messages.TracAttribute_Summary, TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_RICH_TEXT),
 
-	TIME(Key.TIME, Messages.TracAttribute_Created, TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, Flag.READ_ONLY),
+	TIME(Key.TIME, Messages.TracAttribute_Created, TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE,
+			Flag.READ_ONLY),
 
 	TYPE(Key.TYPE, Messages.TracAttribute_Type, TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT,
 			Flag.ATTRIBUTE),

@@ -160,8 +160,8 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
-		Set<IWorkingSet> sets = TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow());
+		Set<IWorkingSet> sets = TaskWorkingSetUpdater
+				.getActiveWorkingSets(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 		if (scopedToWorkingSet && !sets.isEmpty()) {
 			Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
 			for (IWorkingSet workingSet : sets) {

@@ -64,8 +64,8 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			client = connector.getClientManager().getClient(repository, monitor);
 			return client.getAttachmentData(attachment.getAttachmentId(), monitor);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Unable to retrieve attachment", e)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "Unable to retrieve attachment", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -76,8 +76,8 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask(Messages.BugzillaTaskAttachmentHandler_Sending_attachment, IProgressMonitor.UNKNOWN);
-			BugzillaClient client = connector.getClientManager().getClient(repository,
-					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			BugzillaClient client = connector.getClientManager()
+					.getClient(repository, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 
 			client.postAttachment(task.getTaskId(), comment, source, attachmentAttribute, monitor);
 		} catch (IOException e) {

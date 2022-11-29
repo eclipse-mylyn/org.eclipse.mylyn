@@ -87,9 +87,9 @@ public class TaskEditorExtensions {
 		}
 		String previous = associationByConnectorKind.put(connectorKind, extensionId);
 		if (previous != null) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, String.format(
-					"Duplicate association for repository %s: %s replaces %s", connectorKind, extensionId, previous), //$NON-NLS-1$
-					null));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					String.format("Duplicate association for repository %s: %s replaces %s", connectorKind, extensionId, //$NON-NLS-1$
+							previous), null));
 		}
 	}
 
@@ -141,8 +141,8 @@ public class TaskEditorExtensions {
 					}
 				}
 			} catch (IllegalArgumentException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, String.format(
-						"Unable to parse markup type for attribute %s", taskAttribute.toString()), e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						String.format("Unable to parse markup type for attribute %s", taskAttribute.toString()), e)); //$NON-NLS-1$
 			}
 		}
 		return getTaskEditorExtension(taskRepository);
@@ -207,8 +207,8 @@ public class TaskEditorExtensions {
 		}
 	}
 
-	public static class RegisteredTaskEditorExtension implements Comparable<RegisteredTaskEditorExtension>,
-			IPluginContribution {
+	public static class RegisteredTaskEditorExtension
+			implements Comparable<RegisteredTaskEditorExtension>, IPluginContribution {
 
 		private final String id;
 

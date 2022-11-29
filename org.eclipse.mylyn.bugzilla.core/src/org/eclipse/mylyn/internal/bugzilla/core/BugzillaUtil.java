@@ -29,7 +29,8 @@ public class BugzillaUtil {
 	private static boolean getParamValue(TaskRepository taskRepository, String propertyName, boolean trueIfUndefined) {
 		boolean result;
 		String useParam = taskRepository.getProperty(propertyName);
-		result = trueIfUndefined ? (useParam == null || (useParam != null && useParam.equals("true"))) //$NON-NLS-1$
+		result = trueIfUndefined
+				? (useParam == null || (useParam != null && useParam.equals("true"))) //$NON-NLS-1$
 				: (useParam != null && useParam.equals("true")); //$NON-NLS-1$
 		return result;
 	}
@@ -75,15 +76,15 @@ public class BugzillaUtil {
 		return (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
 	}
 
-	private static final Pattern TIME_STAMP_PATTERN = Pattern.compile(
-			"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern TIME_STAMP_PATTERN = Pattern
+			.compile("[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	public static String removeTimezone(String timeWithTimezone) throws CoreException {
 		Matcher matcher = TIME_STAMP_PATTERN.matcher(timeWithTimezone);
 		if (matcher.find()) {
 			return matcher.group();
 		}
-		throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, NLS.bind(
-				"{0} is not a valid time", timeWithTimezone))); //$NON-NLS-1$
+		throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+				NLS.bind("{0} is not a valid time", timeWithTimezone))); //$NON-NLS-1$
 	}
 }

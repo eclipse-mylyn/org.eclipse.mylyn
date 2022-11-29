@@ -125,11 +125,9 @@ public class RepositoryTemplateExtensionReader {
 			templateManager.addTemplate(repKind, template);
 			return Status.OK_STATUS;
 		} else {
-			return new Status(
-					IStatus.ERROR,
-					ITasksCoreConstants.ID_PLUGIN,
-					NLS.bind(
-							"Could not load repository template extension contributed by ''{0}'' with connectorKind ''{1}''", element.getNamespaceIdentifier(), repKind)); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+					"Could not load repository template extension contributed by ''{0}'' with connectorKind ''{1}''", //$NON-NLS-1$
+					element.getNamespaceIdentifier(), repKind));
 		}
 	}
 

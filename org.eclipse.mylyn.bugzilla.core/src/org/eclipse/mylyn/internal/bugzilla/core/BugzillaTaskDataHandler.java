@@ -72,14 +72,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				// Old actions not saved so recreate them upon migration
 				// delete legacy operations:
 				Set<TaskAttribute> operationsToRemove = new HashSet<TaskAttribute>();
-				for (TaskAttribute attribute : data.getAttributeMapper().getAttributesByType(data,
-						TaskAttribute.TYPE_OPERATION)) {
+				for (TaskAttribute attribute : data.getAttributeMapper()
+						.getAttributesByType(data, TaskAttribute.TYPE_OPERATION)) {
 					operationsToRemove.add(attribute);
 				}
 				for (TaskAttribute taskAttribute : operationsToRemove) {
 					data.getRoot().removeAttribute(taskAttribute.getId());
 				}
-				RepositoryConfiguration configuration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+				RepositoryConfiguration configuration = connector
+						.getRepositoryConfiguration(repository.getRepositoryUrl());
 				if (configuration != null) {
 					configuration.addValidOperations(data);
 				}
@@ -155,7 +156,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			@Override
 			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// migrate custom attributes
-				RepositoryConfiguration configuration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+				RepositoryConfiguration configuration = connector
+						.getRepositoryConfiguration(repository.getRepositoryUrl());
 
 				if (configuration == null) {
 					return;
@@ -474,7 +476,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				return true;
 
 			} else {
-				boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+				boolean shortLogin = Boolean
+						.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 				repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
 			}
 //			boolean updateConfig = false;
@@ -533,10 +536,10 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 		} else {
-			if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-					BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-					|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+			if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+					.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 
 				attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
 				repositoryConfiguration.addValidOperations(taskData);
@@ -641,7 +644,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue(""); //$NON-NLS-1$
 
-		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository, IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT)) {
+		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository,
+				IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT)) {
 			TaskAttribute attributeQAContact = createAttribute(taskData, BugzillaAttribute.QA_CONTACT);
 			attributeQAContact.setValue(""); //$NON-NLS-1$
 		}
@@ -754,8 +758,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				keywords.setValue(""); //$NON-NLS-1$
 			}
 			subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
-			TaskAttribute parentAttributeAssigned = parentTaskData.getRoot().getMappedAttribute(
-					TaskAttribute.USER_ASSIGNED);
+			TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
+					.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
 			subTaskData.getRoot()
 					.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
 					.setValue(parentAttributeAssigned.getValue());

@@ -132,8 +132,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			if (getTaskRepository() != null) {
 				refreshConfiguration(true);
 			} else {
-				MessageDialog.openInformation(
-						Display.getCurrent().getActiveShell(),
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 						Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
 						Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 			}
@@ -172,10 +171,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	void updateTitleFromSuggestion() {
 		if (editQueryTitleInProgress) {
 			titleWasSuggested = false;
-		} else if (titleWasSuggested
-				|| Strings.isNullOrEmpty(getQueryTitle())
-				|| (getQuery() != null && Objects.equal(getQuery().getSummary(), getQueryTitle()) && suggestQueryTitle().equals(
-						getQueryTitle()))) {
+		} else if (titleWasSuggested || Strings.isNullOrEmpty(getQueryTitle())
+				|| (getQuery() != null && Objects.equal(getQuery().getSummary(), getQueryTitle())
+						&& suggestQueryTitle().equals(getQueryTitle()))) {
 			setQueryTitle(suggestQueryTitle());
 			titleWasSuggested = true;
 		}
@@ -402,8 +400,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 					if (getTaskRepository() != null) {
 						refreshConfiguration(true);
 					} else {
-						MessageDialog.openInformation(
-								Display.getCurrent().getActiveShell(),
+						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 								Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
 								Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 					}

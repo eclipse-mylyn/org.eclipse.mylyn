@@ -120,8 +120,8 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 		return 0;
 	}
 
-	protected int addItems(Menu menu, int index, List<ITaskAttachmentViewer> viewers,
-			List<ITaskAttachment> attachments, String viewerId) {
+	protected int addItems(Menu menu, int index, List<ITaskAttachmentViewer> viewers, List<ITaskAttachment> attachments,
+			String viewerId) {
 		int i = 0;
 		for (ITaskAttachmentViewer viewer : viewers) {
 			MenuItem item = new MenuItem(menu, SWT.RADIO, index + i);

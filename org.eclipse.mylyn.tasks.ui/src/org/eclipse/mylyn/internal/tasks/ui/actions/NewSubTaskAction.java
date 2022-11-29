@@ -104,8 +104,8 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 	}
 
 	private IWizard getNewSubTaskWizard() {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(selectedTask.getConnectorKind(),
-				selectedTask.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(selectedTask.getConnectorKind(), selectedTask.getRepositoryUrl());
 		AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(selectedTask.getConnectorKind());
 		return connectorUi.getNewSubTaskWizard(repository, selectedTask);
 	}

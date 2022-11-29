@@ -114,10 +114,11 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 		TaskAttribute idAttribute = description.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
 
 		String value = idAttribute.getValue();
-		TaskAttribute definedIsPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
-				+ value);
+		TaskAttribute definedIsPrivate = description
+				.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		if (definedIsPrivate == null) {
-			definedIsPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+			definedIsPrivate = description
+					.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		}
 		TaskAttribute isPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 		if (isPrivate == null) {

@@ -132,8 +132,7 @@ public class SaveAttachmentsAction extends Action {
 				return attachFile;
 			}
 
-			boolean overwrite = MessageDialog.openQuestion(
-					shell,
+			boolean overwrite = MessageDialog.openQuestion(shell,
 					NLS.bind(Messages.SaveAttachmentsAction_overwriteFile0, attachFile.getName()),
 					NLS.bind(Messages.SaveAttachmentsAction_fileExists_doYouWantToOverwrite0,
 							attachFile.getAbsolutePath()));

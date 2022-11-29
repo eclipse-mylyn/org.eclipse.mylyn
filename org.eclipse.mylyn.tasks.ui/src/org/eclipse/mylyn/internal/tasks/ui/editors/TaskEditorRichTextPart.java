@@ -107,8 +107,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			} else {
 				clazz = "<null>"; //$NON-NLS-1$
 			}
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-					"Expected an instance of RichTextAttributeEditor, got \"{0}\"", clazz), //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Expected an instance of RichTextAttributeEditor, got \"{0}\"", clazz), //$NON-NLS-1$
 					new IllegalArgumentException()));
 			return;
 		}
@@ -125,8 +125,9 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			composite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 0, 0, 0, 3));
 		} else {
 			StyledText textWidget = editor.getViewer().getTextWidget();
-			editor.getControl().setLayoutData(
-					EditorUtil.getTextControlLayoutData(getTaskEditorPage(), textWidget, getExpandVertically()));
+			editor.getControl()
+					.setLayoutData(EditorUtil.getTextControlLayoutData(getTaskEditorPage(), textWidget,
+							getExpandVertically()));
 			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		}
 

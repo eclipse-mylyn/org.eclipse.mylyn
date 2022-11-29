@@ -53,8 +53,8 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 		}
 
 		ITask task = (ITask) element;
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		return repository.getRepositoryLabel();
 	}
 }

@@ -81,11 +81,13 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testPostingAndReadingAttributes() throws Exception {
-		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		RepositoryConfiguration repositoryConfiguration = connector
+				.getRepositoryConfiguration(repository.getRepositoryUrl());
 		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		String priority = priorities.get(priorities.size() > 0 ? priorities.size() - 1 : 0);
-		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "testPostingAndReading() summary",
-				"testPostingAndReading() description");
+		TaskData data = BugzillaFixture.current()
+				.createTask(PrivilegeLevel.USER, "testPostingAndReading() summary",
+						"testPostingAndReading() description");
 		data.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("ManualC2");
 		data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue(priority);
 		data.getRoot().getMappedAttribute(TaskAttribute.SEVERITY).setValue("enhancement");

@@ -130,7 +130,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void createContributions(final Composite editorComposite) {
-		Collection<LocalTaskEditorContributionDescriptor> localEditorContributions = TaskEditorContributionExtensionReader.getLocalEditorContributions();
+		Collection<LocalTaskEditorContributionDescriptor> localEditorContributions = TaskEditorContributionExtensionReader
+				.getLocalEditorContributions();
 		for (final LocalTaskEditorContributionDescriptor descriptor : localEditorContributions) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -179,8 +180,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
 				if (taskData != null) {
 					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
-					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-							taskData.getConnectorKind(), taskData.getRepositoryUrl());
+					TaskRepository taskRepository = TasksUi.getRepositoryManager()
+							.getRepository(taskData.getConnectorKind(), taskData.getRepositoryUrl());
 					if (connector != null && taskRepository != null
 							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
 						needsDueDate = false;
@@ -248,10 +249,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
-		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
+		this.textSupport
+				.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
 
-		site.setSelectionProvider(new SelectionProviderAdapter(new StructuredSelection(
-				((TaskEditorInput) input).getTask())));
+		site.setSelectionProvider(
+				new SelectionProviderAdapter(new StructuredSelection(((TaskEditorInput) input).getTask())));
 	}
 
 	private void initializePart(final Composite editorComposite, final AbstractLocalEditorPart part) {

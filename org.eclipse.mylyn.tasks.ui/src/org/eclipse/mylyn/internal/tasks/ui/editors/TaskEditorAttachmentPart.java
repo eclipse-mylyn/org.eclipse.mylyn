@@ -203,8 +203,11 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
-				attachmentsTable);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, false)
+				.hint(500, SWT.DEFAULT)
+				.applyTo(attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		TableColumnDescriptor[] columnDescriptorArray = createColumnDescriptors();
@@ -349,8 +352,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		attachmentAttributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
-				TaskAttribute.TYPE_ATTACHMENT);
+		attachmentAttributes = getTaskData().getAttributeMapper()
+				.getAttributesByType(getTaskData(), TaskAttribute.TYPE_ATTACHMENT);
 		attachmentList = new ArrayList<ITaskAttachment>(attachmentAttributes.size());
 		for (TaskAttribute attribute : attachmentAttributes) {
 			if (getModel().hasIncomingChanges(attribute)) {

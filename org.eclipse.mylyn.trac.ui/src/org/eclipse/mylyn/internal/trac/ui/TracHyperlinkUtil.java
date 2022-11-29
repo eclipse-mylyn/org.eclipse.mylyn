@@ -131,8 +131,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
-						+ ITracClient.REPORT_URL + id));
+				links.add(new WebHyperlink(determineRegion(textOffset, m),
+						repository.getRepositoryUrl() + ITracClient.REPORT_URL + id));
 			}
 		}
 
@@ -140,8 +140,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
-						+ ITracClient.REPORT_URL + id));
+				links.add(new WebHyperlink(determineRegion(textOffset, m),
+						repository.getRepositoryUrl() + ITracClient.REPORT_URL + id));
 			}
 		}
 
@@ -248,8 +248,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String page = m.group(1);
-				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
-						+ ITracClient.WIKI_URL + page));
+				links.add(new WebHyperlink(determineRegion(textOffset, m),
+						repository.getRepositoryUrl() + ITracClient.WIKI_URL + page));
 			}
 		}
 
@@ -257,8 +257,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String page = m.group(0);
-				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
-						+ ITracClient.WIKI_URL + page));
+				links.add(new WebHyperlink(determineRegion(textOffset, m),
+						repository.getRepositoryUrl() + ITracClient.WIKI_URL + page));
 			}
 		}
 
@@ -266,8 +266,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(offsetInText, m)) {
 				String milestone = m.group(1);
-				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
-						+ ITracClient.MILESTONE_URL + milestone));
+				links.add(new WebHyperlink(determineRegion(textOffset, m),
+						repository.getRepositoryUrl() + ITracClient.MILESTONE_URL + milestone));
 			}
 		}
 

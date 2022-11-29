@@ -58,7 +58,8 @@ public class TracSearchTest extends TestCase {
 		search.addFilter("nstarts", "!^g");
 		search.addFilter("nends", "!$h");
 
-		assertEquals("&is=a&contains~=b&starts^=c&ends$=d&nis!=e&ncontains!~=f&nstarts!^=g&nends!$=h", search.toQuery());
+		assertEquals("&is=a&contains~=b&starts^=c&ends$=d&nis!=e&ncontains!~=f&nstarts!^=g&nends!$=h",
+				search.toQuery());
 	}
 
 	public void testToQueryOperators2() {

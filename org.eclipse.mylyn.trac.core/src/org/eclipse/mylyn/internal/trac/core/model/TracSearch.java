@@ -199,8 +199,8 @@ public class TracSearch {
 						try {
 							setMax(Integer.parseInt(value));
 						} catch (NumberFormatException e) {
-							StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN, NLS.bind(
-									"Illegal format in URL, expected a number ''{0}''", value), e)); //$NON-NLS-1$							
+							StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
+									NLS.bind("Illegal format in URL, expected a number ''{0}''", value), e)); //$NON-NLS-1$							
 						}
 					} else {
 						addFilter(key, value);

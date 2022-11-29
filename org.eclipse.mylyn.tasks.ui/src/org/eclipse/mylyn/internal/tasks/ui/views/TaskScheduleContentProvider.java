@@ -128,8 +128,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, nextWeek);
 			containers.add(nextWeekContainer);
 
-			ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next()
-					.next(), Messages.TaskScheduleContentProvider_Two_Weeks);
+			ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager,
+					week.next().next(), Messages.TaskScheduleContentProvider_Two_Weeks);
 			containers.add(twoWeeksContainer);
 
 			Calendar startDate = TaskActivityUtil.getCalendar();
@@ -251,8 +251,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private static boolean notScheduled(ITask task) {
 		SynchronizationState state = task.getSynchronizationState();
-		return state == SynchronizationState.SYNCHRONIZED
-				|| (state == SynchronizationState.INCOMING && Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
+		return state == SynchronizationState.SYNCHRONIZED || (state == SynchronizationState.INCOMING
+				&& Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
 	}
 
 	public class Unscheduled extends StateTaskContainer {
@@ -343,8 +343,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		@Override
 		protected boolean select(ITask task) {
 			SynchronizationState state = task.getSynchronizationState();
-			return state == SynchronizationState.INCOMING_NEW
-					|| (state == SynchronizationState.INCOMING && !Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
+			return state == SynchronizationState.INCOMING_NEW || (state == SynchronizationState.INCOMING
+					&& !Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
 		}
 	}
 

@@ -126,8 +126,8 @@ public class TaskActivationHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task12);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task11);
 
-		prevHistoryList = history.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow())));
+		prevHistoryList = history.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(
+				TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench().getActiveWorkbenchWindow())));
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 2);
@@ -149,8 +149,8 @@ public class TaskActivationHistoryTest extends TestCase {
 		IWorkingSet workingSet = workingSetManager1.createWorkingSet("Task Working Set", new IAdaptable[] { element });
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(element));
-		Set<IWorkingSet> sets = TaskWorkingSetUpdater.getActiveWorkingSets(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow());
+		Set<IWorkingSet> sets = TaskWorkingSetUpdater
+				.getActiveWorkingSets(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 		sets.add(workingSet);
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(sets);
 		return workingSet;

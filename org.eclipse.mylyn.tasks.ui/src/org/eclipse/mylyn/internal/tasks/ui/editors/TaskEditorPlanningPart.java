@@ -65,8 +65,8 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		boolean needsDueDate = !taskEditorPage.getConnector().hasRepositoryDueDate(taskEditorPage.getTaskRepository(),
-				taskEditorPage.getTask(), getTaskData());
+		boolean needsDueDate = !taskEditorPage.getConnector()
+				.hasRepositoryDueDate(taskEditorPage.getTaskRepository(), taskEditorPage.getTask(), getTaskData());
 		CommonTextSupport textSupport = (CommonTextSupport) getTaskEditorPage().getAdapter(CommonTextSupport.class);
 		// disable notes for new tasks to avoid confusion due to showing multiple input fields
 		part.initialize(taskEditorPage.getManagedForm(), taskEditorPage.getTaskRepository(),

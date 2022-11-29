@@ -226,8 +226,8 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		setTitle(TITLE);
 		Control control = super.createContents(parent);
 		if (taskRepository != null) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					taskRepository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(taskRepository.getConnectorKind());
 			if (connector != null) {
 				setTitle(connector.getShortLabel() + " " + TITLE); //$NON-NLS-1$
 			}

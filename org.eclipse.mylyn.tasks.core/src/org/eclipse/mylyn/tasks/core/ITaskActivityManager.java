@@ -41,8 +41,8 @@ public interface ITaskActivityManager {
 	public abstract void deactivateTask(ITask task);
 
 	/**
-	 * returns all tasks that where active between <code>start</code> and <code>end</end> (exclusive)
-	 * both ranges are floored to the hour
+	 * returns all tasks that where active between <code>start</code> and <code>end</end> (exclusive) both ranges are
+	 * floored to the hour
 	 */
 	public abstract Set<AbstractTask> getActiveTasks(Calendar start, Calendar end);
 

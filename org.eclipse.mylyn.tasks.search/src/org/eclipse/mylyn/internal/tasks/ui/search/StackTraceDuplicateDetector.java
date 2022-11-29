@@ -57,8 +57,8 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 		}
 
 		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(taskRepository);
-		AbstractSearchHandler searchHandler = TasksUiPlugin.getDefault().getSearchHandler(
-				taskRepository.getConnectorKind());
+		AbstractSearchHandler searchHandler = TasksUiPlugin.getDefault()
+				.getSearchHandler(taskRepository.getConnectorKind());
 		if (searchHandler.queryForText(taskRepository, query, taskData, searchString)) {
 			return query;
 		}

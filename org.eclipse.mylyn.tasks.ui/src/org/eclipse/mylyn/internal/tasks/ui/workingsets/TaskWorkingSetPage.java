@@ -151,8 +151,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-				for (AbstractTaskContainer element : TasksUiPlugin.getTaskList().getRepositoryQueries(
-						((TaskRepository) parentElement).getRepositoryUrl())) {
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskList()
+						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof IRepositoryQuery) {
 						taskContainers.add(element);
 						queryMap.put((IRepositoryQuery) element, (TaskRepository) parentElement);
@@ -354,15 +354,15 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				IRepositoryQuery query = (IRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
 					// Add Unmatched
-					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskList().getUnmatchedContainer(
-							query.getRepositoryUrl());
+					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskList()
+							.getUnmatchedContainer(query.getRepositoryUrl());
 					if (orphansContainer != null) {
 						specialContainers.add(orphansContainer);
 					}
 
 					// Add Unsubmitted
-					AbstractTaskContainer unsubmittedContainer = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
-							query.getRepositoryUrl());
+					AbstractTaskContainer unsubmittedContainer = TasksUiPlugin.getTaskList()
+							.getUnsubmittedContainer(query.getRepositoryUrl());
 					if (unsubmittedContainer != null) {
 						specialContainers.add(unsubmittedContainer);
 					}
@@ -405,8 +405,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IIDEHelpContextIds.WORKING_SET_RESOURCE_PAGE);
 		Label label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.TaskWorkingSetPage_Working_set_name);
-		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.VERTICAL_ALIGN_CENTER));
+		label.setLayoutData(new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 
 		text = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
@@ -419,16 +419,15 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.TaskWorkingSetPage_Working_set_contents);
-		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.VERTICAL_ALIGN_CENTER));
+		label.setLayoutData(new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 
 		treeViewer = new CheckboxTreeViewer(composite);
 		treeViewer.setUseHashlookup(true);
 		treeViewer.setContentProvider(workingSetPageContentProvider);
 
-		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(), PlatformUI.getWorkbench()
-				.getDecoratorManager()
-				.getLabelDecorator()));
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		treeViewer.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();

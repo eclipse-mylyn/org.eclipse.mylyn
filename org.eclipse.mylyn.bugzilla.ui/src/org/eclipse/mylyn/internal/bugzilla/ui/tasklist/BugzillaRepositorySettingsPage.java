@@ -542,9 +542,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
 			changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
 		}
-		changed = changed || Boolean.parseBoolean(
-				repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions
-						.getSelection();
+		changed = changed || Boolean.parseBoolean(repository
+				.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
 		changed = changed || !equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
 				descriptorFile.getText());
 		if (httpAuth != null) {
@@ -559,8 +558,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 		applyToInternal(repository);
 		if (changed) {
-			TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector, repository,
-					null);
+			TaskJob job = TasksUiInternal.getJobFactory()
+					.createUpdateRepositoryConfigurationJob(connector, repository, null);
 			job.schedule();
 		}
 	}

@@ -57,7 +57,6 @@ public abstract class AbstractBugzillaOperation implements Serializable {
 	@Override
 	/**
 	 * Return the bug_status string to be sent to the server.
-	 * 
 	 */
 	public abstract String toString();
 }

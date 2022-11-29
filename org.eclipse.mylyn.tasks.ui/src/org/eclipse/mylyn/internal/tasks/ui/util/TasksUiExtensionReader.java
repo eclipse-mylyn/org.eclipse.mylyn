@@ -154,7 +154,8 @@ public class TasksUiExtensionReader {
 			String iconPath = element.getAttribute(ATTR_ICON);
 			ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( //
 					element.getContributor().getName(), iconPath);
-			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation) element.createExecutableExtension(ATTR_CLASS);
+			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation) element
+					.createExecutableExtension(ATTR_CLASS);
 			presentation.setPluginId(element.getNamespaceIdentifier());
 			presentation.setImageDescriptor(imageDescriptor);
 			presentation.setName(name);
@@ -166,8 +167,8 @@ public class TasksUiExtensionReader {
 
 			TaskListView.addPresentation(presentation);
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load presentation extension", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load presentation extension", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -184,7 +185,8 @@ public class TasksUiExtensionReader {
 						"Could not load duplicate detector " + obj.getClass().getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load duplicate detector", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load duplicate detector", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -192,23 +194,24 @@ public class TasksUiExtensionReader {
 		try {
 			Object repositoryLinkProvider = element.createExecutableExtension(ATTR_CLASS);
 			if (repositoryLinkProvider instanceof AbstractTaskRepositoryLinkProvider) {
-				TasksUiPlugin.getDefault().addRepositoryLinkProvider(
-						(AbstractTaskRepositoryLinkProvider) repositoryLinkProvider);
+				TasksUiPlugin.getDefault()
+						.addRepositoryLinkProvider((AbstractTaskRepositoryLinkProvider) repositoryLinkProvider);
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load repository link provider " //$NON-NLS-1$
-						+ repositoryLinkProvider.getClass().getCanonicalName()));
+				StatusHandler.log(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load repository link provider " //$NON-NLS-1$
+								+ repositoryLinkProvider.getClass().getCanonicalName()));
 			}
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load repository link provider", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load repository link provider", e)); //$NON-NLS-1$
 		}
 	}
 
 	private static void readTaskEditorPageFactory(IConfigurationElement element) {
 		String id = element.getAttribute(ATTR_ID);
 		if (id == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Editor page factory must specify id")); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Editor page factory must specify id")); //$NON-NLS-1$
 			return;
 		}
 
@@ -222,7 +225,7 @@ public class TasksUiExtensionReader {
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
-						+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
+								+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory", //$NON-NLS-1$
@@ -235,12 +238,12 @@ public class TasksUiExtensionReader {
 			Object dynamicPopupContributor = element.createExecutableExtension(ATTR_CLASS);
 			String menuPath = element.getAttribute(ATTR_MENU_PATH);
 			if (dynamicPopupContributor instanceof IDynamicSubMenuContributor) {
-				TasksUiPlugin.getDefault().addDynamicPopupContributor(menuPath,
-						(IDynamicSubMenuContributor) dynamicPopupContributor);
+				TasksUiPlugin.getDefault()
+						.addDynamicPopupContributor(menuPath, (IDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load dynamic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() //$NON-NLS-1$
-						+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
+								+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

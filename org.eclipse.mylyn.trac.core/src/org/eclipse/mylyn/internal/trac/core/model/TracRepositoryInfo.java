@@ -77,13 +77,13 @@ public class TracRepositoryInfo {
 	public boolean isApiVersionOrHigher(int epoch, int major, int minor) {
 		return apiEpoch > epoch //
 				|| apiEpoch == epoch && (apiMajor > major //
-				|| apiMajor == major && apiMinor >= minor);
+						|| apiMajor == major && apiMinor >= minor);
 	}
 
 	public boolean isApiVersionOrSmaller(int epoch, int major, int minor) {
 		return apiEpoch < epoch //
 				|| apiEpoch == epoch && (apiMajor < major //
-				|| apiMajor == major && apiMinor <= minor);
+						|| apiMajor == major && apiMinor <= minor);
 	}
 
 	public boolean isStale() {

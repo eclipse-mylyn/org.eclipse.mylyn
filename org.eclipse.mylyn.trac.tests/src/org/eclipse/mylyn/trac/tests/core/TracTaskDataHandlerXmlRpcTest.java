@@ -381,8 +381,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		boolean hasReassign = TracFixture.current().getVersion().compareTo("0.11") >= 0;
 
 		TaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
-		List<TaskAttribute> operations = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_OPERATION);
+		List<TaskAttribute> operations = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_OPERATION);
 		assertEquals("Unexpected operations: " + operations, (hasReassign ? 5 : 4), operations.size());
 
 		TaskOperation operation = taskData.getAttributeMapper().getTaskOperation(operations.get(0));
@@ -432,8 +432,9 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		TracTicket ticket = harness.createTicket("midAirCollision");
 		if (ticket.getValue(Key.TOKEN) == null) {
 			// repository does not have mid-air collision support
-			System.err.println("Skipping TracTaskDataHandler.testPostTaskDataMidAirCollision() due to lack of mid-air collision support on "
-					+ repository.getRepositoryUrl());
+			System.err.println(
+					"Skipping TracTaskDataHandler.testPostTaskDataMidAirCollision() due to lack of mid-air collision support on "
+							+ repository.getRepositoryUrl());
 			return;
 		}
 		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());

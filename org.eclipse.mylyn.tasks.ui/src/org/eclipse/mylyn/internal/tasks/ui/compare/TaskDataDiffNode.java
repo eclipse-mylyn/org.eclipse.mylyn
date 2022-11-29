@@ -74,8 +74,9 @@ public class TaskDataDiffNode extends DiffNode {
 			if (label.endsWith(":")) { //$NON-NLS-1$
 				label = label.substring(0, label.length() - 1);
 			}
-			DiffNode node = new DiffNode(Differencer.CHANGE, this, new ByteArrayInput(attr.getOldValues().toString(),
-					null), new ByteArrayInput(attr.getNewValues().toString(), label));
+			DiffNode node = new DiffNode(Differencer.CHANGE, this,
+					new ByteArrayInput(attr.getOldValues().toString(), null),
+					new ByteArrayInput(attr.getNewValues().toString(), label));
 			add(node);
 		}
 		for (ITaskComment attribute : diff.getNewComments()) {

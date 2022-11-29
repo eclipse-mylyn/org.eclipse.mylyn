@@ -66,8 +66,9 @@ public class RepositoryQueryWizard extends Wizard {
 	public boolean performFinish() {
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (!(currentPage instanceof AbstractRepositoryQueryPage)) {
-			throw new AssertionError(NLS.bind(
-					"Current wizard page ''{0}'' does not extends AbstractRepositoryQueryPage", currentPage.getClass())); //$NON-NLS-1$
+			throw new AssertionError(
+					NLS.bind("Current wizard page ''{0}'' does not extends AbstractRepositoryQueryPage", //$NON-NLS-1$
+							currentPage.getClass()));
 		}
 
 		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) currentPage;
@@ -86,8 +87,8 @@ public class RepositoryQueryWizard extends Wizard {
 			query = page.createQuery();
 			TasksUiInternal.getTaskList().addQuery((RepositoryQuery) query);
 		}
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				getTaskRepository().getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(getTaskRepository().getConnectorKind());
 		TasksUiInternal.synchronizeQuery(connector, (RepositoryQuery) query, null, true);
 		return true;
 	}

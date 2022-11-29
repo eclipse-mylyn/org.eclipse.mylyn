@@ -367,8 +367,9 @@ public class RichTextEditor {
 			// fixed font size
 			defaultViewer.getTextWidget().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
 			// adapt maximize action
-			defaultViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
-					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
+			defaultViewer.getControl()
+					.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
+							editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
 			// adapt menu to the new viewer
 			installMenu(defaultViewer.getControl(), editorViewer.getControl().getMenu());
 		}
@@ -412,8 +413,9 @@ public class RichTextEditor {
 					createHyperlinkDetectorContext());
 			configure(previewViewer, new Document(getText()), true);
 			// adapt maximize action
-			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
-					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
+			previewViewer.getControl()
+					.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
+							editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
 			installMenu(previewViewer.getControl(), editorViewer.getControl().getMenu());
 			//set the background color in case there is an incoming to show
 			previewViewer.getTextWidget().setBackground(editorComposite.getBackground());
@@ -460,7 +462,8 @@ public class RichTextEditor {
 
 	public static RepositoryTextViewerConfiguration installHyperlinkPresenter(ISourceViewer viewer,
 			TaskRepository repository, ITask task, Mode mode) {
-		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(repository, task, false);
+		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(repository, task,
+				false);
 		configuration.setMode(mode);
 
 		// do not configure viewer, this has already been done in extension
@@ -676,7 +679,8 @@ public class RichTextEditor {
 						Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), new Runnable() {
 
 							public void run() {
-								if (previewViewer.getTextWidget() == null || previewViewer.getTextWidget().isDisposed()) {
+								if (previewViewer.getTextWidget() == null
+										|| previewViewer.getTextWidget().isDisposed()) {
 									return;
 								}
 

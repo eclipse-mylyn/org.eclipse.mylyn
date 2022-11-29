@@ -27,8 +27,9 @@ import java.util.List;
 public class TracSearchFilter {
 
 	public enum CompareOperator {
-		CONTAINS("~"), CONTAINS_NOT("!~"), BEGINS_WITH("^"), NOT_BEGINS_WITH("!^"), ENDS_WITH("$"), NOT_ENDS_WITH("!$"), IS( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-				""), IS_NOT("!"); //$NON-NLS-1$ //$NON-NLS-2$
+		CONTAINS("~"), CONTAINS_NOT("!~"), BEGINS_WITH("^"), NOT_BEGINS_WITH("!^"), ENDS_WITH("$"), NOT_ENDS_WITH( //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+				"!$"), IS( //$NON-NLS-1$
+						""), IS_NOT("!"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		public static CompareOperator fromUrl(String value) {
 			for (CompareOperator operator : values()) {

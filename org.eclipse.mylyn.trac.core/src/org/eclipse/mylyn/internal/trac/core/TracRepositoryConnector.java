@@ -286,8 +286,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN, IStatus.OK,
-					"Invalid ticket id: " + taskId, e)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN, IStatus.OK, "Invalid ticket id: " + taskId, e)); //$NON-NLS-1$
 		}
 	}
 
@@ -647,7 +647,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			ITracClient client = getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, true);

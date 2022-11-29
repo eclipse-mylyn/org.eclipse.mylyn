@@ -47,8 +47,8 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 	@Override
 	public void run() {
 		repository.setOffline(isChecked());
-		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository,
-				new TaskRepositoryDelta(Type.OFFLINE));
+		TasksUiPlugin.getRepositoryManager()
+				.notifyRepositorySettingsChanged(repository, new TaskRepositoryDelta(Type.OFFLINE));
 	}
 
 	@Deprecated
@@ -60,8 +60,8 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 		if (selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size() == 1) {
 			Object selectedObject = ((IStructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof TaskRepository) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						((TaskRepository) selectedObject).getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(((TaskRepository) selectedObject).getConnectorKind());
 				if (connector.isUserManaged()) {
 					this.repository = (TaskRepository) selectedObject;
 					setChecked(this.repository.isOffline());

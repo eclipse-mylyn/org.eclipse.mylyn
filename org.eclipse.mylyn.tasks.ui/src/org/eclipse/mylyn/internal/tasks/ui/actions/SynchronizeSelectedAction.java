@@ -76,8 +76,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 		for (Object obj : selection.toList()) {
 			if (obj instanceof IRepositoryQuery) {
 				final RepositoryQuery repositoryQuery = (RepositoryQuery) obj;
-				AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repositoryQuery.getConnectorKind());
+				AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repositoryQuery.getConnectorKind());
 				if (client != null) {
 					List<RepositoryQuery> queriesToSync = queriesToSyncMap.get(client);
 					if (queriesToSync == null) {
@@ -89,34 +89,34 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			} else if (obj instanceof TaskCategory) {
 				TaskCategory cat = (TaskCategory) obj;
 				for (ITask task : cat.getChildren()) {
-					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
 			} else if (obj instanceof ITask) {
 				AbstractTask repositoryTask = (AbstractTask) obj;
-				AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repositoryTask.getConnectorKind());
+				AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repositoryTask.getConnectorKind());
 				addTaskToSync(client, repositoryTask, tasksToSyncMap);
 			} else if (obj instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer scheduledContainer = (ScheduledTaskContainer) obj;
 				for (ITask task : scheduledContainer.getChildren()) {
-					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
 			} else if (obj instanceof Person) {
 				Person person = (Person) obj;
 				for (ITask task : person.getChildren()) {
-					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
 			} else if (obj instanceof TaskGroup) {
 				TaskGroup group = (TaskGroup) obj;
 				for (ITask task : group.getChildren()) {
-					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
 			}
@@ -133,8 +133,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				}
 
 				for (RepositoryQuery query : queriesToSync) {
-					TaskRepository repos = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-							query.getRepositoryUrl());
+					TaskRepository repos = TasksUi.getRepositoryManager()
+							.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 					if (repos == null) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Failed to synchronize query \"" + query.getUrl() //$NON-NLS-1$
@@ -153,8 +153,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 			for (Map.Entry<TaskRepository, Set<RepositoryQuery>> entry : repositoriesToSync.entrySet()) {
 				TaskRepository repository = entry.getKey();
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repository.getConnectorKind());
 				Set<RepositoryQuery> queries = entry.getValue();
 				TasksUiInternal.synchronizeQueries(connector, repository, queries, null, true);
 			}

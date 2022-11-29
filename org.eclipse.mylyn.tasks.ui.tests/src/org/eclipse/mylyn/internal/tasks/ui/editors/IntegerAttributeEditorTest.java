@@ -51,7 +51,8 @@ public class IntegerAttributeEditorTest {
 		assertEquals("This field requires an integer value.", validator.isValid("abc"));
 		assertEquals("This field requires an integer value.", validator.isValid("1.0"));
 		assertEquals("This field requires an integer value.", validator.isValid(Long.toString(1L + Integer.MAX_VALUE)));
-		assertEquals("This field requires an integer value.", validator.isValid(Long.toString(-1L + Integer.MIN_VALUE)));
+		assertEquals("This field requires an integer value.",
+				validator.isValid(Long.toString(-1L + Integer.MIN_VALUE)));
 	}
 
 }

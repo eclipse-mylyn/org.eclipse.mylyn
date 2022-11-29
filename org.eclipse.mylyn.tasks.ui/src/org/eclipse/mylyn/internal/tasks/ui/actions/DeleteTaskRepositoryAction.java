@@ -98,8 +98,8 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		}
 
 		// add unsubmitted tasks
-		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
-				repositoryToDelete.getRepositoryUrl());
+		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList()
+				.getUnsubmittedContainer(repositoryToDelete.getRepositoryUrl());
 		if (unsubmitted != null) {
 			Collection<ITask> children = unsubmitted.getChildren();
 			if (children != null) {
@@ -112,15 +112,14 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		// confirm that the user wants to delete all tasks and queries that are associated
 		boolean deleteConfirmed;
 		if (queriesToDelete.size() > 0 || tasksToDelete.size() > 0) {
-			deleteConfirmed = MessageDialog.openQuestion(
-					WorkbenchUtil.getShell(),
+			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
 					Messages.DeleteTaskRepositoryAction_Confirm_Delete,
-					NLS.bind(Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories, new Integer[] {
-							tasksToDelete.size(), queriesToDelete.size() }));
+					NLS.bind(Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories,
+							new Integer[] { tasksToDelete.size(), queriesToDelete.size() }));
 		} else {
 			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
-					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
-							Messages.DeleteTaskRepositoryAction_Delete_Specific_Task_Repository,
+					Messages.DeleteTaskRepositoryAction_Confirm_Delete,
+					NLS.bind(Messages.DeleteTaskRepositoryAction_Delete_Specific_Task_Repository,
 							new String[] { repositoryToDelete.getRepositoryLabel() }));
 
 		}
@@ -152,8 +151,8 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 			try {
 				WorkbenchUtil.runInUi(op, null);
 			} catch (CoreException e) {
-				Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-						"Problems encountered deleting task repository: {0}", e.getMessage()), e); //$NON-NLS-1$
+				Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind("Problems encountered deleting task repository: {0}", e.getMessage()), e); //$NON-NLS-1$
 				TasksUiInternal.logAndDisplayStatus(Messages.DeleteTaskRepositoryAction_Delete_Task_Repository_Failed,
 						status);
 			} catch (OperationCanceledException e) {

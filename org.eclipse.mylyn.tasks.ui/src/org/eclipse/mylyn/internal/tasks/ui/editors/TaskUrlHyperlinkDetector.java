@@ -40,7 +40,8 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	// based on RFC 3986
 	// even though it's valid, the platform hyperlink detector doesn't detect hyperlinks that end with '.', ',' or ')'
 	// so we do the same here
-	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
+	private static final Pattern URL_PATTERN = Pattern
+			.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	private static final String CLOSED_PARENTHESIS_PATTERN = "[^)]"; //$NON-NLS-1$
 

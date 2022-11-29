@@ -155,8 +155,8 @@ public class TaskCommentMapper {
 			mapper.setValue(taskAttribute, getCommentId());
 		}
 		if (getAuthor() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(
-					taskAttribute);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR)
+					.createAttribute(taskAttribute);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getCreationDate() != null) {
@@ -164,8 +164,8 @@ public class TaskCommentMapper {
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getNumber() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_NUMBER).createAttribute(
-					taskAttribute);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_NUMBER)
+					.createAttribute(taskAttribute);
 			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getUrl() != null) {
@@ -178,8 +178,8 @@ public class TaskCommentMapper {
 			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
 		}
 		if (getIsPrivate() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_ISPRIVATE).createAttribute(
-					taskAttribute);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_ISPRIVATE)
+					.createAttribute(taskAttribute);
 			mapper.setBooleanValue(child, getIsPrivate());
 		}
 	}

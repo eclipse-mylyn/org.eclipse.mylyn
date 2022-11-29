@@ -40,11 +40,11 @@ import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class TaskEditorActionContributor extends MultiPageEditorActionBarContributor implements
-		ISelectionChangedListener {
+public class TaskEditorActionContributor extends MultiPageEditorActionBarContributor
+		implements ISelectionChangedListener {
 
-	private final class SelectionProviderAdapterExtension extends SelectionProviderAdapter implements
-			ISelectionChangedListener {
+	private final class SelectionProviderAdapterExtension extends SelectionProviderAdapter
+			implements ISelectionChangedListener {
 		@Override
 		public ISelection getSelection() {
 			if (editor != null && editor.getSite().getSelectionProvider() != null) {
@@ -70,7 +70,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
 				return page.canPerformAction(actionId);
 			} else if (activePage != null) {
-				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage
+						.getAdapter(WorkbenchActionCallback.class);
 				if (callback != null) {
 					return callback.canPerformAction(actionId, control);
 				}
@@ -86,7 +87,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				page.doAction(actionId);
 				return;
 			} else if (activePage != null) {
-				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage
+						.getAdapter(WorkbenchActionCallback.class);
 				if (callback != null) {
 					callback.doAction(actionId, control);
 					return;

@@ -61,9 +61,9 @@ public class OpenTaskAttachmentHandler extends AbstractHandler implements IHandl
 		for (ITaskAttachment attachment : attachments) {
 			ITaskAttachmentViewer viewer = manager.getPreferredViewer(attachment);
 			if (viewer == null) {
-				TasksUiInternal.logAndDisplayStatus(Messages.OpenTaskAttachmentHandler_failedToOpenViewer, new Status(
-						IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-						Messages.OpenTaskAttachmentHandler_noAttachmentViewerFound));
+				TasksUiInternal.logAndDisplayStatus(Messages.OpenTaskAttachmentHandler_failedToOpenViewer,
+						new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								Messages.OpenTaskAttachmentHandler_noAttachmentViewerFound));
 				continue;
 			}
 

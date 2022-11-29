@@ -200,8 +200,8 @@ public class TaskEditorFindSupport {
 	private void searchCommentPart(final String searchString, final TaskEditorCommentPart part,
 			List<CommentGroupViewer> commentGroupViewers, final List<StyledText> styledTexts) {
 		TaskData taskData = taskEditorPage.getModel().getTaskData();
-		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 
 		if (!anyCommentContains(commentAttributes, searchString)) {
 			return;

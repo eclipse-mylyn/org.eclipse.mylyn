@@ -70,7 +70,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				if (mapping != null) {
 					PriorityLevel priorityLevel = mapping.getPriorityLevel();
 					if (priorityLevel != null) {
-						Image image = CommonImages.getImage(TasksUiInternal.getPriorityImage(getTaskEditorPage().getTask()));
+						Image image = CommonImages
+								.getImage(TasksUiInternal.getPriorityImage(getTaskEditorPage().getTask()));
 						if (image != null) {
 							Label label = toolkit.createLabel(composite, null);
 							label.setImage(image);
@@ -111,8 +112,10 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private boolean isAttribute(TaskAttribute attribute, String id) {
-		return attribute.getId().equals(
-				attribute.getTaskData().getAttributeMapper().mapToRepositoryKey(attribute.getParentAttribute(), id));
+		return attribute.getId()
+				.equals(attribute.getTaskData()
+						.getAttributeMapper()
+						.mapToRepositoryKey(attribute.getParentAttribute(), id));
 	}
 
 	private void addSummaryText(Composite composite, final FormToolkit toolkit) {
@@ -178,10 +181,10 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		addSummaryText(composite, toolkit);
 
-		if (Boolean.parseBoolean(getModel().getTaskRepository().getProperty(
-				TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT))) {
-			TaskAttribute userAssignedAttribute = getTaskData().getRoot().getMappedAttribute(
-					TaskAttribute.USER_ASSIGNED);
+		if (Boolean.parseBoolean(
+				getModel().getTaskRepository().getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT))) {
+			TaskAttribute userAssignedAttribute = getTaskData().getRoot()
+					.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
 			if (userAssignedAttribute != null) {
 				UserAttributeEditor editor = new UserAttributeEditor(getModel(), userAssignedAttribute);
 				editor.createControl(composite, toolkit);
@@ -243,8 +246,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		addAttribute(headerComposite, toolkit, dateModified, EditorUtil.HEADER_COLUMN_MARGIN, true, false, true);
 
-		List<TaskAttribute> commentAttributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> commentAttributes = getTaskData().getAttributeMapper()
+				.getAttributesByType(getTaskData(), TaskAttribute.TYPE_COMMENT);
 		if (!commentAttributes.isEmpty()) {
 			TaskAttribute lastComment = commentAttributes.get(commentAttributes.size() - 1);
 			if (lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE) != null) {

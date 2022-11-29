@@ -141,8 +141,8 @@ public class MockTestContext {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(mockRepository), task.getConnectorKind(),
 				task.getRepositoryUrl(), task.getTaskId());
 
-		mockRepositoryConnector.getTaskDataHandler().initializeTaskData(mockRepository, taskData, new TaskMapping(),
-				new NullProgressMonitor());
+		mockRepositoryConnector.getTaskDataHandler()
+				.initializeTaskData(mockRepository, taskData, new TaskMapping(), new NullProgressMonitor());
 
 		taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("summary");
 		taskData.getRoot()

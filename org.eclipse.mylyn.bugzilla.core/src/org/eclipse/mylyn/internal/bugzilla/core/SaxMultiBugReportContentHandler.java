@@ -175,7 +175,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
 					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.REPORTER_NAME)
-					.setValue(name);
+							.setValue(name);
 				}
 			}
 			break;
@@ -184,7 +184,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
 					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.QA_CONTACT_NAME)
-					.setValue(name);
+							.setValue(name);
 				}
 			}
 			break;
@@ -193,7 +193,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
 					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.ASSIGNED_TO_NAME)
-					.setValue(name);
+							.setValue(name);
 				}
 			}
 			break;
@@ -227,8 +227,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 							if (attachmentAttribute != null) {
 								attribute = attachmentAttribute.createAttribute(BugzillaAttribute.KIND_FLAG + id);
 							} else {
-								attribute = repositoryTaskData.getRoot().createAttribute(
-										BugzillaAttribute.KIND_FLAG + id);
+								attribute = repositoryTaskData.getRoot()
+										.createAttribute(BugzillaAttribute.KIND_FLAG + id);
 							}
 							mapper.applyTo(attribute);
 						} catch (NumberFormatException e) {
@@ -364,10 +364,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 
-			// Attachment attributes
+		// Attachment attributes
 		case ATTACHID:
-			attachmentAttribute = repositoryTaskData.getRoot().createAttribute(
-					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
+			attachmentAttribute = repositoryTaskData.getRoot()
+					.createAttribute(TaskAttribute.PREFIX_ATTACHMENT + parsedText);
 			attachment = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
 			attachment.setLength(new Long(-1));
 			attachment.setAttachmentId(parsedText);
@@ -453,8 +453,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			addDescriptionAndComments();
 
 			// Need to set LONGDESCLENGTH to number of comments + 1 for description
-			TaskAttribute numCommentsAttribute = repositoryTaskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.LONGDESCLENGTH.getKey());
+			TaskAttribute numCommentsAttribute = repositoryTaskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.LONGDESCLENGTH.getKey());
 			if (numCommentsAttribute == null) {
 				numCommentsAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
 						BugzillaAttribute.LONGDESCLENGTH);
@@ -463,8 +463,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			numCommentsAttribute.setValue("" + commentNum); //$NON-NLS-1$
 
 			updateAttachmentMetaData();
-			TaskAttribute attrCreation = repositoryTaskData.getRoot().getAttribute(
-					BugzillaAttribute.CREATION_TS.getKey());
+			TaskAttribute attrCreation = repositoryTaskData.getRoot()
+					.getAttribute(BugzillaAttribute.CREATION_TS.getKey());
 
 			updateCustomFields(repositoryTaskData);
 
@@ -475,10 +475,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 
 			// Work around (bug#285796) If planning enabled (ESTIMATE_TIME attr present) create DEADLINE attr since it should be present.
-			TaskAttribute estimatedTimeAttr = repositoryTaskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.ESTIMATED_TIME.getKey());
-			TaskAttribute deadlineAttr = repositoryTaskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.DEADLINE.getKey());
+			TaskAttribute estimatedTimeAttr = repositoryTaskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey());
+			TaskAttribute deadlineAttr = repositoryTaskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.DEADLINE.getKey());
 			if (estimatedTimeAttr != null && deadlineAttr == null) {
 				BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.DEADLINE);
 			}
@@ -577,8 +577,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case SEE_ALSO:
-			TaskAttribute seeAlso = repositoryTaskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.SEE_ALSO_READ.getKey());
+			TaskAttribute seeAlso = repositoryTaskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.SEE_ALSO_READ.getKey());
 			if (seeAlso == null) {
 				BugzillaUtil.createAttributeWithKindDefaultIfUsed("", tag, repositoryTaskData,
 						IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
@@ -665,8 +665,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	}
 
 	private void updateAttachmentMetaData() {
-		List<TaskAttribute> taskAttachments = repositoryTaskData.getAttributeMapper().getAttributesByType(
-				repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> taskAttachments = repositoryTaskData.getAttributeMapper()
+				.getAttributesByType(repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
 		for (TaskAttribute attachment : taskAttachments) {
 			BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachment);
 			if (attachmentMapper.getAuthor() == null || attachmentMapper.getCreationDate() == null) {
@@ -676,8 +676,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					attachmentMapper.setCreationDate(taskComment.getCreationDate());
 				}
 			}
-			attachmentMapper.setUrl(repositoryTaskData.getRepositoryUrl()
-					+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentMapper.getAttachmentId());
+			attachmentMapper.setUrl(repositoryTaskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX
+					+ attachmentMapper.getAttachmentId());
 			attachmentMapper.applyTo(attachment);
 		}
 	}
@@ -732,7 +732,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attrDescription = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
 				BugzillaAttribute.LONG_DESC);
 		TaskAttribute idAttribute = attrDescription.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
-		TaskAttribute isprivateAttribute = attrDescription.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		TaskAttribute isprivateAttribute = attrDescription
+				.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
 		attrDescription.setValue(comment.commentText);
 		idAttribute.setValue(Integer.toString(comment.id));
 		if (comment.isPrivate != null) {
@@ -748,8 +749,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	}
 
 	private void addComment(TaskComment comment) {
-		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
-				TaskAttribute.PREFIX_COMMENT + commentNum);
+		TaskAttribute attribute = repositoryTaskData.getRoot()
+				.createAttribute(TaskAttribute.PREFIX_COMMENT + commentNum);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 		taskComment.setCommentId(comment.id + ""); //$NON-NLS-1$
 		taskComment.setNumber(commentNum);

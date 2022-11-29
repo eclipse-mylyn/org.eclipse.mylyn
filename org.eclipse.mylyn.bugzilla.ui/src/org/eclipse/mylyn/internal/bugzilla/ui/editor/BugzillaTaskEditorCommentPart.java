@@ -47,24 +47,24 @@ public class BugzillaTaskEditorCommentPart extends TaskEditorCommentPart {
 		public void run() {
 			if (taskComment.getIsPrivate() != null) {
 				taskComment.setIsPrivate(!taskComment.getIsPrivate());
-				TaskAttribute isprivate = taskComment.getTaskAttribute().getMappedAttribute(
-						TaskAttribute.COMMENT_ISPRIVATE);
+				TaskAttribute isprivate = taskComment.getTaskAttribute()
+						.getMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
 				if (isprivate == null) {
 					isprivate = taskComment.getTaskAttribute().createMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
 				}
 				isprivate.setValue(taskComment.getIsPrivate() ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 				String value = taskComment.getTaskAttribute().getValue();
-				TaskAttribute definedIsPrivate = taskComment.getTaskAttribute().getAttribute(
-						IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+				TaskAttribute definedIsPrivate = taskComment.getTaskAttribute()
+						.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 				if (definedIsPrivate == null) {
-					definedIsPrivate = taskComment.getTaskAttribute().createAttribute(
-							IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+					definedIsPrivate = taskComment.getTaskAttribute()
+							.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 				}
-				TaskAttribute isPrivate = taskComment.getTaskAttribute().getAttribute(
-						IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+				TaskAttribute isPrivate = taskComment.getTaskAttribute()
+						.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 				if (isPrivate == null) {
-					isPrivate = taskComment.getTaskAttribute().createAttribute(
-							IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+					isPrivate = taskComment.getTaskAttribute()
+							.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 				}
 				definedIsPrivate.setValue("1"); //$NON-NLS-1$
 				isPrivate.setValue(taskComment.getIsPrivate() ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$

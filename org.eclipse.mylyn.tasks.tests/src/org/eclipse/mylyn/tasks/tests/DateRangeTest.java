@@ -53,7 +53,8 @@ public class DateRangeTest extends TestCase {
 	}
 
 	public void testQueryDateRange() {
-		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
+		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
+				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
 		DateRange range1 = TaskActivityUtil.getCurrentWeek().getToday().previous();
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(new LocalTask("1", "summaryForLocalTask"));
@@ -79,7 +80,8 @@ public class DateRangeTest extends TestCase {
 	}
 
 	public void testOverScheduled() {
-		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
+		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
+				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
 		DateRange range1 = TaskActivityUtil.getDayOf(new Date(0));
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(new LocalTask("1", "summaryForLocalTask"));

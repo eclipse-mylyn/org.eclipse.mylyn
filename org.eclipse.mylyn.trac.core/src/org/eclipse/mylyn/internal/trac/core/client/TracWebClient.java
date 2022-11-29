@@ -315,8 +315,8 @@ public class TracWebClient extends AbstractTracClient {
 			}
 		}
 
-		private boolean needsReauthentication(int code, IProgressMonitor monitor) throws IOException,
-				TracLoginException {
+		private boolean needsReauthentication(int code, IProgressMonitor monitor)
+				throws IOException, TracLoginException {
 			final AuthenticationType authenticationType;
 			if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
 				authenticationType = AuthenticationType.REPOSITORY;
@@ -401,7 +401,8 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
 							// TODO handle custom fields
-						} else if ((tag.getTagType() == Tag.H2 && ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$
+						} else if ((tag.getTagType() == Tag.H2 && ("summary".equals(tag.getAttribute("class")) //$NON-NLS-1$//$NON-NLS-2$
+								|| "summary searchable".equals(tag.getAttribute("class")))) //$NON-NLS-1$ //$NON-NLS-2$
 								|| tag.getTagType() == Tag.SPAN && ("summary".equals(tag.getAttribute("class")))) { //$NON-NLS-1$ //$NON-NLS-2$ 
 							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
 						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) { //$NON-NLS-1$ //$NON-NLS-2$

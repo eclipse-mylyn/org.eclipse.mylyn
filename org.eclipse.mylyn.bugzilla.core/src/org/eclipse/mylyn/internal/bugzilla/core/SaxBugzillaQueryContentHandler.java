@@ -41,7 +41,8 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private TaskData taskData;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector, TaskAttributeMapper mapper) {
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector,
+			TaskAttributeMapper mapper) {
 		this.repositoryUrl = repositoryUrl;
 		this.collector = collector;
 		this.mapper = mapper;

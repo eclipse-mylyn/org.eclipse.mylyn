@@ -36,7 +36,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
  */
 public abstract class SubmitJob extends TaskJob {
 
-	private final List<SubmitJobListener> submitJobListeners = Collections.synchronizedList(new ArrayList<SubmitJobListener>());
+	private final List<SubmitJobListener> submitJobListeners = Collections
+			.synchronizedList(new ArrayList<SubmitJobListener>());
 
 	/**
 	 * @since 3.0
@@ -102,7 +103,8 @@ public abstract class SubmitJob extends TaskJob {
 			for (final SubmitJobListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {

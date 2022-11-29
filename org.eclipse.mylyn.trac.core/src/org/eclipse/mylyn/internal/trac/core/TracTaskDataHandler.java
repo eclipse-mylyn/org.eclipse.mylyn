@@ -118,9 +118,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				createDefaultAttributes(taskData, client, true);
 				Set<TaskAttribute> changedAttributes = updateTaskData(repository, taskData, ticket);
 				// remove attributes that were not set, i.e. were not received from the server
-				List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(taskData.getRoot()
-						.getAttributes()
-						.values());
+				List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(
+						taskData.getRoot().getAttributes().values());
 				for (TaskAttribute attribute : attributes) {
 					if (!changedAttributes.contains(attribute) && !TracAttributeMapper.isInternalAttribute(attribute)) {
 						taskData.getRoot().removeAttribute(attribute.getId());
@@ -279,8 +278,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				fieldAttribute.getMetaData().setKind(null);
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, fieldAttribute.getId());
 			} else if ("resolve".equals(action.getId())) { //$NON-NLS-1$
-				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-						TracAttribute.RESOLUTION.getTracKey());
+				attribute.getMetaData()
+						.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TracAttribute.RESOLUTION.getTracKey());
 			}
 
 			if (setAsDefault) {
@@ -563,10 +562,11 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		return taskData.getRoot().getAttribute(ATTRIBUTE_BLOCKED_BY) != null;
 	}
 
-	public static TracTicket getTracTicket(TaskRepository repository, TaskData data) throws InvalidTicketException,
-			CoreException {
-		TracTicket ticket = (data.isNew()) ? new TracTicket() : new TracTicket(
-				TracRepositoryConnector.getTicketId(data.getTaskId()));
+	public static TracTicket getTracTicket(TaskRepository repository, TaskData data)
+			throws InvalidTicketException, CoreException {
+		TracTicket ticket = (data.isNew())
+				? new TracTicket()
+				: new TracTicket(TracRepositoryConnector.getTicketId(data.getTaskId()));
 
 		Collection<TaskAttribute> attributes = data.getRoot().getAttributes().values();
 		for (TaskAttribute attribute : attributes) {
@@ -627,8 +627,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			ticket.putValue("action", action); //$NON-NLS-1$
 		}
 
-		Date lastChanged = TracUtil.parseDate(TracRepositoryConnector.getAttributeValue(data,
-				TracAttribute.CHANGE_TIME.getTracKey()));
+		Date lastChanged = TracUtil
+				.parseDate(TracRepositoryConnector.getAttributeValue(data, TracAttribute.CHANGE_TIME.getTracKey()));
 		ticket.setLastChanged(lastChanged);
 
 		return ticket;

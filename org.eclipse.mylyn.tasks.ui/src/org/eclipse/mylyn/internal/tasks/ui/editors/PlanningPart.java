@@ -244,8 +244,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
 			if (getTask().getScheduledForDate() == null
-					|| (getTask().getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
-							getTask().getScheduledForDate()))
+					|| (getTask().getScheduledForDate() != null
+							&& !scheduleDatePicker.getScheduledDate().equals(getTask().getScheduledForDate()))
 					|| getTask().getScheduledForDate() instanceof DayDateRange) {
 				TasksUiPlugin.getTaskActivityManager()
 						.setScheduledFor(getTask(), scheduleDatePicker.getScheduledDate());
@@ -353,16 +353,16 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			}
 		}
 		if (noteEditor == null) {
-			noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL, null,
-					null, getTask());
+			noteEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL, null, null,
+					getTask());
 		}
 		noteEditor.setSpellCheckingEnabled(true);
 		noteEditor.createControl(composite, toolkit);
 
 		noteEditor.setText(notesString);
 
-		noteEditor.getControl().setLayoutData(
-				EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
+		noteEditor.getControl()
+				.setLayoutData(EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		noteEditor.setReadOnly(false);
 		if (textSupport != null) {
@@ -461,8 +461,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				if (MessageDialog.openConfirm(getControl().getShell(),
 						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
 						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-					MonitorUi.getActivityContextManager().removeActivityTime(getTask().getHandleIdentifier(), 0l,
-							System.currentTimeMillis());
+					MonitorUi.getActivityContextManager()
+							.removeActivityTime(getTask().getHandleIdentifier(), 0l, System.currentTimeMillis());
 				}
 			}
 		});
@@ -655,8 +655,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				DateRange date = getTask().getScheduledForDate();
 				if (date != null) {
 					scheduledLabel.setText(getLabel(date));
-					scheduledLabel.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip,
-							date.toString()));
+					scheduledLabel
+							.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip, date.toString()));
 				} else {
 					scheduledLabel.setText(""); //$NON-NLS-1$
 					scheduledLabel.setToolTipText(null);

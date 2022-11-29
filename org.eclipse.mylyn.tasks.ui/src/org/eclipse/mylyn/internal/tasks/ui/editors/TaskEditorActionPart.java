@@ -74,8 +74,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private static final String KEY_OPERATION = "operation"; //$NON-NLS-1$
 
-	public class SelectButtonListener implements ModifyListener, VerifyListener, SelectionListener, FocusListener,
-			TextChangeListener {
+	public class SelectButtonListener
+			implements ModifyListener, VerifyListener, SelectionListener, FocusListener, TextChangeListener {
 
 		private final Button button;
 
@@ -204,8 +204,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @param toolkit
 	 */
 	private void createCategoryChooser(Composite buttonComposite, FormToolkit toolkit) {
-		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite,
-				Messages.TaskEditorActionPart_Add_to_Category, SWT.CHECK);
+		addToCategory = getManagedForm().getToolkit()
+				.createButton(buttonComposite, Messages.TaskEditorActionPart_Add_to_Category, SWT.CHECK);
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
@@ -214,7 +214,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new TaskContainerComparator());
-		AbstractTaskCategory selectedCategory = TasksUiInternal.getSelectedCategory(TaskListView.getFromActivePerspective());
+		AbstractTaskCategory selectedCategory = TasksUiInternal
+				.getSelectedCategory(TaskListView.getFromActivePerspective());
 		int i = 0;
 		int selectedIndex = 0;
 		for (IRepositoryElement category : categories) {
@@ -274,8 +275,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		selectedOperationAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.OPERATION);
 		if (selectedOperationAttribute != null
 				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getMetaData().getType())) {
-			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperation(
-					selectedOperationAttribute);
+			TaskOperation selectedOperation = getTaskData().getAttributeMapper()
+					.getTaskOperation(selectedOperationAttribute);
 			createRadioButtons(buttonComposite, toolkit, selectedOperation);
 		}
 
@@ -373,8 +374,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit, TaskOperation selectedOperation) {
-		List<TaskOperation> operations = getTaskData().getAttributeMapper().getTaskOperations(
-				selectedOperationAttribute);
+		List<TaskOperation> operations = getTaskData().getAttributeMapper()
+				.getTaskOperations(selectedOperationAttribute);
 		if (operations.size() > 0) {
 			operationButtons = new ArrayList<Button>();
 			Button selectedButton = null;
@@ -384,13 +385,12 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				button.setData(KEY_OPERATION, operation);
 				//button.setEnabled(!operation.getTaskAttribute().getMetaData().isReadOnly());
 				button.setEnabled(!operation.getTaskAttribute().getMetaData().isDisabled());
-				button.setToolTipText(operation.getTaskAttribute()
-						.getMetaData()
-						.getValue(TaskAttribute.META_DESCRIPTION));
+				button.setToolTipText(
+						operation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 
 				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
-						operation);
+				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper()
+						.getAssoctiatedAttribute(operation);
 				if (associatedAttribute != null) {
 					radioData.horizontalSpan = 1;
 					addAttribute(buttonComposite, toolkit, associatedAttribute, button);
@@ -471,9 +471,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			for (Button button : operationButtons) {
 				TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
 				button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isDisabled());
-				button.setToolTipText(taskOperation.getTaskAttribute()
-						.getMetaData()
-						.getValue(TaskAttribute.META_DESCRIPTION));
+				button.setToolTipText(
+						taskOperation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 			}
 		}
 	}

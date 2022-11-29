@@ -43,7 +43,8 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	private static final String EXPORT_JOB_LABEL = Messages.TaskDataExportOperation_exporting_task_data;
 
-	private static final Pattern excludePattern = Pattern.compile("(?:^\\.|^monitor-log.xml\\z|^tasklist.xml.zip\\z|attachments\\z|backup\\z)"); //$NON-NLS-1$
+	private static final Pattern excludePattern = Pattern
+			.compile("(?:^\\.|^monitor-log.xml\\z|^tasklist.xml.zip\\z|attachments\\z|backup\\z)"); //$NON-NLS-1$
 
 	private final String destinationDirectory;
 
@@ -64,8 +65,8 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 			try {
 				monitor.beginTask(EXPORT_JOB_LABEL, filesToExport.size() + 1);
 
-				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
-						new SubProgressMonitor(monitor, 1));
+				Job.getJobManager()
+						.beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, new SubProgressMonitor(monitor, 1));
 
 				ZipFileUtil.createZipFile(getDestinationFile(), new ArrayList<File>(filesToExport),
 						TasksUiPlugin.getDefault().getDataDirectory(), monitor);

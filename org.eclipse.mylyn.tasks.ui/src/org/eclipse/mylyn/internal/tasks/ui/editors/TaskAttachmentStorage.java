@@ -104,8 +104,8 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 	}
 
 	public InputStream getContents() throws CoreException {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskRepository.getConnectorKind());
 		AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
 		return handler.getContent(taskRepository, task, attachmentAttribute, new NullProgressMonitor());
 	}

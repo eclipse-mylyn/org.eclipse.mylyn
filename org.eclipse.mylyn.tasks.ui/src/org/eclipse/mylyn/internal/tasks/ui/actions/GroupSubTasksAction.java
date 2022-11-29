@@ -29,9 +29,8 @@ public class GroupSubTasksAction extends Action {
 		setText(Messages.GroupSubTasksAction_Group_Subtasks);
 		setToolTipText(Messages.GroupSubTasksAction_Group_Subtasks);
 		setId(ID);
-		setChecked(TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS));
+		setChecked(
+				TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS));
 	}
 
 	@Override

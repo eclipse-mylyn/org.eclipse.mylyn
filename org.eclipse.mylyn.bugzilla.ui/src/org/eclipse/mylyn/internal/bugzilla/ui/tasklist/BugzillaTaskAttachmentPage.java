@@ -106,10 +106,10 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 		createScrolledComposite(parent);
 		updateScrolledCompositeSize();
 		super.createControl(getScrolledBodyComposite());
-		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getModel().getTaskRepository()
-				.getConnectorKind());
-		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getModel().getTaskRepository()
-				.getRepositoryUrl());
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+				.getRepositoryConnector(getModel().getTaskRepository().getConnectorKind());
+		RepositoryConfiguration configuration = connector
+				.getRepositoryConfiguration(getModel().getTaskRepository().getRepositoryUrl());
 		if (configuration != null) {
 			List<BugzillaFlag> flags = configuration.getFlags();
 			TaskAttribute productAttribute = getModel().getAttribute()
@@ -140,8 +140,8 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				mapper.setState(" "); //$NON-NLS-1$
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
-				final TaskAttribute attribute = getModel().getAttribute().createAttribute(
-						BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
+				final TaskAttribute attribute = getModel().getAttribute()
+						.createAttribute(BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
 				mapper.applyTo(attribute);
 
 				Label flagLiteral = new Label(flagComposite, SWT.NONE);
@@ -205,8 +205,8 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 	}
 
 	private Composite createFlagSection(Composite container) {
-		flagExpandComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
+		flagExpandComposite = toolkit.createExpandableComposite(container,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		flagExpandComposite.setFont(container.getFont());
 		flagExpandComposite.setBackground(container.getBackground());
 		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_Advanced);

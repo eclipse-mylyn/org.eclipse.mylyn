@@ -46,8 +46,8 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testCloneTaskData() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "test summary for clone",
-				"test description for clone");
+		TaskData taskData = BugzillaFixture.current()
+				.createTask(PrivilegeLevel.USER, "test summary for clone", "test description for clone");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
 		TaskInitializationData taskSelection = new TaskInitializationData();
@@ -66,9 +66,8 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	public void testCharacterEscaping() throws Exception {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "Testing! \"&@ $\" &amp;", null);
-		assertEquals("Testing! \"&@ $\" &amp;", taskData.getRoot()
-				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
-				.getValue());
+		assertEquals("Testing! \"&@ $\" &amp;",
+				taskData.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue());
 	}
 
 	public void testinitializeTaskData() throws Exception {

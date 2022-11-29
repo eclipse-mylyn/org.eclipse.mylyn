@@ -51,8 +51,8 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		subMenuManager.setVisible(!selectedTasks.isEmpty());
 
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
-				.getCategories());
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
+				TasksUiInternal.getTaskList().getCategories());
 		Collections.sort(categories, new TaskContainerComparator());
 		for (final AbstractTaskCategory category : categories) {
 			if (!(category instanceof UnmatchedTaskContainer)) {

@@ -288,8 +288,9 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	@Override
 	protected void submit(TaskDataModel model) {
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
-				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
+		SubmitJob submitJob = TasksUiInternal.getJobFactory()
+				.createSubmitTaskJob(connector, model.getTaskRepository(), model.getTask(), model.getTaskData(),
+						model.getChangedOldAttributes());
 		submitJob.schedule();
 		try {
 			submitJob.join();

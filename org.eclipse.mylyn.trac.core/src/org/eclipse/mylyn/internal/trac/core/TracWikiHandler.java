@@ -78,8 +78,9 @@ public class TracWikiHandler extends AbstractWikiHandler {
 			if (success) {
 				return;
 			} else {
-				throw new CoreException(TracCorePlugin.toStatus(new TracException(
-						"Failed to upload wiki page. No further information available."), repository)); //$NON-NLS-1$
+				throw new CoreException(TracCorePlugin.toStatus(
+						new TracException("Failed to upload wiki page. No further information available."), //$NON-NLS-1$
+						repository));
 			}
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));

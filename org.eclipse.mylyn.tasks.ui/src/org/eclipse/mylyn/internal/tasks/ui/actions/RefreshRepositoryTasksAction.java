@@ -54,8 +54,8 @@ public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction i
 	}
 
 	private void synchronizeAllTasks(TaskRepository repository) {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		if (connector != null) {
 			Set<ITask> repositoryTasks = TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl());
 			TasksUiInternal.synchronizeTasks(connector, repositoryTasks, true, null);

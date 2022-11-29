@@ -35,9 +35,11 @@ public class TracTicket {
 	 */
 	public enum Key {
 		CC("cc"), CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-				"keywords"), MILESTONE("milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-				"resolution"), STATUS("status"), SEVERITY("severity"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-				"version"), TOKEN("_ts"); //$NON-NLS-1$ //$NON-NLS-2$
+				"keywords"), MILESTONE("milestone"), OWNER( //$NON-NLS-1$//$NON-NLS-2$
+						"owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								"resolution"), STATUS("status"), SEVERITY("severity"), SUMMARY("summary"), TIME( //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+										"time"), TYPE("type"), VERSION( //$NON-NLS-1$ //$NON-NLS-2$
+												"version"), TOKEN("_ts"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		public static Key fromKey(String name) {
 			for (Key key : Key.values()) {

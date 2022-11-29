@@ -89,7 +89,8 @@ public class RepositoryConnectorContributorTest extends TestCase {
 
 	@Test
 	public void testConnectorContributed() {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(DynamicMockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnector connector = TasksUi
+				.getRepositoryConnector(DynamicMockRepositoryConnector.CONNECTOR_KIND);
 		assertNotNull("Expected dynamically contributed mock connector", connector);
 		assertEquals(DynamicMockRepositoryConnector.class, connector.getClass());
 		assertEquals(DynamicMockRepositoryConnector.CONNECTOR_KIND, connector.getConnectorKind());
@@ -97,7 +98,8 @@ public class RepositoryConnectorContributorTest extends TestCase {
 
 	@Test
 	public void testConnectorUiContributed() {
-		AbstractRepositoryConnectorUi connector = TasksUi.getRepositoryConnectorUi(DynamicMockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnectorUi connector = TasksUi
+				.getRepositoryConnectorUi(DynamicMockRepositoryConnector.CONNECTOR_KIND);
 		assertNotNull("Expected connector UI contributed by MockRepositoryConnectorAdapter", connector);
 		assertEquals(DynamicMockRepositoryConnectorUi.class, connector.getClass());
 		assertEquals(DynamicMockRepositoryConnector.CONNECTOR_KIND, connector.getConnectorKind());

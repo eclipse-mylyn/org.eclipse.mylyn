@@ -57,8 +57,8 @@ public abstract class CommentEditor {
 			}
 		}
 
-		textEditor = new RichTextEditor(taskRepository, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP, contextService,
-				extension, task) {
+		textEditor = new RichTextEditor(taskRepository, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP, contextService, extension,
+				task) {
 			@Override
 			protected void valueChanged(String value) {
 				CommentEditor.this.valueChanged(value);

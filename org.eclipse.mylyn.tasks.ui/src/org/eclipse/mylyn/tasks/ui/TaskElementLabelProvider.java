@@ -147,13 +147,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = CommonImages.PERSON;
 					Person person = (Person) element;
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(person.getConnectorKind(),
-							person.getRepositoryUrl());
+					TaskRepository repository = TasksUi.getRepositoryManager()
+							.getRepository(person.getConnectorKind(), person.getRepositoryUrl());
 
-					if (repository != null
-							&& !repository.isAnonymous()
-							&& (repository.getUserName() != null && repository.getUserName().equalsIgnoreCase(
-									element.getHandleIdentifier()))) {
+					if (repository != null && !repository.isAnonymous() && (repository.getUserName() != null
+							&& repository.getUserName().equalsIgnoreCase(element.getHandleIdentifier()))) {
 						compositeDescriptor.icon = CommonImages.PERSON_ME;
 					}
 				}
@@ -252,7 +250,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 		if (element instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
-				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+				if (child.isActive()
+						|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
 					return CommonFonts.BOLD;
 				}
 			}
@@ -262,17 +261,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			if (((AbstractTask) element).isActive()) {
 				return CommonFonts.BOLD;
 			} else if (((AbstractTask) element).isCompleted()) {
-				if (CommonFonts.HAS_STRIKETHROUGH
-						&& TasksUiPlugin.getDefault()
-								.getPluginPreferences()
-								.getBoolean(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
+				if (CommonFonts.HAS_STRIKETHROUGH && TasksUiPlugin.getDefault()
+						.getPluginPreferences()
+						.getBoolean(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
 					return CommonFonts.STRIKETHROUGH;
 				} else {
 					return null;
 				}
 			}
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
-				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+				if (child.isActive()
+						|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
 					return CommonFonts.BOLD;
 				}
 			}

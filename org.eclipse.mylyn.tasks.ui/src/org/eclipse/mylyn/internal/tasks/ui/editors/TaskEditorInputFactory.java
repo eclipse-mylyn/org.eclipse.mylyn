@@ -38,8 +38,8 @@ public class TaskEditorInputFactory implements IElementFactory {
 		String handle = memento.getString(TAG_TASK_HANDLE);
 		AbstractTask task = TasksUiPlugin.getTaskList().getTask(handle);
 		if (task != null) {
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			TaskRepository taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			if (taskRepository != null) {
 				return new TaskEditorInput(taskRepository, task);
 			} else {

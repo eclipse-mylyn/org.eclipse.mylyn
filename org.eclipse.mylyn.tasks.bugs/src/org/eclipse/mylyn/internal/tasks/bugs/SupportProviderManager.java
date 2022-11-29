@@ -321,21 +321,18 @@ public class SupportProviderManager {
 			} else {
 				product = getProduct(productId);
 				if (product == null) {
-					StatusHandler.log(new Status(
-							IStatus.WARNING,
-							TasksBugsPlugin.ID_PLUGIN,
-							NLS.bind(
-									"Mapping contributed by {0} with namespace ''{1}'' ignored, unkown product id ''{1}'' specified", //$NON-NLS-1$
-									new String[] { element.getNamespaceIdentifier(), namespace, productId })));
+					StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
+							"Mapping contributed by {0} with namespace ''{1}'' ignored, unkown product id ''{1}'' specified", //$NON-NLS-1$
+							new String[] { element.getNamespaceIdentifier(), namespace, productId })));
 					return null;
 				}
 			}
 			product.addRepositoryMapping(mapping);
 			return mapping;
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
-					"Mapping contributed by {0} with namespace ''{1}'' ignored, no attributes specified", //$NON-NLS-1$
-					new String[] { element.getNamespaceIdentifier(), namespace })));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+					NLS.bind("Mapping contributed by {0} with namespace ''{1}'' ignored, no attributes specified", //$NON-NLS-1$
+							new String[] { element.getNamespaceIdentifier(), namespace })));
 			return null;
 		}
 	}
@@ -345,9 +342,10 @@ public class SupportProviderManager {
 		String providerId = element.getAttribute(ATTRIBUTE_PROVIDER_ID);
 		IProvider provider = getProvider(providerId);
 		if (provider == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
-					"Product contributed by {0} with id ''{1}'' ignored, unknown provider id ''{2}'' specified", //$NON-NLS-1$
-					new String[] { element.getNamespaceIdentifier(), id, providerId })));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+					NLS.bind(
+							"Product contributed by {0} with id ''{1}'' ignored, unknown provider id ''{2}'' specified", //$NON-NLS-1$
+							new String[] { element.getNamespaceIdentifier(), id, providerId })));
 			return null;
 		}
 		boolean enabled = true;
@@ -361,9 +359,9 @@ public class SupportProviderManager {
 		product.setInstalled(enabled);
 		product.setProvider(provider);
 		if (!addProduct(product)) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
-					"Product contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
-					element.getNamespaceIdentifier(), id)));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+					NLS.bind("Product contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
+							element.getNamespaceIdentifier(), id)));
 			return null;
 		}
 		((SupportProvider) provider).add(product);
@@ -376,9 +374,9 @@ public class SupportProviderManager {
 		SupportProvider provider = new SupportProvider();
 		readAttributes(element, provider);
 		if (!addProvider(provider)) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
-					"Provider contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
-					element.getNamespaceIdentifier(), id)));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+					NLS.bind("Provider contributed by {0} ignored, id ''{1}'' already present", //$NON-NLS-1$
+							element.getNamespaceIdentifier(), id)));
 			return null;
 		}
 		String categoryId = element.getAttribute(ATTRIBUTE_CATEGORY_ID);

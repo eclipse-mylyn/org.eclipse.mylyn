@@ -191,9 +191,9 @@ public class AttachmentPreviewPage extends WizardPage {
 		if (taskAttachment.getFileName() != null) {
 			name = taskAttachment.getFileName();
 		}
-		label.setText(MessageFormat.format(
-				Messages.AttachmentPreviewPage_A_preview_the_type_X_is_currently_not_available, name,
-				model.getContentType()));
+		label.setText(
+				MessageFormat.format(Messages.AttachmentPreviewPage_A_preview_the_type_X_is_currently_not_available,
+						name, model.getContentType()));
 	}
 
 	private void createImagePreview(Composite composite, final Image bufferedImage) {
@@ -286,8 +286,8 @@ public class AttachmentPreviewPage extends WizardPage {
 							try {
 								in.close();
 							} catch (IOException e) {
-								StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-										"Failed to close file", e)); //$NON-NLS-1$
+								StatusHandler.log(
+										new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to close file", e)); //$NON-NLS-1$
 							}
 						}
 					} catch (CoreException e) {

@@ -69,9 +69,8 @@ public class TaskListNotification extends AbstractUiNotification {
 	private LabelProvider getLabelProvider() {
 		// lazily instantiate on UI thread
 		if (labelProvider == null) {
-			labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true), PlatformUI.getWorkbench()
-					.getDecoratorManager()
-					.getLabelDecorator());
+			labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
+					PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 		}
 		return labelProvider;
 	}

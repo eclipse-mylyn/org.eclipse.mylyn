@@ -73,7 +73,8 @@ public class RepositoryStatus extends Status {
 		this(repositoryUrl, severity, pluginId, code, message, null);
 	}
 
-	public RepositoryStatus(String repositoryUrl, int severity, String pluginId, int code, String message, Throwable e) {
+	public RepositoryStatus(String repositoryUrl, int severity, String pluginId, int code, String message,
+			Throwable e) {
 		super(severity, pluginId, code, message, e);
 
 		if (repositoryUrl == null) {
@@ -158,7 +159,8 @@ public class RepositoryStatus extends Status {
 		return status;
 	}
 
-	public static RepositoryStatus createStatus(TaskRepository repository, int severity, String pluginId, String message) {
+	public static RepositoryStatus createStatus(TaskRepository repository, int severity, String pluginId,
+			String message) {
 		return createStatus(repository.getRepositoryUrl(), severity, pluginId, message);
 	}
 
@@ -173,8 +175,8 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createNotFoundError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId,
-				RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND, NLS.bind("Repository {0} could not be found.", //$NON-NLS-1$
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND,
+				NLS.bind("Repository {0} could not be found.", //$NON-NLS-1$
 						repositoryUrl));
 	}
 

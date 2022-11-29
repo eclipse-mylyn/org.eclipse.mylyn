@@ -232,10 +232,10 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 		assertFalse(mockQuery.contains(mockTask.getHandleIdentifier()));
 		assertTrue(unmatchedContainer.contains(mockTask.getHandleIdentifier()));
 
-		taskList.refactorRepositoryUrl(MockRepositoryConnector.REPOSITORY_URL, MockRepositoryConnector.REPOSITORY_URL
-				+ "new");
-		assertTrue(taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL + "new").contains(
-				mockTask.getHandleIdentifier()));
+		taskList.refactorRepositoryUrl(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.REPOSITORY_URL + "new");
+		assertTrue(taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL + "new")
+				.contains(mockTask.getHandleIdentifier()));
 	}
 
 	public void testOrphanedSubtasks() {

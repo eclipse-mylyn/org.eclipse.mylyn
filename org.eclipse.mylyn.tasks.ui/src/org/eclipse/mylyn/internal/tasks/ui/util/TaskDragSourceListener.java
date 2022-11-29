@@ -78,13 +78,13 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 				paths[0] = file.getAbsolutePath();
 				event.data = paths;
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Problems encountered dragging task", //$NON-NLS-1$
-						e));
+				StatusHandler
+						.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problems encountered dragging task", //$NON-NLS-1$
+								e));
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Problems encountered dragging task", //$NON-NLS-1$
-						e));
+				StatusHandler
+						.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problems encountered dragging task", //$NON-NLS-1$
+								e));
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = CopyTaskDetailsAction.getTextForTask(currentSelection.getFirstElement());

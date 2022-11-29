@@ -261,7 +261,8 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		};
 		BugzillaFixture.current()
 				.connector()
-				.performQuery(BugzillaFixture.current().repository(), query, collector, null, new NullProgressMonitor());
+				.performQuery(BugzillaFixture.current().repository(), query, collector, null,
+						new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
 			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
@@ -299,8 +300,8 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		taskDataNew[0] = createTaskData(BugzillaFixture.current().repository(), taskMappingInit, taskMappingSelect,
 				null);
 
-		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0],
-				BugzillaFixture.current().client());
+		RepositoryResponse response = BugzillaFixture.current()
+				.submitTask(taskDataNew[0], BugzillaFixture.current().client());
 
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());

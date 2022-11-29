@@ -60,8 +60,8 @@ public class ReportErrorWizard extends Wizard {
 	@Override
 	public boolean canFinish() {
 		// newTaskPage is a selection page, therefore it's only valid to finish early if the selected node does not delegate to another wizard
-		return reportErrorPage.getSelectedContribution() != null || newTaskPage.canFinish()
-				&& newTaskPage.getNextPage() == null;
+		return reportErrorPage.getSelectedContribution() != null
+				|| newTaskPage.canFinish() && newTaskPage.getNextPage() == null;
 	}
 
 	@Override

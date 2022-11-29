@@ -80,7 +80,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			connector.getTaskData(repository, "99999", new NullProgressMonitor());
 			fail("Invalid id error should have resulted");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) > 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) > 0) {
 				assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
 			} else {
 				assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_NOT_FOUND_BUG_ID));
@@ -438,7 +440,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			taskId = harness.createCfBugIdTask();
 		}
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			if (!BugzillaFixture.current().isCustomWorkflow() && !BugzillaFixture.current().isCustomWorkflowAndStatus()) {
+			if (!BugzillaFixture.current().isCustomWorkflow()
+					&& !BugzillaFixture.current().isCustomWorkflowAndStatus()) {
 				doStdWorkflow32(taskId);
 			}
 		} else {
@@ -500,13 +503,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskAttribute statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertEquals("CONFIRMED", statusAttribute.getValue());
 		TaskAttribute selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-		TaskAttribute operationAttribute = taskData.getRoot().getAttribute(
-				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString());
-		TaskAttribute operationAttributeUppercase = taskData.getRoot().getAttribute(
-				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString().toUpperCase());
-		TaskOperation.applyTo(selectedOperationAttribute, operationAttribute != null
-				? operationAttribute.getValue()
-				: operationAttributeUppercase.getValue(), BugzillaOperation.in_progress.getLabel());
+		TaskAttribute operationAttribute = taskData.getRoot()
+				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString());
+		TaskAttribute operationAttributeUppercase = taskData.getRoot()
+				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString().toUpperCase());
+		TaskOperation.applyTo(selectedOperationAttribute,
+				operationAttribute != null ? operationAttribute.getValue() : operationAttributeUppercase.getValue(),
+				BugzillaOperation.in_progress.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);
@@ -567,13 +570,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertEquals("VERIFIED", statusAttribute.getValue());
 		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-		operationAttribute = taskData.getRoot().getAttribute(
-				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString());
-		operationAttributeUppercase = taskData.getRoot().getAttribute(
-				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString().toUpperCase());
-		TaskOperation.applyTo(selectedOperationAttribute, operationAttribute != null
-				? operationAttribute.getValue()
-				: operationAttributeUppercase.getValue(), BugzillaOperation.confirmed.getLabel());
+		operationAttribute = taskData.getRoot()
+				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString());
+		operationAttributeUppercase = taskData.getRoot()
+				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString().toUpperCase());
+		TaskOperation.applyTo(selectedOperationAttribute,
+				operationAttribute != null ? operationAttribute.getValue() : operationAttributeUppercase.getValue(),
+				BugzillaOperation.confirmed.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);
@@ -929,8 +932,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			response = BugzillaFixture.current().submitTask(data, client);
 			assertNotNull(response);
 			//assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
-			System.err.println("\n\ntestMidAirCollision >>> ResponseKind:" + response.getReposonseKind().toString()
-					+ "\n\n");
+			System.err.println(
+					"\n\ntestMidAirCollision >>> ResponseKind:" + response.getReposonseKind().toString() + "\n\n");
 			fail("Mid-air collision expected");
 		} catch (CoreException e) {
 			assertTrue(e.getStatus().getMessage().indexOf("Mid-air collision occurred while submitting") != -1);
@@ -1149,15 +1152,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		float estimatedTime, remainingTime, actualTime, addTime;
 		String deadline = null;
 
-		estimatedTime = Float.parseFloat(taskData.getRoot()
-				.getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey())
-				.getValue());
-		remainingTime = Float.parseFloat(taskData.getRoot()
-				.getAttribute(BugzillaAttribute.REMAINING_TIME.getKey())
-				.getValue());
-		actualTime = Float.parseFloat(taskData.getRoot()
-				.getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey())
-				.getValue());
+		estimatedTime = Float
+				.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue());
+		remainingTime = Float
+				.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).getValue());
+		actualTime = Float
+				.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey()).getValue());
 
 		if (enableDeadline) {
 			deadline = taskData.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue();
@@ -1200,10 +1200,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		model = createModel(task);
 		taskData = model.getTaskData();
 
-		assertEquals(estimatedTime,
-				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue()));
-		assertEquals(remainingTime,
-				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).getValue()));
+		assertEquals(estimatedTime, Float
+				.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue()));
+		assertEquals(remainingTime, Float
+				.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()).getValue()));
 		assertEquals(actualTime + addTime,
 				Float.parseFloat(taskData.getRoot().getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey()).getValue()));
 		if (enableDeadline) {
@@ -1231,7 +1231,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			// Until we found the reason we disable this test for the 4.1 bugzilla on mylyn.eclipse.org
 			return;
 		}
-		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		RepositoryConfiguration repositoryConfiguration = connector
+				.getRepositoryConfiguration(repository.getRepositoryUrl());
 		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		String priority1 = priorities.get(0);
 		String priority2 = priorities.get(1);
@@ -1321,14 +1322,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		for (ITask task : tasks) {
 			if (task.getTaskId() == "4") {
-				assertEquals(priority4, taskData4.getRoot()
-						.getAttribute(BugzillaAttribute.PRIORITY.getKey())
-						.getValue());
+				assertEquals(priority4,
+						taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
 			}
 			if (task.getTaskId() == "5") {
-				assertEquals(priority5, taskData5.getRoot()
-						.getAttribute(BugzillaAttribute.PRIORITY.getKey())
-						.getValue());
+				assertEquals(priority5,
+						taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
 			}
 		}
 	}
@@ -1345,7 +1344,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			client.validate(new NullProgressMonitor());
 
 		} catch (CoreException e) {
-			assertTrue(e.getStatus().getMessage().indexOf("Please validate credentials via Task Repositories view.") != -1);
+			assertTrue(e.getStatus()
+					.getMessage()
+					.indexOf("Please validate credentials via Task Repositories view.") != -1);
 			return;
 		} finally {
 			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);
@@ -1373,11 +1374,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			assertNotNull(matchUserResponse.getNewCCMsg());
 			assertNull(matchUserResponse.getAssignedToMsg());
 			assertNull(matchUserResponse.getQaContactMsg());
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertTrue(matchUserResponse.getNewCCMsg().equals("st  did not match anything "));
 			} else {
-				assertTrue(matchUserResponse.getNewCCMsg().equals(
-						"st  was too short for substring match (minimum 3 characters) "));
+				assertTrue(matchUserResponse.getNewCCMsg()
+						.equals("st  was too short for substring match (minimum 3 characters) "));
 			}
 		}
 	}
@@ -1387,7 +1390,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			doUserMatch("est", null);
 			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
 				assertNotNull(status);
@@ -1430,7 +1435,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			doUserMatch(null, "est");
 			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
 				assertNotNull(status);
@@ -1472,7 +1479,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			doUserMatch("test", "est");
 			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
 				assertNotNull(status);
@@ -1517,7 +1526,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			doUserMatch("test;guest", null);
 			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
 				assertNotNull(status);
@@ -1584,7 +1595,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			doUserMatch("est", "test1");
 			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+			if (BugzillaFixture.current()
+					.getBugzillaVersion()
+					.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
 				assertNotNull(status);
@@ -1623,8 +1636,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 	}
 
-	public void doUserMatch(String newCCAttributeValue, String assignedToAttributeValue) throws CoreException,
-			IOException {
+	public void doUserMatch(String newCCAttributeValue, String assignedToAttributeValue)
+			throws CoreException, IOException {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 
 			@Override
@@ -1747,10 +1760,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskAttribute idAttribute = description.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
 
 		String value = idAttribute.getValue();
-		TaskAttribute definedIsPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
-				+ value);
+		TaskAttribute definedIsPrivate = description
+				.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		if (definedIsPrivate == null) {
-			definedIsPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+			definedIsPrivate = description
+					.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		}
 		TaskAttribute isPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 		if (isPrivate == null) {
@@ -1847,8 +1861,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals("0", isPrivateAttribute.getValue());
 
 		String value = comment1.getValue();
-		TaskAttribute definedIsPrivate = comment1.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
-				+ value);
+		TaskAttribute definedIsPrivate = comment1
+				.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		if (definedIsPrivate == null) {
 			definedIsPrivate = comment1.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
 		}

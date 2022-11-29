@@ -50,7 +50,8 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testRead() throws Exception {
-		ZipInputStream in = new ZipInputStream(CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
+		ZipInputStream in = new ZipInputStream(
+				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		try {
 			in.getNextEntry();
 			@SuppressWarnings("unused")
@@ -61,7 +62,8 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testReadWrite() throws Exception {
-		ZipInputStream in = new ZipInputStream(CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
+		ZipInputStream in = new ZipInputStream(
+				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		ITaskDataWorkingCopy state;
 		try {
 			in.getNextEntry();
@@ -95,7 +97,8 @@ public class TaskDataExternalizerTest extends TestCase {
 		} catch (SAXParseException expected) {
 		}
 
-		TaskDataState state2 = externalizer.readState(new Xml11InputStream(new ByteArrayInputStream(out.toByteArray())));
+		TaskDataState state2 = externalizer
+				.readState(new Xml11InputStream(new ByteArrayInputStream(out.toByteArray())));
 		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
 		assertEquals("\u0001\u001F", state2.getRepositoryData().getRoot().getAttribute("attribute").getValue());
 	}

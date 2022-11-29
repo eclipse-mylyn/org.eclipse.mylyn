@@ -112,8 +112,8 @@ public final class DefaultTaskSchema extends AbstractTaskSchema {
 			Messages.DefaultTaskSchema_Modified_Label, TaskAttribute.TYPE_DATE, "modification_date", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field DESCRIPTION = createField(TaskAttribute.DESCRIPTION,
-			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_LONG_RICH_TEXT,
-			"description", Flag.DESCRIPTION); //$NON-NLS-1$
+			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_LONG_RICH_TEXT, "description", //$NON-NLS-1$
+			Flag.DESCRIPTION);
 
 	public final Field KEYWORDS = createField(TaskAttribute.KEYWORDS, Messages.DefaultTaskSchema_Keywords_Label,
 			TaskAttribute.TYPE_MULTI_SELECT, "keywords", Flag.ATTRIBUTE); //$NON-NLS-1$

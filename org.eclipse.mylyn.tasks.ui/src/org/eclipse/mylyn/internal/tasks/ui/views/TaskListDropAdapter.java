@@ -93,7 +93,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		Object currentTarget = getCurrentTarget();
-		if (currentTarget instanceof LocalTask && areAllLocalTasks(tasksToMove) && getCurrentLocation() == LOCATION_ON) {
+		if (currentTarget instanceof LocalTask && areAllLocalTasks(tasksToMove)
+				&& getCurrentLocation() == LOCATION_ON) {
 			for (ITask task : tasksToMove) {
 				if (!((AbstractTask) task).contains(((LocalTask) currentTarget).getHandleIdentifier())) {
 					TasksUiInternal.getTaskList().addTask(task, (LocalTask) currentTarget);
@@ -112,7 +113,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					} else if (currentTarget instanceof TaskCategory) {
 						moveTask(task, (TaskCategory) currentTarget);
 					} else if (currentTarget instanceof UnmatchedTaskContainer) {
-						if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+						if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl()
+								.equals(task.getRepositoryUrl())) {
 							moveTask(task, (AbstractTaskCategory) currentTarget);
 						}
 					} else if (currentTarget instanceof ITask) {
@@ -131,8 +133,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
 								targetCategory = (AbstractTaskCategory) container;
 							} else if (container instanceof UnmatchedTaskContainer) {
-								if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(
-										task.getRepositoryUrl())) {
+								if (((UnmatchedTaskContainer) container).getRepositoryUrl()
+										.equals(task.getRepositoryUrl())) {
 									targetCategory = (AbstractTaskCategory) container;
 								}
 							}
@@ -145,8 +147,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						if (container instanceof Unscheduled) {
 							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
 						} else if (isValidTarget(container)) {
-							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-									container.getDateRange());
+							TasksUiPlugin.getTaskActivityManager()
+									.setScheduledFor((AbstractTask) task, container.getDateRange());
 						}
 					} else if (currentTarget == null) {
 						moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
@@ -256,8 +258,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					|| target instanceof UnmatchedTaskContainer
 					|| (target instanceof ScheduledTaskContainer && isValidTarget((ScheduledTaskContainer) target))) {
 				return true;
-			} else if (target instanceof ITaskContainer
-					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
+			} else if (target instanceof ITaskContainer && (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER
+					|| getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else if (target instanceof LocalTask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON) {
 				return true;

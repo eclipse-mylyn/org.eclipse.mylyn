@@ -68,12 +68,11 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
-			if (MessageDialog.openConfirm(
-					WorkbenchUtil.getShell(),
+			if (MessageDialog.openConfirm(WorkbenchUtil.getShell(),
 					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
 					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
-				MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
-						System.currentTimeMillis());
+				MonitorUi.getActivityContextManager()
+						.removeActivityTime(task.getHandleIdentifier(), 0l, System.currentTimeMillis());
 			}
 		}
 	}
@@ -201,7 +200,8 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 			if (item instanceof ITask) {
 				ITask task = (ITask) item;
 				markTasksRead(event, new ITask[] { task }, true);
-				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.DOWN);
+				GoToUnreadTaskHandler.execute(event,
+						org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.DOWN);
 			}
 		}
 	}

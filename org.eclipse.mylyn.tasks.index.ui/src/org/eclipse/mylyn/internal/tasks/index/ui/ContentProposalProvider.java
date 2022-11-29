@@ -42,7 +42,8 @@ public class ContentProposalProvider implements IContentProposalProvider {
 
 	private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s"); //$NON-NLS-1$
 
-	private static final Pattern PATTERN_SPECIAL_CHARACTERS = Pattern.compile("([+&\\|!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\-])"); //$NON-NLS-1$
+	private static final Pattern PATTERN_SPECIAL_CHARACTERS = Pattern
+			.compile("([+&\\|!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\-])"); //$NON-NLS-1$
 
 	private final AbstractIndexReference reference;
 
@@ -184,8 +185,8 @@ public class ContentProposalProvider implements IContentProposalProvider {
 
 		String label = NLS.bind(Messages.IndexSearchHandler_Past_week_date_range_label, field.getIndexKey());
 
-		String queryText = reference.index().computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound,
-				dateSearchUpperBound);
+		String queryText = reference.index()
+				.computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound, dateSearchUpperBound);
 
 		if (queryText.startsWith(contentState.prefix)) {
 			proposals.add(new ContentProposal(contentState.beforePrefixContent + queryText, contentState.suffix, label,

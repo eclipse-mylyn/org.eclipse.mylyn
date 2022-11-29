@@ -45,8 +45,8 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TaskData taskData = new TaskData(new TaskAttributeMapper(taskRepository), "kind", "http://url", "1");
-		TaskComment comment = new TaskComment(taskRepository, new MockTask("1"), taskData.getRoot().createAttribute(
-				"id"));
+		TaskComment comment = new TaskComment(taskRepository, new MockTask("1"),
+				taskData.getRoot().createAttribute("id"));
 
 		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
 		action.selectionChanged(new StructuredSelection(comment));

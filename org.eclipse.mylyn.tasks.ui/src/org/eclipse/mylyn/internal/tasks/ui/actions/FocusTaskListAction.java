@@ -165,12 +165,14 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 		}
 
 		if (!taskListView.isFocusedMode()) {
-			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED,
-					true);
+			TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, true);
 			installInterestFilter();
 		} else {
-			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED,
-					false);
+			TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, false);
 			uninstallInterestFilter();
 		}
 	}

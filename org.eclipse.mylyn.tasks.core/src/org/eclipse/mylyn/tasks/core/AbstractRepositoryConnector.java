@@ -528,8 +528,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.3
 	 */
 	@NonNull
-	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull IProgressMonitor monitor)
-			throws CoreException {
+	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task,
+			@NonNull IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 

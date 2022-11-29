@@ -157,8 +157,8 @@ public class TasksUiUtil {
 				ITask task = (ITask) adaptable.getAdapter(AbstractTask.class);
 				if (task != null) {
 					ITask rtask = task;
-					return TasksUi.getRepositoryManager().getRepository(rtask.getConnectorKind(),
-							rtask.getRepositoryUrl());
+					return TasksUi.getRepositoryManager()
+							.getRepository(rtask.getConnectorKind(), rtask.getRepositoryUrl());
 				}
 			}
 		}

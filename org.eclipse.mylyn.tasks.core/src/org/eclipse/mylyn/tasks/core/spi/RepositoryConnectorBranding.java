@@ -46,7 +46,6 @@ import com.google.common.collect.ImmutableList;
  *     &lt;/factory&gt;
  *  &lt;/extension&gt;
  * </pre>
- * 
  * </p>
  * <p>
  * <code>MyRepositoryConnector</code> needs to return an instance of {@link RepositoryConnectorBranding} for the
@@ -76,7 +75,6 @@ import com.google.common.collect.ImmutableList;
  * 	}
  * }
  * </pre>
- * 
  * </p>
  * 
  * @since 3.10

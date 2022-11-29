@@ -274,7 +274,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public Map<String, String> getOptions(TaskAttribute attribute) {
-		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
+		RepositoryConfiguration configuration = connector
+				.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
 		if (configuration != null) {
 			TaskAttribute attributeProduct = attribute.getTaskData()
 					.getRoot()
@@ -331,7 +332,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				&& (BugzillaAttribute.RESOLUTION.getKey().equals(id)
 						|| BugzillaAttribute.BUG_FILE_LOC.getKey().equals(id)
 						|| BugzillaAttribute.STATUS_WHITEBOARD.getKey().equals(id) //
-				|| BugzillaAttribute.KEYWORDS.getKey().equals(id))) {
+						|| BugzillaAttribute.KEYWORDS.getKey().equals(id))) {
 			if (oldAttribute.getValue().length() == 0 && newAttribute.getValue().length() == 0
 					&& oldAttribute.getValues().size() <= 1 && newAttribute.getValues().size() <= 1) {
 				return true;

@@ -48,8 +48,8 @@ public class RepositoryModel implements IRepositoryModel {
 		repositoryManager.addListener(new TaskRepositoryAdapter() {
 			@Override
 			public void repositoryAdded(TaskRepository repository) {
-				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
-						repository.getRepositoryUrl()));
+				taskList.addUnmatchedContainer(
+						new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getRepositoryUrl()));
 			}
 
 			@Override

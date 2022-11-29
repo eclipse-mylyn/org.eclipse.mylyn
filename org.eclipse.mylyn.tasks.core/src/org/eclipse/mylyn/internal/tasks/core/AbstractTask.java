@@ -419,8 +419,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (isCompleted() || scheduledForDate == null || !(getScheduledForDate() instanceof DayDateRange)) {
 			return false;
 		} else {
-			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate().compareTo(
-					TaskActivityUtil.getCalendar()) < 0) {
+			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate()
+					.compareTo(TaskActivityUtil.getCalendar()) < 0) {
 				return true;
 			} else {
 				return false;

@@ -166,8 +166,8 @@ public class ConnectorMigrationWizard extends Wizard {
 					IRepositoryManager manager = migrator.getRepositoryManager();
 					AbstractRepositoryConnector connector = manager.getRepositoryConnector(kind);
 					if (connector != null) {
-						return connector.getLabel()
-								+ NLS.bind(Messages.ConnectorMigrationWizard_used_by_X_repositories, manager.getRepositories(kind).size());
+						return connector.getLabel() + NLS.bind(Messages.ConnectorMigrationWizard_used_by_X_repositories,
+								manager.getRepositories(kind).size());
 					}
 				}
 				return super.getText(element);

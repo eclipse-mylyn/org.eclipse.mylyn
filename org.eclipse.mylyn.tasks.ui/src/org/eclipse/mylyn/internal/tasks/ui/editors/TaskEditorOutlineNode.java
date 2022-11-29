@@ -143,8 +143,8 @@ public class TaskEditorOutlineNode {
 							label = task.getSummary();
 						}
 					} else {
-						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
-								new Object[] { taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
+								taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
 					}
 					TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
 
@@ -167,8 +167,8 @@ public class TaskEditorOutlineNode {
 			}
 		}
 		addNode(rootNode, taskData, TaskAttribute.DESCRIPTION, LABEL_DESCRIPTION);
-		List<TaskAttribute> attachments = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> attachments = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 		if (attachments.size() > 0) {
 			TaskEditorOutlineNode attachmentNode = new TaskEditorOutlineNode(LABEL_ATTACHMENTS);
 			rootNode.addChild(attachmentNode);
@@ -179,8 +179,8 @@ public class TaskEditorOutlineNode {
 				}
 			}
 		}
-		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_COMMENT);
+		List<TaskAttribute> comments = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 		if (comments.size() > 0) {
 			TaskEditorOutlineNode commentsNode = new TaskEditorOutlineNode(LABEL_COMMENTS);
 			rootNode.addChild(commentsNode);

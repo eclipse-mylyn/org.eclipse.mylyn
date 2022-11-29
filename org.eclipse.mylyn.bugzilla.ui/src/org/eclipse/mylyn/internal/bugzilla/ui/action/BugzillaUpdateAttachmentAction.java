@@ -80,8 +80,8 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 								final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 									public void run() {
-										bugzillaPage.getTaskEditor().setMessage(job.getError().getMessage(),
-												IMessageProvider.ERROR);
+										bugzillaPage.getTaskEditor()
+												.setMessage(job.getError().getMessage(), IMessageProvider.ERROR);
 									}
 								});
 							}

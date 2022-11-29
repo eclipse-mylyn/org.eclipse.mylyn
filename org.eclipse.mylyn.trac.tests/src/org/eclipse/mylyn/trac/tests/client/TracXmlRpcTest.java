@@ -111,8 +111,8 @@ public class TracXmlRpcTest extends TestCase {
 		return result;
 	}
 
-	public Map<String, Object> createMultiCall(String methodName, Object... parameters) throws XmlRpcException,
-			IOException {
+	public Map<String, Object> createMultiCall(String methodName, Object... parameters)
+			throws XmlRpcException, IOException {
 		Map<String, Object> table = new Hashtable<String, Object>();
 		table.put("methodName", methodName);
 		table.put("params", parameters);

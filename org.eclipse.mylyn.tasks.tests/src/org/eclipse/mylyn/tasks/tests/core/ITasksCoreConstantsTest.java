@@ -26,10 +26,12 @@ public class ITasksCoreConstantsTest extends TestCase {
 
 	public void testRootRuleConflicts() {
 		assertTrue(ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
-		assertTrue(ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.TASKLIST_SCHEDULING_RULE));
+		assertTrue(
+				ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.TASKLIST_SCHEDULING_RULE));
 		assertTrue(ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(new MutexSchedulingRule()));
 		assertTrue(ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(new ObjectSchedulingRule(this)));
-		assertTrue(ITasksCoreConstants.TASKLIST_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
+		assertTrue(
+				ITasksCoreConstants.TASKLIST_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
 		assertTrue(new MutexSchedulingRule().isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
 		assertTrue(new ObjectSchedulingRule(this).isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
 	}

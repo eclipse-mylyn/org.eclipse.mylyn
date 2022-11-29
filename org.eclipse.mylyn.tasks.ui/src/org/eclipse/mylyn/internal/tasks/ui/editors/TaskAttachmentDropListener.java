@@ -104,8 +104,8 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 			List<ITask> tasksToMove = TasksUiInternal.getTasksFromSelection(selection);
 			if (!tasksToMove.isEmpty()) {
-				TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, page.getTask(),
-						Operation.DROP_ON_TASK_EDITOR);
+				TasksUiInternal.getTaskDropHandler()
+						.fireTaskDropped(tasksToMove, page.getTask(), Operation.DROP_ON_TASK_EDITOR);
 			} else {
 				attachFirstFile(getFilesFromSelection(selection));
 			}
