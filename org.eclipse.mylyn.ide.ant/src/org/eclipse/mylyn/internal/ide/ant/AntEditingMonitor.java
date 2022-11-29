@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- *
+ * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.AbstractContextInteractionMonitor;
 import org.eclipse.mylyn.internal.ide.ui.XmlNodeHelper;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -31,15 +31,14 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author Mik Kersten
  */
 @SuppressWarnings("restriction")
-public class AntEditingMonitor extends AbstractContextInteractionMonitor {
+public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 
 	public AntEditingMonitor() {
 		super();
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
-			boolean contributeToContext) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		if (part instanceof AntEditor) {
 
 			TextSelection textSelection = null;
@@ -75,16 +74,16 @@ public class AntEditingMonitor extends AbstractContextInteractionMonitor {
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
-					StatusHandler.log(
-							new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Resolving selection failed", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
+							"Resolving selection failed", e)); //$NON-NLS-1$
 				}
 			}
 		}
 		return;
 	}
 
-	public static AntElementNode getNode(AntModel antModel, String elementPath)
-			throws SecurityException, NoSuchMethodException {
+	public static AntElementNode getNode(AntModel antModel, String elementPath) throws SecurityException,
+			NoSuchMethodException {
 		AntProjectNode topNode;
 		try {
 			topNode = antModel.getProjectNode();
@@ -97,8 +96,8 @@ public class AntEditingMonitor extends AbstractContextInteractionMonitor {
 	/**
 	 * HACK: using reflection to gain accessibility
 	 */
-	private static AntElementNode getNode(AntElementNode topNode, String elementPath)
-			throws NoSuchMethodException, IllegalAccessException {
+	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException,
+			IllegalAccessException {
 		if (topNode == null) {
 			return null;
 		}

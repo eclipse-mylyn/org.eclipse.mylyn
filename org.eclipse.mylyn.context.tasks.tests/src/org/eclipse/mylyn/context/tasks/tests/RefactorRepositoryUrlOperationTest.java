@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies.
- *
+ * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -14,10 +14,12 @@ package org.eclipse.mylyn.context.tasks.tests;
 
 import java.util.Calendar;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.common.context.CommonInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -30,8 +32,6 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.junit.Before;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
@@ -88,16 +88,16 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
-		ContextCorePlugin.getContextManager()
-				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						CommonInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
-						"origin", null, CommonInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
-		ContextCorePlugin.getContextManager()
-				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						CommonInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
-						"origin", null, CommonInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
@@ -106,10 +106,9 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		new RefactorRepositoryUrlOperation(firstUrl, secondUrl).run(new NullProgressMonitor());
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(5 * 60 * 1000,
-				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
-		assertEquals(10 * 60 * 1000,
-				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "2")));
+		assertEquals(5 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
+		assertEquals(10 * 60 * 1000, TasksUiPlugin.getTaskActivityManager()
+				.getElapsedTime(new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 

@@ -1,16 +1,18 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- *
+ * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui;
+
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,15 +29,15 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.AbstractContextInteractionMonitor;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Mik Kersten
  */
-public class JavaEditingMonitor extends AbstractContextInteractionMonitor {
+public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 
 	protected IJavaElement lastSelectedElement = null;
 
@@ -65,10 +67,10 @@ public class JavaEditingMonitor extends AbstractContextInteractionMonitor {
 				}
 				currentSelection = structuredSelection;
 
-				for (Object selectedObject : structuredSelection) {
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+					Object selectedObject = iterator.next();
 					if (selectedObject instanceof IJavaElement) {
-						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(
-								(IJavaElement) selectedObject);
+						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IJavaElement) selectedObject);
 						if (checkedElement == null) {
 							return;
 						} else {

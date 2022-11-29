@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- *
+ * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,8 +32,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.common.context.CommonContextPlugin;
-import org.eclipse.mylyn.common.context.ContextCallBack;
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextContributor;
@@ -41,12 +39,11 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IContextContributor;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.osgi.framework.BundleContext;
 
 /**
  * Activator for the Context Core plug-in.
- *
+ * 
  * @author Mik Kersten
  * @since 3.0
  */
@@ -159,21 +156,6 @@ public class ContextCorePlugin extends Plugin {
 		}
 		contextStore.setContextDirectory(storeFile);
 		contextManager = new InteractionContextManager(contextStore);
-		CommonContextPlugin.getDefault().setContextCallBack(new ContextCallBack() {
-
-			@Override
-			public void processActivityMetaContextEvent(InteractionEvent event) {
-				ContextCorePlugin.getContextManager().processActivityMetaContextEvent(event);
-			}
-
-			@Override
-			public String getActiveContextHandleIdentifier() {
-				if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
-					return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
-				}
-				return null;
-			}
-		});
 	}
 
 	@Override
@@ -272,7 +254,7 @@ public class ContextCorePlugin extends Plugin {
 
 	/**
 	 * Finds the shadowed content for the passed in base content
-	 *
+	 * 
 	 * @param baseContent
 	 * @return the shadowed content type or if null there is none
 	 */
@@ -445,8 +427,7 @@ public class ContextCorePlugin extends Plugin {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-				IExtensionPoint extensionPoint = registry
-						.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (IExtension extension : extensions) {
 					IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -469,8 +450,7 @@ public class ContextCorePlugin extends Plugin {
 					}
 				}
 
-				extensionPoint = registry
-						.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_RELATION_PROVIDERS);
+				extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_RELATION_PROVIDERS);
 				extensions = extensionPoint.getExtensions();
 				for (IExtension extension : extensions) {
 					IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -496,16 +476,15 @@ public class ContextCorePlugin extends Plugin {
 
 				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
 				if (element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE) != null) {
-					String parentContentType = element
-							.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
+					String parentContentType = element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
 					if (parentContentType != null) {
 						bridge.setParentContentType(parentContentType);
 					}
 				}
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (Throwable e) {
-				StatusHandler.log(
-						new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not load bridge extension", e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+						"Could not load bridge extension", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -516,8 +495,7 @@ public class ContextCorePlugin extends Plugin {
 			if (baseContent == null || shadowedByContent == null) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Ignoring bridge shadowing because of invalid extension point " //$NON-NLS-1$
-								+ BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE,
-						new Exception()));
+								+ BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE, new Exception()));
 			}
 			ContextCorePlugin.getDefault().addShadowsContent(baseContent, shadowedByContent);
 		}
@@ -525,8 +503,7 @@ public class ContextCorePlugin extends Plugin {
 		private static void readRelationProvider(IConfigurationElement element) {
 			try {
 				String contentType = element.getAttribute(BridgesExtensionPointReader.ATTR_CONTENT_TYPE);
-				AbstractRelationProvider relationProvider = (AbstractRelationProvider) element
-						.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
+				AbstractRelationProvider relationProvider = (AbstractRelationProvider) element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (contentType != null) {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
