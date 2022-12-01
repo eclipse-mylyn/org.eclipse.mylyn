@@ -12,9 +12,9 @@
     <packaging>pom</packaging>
 
     <properties>
-    	<guava.osgi>30.1</guava.osgi>
-    	<guava.osgi.upper>31.0</guava.osgi.upper>
-        <guava.version>31.1-jre</guava.version>
+    	<guava.osgi>31.1</guava.osgi>
+    	<guava.osgi.upper>32.0</guava.osgi.upper>
+        <guava.version>${guava.osgi}-jre</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>

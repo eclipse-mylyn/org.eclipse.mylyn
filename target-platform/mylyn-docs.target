@@ -8,8 +8,6 @@
 			<unit id="org.junit" version="4.13.2.v20211018-1956"/>
 			<unit id="org.junit.source" version="4.13.2.v20211018-1956"/>
 			<unit id="javax.activation" version="1.2.2.v20201119-1642"/>
-			<unit id="com.google.guava" version="30.1.0.v20210127-2300"/>
-			<unit id="com.google.guava.source" version="30.1.0.v20210127-2300"/>
 			<unit id="org.jsoup" version="1.14.3.v20211012-1727"/>
 			<unit id="org.jsoup.source" version="1.14.3.v20211012-1727"/>
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220830213456/repository"/>
@@ -59,6 +57,12 @@
 					<version>1.15.3</version>
 					<type>jar</type>
 				</dependency>
+				<dependency>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+					<version>31.1-jre</version>
+					<type>jar</type>
+				</dependency>				
 			</dependencies>
 		</location>
 	</locations>
