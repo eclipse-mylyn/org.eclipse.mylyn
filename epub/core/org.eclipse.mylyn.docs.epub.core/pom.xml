@@ -95,6 +95,14 @@
 					<groupId>edu.ucar</groupId>
 					<artifactId>cdm</artifactId>
 				</exclusion>
+				<exclusion>
+				    <groupId>com.github.junrar</groupId>
+				    <artifactId>junrar</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>org.apache.xmlbeans</groupId>
+				    <artifactId>xmlbeans</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
