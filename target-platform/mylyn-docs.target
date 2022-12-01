@@ -3,13 +3,9 @@
 <target name="mylyn-docs" sequenceNumber="2">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-			<unit id="org.apache.tika.parsers" version="1.24.1.v20211101-1915"/>
-			<unit id="org.apache.tika.core" version="1.24.1.v20211101-1915"/>
 			<unit id="org.junit" version="4.13.2.v20211018-1956"/>
 			<unit id="org.junit.source" version="4.13.2.v20211018-1956"/>
 			<unit id="javax.activation" version="1.2.2.v20201119-1642"/>
-			<unit id="org.jsoup" version="1.14.3.v20211012-1727"/>
-			<unit id="org.jsoup.source" version="1.14.3.v20211012-1727"/>
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220830213456/repository"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -28,6 +24,30 @@
 		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+					<version>31.1-jre</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>net.bytebuddy</groupId>
+					<artifactId>byte-buddy-agent</artifactId>
+					<version>1.12.16</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>net.bytebuddy</groupId>
+					<artifactId>byte-buddy</artifactId>
+					<version>1.12.16</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.jsoup</groupId>
+					<artifactId>jsoup</artifactId>
+					<version>1.15.3</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-core</artifactId>
 					<version>4.8.1</version>
@@ -39,30 +59,6 @@
 					<version>3.2</version>
 					<type>jar</type>
 				</dependency>
-				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy</artifactId>
-					<version>1.12.16</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy-agent</artifactId>
-					<version>1.12.16</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.jsoup</groupId>
-					<artifactId>jsoup</artifactId>
-					<version>1.15.3</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-					<version>31.1-jre</version>
-					<type>jar</type>
-				</dependency>				
 			</dependencies>
 		</location>
 	</locations>
