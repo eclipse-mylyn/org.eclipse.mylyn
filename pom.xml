@@ -107,7 +107,7 @@
                 <configuration>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
                 </configuration>
             </plugin>
             <plugin>
@@ -403,10 +403,10 @@
         <system>Bugzilla</system>
         <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn;product=Mylyn%20Docs</url>
     </issueManagement>
-    <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
-        <developerConnection>scm:git:ssh://genie.docs@git.eclipse.org:29418/mylyn/org.eclipse.mylyn.docs</developerConnection>
-        <connection>scm:git:https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git</connection>
-        <url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
+    <scm>
+        <developerConnection>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.git</developerConnection>
+        <connection>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.git</connection>
+        <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.git</url>
     </scm>
     <developers>
         <developer>
