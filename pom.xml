@@ -19,8 +19,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn.commons</groupId>
   <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
-  <name>Mylyn Commons</name>
   <version>3.26.0-SNAPSHOT</version>
+  <name>Mylyn Commons</name>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -30,7 +30,6 @@
   <properties>
     <tycho-version>3.0.0</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
-    <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.tck,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.development</sonar.skippedModules>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
 
@@ -66,7 +65,6 @@
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
     <target-platform>mylyn-commons-e${target-version}</target-platform>
-
   </properties>
 
   <mailingLists>
@@ -122,7 +120,7 @@
 
   <organization>
     <name>Eclipse Foundation</name>
-    <url>http://www.eclipse.org/</url>
+    <url>https://www.eclipse.org/</url>
   </organization>
 
   <profiles>
@@ -177,8 +175,8 @@
               </environments>
               <target>
                 <artifact>
-                  <groupId>org.eclipse.mylyn.commons</groupId>
-                  <artifactId>org.eclipse.mylyn.commons-target</artifactId>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.groupId}-target</artifactId>
                   <version>${project.parent.version}</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
@@ -267,6 +265,38 @@
         <target-version>4.26</target-version>
         <platform-repository-url>http://download.eclipse.org/releases/2022-12/</platform-repository-url>
       </properties>
+    </profile>
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-jarsigner-plugin</artifactId>
+            <version>1.3.4</version>
+            <configuration>
+              <resigningStrategy>DO_NOT_RESIGN</resigningStrategy>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <!-- Eclipse jar-signing must occur before GPG signing. Bind this plugin execution to a phase just prior to to the GPG plugin execution. -->
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>eclipse-cbi</id>
+          <name>Eclipse CBI</name>
+          <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
   </profiles>
 
