@@ -31,12 +31,9 @@ The project maintains the following source code repositories:
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.context.git
-* https://github.com/eclipse-mylyn/org.eclipse.mylyn.context.mft.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.intent.main.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs.vex.git
-* https://github.com/eclipse-mylyn/org.eclipse.mylyn.incubator.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews.git
-* https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews.ui.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.tasks.git
 * https://github.com/eclipse-mylyn/org.eclipse.mylyn.versions.git
