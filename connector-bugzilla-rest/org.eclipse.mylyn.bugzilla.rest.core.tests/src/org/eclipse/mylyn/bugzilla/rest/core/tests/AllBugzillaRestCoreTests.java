@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -37,9 +37,11 @@ public class AllBugzillaRestCoreTests {
 	@SuiteClassProvider
 	public static void add2SuiteClasses(List<Class<?>> suiteClassList, TestConfiguration testConfiguration) {
 		if (!testConfiguration.isLocalOnly()) {
-			suiteClassList.add(BugzillaRestClientTest.class);
-			suiteClassList.add(BugzillaRestConfigurationTest.class);
-			suiteClassList.add(BugzillaRestConnectorTest.class);
+			//FIXME: AF: https://mylyn.org does not have a valid certificate
+			//https://github.com/eclipse-mylyn/.github/issues/3
+//			suiteClassList.add(BugzillaRestClientTest.class);
+//			suiteClassList.add(BugzillaRestConfigurationTest.class);
+//			suiteClassList.add(BugzillaRestConnectorTest.class);
 		}
 	}
 }

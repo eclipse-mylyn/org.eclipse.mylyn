@@ -18,7 +18,6 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.trac.core,
  org.eclipse.mylyn.trac.ui,
  org.apache.ws.commons.util;bundle-version="1.0.0",
- org.apache.xmlrpc;bundle-version="3.0.0",
  org.eclipse.ui.forms,
  org.apache.commons.lang;bundle-version="2.4.0"
 Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
@@ -26,5 +25,8 @@ Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.core;x-internal:=true,
  org.eclipse.mylyn.trac.tests.support;x-internal:=true,
  org.eclipse.mylyn.trac.tests.ui;x-internal:=true
+Import-Package: org.apache.xmlrpc;version="0.0.0",
+ org.apache.xmlrpc.client,
+ org.apache.xmlrpc.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse Mylyn

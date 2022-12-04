@@ -28,7 +28,6 @@ public class TckFixture extends AbstractTestFixture {
 		return new TaskRepository(getConnectorKind(), getRepositoryUrl());
 	}
 
-	@SuppressWarnings("restriction")
 	public AbstractRepositoryConnector connector() {
 		return new org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector();
 	}
