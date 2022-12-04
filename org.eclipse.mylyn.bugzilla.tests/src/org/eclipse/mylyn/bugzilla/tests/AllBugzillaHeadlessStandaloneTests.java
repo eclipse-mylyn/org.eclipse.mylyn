@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,11 +13,6 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
-
-import java.util.List;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttributeMapperTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttributeTest;
@@ -34,6 +29,9 @@ import org.eclipse.mylyn.bugzilla.tests.core.RepositoryConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel
@@ -58,10 +56,12 @@ public class AllBugzillaHeadlessStandaloneTests {
 			// network tests
 			suite.addTestSuite(BugzillaTaskCompletionTest.class);
 			// tests that run against all repository versions
-			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
-			for (BugzillaFixture fixture : fixtures) {
-				addTests(suite, fixture);
-			}
+			//FIXME: AF: https://mylyn.org does not have a valid certificate
+			//https://github.com/eclipse-mylyn/.github/issues/3
+//			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
+//			for (BugzillaFixture fixture : fixtures) {
+//				addTests(suite, fixture);
+//			}
 		}
 		return suite;
 	}
@@ -73,7 +73,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 
 		fixture.createSuite(suite);
 		// XXX: re-enable when webservice is used for retrieval of history
-		// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
+		// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class);
 		fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
 		fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
 		fixture.add(BugzillaClientTest.class);
