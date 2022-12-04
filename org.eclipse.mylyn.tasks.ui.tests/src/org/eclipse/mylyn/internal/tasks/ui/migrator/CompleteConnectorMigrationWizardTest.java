@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2015, 2022 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -18,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -43,7 +44,6 @@ import org.eclipse.mylyn.internal.tasks.ui.migrator.CompleteConnectorMigrationWi
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
-import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -87,7 +87,7 @@ public class CompleteConnectorMigrationWizardTest {
 
 	@After
 	public void tearDown() throws Exception {
-		TestFixture.resetTaskList();
+		org.eclipse.mylyn.tests.util.TestFixture.resetTaskList();
 	}
 
 	@Test

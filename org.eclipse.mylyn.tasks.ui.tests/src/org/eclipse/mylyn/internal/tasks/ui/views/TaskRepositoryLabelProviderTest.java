@@ -1,20 +1,22 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2015, 2022 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +29,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 public class TaskRepositoryLabelProviderTest {
 	private final IBrandManager manager = mock(IBrandManager.class);;
@@ -50,9 +51,9 @@ public class TaskRepositoryLabelProviderTest {
 
 	@Test
 	public void testGetText() {
-		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), Matchers.eq("a"))).thenReturn(
+		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), eq("a"))).thenReturn(
 				"Mock Brand");
-		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), Matchers.eq("b"))).thenReturn(
+		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), eq("b"))).thenReturn(
 				"Mock Brand B");
 		assertEquals("Mock Brand", labelProvider.getText(new ConnectorBrand(new MockRepositoryConnector(), "a")));
 		assertEquals("Mock Brand B", labelProvider.getText(new ConnectorBrand(new MockRepositoryConnector(), "b")));

@@ -6,14 +6,12 @@ Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.tasks.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.junit;bundle-version="4.8.2",
- org.mockito;bundle-version="[1.8.4,2.0.0)",
- org.objenesis;bundle-version="[1.0.0,2.0.0)",
- org.hamcrest;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.equinox.security,
- org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.tasks.tests,
- org.eclipse.mylyn.tests.util
+Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",
+ org.eclipse.mylyn.tasks.tests;bundle-version="3.26.0",
+ org.eclipse.mylyn.tests.util;bundle-version="3.26.0",
+ org.junit;bundle-version="4.8.2",
+ org.mockito.mockito-core;bundle-version="4.8.1",
+ org.objenesis;bundle-version="3.3.0"
 Export-Package: org.eclipse.mylyn.internal.tasks.ui.editors;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.migrator;x-internal:=true,
  org.eclipse.mylyn.tasks.ui.editors,

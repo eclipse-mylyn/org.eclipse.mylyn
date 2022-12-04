@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies.
- * 
+ * Copyright (c) 2015, 2022 Tasktop Technologies.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -20,9 +21,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
@@ -33,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +71,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -176,7 +176,7 @@ public class ConnectorMigratorTest {
 
 	@After
 	public void tearDown() throws Exception {
-		TestFixture.resetTaskList();
+		org.eclipse.mylyn.tests.util.TestFixture.resetTaskList();
 		new File("test-context.zip").delete();
 	}
 
