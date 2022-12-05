@@ -18,9 +18,7 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.monitor.ui,
- org.mockito;bundle-version="[1.8.4,2.0.0)",
- org.objenesis;bundle-version="[1.0.0,2.0.0)",
- org.hamcrest;bundle-version="[1.0.0,2.0.0)"
+ org.mockito.mockito-core;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.context.tests;x-internal:=true,
  org.eclipse.mylyn.context.tests.support;x-internal:=true,
  org.eclipse.mylyn.context.tests.support.search;x-internal:=true
