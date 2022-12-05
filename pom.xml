@@ -438,8 +438,6 @@
     <module>org.eclipse.mylyn.resources.tests</module>
     <module>org.eclipse.mylyn.resources.ui</module>
     <module>org.eclipse.mylyn.team-feature</module>
-    <module>org.eclipse.mylyn.team.cvs-feature</module>
-    <module>org.eclipse.mylyn.team.cvs</module>
     <module>org.eclipse.mylyn.team.tests</module>
     <module>org.eclipse.mylyn.team.ui</module>
   </modules>
