@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies and others.
+ * Copyright (c) 2015, 2022 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
 
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -24,8 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -52,6 +51,8 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Before;
 import org.mockito.ArgumentMatcher;
+
+import junit.framework.TestCase;
 
 @SuppressWarnings("restriction")
 public class ContextTaskActivationListenerTest extends TestCase {
@@ -116,7 +117,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 		assertEquals(Collections.emptyList(), listener.findDirtyEditors());
 		assertTrue(listener.canDeactivateTask(task1));
-		verify(listener, never()).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		verify(listener, never()).openTaskDeactivationDialog(anyList());
 	}
 
 	public void testDeactivatingDirtyTask() {
@@ -124,10 +125,10 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertTrue(listener.canDeactivateTask(task1));
-		verify(listener, never()).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		verify(listener, never()).openTaskDeactivationDialog(anyList());
 	}
 
 	public void testDeactivatingDirtyTaskNonActiveEditor() {
@@ -136,7 +137,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		TasksUiUtil.openTask(task2);
 
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -147,7 +148,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task2));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -158,7 +159,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -169,7 +170,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -182,7 +183,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -195,7 +196,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 		List<IEditorReference> dirtyRefs = makeDirtyReferencesFromParts(parts);
 		doReturn(dirtyRefs).when(listener).findDirtyEditors();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		verify(listener).openTaskDeactivationDialog(argThat(new ContainsEqualElementsInArbitraryOrder(dirtyRefs)));
@@ -203,7 +204,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 	public void testDeactivatingTaskAndSavingAllWithOnlyDirtyFiles() throws Exception {
 		List<IEditorPart> dirtyFiles = activateTaskAndEditFiles();
-		doReturn(0).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(0).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertTrue(listener.canDeactivateTask(task1));
 		assertFalse(dirtyFiles.get(0).isDirty());
@@ -214,7 +215,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 	public void testDeactivatingTaskAndSavingSomeWithOnlyDirtyFiles() throws Exception {
 		List<IEditorPart> dirtyFiles = activateTaskAndEditFiles();
-		doReturn(1).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(1).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertTrue(listener.canDeactivateTask(task1));
 		assertTrue(dirtyFiles.get(0).isDirty());
@@ -225,7 +226,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 
 	public void testDeactivatingTaskAndCancellingWithOnlyDirtyFiles() throws Exception {
 		List<IEditorPart> dirtyFiles = activateTaskAndEditFiles();
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		assertTrue(dirtyFiles.get(0).isDirty());
@@ -238,7 +239,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		IEditorPart dirtyFile = activateTaskAndOnlyEditOneFile();
 		List<IEditorPart> dirtyParts = new ArrayList<IEditorPart>();
 		dirtyParts.add(dirtyFile);
-		doReturn(0).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(0).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertTrue(listener.canDeactivateTask(task1));
 		assertFalse(dirtyFile.isDirty());
@@ -250,8 +251,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		IEditorPart dirtyFile = activateTaskAndOnlyEditOneFile();
 		List<IEditorPart> dirtyParts = new ArrayList<IEditorPart>();
 		dirtyParts.add(dirtyFile);
-		doReturn(1).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
-
+		doReturn(1).when(listener).openTaskDeactivationDialog(anyList());
 		assertTrue(listener.canDeactivateTask(task1));
 		assertTrue(dirtyFile.isDirty());
 		verify(listener).openTaskDeactivationDialog(
@@ -262,7 +262,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		IEditorPart dirtyFile = activateTaskAndOnlyEditOneFile();
 		List<IEditorPart> dirtyParts = new ArrayList<IEditorPart>();
 		dirtyParts.add(dirtyFile);
-		doReturn(2).when(listener).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		doReturn(2).when(listener).openTaskDeactivationDialog(anyList());
 
 		assertFalse(listener.canDeactivateTask(task1));
 		assertTrue(dirtyFile.isDirty());
@@ -279,7 +279,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		openFile(fileB);
 		assertTrue(listener.canDeactivateTask(task1));
 		assertTrue(listener.canDeactivateTask(task2));
-		verify(listener, never()).openTaskDeactivationDialog(anyListOf(IEditorReference.class));
+		verify(listener, never()).openTaskDeactivationDialog(anyList());
 	}
 
 	private IEditorPart openFile(IFile file) throws Exception {
@@ -361,7 +361,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		assertTrue(filePart.isDirty());
 	}
 
-	class ContainsEqualElementsInArbitraryOrder extends ArgumentMatcher<List<IEditorReference>> {
+	class ContainsEqualElementsInArbitraryOrder implements ArgumentMatcher<List<IEditorReference>> {
 
 		private final List<?> expected;
 
@@ -370,7 +370,7 @@ public class ContextTaskActivationListenerTest extends TestCase {
 		}
 
 		@Override
-		public boolean matches(Object argument) {
+		public boolean matches(List<IEditorReference> argument) {
 			if (expected != null && argument != null) {
 				Set<?> actualSet = new HashSet<Object>((List<?>) argument);
 				Set<?> expectedSet = new HashSet<Object>(expected);
