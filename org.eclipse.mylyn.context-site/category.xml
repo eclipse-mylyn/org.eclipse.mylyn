@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2022 ArSysOp and others
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
+<site>
+	<category-def
+		name="org.eclipse.mylyn.context.features.category"
+		label="Mylyn Tasks Features"
+	>
+		<description>
+			Tools.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.context_feature">
+		<category name="org.eclipse.mylyn.context.features.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.context.integrations.category"
+		label="Mylyn Tasks Integrations"
+	>
+		<description>
+			Connectors that integrate with ALM systems.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.cdt.mylyn">
+		<category name="org.eclipse.mylyn.context.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.ide_feature">
+		<category name="org.eclipse.mylyn.context.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.java_feature">
+		<category name="org.eclipse.mylyn.context.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.pde_feature">
+		<category name="org.eclipse.mylyn.context.integrations.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.team_feature">
+		<category name="org.eclipse.mylyn.context.integrations.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.context.sdk.category"
+		label="Mylyn Tasks SDK and Framework"
+	>
+		<description>
+			Source code and documentation for integrators.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.context.sdk">
+		<category name="org.eclipse.mylyn.context.sdk.category" />
+	</feature>
+</site>
