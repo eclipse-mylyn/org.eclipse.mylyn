@@ -240,8 +240,8 @@
               </environments>
               <target>
                 <artifact>
-                  <groupId>org.eclipse.mylyn.commons</groupId>
-                  <artifactId>org.eclipse.mylyn.commons-target</artifactId>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.groupId}-target</artifactId>
                   <version>${project.parent.version}</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
