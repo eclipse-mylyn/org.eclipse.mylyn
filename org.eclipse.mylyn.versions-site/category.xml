@@ -51,8 +51,8 @@
 		</description>
 	</category-def>
 	<feature
-		id="org.eclipse.mylyn.sdk_feature">
-		<category name="org.eclipse.mylyn.versions.sdk" />
+		id="org.eclipse.mylyn.versions.sdk">
+		<category name="org.eclipse.mylyn.versions.sdk.category" />
 	</feature>
 	<category-def
 		name="org.eclipse.mylyn.versions.tests.category"
