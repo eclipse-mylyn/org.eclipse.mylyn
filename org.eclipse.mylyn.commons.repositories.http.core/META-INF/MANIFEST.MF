@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.http.core;singleton:=true
-Bundle-Version: 1.18.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.net,
- org.eclipse.mylyn.commons.core,
- org.eclipse.mylyn.commons.repositories.core
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.core.net;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="3.26.0"
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.commons.repositories.http.core;x-internal:=true,
  org.eclipse.mylyn.internal.commons.repositories.http.core;x-internal:=true

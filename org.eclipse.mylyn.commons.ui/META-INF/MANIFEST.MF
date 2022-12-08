@@ -4,14 +4,14 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui;singleton:=true
 Automatic-Module-Name: org.eclipse.mylyn.commons.ui
 Bundle-Version: 3.26.0.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui,
- org.eclipse.ui.forms,
- org.eclipse.mylyn.commons.core;bundle-version="3.8.0",
- org.eclipse.mylyn.commons.screenshots;bundle-version="1.0.0",
+Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
  org.apache.commons.lang;bundle-version="[2.6.0,3.0.0)",
- com.google.guava;bundle-version="[21.0.0,22.0.0)",
- org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional,
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.screenshots;bundle-version="3.26.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.eclipse.ui.forms;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin
