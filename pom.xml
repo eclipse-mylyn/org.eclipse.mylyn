@@ -28,7 +28,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>3.0.0</tycho-version>
+    <tycho-version>3.0.1</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.tasks.git</tycho.scmUrl>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
@@ -66,6 +66,7 @@
     <dist.site></dist.site>
     <target-platform>mylyn-tasks-e${target-version}</target-platform>
   </properties>
+
   <mailingLists>
     <mailingList>
       <name>Mylyn Tasks Mailing List</name>
@@ -264,6 +265,38 @@
         <target-version>4.26</target-version>
         <platform-repository-url>http://download.eclipse.org/releases/2022-12/</platform-repository-url>
       </properties>
+    </profile>
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-jarsigner-plugin</artifactId>
+            <version>1.3.4</version>
+            <configuration>
+              <resigningStrategy>DO_NOT_RESIGN</resigningStrategy>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <!-- Eclipse jar-signing must occur before GPG signing. Bind this plugin execution to a phase just prior to to the GPG plugin execution. -->
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>eclipse-cbi</id>
+          <name>Eclipse CBI</name>
+          <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
   </profiles>
 
