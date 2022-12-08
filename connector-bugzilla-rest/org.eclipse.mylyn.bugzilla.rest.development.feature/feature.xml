@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2016 Frank Becker and others.
+    Copyright (c) 2016, 2022 Frank Becker and others.
  
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,13 +10,14 @@
 
     Contributors:
          Frank Becker - initial API and implementation
+         ArSysOp - porting to SimRel 2022-12
  -->
 <feature
       id="org.eclipse.mylyn.bugzilla.rest.development.feature"
       label="Bugzilla Rest Development Feature"
-      version="1.0.0.qualifier"
+      version="3.26.0.qualifier"
       license-feature="org.eclipse.license"
-      license-feature-version="2.0.2">
+      license-feature-version="0.0.0">
 
    <description url="http://eclipse.org/mylyn">
       %description
@@ -26,12 +27,12 @@
       %copyright
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="%licenseURL">
+      %license
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.bugzilla.rest" version="1.0.0.qualifier"/>
+      <import feature="org.eclipse.mylyn.bugzilla.rest" version="3.26.0.qualifier"/>
    </requires>
 
    <plugin
