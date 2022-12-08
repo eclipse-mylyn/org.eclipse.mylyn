@@ -3,18 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.workbench;singleton:=true
 Bundle-Version: 3.26.0.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.expressions,
- org.eclipse.jface,
- org.eclipse.jface.text,
- org.eclipse.ui,
+Require-Bundle: org.eclipse.core.expressions;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
+ org.eclipse.jface;bundle-version="0.0.0",
+ org.eclipse.jface.text;bundle-version="0.0.0",
+ org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.browser;resolution:=optional,
  org.eclipse.ui.editors;resolution:=optional,
- org.eclipse.ui.forms,
- org.eclipse.ui.workbench,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylyn.commons.core;bundle-version="3.8.0",
- org.eclipse.mylyn.commons.ui;bundle-version="3.8.0"
+ org.eclipse.ui.forms;bundle-version="0.0.0",
+ org.eclipse.ui.workbench;bundle-version="0.0.0",
+ org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin

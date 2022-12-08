@@ -4,8 +4,8 @@ Bundle-Name: Mylyn Commons Activity Monitor Tests
 Bundle-SymbolicName: org.eclipse.mylyn.commons.activity.tests;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Require-Bundle: org.junit;bundle-version="4.8.2",
- org.eclipse.core.runtime,
- org.eclipse.mylyn.commons.activity.ui
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.activity.ui;bundle-version="3.26.0",
+ org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.commons.activity.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
