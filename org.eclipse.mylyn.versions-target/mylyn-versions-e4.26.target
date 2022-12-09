@@ -7,41 +7,45 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.26-I-builds/I20221123-1800/"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/staging/v6.4.0.202211231055-rc1/"/>
+			<repository location="https://download.eclipse.org/egit/updates-6.4/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/milestone/S202209250929/"/>
+			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.32/"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/"/>
+			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/commons/"/>
+			<unit id="org.eclipse.mylyn.commons.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/cdt/builds/11.0/cdt-11.0.0-rc1/"/>
+			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/context/"/>
+			<unit id="org.eclipse.mylyn.context_feature.feature.group" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/tasks/"/>
+			<unit id="org.eclipse.mylyn_feature.feature.group" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/tools/cdt/releases/11.0/"/>
 			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/mylyn/snapshots/3.20"/>
-			<unit id="org.eclipse.mylyn.ide_feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
 			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="com.thoughtworks.qdox" version="0.0.0"/>
 			<unit id="javax.xml.stream" version="0.0.0"/>
-			<unit id="org.apache.lucene.analyzers-common" version="0.0.0"/>
-			<unit id="org.apache.lucene.core" version="0.0.0"/>
-			<unit id="org.apache.lucene.queryparser" version="0.0.0"/>
+			<unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
+			<unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
+			<unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
 			<unit id="org.hamcrest" version="0.0.0"/>
 			<unit id="org.hamcrest.core" version="0.0.0"/>
 			<unit id="org.hamcrest.generator" version="0.0.0"/>
