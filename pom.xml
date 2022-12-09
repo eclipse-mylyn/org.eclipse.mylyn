@@ -439,6 +439,7 @@
   <modules>
     <module>org.eclipse.mylyn.builds-feature</module>
     <module>org.eclipse.mylyn.builds-site</module>
+    <module>org.eclipse.mylyn.builds-target</module>
     <module>org.eclipse.mylyn.builds.core</module>
     <module>org.eclipse.mylyn.builds.tests</module>
     <module>org.eclipse.mylyn.builds.ui</module>
