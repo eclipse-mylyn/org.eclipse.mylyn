@@ -28,7 +28,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>3.0.0</tycho-version>
+    <tycho-version>3.0.1</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.versions.git</tycho.scmUrl>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
@@ -75,6 +75,7 @@
       <archive>https://dev.eclipse.org/mhonarc/lists/mylyn-versions-dev</archive>
     </mailingList>
   </mailingLists>
+
   <issueManagement>
     <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.versions/issues</url>
     <system>GitHub Issues</system>
