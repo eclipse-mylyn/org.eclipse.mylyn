@@ -4,19 +4,19 @@ Bundle-Name: Mylyn Context SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.context.sdk.util;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Require-Bundle: org.junit;bundle-version="4.8.2",
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.eclipse.ui,
- org.eclipse.ui.ide,
- org.eclipse.mylyn.commons.sdk.util,
- org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.context.ui,
- org.eclipse.mylyn.ide.ui,
- org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn.monitor.ui,
- org.eclipse.mylyn.resources.ui,
- org.eclipse.equinox.event;bundle-version="1.3.100"
+Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.equinox.event;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.0",
+ org.eclipse.mylyn.context.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.context.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.ide.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.monitor.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.monitor.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.resources.ui;bundle-version="3.26.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.eclipse.ui.ide;bundle-version="0.0.0",
+ org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.context.sdk.util;x-internal:=true,
  org.eclipse.mylyn.context.sdk.util.search;x-internal:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
