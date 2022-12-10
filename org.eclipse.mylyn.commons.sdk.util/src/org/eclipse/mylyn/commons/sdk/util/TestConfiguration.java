@@ -19,9 +19,19 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.osgi.util.NLS;
@@ -37,7 +47,7 @@ import junit.framework.AssertionFailedError;
 public class TestConfiguration {
 
 	private static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server",
-			"http://localhost:2080");
+			"https://mylyn.local");
 
 	private static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "https://mylyn.org");
 
@@ -112,7 +122,7 @@ public class TestConfiguration {
 			}
 
 			if (fixtures.isEmpty()) {
-				fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
+				fixtures = discover(URL_SERVICES_LOCALHOST + "/mylyn_idx/service", URL_SERVICES_LOCALHOST, clazz,
 						fixtureType, defaultOnly, exception);
 			}
 		}
@@ -168,6 +178,31 @@ public class TestConfiguration {
 
 	private static List<FixtureConfiguration> getConfigurations(String url, Exception[] result) {
 		try {
+			// Create a trust manager that does not validate certificate chains
+			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+
+				public void checkClientTrusted(X509Certificate[] certs, String authType) {
+				}
+
+				public void checkServerTrusted(X509Certificate[] certs, String authType) {
+				}
+			} };
+			// Install the all-trusting trust manager
+			final SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			// Create all-trusting host name verifier
+			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			};
+
+			// Install the all-trusting host verifier
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 			URLConnection connection = new URL(url).openConnection();
 			InputStreamReader in = new InputStreamReader(connection.getInputStream());
 			try {
@@ -179,6 +214,12 @@ public class TestConfiguration {
 			}
 		} catch (IOException e) {
 			result[0] = new IOException("IOException accessing " + url, e);
+			return null;
+		} catch (NoSuchAlgorithmException e) {
+			result[0] = new NoSuchAlgorithmException("NoSuchAlgorithmException accessing " + url, e);
+			return null;
+		} catch (KeyManagementException e) {
+			result[0] = new KeyManagementException("KeyManagementException accessing " + url, e);
 			return null;
 		}
 	}
