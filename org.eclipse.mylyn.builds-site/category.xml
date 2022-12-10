@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2022 ArSysOp and others
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
+<site>
+	<category-def
+		name="org.eclipse.mylyn.builds.features.category"
+		label="Mylyn Builds Features"
+	>
+		<description>
+			Tools.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.builds">
+		<category name="org.eclipse.mylyn.builds.features.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.builds.integrations.category"
+		label="Mylyn Builds Integrations"
+	>
+		<description>
+			Connectors that integrate with ALM systems.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.hudson">
+		<category name="org.eclipse.mylyn.builds.integrations.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.builds.sdk.category"
+		label="Mylyn Builds SDK and Framework"
+	>
+		<description>
+			Source code and documentation for integrators.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.builds.sdk">
+		<category name="org.eclipse.mylyn.builds.sdk.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.builds.tests.category"
+		label="Mylyn Builds Tests"
+	>
+		<description>
+			Tests for tasks functionality.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.builds.development">
+		<category name="org.eclipse.mylyn.builds.tests.category" />
+	</feature>
+</site>
