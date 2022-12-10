@@ -69,7 +69,9 @@ public class AllHudsonTests {
 						"No hudson fixtures found, will look for jenkins fixtures", e));
 				fixtures = new ArrayList<HudsonFixture>();
 			}
-			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
+			//FIXME: AF: https://mylyn.org does not have a valid certificate
+			//https://github.com/eclipse-mylyn/.github/issues/3
+//			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
 			for (HudsonFixture fixture : fixtures) {
 				if (fixture.isExcluded()
 						|| (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken())) {
