@@ -16,7 +16,7 @@
 <site>
 	<category-def
 		name="org.eclipse.mylyn.versions.features.category"
-		label="Mylyn Tasks Features"
+		label="Mylyn Versions Features"
 	>
 		<description>
 			Tools.
@@ -28,7 +28,7 @@
 	</feature>
 	<category-def
 		name="org.eclipse.mylyn.versions.integrations.category"
-		label="Mylyn Tasks Integrations"
+		label="Mylyn Versions Integrations"
 	>
 		<description>
 			Connectors that integrate with ALM systems.
@@ -44,7 +44,7 @@
 	</feature>
 	<category-def
 		name="org.eclipse.mylyn.versions.sdk.category"
-		label="Mylyn Tasks SDK and Framework"
+		label="Mylyn Versions SDK and Framework"
 	>
 		<description>
 			Source code and documentation for integrators.
@@ -56,7 +56,7 @@
 	</feature>
 	<category-def
 		name="org.eclipse.mylyn.versions.tests.category"
-		label="Mylyn Tasks Tests"
+		label="Mylyn Versions Tests"
 	>
 		<description>
 			Tests for tasks functionality.
