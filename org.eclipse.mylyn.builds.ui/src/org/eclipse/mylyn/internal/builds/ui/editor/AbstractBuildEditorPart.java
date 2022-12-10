@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2010, 2022 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -23,7 +24,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.databinding.swt.IWidgetValueProperty;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -126,7 +127,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 
 	/**
 	 * Clients can implement to provide attribute overlay text
-	 * 
+	 *
 	 * @param section
 	 */
 	private void createInfoOverlay(Composite composite, Section section, FormToolkit toolkit) {
