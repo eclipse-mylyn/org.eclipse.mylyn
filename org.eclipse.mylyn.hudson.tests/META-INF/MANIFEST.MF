@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Hudson Connector
 Bundle-SymbolicName: org.eclipse.mylyn.hudson.tests;singleton:=true
-Bundle-Version: 1.18.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
- org.eclipse.mylyn.builds.core,
- org.eclipse.mylyn.commons.core,
- org.eclipse.mylyn.commons.repositories.core,
- org.eclipse.mylyn.commons.sdk.util,
- org.eclipse.mylyn.hudson.core,
- org.eclipse.mylyn.hudson.ui,
+ org.eclipse.mylyn.builds.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.0",
+ org.eclipse.mylyn.hudson.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.hudson.ui;bundle-version="3.26.0",
  org.eclipse.search;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0",
