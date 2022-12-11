@@ -37,11 +37,9 @@ public class AllBugzillaRestCoreTests {
 	@SuiteClassProvider
 	public static void add2SuiteClasses(List<Class<?>> suiteClassList, TestConfiguration testConfiguration) {
 		if (!testConfiguration.isLocalOnly()) {
-			//FIXME: AF: https://mylyn.org does not have a valid certificate
-			//https://github.com/eclipse-mylyn/.github/issues/3
-//			suiteClassList.add(BugzillaRestClientTest.class);
-//			suiteClassList.add(BugzillaRestConfigurationTest.class);
-//			suiteClassList.add(BugzillaRestConnectorTest.class);
+			suiteClassList.add(BugzillaRestClientTest.class);
+			suiteClassList.add(BugzillaRestConfigurationTest.class);
+			suiteClassList.add(BugzillaRestConnectorTest.class);
 		}
 	}
 }

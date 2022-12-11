@@ -27,9 +27,7 @@
     <module>org.eclipse.mylyn.bugzilla.rest.feature</module>
     <module>org.eclipse.mylyn.bugzilla.rest.core</module>
     <module>org.eclipse.mylyn.bugzilla.rest.core.tests</module>
-    <!-- see https://github.com/eclipse-mylyn/.github/issues/3
     <module>org.eclipse.mylyn.bugzilla.rest.tests</module>
-    -->
     <module>org.eclipse.mylyn.bugzilla.rest.ui</module>
     <module>org.eclipse.mylyn.bugzilla.rest.ui.tests</module>
   </modules>

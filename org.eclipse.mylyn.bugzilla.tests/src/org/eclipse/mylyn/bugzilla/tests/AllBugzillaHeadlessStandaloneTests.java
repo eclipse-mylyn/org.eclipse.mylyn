@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.List;
+
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttributeMapperTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttributeTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaClientTest;
@@ -22,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.core.BugzillaCustomFieldsTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaFlagsTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskCompletionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaUtilTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.RepositoryConfigurationTest;
@@ -53,16 +56,12 @@ public class AllBugzillaHeadlessStandaloneTests {
 		suite.addTestSuite(RepositoryConfigurationTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
-			//FIXME: AF: https://mylyn.org does not have a valid certificate
-			//https://github.com/eclipse-mylyn/.github/issues/3
-//			suite.addTestSuite(BugzillaTaskCompletionTest.class);
+			suite.addTestSuite(BugzillaTaskCompletionTest.class);
 			// tests that run against all repository versions
-			//FIXME: AF: https://mylyn.org does not have a valid certificate
-			//https://github.com/eclipse-mylyn/.github/issues/3
-//			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
-//			for (BugzillaFixture fixture : fixtures) {
-//				addTests(suite, fixture);
-//			}
+			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
+			for (BugzillaFixture fixture : fixtures) {
+				addTests(suite, fixture);
+			}
 		}
 		return suite;
 	}

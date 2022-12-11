@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -242,11 +242,17 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json")),
-				new Gson().toJson(parameter).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
+				new Gson().toJson(parameter)
+						.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
+						.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
+								"http://dummy.url"));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
-				new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
+				new Gson().toJson(configuration)
+						.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
+						.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
+								"http://dummy.url"));
 	}
 
 	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {

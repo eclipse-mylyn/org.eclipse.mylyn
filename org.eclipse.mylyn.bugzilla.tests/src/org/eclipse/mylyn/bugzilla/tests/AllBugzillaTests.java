@@ -14,9 +14,14 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.List;
+
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
@@ -60,17 +65,13 @@ public class AllBugzillaTests {
 
 		// network tests
 		if (!configuration.isLocalOnly()) {
-			//FIXME: AF: https://mylyn.org does not have a valid certificate
-			//https://github.com/eclipse-mylyn/.github/issues/3
-//			suite.addTestSuite(BugzillaTaskEditorTest.class);
-//			suite.addTestSuite(BugzillaSearchPageTest.class);
-//			suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-			//FIXME: AF: https://mylyn.org does not have a valid certificate
-			//https://github.com/eclipse-mylyn/.github/issues/3
-//			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
-//			for (BugzillaFixture fixture : fixtures) {
-//				addTests(suite, fixture);
-//			}
+			suite.addTestSuite(BugzillaTaskEditorTest.class);
+			suite.addTestSuite(BugzillaSearchPageTest.class);
+			suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
+			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
+			for (BugzillaFixture fixture : fixtures) {
+				addTests(suite, fixture);
+			}
 		}
 	}
 
