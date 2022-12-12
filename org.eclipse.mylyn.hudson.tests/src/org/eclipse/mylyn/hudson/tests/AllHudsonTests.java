@@ -24,7 +24,6 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.hudson.tests.client.HudsonUrlTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
-import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
@@ -84,7 +83,7 @@ public class AllHudsonTests {
 				if (!fixture.isUseCertificateAuthentication()) {
 					//FIXME: AF: fix required infra and enable test back
 					//https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds/issues/8
-					fixture.add(HudsonIntegrationTest.class);
+//					fixture.add(HudsonIntegrationTest.class);
 				}
 				fixture.done();
 			}
