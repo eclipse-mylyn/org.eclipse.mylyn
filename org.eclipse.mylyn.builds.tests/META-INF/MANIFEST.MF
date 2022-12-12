@@ -2,21 +2,21 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Build Framework
 Bundle-SymbolicName: org.eclipse.mylyn.builds.tests;singleton:=true
-Bundle-Version: 1.18.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
  org.eclipse.equinox.event;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
- org.eclipse.mylyn.builds.core,
- org.eclipse.mylyn.builds.ui,
- org.eclipse.mylyn.commons.core,
- org.eclipse.mylyn.commons.net,
- org.eclipse.mylyn.commons.repositories.core,
- org.eclipse.mylyn.commons.sdk.util,
- org.eclipse.mylyn.commons.workbench,
- org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.builds.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.builds.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.net;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
+ org.eclipse.mylyn.context.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.26.0",
  org.eclipse.search;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0",

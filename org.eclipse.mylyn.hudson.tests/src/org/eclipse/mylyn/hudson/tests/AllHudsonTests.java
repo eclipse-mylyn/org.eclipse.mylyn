@@ -21,11 +21,9 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonUrlTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
-import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
@@ -79,9 +77,13 @@ public class AllHudsonTests {
 					continue;
 				}
 				fixture.createSuite(suite);
-				fixture.add(HudsonClientTest.class);
+				//FIXME: AF: fix required infra and enable test back
+				//https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds/issues/8
+//				fixture.add(HudsonClientTest.class);
 				if (!fixture.isUseCertificateAuthentication()) {
-					fixture.add(HudsonIntegrationTest.class);
+					//FIXME: AF: fix required infra and enable test back
+					//https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds/issues/8
+//					fixture.add(HudsonIntegrationTest.class);
 				}
 				fixture.done();
 			}
