@@ -437,10 +437,10 @@
     </pluginManagement>
   </build>
   <modules>
+	<module>org.eclipse.mylyn.reviews-target</module>
 	<module>org.eclipse.mylyn.gerrit.core</module>
 	<module>org.eclipse.mylyn.gerrit.core.tests</module>
 	<module>org.eclipse.mylyn.gerrit.feature</module>
-	<module>org.eclipse.mylyn.gerrit.target</module>
 	<module>org.eclipse.mylyn.gerrit.tests</module>
 	<module>org.eclipse.mylyn.gerrit.dashboard.core</module>
 	<module>org.eclipse.mylyn.gerrit.dashboard.feature</module>
