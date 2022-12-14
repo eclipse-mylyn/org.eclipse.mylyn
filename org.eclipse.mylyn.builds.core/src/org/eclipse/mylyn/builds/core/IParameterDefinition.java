@@ -19,7 +19,8 @@ package org.eclipse.mylyn.builds.core;
  * <ul>
  * <li>{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getName <em>Name</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getDescription <em>Description</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan <em>Containing Build Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan <em>Containing Build
+ * Plan</em>}</li>
  * </ul>
  * </p>
  * 
@@ -77,8 +78,8 @@ public interface IParameterDefinition {
 
 	/**
 	 * Returns the value of the '<em><b>Containing Build Plan</b></em>' container reference. It is bidirectional and its
-	 * opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions
-	 * <em>Parameter Definitions</em>}'. <!-- begin-user-doc -->
+	 * opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions <em>Parameter
+	 * Definitions</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Containing Build Plan</em>' container reference isn't clear, there really should be
 	 * more of a description here...

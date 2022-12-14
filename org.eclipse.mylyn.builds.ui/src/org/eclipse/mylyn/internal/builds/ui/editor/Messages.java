@@ -28,6 +28,7 @@ public class Messages extends NLS {
 	public static String BuildEditor_X_Failed_Retrieve_Build_Information;
 
 	public static String BuildEditor_X_Retrieving_Build;
+
 	public static String HeaderPart_Build;
 
 	public static String HeaderPart_Duration;

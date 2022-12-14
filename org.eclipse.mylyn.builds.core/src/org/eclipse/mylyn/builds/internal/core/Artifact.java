@@ -91,8 +91,8 @@ public class Artifact extends BuildElement implements IArtifact {
 		String oldRelativePath = relativePath;
 		relativePath = newRelativePath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__RELATIVE_PATH,
-					oldRelativePath, relativePath));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__RELATIVE_PATH, oldRelativePath,
+					relativePath));
 	}
 
 	/**

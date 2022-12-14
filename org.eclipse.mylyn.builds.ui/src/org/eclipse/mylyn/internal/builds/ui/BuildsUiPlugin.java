@@ -68,8 +68,9 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		try {
 			BuildsUiInternal.save();
 		} catch (IOException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds", e));
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
+							e));
 		}
 		super.stop(context);
 		instance = null;
@@ -115,9 +116,9 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 				try {
 					BuildsUiInternal.save();
 				} catch (IOException e) {
-					StatusManager.getManager().handle(
-							new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
-									e));
+					StatusManager.getManager()
+							.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+									"Unexpected error while saving builds", e));
 				}
 			}
 		});
@@ -149,9 +150,9 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 			try {
 				Object object = configurationElement.createExecutableExtension(ELEMENT_CLASS);
 				if (!(object instanceof BuildsUiStartup)) {
-					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-							"Startup extension failed: {0} does notimplement {1}", //$NON-NLS-1$
-							object.getClass().getCanonicalName(), BuildsUiStartup.class.getCanonicalName())));
+					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+							NLS.bind("Startup extension failed: {0} does notimplement {1}", //$NON-NLS-1$
+									object.getClass().getCanonicalName(), BuildsUiStartup.class.getCanonicalName())));
 					return;
 				}
 				final BuildsUiStartup startup = (BuildsUiStartup) object;

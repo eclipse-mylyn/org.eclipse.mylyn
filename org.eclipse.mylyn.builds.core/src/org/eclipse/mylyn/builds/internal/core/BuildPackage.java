@@ -173,8 +173,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int CHANGE_SET = 11;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact
-	 * <em>Change Artifact</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact <em>Change
+	 * Artifact</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.ChangeArtifact
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeArtifact()
@@ -183,8 +183,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int CHANGE_ARTIFACT = 12;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap
-	 * <em>String To String Map</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap <em>String To String
+	 * Map</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.StringToStringMap
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringToStringMap()
@@ -1167,8 +1167,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int USER_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition
-	 * <em>Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition <em>Parameter
+	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.ParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getParameterDefinition()
@@ -1211,8 +1211,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int PARAMETER_DEFINITION_FEATURE_COUNT = 3;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition
-	 * <em>Choice Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition <em>Choice
+	 * Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChoiceParameterDefinition()
@@ -1271,8 +1271,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
-	 * <em>Boolean Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition <em>Boolean
+	 * Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBooleanParameterDefinition()
@@ -1323,8 +1323,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BOOLEAN_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.FileParameterDefinition
-	 * <em>File Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.FileParameterDefinition <em>File
+	 * Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.FileParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getFileParameterDefinition()
@@ -1367,8 +1367,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int FILE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition
-	 * <em>Plan Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition <em>Plan
+	 * Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getPlanParameterDefinition()
@@ -1463,8 +1463,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int PASSWORD_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition
-	 * <em>Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition <em>Parameter
+	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildParameterDefinition()
@@ -1523,8 +1523,8 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition
-	 * <em>String Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition <em>String
+	 * Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see org.eclipse.mylyn.builds.internal.core.StringParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringParameterDefinition()
@@ -2509,8 +2509,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild
-	 * <em>Last Build</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild <em>Last
+	 * Build</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the reference '<em>Last Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild()
@@ -2702,8 +2702,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber
-	 * <em>Build Number</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build
+	 * Number</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Build Number</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getBuildNumber()
@@ -2741,8 +2741,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName
-	 * <em>Display Name</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display
+	 * Name</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Display Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getDisplayName()
@@ -3233,8 +3233,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IParameterDefinition
-	 * <em>Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IParameterDefinition <em>Parameter
+	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition
@@ -3286,8 +3286,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition
-	 * <em>Choice Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition <em>Choice
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Choice Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChoiceParameterDefinition
@@ -3326,8 +3326,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition
-	 * <em>Boolean Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition <em>Boolean
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Boolean Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBooleanParameterDefinition
@@ -3352,8 +3352,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IFileParameterDefinition
-	 * <em>File Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IFileParameterDefinition <em>File
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>File Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IFileParameterDefinition
@@ -3364,8 +3364,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPlanParameterDefinition
-	 * <em>Plan Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPlanParameterDefinition <em>Plan
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Plan Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IPlanParameterDefinition
@@ -3376,8 +3376,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPasswordParameterDefinition
-	 * <em>Password Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPasswordParameterDefinition <em>Password
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Password Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IPasswordParameterDefinition
@@ -3402,8 +3402,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition
-	 * <em>Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition <em>Parameter
+	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildParameterDefinition
@@ -3442,8 +3442,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IStringParameterDefinition
-	 * <em>String Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IStringParameterDefinition <em>String
+	 * Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>String Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IStringParameterDefinition
@@ -3506,8 +3506,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount
-	 * <em>Fail Count</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail
+	 * Count</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Fail Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getFailCount()
@@ -3519,8 +3519,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount
-	 * <em>Pass Count</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass
+	 * Count</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Pass Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getPassCount()
@@ -3687,8 +3687,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName
-	 * <em>Class Name</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class
+	 * Name</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Class Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getClassName()
@@ -3752,8 +3752,8 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace
-	 * <em>Stack Trace</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace <em>Stack
+	 * Trace</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Stack Trace</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getStackTrace()
@@ -4122,501 +4122,333 @@ public class BuildPackage extends EPackageImpl {
 		testCaseEClass.getESuperTypes().add(this.getTestElement());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(stringToStringMapEClass, Map.Entry.class,
-				"StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getStringToStringMap_Key(),
-				ecorePackage.getEString(),
-				"key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getStringToStringMap_Value(),
-				ecorePackage.getEString(),
-				"value", "", 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", "", 0, 1, Map.Entry.class, //$NON-NLS-1$//$NON-NLS-2$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(artifactEClass, IArtifact.class,
-				"Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getArtifact_RelativePath(),
-				ecorePackage.getEString(),
-				"relativePath", null, 0, 1, IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(artifactEClass, IArtifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getArtifact_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1, //$NON-NLS-1$
+				IArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(buildEClass, IBuild.class, "Build", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_BuildNumber(),
-				ecorePackage.getEInt(),
-				"buildNumber", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Timestamp(),
-				ecorePackage.getELong(),
-				"timestamp", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Duration(),
-				ecorePackage.getELong(),
-				"duration", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_DisplayName(),
-				ecorePackage.getEString(),
-				"displayName", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_State(),
-				this.getBuildState(),
-				"state", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Status(),
-				this.getBuildStatus(),
-				"status", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_Artifacts(),
-				this.getArtifact(),
-				null,
-				"artifacts", null, 0, -1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_ChangeSet(),
-				this.getChangeSet(),
-				null,
-				"changeSet", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_Plan(),
-				this.getBuildPlan(),
-				null,
-				"plan", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Label(),
-				ecorePackage.getEString(),
-				"label", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_Server(),
-				this.getBuildServer(),
-				null,
-				"server", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_TestResult(),
-				this.getTestResult(),
-				this.getTestResult_Build(),
-				"testResult", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_Culprits(),
-				this.getUser(),
-				null,
-				"culprits", null, 0, -1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuild_Summary(),
-				ecorePackage.getEString(),
-				"summary", null, 0, 1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuild_Cause(),
-				this.getBuildCause(),
-				null,
-				"cause", null, 0, -1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getBuild_Id(), ecorePackage.getEString(), "id", null, 0, 1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_BuildNumber(), ecorePackage.getEInt(), "buildNumber", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_Timestamp(), ecorePackage.getELong(), "timestamp", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_Duration(), ecorePackage.getELong(), "duration", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_State(), this.getBuildState(), "state", null, 0, 1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuild_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_Artifacts(), this.getArtifact(), null, "artifacts", null, 0, -1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_ChangeSet(), this.getChangeSet(), null, "changeSet", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_Plan(), this.getBuildPlan(), null, "plan", null, 0, 1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getBuild_Label(), ecorePackage.getEString(), "label", null, 0, 1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_Server(), this.getBuildServer(), null, "server", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_TestResult(), this.getTestResult(), this.getTestResult_Build(), "testResult", null, 0, //$NON-NLS-1$
+				1, IBuild.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_Culprits(), this.getUser(), null, "culprits", null, 0, -1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getBuild_Summary(), ecorePackage.getEString(), "summary", null, 0, 1, IBuild.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuild_Cause(), this.getBuildCause(), null, "cause", null, 0, -1, IBuild.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(buildCauseEClass, IBuildCause.class,
-				"BuildCause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuildCause_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IBuildCause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildCause_Build(),
-				this.getBuildReference(),
-				null,
-				"build", null, 0, 1, IBuildCause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildCause_User(),
-				this.getUser(),
-				null,
-				"user", null, 0, 1, IBuildCause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildCauseEClass, IBuildCause.class, "BuildCause", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBuildCause_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IBuildCause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildCause_Build(), this.getBuildReference(), null, "build", null, 0, 1, IBuildCause.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildCause_User(), this.getUser(), null, "user", null, 0, 1, IBuildCause.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(buildReferenceEClass, IBuildReference.class,
-				"BuildReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuildReference_Plan(),
-				ecorePackage.getEString(),
-				"plan", null, 0, 1, IBuildReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildReference_Build(),
-				ecorePackage.getEString(),
-				"build", null, 0, 1, IBuildReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildReferenceEClass, IBuildReference.class, "BuildReference", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBuildReference_Plan(), ecorePackage.getEString(), "plan", null, 0, 1, IBuildReference.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildReference_Build(), ecorePackage.getEString(), "build", null, 0, 1, IBuildReference.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(buildElementEClass, IBuildElement.class,
-				"BuildElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuildElement_Url(),
-				ecorePackage.getEString(),
-				"url", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildElement_Name(),
-				ecorePackage.getEString(),
-				"name", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildElement_Operations(),
-				this.getIOperation(),
-				"operations", null, 0, -1, IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildElement_ElementStatus(),
-				this.getIStatus(),
-				"elementStatus", null, 0, 1, IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildElement_RefreshDate(),
-				ecorePackage.getEDate(),
-				"refreshDate", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildElement_Attributes(),
-				this.getStringToStringMap(),
-				null,
-				"attributes", null, 0, -1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildElementEClass, IBuildElement.class, "BuildElement", IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBuildElement_Url(), ecorePackage.getEString(), "url", null, 0, 1, IBuildElement.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBuildElement.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildElement_Operations(), this.getIOperation(), "operations", null, 0, -1, //$NON-NLS-1$
+				IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildElement_ElementStatus(), this.getIStatus(), "elementStatus", null, 0, 1, //$NON-NLS-1$
+				IBuildElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildElement_RefreshDate(), ecorePackage.getEDate(), "refreshDate", null, 0, 1, //$NON-NLS-1$
+				IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildElement_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, //$NON-NLS-1$
+				IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(buildElementEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(buildElementEClass, this.getBuildServer(), "getServer", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(buildPlanEClass, IBuildPlan.class,
-				"BuildPlan", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_Server(),
-				this.getBuildServer(),
-				null,
-				"server", null, 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_Children(),
-				this.getBuildPlan(),
-				this.getBuildPlan_Parent(),
-				"children", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_Parent(),
-				this.getBuildPlan(),
-				this.getBuildPlan_Children(),
-				"parent", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Health(),
-				ecorePackage.getEInt(),
-				"health", "-1", 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(
-				getBuildPlan_Id(),
-				ecorePackage.getEString(),
-				"id", null, 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Info(),
-				ecorePackage.getEString(),
-				"info", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Selected(),
-				ecorePackage.getEBoolean(),
-				"selected", "false", 1, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(
-				getBuildPlan_Summary(),
-				ecorePackage.getEString(),
-				"summary", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_State(),
-				this.getBuildState(),
-				"state", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Status(),
-				this.getBuildStatus(),
-				"status", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_LastBuild(),
-				this.getBuild(),
-				null,
-				"lastBuild", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_ParameterDefinitions(),
-				this.getParameterDefinition(),
-				this.getParameterDefinition_ContainingBuildPlan(),
-				"parameterDefinitions", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildPlan_HealthReports(),
-				this.getHealthReport(),
-				null,
-				"healthReports", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildPlan_Flags(),
-				this.getBuildState(),
-				"flags", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildPlanEClass, IBuildPlan.class, "BuildPlan", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBuildPlan_Server(), this.getBuildServer(), null, "server", null, 1, 1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildPlan_Children(), this.getBuildPlan(), this.getBuildPlan_Parent(), "children", null, 0, //$NON-NLS-1$
+				-1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildPlan_Parent(), this.getBuildPlan(), this.getBuildPlan_Children(), "parent", null, 0, 1, //$NON-NLS-1$
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Health(), ecorePackage.getEInt(), "health", "-1", 0, 1, IBuildPlan.class, //$NON-NLS-1$//$NON-NLS-2$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Id(), ecorePackage.getEString(), "id", null, 1, 1, IBuildPlan.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Info(), ecorePackage.getEString(), "info", null, 0, 1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Selected(), ecorePackage.getEBoolean(), "selected", "false", 1, 1, IBuildPlan.class, //$NON-NLS-1$//$NON-NLS-2$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Summary(), ecorePackage.getEString(), "summary", null, 0, 1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_State(), this.getBuildState(), "state", null, 0, 1, IBuildPlan.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Status(), this.getBuildStatus(), "status", null, 0, 1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildPlan_LastBuild(), this.getBuild(), null, "lastBuild", null, 0, 1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildPlan_ParameterDefinitions(), this.getParameterDefinition(),
+				this.getParameterDefinition_ContainingBuildPlan(), "parameterDefinitions", null, 0, -1, //$NON-NLS-1$
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildPlan_HealthReports(), this.getHealthReport(), null, "healthReports", null, 0, -1, //$NON-NLS-1$
+				IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildPlan_Flags(), this.getBuildState(), "flags", null, 0, -1, IBuildPlan.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				!IS_ORDERED);
 
-		initEClass(healthReportEClass, IHealthReport.class,
-				"HealthReport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getHealthReport_Health(),
-				ecorePackage.getEInt(),
-				"health", null, 0, 1, IHealthReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getHealthReport_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IHealthReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(healthReportEClass, IHealthReport.class, "HealthReport", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getHealthReport_Health(), ecorePackage.getEInt(), "health", null, 0, 1, IHealthReport.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getHealthReport_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IHealthReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(buildModelEClass, IBuildModel.class,
-				"BuildModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getBuildModel_Servers(),
-				this.getBuildServer(),
-				null,
-				"servers", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildModel_Plans(),
-				this.getBuildPlan(),
-				null,
-				"plans", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildModel_Builds(),
-				this.getBuild(),
-				null,
-				"builds", null, 0, -1, IBuildModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildModelEClass, IBuildModel.class, "BuildModel", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBuildModel_Servers(), this.getBuildServer(), null, "servers", null, 0, -1, IBuildModel.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildModel_Plans(), this.getBuildPlan(), null, "plans", null, 0, -1, IBuildModel.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getBuildModel_Builds(), this.getBuild(), null, "builds", null, 0, -1, IBuildModel.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(buildServerEClass, IBuildServer.class,
-				"BuildServer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuildServer_Location(),
-				this.getRepositoryLocation(),
-				"location", null, 0, 1, IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildServer_ConnectorKind(),
-				ecorePackage.getEString(),
-				"connectorKind", null, 0, 1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getBuildServer_RepositoryUrl(),
-				ecorePackage.getEString(),
-				"repositoryUrl", null, 0, 1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildServerEClass, IBuildServer.class, "BuildServer", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBuildServer_Location(), this.getRepositoryLocation(), "location", null, 0, 1, //$NON-NLS-1$
+				IBuildServer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildServer_ConnectorKind(), ecorePackage.getEString(), "connectorKind", null, 0, 1, //$NON-NLS-1$
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBuildServer_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1, //$NON-NLS-1$
+				IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(changeEClass, IChange.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getChange_Artifacts(),
-				this.getChangeArtifact(),
-				null,
-				"artifacts", null, 0, -1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getChange_Author(),
-				this.getUser(),
-				null,
-				"author", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Message(),
-				ecorePackage.getEString(),
-				"message", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Date(),
-				ecorePackage.getELong(),
-				"date", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Revision(),
-				ecorePackage.getEString(),
-				"revision", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getChange_Artifacts(), this.getChangeArtifact(), null, "artifacts", null, 0, -1, IChange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getChange_Author(), this.getUser(), null, "author", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getChange_Message(), ecorePackage.getEString(), "message", null, 0, 1, IChange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_Date(), ecorePackage.getELong(), "date", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_Revision(), ecorePackage.getEString(), "revision", null, 0, 1, IChange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(changeSetEClass, IChangeSet.class,
-				"ChangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getChangeSet_Changes(),
-				this.getChange(),
-				null,
-				"changes", null, 0, -1, IChangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeSet_Kind(),
-				ecorePackage.getEString(),
-				"kind", null, 0, 1, IChangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(changeSetEClass, IChangeSet.class, "ChangeSet", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getChangeSet_Changes(), this.getChange(), null, "changes", null, 0, -1, IChangeSet.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeSet_Kind(), ecorePackage.getEString(), "kind", null, 0, 1, IChangeSet.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(changeArtifactEClass, IChangeArtifact.class,
-				"ChangeArtifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_File(),
-				ecorePackage.getEString(),
-				"file", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_RelativePath(),
-				ecorePackage.getEString(),
-				"relativePath", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_PrevRevision(),
-				ecorePackage.getEString(),
-				"prevRevision", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_Revision(),
-				ecorePackage.getEString(),
-				"revision", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_Dead(),
-				ecorePackage.getEBoolean(),
-				"dead", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChangeArtifact_EditType(),
-				this.getEditType(),
-				"editType", null, 0, 1, IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(changeArtifactEClass, IChangeArtifact.class, "ChangeArtifact", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getChangeArtifact_File(), ecorePackage.getEString(), "file", null, 0, 1, IChangeArtifact.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeArtifact_RelativePath(), ecorePackage.getEString(), "relativePath", null, 0, 1, //$NON-NLS-1$
+				IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeArtifact_PrevRevision(), ecorePackage.getEString(), "prevRevision", null, 0, 1, //$NON-NLS-1$
+				IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeArtifact_Revision(), ecorePackage.getEString(), "revision", null, 0, 1, //$NON-NLS-1$
+				IChangeArtifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeArtifact_Dead(), ecorePackage.getEBoolean(), "dead", null, 0, 1, IChangeArtifact.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChangeArtifact_EditType(), this.getEditType(), "editType", null, 0, 1, IChangeArtifact.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userEClass, IUser.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getUser_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getUser_Email(),
-				ecorePackage.getEString(),
-				"email", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getUser_Id(), ecorePackage.getEString(), "id", null, 0, 1, IUser.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUser_Email(), ecorePackage.getEString(), "email", null, 0, 1, IUser.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(parameterDefinitionEClass, IParameterDefinition.class,
-				"ParameterDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getParameterDefinition_Name(),
-				ecorePackage.getEString(),
-				"name", null, 0, 1, IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getParameterDefinition_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getParameterDefinition_ContainingBuildPlan(),
-				this.getBuildPlan(),
-				this.getBuildPlan_ParameterDefinitions(),
-				"containingBuildPlan", null, 0, 1, IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(parameterDefinitionEClass, IParameterDefinition.class, "ParameterDefinition", IS_ABSTRACT, //$NON-NLS-1$
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getParameterDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, //$NON-NLS-1$
+				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getParameterDefinition_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParameterDefinition_ContainingBuildPlan(), this.getBuildPlan(),
+				this.getBuildPlan_ParameterDefinitions(), "containingBuildPlan", null, 0, 1, IParameterDefinition.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(choiceParameterDefinitionEClass, IChoiceParameterDefinition.class,
-				"ChoiceParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getChoiceParameterDefinition_Options(),
-				ecorePackage.getEString(),
-				"options", null, 1, -1, IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChoiceParameterDefinition_DefaultValue(),
-				ecorePackage.getEString(),
-				"defaultValue", null, 0, 1, IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(choiceParameterDefinitionEClass, IChoiceParameterDefinition.class, "ChoiceParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getChoiceParameterDefinition_Options(), ecorePackage.getEString(), "options", null, 1, -1, //$NON-NLS-1$
+				IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChoiceParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null, 0, //$NON-NLS-1$
+				1, IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(booleanParameterDefinitionEClass, IBooleanParameterDefinition.class,
-				"BooleanParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBooleanParameterDefinition_DefaultValue(),
-				ecorePackage.getEBoolean(),
-				"defaultValue", null, 0, 1, IBooleanParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(booleanParameterDefinitionEClass, IBooleanParameterDefinition.class, "BooleanParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBooleanParameterDefinition_DefaultValue(), ecorePackage.getEBoolean(), "defaultValue", null, //$NON-NLS-1$
+				0, 1, IBooleanParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(fileParameterDefinitionEClass, IFileParameterDefinition.class,
-				"FileParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(fileParameterDefinitionEClass, IFileParameterDefinition.class, "FileParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(planParameterDefinitionEClass, IPlanParameterDefinition.class,
-				"PlanParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(planParameterDefinitionEClass, IPlanParameterDefinition.class, "PlanParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(passwordParameterDefinitionEClass, IPasswordParameterDefinition.class,
-				"PasswordParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getPasswordParameterDefinition_DefaultValue(),
-				ecorePackage.getEString(),
-				"defaultValue", null, 0, 1, IPasswordParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(passwordParameterDefinitionEClass, IPasswordParameterDefinition.class, "PasswordParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPasswordParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null, //$NON-NLS-1$
+				0, 1, IPasswordParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(buildParameterDefinitionEClass, IBuildParameterDefinition.class,
-				"BuildParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getBuildParameterDefinition_BuildPlanId(),
-				ecorePackage.getEString(),
-				"buildPlanId", null, 0, 1, IBuildParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getBuildParameterDefinition_BuildPlan(),
-				this.getBuildPlan(),
-				null,
-				"buildPlan", null, 0, 1, IBuildParameterDefinition.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(buildParameterDefinitionEClass, IBuildParameterDefinition.class, "BuildParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBuildParameterDefinition_BuildPlanId(), ecorePackage.getEString(), "buildPlanId", null, 0, 1, //$NON-NLS-1$
+				IBuildParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBuildParameterDefinition_BuildPlan(), this.getBuildPlan(), null, "buildPlan", null, 0, 1, //$NON-NLS-1$
+				IBuildParameterDefinition.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEClass(stringParameterDefinitionEClass, IStringParameterDefinition.class,
-				"StringParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getStringParameterDefinition_DefaultValue(),
-				ecorePackage.getEString(),
-				"defaultValue", null, 0, 1, IStringParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stringParameterDefinitionEClass, IStringParameterDefinition.class, "StringParameterDefinition", //$NON-NLS-1$
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringParameterDefinition_DefaultValue(), ecorePackage.getEString(), "defaultValue", null, 0, //$NON-NLS-1$
+				1, IStringParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(testResultEClass, ITestResult.class,
-				"TestResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getTestResult_Build(),
-				this.getBuild(),
-				this.getBuild_TestResult(),
-				"build", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestResult_Duration(),
-				ecorePackage.getELong(),
-				"duration", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestResult_FailCount(),
-				ecorePackage.getEInt(),
-				"failCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestResult_PassCount(),
-				ecorePackage.getEInt(),
-				"passCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestResult_IgnoredCount(),
-				ecorePackage.getEInt(),
-				"ignoredCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestResult_ErrorCount(),
-				ecorePackage.getEInt(),
-				"errorCount", null, 0, 1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getTestResult_Suites(),
-				this.getTestSuite(),
-				this.getTestSuite_Result(),
-				"suites", null, 0, -1, ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(testResultEClass, ITestResult.class, "TestResult", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTestResult_Build(), this.getBuild(), this.getBuild_TestResult(), "build", null, 0, 1, //$NON-NLS-1$
+				ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_Duration(), ecorePackage.getELong(), "duration", null, 0, 1, ITestResult.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_FailCount(), ecorePackage.getEInt(), "failCount", null, 0, 1, ITestResult.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_PassCount(), ecorePackage.getEInt(), "passCount", null, 0, 1, ITestResult.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_IgnoredCount(), ecorePackage.getEInt(), "ignoredCount", null, 0, 1, //$NON-NLS-1$
+				ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestResult_ErrorCount(), ecorePackage.getEInt(), "errorCount", null, 0, 1, ITestResult.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestResult_Suites(), this.getTestSuite(), this.getTestSuite_Result(), "suites", null, 0, -1, //$NON-NLS-1$
+				ITestResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(testElementEClass, ITestElement.class,
-				"TestElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getTestElement_Label(),
-				ecorePackage.getEString(),
-				"label", null, 0, 1, ITestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestElement_Duration(),
-				ecorePackage.getELong(),
-				"duration", null, 0, 1, ITestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestElement_ErrorOutput(),
-				ecorePackage.getEString(),
-				"errorOutput", null, 0, 1, ITestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestElement_Output(),
-				ecorePackage.getEString(),
-				"output", null, 0, 1, ITestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(testElementEClass, ITestElement.class, "TestElement", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTestElement_Label(), ecorePackage.getEString(), "label", null, 0, 1, ITestElement.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_Duration(), ecorePackage.getELong(), "duration", null, 0, 1, ITestElement.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_ErrorOutput(), ecorePackage.getEString(), "errorOutput", null, 0, 1, //$NON-NLS-1$
+				ITestElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestElement_Output(), ecorePackage.getEString(), "output", null, 0, 1, ITestElement.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(testSuiteEClass, ITestSuite.class,
-				"TestSuite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getTestSuite_Cases(),
-				this.getTestCase(),
-				this.getTestCase_Suite(),
-				"cases", null, 0, -1, ITestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getTestSuite_Result(),
-				this.getTestResult(),
-				this.getTestResult_Suites(),
-				"result", null, 0, 1, ITestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(testSuiteEClass, ITestSuite.class, "TestSuite", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTestSuite_Cases(), this.getTestCase(), this.getTestCase_Suite(), "cases", null, 0, -1, //$NON-NLS-1$
+				ITestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestSuite_Result(), this.getTestResult(), this.getTestResult_Suites(), "result", null, 0, 1, //$NON-NLS-1$
+				ITestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(testCaseEClass, ITestCase.class,
-				"TestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getTestCase_ClassName(),
-				ecorePackage.getEString(),
-				"className", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestCase_Skipped(),
-				ecorePackage.getEBoolean(),
-				"skipped", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getTestCase_Suite(),
-				this.getTestSuite(),
-				this.getTestSuite_Cases(),
-				"suite", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestCase_Status(),
-				this.getTestCaseResult(),
-				"status", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestCase_Message(),
-				ecorePackage.getEString(),
-				"message", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getTestCase_StackTrace(),
-				ecorePackage.getEString(),
-				"stackTrace", null, 0, 1, ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(testCaseEClass, ITestCase.class, "TestCase", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTestCase_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, ITestCase.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_Skipped(), ecorePackage.getEBoolean(), "skipped", null, 0, 1, ITestCase.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestCase_Suite(), this.getTestSuite(), this.getTestSuite_Cases(), "suite", null, 0, 1, //$NON-NLS-1$
+				ITestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_Status(), this.getTestCaseResult(), "status", null, 0, 1, ITestCase.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_Message(), ecorePackage.getEString(), "message", null, 0, 1, ITestCase.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTestCase_StackTrace(), ecorePackage.getEString(), "stackTrace", null, 0, 1, ITestCase.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(testCaseResultEEnum, TestCaseResult.class, "TestCaseResult"); //$NON-NLS-1$
@@ -4627,16 +4459,16 @@ public class BuildPackage extends EPackageImpl {
 		addEEnumLiteral(testCaseResultEEnum, TestCaseResult.REGRESSION);
 
 		// Initialize data types
-		initEDataType(buildStateEDataType, BuildState.class,
-				"BuildState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEDataType(buildStatusEDataType, BuildStatus.class,
-				"BuildStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(buildStateEDataType, BuildState.class, "BuildState", IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(buildStatusEDataType, BuildStatus.class, "BuildStatus", IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(editTypeEDataType, EditType.class, "EditType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEDataType(iStatusEDataType, IStatus.class, "IStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEDataType(iOperationEDataType, IOperation.class,
-				"IOperation", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEDataType(repositoryLocationEDataType, RepositoryLocation.class,
-				"RepositoryLocation", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(iOperationEDataType, IOperation.class, "IOperation", IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(repositoryLocationEDataType, RepositoryLocation.class, "RepositoryLocation", !IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -5041,7 +4873,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EReference BUILD_PLAN__PARAMETER_DEFINITIONS = eINSTANCE.getBuildPlan_ParameterDefinitions();
+		public static final EReference BUILD_PLAN__PARAMETER_DEFINITIONS = eINSTANCE
+				.getBuildPlan_ParameterDefinitions();
 
 		/**
 		 * The meta object literal for the '<em><b>Health Reports</b></em>' containment reference list feature. <!--
@@ -5060,8 +4893,8 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute BUILD_PLAN__FLAGS = eINSTANCE.getBuildPlan_Flags();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport
-		 * <em>Health Report</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport <em>Health
+		 * Report</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.internal.core.HealthReport
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getHealthReport()
@@ -5230,8 +5063,8 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute CHANGE_SET__KIND = eINSTANCE.getChangeSet_Kind();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact
-		 * <em>Change Artifact</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact <em>Change
+		 * Artifact</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.internal.core.ChangeArtifact
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeArtifact()
@@ -5288,8 +5121,8 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute CHANGE_ARTIFACT__EDIT_TYPE = eINSTANCE.getChangeArtifact_EditType();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap
-		 * <em>String To String Map</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap <em>String
+		 * To String Map</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.internal.core.StringToStringMap
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringToStringMap()
@@ -5382,7 +5215,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute PARAMETER_DEFINITION__DESCRIPTION = eINSTANCE.getParameterDefinition_Description();
+		public static final EAttribute PARAMETER_DEFINITION__DESCRIPTION = eINSTANCE
+				.getParameterDefinition_Description();
 
 		/**
 		 * The meta object literal for the '<em><b>Containing Build Plan</b></em>' container reference feature. <!--
@@ -5390,7 +5224,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EReference PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE.getParameterDefinition_ContainingBuildPlan();
+		public static final EReference PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE
+				.getParameterDefinition_ContainingBuildPlan();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition
@@ -5408,7 +5243,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute CHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE.getChoiceParameterDefinition_Options();
+		public static final EAttribute CHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE
+				.getChoiceParameterDefinition_Options();
 
 		/**
 		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc -->
@@ -5416,7 +5252,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getChoiceParameterDefinition_DefaultValue();
+		public static final EAttribute CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getChoiceParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
@@ -5434,7 +5271,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getBooleanParameterDefinition_DefaultValue();
+		public static final EAttribute BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getBooleanParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.FileParameterDefinition
@@ -5472,7 +5310,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getPasswordParameterDefinition_DefaultValue();
+		public static final EAttribute PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getPasswordParameterDefinition_DefaultValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition
@@ -5490,7 +5329,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE.getBuildParameterDefinition_BuildPlanId();
+		public static final EAttribute BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE
+				.getBuildParameterDefinition_BuildPlanId();
 
 		/**
 		 * The meta object literal for the '<em><b>Build Plan</b></em>' reference feature. <!-- begin-user-doc --> <!--
@@ -5498,7 +5338,8 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EReference BUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE.getBuildParameterDefinition_BuildPlan();
+		public static final EReference BUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE
+				.getBuildParameterDefinition_BuildPlan();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition
@@ -5516,11 +5357,12 @@ public class BuildPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getStringParameterDefinition_DefaultValue();
+		public static final EAttribute STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
+				.getStringParameterDefinition_DefaultValue();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestResult
-		 * <em>Test Result</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestResult <em>Test
+		 * Result</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.internal.core.TestResult
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestResult()
@@ -5585,8 +5427,8 @@ public class BuildPackage extends EPackageImpl {
 		public static final EReference TEST_RESULT__SUITES = eINSTANCE.getTestResult_Suites();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestElement
-		 * <em>Test Element</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestElement <em>Test
+		 * Element</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.internal.core.TestElement
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestElement()
@@ -5711,8 +5553,8 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute TEST_CASE__STACK_TRACE = eINSTANCE.getTestCase_StackTrace();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult
-		 * <em>Test Case Result</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult <em>Test Case
+		 * Result</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCaseResult()

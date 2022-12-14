@@ -70,8 +70,8 @@ public class HudsonTestUtil {
 				lastException = e;
 			} catch (HudsonException e) {
 				if (e.getMessage().contains("Bad Gateway") && badGatewayCounter-- > 0) {// log and try again
-					StatusHandler.log(new Status(IStatus.ERROR, "org.eclipse.mylyn.hudson.tests", "Bad Gateway #"
-							+ badGatewayCounter, e));
+					StatusHandler.log(new Status(IStatus.ERROR, "org.eclipse.mylyn.hudson.tests",
+							"Bad Gateway #" + badGatewayCounter, e));
 				} else {
 					throw e;
 				}

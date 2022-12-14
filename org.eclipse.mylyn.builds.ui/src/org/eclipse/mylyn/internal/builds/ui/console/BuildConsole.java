@@ -61,9 +61,10 @@ public class BuildConsole {
 
 	public MessageConsole show() {
 		if (console == null) {
-			console = new MessageConsole(NLS.bind("Output for Build {0}#{1}", build.getPlan() == null
-					? "Unknown"
-					: build.getPlan().getLabel(), build.getLabel()), CONSOLE_TYPE, BuildImages.CONSOLE, true);
+			console = new MessageConsole(
+					NLS.bind("Output for Build {0}#{1}",
+							build.getPlan() == null ? "Unknown" : build.getPlan().getLabel(), build.getLabel()),
+					CONSOLE_TYPE, BuildImages.CONSOLE, true);
 			consoleManager.addConsoles(new IConsole[] { console });
 			console.setAttribute(ATTRIBUTE_BUILD, build);
 
@@ -87,8 +88,8 @@ public class BuildConsole {
 			operation = new GetBuildOutputOperation(BuildsUiInternal.getOperationService(), build,
 					new BuildOutputReader() {
 						@Override
-						public void handle(BuildOutputEvent event, IOperationMonitor monitor) throws IOException,
-								CoreException {
+						public void handle(BuildOutputEvent event, IOperationMonitor monitor)
+								throws IOException, CoreException {
 							BufferedReader reader = event.getInput();
 							String line;
 							while ((line = reader.readLine()) != null) {

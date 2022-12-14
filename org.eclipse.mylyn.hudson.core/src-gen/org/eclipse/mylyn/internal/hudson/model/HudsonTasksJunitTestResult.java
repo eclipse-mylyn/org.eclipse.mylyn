@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.tasks.junit.TestResult complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.tasks.junit.TestResult complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.tasks.junit.TestResult">
@@ -44,128 +44,105 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.tasks.junit.TestResult", propOrder = {
-    "duration",
-    "failCount",
-    "passCount",
-    "skipCount",
-    "suite"
-})
+@XmlType(name = "hudson.tasks.junit.TestResult", propOrder = { "duration", "failCount", "passCount", "skipCount",
+		"suite" })
 @SuppressWarnings("all")
-public class HudsonTasksJunitTestResult
-    extends HudsonTasksTestMetaTabulatedResult
-{
+public class HudsonTasksJunitTestResult extends HudsonTasksTestMetaTabulatedResult {
 
-    @XmlElement(required = true)
-    protected Object duration;
-    protected int failCount;
-    protected int passCount;
-    protected int skipCount;
-    protected List<HudsonTasksJunitSuiteResult> suite;
+	@XmlElement(required = true)
+	protected Object duration;
 
-    /**
-     * Gets the value of the duration property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public Object getDuration() {
-        return duration;
-    }
+	protected int failCount;
 
-    /**
-     * Sets the value of the duration property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setDuration(Object value) {
-        this.duration = value;
-    }
+	protected int passCount;
 
-    /**
-     * Gets the value of the failCount property.
-     * 
-     */
-    public int getFailCount() {
-        return failCount;
-    }
+	protected int skipCount;
 
-    /**
-     * Sets the value of the failCount property.
-     * 
-     */
-    public void setFailCount(int value) {
-        this.failCount = value;
-    }
+	protected List<HudsonTasksJunitSuiteResult> suite;
 
-    /**
-     * Gets the value of the passCount property.
-     * 
-     */
-    public int getPassCount() {
-        return passCount;
-    }
+	/**
+	 * Gets the value of the duration property.
+	 * 
+	 * @return possible object is {@link Object }
+	 */
+	public Object getDuration() {
+		return duration;
+	}
 
-    /**
-     * Sets the value of the passCount property.
-     * 
-     */
-    public void setPassCount(int value) {
-        this.passCount = value;
-    }
+	/**
+	 * Sets the value of the duration property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Object }
+	 */
+	public void setDuration(Object value) {
+		this.duration = value;
+	}
 
-    /**
-     * Gets the value of the skipCount property.
-     * 
-     */
-    public int getSkipCount() {
-        return skipCount;
-    }
+	/**
+	 * Gets the value of the failCount property.
+	 */
+	public int getFailCount() {
+		return failCount;
+	}
 
-    /**
-     * Sets the value of the skipCount property.
-     * 
-     */
-    public void setSkipCount(int value) {
-        this.skipCount = value;
-    }
+	/**
+	 * Sets the value of the failCount property.
+	 */
+	public void setFailCount(int value) {
+		this.failCount = value;
+	}
 
-    /**
-     * Gets the value of the suite property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the suite property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSuite().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonTasksJunitSuiteResult }
-     * 
-     * 
-     */
-    public List<HudsonTasksJunitSuiteResult> getSuite() {
-        if (suite == null) {
-            suite = new ArrayList<HudsonTasksJunitSuiteResult>();
-        }
-        return this.suite;
-    }
+	/**
+	 * Gets the value of the passCount property.
+	 */
+	public int getPassCount() {
+		return passCount;
+	}
+
+	/**
+	 * Sets the value of the passCount property.
+	 */
+	public void setPassCount(int value) {
+		this.passCount = value;
+	}
+
+	/**
+	 * Gets the value of the skipCount property.
+	 */
+	public int getSkipCount() {
+		return skipCount;
+	}
+
+	/**
+	 * Sets the value of the skipCount property.
+	 */
+	public void setSkipCount(int value) {
+		this.skipCount = value;
+	}
+
+	/**
+	 * Gets the value of the suite property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the suite property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getSuite().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonTasksJunitSuiteResult }
+	 */
+	public List<HudsonTasksJunitSuiteResult> getSuite() {
+		if (suite == null) {
+			suite = new ArrayList<HudsonTasksJunitSuiteResult>();
+		}
+		return this.suite;
+	}
 
 }

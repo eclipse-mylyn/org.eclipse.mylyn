@@ -57,8 +57,8 @@ public class BuildConnectorDescriptor {
 						object.getClass().getCanonicalName(), getPluginId()));
 			}
 		} catch (Throwable e) {
-			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-					"Connector core failed to load for extension contributed by {0}", getPluginId()), e); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+					NLS.bind("Connector core failed to load for extension contributed by {0}", getPluginId()), e); //$NON-NLS-1$
 		}
 	}
 
@@ -78,13 +78,13 @@ public class BuildConnectorDescriptor {
 				ui.init(core, getElement());
 				return Status.OK_STATUS;
 			} else {
-				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Connector ui ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-						object.getClass().getCanonicalName(), getPluginId()));
+				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						NLS.bind("Connector ui ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+								object.getClass().getCanonicalName(), getPluginId()));
 			}
 		} catch (Throwable e) {
-			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-					"Connector ui failed to load for extension contributed by {0}", getPluginId()), e); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+					NLS.bind("Connector ui failed to load for extension contributed by {0}", getPluginId()), e); //$NON-NLS-1$
 		}
 	}
 

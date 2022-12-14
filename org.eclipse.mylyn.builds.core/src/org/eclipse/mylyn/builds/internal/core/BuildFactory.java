@@ -66,7 +66,8 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 */
 	public static BuildFactory init() {
 		try {
-			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/mylyn/models/build"); //$NON-NLS-1$ 
+			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http://eclipse.org/mylyn/models/build"); //$NON-NLS-1$ 
 			if (theBuildFactory != null) {
 				return theBuildFactory;
 			}

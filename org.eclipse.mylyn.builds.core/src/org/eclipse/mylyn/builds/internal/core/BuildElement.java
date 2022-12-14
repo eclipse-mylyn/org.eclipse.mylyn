@@ -294,8 +294,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).basicRemove(
-					otherEnd, msgs);
+			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
+					.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -353,7 +353,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 			setRefreshDate((Date) newValue);
 			return;
 		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
+					.set(newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);

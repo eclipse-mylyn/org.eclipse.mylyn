@@ -23,7 +23,8 @@ import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
  * The following features are implemented:
  * <ul>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition#getOptions <em>Options</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition#getDefaultValue <em>Default
+ * Value</em>}</li>
  * </ul>
  * </p>
  * 

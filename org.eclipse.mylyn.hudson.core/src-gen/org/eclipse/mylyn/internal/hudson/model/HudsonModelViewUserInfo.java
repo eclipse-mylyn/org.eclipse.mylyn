@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.View-UserInfo complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.View-UserInfo complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.View-UserInfo">
@@ -39,92 +39,73 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.View-UserInfo", propOrder = {
-    "lastChange",
-    "project",
-    "user"
-})
+@XmlType(name = "hudson.model.View-UserInfo", propOrder = { "lastChange", "project", "user" })
 @SuppressWarnings("all")
 public class HudsonModelViewUserInfo {
 
-    protected Long lastChange;
-    protected HudsonModelAbstractProject project;
-    protected HudsonModelUser user;
+	protected Long lastChange;
 
-    /**
-     * Gets the value of the lastChange property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
-     */
-    public Long getLastChange() {
-        return lastChange;
-    }
+	protected HudsonModelAbstractProject project;
 
-    /**
-     * Sets the value of the lastChange property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
-     */
-    public void setLastChange(Long value) {
-        this.lastChange = value;
-    }
+	protected HudsonModelUser user;
 
-    /**
-     * Gets the value of the project property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelAbstractProject }
-     *     
-     */
-    public HudsonModelAbstractProject getProject() {
-        return project;
-    }
+	/**
+	 * Gets the value of the lastChange property.
+	 * 
+	 * @return possible object is {@link Long }
+	 */
+	public Long getLastChange() {
+		return lastChange;
+	}
 
-    /**
-     * Sets the value of the project property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelAbstractProject }
-     *     
-     */
-    public void setProject(HudsonModelAbstractProject value) {
-        this.project = value;
-    }
+	/**
+	 * Sets the value of the lastChange property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Long }
+	 */
+	public void setLastChange(Long value) {
+		this.lastChange = value;
+	}
 
-    /**
-     * Gets the value of the user property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelUser }
-     *     
-     */
-    public HudsonModelUser getUser() {
-        return user;
-    }
+	/**
+	 * Gets the value of the project property.
+	 * 
+	 * @return possible object is {@link HudsonModelAbstractProject }
+	 */
+	public HudsonModelAbstractProject getProject() {
+		return project;
+	}
 
-    /**
-     * Sets the value of the user property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelUser }
-     *     
-     */
-    public void setUser(HudsonModelUser value) {
-        this.user = value;
-    }
+	/**
+	 * Sets the value of the project property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelAbstractProject }
+	 */
+	public void setProject(HudsonModelAbstractProject value) {
+		this.project = value;
+	}
+
+	/**
+	 * Gets the value of the user property.
+	 * 
+	 * @return possible object is {@link HudsonModelUser }
+	 */
+	public HudsonModelUser getUser() {
+		return user;
+	}
+
+	/**
+	 * Sets the value of the user property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelUser }
+	 */
+	public void setUser(HudsonModelUser value) {
+		this.user = value;
+	}
 
 }

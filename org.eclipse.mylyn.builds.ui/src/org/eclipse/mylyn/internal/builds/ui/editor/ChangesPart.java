@@ -242,9 +242,9 @@ public class ChangesPart extends AbstractBuildEditorPart {
 						"Could not determine change revisions for the selected file", null, IMessageProvider.WARNING);
 			}
 		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error", e),
-					StatusManager.SHOW | StatusManager.LOG);
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error", e),
+							StatusManager.SHOW | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// ignore
 		}

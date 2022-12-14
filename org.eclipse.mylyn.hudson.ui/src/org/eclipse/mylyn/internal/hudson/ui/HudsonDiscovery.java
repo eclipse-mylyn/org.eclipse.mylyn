@@ -65,32 +65,34 @@ public class HudsonDiscovery {
 				IServiceProperties properties = serviceInfo.getServiceProperties();
 				try {
 					if (properties.getProperty(URL_PROPERTY) == null) {
-						notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(
-								Messages.JenkinsDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
-										.getHost() }));
+						notifyMessage(Messages.JenkinsDiscovery_MessageTitle,
+								NLS.bind(Messages.JenkinsDiscovery_MissingURL,
+										new Object[] { serviceInfo.getLocation().getHost() }));
 					} else {
 						issueJenkinsNotification(properties);
 					}
 				} catch (URISyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
-							Messages.Discovery_IncorrectURI, new Object[] { properties.getProperty(URL_PROPERTY)
-									.toString() }), e));
+					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN,
+							NLS.bind(Messages.Discovery_IncorrectURI,
+									new Object[] { properties.getProperty(URL_PROPERTY).toString() }),
+							e));
 				}
 			}
 			if (serviceTypeId.getName().equals(HUDSON_MDNS_ID)) {
 				IServiceProperties properties = serviceInfo.getServiceProperties();
 				try {
 					if (properties.getProperty(URL_PROPERTY) == null) {
-						notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(
-								Messages.HudsonDiscovery_MissingURL,
-								new Object[] { serviceInfo.getLocation().getHost() }));
+						notifyMessage(Messages.HudsonDiscovery_MessageTitle,
+								NLS.bind(Messages.HudsonDiscovery_MissingURL,
+										new Object[] { serviceInfo.getLocation().getHost() }));
 					} else {
 						issueHudsonNotification(properties);
 					}
 				} catch (URISyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
-							Messages.Discovery_IncorrectURI, new Object[] { properties.getProperty(URL_PROPERTY)
-									.toString() }), e));
+					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN,
+							NLS.bind(Messages.Discovery_IncorrectURI,
+									new Object[] { properties.getProperty(URL_PROPERTY).toString() }),
+							e));
 				}
 			}
 		}
@@ -178,10 +180,8 @@ public class HudsonDiscovery {
 		String url = properties.getProperty(URL_PROPERTY).toString();
 		String id = getId(properties);
 		if (isNew(url, id)) {
-			notifyMessage(
-					Messages.HudsonDiscovery_MessageTitle,
-					NLS.bind(Messages.HudsonDiscovery_MessageText, new Object[] { url,
-							Messages.HudsonDiscovery_ServerName, url, id }));
+			notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(Messages.HudsonDiscovery_MessageText,
+					new Object[] { url, Messages.HudsonDiscovery_ServerName, url, id }));
 		}
 	}
 
@@ -191,10 +191,8 @@ public class HudsonDiscovery {
 		if (isNew(url, id)) {
 			// Change the first segment (org.eclipse.mylyn.hudson) to the id of
 			// the new repository type when we start differentiation between the two
-			notifyMessage(
-					Messages.JenkinsDiscovery_MessageTitle,
-					NLS.bind(Messages.JenkinsDiscovery_MessageText, new Object[] { url,
-							Messages.JenkinsDiscovery_ServerName, url, id }));
+			notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(Messages.JenkinsDiscovery_MessageText,
+					new Object[] { url, Messages.JenkinsDiscovery_ServerName, url, id }));
 		}
 	}
 

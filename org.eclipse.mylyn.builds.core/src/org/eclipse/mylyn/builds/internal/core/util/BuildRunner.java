@@ -24,8 +24,8 @@ import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
  */
 public class BuildRunner {
 
-	private static void handleException(BuildRunnable code, Throwable exception) throws CoreException,
-			OperationCanceledException {
+	private static void handleException(BuildRunnable code, Throwable exception)
+			throws CoreException, OperationCanceledException {
 		if (exception instanceof OperationCanceledException) {
 			throw (OperationCanceledException) exception;
 		}
@@ -39,8 +39,8 @@ public class BuildRunner {
 				"Unexpected error during invocation of operation", exception));
 	}
 
-	private static void handleException(BuildRunnableWithResult<?> code, Throwable exception) throws CoreException,
-			OperationCanceledException {
+	private static void handleException(BuildRunnableWithResult<?> code, Throwable exception)
+			throws CoreException, OperationCanceledException {
 		if (exception instanceof OperationCanceledException) {
 			throw (OperationCanceledException) exception;
 		}

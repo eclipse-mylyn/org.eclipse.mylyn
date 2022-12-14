@@ -229,7 +229,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 		String oldOutput = output;
 		output = newOutput;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_ELEMENT__OUTPUT, oldOutput, output));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_ELEMENT__OUTPUT, oldOutput,
+					output));
 	}
 
 	/**

@@ -30,8 +30,8 @@ public class OpenBuildsPreferencesAction extends Action {
 	@Override
 	public void run() {
 		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(WorkbenchUtil.getShell(),
-				BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS,
-				new String[] { BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS }, null);
+				BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS, new String[] { BuildsUiInternal.ID_PREFERENCE_PAGE_BUILDS },
+				null);
 		dlg.open();
 	}
 

@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.tasks.junit.SuiteResult complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.tasks.junit.SuiteResult complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.tasks.junit.SuiteResult">
@@ -45,177 +45,142 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.tasks.junit.SuiteResult", propOrder = {
-    "_case",
-    "duration",
-    "name",
-    "stderr",
-    "stdout",
-    "timestamp"
-})
+@XmlType(name = "hudson.tasks.junit.SuiteResult", propOrder = { "_case", "duration", "name", "stderr", "stdout",
+		"timestamp" })
 @SuppressWarnings("all")
 public class HudsonTasksJunitSuiteResult {
 
-    @XmlElement(name = "case")
-    protected List<HudsonTasksJunitCaseResult> _case;
-    @XmlElement(required = true)
-    protected Object duration;
-    protected String name;
-    protected String stderr;
-    protected String stdout;
-    protected String timestamp;
+	@XmlElement(name = "case")
+	protected List<HudsonTasksJunitCaseResult> _case;
 
-    /**
-     * Gets the value of the case property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the case property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getCase().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonTasksJunitCaseResult }
-     * 
-     * 
-     */
-    public List<HudsonTasksJunitCaseResult> getCase() {
-        if (_case == null) {
-            _case = new ArrayList<HudsonTasksJunitCaseResult>();
-        }
-        return this._case;
-    }
+	@XmlElement(required = true)
+	protected Object duration;
 
-    /**
-     * Gets the value of the duration property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public Object getDuration() {
-        return duration;
-    }
+	protected String name;
 
-    /**
-     * Sets the value of the duration property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setDuration(Object value) {
-        this.duration = value;
-    }
+	protected String stderr;
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+	protected String stdout;
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+	protected String timestamp;
 
-    /**
-     * Gets the value of the stderr property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStderr() {
-        return stderr;
-    }
+	/**
+	 * Gets the value of the case property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the case property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getCase().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonTasksJunitCaseResult }
+	 */
+	public List<HudsonTasksJunitCaseResult> getCase() {
+		if (_case == null) {
+			_case = new ArrayList<HudsonTasksJunitCaseResult>();
+		}
+		return this._case;
+	}
 
-    /**
-     * Sets the value of the stderr property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStderr(String value) {
-        this.stderr = value;
-    }
+	/**
+	 * Gets the value of the duration property.
+	 * 
+	 * @return possible object is {@link Object }
+	 */
+	public Object getDuration() {
+		return duration;
+	}
 
-    /**
-     * Gets the value of the stdout property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStdout() {
-        return stdout;
-    }
+	/**
+	 * Sets the value of the duration property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Object }
+	 */
+	public void setDuration(Object value) {
+		this.duration = value;
+	}
 
-    /**
-     * Sets the value of the stdout property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStdout(String value) {
-        this.stdout = value;
-    }
+	/**
+	 * Gets the value of the name property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Gets the value of the timestamp property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTimestamp() {
-        return timestamp;
-    }
+	/**
+	 * Sets the value of the name property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setName(String value) {
+		this.name = value;
+	}
 
-    /**
-     * Sets the value of the timestamp property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTimestamp(String value) {
-        this.timestamp = value;
-    }
+	/**
+	 * Gets the value of the stderr property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getStderr() {
+		return stderr;
+	}
+
+	/**
+	 * Sets the value of the stderr property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setStderr(String value) {
+		this.stderr = value;
+	}
+
+	/**
+	 * Gets the value of the stdout property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getStdout() {
+		return stdout;
+	}
+
+	/**
+	 * Sets the value of the stdout property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setStdout(String value) {
+		this.stdout = value;
+	}
+
+	/**
+	 * Gets the value of the timestamp property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * Sets the value of the timestamp property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setTimestamp(String value) {
+		this.timestamp = value;
+	}
 
 }

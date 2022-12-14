@@ -34,8 +34,9 @@ public class HudsonUrlTest extends TestCase {
 	}
 
 	private String createHudsonUrl(String buildName) throws UnsupportedEncodingException {
-		return HudsonUrl.create("http://hudson.com").depth(1).include("/hudson/job") //$NON-NLS-1$
-				.match("name", Collections.singletonList(buildName)) //$NON-NLS-1$
+		return HudsonUrl.create("http://hudson.com") //$NON-NLS-1$
+				.depth(1)
+				.include("/hudson/job").match("name", Collections.singletonList(buildName)) //$NON-NLS-2$
 				.exclude("/hudson/job/build") //$NON-NLS-1$
 				.toUrl();
 	}

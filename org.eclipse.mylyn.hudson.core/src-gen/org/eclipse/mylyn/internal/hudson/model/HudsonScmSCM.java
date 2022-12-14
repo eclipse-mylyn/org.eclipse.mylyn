@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.scm.SCM complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.scm.SCM complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.scm.SCM">
@@ -38,66 +38,52 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.scm.SCM", propOrder = {
-    "browser",
-    "type"
-})
+@XmlType(name = "hudson.scm.SCM", propOrder = { "browser", "type" })
 @SuppressWarnings("all")
 public class HudsonScmSCM {
 
-    protected HudsonScmRepositoryBrowser browser;
-    protected String type;
+	protected HudsonScmRepositoryBrowser browser;
 
-    /**
-     * Gets the value of the browser property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonScmRepositoryBrowser }
-     *     
-     */
-    public HudsonScmRepositoryBrowser getBrowser() {
-        return browser;
-    }
+	protected String type;
 
-    /**
-     * Sets the value of the browser property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonScmRepositoryBrowser }
-     *     
-     */
-    public void setBrowser(HudsonScmRepositoryBrowser value) {
-        this.browser = value;
-    }
+	/**
+	 * Gets the value of the browser property.
+	 * 
+	 * @return possible object is {@link HudsonScmRepositoryBrowser }
+	 */
+	public HudsonScmRepositoryBrowser getBrowser() {
+		return browser;
+	}
 
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getType() {
-        return type;
-    }
+	/**
+	 * Sets the value of the browser property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonScmRepositoryBrowser }
+	 */
+	public void setBrowser(HudsonScmRepositoryBrowser value) {
+		this.browser = value;
+	}
 
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setType(String value) {
-        this.type = value;
-    }
+	/**
+	 * Gets the value of the type property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Sets the value of the type property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setType(String value) {
+		this.type = value;
+	}
 
 }

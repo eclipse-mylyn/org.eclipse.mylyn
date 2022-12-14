@@ -107,7 +107,8 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 		int oldHealth = health;
 		health = newHealth;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.HEALTH_REPORT__HEALTH, oldHealth, health));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.HEALTH_REPORT__HEALTH, oldHealth,
+					health));
 	}
 
 	/**

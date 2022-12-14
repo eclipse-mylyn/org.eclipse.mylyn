@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.Job complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.Job complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.Job">
@@ -54,392 +54,317 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.Job", propOrder = {
-    "buildable",
-    "build",
-    "color",
-    "firstBuild",
-    "healthReport",
-    "inQueue",
-    "keepDependencies",
-    "lastBuild",
-    "lastCompletedBuild",
-    "lastFailedBuild",
-    "lastStableBuild",
-    "lastSuccessfulBuild",
-    "nextBuildNumber",
-    "property",
-    "queueItem"
-})
-@XmlSeeAlso({
-    HudsonModelAbstractProject.class
-})
+@XmlType(name = "hudson.model.Job", propOrder = { "buildable", "build", "color", "firstBuild", "healthReport",
+		"inQueue", "keepDependencies", "lastBuild", "lastCompletedBuild", "lastFailedBuild", "lastStableBuild",
+		"lastSuccessfulBuild", "nextBuildNumber", "property", "queueItem" })
+@XmlSeeAlso({ HudsonModelAbstractProject.class })
 @SuppressWarnings("all")
-public class HudsonModelJob
-    extends HudsonModelAbstractItem
-{
+public class HudsonModelJob extends HudsonModelAbstractItem {
 
-    protected boolean buildable;
-    protected List<HudsonModelRun> build;
-    protected HudsonModelBallColor color;
-    protected HudsonModelRun firstBuild;
-    protected List<HudsonModelHealthReport> healthReport;
-    protected boolean inQueue;
-    protected boolean keepDependencies;
-    protected HudsonModelRun lastBuild;
-    protected HudsonModelRun lastCompletedBuild;
-    protected HudsonModelRun lastFailedBuild;
-    protected HudsonModelRun lastStableBuild;
-    protected HudsonModelRun lastSuccessfulBuild;
-    protected int nextBuildNumber;
-    protected List<HudsonModelJobProperty> property;
-    protected HudsonModelQueueItem queueItem;
+	protected boolean buildable;
 
-    /**
-     * Gets the value of the buildable property.
-     * 
-     */
-    public boolean isBuildable() {
-        return buildable;
-    }
+	protected List<HudsonModelRun> build;
 
-    /**
-     * Sets the value of the buildable property.
-     * 
-     */
-    public void setBuildable(boolean value) {
-        this.buildable = value;
-    }
+	protected HudsonModelBallColor color;
 
-    /**
-     * Gets the value of the build property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the build property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getBuild().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelRun }
-     * 
-     * 
-     */
-    public List<HudsonModelRun> getBuild() {
-        if (build == null) {
-            build = new ArrayList<HudsonModelRun>();
-        }
-        return this.build;
-    }
+	protected HudsonModelRun firstBuild;
 
-    /**
-     * Gets the value of the color property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelBallColor }
-     *     
-     */
-    public HudsonModelBallColor getColor() {
-        return color;
-    }
+	protected List<HudsonModelHealthReport> healthReport;
 
-    /**
-     * Sets the value of the color property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelBallColor }
-     *     
-     */
-    public void setColor(HudsonModelBallColor value) {
-        this.color = value;
-    }
+	protected boolean inQueue;
 
-    /**
-     * Gets the value of the firstBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getFirstBuild() {
-        return firstBuild;
-    }
+	protected boolean keepDependencies;
 
-    /**
-     * Sets the value of the firstBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setFirstBuild(HudsonModelRun value) {
-        this.firstBuild = value;
-    }
+	protected HudsonModelRun lastBuild;
 
-    /**
-     * Gets the value of the healthReport property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the healthReport property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getHealthReport().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelHealthReport }
-     * 
-     * 
-     */
-    public List<HudsonModelHealthReport> getHealthReport() {
-        if (healthReport == null) {
-            healthReport = new ArrayList<HudsonModelHealthReport>();
-        }
-        return this.healthReport;
-    }
+	protected HudsonModelRun lastCompletedBuild;
 
-    /**
-     * Gets the value of the inQueue property.
-     * 
-     */
-    public boolean isInQueue() {
-        return inQueue;
-    }
+	protected HudsonModelRun lastFailedBuild;
 
-    /**
-     * Sets the value of the inQueue property.
-     * 
-     */
-    public void setInQueue(boolean value) {
-        this.inQueue = value;
-    }
+	protected HudsonModelRun lastStableBuild;
 
-    /**
-     * Gets the value of the keepDependencies property.
-     * 
-     */
-    public boolean isKeepDependencies() {
-        return keepDependencies;
-    }
+	protected HudsonModelRun lastSuccessfulBuild;
 
-    /**
-     * Sets the value of the keepDependencies property.
-     * 
-     */
-    public void setKeepDependencies(boolean value) {
-        this.keepDependencies = value;
-    }
+	protected int nextBuildNumber;
 
-    /**
-     * Gets the value of the lastBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getLastBuild() {
-        return lastBuild;
-    }
+	protected List<HudsonModelJobProperty> property;
 
-    /**
-     * Sets the value of the lastBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setLastBuild(HudsonModelRun value) {
-        this.lastBuild = value;
-    }
+	protected HudsonModelQueueItem queueItem;
 
-    /**
-     * Gets the value of the lastCompletedBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getLastCompletedBuild() {
-        return lastCompletedBuild;
-    }
+	/**
+	 * Gets the value of the buildable property.
+	 */
+	public boolean isBuildable() {
+		return buildable;
+	}
 
-    /**
-     * Sets the value of the lastCompletedBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setLastCompletedBuild(HudsonModelRun value) {
-        this.lastCompletedBuild = value;
-    }
+	/**
+	 * Sets the value of the buildable property.
+	 */
+	public void setBuildable(boolean value) {
+		this.buildable = value;
+	}
 
-    /**
-     * Gets the value of the lastFailedBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getLastFailedBuild() {
-        return lastFailedBuild;
-    }
+	/**
+	 * Gets the value of the build property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the build property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getBuild().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelRun }
+	 */
+	public List<HudsonModelRun> getBuild() {
+		if (build == null) {
+			build = new ArrayList<HudsonModelRun>();
+		}
+		return this.build;
+	}
 
-    /**
-     * Sets the value of the lastFailedBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setLastFailedBuild(HudsonModelRun value) {
-        this.lastFailedBuild = value;
-    }
+	/**
+	 * Gets the value of the color property.
+	 * 
+	 * @return possible object is {@link HudsonModelBallColor }
+	 */
+	public HudsonModelBallColor getColor() {
+		return color;
+	}
 
-    /**
-     * Gets the value of the lastStableBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getLastStableBuild() {
-        return lastStableBuild;
-    }
+	/**
+	 * Sets the value of the color property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelBallColor }
+	 */
+	public void setColor(HudsonModelBallColor value) {
+		this.color = value;
+	}
 
-    /**
-     * Sets the value of the lastStableBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setLastStableBuild(HudsonModelRun value) {
-        this.lastStableBuild = value;
-    }
+	/**
+	 * Gets the value of the firstBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getFirstBuild() {
+		return firstBuild;
+	}
 
-    /**
-     * Gets the value of the lastSuccessfulBuild property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public HudsonModelRun getLastSuccessfulBuild() {
-        return lastSuccessfulBuild;
-    }
+	/**
+	 * Sets the value of the firstBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setFirstBuild(HudsonModelRun value) {
+		this.firstBuild = value;
+	}
 
-    /**
-     * Sets the value of the lastSuccessfulBuild property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelRun }
-     *     
-     */
-    public void setLastSuccessfulBuild(HudsonModelRun value) {
-        this.lastSuccessfulBuild = value;
-    }
+	/**
+	 * Gets the value of the healthReport property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the healthReport property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getHealthReport().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelHealthReport }
+	 */
+	public List<HudsonModelHealthReport> getHealthReport() {
+		if (healthReport == null) {
+			healthReport = new ArrayList<HudsonModelHealthReport>();
+		}
+		return this.healthReport;
+	}
 
-    /**
-     * Gets the value of the nextBuildNumber property.
-     * 
-     */
-    public int getNextBuildNumber() {
-        return nextBuildNumber;
-    }
+	/**
+	 * Gets the value of the inQueue property.
+	 */
+	public boolean isInQueue() {
+		return inQueue;
+	}
 
-    /**
-     * Sets the value of the nextBuildNumber property.
-     * 
-     */
-    public void setNextBuildNumber(int value) {
-        this.nextBuildNumber = value;
-    }
+	/**
+	 * Sets the value of the inQueue property.
+	 */
+	public void setInQueue(boolean value) {
+		this.inQueue = value;
+	}
 
-    /**
-     * Gets the value of the property property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the property property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getProperty().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelJobProperty }
-     * 
-     * 
-     */
-    public List<HudsonModelJobProperty> getProperty() {
-        if (property == null) {
-            property = new ArrayList<HudsonModelJobProperty>();
-        }
-        return this.property;
-    }
+	/**
+	 * Gets the value of the keepDependencies property.
+	 */
+	public boolean isKeepDependencies() {
+		return keepDependencies;
+	}
 
-    /**
-     * Gets the value of the queueItem property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelQueueItem }
-     *     
-     */
-    public HudsonModelQueueItem getQueueItem() {
-        return queueItem;
-    }
+	/**
+	 * Sets the value of the keepDependencies property.
+	 */
+	public void setKeepDependencies(boolean value) {
+		this.keepDependencies = value;
+	}
 
-    /**
-     * Sets the value of the queueItem property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelQueueItem }
-     *     
-     */
-    public void setQueueItem(HudsonModelQueueItem value) {
-        this.queueItem = value;
-    }
+	/**
+	 * Gets the value of the lastBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getLastBuild() {
+		return lastBuild;
+	}
+
+	/**
+	 * Sets the value of the lastBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setLastBuild(HudsonModelRun value) {
+		this.lastBuild = value;
+	}
+
+	/**
+	 * Gets the value of the lastCompletedBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getLastCompletedBuild() {
+		return lastCompletedBuild;
+	}
+
+	/**
+	 * Sets the value of the lastCompletedBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setLastCompletedBuild(HudsonModelRun value) {
+		this.lastCompletedBuild = value;
+	}
+
+	/**
+	 * Gets the value of the lastFailedBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getLastFailedBuild() {
+		return lastFailedBuild;
+	}
+
+	/**
+	 * Sets the value of the lastFailedBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setLastFailedBuild(HudsonModelRun value) {
+		this.lastFailedBuild = value;
+	}
+
+	/**
+	 * Gets the value of the lastStableBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getLastStableBuild() {
+		return lastStableBuild;
+	}
+
+	/**
+	 * Sets the value of the lastStableBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setLastStableBuild(HudsonModelRun value) {
+		this.lastStableBuild = value;
+	}
+
+	/**
+	 * Gets the value of the lastSuccessfulBuild property.
+	 * 
+	 * @return possible object is {@link HudsonModelRun }
+	 */
+	public HudsonModelRun getLastSuccessfulBuild() {
+		return lastSuccessfulBuild;
+	}
+
+	/**
+	 * Sets the value of the lastSuccessfulBuild property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelRun }
+	 */
+	public void setLastSuccessfulBuild(HudsonModelRun value) {
+		this.lastSuccessfulBuild = value;
+	}
+
+	/**
+	 * Gets the value of the nextBuildNumber property.
+	 */
+	public int getNextBuildNumber() {
+		return nextBuildNumber;
+	}
+
+	/**
+	 * Sets the value of the nextBuildNumber property.
+	 */
+	public void setNextBuildNumber(int value) {
+		this.nextBuildNumber = value;
+	}
+
+	/**
+	 * Gets the value of the property property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the property property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getProperty().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelJobProperty }
+	 */
+	public List<HudsonModelJobProperty> getProperty() {
+		if (property == null) {
+			property = new ArrayList<HudsonModelJobProperty>();
+		}
+		return this.property;
+	}
+
+	/**
+	 * Gets the value of the queueItem property.
+	 * 
+	 * @return possible object is {@link HudsonModelQueueItem }
+	 */
+	public HudsonModelQueueItem getQueueItem() {
+		return queueItem;
+	}
+
+	/**
+	 * Sets the value of the queueItem property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelQueueItem }
+	 */
+	public void setQueueItem(HudsonModelQueueItem value) {
+		this.queueItem = value;
+	}
 
 }

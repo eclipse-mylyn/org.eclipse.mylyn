@@ -184,7 +184,8 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 */
 	public void setContainingBuildPlan(IBuildPlan newContainingBuildPlan) {
 		if (newContainingBuildPlan != eInternalContainer()
-				|| (eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN && newContainingBuildPlan != null)) {
+				|| (eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN
+						&& newContainingBuildPlan != null)) {
 			if (EcoreUtil.isAncestor(this, (EObject) newContainingBuildPlan))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;

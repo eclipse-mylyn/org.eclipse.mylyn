@@ -75,8 +75,8 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				RefreshRequest request = new RefreshRequest(model, plansToRefresh);
 				((BuildServer) data.server).getRefreshSession().refresh(request, progress.newChild(1));
 			} catch (CoreException e) {
-				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Refresh of server ''{0}'' failed", data.server.getLabel()), e));
+				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+						NLS.bind("Refresh of server ''{0}'' failed", data.server.getLabel()), e));
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			}

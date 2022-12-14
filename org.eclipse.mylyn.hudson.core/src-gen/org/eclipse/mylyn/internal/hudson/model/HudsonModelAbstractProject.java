@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.AbstractProject complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.AbstractProject complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.AbstractProject">
@@ -43,125 +43,97 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.AbstractProject", propOrder = {
-    "concurrentBuild",
-    "downstreamProject",
-    "scm",
-    "upstreamProject"
-})
-@XmlSeeAlso({
-    HudsonModelProject.class
-})
+@XmlType(name = "hudson.model.AbstractProject", propOrder = { "concurrentBuild", "downstreamProject", "scm",
+		"upstreamProject" })
+@XmlSeeAlso({ HudsonModelProject.class })
 @SuppressWarnings("all")
-public class HudsonModelAbstractProject
-    extends HudsonModelJob
-{
+public class HudsonModelAbstractProject extends HudsonModelJob {
 
-    protected boolean concurrentBuild;
-    protected List<HudsonModelAbstractProject> downstreamProject;
-    protected HudsonScmSCM scm;
-    protected List<HudsonModelAbstractProject> upstreamProject;
+	protected boolean concurrentBuild;
 
-    /**
-     * Gets the value of the concurrentBuild property.
-     * 
-     */
-    public boolean isConcurrentBuild() {
-        return concurrentBuild;
-    }
+	protected List<HudsonModelAbstractProject> downstreamProject;
 
-    /**
-     * Sets the value of the concurrentBuild property.
-     * 
-     */
-    public void setConcurrentBuild(boolean value) {
-        this.concurrentBuild = value;
-    }
+	protected HudsonScmSCM scm;
 
-    /**
-     * Gets the value of the downstreamProject property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the downstreamProject property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getDownstreamProject().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelAbstractProject }
-     * 
-     * 
-     */
-    public List<HudsonModelAbstractProject> getDownstreamProject() {
-        if (downstreamProject == null) {
-            downstreamProject = new ArrayList<HudsonModelAbstractProject>();
-        }
-        return this.downstreamProject;
-    }
+	protected List<HudsonModelAbstractProject> upstreamProject;
 
-    /**
-     * Gets the value of the scm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonScmSCM }
-     *     
-     */
-    public HudsonScmSCM getScm() {
-        return scm;
-    }
+	/**
+	 * Gets the value of the concurrentBuild property.
+	 */
+	public boolean isConcurrentBuild() {
+		return concurrentBuild;
+	}
 
-    /**
-     * Sets the value of the scm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonScmSCM }
-     *     
-     */
-    public void setScm(HudsonScmSCM value) {
-        this.scm = value;
-    }
+	/**
+	 * Sets the value of the concurrentBuild property.
+	 */
+	public void setConcurrentBuild(boolean value) {
+		this.concurrentBuild = value;
+	}
 
-    /**
-     * Gets the value of the upstreamProject property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the upstreamProject property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getUpstreamProject().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelAbstractProject }
-     * 
-     * 
-     */
-    public List<HudsonModelAbstractProject> getUpstreamProject() {
-        if (upstreamProject == null) {
-            upstreamProject = new ArrayList<HudsonModelAbstractProject>();
-        }
-        return this.upstreamProject;
-    }
+	/**
+	 * Gets the value of the downstreamProject property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the downstreamProject property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getDownstreamProject().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelAbstractProject }
+	 */
+	public List<HudsonModelAbstractProject> getDownstreamProject() {
+		if (downstreamProject == null) {
+			downstreamProject = new ArrayList<HudsonModelAbstractProject>();
+		}
+		return this.downstreamProject;
+	}
+
+	/**
+	 * Gets the value of the scm property.
+	 * 
+	 * @return possible object is {@link HudsonScmSCM }
+	 */
+	public HudsonScmSCM getScm() {
+		return scm;
+	}
+
+	/**
+	 * Sets the value of the scm property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonScmSCM }
+	 */
+	public void setScm(HudsonScmSCM value) {
+		this.scm = value;
+	}
+
+	/**
+	 * Gets the value of the upstreamProject property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the upstreamProject property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getUpstreamProject().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelAbstractProject }
+	 */
+	public List<HudsonModelAbstractProject> getUpstreamProject() {
+		if (upstreamProject == null) {
+			upstreamProject = new ArrayList<HudsonModelAbstractProject>();
+		}
+		return this.upstreamProject;
+	}
 
 }

@@ -17,7 +17,8 @@ import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition#getDefaultValue <em>Default
+ * Value</em>}</li>
  * </ul>
  * </p>
  * 

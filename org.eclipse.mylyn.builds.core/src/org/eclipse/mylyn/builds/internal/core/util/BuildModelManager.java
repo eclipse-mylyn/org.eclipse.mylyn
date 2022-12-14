@@ -72,12 +72,12 @@ public class BuildModelManager {
 						}
 					}
 				} else {
-					StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-							"Unexpected content while loading builds from ''{0}''", file.getAbsolutePath())));
+					StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+							NLS.bind("Unexpected content while loading builds from ''{0}''", file.getAbsolutePath())));
 				}
 			} catch (RuntimeException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Unexpected error while loading builds from ''{0}''", file.getAbsolutePath()), e));
+				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+						NLS.bind("Unexpected error while loading builds from ''{0}''", file.getAbsolutePath()), e));
 			}
 		}
 		if (model == null) {

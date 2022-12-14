@@ -123,8 +123,9 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		try {
 			BuildsUiInternal.save();
 		} catch (IOException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds", e));
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
+							e));
 		}
 
 		return true;
