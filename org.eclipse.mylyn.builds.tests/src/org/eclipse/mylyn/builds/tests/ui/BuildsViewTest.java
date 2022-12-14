@@ -62,7 +62,8 @@ public class BuildsViewTest extends TestCase {
 		assertEquals("3 Succeeded, 2 Unstable, 1 Failed", view.getBuildsSummary().toString());
 	}
 
-	private void assertBuildSummary(BuildsSummary buildsSummary, boolean isSuccess, boolean isUnstable, boolean isFailed) {
+	private void assertBuildSummary(BuildsSummary buildsSummary, boolean isSuccess, boolean isUnstable,
+			boolean isFailed) {
 		assertEquals(isSuccess, buildsSummary.isSuccess());
 		assertEquals(isUnstable, buildsSummary.isUnstable());
 		assertEquals(isFailed, buildsSummary.isFailed());

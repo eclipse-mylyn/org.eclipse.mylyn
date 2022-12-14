@@ -51,7 +51,8 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getStatus <em>Status</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getDescription <em>Description</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getLastBuild <em>Last Build</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParameterDefinitions <em>Parameter
+ * Definitions</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getHealthReports <em>Health Reports</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getFlags <em>Flags</em>}</li>
  * </ul>
@@ -446,7 +447,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 				msgs.dispatch();
 			}
 		} else if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent, newParent));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent,
+					newParent));
 		}
 	}
 
@@ -580,7 +582,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		String oldSummary = summary;
 		summary = newSummary;
 		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SUMMARY, oldSummary, summary));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SUMMARY, oldSummary,
+					summary));
 		}
 	}
 

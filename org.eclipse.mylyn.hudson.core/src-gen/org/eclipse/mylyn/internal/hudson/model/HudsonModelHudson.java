@@ -22,11 +22,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.Hudson complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.Hudson complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.Hudson">
@@ -46,210 +46,170 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.Hudson", propOrder = {
-    "description",
-    "job",
-    "overallLoad",
-    "primaryView",
-    "slaveAgentPort",
-    "useCrumbs",
-    "useSecurity",
-    "view"
-})
+@XmlType(name = "hudson.model.Hudson", propOrder = { "description", "job", "overallLoad", "primaryView",
+		"slaveAgentPort", "useCrumbs", "useSecurity", "view" })
 @SuppressWarnings("all")
-public class HudsonModelHudson
-    extends HudsonModelNode
-{
+public class HudsonModelHudson extends HudsonModelNode {
 
-    protected String description;
-    protected List<Object> job;
-    protected HudsonModelOverallLoadStatistics overallLoad;
-    protected HudsonModelView primaryView;
-    protected int slaveAgentPort;
-    protected boolean useCrumbs;
-    protected boolean useSecurity;
-    protected List<HudsonModelView> view;
+	protected String description;
 
-    /**
-     * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDescription() {
-        return description;
-    }
+	protected List<Object> job;
 
-    /**
-     * Sets the value of the description property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDescription(String value) {
-        this.description = value;
-    }
+	protected HudsonModelOverallLoadStatistics overallLoad;
 
-    /**
-     * Gets the value of the job property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the job property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getJob().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * 
-     * 
-     */
-    public List<Object> getJob() {
-        if (job == null) {
-            job = new ArrayList<Object>();
-        }
-        return this.job;
-    }
+	protected HudsonModelView primaryView;
 
-    /**
-     * Gets the value of the overallLoad property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelOverallLoadStatistics }
-     *     
-     */
-    public HudsonModelOverallLoadStatistics getOverallLoad() {
-        return overallLoad;
-    }
+	protected int slaveAgentPort;
 
-    /**
-     * Sets the value of the overallLoad property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelOverallLoadStatistics }
-     *     
-     */
-    public void setOverallLoad(HudsonModelOverallLoadStatistics value) {
-        this.overallLoad = value;
-    }
+	protected boolean useCrumbs;
 
-    /**
-     * Gets the value of the primaryView property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelView }
-     *     
-     */
-    public HudsonModelView getPrimaryView() {
-        return primaryView;
-    }
+	protected boolean useSecurity;
 
-    /**
-     * Sets the value of the primaryView property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelView }
-     *     
-     */
-    public void setPrimaryView(HudsonModelView value) {
-        this.primaryView = value;
-    }
+	protected List<HudsonModelView> view;
 
-    /**
-     * Gets the value of the slaveAgentPort property.
-     * 
-     */
-    public int getSlaveAgentPort() {
-        return slaveAgentPort;
-    }
+	/**
+	 * Gets the value of the description property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * Sets the value of the slaveAgentPort property.
-     * 
-     */
-    public void setSlaveAgentPort(int value) {
-        this.slaveAgentPort = value;
-    }
+	/**
+	 * Sets the value of the description property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setDescription(String value) {
+		this.description = value;
+	}
 
-    /**
-     * Gets the value of the useCrumbs property.
-     * 
-     */
-    public boolean isUseCrumbs() {
-        return useCrumbs;
-    }
+	/**
+	 * Gets the value of the job property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the job property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getJob().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link Object }
+	 */
+	public List<Object> getJob() {
+		if (job == null) {
+			job = new ArrayList<Object>();
+		}
+		return this.job;
+	}
 
-    /**
-     * Sets the value of the useCrumbs property.
-     * 
-     */
-    public void setUseCrumbs(boolean value) {
-        this.useCrumbs = value;
-    }
+	/**
+	 * Gets the value of the overallLoad property.
+	 * 
+	 * @return possible object is {@link HudsonModelOverallLoadStatistics }
+	 */
+	public HudsonModelOverallLoadStatistics getOverallLoad() {
+		return overallLoad;
+	}
 
-    /**
-     * Gets the value of the useSecurity property.
-     * 
-     */
-    public boolean isUseSecurity() {
-        return useSecurity;
-    }
+	/**
+	 * Sets the value of the overallLoad property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelOverallLoadStatistics }
+	 */
+	public void setOverallLoad(HudsonModelOverallLoadStatistics value) {
+		this.overallLoad = value;
+	}
 
-    /**
-     * Sets the value of the useSecurity property.
-     * 
-     */
-    public void setUseSecurity(boolean value) {
-        this.useSecurity = value;
-    }
+	/**
+	 * Gets the value of the primaryView property.
+	 * 
+	 * @return possible object is {@link HudsonModelView }
+	 */
+	public HudsonModelView getPrimaryView() {
+		return primaryView;
+	}
 
-    /**
-     * Gets the value of the view property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the view property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getView().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelView }
-     * 
-     * 
-     */
-    public List<HudsonModelView> getView() {
-        if (view == null) {
-            view = new ArrayList<HudsonModelView>();
-        }
-        return this.view;
-    }
+	/**
+	 * Sets the value of the primaryView property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelView }
+	 */
+	public void setPrimaryView(HudsonModelView value) {
+		this.primaryView = value;
+	}
+
+	/**
+	 * Gets the value of the slaveAgentPort property.
+	 */
+	public int getSlaveAgentPort() {
+		return slaveAgentPort;
+	}
+
+	/**
+	 * Sets the value of the slaveAgentPort property.
+	 */
+	public void setSlaveAgentPort(int value) {
+		this.slaveAgentPort = value;
+	}
+
+	/**
+	 * Gets the value of the useCrumbs property.
+	 */
+	public boolean isUseCrumbs() {
+		return useCrumbs;
+	}
+
+	/**
+	 * Sets the value of the useCrumbs property.
+	 */
+	public void setUseCrumbs(boolean value) {
+		this.useCrumbs = value;
+	}
+
+	/**
+	 * Gets the value of the useSecurity property.
+	 */
+	public boolean isUseSecurity() {
+		return useSecurity;
+	}
+
+	/**
+	 * Sets the value of the useSecurity property.
+	 */
+	public void setUseSecurity(boolean value) {
+		this.useSecurity = value;
+	}
+
+	/**
+	 * Gets the value of the view property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the view property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getView().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelView }
+	 */
+	public List<HudsonModelView> getView() {
+		if (view == null) {
+			view = new ArrayList<HudsonModelView>();
+		}
+		return this.view;
+	}
 
 }

@@ -129,7 +129,8 @@ public class TestSuite extends TestElement implements ITestSuite {
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_SUITE__RESULT, newResult, newResult));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_SUITE__RESULT, newResult,
+					newResult));
 	}
 
 	/**

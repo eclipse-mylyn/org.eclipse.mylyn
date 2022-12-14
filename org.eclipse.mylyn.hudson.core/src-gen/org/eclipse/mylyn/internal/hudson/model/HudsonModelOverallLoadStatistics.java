@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.OverallLoadStatistics complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.OverallLoadStatistics complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.OverallLoadStatistics">
@@ -37,42 +37,31 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.OverallLoadStatistics", propOrder = {
-    "totalQueueLength"
-})
+@XmlType(name = "hudson.model.OverallLoadStatistics", propOrder = { "totalQueueLength" })
 @SuppressWarnings("all")
-public class HudsonModelOverallLoadStatistics
-    extends HudsonModelLoadStatistics
-{
+public class HudsonModelOverallLoadStatistics extends HudsonModelLoadStatistics {
 
-    protected HudsonModelMultiStageTimeSeries totalQueueLength;
+	protected HudsonModelMultiStageTimeSeries totalQueueLength;
 
-    /**
-     * Gets the value of the totalQueueLength property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelMultiStageTimeSeries }
-     *     
-     */
-    public HudsonModelMultiStageTimeSeries getTotalQueueLength() {
-        return totalQueueLength;
-    }
+	/**
+	 * Gets the value of the totalQueueLength property.
+	 * 
+	 * @return possible object is {@link HudsonModelMultiStageTimeSeries }
+	 */
+	public HudsonModelMultiStageTimeSeries getTotalQueueLength() {
+		return totalQueueLength;
+	}
 
-    /**
-     * Sets the value of the totalQueueLength property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelMultiStageTimeSeries }
-     *     
-     */
-    public void setTotalQueueLength(HudsonModelMultiStageTimeSeries value) {
-        this.totalQueueLength = value;
-    }
+	/**
+	 * Sets the value of the totalQueueLength property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelMultiStageTimeSeries }
+	 */
+	public void setTotalQueueLength(HudsonModelMultiStageTimeSeries value) {
+		this.totalQueueLength = value;
+	}
 
 }

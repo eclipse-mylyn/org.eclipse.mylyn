@@ -24,7 +24,8 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan
+ * Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlan <em>Build Plan</em>}</li>
  * </ul>
  * </p>

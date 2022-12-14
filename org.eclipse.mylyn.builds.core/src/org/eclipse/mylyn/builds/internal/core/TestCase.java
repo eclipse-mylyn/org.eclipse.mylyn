@@ -203,7 +203,8 @@ public class TestCase extends TestElement implements ITestCase {
 		boolean oldSkipped = skipped;
 		skipped = newSkipped;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__SKIPPED, oldSkipped, skipped));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__SKIPPED, oldSkipped,
+					skipped));
 	}
 
 	/**
@@ -299,7 +300,8 @@ public class TestCase extends TestElement implements ITestCase {
 		String oldMessage = message;
 		message = newMessage;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__MESSAGE, oldMessage, message));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_CASE__MESSAGE, oldMessage,
+					message));
 	}
 
 	/**

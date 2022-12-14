@@ -21,11 +21,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.tasks.test.TestResult complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.tasks.test.TestResult complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.tasks.test.TestResult">
@@ -37,19 +37,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hudson.tasks.test.TestResult")
-@XmlSeeAlso({
-    HudsonTasksTestTabulatedResult.class,
-    HudsonTasksJunitCaseResult.class
-})
+@XmlSeeAlso({ HudsonTasksTestTabulatedResult.class, HudsonTasksJunitCaseResult.class })
 @SuppressWarnings("all")
-public class HudsonTasksTestTestResult
-    extends HudsonTasksTestTestObject
-{
-
+public class HudsonTasksTestTestResult extends HudsonTasksTestTestObject {
 
 }

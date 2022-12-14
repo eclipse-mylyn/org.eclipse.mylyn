@@ -67,8 +67,8 @@ public interface IChangeArtifact {
 	String getRelativePath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRelativePath
-	 * <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRelativePath <em>Relative
+	 * Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Relative Path</em>' attribute.
@@ -92,8 +92,8 @@ public interface IChangeArtifact {
 	String getPrevRevision();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getPrevRevision
-	 * <em>Prev Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getPrevRevision <em>Prev
+	 * Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Prev Revision</em>' attribute.

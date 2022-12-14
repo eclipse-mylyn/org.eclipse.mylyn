@@ -47,8 +47,8 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 
 	public static abstract class BuildOutputReader {
 
-		public abstract void handle(BuildOutputEvent event, IOperationMonitor monitor) throws IOException,
-				CoreException;
+		public abstract void handle(BuildOutputEvent event, IOperationMonitor monitor)
+				throws IOException, CoreException;
 
 		public abstract void done();
 
@@ -80,8 +80,8 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 				in.close();
 			}
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Failed to retrieve build output", e));
+			throw new CoreException(
+					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "Failed to retrieve build output", e));
 		} finally {
 			reader.done();
 		}
@@ -89,16 +89,16 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 
 	@Override
 	protected BuildJob doCreateJob(final IBuild build) {
-		return new BuildJob(NLS.bind("Retrieving Output for Build {0}#{1}", build.getPlan() == null
-				? "Unknown"
-				: build.getPlan().getLabel(), build.getLabel())) {
+		return new BuildJob(NLS.bind("Retrieving Output for Build {0}#{1}",
+				build.getPlan() == null ? "Unknown" : build.getPlan().getLabel(), build.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor monitor) {
 				try {
 					doGetOutput(build, monitor);
 				} catch (CoreException e) {
-					setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-							"Unexpected error while retrieving output for build ''{0}''.", build.getName()), e));
+					setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+							NLS.bind("Unexpected error while retrieving output for build ''{0}''.", build.getName()),
+							e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;
 				}

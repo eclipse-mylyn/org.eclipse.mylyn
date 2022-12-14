@@ -91,8 +91,8 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 	}
 
 	public void reset() {
-		intervalText.setText(String.valueOf(getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
-				/ MILLIS_PER_MINUTE));
+		intervalText.setText(String.valueOf(
+				getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL) / MILLIS_PER_MINUTE));
 		enableRefreshButton.setSelection(getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 
 		refreshOnFocusButton.setSelection(getPreferenceStore().getBoolean(BuildsUiInternal.PREF_REFRESH_ON_FOCUS));
@@ -120,12 +120,12 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected void performDefaults() {
-		intervalText.setText(String.valueOf(getPreferenceStore().getDefaultLong(
-				BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)
-				/ MILLIS_PER_MINUTE));
-		enableRefreshButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
-		refreshOnFocusButton.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiInternal.PREF_REFRESH_ON_FOCUS));
+		intervalText.setText(String.valueOf(
+				getPreferenceStore().getDefaultLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL) / MILLIS_PER_MINUTE));
+		enableRefreshButton
+				.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
+		refreshOnFocusButton
+				.setSelection(getPreferenceStore().getDefaultBoolean(BuildsUiInternal.PREF_REFRESH_ON_FOCUS));
 		updateEnablement();
 	}
 

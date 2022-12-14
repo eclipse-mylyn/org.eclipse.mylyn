@@ -102,53 +102,37 @@ public class BuildsUiInternal {
 		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
-				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. No connector kind was specified.",
-						server.getName())));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						NLS.bind("Loading of connector for server ''{0}'' failed. No connector kind was specified.",
+								server.getName())));
 			}
 			BuildConnector connector = BuildsUi.getConnector(connectorKind);
 			if (connector == null) {
-				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.",
-						server.getName(), connectorKind)));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						NLS.bind("Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.",
+								server.getName(), connectorKind)));
 			}
 			BuildServerBehaviour behaviour;
 			try {
 				behaviour = connector.getBehaviour(server.getLocation());
 			} catch (Exception e) {
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								BuildsUiPlugin.ID_PLUGIN,
-								NLS.bind(
-										"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
-										server.getName(), connectorKind), e));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
+						server.getName(), connectorKind), e));
 			} catch (LinkageError e) {
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								BuildsUiPlugin.ID_PLUGIN,
-								NLS.bind(
-										"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
-										server.getName(), connectorKind), e));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
+						server.getName(), connectorKind), e));
 			} catch (AssertionError e) {
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								BuildsUiPlugin.ID_PLUGIN,
-								NLS.bind(
-										"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
-										server.getName(), connectorKind), e));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
+						server.getName(), connectorKind), e));
 
 			}
 			if (behaviour == null) {
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								BuildsUiPlugin.ID_PLUGIN,
-								NLS.bind(
-										"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed, returned behaviour object is null.",
-										server.getName(), connectorKind)));
+				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed, returned behaviour object is null.",
+						server.getName(), connectorKind)));
 			}
 			return behaviour;
 		}

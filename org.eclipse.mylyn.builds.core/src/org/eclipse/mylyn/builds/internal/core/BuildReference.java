@@ -128,7 +128,8 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 		String oldBuild = build;
 		build = newBuild;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_REFERENCE__BUILD, oldBuild, build));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_REFERENCE__BUILD, oldBuild,
+					build));
 	}
 
 	/**

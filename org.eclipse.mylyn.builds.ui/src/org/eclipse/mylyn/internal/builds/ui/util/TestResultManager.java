@@ -223,9 +223,9 @@ public class TestResultManager {
 		Assert.isNotNull(build);
 
 		if (!isJUnitAvailable()) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."), //$NON-NLS-1$
-					StatusManager.SHOW | StatusManager.BLOCK);
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."), //$NON-NLS-1$
+							StatusManager.SHOW | StatusManager.BLOCK);
 			return;
 		}
 

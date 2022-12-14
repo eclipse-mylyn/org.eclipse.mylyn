@@ -21,11 +21,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.tasks.junit.CaseResult complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.tasks.junit.CaseResult complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.tasks.junit.CaseResult">
@@ -48,279 +48,228 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.tasks.junit.CaseResult", propOrder = {
-    "age",
-    "className",
-    "duration",
-    "errorDetails",
-    "errorStackTrace",
-    "failedSince",
-    "name",
-    "skipped",
-    "status",
-    "stderr",
-    "stdout"
-})
+@XmlType(name = "hudson.tasks.junit.CaseResult", propOrder = { "age", "className", "duration", "errorDetails",
+		"errorStackTrace", "failedSince", "name", "skipped", "status", "stderr", "stdout" })
 @SuppressWarnings("all")
-public class HudsonTasksJunitCaseResult
-    extends HudsonTasksTestTestResult
-{
+public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
-    protected int age;
-    protected String className;
-    @XmlElement(required = true)
-    protected Object duration;
-    protected String errorDetails;
-    protected String errorStackTrace;
-    protected int failedSince;
-    protected String name;
-    protected boolean skipped;
-    protected HudsonTasksJunitCaseResultStatus status;
-    protected String stderr;
-    protected String stdout;
+	protected int age;
 
-    /**
-     * Gets the value of the age property.
-     * 
-     */
-    public int getAge() {
-        return age;
-    }
+	protected String className;
 
-    /**
-     * Sets the value of the age property.
-     * 
-     */
-    public void setAge(int value) {
-        this.age = value;
-    }
+	@XmlElement(required = true)
+	protected Object duration;
 
-    /**
-     * Gets the value of the className property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getClassName() {
-        return className;
-    }
+	protected String errorDetails;
 
-    /**
-     * Sets the value of the className property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setClassName(String value) {
-        this.className = value;
-    }
+	protected String errorStackTrace;
 
-    /**
-     * Gets the value of the duration property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public Object getDuration() {
-        return duration;
-    }
+	protected int failedSince;
 
-    /**
-     * Sets the value of the duration property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setDuration(Object value) {
-        this.duration = value;
-    }
+	protected String name;
 
-    /**
-     * Gets the value of the errorDetails property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getErrorDetails() {
-        return errorDetails;
-    }
+	protected boolean skipped;
 
-    /**
-     * Sets the value of the errorDetails property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setErrorDetails(String value) {
-        this.errorDetails = value;
-    }
+	protected HudsonTasksJunitCaseResultStatus status;
 
-    /**
-     * Gets the value of the errorStackTrace property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getErrorStackTrace() {
-        return errorStackTrace;
-    }
+	protected String stderr;
 
-    /**
-     * Sets the value of the errorStackTrace property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setErrorStackTrace(String value) {
-        this.errorStackTrace = value;
-    }
+	protected String stdout;
 
-    /**
-     * Gets the value of the failedSince property.
-     * 
-     */
-    public int getFailedSince() {
-        return failedSince;
-    }
+	/**
+	 * Gets the value of the age property.
+	 */
+	public int getAge() {
+		return age;
+	}
 
-    /**
-     * Sets the value of the failedSince property.
-     * 
-     */
-    public void setFailedSince(int value) {
-        this.failedSince = value;
-    }
+	/**
+	 * Sets the value of the age property.
+	 */
+	public void setAge(int value) {
+		this.age = value;
+	}
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Gets the value of the className property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getClassName() {
+		return className;
+	}
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+	/**
+	 * Sets the value of the className property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setClassName(String value) {
+		this.className = value;
+	}
 
-    /**
-     * Gets the value of the skipped property.
-     * 
-     */
-    public boolean isSkipped() {
-        return skipped;
-    }
+	/**
+	 * Gets the value of the duration property.
+	 * 
+	 * @return possible object is {@link Object }
+	 */
+	public Object getDuration() {
+		return duration;
+	}
 
-    /**
-     * Sets the value of the skipped property.
-     * 
-     */
-    public void setSkipped(boolean value) {
-        this.skipped = value;
-    }
+	/**
+	 * Sets the value of the duration property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Object }
+	 */
+	public void setDuration(Object value) {
+		this.duration = value;
+	}
 
-    /**
-     * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonTasksJunitCaseResultStatus }
-     *     
-     */
-    public HudsonTasksJunitCaseResultStatus getStatus() {
-        return status;
-    }
+	/**
+	 * Gets the value of the errorDetails property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getErrorDetails() {
+		return errorDetails;
+	}
 
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonTasksJunitCaseResultStatus }
-     *     
-     */
-    public void setStatus(HudsonTasksJunitCaseResultStatus value) {
-        this.status = value;
-    }
+	/**
+	 * Sets the value of the errorDetails property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setErrorDetails(String value) {
+		this.errorDetails = value;
+	}
 
-    /**
-     * Gets the value of the stderr property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStderr() {
-        return stderr;
-    }
+	/**
+	 * Gets the value of the errorStackTrace property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getErrorStackTrace() {
+		return errorStackTrace;
+	}
 
-    /**
-     * Sets the value of the stderr property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStderr(String value) {
-        this.stderr = value;
-    }
+	/**
+	 * Sets the value of the errorStackTrace property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setErrorStackTrace(String value) {
+		this.errorStackTrace = value;
+	}
 
-    /**
-     * Gets the value of the stdout property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStdout() {
-        return stdout;
-    }
+	/**
+	 * Gets the value of the failedSince property.
+	 */
+	public int getFailedSince() {
+		return failedSince;
+	}
 
-    /**
-     * Sets the value of the stdout property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStdout(String value) {
-        this.stdout = value;
-    }
+	/**
+	 * Sets the value of the failedSince property.
+	 */
+	public void setFailedSince(int value) {
+		this.failedSince = value;
+	}
+
+	/**
+	 * Gets the value of the name property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the value of the name property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setName(String value) {
+		this.name = value;
+	}
+
+	/**
+	 * Gets the value of the skipped property.
+	 */
+	public boolean isSkipped() {
+		return skipped;
+	}
+
+	/**
+	 * Sets the value of the skipped property.
+	 */
+	public void setSkipped(boolean value) {
+		this.skipped = value;
+	}
+
+	/**
+	 * Gets the value of the status property.
+	 * 
+	 * @return possible object is {@link HudsonTasksJunitCaseResultStatus }
+	 */
+	public HudsonTasksJunitCaseResultStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the value of the status property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonTasksJunitCaseResultStatus }
+	 */
+	public void setStatus(HudsonTasksJunitCaseResultStatus value) {
+		this.status = value;
+	}
+
+	/**
+	 * Gets the value of the stderr property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getStderr() {
+		return stderr;
+	}
+
+	/**
+	 * Sets the value of the stderr property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setStderr(String value) {
+		this.stderr = value;
+	}
+
+	/**
+	 * Gets the value of the stdout property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getStdout() {
+		return stdout;
+	}
+
+	/**
+	 * Sets the value of the stdout property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setStdout(String value) {
+		this.stdout = value;
+	}
 
 }

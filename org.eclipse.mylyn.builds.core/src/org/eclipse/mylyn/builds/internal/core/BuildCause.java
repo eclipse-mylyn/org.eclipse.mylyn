@@ -112,8 +112,8 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_CAUSE__DESCRIPTION,
-					oldDescription, description));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_CAUSE__DESCRIPTION, oldDescription,
+					description));
 	}
 
 	/**
@@ -153,11 +153,11 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 		if (newBuild != build) {
 			NotificationChain msgs = null;
 			if (build != null)
-				msgs = ((InternalEObject) build).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
+				msgs = ((InternalEObject) build).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
 			if (newBuild != null)
-				msgs = ((InternalEObject) newBuild).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
+				msgs = ((InternalEObject) newBuild).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
 			msgs = basicSetBuild(newBuild, msgs);
 			if (msgs != null)
 				msgs.dispatch();
@@ -202,11 +202,11 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 		if (newUser != user) {
 			NotificationChain msgs = null;
 			if (user != null)
-				msgs = ((InternalEObject) user).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD_CAUSE__USER, null, msgs);
+				msgs = ((InternalEObject) user).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__USER, null, msgs);
 			if (newUser != null)
-				msgs = ((InternalEObject) newUser).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.BUILD_CAUSE__USER, null, msgs);
+				msgs = ((InternalEObject) newUser).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__USER, null, msgs);
 			msgs = basicSetUser(newUser, msgs);
 			if (msgs != null)
 				msgs.dispatch();

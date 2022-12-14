@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.TimeSeries complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.TimeSeries complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.TimeSeries">
@@ -41,72 +41,56 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.TimeSeries", propOrder = {
-    "history",
-    "latest"
-})
+@XmlType(name = "hudson.model.TimeSeries", propOrder = { "history", "latest" })
 @SuppressWarnings("all")
 public class HudsonModelTimeSeries {
 
-    protected List<Object> history;
-    @XmlElement(required = true)
-    protected Object latest;
+	protected List<Object> history;
 
-    /**
-     * Gets the value of the history property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the history property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getHistory().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * 
-     * 
-     */
-    public List<Object> getHistory() {
-        if (history == null) {
-            history = new ArrayList<Object>();
-        }
-        return this.history;
-    }
+	@XmlElement(required = true)
+	protected Object latest;
 
-    /**
-     * Gets the value of the latest property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public Object getLatest() {
-        return latest;
-    }
+	/**
+	 * Gets the value of the history property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the history property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getHistory().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link Object }
+	 */
+	public List<Object> getHistory() {
+		if (history == null) {
+			history = new ArrayList<Object>();
+		}
+		return this.history;
+	}
 
-    /**
-     * Sets the value of the latest property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setLatest(Object value) {
-        this.latest = value;
-    }
+	/**
+	 * Gets the value of the latest property.
+	 * 
+	 * @return possible object is {@link Object }
+	 */
+	public Object getLatest() {
+		return latest;
+	}
+
+	/**
+	 * Sets the value of the latest property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Object }
+	 */
+	public void setLatest(Object value) {
+		this.latest = value;
+	}
 
 }

@@ -58,8 +58,8 @@ public class GetBuildsOperation extends AbstractElementOperation<IBuildPlan> {
 				try {
 					builds = server.getBehaviour().getBuilds(request, progress);
 				} catch (CoreException e) {
-					result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-							"Getting build ''{0}'' failed", request.getPlan().getName()), e));
+					result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+							NLS.bind("Getting build ''{0}'' failed", request.getPlan().getName()), e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;
 				}

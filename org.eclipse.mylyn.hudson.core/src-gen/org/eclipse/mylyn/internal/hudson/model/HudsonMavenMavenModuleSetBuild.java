@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.maven.MavenModuleSetBuild complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.maven.MavenModuleSetBuild complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.maven.MavenModuleSetBuild">
@@ -36,15 +36,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hudson.maven.MavenModuleSetBuild")
 @SuppressWarnings("all")
-public class HudsonMavenMavenModuleSetBuild
-    extends HudsonMavenAbstractMavenBuild
-{
-
+public class HudsonMavenMavenModuleSetBuild extends HudsonMavenAbstractMavenBuild {
 
 }

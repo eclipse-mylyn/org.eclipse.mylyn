@@ -19,12 +19,13 @@ package org.eclipse.mylyn.internal.hudson.model;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.Node-Mode.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for hudson.model.Node-Mode.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="hudson.model.Node-Mode">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -33,22 +34,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "hudson.model.Node-Mode")
 @XmlEnum
 @SuppressWarnings("all")
 public enum HudsonModelNodeMode {
 
-    NORMAL,
-    EXCLUSIVE;
+	NORMAL, EXCLUSIVE;
 
-    public String value() {
-        return name();
-    }
+	public String value() {
+		return name();
+	}
 
-    public static HudsonModelNodeMode fromValue(String v) {
-        return valueOf(v);
-    }
+	public static HudsonModelNodeMode fromValue(String v) {
+		return valueOf(v);
+	}
 
 }

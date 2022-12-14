@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.model.Node complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.model.Node complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.model.Node">
@@ -44,144 +44,115 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "hudson.model.Node", propOrder = {
-    "assignedLabel",
-    "mode",
-    "nodeDescription",
-    "nodeName",
-    "numExecutors"
-})
-@XmlSeeAlso({
-    HudsonModelHudson.class
-})
+@XmlType(name = "hudson.model.Node", propOrder = { "assignedLabel", "mode", "nodeDescription", "nodeName",
+		"numExecutors" })
+@XmlSeeAlso({ HudsonModelHudson.class })
 @SuppressWarnings("all")
 public class HudsonModelNode {
 
-    protected List<HudsonModelLabel> assignedLabel;
-    protected HudsonModelNodeMode mode;
-    protected String nodeDescription;
-    protected String nodeName;
-    protected int numExecutors;
+	protected List<HudsonModelLabel> assignedLabel;
 
-    /**
-     * Gets the value of the assignedLabel property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the assignedLabel property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getAssignedLabel().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HudsonModelLabel }
-     * 
-     * 
-     */
-    public List<HudsonModelLabel> getAssignedLabel() {
-        if (assignedLabel == null) {
-            assignedLabel = new ArrayList<HudsonModelLabel>();
-        }
-        return this.assignedLabel;
-    }
+	protected HudsonModelNodeMode mode;
 
-    /**
-     * Gets the value of the mode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HudsonModelNodeMode }
-     *     
-     */
-    public HudsonModelNodeMode getMode() {
-        return mode;
-    }
+	protected String nodeDescription;
 
-    /**
-     * Sets the value of the mode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HudsonModelNodeMode }
-     *     
-     */
-    public void setMode(HudsonModelNodeMode value) {
-        this.mode = value;
-    }
+	protected String nodeName;
 
-    /**
-     * Gets the value of the nodeDescription property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNodeDescription() {
-        return nodeDescription;
-    }
+	protected int numExecutors;
 
-    /**
-     * Sets the value of the nodeDescription property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNodeDescription(String value) {
-        this.nodeDescription = value;
-    }
+	/**
+	 * Gets the value of the assignedLabel property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the assignedLabel property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getAssignedLabel().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link HudsonModelLabel }
+	 */
+	public List<HudsonModelLabel> getAssignedLabel() {
+		if (assignedLabel == null) {
+			assignedLabel = new ArrayList<HudsonModelLabel>();
+		}
+		return this.assignedLabel;
+	}
 
-    /**
-     * Gets the value of the nodeName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNodeName() {
-        return nodeName;
-    }
+	/**
+	 * Gets the value of the mode property.
+	 * 
+	 * @return possible object is {@link HudsonModelNodeMode }
+	 */
+	public HudsonModelNodeMode getMode() {
+		return mode;
+	}
 
-    /**
-     * Sets the value of the nodeName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNodeName(String value) {
-        this.nodeName = value;
-    }
+	/**
+	 * Sets the value of the mode property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link HudsonModelNodeMode }
+	 */
+	public void setMode(HudsonModelNodeMode value) {
+		this.mode = value;
+	}
 
-    /**
-     * Gets the value of the numExecutors property.
-     * 
-     */
-    public int getNumExecutors() {
-        return numExecutors;
-    }
+	/**
+	 * Gets the value of the nodeDescription property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getNodeDescription() {
+		return nodeDescription;
+	}
 
-    /**
-     * Sets the value of the numExecutors property.
-     * 
-     */
-    public void setNumExecutors(int value) {
-        this.numExecutors = value;
-    }
+	/**
+	 * Sets the value of the nodeDescription property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setNodeDescription(String value) {
+		this.nodeDescription = value;
+	}
+
+	/**
+	 * Gets the value of the nodeName property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	/**
+	 * Sets the value of the nodeName property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setNodeName(String value) {
+		this.nodeName = value;
+	}
+
+	/**
+	 * Gets the value of the numExecutors property.
+	 */
+	public int getNumExecutors() {
+		return numExecutors;
+	}
+
+	/**
+	 * Sets the value of the numExecutors property.
+	 */
+	public void setNumExecutors(int value) {
+		this.numExecutors = value;
+	}
 
 }

@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.matrix.MatrixConfiguration complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for hudson.matrix.MatrixConfiguration complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="hudson.matrix.MatrixConfiguration"&gt;
@@ -36,15 +36,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hudson.matrix.MatrixConfiguration")
 @SuppressWarnings("all")
-public class HudsonMatrixMatrixConfiguration
-    extends HudsonModelProject
-{
-
+public class HudsonMatrixMatrixConfiguration extends HudsonModelProject {
 
 }

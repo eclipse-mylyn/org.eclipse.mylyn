@@ -40,10 +40,11 @@ public class DeleteBuildElementHandler extends AbstractHandler {
 			if (item instanceof IBuildServer) {
 				IBuildServer server = (IBuildServer) item;
 				boolean deleteConfirmed = MessageDialog.openQuestion(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Delete Build Server",
-						NLS.bind("Are you sure you want to delete build server \"{0}\"?\n"
-								+ "You will also lose the settings for the builds that you watched.", server.getLabel()));
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete Build Server",
+						NLS.bind(
+								"Are you sure you want to delete build server \"{0}\"?\n"
+										+ "You will also lose the settings for the builds that you watched.",
+								server.getLabel()));
 
 				if (deleteConfirmed) {
 					List<IBuildPlan> plans = BuildsUiInternal.getModel().getPlans((IBuildServer) item);

@@ -22,7 +22,8 @@ import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default
+ * Value</em>}</li>
  * </ul>
  * </p>
  * 

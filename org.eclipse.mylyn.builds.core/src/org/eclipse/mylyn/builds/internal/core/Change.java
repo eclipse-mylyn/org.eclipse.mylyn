@@ -192,11 +192,11 @@ public class Change extends EObjectImpl implements IChange {
 		if (newAuthor != author) {
 			NotificationChain msgs = null;
 			if (author != null)
-				msgs = ((InternalEObject) author).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.CHANGE__AUTHOR, null, msgs);
+				msgs = ((InternalEObject) author).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.CHANGE__AUTHOR, null, msgs);
 			if (newAuthor != null)
-				msgs = ((InternalEObject) newAuthor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- BuildPackage.CHANGE__AUTHOR, null, msgs);
+				msgs = ((InternalEObject) newAuthor).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - BuildPackage.CHANGE__AUTHOR, null, msgs);
 			msgs = basicSetAuthor(newAuthor, msgs);
 			if (msgs != null)
 				msgs.dispatch();
@@ -273,7 +273,8 @@ public class Change extends EObjectImpl implements IChange {
 		String oldRevision = revision;
 		revision = newRevision;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE__REVISION, oldRevision, revision));
+			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE__REVISION, oldRevision,
+					revision));
 	}
 
 	/**

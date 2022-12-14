@@ -59,8 +59,8 @@ public class RefreshConfigurationOperation extends BuildJob {
 				progress.subTask(NLS.bind("{0}", server.getLabel()));
 				doRefresh((BuildServer) server, progress.newChild(1));
 			} catch (CoreException e) {
-				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Refresh of server ''{0}'' failed", server.getName()), e));
+				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
+						NLS.bind("Refresh of server ''{0}'' failed", server.getName()), e));
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			}

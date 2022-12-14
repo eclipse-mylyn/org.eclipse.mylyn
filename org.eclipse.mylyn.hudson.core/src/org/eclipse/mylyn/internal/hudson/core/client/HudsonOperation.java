@@ -134,9 +134,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
 			try {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, (charSet != null)
-						? charSet
-						: "UTF-8")); //$NON-NLS-1$
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(in, (charSet != null) ? charSet : "UTF-8")); //$NON-NLS-1$
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG) {
@@ -173,20 +172,20 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		}
 	}
 
-	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException, HudsonException,
-			JAXBException {
+	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, HudsonException, JAXBException {
 		return null;
 	}
 
-	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			HudsonException {
+	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, HudsonException {
 		validate(response, HttpStatus.SC_OK, monitor);
 	}
 
 	protected abstract T execute() throws IOException, HudsonException, JAXBException;
 
-	protected T process(CommonHttpResponse response, IOperationMonitor monitor) throws IOException, HudsonException,
-			JAXBException {
+	protected T process(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, HudsonException, JAXBException {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
@@ -215,8 +214,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		return post;
 	}
 
-	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			HudsonException, JAXBException {
+	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, HudsonException, JAXBException {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
@@ -230,8 +229,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		int statusCode = response.getStatusCode();
 		if (statusCode != expected) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
-				throw new HudsonResourceNotFoundException(NLS.bind("Requested resource ''{0}'' does not exist",
-						response.getRequestPath()));
+				throw new HudsonResourceNotFoundException(
+						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
 			}
 			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}",
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));

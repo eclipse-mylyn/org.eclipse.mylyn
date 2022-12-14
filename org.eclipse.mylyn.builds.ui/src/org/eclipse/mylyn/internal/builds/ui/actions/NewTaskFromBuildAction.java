@@ -108,7 +108,8 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 	public static void appendFailed(StringBuilder sb, List<ITestSuite> suites) {
 		for (ITestSuite suite : suites) {
 			for (ITestCase testCase : suite.getCases()) {
-				if (testCase.getStatus() == TestCaseResult.FAILED || testCase.getStatus() == TestCaseResult.REGRESSION) {
+				if (testCase.getStatus() == TestCaseResult.FAILED
+						|| testCase.getStatus() == TestCaseResult.REGRESSION) {
 					append(sb, testCase);
 				}
 			}

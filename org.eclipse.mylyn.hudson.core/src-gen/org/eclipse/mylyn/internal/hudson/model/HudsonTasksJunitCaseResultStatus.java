@@ -19,12 +19,13 @@ package org.eclipse.mylyn.internal.hudson.model;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for hudson.tasks.junit.CaseResult-Status.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for hudson.tasks.junit.CaseResult-Status.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="hudson.tasks.junit.CaseResult-Status">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -36,25 +37,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "hudson.tasks.junit.CaseResult-Status")
 @XmlEnum
 @SuppressWarnings("all")
 public enum HudsonTasksJunitCaseResultStatus {
 
-    PASSED,
-    SKIPPED,
-    FAILED,
-    FIXED,
-    REGRESSION;
+	PASSED, SKIPPED, FAILED, FIXED, REGRESSION;
 
-    public String value() {
-        return name();
-    }
+	public String value() {
+		return name();
+	}
 
-    public static HudsonTasksJunitCaseResultStatus fromValue(String v) {
-        return valueOf(v);
-    }
+	public static HudsonTasksJunitCaseResultStatus fromValue(String v) {
+		return valueOf(v);
+	}
 
 }
