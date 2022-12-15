@@ -5,9 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
 Bundle-Version: 2.17.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: com.google.gson;bundle-version="2.9.1",
- com.google.guava;bundle-version="21.0.0",
- org.apache.commons.io;bundle-version="2.8.0",
+Require-Bundle: com.google.guava;bundle-version="21.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.edit;bundle-version="0.0.0",
  org.eclipse.jgit;bundle-version="0.0.0",
@@ -32,8 +30,10 @@ Require-Bundle: com.google.gson;bundle-version="2.9.1",
 Import-Package: com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.prettify.common;version="2.1.5",
  com.google.gerrit.reviewdb;version="2.1.5",
+ com.google.gson;version="2.9.1",
  com.google.gwtjsonrpc.client;version="1.2.5",
- com.google.gwtorm.client;version="1.1.4"
+ com.google.gwtorm.client;version="1.1.4",
+ org.apache.commons.io;version="2.8.0"
 Export-Package: org.eclipse.mylyn.gerrit.tests;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.core;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.core.client;x-internal:=true,
