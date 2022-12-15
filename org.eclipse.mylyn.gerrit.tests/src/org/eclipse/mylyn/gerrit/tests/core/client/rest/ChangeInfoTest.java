@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2013, 2022 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
@@ -36,8 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
@@ -58,6 +57,8 @@ import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
+
+import junit.framework.TestCase;
 
 public class ChangeInfoTest extends TestCase {
 	@Test
@@ -237,15 +238,15 @@ public class ChangeInfoTest extends TestCase {
 		Map<String, LabelInfo> labels = changeInfo.getLabels();
 		assertThat(labels, not(empty()));
 		assertThat(labels.size(), is(1));
-		assertThat(labels, Matchers.<String, LabelInfo> hasKey("Code-Review"));
+		assertThat(labels, Matchers.hasKey("Code-Review"));
 		Map<String, String> values = labels.get("Code-Review").getValues();
 		assertThat(values, not(empty()));
 		assertThat(values.size(), is(5));
-		assertThat(values, Matchers.<String, String> hasKey("-2"));
-		assertThat(values, Matchers.<String, String> hasKey("-1"));
-		assertThat(values, Matchers.<String, String> hasKey(" 0"));
-		assertThat(values, Matchers.<String, String> hasKey("+1"));
-		assertThat(values, Matchers.<String, String> hasKey("+2"));
+		assertThat(values, Matchers.hasKey("-2"));
+		assertThat(values, Matchers.hasKey("-1"));
+		assertThat(values, Matchers.hasKey(" 0"));
+		assertThat(values, Matchers.hasKey("+1"));
+		assertThat(values, Matchers.hasKey("+2"));
 		if (version29) {
 			//Text for Gerrit 2.9 has changed for the "-2" values
 			assertThat(values.get("-2"), equalTo("This shall not be merged"));
@@ -301,7 +302,7 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(approvalDetail, notNullValue());
 		Map<Id, PatchSetApproval> approvalMap = approvalDetail.getApprovalMap();
 		assertThat(approvalMap, notNullValue());
-		assertThat(approvalMap, Matchers.<Id, PatchSetApproval> hasKey(CRVW.getCategory().getId()));
+		assertThat(approvalMap, Matchers.hasKey(CRVW.getCategory().getId()));
 		PatchSetApproval patchSetApproval = approvalMap.get(CRVW.getCategory().getId());
 		assertThat(patchSetApproval.getValue(), is((short) value));
 	}
