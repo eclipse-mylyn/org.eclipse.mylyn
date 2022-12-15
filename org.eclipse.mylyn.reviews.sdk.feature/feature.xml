@@ -19,7 +19,7 @@
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.reviews.core"
       license-feature="org.eclipse.license"
-      license-feature-version="0.0.">
+      license-feature-version="0.0.0">
 
    <description url="https://eclipse.org/mylyn/reviews">
       %description
