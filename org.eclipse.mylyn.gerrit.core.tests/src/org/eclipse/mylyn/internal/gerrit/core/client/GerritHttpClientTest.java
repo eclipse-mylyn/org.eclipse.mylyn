@@ -1,22 +1,23 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Christian Trutz and others.
- * 
+ * Copyright (c) 2011, 2022 Christian Trutz and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Christian Trutz - initial API and implementation
  *     Tasktop Technologies - ongoing maintenance
+ *     ArSysOp - adapt to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -43,7 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.gson.reflect.TypeToken;
 
