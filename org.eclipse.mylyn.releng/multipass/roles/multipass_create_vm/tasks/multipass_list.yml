@@ -1,0 +1,16 @@
+---
+- name: get multipass instances
+  ansible.builtin.shell: multipass list --format json
+  register: multipass_instances
+  ignore_errors: true
+- name: json obj
+  ansible.builtin.set_fact:
+    inst_json_obj: "{{ multipass_instances.stdout | from_json}}"
+- name: json names
+  ansible.builtin.set_fact:
+    inst_name_list: "{{ inst_json_obj.list | map(attribute='name') | list() }}"
+- name: inst_list
+  ansible.builtin.set_fact:
+    inst_list: "{{ inst_json_obj.list | json_query(jmesquery) }}"
+  vars:
+    jmesquery: "[*].{inst_name: name, inst_state: state, ip_adr4: ipv4[0]}"

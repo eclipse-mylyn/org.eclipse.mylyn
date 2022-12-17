@@ -1,0 +1,10 @@
+---
+- name: add etc hosts if not included {{ act_name.name }}
+  become: true
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ item.ip4 }} {{ item.name }} {{ item.name }}.{{ hostvars['localhost'].local_domain }}"
+    insertafter: EOF
+  loop: "{{ setup_lst }}"
+  delegate_to: "{{ act_name.name }}"

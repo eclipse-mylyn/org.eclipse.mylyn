@@ -1,0 +1,55 @@
+---
+- name: Get info on Docker Swarm
+  community.docker.docker_swarm_info:
+  ignore_errors: true
+  register: swarm_info_init
+- debug:
+    var: swarm_info_init
+    verbosity: 3
+- name: Init a new swarm with default parameters
+  community.docker.docker_swarm:
+    state: present
+  register: swarm_result
+  when: swarm_info_init.docker_swarm_active|bool == false
+
+- name: Get infos on network
+  community.docker.docker_network_info:
+    name: ruvzcx_net
+  register: network_result
+
+- name: Create a network
+  community.docker.docker_network:
+    driver: overlay
+    scope: swarm
+#    attachable: true
+    name: ruvzcx_net
+  when: not network_result.exists 
+
+- name: Get info on Docker Swarm
+  community.docker.docker_swarm_info:
+  register: swarm_info
+- name: docker_swarm_active
+  debug:
+    msg: " {{ swarm_info.docker_swarm_active }}"
+    verbosity: 3
+- debug: var="swarm_info" verbosity=3
+- name: glob swarm info
+  ansible.builtin.set_fact:
+    myWorkerToken: "{{ swarm_info.swarm_facts.JoinTokens.Worker  }}"
+    myWorkerManager: "{{ swarm_info.swarm_facts.JoinTokens.Manager  }}"
+    mySwarmMaster: "{{ inventory_hostname }}"
+  run_once: true
+  delegate_to: localhost
+  delegate_facts: true
+
+
+- name: add node to swarm as worker
+  community.docker.docker_swarm:
+    state: join
+    join_token: "{{ hostvars['localhost'].myWorkerToken }}"
+    remote_addrs: "{{ hostvars['localhost'].mySwarmMaster }}"
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ groups[hostvars['localhost'].grp_prefix  + \"_swarm_worker\"] }}"
+  when: swarm_info_init.docker_swarm_active|bool == false
+...

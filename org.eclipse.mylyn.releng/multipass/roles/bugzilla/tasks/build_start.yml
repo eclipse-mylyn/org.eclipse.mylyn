@@ -1,0 +1,116 @@
+---
+- name: Build the version image {{ act_item.image_tag }}
+  community.docker.docker_image:
+    name: "127.0.0.1:5000/bugzilla"
+    tag: "{{ act_item.image_tag }}"
+    push: true
+    build:
+      path: /mylyn-config-dir/{{ role_name }}/versions
+      args:
+        GIT_BRANCH_TAG: "{{ act_item.git_branch }}"
+        EXTRAINFO: "{{ act_item.extra_info }}"
+    source: build
+  register: build_out
+- name: build_out {{ act_item.image_tag }}
+  debug:
+    var: build_out.stdout_lines
+- name: get version {{ act_item.image_tag }}
+  ansible.builtin.shell: |
+    docker run --rm 127.0.0.1:5000/bugzilla:{{ act_item.image_tag }} sh -c 'cat /var/www/html/Bugzilla/Constants.pm | grep "BUGZILLA_VERSION =>"'   | cut -d'"' -f 2 
+  register: bugzilla_version
+- debug:
+    var: act_item.extra_info
+
+- name: myServiceInfo {{ act_item.image_tag }}
+  set_fact:
+    bugzilla_info_array: []
+    extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
+- debug:
+    var: extra_info_entries
+- set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow'] if ('custom_wf' in extra_info_entries and extra_info_entries['custom_wf'] | bool == true)  else bugzilla_info_array }}"
+    bugzilla_type: "{{ 'bugzillaREST' if ('rest_enabled' in extra_info_entries and extra_info_entries['rest_enabled'] | bool == true) else 'bugzilla' }}"
+- set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow and Status'] if ('custom_wf_and_status' in extra_info_entries and extra_info_entries['custom_wf_and_status'] | bool == true) else bugzilla_info_array }}"
+- set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Use Bugaliases'] if ('use_bug_alias' in extra_info_entries and extra_info_entries['use_bug_alias'] | bool == true) else bugzilla_info_array }}"
+- set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['APIKEY enabled'] if ('api_key_enabled' in extra_info_entries and extra_info_entries['api_key_enabled'] | bool == true) else bugzilla_info_array }}"
+- name: bugzilla_info_array  {{ act_item.image_tag }}
+  debug:
+    var: bugzilla_info_array
+- set_fact:
+    bugzilla_info: "{{bugzilla_info_array | join(', ') | to_yaml }}"
+    extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
+- name: bugzilla_info  {{ act_item.image_tag }}
+  debug:
+    var: bugzilla_info
+- name: extra_info_label  {{ act_item.image_tag }}
+  debug:
+    var: extra_info_label
+- name: myServiceLabel {{ act_item.image_tag }}
+  set_fact:
+    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}", "host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true"  {{ extra_info_label }} } }'
+- name: debug1 {{ act_item.image_tag }}
+  debug:
+    var: serviceLabel
+
+- name: setlabels {{ act_item.image_tag }}
+  ansible.builtin.set_fact:
+#    contname: "bugzilla{{ act_item.image_tag }}"
+    label_data:  |
+       { traefik.enable: "true" ,
+         traefik.docker.network: ruvzcx_net ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
+         traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.middlewares: stripprefix_{{ act_item.servmame }} ,
+         traefik.http.middlewares.stripprefix_{{ act_item.servmame }}.stripprefix.prefixes: "/{{ act_item.servmame }}" ,
+         traefik.http.middlewares.stripprefix_{{ act_item.servmame }}.stripprefix.forceSlash: "true" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
+         traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "80" ,
+         org.eclipse.mylyn.service: '{{ serviceLabel }}'
+       }
+#         traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
+#         traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "8090" ,
+#         traefik.http.services.{{ act_item.servmame }}.loadbalancer.passhostheader: "true" ,
+
+- debug:
+    var: label_data
+- debug:
+    var: act_item.servmame
+
+- name: Deploy swarm service {{ act_item.image_tag }}
+  community.docker.docker_swarm_service:
+    name: "{{ act_item.servmame}}"
+    image: "127.0.0.1:5000/bugzilla:{{ act_item.image_tag }}"
+    networks:
+      - ruvzcx_net
+#    publish:       
+#      - published_port: "{{ act_item.port1 }}"
+#        target_port: "{{ act_item.port1 }}"
+    env:
+      BASE_URL: "{{ common_domain_name }}"
+      BUG_SERVICE_NAME: "{{ act_item.servmame}}"
+      CERT_FILE_NAME: "mylynmstr01"
+    mounts:
+      - source: "/mylyn-config-dir/certs"
+        target: "/certificates"
+        type: bind
+    replicas: 1
+    update_config:
+      parallelism: 1
+      delay: 10s
+      order: start-first
+    restart_config:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 1
+      window: 120s
+    labels: "{{ label_data | from_yaml }}"
+    placement:
+      constraints:
+#        - node.role == manager
+       - node.role == worker
+
+...

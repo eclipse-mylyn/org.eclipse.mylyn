@@ -1,0 +1,21 @@
+---
+- name: stop_swarm for recreate
+  ansible.builtin.include_role:
+    name: swarm_stop
+- name: remove worker from swarm
+  community.docker.docker_swarm:
+    state: absent
+    force: true
+  ignore_errors: true
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ groups[hostvars['localhost'].grp_prefix  + \"_swarm_worker\"] }}"
+  when: stack_info_result.results is defined
+
+- name: remove node from swarm
+  community.docker.docker_swarm:
+    state: absent
+    force: true
+  when: stack_info_result.results is defined
+
+

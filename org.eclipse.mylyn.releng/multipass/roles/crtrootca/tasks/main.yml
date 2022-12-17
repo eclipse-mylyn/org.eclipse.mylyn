@@ -1,0 +1,61 @@
+---
+- name: transfer id_rsa
+  ansible.posix.synchronize:
+    src: ./first_setup/ubuntu_key
+    dest: .ssh/id_rsa
+
+- name: delete ca_path exists
+  become: true
+  ansible.builtin.file:
+    path: /cacerts/root_ca
+    state: absent
+#  delegate_to: frankca
+  when: (recreate_certs is defined) and (recreate_certs|bool == true)
+
+- name: ensure ca_path exists
+  become: true
+  ansible.builtin.file:
+    path: /cacerts/root_ca
+    state: directory
+    mode: "0755"
+    owner: ubuntu
+    group: ubuntu
+#  delegate_to: frankca
+#  run_once: true
+
+- name: Create private key with password protection
+  community.crypto.openssl_privatekey:
+    path: "/cacerts/root_ca/{{ rootca_name }}.key"
+    passphrase: "{{ secret_ca_passphrase }}"
+    cipher: auto
+#  delegate_to: frankca
+#  run_once: true
+
+- name: Create certificate signing request (CSR) for CA certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "/cacerts/root_ca/{{ rootca_name }}.key"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    common_name: "local-frank-becker.de CA"
+    country_name: DE
+    organization_name: Frank Becker Computertechnik
+    email_address: frank@frank-becker.de
+    use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
+    basic_constraints:
+      - 'CA:TRUE'
+    basic_constraints_critical: yes
+    key_usage:
+      - keyCertSign
+    key_usage_critical: true
+  register: ca_csr
+#  delegate_to: frankca
+#  run_once: true
+
+- name: Create self-signed CA certificate from CSR
+  community.crypto.x509_certificate:
+    path: "/cacerts/root_ca/{{ rootca_name }}.crt"
+    csr_content: "{{ ca_csr.csr }}"
+    privatekey_path: "/cacerts/root_ca/{{ rootca_name }}.key"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    provider: selfsigned
+#  delegate_to: frankca
+#  run_once: true

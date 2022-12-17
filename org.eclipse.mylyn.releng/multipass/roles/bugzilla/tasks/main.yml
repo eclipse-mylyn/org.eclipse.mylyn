@@ -1,0 +1,24 @@
+---
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: Build the base image
+  community.docker.docker_image:
+    name: "127.0.0.1:5000/bugzillabase"
+    tag: 1
+    push: true
+    build:
+      path: /mylyn-config-dir/{{ role_name }}/base
+    source: build
+
+- name: Build and start
+  ansible.builtin.include_tasks:
+    file: build_start.yml
+  with_items: 
+    "{{ bugzilla_instances  }}"
+  loop_control:
+    loop_var: act_item

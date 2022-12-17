@@ -1,0 +1,112 @@
+---
+- name: Get running containers
+  community.docker.docker_host_info:
+    containers: true
+  register: docker_info
+
+- debug:
+    var: docker_info
+- debug:
+    var: docker_info.containers
+
+- name: Stop running containers
+  community.docker.docker_container:
+    name: "{{ item }}"
+    container_default_behavior: no_defaults
+    state: stopped
+  loop: "{{ docker_info.containers | map(attribute='Id') | list }}"
+  when: (docker_info.containers | length)  != 0
+
+#- name: Get stopped containers
+#  community.docker.docker_host_info:
+#    containers: true
+#    containers_filters:
+#      status: "exited"
+#  register: docker_info_stop
+#
+#- debug:
+#    var: docker_info_stop
+#
+- name: Remove Stoped docker containers
+  ansible.builtin.shell: |
+     docker rm $(docker ps -a -q);
+  failed_when: false
+#  when: (docker_info_stop.containers | length)  != 0
+
+- name: Get details of all images
+  community.docker.docker_host_info:
+    images: true
+    verbose_output: true
+  register: image_info
+  when: (pruneImages is undefined) or ((pruneImages is defined) and (pruneImages == 'yes'))
+- name: Remove all images
+  community.docker.docker_image:
+    name: "{{ item }}"
+    state: absent
+    force_absent: true
+  loop: "{{ image_info.images | map(attribute='Id') | list }}"
+  when: (pruneImages is undefined) or ((pruneImages is defined) and (pruneImages == 'yes'))
+
+- name: Get volumes
+  community.docker.docker_host_info:
+    volumes: true
+  register: docker_info_volumes
+
+- name: delete volumes
+  community.docker.docker_volume:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker_info_volumes.volumes | map(attribute='Name') | list }}"
+
+- name: list config directory content
+  tags:
+    - clean-mylyn-dir
+  ansible.builtin.find:
+    paths: /mylyn-config-dir
+    recurse: false
+    file_type: directory
+    excludes: 'certs'
+  register: cleanup_config_dir
+  ignore_errors: true
+#- name: debug dirs in mylyn-config-dir
+#  debug:
+#    var: cleanup_config_dir
+- name: delete config directory content
+  tags:
+    - clean-mylyn-dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true
+  with_items: "{{  cleanup_config_dir.files | map(attribute='path') | list  }}"
+
+- name: change project
+  tags:
+    - clean-mylyn-dir
+  ansible.builtin.shell: |
+       # rm -r /tmp/ruvsetups
+       # rm /home/ubuntu/.ssh/known_hosts
+       sudo rm -r /mylyn-runtime-dir/*
+  failed_when: false
+  changed_when: false
+
+#- name: Remove network
+#  community.docker.docker_network:
+#    name: ruvzcx_net
+#    state: absent
+#    force: true
+#  when: (deleteNetwork is defined) and (deleteNetwork|bool == true)
+#
+#- name: Remove swarn
+#  community.docker.docker_swarm:
+#    state: absent
+#    force: true
+#  when: (deleteSwarn is defined) and (deleteSwarn|bool == true)
+
+- name: Prune everything
+  community.docker.docker_prune:
+    containers: true
+    images: "{{ pruneImages | default('false') }}"
+    networks: "{{ deleteNetwork | default('false') }}"
+    volumes: true
+    builder_cache: true
