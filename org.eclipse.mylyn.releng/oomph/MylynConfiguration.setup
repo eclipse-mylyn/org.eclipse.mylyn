@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Configuration
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    label="Mylyn">
+  <annotation
+      source="http://www.eclipse.org/oomph/setup/BrandingInfo">
+    <detail
+        key="imageURI">
+      <value>https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn.context/master/org.eclipse.mylyn.bugzilla.ide/icons/branding32/mylyn.gif</value>
+    </detail>
+    <detail
+        key="badgeLabel">
+      <value>Mylyn</value>
+    </detail>
+  </annotation>
+  <installation
+      name="mylyn.installation"
+      label="Mylyn Installation">
+    <productVersion
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.committers']/@versions[name='latest']"/>
+    <description>The Mylyn installation provides development environment needed to work on Mylyn's projects</description>
+  </installation>
+  <workspace
+      name="mylyn.workspace"
+      label="Mylyn Workspace">
+    <stream
+        href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@projects[name='mylyn']/@projects[name='Maintainer']/@streams[name='master']"/>
+    <description>The Mylyn workspace provides access to the Mylyn's Git repositories their projects.</description>
+  </workspace>
+  <description>
+    Mylyn is the task and application lifecycle management (ALM) framework for Eclipse. 
+    Consult the &lt;a href=&quot;https://github.com/eclipse-mylyn/.github/blob/main/CONTRIBUTING.md&quot;>contributor guide&lt;/a> to participate.
+    This configuration provides a complete IDE for working on Mylyn's projects.
+  </description>
+</setup:Configuration>
