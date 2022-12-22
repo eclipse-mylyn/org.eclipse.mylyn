@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn.reviews</groupId>
   <artifactId>org.eclipse.mylyn.reviews.parent</artifactId>
-  <version>2.17.0-SNAPSHOT</version>
+  <version>3.26.0-SNAPSHOT</version>
   <name>Mylyn Reviews</name>
   <packaging>pom</packaging>
 
