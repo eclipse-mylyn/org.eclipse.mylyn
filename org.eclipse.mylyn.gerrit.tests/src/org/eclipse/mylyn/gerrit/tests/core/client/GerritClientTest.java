@@ -1,11 +1,11 @@
 /*******************************************************************************
  /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -232,9 +232,9 @@ public class GerritClientTest extends TestCase {
 		List<String> options = ImmutableList.of(GET_LABELS_OPTION);
 		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
-		for (int index = 0; index < results.size(); index++) {
-			assertNotNull(results.get(index));
-			assertNotNull(results.get(index).getReviewLabel());
+		for (GerritQueryResult result : results) {
+			assertNotNull(result);
+			assertNotNull(result.getReviewLabel());
 		}
 	}
 
@@ -244,9 +244,9 @@ public class GerritClientTest extends TestCase {
 		List<String> options = ImmutableList.of(GET_LABELS_OPTION, GET_DETAILED_ACCOUNTS_OPTION);
 		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
-		for (int index = 0; index < results.size(); index++) {
-			assertNotNull(results.get(index));
-			assertNotNull(results.get(index).getReviewLabel());
+		for (GerritQueryResult result : results) {
+			assertNotNull(result);
+			assertNotNull(result.getReviewLabel());
 		}
 	}
 

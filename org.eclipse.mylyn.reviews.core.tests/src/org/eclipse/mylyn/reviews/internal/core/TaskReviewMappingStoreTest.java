@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Blaine Lewis
- * 
+ * Copyright (c) 2015, 2022 Blaine Lewis and others
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Blaine Lewis
+ *     ArSysOp - adapt to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.internal.core;
@@ -36,7 +37,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -112,7 +113,8 @@ public class TaskReviewMappingStoreTest {
 
 		taskDataManager = mock(TaskDataManager.class);
 
-		when(repositoryManager.getConnectorForRepositoryTaskUrl(Matchers.anyString())).thenReturn(reviewConnector);
+		when(repositoryManager.getConnectorForRepositoryTaskUrl(ArgumentMatchers.anyString()))
+				.thenReturn(reviewConnector);
 		when(repositoryManager.getRepositoryConnector("reviewKind")).thenReturn(reviewConnector);
 		when(repositoryManager.getRepositoryConnector("taskKind")).thenReturn(taskConnector);
 

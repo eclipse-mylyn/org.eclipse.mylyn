@@ -13,16 +13,15 @@
  *   See git history
  *******************************************************************************
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>org.eclipse.mylyn.reviews.parent</artifactId>
     <groupId>org.eclipse.mylyn.reviews</groupId>
     <version>2.17.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.eclipse.mylyn.reviews.site</artifactId>
-  <packaging>eclipse-repository</packaging>
-  <name>org.eclipse.mylyn.reviews.site</name>
+  <artifactId>org.eclipse.mylyn.reviews-target</artifactId>
+  <packaging>pom</packaging>
 </project>

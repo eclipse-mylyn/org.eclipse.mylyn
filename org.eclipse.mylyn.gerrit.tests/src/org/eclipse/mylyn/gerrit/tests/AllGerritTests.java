@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.gerrit.tests;
 
-import java.util.List;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
@@ -22,7 +20,6 @@ import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritCapabilitiesTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
-import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.compat.ChangeDetailXTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.compat.PatchScriptXTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AbandonInputTest;
@@ -88,16 +85,21 @@ public class AllGerritTests {
 		suite.addTestSuite(PatchScriptXTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
-			suite.addTestSuite(OpenIdAuthenticationTest.class);
-			List<GerritFixture> fixtures = configuration.discover(GerritFixture.class, "gerrit"); //$NON-NLS-1$
-			for (GerritFixture fixture : fixtures) {
-				if (!fixture.isExcluded()) {
-					addTests(suite, fixture);
-				}
-			}
+			//FIXME: AF: enable tests
+			//https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
+//			suite.addTestSuite(OpenIdAuthenticationTest.class);
+//			List<GerritFixture> fixtures = configuration.discover(GerritFixture.class, "gerrit"); //$NON-NLS-1$
+//			for (GerritFixture fixture : fixtures) {
+//				if (!fixture.isExcluded()) {
+//					addTests(suite, fixture);
+//				}
+//			}
 		}
 	}
 
+	//FIXME: AF: enable tests
+	//https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
+	@SuppressWarnings("unused")
 	private static void addTests(TestSuite suite, GerritFixture fixture) {
 		fixture.createSuite(suite);
 		fixture.add(GerritClientTest.class);
