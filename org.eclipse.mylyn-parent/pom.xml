@@ -25,8 +25,8 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>3.0.0</tycho-version>
-    <tycho-extras-version>${tycho-version}</tycho-extras-version>
+    <tycho-version>3.0.1</tycho-version>
+    <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
 
     <mylyn-test-append></mylyn-test-append>
 
@@ -61,28 +61,9 @@
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
-    <dist.pack200>${java.home}/bin</dist.pack200>
-
     <dist.releases.url>https://repo.eclipse.org/content/repositories/mylyn-releases/</dist.releases.url>
     <dist.snapshots.url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</dist.snapshots.url>
-
     <target-platform>mylyn-e${target-version}</target-platform>
-    <egit-repository-url>http://download.eclipse.org/egit/updates-5.8/</egit-repository-url>
-    <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
-
-    <alt-target-version>4.7</alt-target-version>
-    <alt-platform-repository-url>http://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
-
-    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/</orbit-repository-url>
-    <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
-    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
-    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
-    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
-    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
-    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
-    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
-    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
@@ -91,13 +72,13 @@
       <post>mylyn-dev@eclipse.org</post>
       <subscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</subscribe>
       <unsubscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</unsubscribe>
-      <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-dev</archive>
+      <archive>https://dev.eclipse.org/mhonarc/lists/mylyn-dev</archive>
     </mailingList>
   </mailingLists>
 
   <issueManagement>
-    <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn</url>
-    <system>Bugzilla</system>
+    <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons/issues</url>
+    <system>GitHub Issues</system>
   </issueManagement>
 
   <distributionManagement>
@@ -127,6 +108,11 @@
       <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
       <layout>default</layout>
     </repository>
+    <repository>
+      <id>cbi-license</id>
+      <layout>p2</layout>
+      <url>https://download.eclipse.org/cbi/updates/license/</url>
+    </repository>
   </repositories>
 
   <licenses>
@@ -147,7 +133,7 @@
 
   <organization>
     <name>Eclipse Foundation</name>
-    <url>http://www.eclipse.org/</url>
+    <url>https://www.eclipse.org/</url>
   </organization>
 
   <profiles>
@@ -168,18 +154,6 @@
             <version>${tycho-version}</version>
             <configuration>
               <resolver>p2</resolver>
-              <target>
-                <artifact>
-                  <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId>
-                  <version>3.26.0-SNAPSHOT</version>
-                  <classifier>${target-platform}</classifier>
-                </artifact>
-              </target>
-              <ignoreTychoRepositories>true</ignoreTychoRepositories>
-              <dependency-resolution>
-                <optionalDependencies>ignore</optionalDependencies>
-              </dependency-resolution>
               <environments>
                 <environment>
                   <os>macosx</os>
@@ -212,6 +186,15 @@
                   <arch>ppc64</arch>
                 </environment>
               </environments>
+              <target>
+                <artifact>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.groupId}-target</artifactId>
+                  <version>${project.parent.version}</version>
+                  <classifier>${target-platform}</classifier>
+                </artifact>
+              </target>
+              <pomDependencies>consider</pomDependencies>
             </configuration>
           </plugin>
         </plugins>
@@ -232,7 +215,6 @@
             <version>${tycho-version}</version>
             <configuration>
               <resolver>p2</resolver>
-              <ignoreTychoRepositories>false</ignoreTychoRepositories>
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
@@ -269,32 +251,18 @@
                   <arch>ppc64</arch>
                 </environment>
               </environments>
+              <target>
+                <artifact>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.groupId}-target</artifactId>
+                  <version>${project.parent.version}</version>
+                  <classifier>${target-platform}</classifier>
+                </artifact>
+              </target>
             </configuration>
           </plugin>
         </plugins>
       </build>
-      <repositories>
-        <repository>
-          <id>eclipse-platform</id>
-          <layout>p2</layout>
-          <url>${platform-repository-url}</url>
-        </repository>
-        <repository>
-          <id>eclipse-egit</id>
-          <layout>p2</layout>
-          <url>${egit-repository-url}</url>
-        </repository>
-        <repository>
-          <id>eclipse-orbit</id>
-          <layout>p2</layout>
-          <url>${orbit-repository-url}</url>
-        </repository>
-        <repository>
-          <id>eclipse-jdt-annotation</id>
-          <layout>p2</layout>
-          <url>${jdt-annotation-repository-url}</url>
-        </repository>
-      </repositories>
     </profile>
 
     <!-- Target profiles -->
@@ -312,154 +280,36 @@
       </properties>
     </profile>
     <profile>
-      <id>juno</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>juno</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.2</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/juno/201303010900/</platform-repository-url>
-        <alt-target-version>4.2</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/juno/201303010900/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>kepler</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>kepler</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.3</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/kepler/</platform-repository-url>
-        <alt-target-version>4.3</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/kepler/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>luna</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>luna</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.4</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/luna/</platform-repository-url>
-        <alt-target-version>4.4</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/luna/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>mars</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>mars</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.5</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/mars/</platform-repository-url>
-        <alt-target-version>4.5</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/mars/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>neon</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>neon</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.6</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/neon/</platform-repository-url>
-        <alt-target-version>4.6</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/neon/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>oxygen</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>oxygen</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.7</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/oxygen/</platform-repository-url>
-        <alt-target-version>4.7</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>photon</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>photon</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.8</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
-        <alt-target-version>4.photon</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/photon/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>2019-12</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>photon</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>4.14</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/2019-12/</platform-repository-url>
-        <alt-target-version>4.14</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/2019-12/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>maintenance</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>maintenance</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>maintenance</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/maintenance/</platform-repository-url>
-        <alt-target-version>maintenance</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/maintenance/</alt-platform-repository-url>
-      </properties>
-    </profile>
-    <profile>
-      <id>staging</id>
-      <activation>
-        <property>
-          <name>target-profile</name>
-          <value>staging</value>
-        </property>
-      </activation>
-      <properties>
-        <target-version>staging</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
-        <alt-target-version>staging</alt-target-version>
-        <alt-platform-repository-url>http://download.eclipse.org/releases/staging/</alt-platform-repository-url>
-      </properties>
+      <id>sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-jarsigner-plugin</artifactId>
+            <version>1.3.4</version>
+            <configuration>
+              <resigningStrategy>DO_NOT_RESIGN</resigningStrategy>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <!-- Eclipse jar-signing must occur before GPG signing. Bind this plugin execution to a phase just prior to to the GPG plugin execution. -->
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>eclipse-cbi</id>
+          <name>Eclipse CBI</name>
+          <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
 
     <!-- OS and machine specific profiles -->
@@ -640,17 +490,8 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.0.2</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.1</version>
+          <version>3.3.0</version>
           <configuration>
             <encoding>ISO-8859-1</encoding>
           </configuration>
@@ -661,14 +502,14 @@
           <version>${tycho-version}</version>
           <dependencies>
             <dependency>
-              <groupId>org.eclipse.tycho.extras</groupId>
+              <groupId>org.eclipse.tycho</groupId>
               <artifactId>tycho-buildtimestamp-jgit</artifactId>
-              <version>${tycho-extras-version}</version>
+              <version>${tycho-version}</version>
             </dependency>
             <dependency>
               <groupId>org.eclipse.tycho.extras</groupId>
               <artifactId>tycho-sourceref-jgit</artifactId>
-              <version>${tycho-extras-version}</version>
+              <version>${tycho-version}</version>
             </dependency>
           </dependencies>
           <configuration>
@@ -681,15 +522,16 @@
               <generate>true</generate>
             </sourceReferences>
             <timestampProvider>jgit</timestampProvider>
+            <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
           </configuration>
         </plugin>
         <!-- code analysis -->
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>findbugs-maven-plugin</artifactId>
-          <version>3.0.5</version>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.7.3.0</version>
           <configuration>
-            <findbugsXmlOutput>true</findbugsXmlOutput>
+            <xmlOutput>true</xmlOutput>
             <failOnError>false</failOnError>
             <skip>${analysis.skip}</skip>
           </configuration>
@@ -704,7 +546,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.5</version>
+          <version>3.19.0</version>
           <configuration>
             <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
@@ -815,7 +657,7 @@
                 <requirement>
                   <type>p2-installable-unit</type>
                   <id>org.eclipse.sdk.feature.group</id>
-                  <versionRange>${platform-version}</versionRange>
+                  <versionRange>0.0.0</versionRange>
                 </requirement>
               </extraRequirements>
             </dependency-resolution>
