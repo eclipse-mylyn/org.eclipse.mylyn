@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies and others.
+ * Copyright (c) 2015, 2022 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2022-12
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -821,7 +822,7 @@ public class CommentPopupDialogTest extends TestCase {
 		}
 	}
 
-	class NewCommentMatcher extends ArgumentMatcher<IComment> {
+	class NewCommentMatcher implements ArgumentMatcher<IComment> {
 
 		private final String description;
 
@@ -833,16 +834,11 @@ public class CommentPopupDialogTest extends TestCase {
 		}
 
 		@Override
-		public boolean matches(Object argument) {
-			if (argument instanceof IComment) {
-				IComment argComment = (IComment) argument;
-				// For there to be a match, the description of the comments need to be the same and if:
-				//	isDraft is true, then it is a draft edit so there must be an ID
-				//  isDraft is false, then it is a new draft being created so there is no ID
-				return description.equals(argComment.getDescription())
-						&& (isDraft ^ StringUtils.isEmpty(argComment.getId()));
-			}
-			return false;
+		public boolean matches(IComment argument) {
+			// For there to be a match, the description of the comments need to be the same and if:
+			//	isDraft is true, then it is a draft edit so there must be an ID
+			//  isDraft is false, then it is a new draft being created so there is no ID
+			return description.equals(argument.getDescription()) && (isDraft ^ StringUtils.isEmpty(argument.getId()));
 		}
 	}
 }
