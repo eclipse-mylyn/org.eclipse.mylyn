@@ -676,7 +676,7 @@ public class CommentPopupDialogTest extends TestCase {
 		String[] commentLabel = ((Label) controls[0]).getText().split("   ");
 		assertEquals(2, commentLabel.length);
 		assertEquals(USER_NAME, commentLabel[0]);
-		DateFormat format = new SimpleDateFormat("MMM d, yyyy h:mm aa");
+		DateFormat format = new SimpleDateFormat("MMM d, yyyy, h:mm aa");
 		assertEquals(format.format(commentDate), commentLabel[1]);
 
 		if (isDraft) {
