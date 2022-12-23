@@ -4,10 +4,9 @@
    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn-parent</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn-aggregator</artifactId>
     <version>3.26.0-SNAPSHOT</version>
-    <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn-target</artifactId>
   <packaging>pom</packaging>
