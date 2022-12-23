@@ -669,6 +669,7 @@
     </setupTask>
     <setupTask
         xsi:type="launching:LaunchTask"
+        disabled="true"
         predecessor="//@projects[name='Maintainer']/@setupTasks.14"
         launcher="submodulConfig"/>
     <setupTask
