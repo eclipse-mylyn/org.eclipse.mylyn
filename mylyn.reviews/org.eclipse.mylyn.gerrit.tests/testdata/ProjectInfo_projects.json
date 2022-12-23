@@ -1,0 +1,22 @@
+)]}'
+  {
+    "external/bison": {
+      "kind": "gerritcodereview#project",
+      "id": "external%2Fbison",
+      "description": "GNU parser generator"
+    },
+    "external/gcc": {
+      "kind": "gerritcodereview#project",
+      "id": "external%2Fgcc"
+    },
+    "external/openssl": {
+      "kind": "gerritcodereview#project",
+      "id": "external%2Fopenssl",
+      "description": "encryption\ncrypto routines"
+    },
+    "test": {
+      "kind": "gerritcodereview#project",
+      "id": "test",
+      "description": "\u003chtml\u003e is escaped"
+    }
+  }

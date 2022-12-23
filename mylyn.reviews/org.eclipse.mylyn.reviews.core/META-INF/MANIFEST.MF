@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Reviews
+Bundle-SymbolicName: org.eclipse.mylyn.reviews.core;singleton:=true
+Bundle-Version: 3.26.0.qualifier
+Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.emf.common;bundle-version="0.0.0",
+ org.eclipse.emf.ecore;bundle-version="0.0.0",
+ org.eclipse.emf.ecore.xmi;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="3.26.0",
+ org.eclipse.team.core;bundle-version="0.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.mylyn.reviews.edit,org.eclipse.mylyn.reviews.ui",
+ org.eclipse.mylyn.reviews.core.spi;x-friends:="org.eclipse.mylyn.reviews.ui",
+ org.eclipse.mylyn.reviews.core.spi.remote;x-friends:="org.eclipse.mylyn.reviews.ui,org.eclipse.mylyn.reviews.edit",
+ org.eclipse.mylyn.reviews.core.spi.remote.emf;x-friends:="org.eclipse.mylyn.reviews.ui,org.eclipse.mylyn.reviews.edit",
+ org.eclipse.mylyn.reviews.core.spi.remote.review;x-friends:="org.eclipse.mylyn.reviews.ui,org.eclipse.mylyn.reviews.edit",
+ org.eclipse.mylyn.reviews.internal.core;x-internal:=true,
+ org.eclipse.mylyn.reviews.internal.core.model;x-friends:="org.eclipse.mylyn.reviews.edit"
+Bundle-Vendor: Eclipse Mylyn
+Import-Package: com.google.common.base;version="15.0.0",
+ com.google.common.collect;version="15.0.0",
+ org.apache.commons.io,
+ org.apache.commons.lang;version="[2.6.0,3.0.0)"

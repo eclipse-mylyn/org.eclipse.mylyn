@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/reviews/core/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/reviews/ui/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/reviews/internal/core/model/ReviewsPackage"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/ReviewsUiConstants"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/views/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/providers/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/compare/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/tasks/ui/editors/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/gerrit/core/client/rest/*"/>
+			<accessrule kind="accessible" pattern="org/eclipse/egit/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

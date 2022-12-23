@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2013 Tasktop Technologies and others.&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v2.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;Contributors:&#xA;    Tasktop Technologies - initial API and implementation"
+    modelDirectory="/org.eclipse.mylyn.reviews.core/src" editDirectory="/org.eclipse.mylyn.reviews.edit/src"
+    editorDirectory="/org.eclipse.mylyn.reviews.editor/src" modelPluginID="org.eclipse.mylyn.reviews.core"
+    modelName="Reviews" modelPluginClass="" nonNLSMarkers="true" rootImplementsInterface=""
+    suppressEMFTypes="true" suppressEMFMetaData="true" suppressEMFModelTags="true"
+    codeFormatting="true" testsDirectory="/org.eclipse.mylyn.reviews.core.tests/src"
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" containmentProxies="true"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="org.eclipse.mylyn.reviews.edit"
+    editorPluginID="org.eclipse.mylyn.reviews.editor" testsPluginID="org.eclipse.mylyn.reviews.core.tests"
+    runtimeVersion="2.5" interfaceNamePattern="I{0}" classNamePattern="{0}">
+  <foreignModel>reviews.ecore</foreignModel>
+  <genPackages prefix="Reviews" basePackage="org.eclipse.mylyn" resource="XML" disposableProviderFactory="true"
+      interfacePackageSuffix="core.model" metaDataPackageSuffix="core.model" classPackageSuffix="internal.core.model"
+      utilityPackageSuffix="internal.core.model" providerPackageSuffix="edit.provider"
+      presentationPackageSuffix="ui.model.presentations" testsPackageSuffix="core.model"
+      generateExampleClass="false" contentTypeIdentifier="" fileExtensions="reviews"
+      ecorePackage="reviews.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="reviews.ecore#//RequirementStatus">
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Unknown"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Satisfied"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Optional"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Closed"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/NotSatisfied"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Rejected"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Error"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="reviews.ecore#//ReviewStatus">
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//ReviewStatus/New"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//ReviewStatus/Submitted"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//ReviewStatus/Merged"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//ReviewStatus/Abandoned"/>
+      <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//ReviewStatus/Draft"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="reviews.ecore#//IFileRevision"/>
+    <genDataTypes ecoreDataType="reviews.ecore#//TaskRepository"/>
+    <genClasses image="false" ecoreClass="reviews.ecore#//CommentContainer">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//CommentContainer/allComments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//CommentContainer/comments"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//CommentContainer/allDrafts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//CommentContainer/drafts"/>
+      <genOperations ecoreOperation="reviews.ecore#//CommentContainer/createComment">
+        <genParameters ecoreParameter="reviews.ecore#//CommentContainer/createComment/initalLocation"/>
+        <genParameters ecoreParameter="reviews.ecore#//CommentContainer/createComment/commentText"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//Change">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Change/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Change/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Change/subject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Change/message"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//Change/owner"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute reviews.ecore#//Change/state"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//Review">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Review/sets"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//Review/repository"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Review/parents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Review/children"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Review/reviewerApprovals"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Review/requirements"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//Comment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//Comment/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Comment/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Comment/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Comment/replies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Comment/draft"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Comment/locations"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//Comment/review"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Comment/title"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//Comment/item"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ReviewItem">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/addedBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/committedBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/review"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItem/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItem/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItem/reference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="reviews.ecore#//Location"/>
+    <genClasses ecoreClass="reviews.ecore#//User">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//User/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//User/email"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//User/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//Repository">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Repository/approvalTypes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Repository/taskRepositoryUrl"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Repository/taskConnectorKind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Repository/taskRepository"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//Repository/account"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Repository/reviews"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//Repository/users"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Repository/description"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//FileItem">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//FileItem/base"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//FileItem/target"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//FileItem/set"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ReviewItemSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItemSet/items"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItemSet/revision"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItemSet/parentReview"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//LineLocation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//LineLocation/ranges"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//LineLocation/rangeMin"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//LineLocation/rangeMax"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//LineRange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//LineRange/start"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//LineRange/end"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//FileVersion">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileVersion/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileVersion/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileVersion/content"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//FileVersion/file"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileVersion/fileRevision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileVersion/binaryContent"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="reviews.ecore#//Indexed">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Indexed/index"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="reviews.ecore#//Dated">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Dated/creationDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//Dated/modificationDate"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ApprovalType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ApprovalType/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ApprovalType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//UserApprovalsMap">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//UserApprovalsMap/key"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//UserApprovalsMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ReviewerEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewerEntry/approvals"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ApprovalValueMap">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ApprovalValueMap/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ApprovalValueMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//RequirementEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//RequirementEntry/status"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//RequirementEntry/by"/>
+    </genClasses>
+    <genClasses ecoreClass="reviews.ecore#//ReviewRequirementsMap">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewRequirementsMap/key"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewRequirementsMap/value"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,8 @@
+)]}'
+  {
+    "kind": "gerritcodereview#project",
+    "id": "plugins%2Freplication",
+    "name": "plugins/replication",
+    "parent": "Public-Plugins",
+    "description": "Copies to other servers using the Git protocol"
+  }

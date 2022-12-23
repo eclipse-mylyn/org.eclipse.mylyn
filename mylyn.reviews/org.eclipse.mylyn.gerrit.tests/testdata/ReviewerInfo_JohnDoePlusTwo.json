@@ -1,0 +1,11 @@
+)]}'
+{
+	"kind": "gerritcodereview#reviewer",
+	"approvals": {
+		"Verified": "+1",
+		"Code-Review": "+2"
+	},
+	"_account_id": 1000096,
+	"name": "John Doe",
+	"email": "john.doe@example.com"
+}

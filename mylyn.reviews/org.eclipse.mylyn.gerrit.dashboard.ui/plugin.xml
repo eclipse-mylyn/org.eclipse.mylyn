@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+  <!-- Define which command should be available in the Gerrit Dashboard connector  
+ -->
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="%category.name"
+            id="org.eclipse.mylyn.gerrit.dashboard.ui">
+      </category>
+      <view
+            name="%view.name"
+            icon="icons/view16/gerrit.png" 
+            category="org.eclipse.mylyn.ui"
+            class="org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView"
+            id="org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+
+ <!-- Lets hold it for later JB Jan 24, 2014
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+          <toolbar
+                id="org.eclipse.ui.contributions.toolbars.GerritDashboard"
+                label="Gerrit Dashboard">
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.selectCurrentGerrit"
+                icon="icons/view16/gerrit.png"
+                id="GerritDashboard.dropdown.toolbar.initiateGerrit"
+                label="Gerrit Dashboard"
+                style="pulldown">
+          </command>
+         <separator
+                  name="additions"
+                  visible="false">
+            </separator>
+        </toolbar>
+      </menuContribution>
+ -->
+	<!-- Add the menu item to the Gerrit Dashboard pulldown menu
+	-->
+      <menuContribution
+            locationURI="menu:GerritDashboard.dropdown.toolbar.initiateGerrit">
+          <dynamic
+                class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.menus.DynamicMenuAddition"
+                id="org.eclipse.mylyn.gerrit.dashboard.ui.dynamic1">
+          </dynamic>
+          <separator
+                name="additions"
+                visible="true">
+          </separator>  
+ <!--
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite"
+                id="Search.gerritSite"
+                label="Add Gerrit Repository..."
+                style="push">
+          </command>
+ -->
+          <command
+                commandId="command.showTaskRepo"
+                id="Task.Repositories"
+                label="%command.showTask"
+                style="push">
+             <parameter
+                   name="org.eclipse.ui.views.showView.viewId"
+                   value="org.eclipse.mylyn.tasks.ui.views.repositories">
+             </parameter>
+          </command>        </menuContribution>
+   	<!-- Define the toolbar menu for Gerrit Dashboard UI "with pulldown menu"
+	-->
+      <menuContribution
+            locationURI="toolbar:org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView?after=additions">
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.selectCurrentGerrit"
+                icon="icons/view16/repository-middle.gif"
+                id="GerritDashboard.dropdown.toolbar.initiateGerrit"
+                label="%command.title"
+                style="pulldown">
+          </command>            
+	<!--          <separator
+                name="addition0"
+                visible="true">
+            </separator>
+            -->
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allOpenReviews"
+                id="GerritDashboardUI.dropdown.toolbar.AddAllOpenReviews"
+                label="%command.all"
+                style="pulldown"
+                tooltip="%command.tooltipAllOpen">
+          </command>
+         <separator
+                name="addition1"
+                visible="true">
+            </separator>
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myWatchedChanges"
+                id="GerritDashboardUI.dropdown.toolbar.MyWatchedChanges"
+                label="%command.my"
+                style="pulldown"
+                tooltip="%command.tooltipMyWatchedChanges">
+          </command>
+         <separator
+                name="addition2"
+                visible="true">
+            </separator>
+ <!--
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.projectList"
+                id="GerritDashboardUI.dropdown.toolbar.ProjectList"
+                label="Projects"
+                style="pulldown"
+                tooltip="Find projects list reviews for the selected repository">
+          </command>
+         <separator
+                name="addition3"
+                visible="true">
+            </separator>
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.groupList"
+                id="GerritDashboardUI.dropdown.toolbar.GroupList"
+                label="Groups"
+                style="pulldown"
+                tooltip="Find groups list reviews for the selected repository">
+          </command>
+         <separator
+                name="addition4"
+                visible="true">
+            </separator>
+ -->
+          <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationIndex"
+                id="GerritDashboardUI.dropdown.toolbar.Documentation"
+                label="%command.documentation"
+                style="pulldown"
+                tooltip="%command.tooltipDocumentation">
+          </command>
+         <separator
+                name="additions"
+               	visible="true">
+            </separator>
+
+      </menuContribution>
+      
+	<!-- Add sub-menu for the All menu
+	-->
+       <menuContribution
+            locationURI="menu:GerritDashboardUI.dropdown.toolbar.AddAllOpenReviews">
+         <command
+               	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allOpenReviews"
+               	id="GerritDashboardUI.dropdown.toolbar.addOpenReviews"
+               	label="%command.open"
+               	style="push"
+               	tooltip="%command.tooltipOpen">
+         </command>
+         <command
+               	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews"
+               	id="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews"
+               	label="%command.merged"
+               	style="push"
+               	tooltip="%command.tooltipMerged">
+         </command>
+         <command
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews"
+	            id="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews"
+	            label="%command.abandoned"
+	            style="push"
+	            tooltip="%command.tooltipAbandoned">
+         </command>
+         <command
+            	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	label="%command.activeTaskReviews"
+            	icon="icons/view16/task.gif"
+            	style="push">
+         </command>
+
+         <separator
+                name="additions"
+                visible="true">
+         </separator>
+      </menuContribution>
+   	<!-- Add sub-menu for the My menu
+	-->
+       <menuContribution
+            locationURI="menu:GerritDashboardUI.dropdown.toolbar.MyWatchedChanges">
+         <command
+                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myWatchedChanges"
+                id="org.eclipse.mylyn.gerrit.dashboard.ui.myWatchedChanges"
+                label="%command.watchChanges"
+                style="push"
+                tooltip="%command.tooltipWatchChanges">
+         </command>
+         <command
+               	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myChanges"
+               	id="GerritDashboardUI.dropdown.toolbar.myChanges"
+               	label="%command.changes"
+               	style="push"
+               	tooltip="%command.tooltipChanges">
+         </command>
+         <command
+               	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myDrafts"
+               	id="org.eclipse.mylyn.gerrit.dashboard.ui.myDrafts"
+               	label="%command.drafts"
+               	style="push"
+               	tooltip="%command.tooltipDrafts">
+         </command>
+         <command
+            	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myStarredChanges"
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myStarredChanges"
+            	label="%command.starred"
+            	style="push"
+            	tooltip="%command.tooltipStarred">
+         </command>
+         <command
+            	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myDraftComments"
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myDraftComments"
+            	label="%command.draftComment"
+            	style="push"
+            	tooltip="%command.tooltipDraftComment">
+         </command>
+
+         <separator
+                name="additions"
+                visible="true">
+         </separator>
+      </menuContribution>
+   
+    <!-- Add sub-menu for the Projects menu
+	-->
+       <menuContribution
+            locationURI="menu:GerritDashboardUI.dropdown.toolbar.ProjectList">
+         <command
+               	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.projectList"
+               	id="GerritDashboardUI.dropdown.toolbar.projectList"
+               	label="%command.projectList"
+               	style="push"
+               	tooltip="%command.tooltipProjectList">
+         </command>
+
+         <separator
+               name="additions"
+               visible="true">
+         </separator>
+      </menuContribution>  
+   
+    <!-- Add sub-menu for the Groups menu
+	-->
+       <menuContribution
+            locationURI="menu:GerritDashboardUI.dropdown.toolbar.GroupList">
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.groupList"
+               id="GerritDashboardUI.dropdown.toolbar.groupList"
+               label="%command.groupList"
+               style="push"
+               tooltip="%command.tooltipGroupList">
+         </command>
+
+         <separator
+               name="additions"
+               visible="true">
+         </separator>
+      </menuContribution>  
+   
+    <!-- Add sub-menu for the Documentation menu
+	-->
+       <menuContribution
+            locationURI="menu:GerritDashboardUI.dropdown.toolbar.Documentation">
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationIndex"
+               id="GerritDashboardUI.dropdown.toolbar.documentationIndex"
+               label="%command.documentIndex"
+               style="push"
+               tooltip="%command.tooltipDocumentIndex">
+         </command>
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationSearching"
+               id="GerritDashboardUI.dropdown.toolbar.documentationSearching"
+               label="%command.documemtSearching"
+               style="push"
+               tooltip="%command.tooltipDocumentSearching">
+         </command>
+
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationUploading"
+               id="GerritDashboardUI.dropdown.toolbar.documentationUploading"
+               label="%command.documentUploading"
+               style="push"
+               tooltip="%command.tooltipDocumentUploading">
+         </command>
+
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationAccessControls"
+               id="GerritDashboardUI.dropdown.toolbar.documentationAccessControls"
+               label="%command.documentAccess"
+               style="push"
+               tooltip="%command.tooltipDocumentAccess">
+         </command>
+
+         <command
+               commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationRestAPI"
+               id="GerritDashboardUI.dropdown.toolbar.documentationRestAPI"
+               label="%command.documentRest"
+               style="push"
+               tooltip="%command.tooltipDocumentRest">
+         </command>
+
+
+         <separator
+               name="additions"
+               visible="true">
+         </separator>
+      </menuContribution>  
+      
+      
+  </extension>
+   
+ <!--
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+ -->  
+   <extension
+         point="org.eclipse.ui.commands">
+
+      <command
+            id="org.eclipse.mylyn.gerrit.dashboard.ui.selectCurrentGerrit"
+            name="%command.name.selectCurrent">
+      </command>
+
+      <command
+            id="org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite"
+            name="%command.name.addRepository">
+      </command>
+      <command
+            defaultHandler="org.eclipse.ui.handlers.ShowViewHandler"
+            id="command.showTaskRepo"
+            name="%command.name.showTaskRepository">
+            <commandParameter
+                  id="org.eclipse.ui.views.showView.viewId"
+                  name="%commandParameter.name.viewId"
+                  optional="true"
+                  values="org.eclipse.ui.internal.registry.ViewParameterValues">
+            </commandParameter>            
+      </command>
+
+         <!-- The following are the commands under the "All" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.allOpenReviews"
+            	name="%command.name.allOpen">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews"
+            	name="%command.name.allMerged">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews"
+            	name="%command.name.allAbandonned">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	name="%command.activeTaskReviews">
+      </command>
+         <!-- The following are the commands under the "My" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myChanges"
+            	name="%command.name.myChanges">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myDrafts"
+            	name="%command.name.myDraftsChanges">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myWatchedChanges"
+            	name="%command.name.myWatchedChanges">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myStarredChanges"
+            	name="%command.name.myStarredChanges">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.myDraftComments"
+            	name="%command.name.myDraftsCommentsChanges">
+      </command>
+      
+         <!-- The following are the commands under the "Projects" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.projectList"
+            	name="%command.name.projectList">
+      </command>
+
+         <!-- The following are the commands under the "Groups" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.groupList"
+            	name="%command.name.groupList">
+      </command>
+
+         <!-- The following are the commands under the "Documentation" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.documentationIndex"
+            	name="%command.name.documentIndex">
+      </command>
+       <command
+             	id="org.eclipse.mylyn.gerrit.dashboard.ui.documentationSearching"
+             	name="%command.name.documentSearching">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.documentationUploading"
+            	name="%command.name.documentUploading">
+      </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.documentationAccessControls"
+            	name="%command.name.documentAccess">
+      </command>
+      
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.documentationRestAPI"
+            	name="%command.name.documentRestApi">
+      </command>
+      
+          <!-- The following are the commands under the "Review TableList" sub-menu
+         -->
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.adjustMyStarred"
+            	name="%command.name.starReview">
+      </command>
+  
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationSearching"
+            contextId="org.eclipse.mylyn.gerrit.dashboard.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F1">
+      </key>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+
+      <handler
+            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.AddGerritSiteHandler"
+            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite">
+      </handler>
+
+      <handler
+            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.SelectReviewSiteHandler"
+            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.selectCurrentGerrit">
+      </handler>
+
+         <!-- The following are the handlers under the "All" sub-menu
+         -->
+		 <handler
+		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.AllOpenReviewsHandler"
+		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allOpenReviews">
+		  </handler>
+		  <handler
+		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.AllMergedReviewsHandler"
+		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews">
+		  </handler>
+		  <handler
+		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.AllAbandonedReviewsHandler"
+		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews">
+		  </handler>
+		  <handler
+		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.ActiveTaskReviewsHandler"
+		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews">
+		  </handler>
+          <!-- The following are the handlers under the "My" sub-menu
+         -->
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my.MyChangesReviewsHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myChanges">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my.MyDraftsReviewsHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myDrafts">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my.MyWatchedChangesReviewsHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myWatchedChanges">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my.MyStarredChangesReviewsHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myStarredChanges">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my.MyDraftCommentsReviewsHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.myDraftComments">
+	      </handler>
+          <!-- The following are the handlers under the "Projects" sub-menu
+         -->
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.projects.ProjectListHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.projectList">
+	      </handler>
+          <!-- The following are the handlers under the "Groups" sub-menu
+         -->
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.groups.GroupListHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.groupList">
+	      </handler>
+          <!-- The following are the handlers under the "Documentation" sub-menu
+         -->
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.documentation.IndexHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationIndex">
+	      </handler>
+	      <handler
+             	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.documentation.SearchingHandler"
+             	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationSearching">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.documentation.UploadingHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationUploading">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.documentation.AccessControlHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationAccessControls">
+	      </handler>
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.documentation.RestAPIHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationRestAPI">
+	      </handler>
+	     <!-- The following are the handlers under the "Table review list" sub-menu
+         -->
+	      <handler
+	            class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.table.AdjustMyStarredHandler"
+	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.adjustMyStarred">
+	      </handler>
+	      
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="%context.descriptionView"
+            id="org.eclipse.mylyn.gerrit.dashboard.ui.context"
+            name="%context.name"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+
+</plugin>

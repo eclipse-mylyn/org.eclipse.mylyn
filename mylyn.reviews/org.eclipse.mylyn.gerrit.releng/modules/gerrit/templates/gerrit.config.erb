@@ -1,0 +1,43 @@
+[gerrit]
+        basePath = <%= @envbase %>/git
+<% if @envhost == "localhost" %>
+        canonicalWebUrl = http://localhost:2080/<%= @envid %>
+<% else %>
+        canonicalWebUrl = http://<%= @envhost %>/<%= @envid %>
+<% end %>
+[database]
+        type = H2
+        database = db/ReviewDB
+[auth]
+        type = <%= @authtype %>
+[sendemail]
+        smtpServer = localhost
+[container]
+        #user = tools
+        javaHome = /usr/lib/jvm/java-8-openjdk-amd64/jre
+        javaOptions = -client
+        heapLimit = 128m
+[sshd]
+        listenAddress = *:<%= @sshport %>
+[httpd]
+        listenUrl = proxy-http://*:<%= @port %>/<%= @envid %>
+[cache]
+        directory = cache
+
+[commentlink "changeid"]
+  match = (I[0-9a-f]{8,40})
+  link = "#q,$1,n,z"
+
+[commentlink "bugzilla"]
+  match = (bug\\s+)(\\d+)
+  link = http://bugs.mylyn.org/show_bug.cgi?id=$2
+
+[commentlink "tracker"]
+  match = ([Tt]ask:\\s+)(\\d+)
+  html = $1<a href=\"http://tracker.mylyn.org/$2\">$2</a>
+
+[mimetype "image/png"]
+  safe = true
+
+[mimetype "image/gif"]
+  safe = false

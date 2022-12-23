@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Reviews
+Bundle-Vendor: Eclipse Mylyn
+Bundle-SymbolicName: org.eclipse.mylyn.reviews.tasks.core;singleton:=true
+Bundle-Version: 1.1.1.qualifier
+Require-Bundle: org.eclipse.core.resources;bundle-version="3.5.0",
+ org.eclipse.core.runtime;bundle-version="3.5.0",
+ org.eclipse.team.core;bundle-version="3.5.0",
+ org.eclipse.compare;bundle-version="3.5.0",
+ org.eclipse.swt;bundle-version="3.5.0",
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.reviews.tasks.dsl;bundle-version="1.0.0",
+ org.eclipse.mylyn.versions.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.mylyn.reviews.tasks.core;x-friends:="org.eclipse.mylyn.tasks.ui",
+ org.eclipse.mylyn.reviews.tasks.core.internal;x-friends:="org.eclipse.mylyn.reviews.tasks.ui"

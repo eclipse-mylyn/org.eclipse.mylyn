@@ -1,0 +1,37 @@
+ProxyPass        /<%= @envid %> http://localhost:<%= @port %>/<%= @envid %>
+ProxyPassReverse /<%= @envid %> http://localhost:<%= @port %>/<%= @envid %>
+
+<% if @authtype == "HTTP" %>
+<% if @allbasicauth %>
+<Location /<%= @envid %>>
+  AuthType Basic
+  AuthName "Gerrit Test Project"
+  AuthUserFile <%= envbase %>/htpasswd
+  Require valid-user
+</Location>
+<% end %>  
+
+<% if @allbasicauth == false %>
+<Location /<%= @envid %>/login>
+<% if @certauth %>
+  SSLOptions +FakeBasicAuth
+  SSLVerifyClient require
+  SSLVerifyDepth  1
+<% end %>
+
+<% if @digestauth %>
+  AuthType Digest
+  AuthName "Gerrit Test Project"
+  AuthUserFile <%= @envbase %>/htpasswd.digest
+  Require valid-user
+<% end %>
+
+<% if @digestauth == false %>
+  AuthType Basic
+  AuthName "Gerrit Test Project"
+  AuthUserFile <%= @envbase %>/htpasswd
+  Require valid-user
+<% end %>
+</Location>
+<% end %>
+<% end %>

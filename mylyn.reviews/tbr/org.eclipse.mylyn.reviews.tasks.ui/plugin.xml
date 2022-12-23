@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?><!--
+ Copyright (c) 2010 Research Group for Industrial Software (INSO), Vienna University of Technology
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+
+ Contributors:
+     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.reviews.ui.objectContribution1"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.reviews.tasks.ui.internal.CreateReviewActionFromAttachment"
+               enablesFor="*"
+               id="org.eclipse.mylyn.reviews.tasks.ui.create_review_from_attachment"
+               label="Create Review from Attachment"
+               tooltip="Create a new review from this attachment">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.reviews.tasks.ui.changesets"
+            objectClass="org.eclipse.mylyn.versions.tasks.core.TaskChangeSet">
+         <action
+               class="org.eclipse.mylyn.reviews.tasks.ui.internal.CreateReviewFromChangeSetAction"
+               id="org.eclipse.mylyn.reviews.tasks.ui.action1"
+               label="Create Review">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.reviews.tasks.ui.internal.editors.ReviewTaskEditorPageFactory"
+            id="org.eclipse.mylyn.reviews.ui.pageFactory2">
+      </pageFactory>
+   </extension>
+
+</plugin>

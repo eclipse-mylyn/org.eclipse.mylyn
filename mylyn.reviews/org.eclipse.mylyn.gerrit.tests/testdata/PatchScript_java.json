@@ -1,0 +1,132 @@
+{
+	"jsonrpc" : "2.0",
+	"id" : 6,
+	"result" : {
+		"changeId" : {
+			"id" : "I1487bd33dbff03cbbcaef8faf6cb21b425ea3665"
+		},
+		"changeType" : "ADDED",
+		"newName" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java",
+		"oldMode" : "FILE",
+		"newMode" : "FILE",
+		"header" : ["diff --git a/org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java b/org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java\n", "new file mode 100644\n", "index 0000000..088aa25\n", "--- /dev/null\n", "+++ b/org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java\n"],
+		"diffPrefs" : {
+			"accountId" : {
+				"id" : 118
+			},
+			"ignoreWhitespace" : "N",
+			"tabSize" : 8,
+			"lineLength" : 100,
+			"syntaxHighlighting" : true,
+			"showWhitespaceErrors" : true,
+			"intralineDifference" : true,
+			"showTabs" : true,
+			"context" : 10,
+			"skipDeleted" : false,
+			"skipUncommented" : false,
+			"expandAllComments" : false,
+			"retainHeader" : false,
+			"manualReview" : false,
+			"showLineEndings" : true
+		},
+		"a" : {
+			"ranges" : [],
+			"size" : 0,
+			"missingNewlineAtEnd" : false
+		},
+		"b" : {
+			"path" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java",
+			"ranges" : [{
+					"base" : 0,
+					"lines" : ["/*******************************************************************************", " * Copyright (c) 2014 Tasktop Technologies and others.", " * All rights reserved. This program and the accompanying materials", " * are made available under the terms of the Eclipse Public License v2.0", " * which accompanies this distribution, and is available at", " * http://www.eclipse.org/legal/epl-v20.html", " *", " * Contributors:", " *     Tasktop Technologies - initial API and implementation", " *******************************************************************************/", "", "package org.eclipse.mylyn.internal.gerrit.core.client.compat;", "", "import com.google.gerrit.common.data.PatchScript;", "", "/**", " * Provides support for binary content.", " * ", " * @author Tomasz Zarna", " */", "public class PatchScriptX extends PatchScript {", "", "\tprivate byte[] binaryA;", "", "\tprivate byte[] binaryB;", "", "\tpublic boolean isBinary() {", "\t\tfor (String header : getPatchHeader()) {", "\t\t\tif (header.contains(\"Binary files differ\")) { //$NON-NLS-1$", "\t\t\t\treturn true;", "\t\t\t}", "\t\t}", "\t\treturn false;", "\t}", "", "\tpublic byte[] getBinaryA() {", "\t\treturn binaryA;", "\t}", "", "\tpublic void setBinaryA(byte[] binaryA) {", "\t\tthis.binaryA \u003d binaryA;", "\t}", "", "\tpublic byte[] getBinaryB() {", "\t\treturn binaryB;", "\t}", "", "\tpublic void setBinaryB(byte[] binaryB) {", "\t\tthis.binaryB \u003d binaryB;", "\t}", "", "}"]
+				}
+			],
+			"size" : 52,
+			"missingNewlineAtEnd" : false
+		},
+		"edits" : [[0, 0, 0, 52]],
+		"displayMethodA" : "NONE",
+		"displayMethodB" : "DIFF",
+		"comments" : {
+			"a" : [],
+			"b" : [],
+			"accounts" : {
+				"accounts" : []
+			}
+		},
+		"history" : [{
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 21486
+						},
+						"patchSetId" : 1
+					},
+					"fileName" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 0,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}, {
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 21486
+						},
+						"patchSetId" : 2
+					},
+					"fileName" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 0,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}, {
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 21486
+						},
+						"patchSetId" : 3
+					},
+					"fileName" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 2,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}, {
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 21486
+						},
+						"patchSetId" : 4
+					},
+					"fileName" : "org.eclipse.mylyn.gerrit.core/src/org/eclipse/mylyn/internal/gerrit/core/client/compat/PatchScriptX.java"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 0,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}
+		],
+		"hugeFile" : false,
+		"intralineDifference" : false,
+		"intralineFailure" : false,
+		"intralineTimeout" : false
+	}
+}

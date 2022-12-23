@@ -1,0 +1,10 @@
+#
+#  Gerrit Dashboard core Debug options
+#
+org.eclipse.mylyn.gerrit.dashboard.core=true
+org.eclipse.mylyn.gerrit.dashboard.core/error=true
+org.eclipse.mylyn.gerrit.dashboard.core/warning=true
+org.eclipse.mylyn.gerrit.dashboard.core/info=true
+org.eclipse.mylyn.gerrit.dashboard.core/debug=true
+org.eclipse.mylyn.gerrit.dashboard.core/consoleLog=true
+org.eclipse.mylyn.gerrit.dashboard.core/logfile=test.log

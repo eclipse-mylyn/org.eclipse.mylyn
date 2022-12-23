@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            id="org.eclipse.mylyn.gerrit"
+            class="org.eclipse.mylyn.internal.gerrit.core.GerritConnector"
+            name="Gerrit"/>
+	  <connectorUi
+         brandingIcon="icons/gerrit.png"
+         class="org.eclipse.mylyn.internal.gerrit.ui.GerritConnectorUi"
+         id="org.eclipse.mylyn.gerrit"
+         name="Gerrit"
+         overlayIcon="icons/gerrit-overlay.png"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="false"
+            anonymous="false"
+            label="Eclipse.org Reviews"
+            repositoryKind="org.eclipse.mylyn.gerrit"
+            urlRepository="https://git.eclipse.org/r/">
+      </repository>
+   </extension>
+
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+         <pageFactory
+            class="org.eclipse.mylyn.internal.gerrit.ui.editor.GerritTaskEditorPageFactory"
+            id="org.eclipse.mylyn.gerrit.ui.pageFactory">
+      </pageFactory>   
+   </extension>
+
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.internal.gerrit.ui.GerritUrlHandler"
+            id="org.eclipse.mylyn.gerrit.ui.urlHandler.UrlHandler">
+      </handler>
+   </extension>
+
+   <extension
+         point="org.eclipse.egit.ui.cloneSourceProvider">
+      <source
+            hasFixLocation="true"
+            icon="icons/gerrit.png"
+            label="Gerrit">
+      </source>
+      <repositorySearchPage
+            class="org.eclipse.mylyn.internal.gerrit.ui.egit.GerritRepositorySearchPage">
+      </repositorySearchPage>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="org.eclipse.mylyn.internal.gerrit.ui.providers.OpenCompareEditorProvider"
+            id="org.eclipse.mylyn.gerrit.ui.actions.OpenCompareProvider">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.eclipse.mylyn.reviews.core.model.IComment">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.mylyn.reviews.core.model.IFileItem">
+               </instanceof>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding
+            viewerId="org.eclipse.mylyn.reviews.Explorer">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.mylyn.gerrit.ui.actions.*">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+      <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <repositoryAssociation
+            connectorKind="org.eclipse.mylyn.gerrit"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+</plugin>

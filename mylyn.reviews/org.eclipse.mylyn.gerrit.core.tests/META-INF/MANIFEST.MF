@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Gerrit Connector Core Tests
+Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests;singleton:=true
+Bundle-Version: 3.26.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Fragment-Host: org.eclipse.mylyn.gerrit.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: com.google.gson;bundle-version="2.9.1",
+ net.bytebuddy.byte-buddy;bundle-version="1.12.16",
+ net.bytebuddy.byte-buddy-agent;bundle-version="1.12.16",
+ org.junit;bundle-version="4.5.0",
+ org.mockito.mockito-core;bundle-version="4.8.1",
+ org.mockito.mockito-inline;bundle-version="4.8.1",
+ org.objenesis;bundle-version="3.3.0"
+Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
+ org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
+ org.eclipse.mylyn.internal.gerrit.core.egit;x-internal:=true,
+ org.eclipse.mylyn.internal.gerrit.core.remote;x-internal:=true
+Import-Package: com.google.gerrit.reviewdb;version="2.1.5"
