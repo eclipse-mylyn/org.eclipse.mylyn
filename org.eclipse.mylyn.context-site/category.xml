@@ -66,4 +66,16 @@
 		id="org.eclipse.mylyn.context.sdk">
 		<category name="org.eclipse.mylyn.context.sdk.category" />
 	</feature>
+	<category-def
+		name="org.eclipse.mylyn.context.tests.category"
+		label="Mylyn Reviews Tests"
+	>
+		<description>
+			Tests for context functionality.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.context.development">
+		<category name="org.eclipse.mylyn.context.tests.category" />
+	</feature>
 </site>
