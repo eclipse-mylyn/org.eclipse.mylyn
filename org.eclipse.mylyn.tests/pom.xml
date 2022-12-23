@@ -8,7 +8,6 @@
     <version>3.26.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.tests</artifactId>
-  <version>3.26.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
     <test.integration.suite>org.eclipse.mylyn.tests.AllTests</test.integration.suite>
@@ -34,54 +33,10 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <skip>${test.integration.skip}</skip>
-          <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.integration.suite}</testClass>
           <forkedProcessTimeoutInSeconds>21600</forkedProcessTimeoutInSeconds>
-          <explodedBundles>
-            <explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
-          </explodedBundles>
-          <dependency-resolution>
-            <extraRequirements>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.sdk.feature.group</id>
-                <versionRange>${platform-version}</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.mylyn.sdk_feature.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.mylyn.context.sdk.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.mylyn.docs.sdk.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.cdt.mylyn.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.mylyn.gerrit.feature.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>p2-installable-unit</type>
-                <id>org.eclipse.mylyn.hudson.feature.group</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-            </extraRequirements>
-          </dependency-resolution>
         </configuration>
       </plugin>
       <plugin>
