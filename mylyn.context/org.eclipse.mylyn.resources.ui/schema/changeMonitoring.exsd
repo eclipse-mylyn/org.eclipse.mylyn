@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.resources.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.mylyn.resources.ui" id="changeMonitoring" name="changeMonitoring"/>
+      </appInfo>
+      <documentation>
+         This extension point is used so that plugins may contribute extensions that should be ignored by default (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=178931 for details)
+      </documentation>
+   </annotation>
+
+   <element name="changeMonitoring">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="exclude" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="exclude">
+      <complexType>
+         <attribute name="pattern" type="string">
+            <annotation>
+               <documentation>
+                  Pattern can include URI syntax su
+               </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="antPattern" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         2.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Use example:
+
+   &lt;extension point=&quot;org.eclipse.mylyn.resources.ui.mylyn_resources_to_ignore&quot;&gt;
+     &lt;resource_to_ignore pattern=&quot;*.pyc&quot;/&gt;
+     &lt;resource_to_ignore pattern=&quot;*.pyo&quot;/&gt;
+   &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         In the preferences initializer it will search for plugins that supply this extension point and add those as defaults.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2004, 2009 Tasktop Technologies and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v2.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v20.html
+      </documentation>
+   </annotation>
+
+</schema>

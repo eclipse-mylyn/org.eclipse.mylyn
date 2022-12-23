@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+ 
+   <extension-point id="changeMonitoring" name="Resource Change Monitorin" schema="schema/changeMonitoring.exsd"/>
+ 
+   <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="%FocusedResourcesPreferencePage.name"
+         class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
+         id="org.eclipse.mylyn.resources.ui.preferences.resources"
+         category="org.eclipse.mylyn.context.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.resources.ui.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="%keywords.label"
+            id="org.eclipse.mylyn.resources.ui.keywords"/>
+   </extension>
+  
+    <extension
+         point="org.eclipse.mylyn.resources.ui.changeMonitoring">
+         <exclude
+         	antPattern=".*"/>
+		<exclude
+         	antPattern="**/.*"/>
+         <exclude
+         	antPattern=".*/**"/>
+         <exclude
+         	antPattern="**/.*/**"/>
+         <exclude
+         	antPattern="target/**"/>
+   </extension>
+ 
+   <extension
+         point="org.eclipse.mylyn.context.core.bridges">
+      <structureBridge
+            class="org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge"
+            name="%ResourceStructureBridge.name"/> 
+   </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <uiBridge
+            class="org.eclipse.mylyn.internal.resources.ui.ResourceUiBridge"
+            contentType="resource"/>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin$ResourcesUiBridgeStartup">
+      </startup>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>
+   </extension>
+   
+   
+   <!--
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <dragAssistant
+             class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context"/>
+   </extension>
+   -->
+   
+   <extension point = "org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="true"
+           id="org.eclipse.mylyn.ui.interest"
+           objectClass="org.eclipse.core.resources.IResource">
+        <action
+              class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+              definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+              enablesFor="*"
+              icon="icons/elcl16/interest-decrease.gif"
+              id="org.eclipse.mylyn.resources.ui.ui.interest.remove.element"
+              label="%InterestDecrementAction.label"
+              menubarPath="group.reorganize"
+              tooltip="%InterestDecrementAction.tooltip">
+           <enablement>
+              <systemProperty
+                    name="org.eclipse.mylyn.context.core.context.active"
+                    value="true">
+              </systemProperty>
+           </enablement>
+        </action>
+     </objectContribution>
+     <objectContribution
+     	adaptable="false"
+        id="org.eclipse.mylyn.ui.interest"
+        objectClass="org.eclipse.core.resources.IFile">
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.resources.ui.ui.interest.increase.element"
+           label="%InterestIncrementAction.label"
+           menubarPath="group.reorganize"
+           tooltip="%InterestIncrementAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
+     </action>
+	 </objectContribution>
+   </extension>
+</plugin>

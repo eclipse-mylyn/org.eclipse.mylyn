@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+         Sebastian Schmidt - added contributor extension point
+ -->
+
+<plugin>
+   <extension-point id="contributor" name="contributor" schema="schema/contributor.exsd"/>
+   <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
+   <extension-point id="internalBridges" name="Internal Bridges" schema="schema/internalBridges.exsd"/>
+   <extension-point id="relationProviders" name="relationProviders" schema="schema/relationProviders.exsd"/>
+   <extension-point id="strategies" name="strategies" schema="schema/strategies.exsd"/>
+</plugin>

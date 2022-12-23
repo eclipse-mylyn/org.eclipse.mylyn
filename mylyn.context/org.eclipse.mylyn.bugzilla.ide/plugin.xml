@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+	<extension point="org.eclipse.mylyn.tasks.core.templates">
+ 		<repository
+         addAutomatically="true"
+         anonymous="true"
+         characterEncoding="UTF-8"
+         label="Eclipse.org"
+         repositoryKind="bugzilla"
+         urlRepository="https://bugs.eclipse.org/bugs"
+         version="3.6">
+         <attribute name="useclassification" value="false"/>
+         <attribute name="usetargetmilestone" value="true"/>
+         <attribute name="useqacontact" value="true"/>
+         <attribute name="usestatuswhiteboard" value="true"/>
+         <attribute name="usebugaliases" value="false"/>
+         <attribute name="use_see_also" value="true"/>
+         <attribute name="useXMLRPC" value="false"/>
+        </repository>
+	</extension>
+	<extension point="org.eclipse.mylyn.tasks.bugs.support">
+	    <category
+	          description="Commercial support"
+	          id="org.eclipse.mylyn.tasks.bugs.commercial"
+	          name="Commercial Support"
+	          weight="500"/>
+		<category description="Community supported open source projects"
+			id="org.eclipse.mylyn.tasks.bugs.openSource" name="Open Source Community"
+			weight="900" />
+		<!-- Eclipse -->
+		<provider categoryId="org.eclipse.mylyn.tasks.bugs.openSource"
+			description="Eclipse open source community bug tracker" icon="icons/branding32/eclipse.png"
+			id="org.eclipse" name="Eclipse.org" url="http://eclipse.org/" />
+		<mapping namespace="org.eclipse">
+			<repository kind="bugzilla" url="https://bugs.eclipse.org/bugs">
+			</repository>
+		</mapping>
+		<!-- Mylyn -->
+		<product
+	        description="Application Lifecycle Tools"
+	        icon="icons/branding32/mylyn.gif"
+	        id="org.eclipse.mylyn"
+	        name="Mylyn"
+	        pluginId="org.eclipse.mylyn.commons.core"
+	        providerId="org.eclipse"
+	        url="http://eclipse.org/mylyn/support/"/>
+		<mapping namespace="org.eclipse.mylyn" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn"/>
+		</mapping>
+		<!-- Mylyn Builds -->
+		<mapping namespace="org.eclipse.mylyn.builds" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Builds"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.hudson" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Builds"/>
+			<property name="component" value="Hudson Connector"/>
+		</mapping>
+		<!-- Mylyn Commons -->
+		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Commons"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.discovery" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Commons"/>
+			<property name="component" value="Discovery"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.monitor" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Commons"/>
+			<property name="component" value="Monitor"/>
+		</mapping>
+		<!-- Mylyn Docs -->
+		<mapping namespace="org.eclipse.mylyn.wikitext" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Docs"/>
+			<property name="component" value="Wikitext"/>
+		</mapping>
+		<!-- Mylyn Context -->
+		<mapping namespace="org.eclipse.cdt.mylyn" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="C/C++"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.context" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.java" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Java"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.team" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<!-- Mylyn Reviews -->
+		<mapping namespace="org.eclipse.mylyn.reviews" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Reviews"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.gerrit" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Reviews"/>
+			<property name="component" value="Gerrit Connector"/>
+		</mapping>
+		<!-- Mylyn Tasks -->
+		<mapping namespace="org.eclipse.mylyn.bugzilla" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Bugzilla"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.tasks" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.trac" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Trac"/>
+		</mapping>
+		<!-- Mylyn Versions -->		
+		<mapping namespace="org.eclipse.mylyn.versions" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Versions"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.git" productId="org.eclipse.mylyn">
+			<property name="product" value="Git Connector"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<!-- PDE -->
+		<product featureId="org.eclipse.egit" id="org.eclipse.egit"
+			providerId="org.eclipse" />
+		<mapping namespace="org.eclipse.jgit" productId="org.eclipse.egit">
+			<property name="product" value="JGit"/>
+		</mapping>
+		<mapping namespace="org.eclipse.egit" productId="org.eclipse.egit">
+			<property name="product" value="EGit"/>
+		</mapping>
+		<!-- PDE -->
+		<product featureId="org.eclipse.pde" id="org.eclipse.pde"
+			providerId="org.eclipse" />
+		<mapping namespace="org.eclipse.pde" productId="org.eclipse.pde">
+			<property name="product" value="PDE">
+			</property>
+		</mapping>
+		<!-- Platform -->
+		<product featureId="org.eclipse.platform" id="org.eclipse.platform"
+			providerId="org.eclipse" />
+		<mapping namespace="org.eclipse.platform" productId="org.eclipse.platform">
+			<property name="product" value="Platform">
+			</property>
+		</mapping>
+		<product featureId="org.eclipse.cvs" id="org.eclipse.cvs"
+			providerId="org.eclipse">
+		</product>
+		<mapping namespace="org.eclipse.cvs" productId="org.eclipse.cvs">
+			<property name="product" value="Platform"/>
+			<property name="component" value="CVS"/>
+		</mapping>
+		<mapping namespace="org.eclipse.team.cvs" productId="org.eclipse.cvs">
+			<property name="product" value="Platform"/>
+			<property name="component" value="CVS"/>
+		</mapping>
+		<!-- JDT -->
+		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"
+			versionPluginId="org.eclipse.platform"
+			providerId="org.eclipse" />
+		<mapping namespace="org.eclipse.jdt" productId="org.eclipse.jdt">
+			<property name="product" value="JDT">
+			</property>
+		</mapping>
+		<!-- EPP -->
+		<!--
+		<product id="org.eclipse.epp.package.java" providerId="org.eclipse" featureId="org.eclipse.epp.package.java.feature" />
+		<mapping namespace="org.eclipse.epp.package.java" productId="org.eclipse.epp.package.java">
+			<property name="product" value="EPP"/>
+			<property name="component" value="java-package"/>
+		</mapping>
+		<product id="org.eclipse.epp.usagedata" providerId="org.eclipse" featureId="org.eclipse.epp.usagedata.feature" />
+		<mapping namespace="org.eclipse.epp.package.java" productId="org.eclipse.epp.package.java">
+			<property name="product" value="EPP"/>
+			<property name="component" value="Usage Data Collector"/>
+		</mapping>
+		-->
+		<!-- Webtools -->
+		<product id="org.eclipse.wst.xml_ui" providerId="org.eclipse" featureId="org.eclipse.wst.xml_ui.feature" />
+		<mapping namespace="org.eclipse.wst" productId="org.eclipse.wst.xml_ui">
+			<property name="product" value="Web Tools"/>
+			<property name="component" value="Web Standard Tools"/>
+		</mapping>
+	</extension>
+</plugin>

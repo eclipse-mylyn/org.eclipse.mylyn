@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector            
+            class="org.eclipse.mylyn.internal.java.tasks.JavaStackTraceHyperlinkDetector"
+            id="org.eclipse.mylyn.java.hyperlink.detector.stack"
+            name="%JavaStackTraceHyperlinkDetector.name"
+            targetId="org.eclipse.ui.DefaultTextEditor"/>
+   </extension>
+      
+   <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+		    id="org.eclipse.mylyn.bugzilla.ui.contribution"
+            targetID="org.eclipse.jdt.junit.ResultView">
+      	<action
+	      	class="org.eclipse.mylyn.internal.java.tasks.NewTaskFromJunitResultViewAction"
+	        icon="icons/etool16/task-new.gif"
+	        id="org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"
+	        label="%NewTaskFromJunitResultViewAction.label"
+	        menubarPath="org.eclipse.jdt.junit.ResultView"/>
+      </viewerContribution>
+   </extension>
+
+    <extension
+          id="org.eclipse.mylyn.internal.ide.ui.editors.templates"
+          point="org.eclipse.ui.editors.templates">
+       <resolver
+             class="org.eclipse.mylyn.tasks.ui.editors.TaskTemplateVariableResolver"
+             contextTypeId="java"
+             description="%MylynTemplateVariableResolver.activeTaskId.description"
+             name="Active Task ID"
+             type="activeTaskKey">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.tasks.ui.editors.TaskTemplateVariableResolver"
+             contextTypeId="javadoc"
+             description="%MylynTemplateVariableResolver.activeTaskId.description"
+             name="Active Task ID"
+             type="activeTaskKey">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.tasks.ui.editors.TaskTemplateVariableResolver"
+             contextTypeId="java"
+             description="%MylynTemplateVariableResolver.activeTaskPrefix.description"
+             name="Active Task Prefix"
+             type="activeTaskPrefix">
+       </resolver>
+       <resolver
+             class="org.eclipse.mylyn.tasks.ui.editors.TaskTemplateVariableResolver"
+             contextTypeId="javadoc"
+             description="%MylynTemplateVariableResolver.activeTaskPrefix.description"
+             name="Active Task Prefix"
+             type="activeTaskPrefix">
+       </resolver>
+       <template
+             autoinsert="true"
+             contextTypeId="javadoc"
+             description="active task"
+             id="org.eclipse.mylyn.ide.ui.template.activeTask"
+             name="active_task">
+          <pattern>
+             ${activeTaskPrefix}${activeTaskKey}
+          </pattern>
+       </template>
+    </extension>
+   
+</plugin>

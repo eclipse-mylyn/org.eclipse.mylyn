@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+    Copyright (c) 2010 Tasktop Technologies and others. 
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Tasktop Technologies - initial API and implementation
+ -->
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.context.core.bridges">
+      <structureBridge
+            class="org.eclipse.mylyn.internal.cdt.ui.CDTStructureBridge"
+            name="%structureBridge.name"
+            parentContentType="resource">
+      </structureBridge>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <uiBridge
+            class="org.eclipse.mylyn.internal.cdt.ui.CDTUiBridge"
+            contentType="c/c++">
+      </uiBridge>
+      <preservedFilters
+            viewId="org.eclipse.cdt.ui.CView">
+         <filter
+               class="org.eclipse.mylyn.internal.cdt.ui.CDTDeclarationsFilter">
+         </filter>
+      </preservedFilters>
+   </extension>
+   <extension
+       point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+          class="org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin">
+    </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="org.eclipse.mylyn.cdt.ui.cview.contribution"
+            targetID="org.eclipse.cdt.ui.CView">
+         <action
+               class="org.eclipse.mylyn.internal.cdt.ui.actions.FocusCViewAction"
+               disabledIcon="icons/elcl16/focus-disabled.gif"
+               enablesFor="*"
+               icon="icons/elcl16/focus.gif"
+               id="org.eclipse.mylyn.cdt.ui.cview.focusActiveTask.action"
+               label="%FocusActiveTask.label"
+               menubarPath="mylyn"
+               style="toggle"
+               toolbarPath="mylyn"
+               tooltip="%FocusActiveTask.tooltip">
+         </action>
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.cdt.ui.interest.increase.contribution"
+            objectClass="org.eclipse.cdt.core.model.ICElement">
+         <action
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+               enablesFor="*"
+               icon="icons/elcl16/interest-increase.gif"
+               id="org.eclipse.mylyn.cdt.ui.markAsLandmark.action"
+               label="%MarkLandmark.label"
+               menubarPath="group.reorganize"
+               tooltip="%MarkLandmark.tooltip">
+         </action>
+         <visibility>
+            <and>
+               <systemProperty
+                     name="org.eclipse.mylyn.context.core.context.active"
+                     value="true">
+               </systemProperty>
+               <or>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IFunction">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IMethod">
+                  </objectClass>
+               </or>
+            </and>
+         </visibility>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.cdt.ui.interest.remove.contribution.elements"
+            objectClass="org.eclipse.cdt.core.model.ICElement">
+         <action
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+               enablesFor="*"
+               icon="icons/elcl16/interest-decrease.gif"
+               id="org.eclipse.mylyn.cdt.ui.interest.decrease.element"
+               label="%RemoveFromContext.label"
+               menubarPath="group.reorganize"
+               tooltip="%RemoveFromContext.tooltip">
+         </action>
+         <visibility>
+            <and>
+               <systemProperty
+                     name="org.eclipse.mylyn.context.core.context.active"
+                     value="true">
+               </systemProperty>
+               <or>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IMethod">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IFunction">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IStructureDeclaration">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IDeclaration">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IUsing">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.ITypeDef">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IMacro">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.INamespace">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IInclude">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IIncludeReference">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IEnumerator">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IContributedCElement">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IBinaryElement">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.cdt.core.model.IBinary">
+                  </objectClass>
+               </or>
+            </and>
+         </visibility>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.cdt.ui.navigator.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.cdt.ui.navigator.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   
+   <!-- Content Assist -->
+
+    <extension
+        point="org.eclipse.cdt.ui.completionProposalComputer"
+        id="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+        name="Parsing-based Proposals (Task-Focused)">
+       <proposalCategory
+             icon="icons/elcl16/proposals-other.gif"></proposalCategory>
+    </extension>
+    <extension
+          id="FocusedDOMCompletionProposalComputer"
+          name="Parsing-based Proposals (Task-Focused)"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             activate="true"
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.mylyn.internal.cdt.ui.contentassist.FocusedDOMCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+    
+    <!-- from CDT -->
+    <extension
+          id="InclusionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.InclusionProposalComputer">
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+          id="KeywordCompletionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.KeywordCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+          <partition type="__c_preprocessor"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+          id="HelpCompletionProposalComputer"
+          point="org.eclipse.cdt.ui.completionProposalComputer">
+       <completionProposalComputer
+             categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+             class="org.eclipse.cdt.internal.ui.text.contentassist.HelpCompletionProposalComputer">
+          <partition type="__dftl_partition_content_type"/>
+       </completionProposalComputer>
+    </extension>
+    <extension
+         id="doccomment.multiline"
+         point="org.eclipse.cdt.ui.completionProposalComputer">
+      <completionProposalComputer
+            activate="true"
+            categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+            class="org.eclipse.cdt.internal.ui.text.doctools.DocCommentMultilineProposalComputer">
+         <partition
+               type="__c_multiline_doc_comment">
+         </partition>
+      </completionProposalComputer>
+   </extension>
+   <extension
+         id="doccomment.singleline"
+         point="org.eclipse.cdt.ui.completionProposalComputer">
+      <completionProposalComputer
+            activate="true"
+            categoryId="org.eclipse.mylyn.cdt.ui.parserProposalCategory"
+            class="org.eclipse.cdt.internal.ui.text.doctools.DocCommentSinglelineProposalComputer">
+         <partition
+               type="__c_singleline_doc_comment">
+         </partition>
+      </completionProposalComputer>
+   </extension>
+   
+   
+   
+   <!-- Editor Folding -->
+	<extension point="org.eclipse.ui.actionSets">
+	  <actionSet
+            id="org.eclipse.mylyn.cdt.ui.actionSet"
+            label="%actionSet.label"
+            visible="false">
+  		<action
+          class="org.eclipse.mylyn.internal.cdt.ui.actions.ToggleActiveFoldingAction"
+          definitionId="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+          icon="icons/elcl16/interest-folding.gif"
+          id="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+          label="%ToggleActiveFoldingAction.label"
+          style="toggle"
+          toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
+          tooltip="%ToggleActiveFoldingAction.tooltip">
+          <enablement>
+          	 <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+       	  </enablement>
+      	</action> 
+    </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.mylyn.cdt.ui.actionSet">
+         <part
+               id="org.eclipse.cdt.ui.editor.CEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+ 
+
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="%commands.category.name"
+            description="%commands.category.description"
+            id="org.eclipse.mylyn.cdt.ui.commands">
+      </category>
+	  <command
+         categoryId="org.eclipse.mylyn.cdt.ui.commands"
+         description="%command.folding.auto.description"
+         id="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
+         name="%command.folding.auto.name">
+      </command>
+    </extension>
+   
+</plugin>

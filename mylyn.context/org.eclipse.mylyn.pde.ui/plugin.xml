@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin> 
+
+   <extension point="org.eclipse.mylyn.context.ui.bridges">
+    <uiBridge
+          class="org.eclipse.mylyn.internal.pde.ui.PdeUiBridge"
+          contentType="plugin.xml"
+          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+	      activeSearchLabel="%bridges.activeSearchLabel"/>
+  </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin$PdeUiBrideStartup">
+      </startup>
+   </extension>
+
+   	<extension point="org.eclipse.mylyn.context.core.bridges">
+		<structureBridge
+	        class="org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge"
+	        name="%PdeStructureBridge.name"
+	        parentContentType="resource"/>
+	</extension>
+	
+	<extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            name="%TaskContextPdeJUnitLaunchConfiguration.name"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
+            delegate="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylyn.pde.junit.launchconfig">
+      </launchConfigurationType>
+    </extension>
+
+	<extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.mylyn.pde.junit.launchconfig"
+            helpContextId="org.eclipse.jdt.junit.junit_tab_group"
+            class="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitTabGroup"
+            id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
+         <launchMode
+               perspective="org.eclipse.debug.ui.DebugPerspective"
+               description="%TaskContextPdeJUnitTabGroup.description"
+               mode="debug">
+         </launchMode>
+         <launchMode
+               description="%TaskContextPdeJUnitTabGroup.description"
+               mode="run">
+         </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>	
+
+</plugin>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+   <extension-point id="javaEditorContributor" 
+   		name="Task-Focused Java Editor Contributor" 
+   		schema="schema/javaEditorContributor.exsd"/>
+	
+	<extension
+	       point="org.eclipse.mylyn.context.core.bridges">
+	    <structureBridge
+           class="org.eclipse.mylyn.internal.java.ui.JavaStructureBridge"
+           name="%JavaStructureBridge.name"
+           parentContentType="resource"/>
+     <structureBridge
+           class="org.eclipse.mylyn.internal.java.ui.JavaDebugStructureBridge"
+           name="%JavaDebugStructureBridge.name"/>
+    </extension>
+	   
+	<extension point="org.eclipse.mylyn.context.ui.bridges">
+	    <uiBridge
+	          class="org.eclipse.mylyn.internal.java.ui.JavaUiBridge"
+	          contentType="java"
+	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
+           	  activeSearchLabel="%JavaUiBridge.activeSearch.label"/>
+        <preservedFilters
+            viewId="org.eclipse.jdt.ui.PackageExplorer">
+       	 	<filter
+               class="org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter">
+         	</filter>
+         	<filter
+               class="org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter">
+         	</filter>
+         	<filter
+               class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter">
+         	</filter>
+          <filter
+                class="org.eclipse.jdt.internal.ui.filters.ClosedProjectFilter">
+          </filter>
+          <filter
+                class="org.eclipse.m2e.ui.internal.filter.MavenModuleFilter">
+          </filter>
+        </preservedFilters>
+        <preservedFilters
+              viewId="org.eclipse.ui.navigator.ProjectExplorer">
+           <filter
+                 class="org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter">
+           </filter>
+           <filter
+                 class="org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter">
+           </filter>
+        </preservedFilters>
+   </extension>
+   
+ <extension
+       point="org.eclipse.mylyn.context.ui.startup">
+    <startup
+          class="org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin$JavaUiBridgeStartup">
+    </startup>
+ </extension>
+
+  	<!-- ==================== Context Editing Common Navigator ==================== -->
+
+	<extension
+			point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding 
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+			<includes>
+				<contentExtension pattern="org.eclipse.jdt.java.ui.javaContent" />	
+			</includes>
+		</viewerContentBinding>
+		<viewerContentBinding 
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
+			<includes>
+				<contentExtension pattern="org.eclipse.jdt.java.ui.javaContent" />	
+			</includes>
+		</viewerContentBinding>
+	</extension>
+
+  	<!-- ==================== Content Assist ==================== -->
+
+ 	<extension
+ 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="javaAllProposalCategory"
+		name="%javaCompletionProposalComputer.javaAllProposalCategory.name">
+ 		<proposalCategory
+			icon="icons/elcl16/proposals-other.gif"/>
+	</extension>
+	
+	<!-- java completions -->
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="javaAllCompletionProposalComputer">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaAllProposalComputer"
+        needsSortingAfterFiltering="true"
+        requiresUIThread="false">
+			<partition type="__dftl_partition_content_type"/>
+			<partition type="__java_string"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<!-- javadoc completions -->
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="JavadocCompletionProposalComputer_all">
+		<javaCompletionProposalComputer
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
+        requiresUIThread="false">
+			<partition type="__java_javadoc"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="JavadocHTMLCompletionProposalComputer_all">
+		<javaCompletionProposalComputer
+        categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
+        requiresUIThread="false">
+			<partition type="__java_javadoc"/>
+		</javaCompletionProposalComputer>
+	</extension>
+
+  	<!-- ==================== Launch Configurations ==================== -->
+
+	<extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            name="%TaskContextJUnitLaunchConfiguration.name"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylyn.java.junit.launchconfig"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+      </launchConfigurationType>
+    </extension>
+    
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+	  	<launchConfigurationTypeImage
+	 		id="org.eclipse.mylyn.pde.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylyn.pde.junit.launchconfig"
+	 		icon="icons/etool16/launch-junit-pde.gif">
+	  	</launchConfigurationTypeImage>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+	  	<launchConfigurationTypeImage
+	 		id="org.eclipse.mylyn.java.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylyn.java.junit.launchconfig"
+	 		icon="icons/etool16/launch-junit.gif">
+	  	</launchConfigurationTypeImage>
+	</extension>
+	
+	<extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.mylyn.java.junit.launchconfig"
+            helpContextId="org.eclipse.jdt.junit.junit_tab_group"
+            class="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitTabGroup"
+            id="org.eclipse.mylyn.java.junit.launchconfig.tabgroup">
+         <launchMode
+               perspective="org.eclipse.debug.ui.DebugPerspective"
+               description="%TaskContextJUnitTabGroup.description"
+               mode="debug">
+         </launchMode>
+         <launchMode
+               description="%TaskContextJUnitTabGroup.description"
+               mode="run">
+         </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>
+
+   <extension point="org.eclipse.ui.viewActions"> 
+		<viewContribution 
+		id="org.eclipse.mylyn.java.explorer.contribution" 
+   		targetID="org.eclipse.jdt.ui.PackageExplorer">
+    	<action
+           class="org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
+           enablesFor="*"
+           icon="icons/elcl16/focus.gif"
+           id="org.eclipse.mylyn.java.actions.focus.packageExplorer"
+           label="%FocusPackageExplorerAction.label"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="%FocusPackageExplorerAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
+  		</action> 
+      </viewContribution>
+ 	  <viewContribution
+       id="org.eclipse.mylyn.ui.views.active.search.contribution"
+       targetID="org.eclipse.mylyn.ui.views.active.search">
+ 		</viewContribution> 	
+	</extension>
+
+	
+  <extension point="org.eclipse.ui.popupMenus"> 
+     <objectContribution
+     	   adaptable="false"
+           id="org.eclipse.mylyn.java.ui.interest.increase.contribution"
+           objectClass="org.eclipse.jdt.core.IJavaElement">
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.java.ui.interest.increase.element"
+           label="%InterestIncrementAction.label"
+           menubarPath="group.reorganize"
+           tooltip="%InterestIncrementAction.tooltip">
+     </action>
+     <visibility>
+     	<and>
+	     	<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+    	    </systemProperty>
+           <objectClass
+                 name="org.eclipse.jdt.core.IMember">
+           </objectClass>
+        </and>
+     </visibility>
+	 </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylyn.java.ui.interest.remove.contribution.elements"
+           objectClass="org.eclipse.jdt.core.IJavaElement">
+     	<action
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylyn.java.ui.interest.remove.element"
+            label="%InterestDecrementAction.label"
+            menubarPath="group.reorganize"
+            tooltip="%InterestDecrementAction.tooltip">
+      </action>
+      <visibility>
+      		<and>
+      			<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+      			</systemProperty>
+      			<or>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IMethod">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IField">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IClassFile">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.compiler.env.IBinaryType">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.core.JarPackageFragment">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.core.JarPackageFragmentRoot">
+	               </objectClass>
+	            </or>
+      		</and>
+      </visibility>
+     </objectContribution>
+     <viewerContribution
+           id="org.eclipse.mylyn.context.ui.browse.filtered.contribution"
+           targetID="org.eclipse.jdt.ui.PackageExplorer">
+        <action
+              class="org.eclipse.mylyn.internal.java.ui.actions.ShowFilteredChildrenAction"
+              enablesFor="1"
+              icon="icons/etool16/browse-filtered.gif"
+              id="org.eclipse.mylyn.java.ui.action.browse.filtered"
+              label="%ShowFilteredChildrenAction.label"
+              menubarPath="group.reorganize">
+        </action>
+        <visibility>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </visibility>
+     </viewerContribution>
+  </extension>   
+
+  <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylyn.java.actionSet"
+            label="%actionSet.label"
+            visible="false">
+  		<action
+          class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
+          definitionId="org.eclipse.mylyn.java.ui.editor.folding.auto"
+          icon="icons/elcl16/interest-folding.gif"
+          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
+          label="%ToggleActiveFoldingAction.label"
+          style="toggle"
+          toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
+          tooltip="%ToggleActiveFoldingAction.tooltip">
+       <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+       </enablement>
+      	</action> 
+      	<!--
+        <action
+               definitionId="org.eclipse.mylyn.java.ui.search.context"
+               label="Search the current task context"
+               class="org.eclipse.mylyn.internal.sandbox.ui.actions.FindReferencesInContextAction"
+               id="org.eclipse.mylyn.java.ui.search.context">
+         </action>
+        -->
+    </actionSet>
+   </extension>
+  
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.mylyn.java.actionSet">
+         <part
+               id="org.eclipse.jdt.ui.CompilationUnitEditor">
+         </part>
+         <part
+               id="org.eclipse.jdt.ui.ClassFileEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+  
+   <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylyn.java.actionSet.browsing"
+            label="%actionSet.browsing.label"
+            visible="false"> 
+	    <action
+           class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
+           id="org.eclipse.mylyn.java.ui.actions.ApplyMylynToBrowsingPerspectiveAction"
+           style="toggle"
+	       label="%FocusBrowsingPerspectiveAction.label" 
+	       icon="icons/elcl16/focus-browsing.gif"
+	       tooltip="%FocusBrowsingPerspectiveAction.tooltip"
+	       toolbarPath="mylyn"
+	       enablesFor="*">
+	    </action>
+  	</actionSet>
+  </extension>
+  
+ <extension point="org.eclipse.ui.actionSetPartAssociations">
+	<actionSetPartAssociation targetID="org.eclipse.mylyn.java.actionSet.browsing">
+         <part id="org.eclipse.jdt.ui.MembersView"/>
+         <part id="org.eclipse.jdt.ui.PackagesView"/>
+         <part id="org.eclipse.jdt.ui.TypesView"/>
+    </actionSetPartAssociation>
+  </extension>
+
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension 
+			targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+			<actionSet id="org.eclipse.mylyn.java.actionSet.browsing"/>
+		</perspectiveExtension>
+	</extension>
+
+   <extension point="org.eclipse.jdt.ui.javaElementFilters">
+        <filter
+            targetId="org.eclipse.jdt.ui.PackageExplorer"
+            name="%JavaDeclarationsFilter.name"
+            enabled="false"
+            description="%JavaDeclarationsFilter.description"
+            class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter"
+            id="org.eclipse.mylyn.java.ui.MembersFilter">
+   		</filter>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="%commands.category.name"
+            description="%commands.category.description"
+            id="org.eclipse.mylyn.java.ui.commands">
+      </category>
+	  <command
+         categoryId="org.eclipse.mylyn.java.ui.commands"
+         description="%command.folding.auto.description"
+         id="org.eclipse.mylyn.java.ui.editor.folding.auto"
+         name="%command.folding.auto.name">
+      </command>
+    </extension>
+   <extension
+         point="org.eclipse.mylyn.context.core.strategies">
+      <contextComputationStrategy
+            class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy">
+      </contextComputationStrategy>
+   </extension>
+   
+</plugin>

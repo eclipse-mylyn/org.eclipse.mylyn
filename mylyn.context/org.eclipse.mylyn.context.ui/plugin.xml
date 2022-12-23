@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+    <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
+    <extension-point id="startup" name="Context UI Startup" schema="schema/startup.exsd"/>
+
+ <!--
+  	<extension point = "org.eclipse.ui.popupMenus">
+     <objectContribution
+        id="org.eclipse.mylyn.context.ui.actions.interest.contribution"
+        objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
+     	<action  
+  		  	label="%InterestDecrementAction.label" 
+	  		tooltip="%InterestDecrementAction.tooltip"
+	  		menubarPath="additions" 
+	  		id="org.eclipse.mylyn.context.ui.actions.interest.decrement" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+	  		icon="icons/elcl16/interest-decrease.gif"
+	  		enablesFor="*"/>
+	    <action  
+  		  	label="%InterestIncrementAction.label" 
+	  		tooltip="%InterestIncrementAction.tooltip"
+	  		menubarPath="additions" 
+	  		id="org.eclipse.mylyn.context.ui.actions.interest.increment" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+	  		icon="icons/elcl16/interest-increase.gif"
+	  		enablesFor="*"/>
+	 </objectContribution> 
+   </extension>
+-->
+    
+    <!-- See org.eclipse.mylyn.tasks.ui/plugin.xml -->
+   	<extension
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <preservedFilters
+			viewId="org.eclipse.ui.navigator.ProjectExplorer">
+			<filter
+				id="org.eclipse.mylyn.tasks.ui.navigator.filters.tasks">
+			</filter>
+	  </preservedFilters> 
+   </extension> 
+    
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%ContextUiPreferencePage.name"
+            class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
+            id="org.eclipse.mylyn.context.ui.preferences"
+            category="org.eclipse.mylyn.preferencePages.Mylyn">
+         <keywordReference id="org.eclipse.mylyn.context.ui.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="%keywords.label"
+            id="org.eclipse.mylyn.context.ui.keywords"/>
+   </extension>
+ 
+	<!-- ==================== Common Navigator ==================== -->
+    <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <!--
+       <viewer
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+          <popupMenu
+                allowsPlatformContributions="false"
+                id="org.eclipse.mylyn.context.ui.navigator.context#PopupMenu">  
+             <insertionPoint name="group.new"/>
+             <insertionPoint
+                   	name="group.open"
+                   	separator="true"/>
+             <insertionPoint 
+             		name="group.openWith"/>     
+             <insertionPoint
+                   name="additions"
+                   separator="true"/>              
+			 <insertionPoint
+                   name="group.port"
+                   separator="true"/>  
+             <insertionPoint
+                   name="group.properties"
+                   separator="true"/>
+          </popupMenu>
+       </viewer>
+       -->
+       <viewerContentBinding 
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+          <includes>
+       	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
+          </includes>
+       </viewerContentBinding>
+       
+       <viewerContentBinding 
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
+          <includes>
+       	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
+          </includes>
+       </viewerContentBinding>
+       
+       <viewerActionBinding
+            viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+         <includes>
+             <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
+         </includes>
+       </viewerActionBinding>
+   </extension>	
+     
+   <!-- ==================== Actions ==================== -->
+    
+   <extension
+       	 point="org.eclipse.ui.actionSets">
+   	  <actionSet
+            label="%actionSet.label"
+            description="%actionSet.description"
+            visible="false"
+            id="org.eclipse.mylyn.context.ui.actionSet">
+         <!--
+         <action
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+               icon="icons/elcl16/interest-decrease.gif"
+               id="org.eclipse.mylyn.context.ui.actions.interest.decrement"
+               label="Mark Less Interesting"
+               menubarPath="navigate/open.ext2">
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+               icon="icons/elcl16/interest-increase.gif"
+               id="org.eclipse.mylyn.context.ui.actions.interest.increment"
+               label="Mark as Landmark"
+               menubarPath="navigate/open.ext2">
+         </action>
+		 -->
+	     <action
+               definitionId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
+               label="%OpenQuickContextPopupDialogAction.label"
+               class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialogAction"
+               menubarPath="navigate/showIn"
+               id="org.eclipse.mylyn.context.ui.actions.open.context.dialog">
+         </action>
+      </actionSet>
+   </extension>
+                              
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="%commands.category.name"
+            description="%commands.category.description"
+            id="org.eclipse.mylyn.context.ui.commands">
+      </category>
+      <command
+            name="%commands.interest.increment.name"
+            description="%commands.interest.increment.description"
+            id="org.eclipse.mylyn.context.ui.commands.interest.increment"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.actions.MarkAsLandmarkCommandHandler"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
+      </command>
+      <command
+            name="%commands.interest.decrement.name"
+            description="%commands.interest.decrement.description"
+            id="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextCommandHandler"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
+            
+      </command>
+      <command
+            name="%commands.open.context.dialog.name"
+            description="%commands.open.context.dialog.description"
+            id="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
+      </command>
+      <command
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
+            id="org.eclipse.mylyn.context.ui.commands.focus.view"
+            name="%commands.FocusViewHandler.name">
+         <commandParameter
+               id="viewId"
+               name="%commands.FocusViewHandler.commandParameter.name"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ToggleFocusActiveViewHandler"
+            description="%commands.ToggleFocusActiveViewHandler.description"
+            id="org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view"
+            name="%commands.ToggleFocusActiveViewHandler.name">
+      </command>
+   </extension>
+
+   <extension point="org.eclipse.ui.bindings">
+      <key
+            sequence="M1+M2+M3+ARROW_UP"
+            commandId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+            schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+M3+ARROW_DOWN"
+            commandId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+M3+ARROW_RIGHT"
+            commandId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M2+M3+H"
+            commandId="org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+
+   <extension point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            label="%InterestDecoratorLightweight.label"
+            class="org.eclipse.mylyn.internal.context.ui.InterestDecoratorLightweight"
+            state="true"
+            id="org.eclipse.mylyn.context.ui.decorator.interest">
+         <description>
+			%InterestDecoratorLightweight.description
+		 </description>
+         <enablement>
+            <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+            </systemProperty>
+         </enablement>
+      </decorator>
+   </extension>
+
+ <extension point="org.eclipse.ui.viewActions"> 
+	<viewContribution 
+		id="org.eclipse.mylyn.context.ui.outline.contribution" 
+   		targetID="org.eclipse.ui.views.ContentOutline">
+    	<action
+           class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
+           enablesFor="*"
+           icon="icons/elcl16/focus.gif"
+           id="org.eclipse.mylyn.context.ui.contentOutline.focus"
+           label="%FocusOutlineAction.label"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="%FocusOutlineAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
+  		</action> 
+  	</viewContribution>
+   </extension>
+   
+</plugin>

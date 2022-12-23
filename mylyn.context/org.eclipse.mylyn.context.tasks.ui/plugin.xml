@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.context.tasks.ui.ContextTasksStartupHandler">
+      </startup>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.contextStore">
+      <contextStore
+            class="org.eclipse.mylyn.internal.context.tasks.ui.TaskContextStore"
+            id="org.eclipse.mylyn.context.tasks.ui.contextStore">
+      </contextStore>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.activityMonitor">
+      <activityMonitor
+            class="org.eclipse.mylyn.internal.context.tasks.ui.TaskActivityMonitor"
+            id="org.eclipse.mylyn.context.tasks.ui.activityMonitor">
+      </activityMonitor>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
+            class="org.eclipse.mylyn.internal.context.tasks.ui.ContextTasksAdapterFactory">
+         <adapter
+               type="org.eclipse.mylyn.context.core.IInteractionContext">
+         </adapter>
+         <adapter
+               type="org.eclipse.mylyn.context.ui.ContextAwareEditorInput">
+         </adapter>
+      </factory>
+   </extension>
+
+ 	<extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      	<pageFactory
+             id="org.eclipse.mylyn.context.ui.pageFactory.Context"
+			 class="org.eclipse.mylyn.internal.context.tasks.ui.editors.ContextPageFactory"/>
+   	</extension>
+    
+</plugin>

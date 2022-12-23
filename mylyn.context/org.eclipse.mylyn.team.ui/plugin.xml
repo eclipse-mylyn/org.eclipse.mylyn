@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+   <extension-point id="changeSets" name="Task-Focused Change Providers" schema="schema/changeSets.exsd"/>
+   <extension-point id="commitTemplates" name="Commit Template Handlers" schema="schema/commitTemplates.exsd"/>
+    
+    <!-- needed to update change sets -->
+    <extension
+         name="Task Change Set Management"
+         point="org.eclipse.ui.startup">
+       <startup
+             class="org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin$FocusedTeamUiStartup">
+       </startup>
+    </extension>
+
+  <extension
+         point="org.eclipse.mylyn.team.ui.changeSets">
+      <contextChangeSetManager
+            class="org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager">
+      </contextChangeSetManager>
+   </extension>
+    
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.eclipse.mylyn.internal.team.ui.ContextChangeSetDecorator"
+            id="org.eclipse.mylyn.team.ui.changeset.decorator"
+            label="%ContextChangeSetDecorator.label"
+            lightweight="true"
+            state="true">
+         <enablement>
+            <objectClass
+                  name="org.eclipse.mylyn.team.ui.IContextChangeSet">
+            </objectClass>
+         </enablement>
+      </decorator>
+    </extension>
+    
+     <extension point="org.eclipse.ui.popupMenus"> 
+
+     	<objectContribution
+				id="org.eclipse.mylyn.ui.team.synchronize.open.report.contribution"
+				objectClass="org.eclipse.mylyn.team.ui.AbstractTaskReference"
+				adaptable="true">
+			<action
+				class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
+				enablesFor="1" 
+				icon="icons/elcl16/task-repository.gif"
+				id="org.eclipse.mylyn.ui.team.synchronize.open.report.linked"
+				label="%OpenCorrespondingTaskAction.label"
+				menubarPath="mylyn"
+				tooltip="%OpenCorrespondingTaskAction.tooltip">
+			</action> 
+			<action
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
+				enablesFor="*" 
+				icon="icons/elcl16/context-add.gif"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
+				label="%AddToTaskContextAction.label"
+				menubarPath="mylyn"
+				tooltip="%AddToTaskContextAction.tooltip">
+			</action> 
+		</objectContribution>
+
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ui.synchronize.SyncInfoModelElement"
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report.syncinfo">
+            <action
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
+				enablesFor="*" 
+				icon="icons/elcl16/context-add.gif"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
+				label="%AddToTaskContextAction.label"
+				menubarPath="mylyn"
+				tooltip="%AddToTaskContextAction.tooltip">
+			</action> 
+		</objectContribution>
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ui.synchronize.UnchangedResourceModelElement"
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report.unchanged">
+            <action
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
+				enablesFor="*" 
+				icon="icons/elcl16/context-add.gif"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
+				label="%AddToTaskContextAction.label"
+				menubarPath="mylyn"
+				tooltip="%AddToTaskContextAction.tooltip">
+			</action> 
+		</objectContribution>
+	</extension>
+    
+    <!-- ================= NAVIGATOR CONTENT =================== -->
+    
+    <extension point="org.eclipse.ui.navigator.navigatorContent">
+	   <actionProvider           
+	   	 class="org.eclipse.mylyn.internal.team.ui.actions.TaskResourceMappingActionProvider"
+	     id="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider">
+	     <enablement>
+	       <adapt type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+	     </enablement>
+	   </actionProvider>
+	</extension>
+	
+	<!-- =================  =================== -->
+	
+	<extension point = "org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
+               enablesFor="1"
+               icon="icons/elcl16/apply-patch.gif"
+               id="org.eclipse.mylyn.team.ui.ui.patch.apply"
+               label="%ApplyPatchAction.attachment.label"
+               menubarPath="actions"
+               tooltip="%ApplyPatchAction.attachment.tooltip">
+         </action>
+      </objectContribution>
+   </extension>
+	
+  <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="%FocusedTeamPreferencePage.name"
+         class="org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage"
+         id="org.eclipse.mylyn.team.ui.ui.preferences"
+         category="org.eclipse.mylyn.preferencePages.Mylyn">
+         <keywordReference id="org.eclipse.mylyn.team.ui.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="%keywords.label"
+            id="org.eclipse.mylyn.team.ui.keywords"/>
+   </extension>
+	
+    <extension
+          point="org.eclipse.mylyn.team.ui.commitTemplates">
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$ConnectorTaskPrefix"
+             description="%CommitTemplateVariables.ConnectorTaskPrefix.description"
+             recognizedKeyword="connector.task.prefix"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$RepositoryKind"
+             description="%CommitTemplateVariables.RepositoryKind.description"
+             recognizedKeyword="repository.kind"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$RepositoryUrl"
+             description="%CommitTemplateVariables.RepositoryUrl.description"
+             recognizedKeyword="repository.url"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskAssignee"
+             description="%CommitTemplateVariables.TaskAssignee.description"
+             recognizedKeyword="task.assignee"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCc"
+             description="%CommitTemplateVariables.TaskCc.description"
+             recognizedKeyword="task.cc"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskDescription"
+             description="%CommitTemplateVariables.TaskDescription.description"
+             recognizedKeyword="task.description"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskId"
+             description="%CommitTemplateVariables.TaskId.description"
+             recognizedKeyword="task.id"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskKey"
+             description="%CommitTemplateVariables.TaskKey.description"
+             recognizedKeyword="task.key"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskKeywords"
+             description="%CommitTemplateVariables.TaskKeywords.description"
+             recognizedKeyword="task.keywords"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskLastModified"
+             description="%CommitTemplateVariables.TaskLastModified.description"
+             recognizedKeyword="task.lastmodified"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskNotes"
+             description="%CommitTemplateVariables.TaskNotes.description"
+             recognizedKeyword="task.notes"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskPriority"
+             description="%CommitTemplateVariables.TaskPriority.description"
+             recognizedKeyword="task.priority"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskProduct"
+             description="%CommitTemplateVariables.TaskProduct.description"
+             recognizedKeyword="task.product"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskReporter"
+             description="%CommitTemplateVariables.TaskReporter.description"
+             recognizedKeyword="task.reporter"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskResolution"
+             description="%CommitTemplateVariables.TaskResolution.description"
+             recognizedKeyword="task.resolution"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskStatus"
+             description="%CommitTemplateVariables.TaskStatus.description"
+             recognizedKeyword="task.status"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskSummary"
+             description="%CommitTemplateVariables.TaskSummary.description"
+             recognizedKeyword="task.summary"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskType"
+             description="%CommitTemplateVariables.TaskType.description"
+             recognizedKeyword="task.type"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskURL"
+             description="%CommitTemplateVariables.TaskURL.description"
+             recognizedKeyword="task.url"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCompletion"
+             description="%CommitTemplateVariables.TaskCompletion.description"
+             recognizedKeyword="task.completiondate"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCreation"
+             description="%CommitTemplateVariables.TaskCreation.description"
+             recognizedKeyword="task.creationdate"/>
+       <templateVariable
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskReminder"
+             description="%CommitTemplateVariables.TaskReminder.description"
+             recognizedKeyword="task.reminderdate"/>
+    </extension>
+	
+   <extension point="org.eclipse.core.runtime.adapters">
+     <factory adaptableType="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
+             class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+     </factory>
+    <factory adaptableType="org.eclipse.team.core.history.IFileRevision"
+             class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+    </factory>
+    <factory adaptableType="org.eclipse.team.internal.core.subscribers.DiffChangeSet"
+             class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+    </factory>
+    <factory adaptableType="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
+             class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+    </factory>
+  </extension>
+  
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            category="org.eclipse.mylyn.tasks.ui.properties.pages.project.repository"
+            class="org.eclipse.mylyn.internal.team.ui.properties.ProjectTeamPage"
+            id="org.eclipse.mylyn.tasks.ui.properties.pages.project.team"
+            name="%ProjectTeamPage.name">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+            </adapt>
+         </enabledWhen>
+         <filter name="open" value="true"/>
+      </page>
+   </extension>
+
+   <!--
+   <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.tasks.ui.views.tasks?after=showIn">
+       <command
+             commandId="org.eclipse.ui.navigate.showIn"
+             label="History"
+             style="push">
+          <parameter
+                name="org.eclipse.ui.navigate.showIn.targetId"
+                value="org.eclipse.team.ui.GenericHistoryView">
+          </parameter>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+             </iterate>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+   </extension>
+   -->
+   
+   <extension
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
+          class="org.eclipse.mylyn.internal.team.ui.history.TaskHistoryAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.ITask"
+          class="org.eclipse.mylyn.internal.team.ui.history.TaskHistoryAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+ </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.internal.team.ui.actions.TaskFinderUrlHandler"
+            id="org.eclipse.mylyn.team.ui.TaskFinderUrlHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
+            defaultHandler="org.eclipse.mylyn.internal.team.ui.commands.CopyCommitMessageHandler"
+            description="Copies a commit message for the currently selected task to the clipboard."
+            id="org.eclipse.mylyn.team.ui.commands.CopyCommitMessage"
+            name="Copy Commit Message for Task">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.mylyn.tasklist.actions.copy?after=additions">
+         <command
+               commandId="org.eclipse.mylyn.team.ui.commands.CopyCommitMessage"
+               label="Commit Message"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+	
+</plugin>

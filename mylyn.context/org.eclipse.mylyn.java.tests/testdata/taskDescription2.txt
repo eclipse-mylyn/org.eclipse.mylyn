@@ -1,0 +1,55 @@
+When activating a task with no context, it was prepopulated with classes named Plugin, Product, Severity, and Date, and methods named error, because these words appear somewhere in a comment with a stack trace.
+
+Here's an example stack trace that should cause this problem:
+
+-- Error Details --
+Date: Mon Aug 08 14:35:23 CEST 2011
+Message: Unhandled event loop exception during blocked modal context.
+Severity: Error
+Product: Tasktop 2.0.2.qualifier (com.tasktop.ui.application.product)
+Plugin: org.eclipse.jface
+Session Data:
+eclipse.buildId=unknown
+java.version=1.6.0_22
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product com.tasktop.ui.application.product
+Command-line arguments:  -product com.tasktop.ui.application.product -data /home/bmuskalla/.tasktop/workspace -dev file:/projects/tasktop-selfhost/.metadata/.plugins/org.eclipse.pde.core/Tasktop/dev.properties -os linux -ws gtk -arch x86 -consoleLog -console -clean
+
+Exception Stack Trace:
+
+org.eclipse.swt.SWTException: Graphic is disposed
+	at org.eclipse.swt.SWT.error(SWT.java:4282)
+	at org.eclipse.swt.SWT.error(SWT.java:4197)
+	at org.eclipse.swt.SWT.error(SWT.java:4168)
+	at org.eclipse.swt.graphics.Image.getBounds(Image.java:840)
+	at org.eclipse.ui.forms.widgets.ImageHyperlink.paintHyperlink(ImageHyperlink.java:108)
+	at org.eclipse.ui.forms.widgets.ImageHyperlink.paintHyperlink(ImageHyperlink.java:93)
+	at org.eclipse.ui.forms.widgets.AbstractHyperlink.paint(AbstractHyperlink.java:296)
+	at org.eclipse.ui.forms.widgets.AbstractHyperlink$2.paintControl(AbstractHyperlink.java:84)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:229)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1258)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1282)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1267)
+	at org.eclipse.swt.widgets.Control.gtk_expose_event(Control.java:2961)
+	at org.eclipse.swt.widgets.Composite.gtk_expose_event(Composite.java:701)
+	at org.eclipse.swt.widgets.Canvas.gtk_expose_event(Canvas.java:167)
+	at org.eclipse.swt.widgets.Widget.windowProc(Widget.java:1739)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:5016)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4408)
+	at org.eclipse.swt.internal.gtk.OS._gtk_main_do_event(Native Method)
+	at org.eclipse.swt.internal.gtk.OS.gtk_main_do_event(OS.java:8394)
+	at org.eclipse.swt.widgets.Display.eventProc(Display.java:1245)
+	at org.eclipse.swt.internal.gtk.OS._g_main_context_iteration(Native Method)
+	at org.eclipse.swt.internal.gtk.OS.g_main_context_iteration(OS.java:2258)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3207)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.block(ModalContext.java:173)
+	at org.eclipse.jface.operation.ModalContext.run(ModalContext.java:388)
+	at org.eclipse.jface.dialogs.ProgressMonitorDialog.run(ProgressMonitorDialog.java:507)
+	at org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog.run(ProgressMonitorJobsDialog.java:275)
+	at org.eclipse.ui.internal.progress.ProgressManager$5.run(ProgressManager.java:960)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+	at org.eclipse.ui.internal.progress.ProgressManager.busyCursorWhile(ProgressManager.java:995)
+	at org.eclipse.ui.internal.progress.ProgressManager.busyCursorWhile(ProgressManager.java:970)
+

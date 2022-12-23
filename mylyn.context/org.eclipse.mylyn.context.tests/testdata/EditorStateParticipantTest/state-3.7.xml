@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<State>
+<org.eclipse.mylyn.context.ui.editors>
+<MonitoredWindowOpenEditors class="org.eclipse.ui.internal.WorkbenchWindow" isActive="true" isLaunching="true" number="0">
+<editorArea activeWorkbook="DefaultEditorWorkbook">
+<info part="DefaultEditorWorkbook">
+<folder appearance="1" expanded="2">
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+<part id="1"/>
+</presentation>
+</folder>
+</info>
+</editorArea>
+<editor id="org.eclipse.ui.DefaultTextEditor" name="b.txt" partName="b.txt" path="WORKSPACE/org.eclipse.mylyn.context.tests.EditorStateParticipantTest/b.txt" title="b.txt" tooltip="org.eclipse.mylyn.context.tests.EditorStateParticipantTest/b.txt" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/org.eclipse.mylyn.context.tests.EditorStateParticipantTest/b.txt"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.ui.DefaultTextEditor" name="a.txt" partName="a.txt" path="WORKSPACE/org.eclipse.mylyn.context.tests.EditorStateParticipantTest/a.txt" title="a.txt" tooltip="org.eclipse.mylyn.context.tests.EditorStateParticipantTest/a.txt" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/org.eclipse.mylyn.context.tests.EditorStateParticipantTest/a.txt"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+</MonitoredWindowOpenEditors>
+</org.eclipse.mylyn.context.ui.editors>
+</State>

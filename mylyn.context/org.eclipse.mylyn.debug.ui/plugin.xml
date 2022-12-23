@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2012 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+<plugin>
+  <extension point="org.eclipse.ui.viewActions"> 
+	<viewContribution
+         id="org.eclipse.mylyn.java.ui.markers.breakpoints.contribution"
+         targetID="org.eclipse.debug.ui.BreakpointView">
+      <action
+            class="org.eclipse.mylyn.internal.debug.ui.FocusBreakpointsViewAction"
+            disabledIcon="icons/elcl16/focus-disabled.gif"
+            enablesFor="*"
+            icon="icons/elcl16/focus.gif"
+            id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
+            label="%FocusBreakpointsViewAction.label"
+            menubarPath="mylyn"
+            style="toggle"
+            toolbarPath="mylyn"
+            tooltip="%FocusBreakpointsViewAction.tooltip">
+      </action>
+   	</viewContribution> 
+ 	<viewContribution 
+		id="org.eclipse.mylyn.ui.debug.view.contribution" 
+   		targetID="org.eclipse.debug.ui.DebugView">
+    	<action
+           class="org.eclipse.mylyn.internal.debug.ui.FocusDebugViewAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
+           enablesFor="*"
+           icon="icons/elcl16/focus.gif"
+           id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
+           label="%FocusDebugViewAction.label"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="%FocusDebugViewAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement> 
+  		</action> 
+    </viewContribution>
+  </extension>
+    <extension
+          point="org.eclipse.mylyn.context.core.bridges">
+       <structureBridge
+             class="org.eclipse.mylyn.internal.debug.ui.BreakpointsStructureBridge">
+       </structureBridge>
+    </extension>
+    <extension
+          point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+          <includes>
+             <contentExtension
+                   pattern="org.eclipse.mylyn.debug.ui.breakpointsRootContent">
+             </contentExtension>
+          </includes>
+       </viewerContentBinding>
+    </extension>
+    <extension
+          point="org.eclipse.ui.navigator.navigatorContent">
+       <navigatorContent
+             contentProvider="org.eclipse.mylyn.internal.debug.ui.cnf.BreakpointManagerContentProvider"
+             id="org.eclipse.mylyn.debug.ui.breakpointsRootContent"
+             labelProvider="org.eclipse.mylyn.internal.debug.ui.cnf.BreakpointManagerLabelProvider"
+             name="org.eclipse.mylyn.debug.ui.breakpointsRootContent"
+             priority="lowest">
+          <triggerPoints>
+             <instanceof
+                   value="org.eclipse.core.resources.IWorkspaceRoot">
+             </instanceof>
+          </triggerPoints>
+       </navigatorContent>
+    </extension>
+    <extension
+          point="org.eclipse.mylyn.context.core.contributor">
+       <contextContributor
+             class="org.eclipse.mylyn.internal.debug.ui.BreakpointsContextContributor"
+             name="Debug Context Contributor">
+       </contextContributor>
+    </extension>
+  <extension point="org.eclipse.ui.popupMenus"> 
+     <objectContribution
+     	   adaptable="false"
+           id="org.eclipse.mylyn.debug.ui.interest.increase.contribution"
+           objectClass="org.eclipse.debug.core.model.IBreakpoint">
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.debug.ui.interest.increase.element"
+           label="%InterestIncrementAction.label"
+           menubarPath="group.reorganize"
+           tooltip="%InterestIncrementAction.tooltip">
+     </action>
+     <visibility>
+     	<and>
+	     	<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+    	    </systemProperty>
+           <objectClass
+                 name="org.eclipse.debug.core.model.IBreakpoint">
+           </objectClass>
+        </and>
+     </visibility>
+	 </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylyn.debug.ui.interest.remove.contribution.elements"
+           objectClass="org.eclipse.debug.core.model.IBreakpoint">
+     	<action
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylyn.debug.ui.interest.remove.element"
+            label="%InterestDecrementAction.label"
+            menubarPath="group.reorganize"
+            tooltip="%InterestDecrementAction.tooltip">
+      </action>
+      <visibility>
+      		<and>
+      			<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+      			</systemProperty>
+	            <objectClass name="org.eclipse.debug.core.model.IBreakpoint">
+	            </objectClass>
+      		</and>
+      </visibility>
+     </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylyn.debug.ui.interest.remove.contribution.elements"
+           objectClass="org.eclipse.debug.core.IBreakpointManager">
+     	<action
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylyn.debug.ui.interest.remove.element"
+            label="%InterestDecrementAction.label"
+            menubarPath="group.reorganize"
+            tooltip="%InterestDecrementAction.tooltip">
+      </action>
+      <visibility>
+      		<and>
+      			<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+      			</systemProperty>
+	            <objectClass name="org.eclipse.debug.core.IBreakpointManager">
+	            </objectClass>
+      		</and>
+      </visibility>
+     </objectContribution>
+   </extension>
+    
+   <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="%BreakpointsPreferencePage.name"
+         class="org.eclipse.mylyn.internal.debug.ui.BreakpointsPreferencePage"
+         id="org.eclipse.mylyn.debug.ui.breakpoints"
+         category="org.eclipse.mylyn.context.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.debug.ui.keywords"/>
+      </page> 
+   </extension>
+   
+  <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="%keywords.label"
+            id="org.eclipse.mylyn.debug.ui.keywords"/>
+   </extension>
+   
+</plugin>
