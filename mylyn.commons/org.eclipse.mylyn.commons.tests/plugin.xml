@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="extensionPointReaderTest" name="ExtensionPointReader Test" schema="schema/extensionPointReaderTest.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.mylyn.commons.ui.screenshots.ScreenshotView"
+            id="org.eclipse.mylyn.commons.tests.view.Screenshot"
+            name="Screenshot"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest$HighPriorityHandler"
+            id="org.eclipse.mylyn.commons.tests.handler.HighPriority">
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest$LowPriorityHandler"
+            id="org.eclipse.mylyn.commons.tests.handler.LowPriority">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.tests.extensionPointReaderTest">
+      <extensionElement
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$ExtensionPointReaderExtensionImplementation"></extensionElement>
+      <extensionElementWithPriority
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P5ExtensionPointReaderExtensionImplementation"
+            priority="5"
+            customPriority="-5"
+            testFilterAttribute="value1">
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$PNegative5ExtensionPointReaderExtensionImplementation"
+            priority="-5"
+            customPriority="5"
+            testFilterAttribute="value2">
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P10ExtensionPointReaderExtensionImplementation"
+            priority="10"
+            customPriority="10">
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P0ExtensionPointReaderExtensionImplementation">
+      </extensionElementWithPriority>
+   </extension>
+
+</plugin>

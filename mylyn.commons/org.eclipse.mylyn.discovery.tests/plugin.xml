@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
+      <connectorCategory
+            description="%connectorCategory.description"
+            id="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            name="%connectorCategory.name">
+      </connectorCategory>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="a fictitious test connector that does nothing"
+            id="org.eclipse.mylyn.discovery.tests.connectorDescriptor1"
+            kind="task"
+            license="UTL (Unit Test License)"
+            name="Test Connector"
+            provider="UnitTesting"
+            siteUrl="http://foo.nodomain/site">
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.discovery.test1"
+            kind="task"
+            license="License"
+            name="Installable Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://localhost/discovery/"
+            statsUrl="http://localhost/stats/">
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.trac"
+            kind="task"
+            license="License"
+            name="Trac Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
+            statsUrl="http://localhost/stats/">
+         <iu
+               id="org.eclipse.mylyn.trac_feature">
+         </iu>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.trac"
+            kind="task"
+            license="License"
+            name="Uninstallable Trac Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
+            statsUrl="http://localhost/stats/">
+         <iu
+               id="org.eclipse.mylyn.trac_feature">
+         </iu>
+         <attribute
+               key="installMessage"
+               value="This connector requires Eclipse 5.0.">
+         </attribute>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
+            id="org.eclipse.mylyn.discovery.2tests"
+            kind="task"
+            license="License"
+            name="2 Installable Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://localhost/discovery/">
+         <iu
+               id="org.eclipse.mylyn.discovery.test1">
+         </iu>
+         <iu
+               id="org.eclipse.mylyn.discovery.test2">
+         </iu>
+      </connectorDescriptor>
+      <certification
+            id="org.eclipse.mylyn.discovery.tests.certification1"
+            name="%certification.name"
+            url="%certification.url">
+         <description>
+            %certification.description
+         </description>
+      </certification>
+   </extension>
+
+</plugin>

@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.commons.notifications.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.mylyn.commons.notifications.ui" id="notifications" name="Notifications"/>
+      </appinfo>
+      <documentation>
+         Provides support for event categories, types and sinks.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="category"/>
+            <element ref="event"/>
+            <element ref="sink"/>
+            <element ref="eventMapping"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="event">
+      <annotation>
+         <documentation>
+            Event types has an unique identifier, a label and optionally an icon and a category. Whenever a notification is triggered the identifier is used to determine how to present the notification to the user.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="0" maxOccurs="1">
+            <element ref="description"/>
+            <element ref="defaultHandler" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a unique event identifier.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  a 16x16 icon.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a label describing the event type.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="categoryId" type="string">
+            <annotation>
+               <documentation>
+                  parent category identifier.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/category/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="category">
+      <annotation>
+         <documentation>
+            Events can (and should) be organised into categories making them easy to locate in the user interface.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a unique event category identifier.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  a 16x16 icon.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a label describing the category.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="sink">
+      <annotation>
+         <documentation>
+            Notification sinks are used to handle events.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a unique event sink identifier.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the event sink implementation.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.commons.notifications.core.NotificationSink:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a label describing the event sink.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="description" type="string">
+      <annotation>
+         <appinfo>
+            <meta.element translatable="true"/>
+         </appinfo>
+         <documentation>
+            A description of the event type.
+         </documentation>
+      </annotation>
+   </element>
+
+   <element name="defaultHandler">
+      <annotation>
+         <documentation>
+            One or more &lt;i&gt;defaultHandler&lt;/i&gt; elements may be added to an event for specifying which sink should handle the event. If none are specified all sinks will be used. Note that this element specifies a default setting that may be changed in user preferences.
+
+A similar effect is achieved by the &lt;i&gt;eventMapping&lt;/i&gt; extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="sinkId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Identifier of the sink that should handle the event.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/sink/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="eventMapping">
+      <annotation>
+         <documentation>
+            Event mappings are used to map one ore more events to a sink. Note that this element specifies a default setting that may be changed in user preferences.
+
+Also see the &lt;i&gt;defaultHandler&lt;/i&gt; element of &lt;i&gt;event&lt;/i&gt; declarations.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="sinkId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Identifier of the sink that should handle the event.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/sink/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="eventIds" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a comma separated list of event identifiers that will be mapped to the notification sink. The &quot;*&quot; wildcard can be used so that multiple events can be mapped to one sink.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.5
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         Following is an example of use:
+&lt;pre&gt;
+ &lt;extension
+       point=&quot;org.eclipse.mylyn.commons.notifications.ui.notifications&quot;&gt;
+    &lt;event
+          categoryId=&quot;org.eclipse.mylyn.builds.ui.category.Builds&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.events.BuildServiceChanged&quot;
+          label=&quot;Build Service Changed&quot;&gt;
+       &lt;description&gt;
+          This event is triggered when the status of a build service is changed. For instance a new server is discovered or is no longer available.
+       &lt;/description&gt;
+       &lt;defaultHandler
+          sinkId=&quot;org.eclipse.mylyn.internal.builds.ui.view.NotificationSinkProxy&quot;/&gt;
+    &lt;/category&gt;
+    &lt;/event&gt;
+    &lt;category
+          icon=&quot;icons/eview16/build-view.png&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.category.Builds&quot;
+          label=&quot;Builds&quot;&gt;
+    &lt;/category&gt;
+    &lt;sink
+          class=&quot;org.eclipse.mylyn.internal.builds.ui.view.NotificationSinkProxy&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.sink.View&quot;
+          label=&quot;Builds View&quot;&gt;
+    &lt;/sink&gt;
+    &lt;eventMapping
+          eventIds=&quot;org.eclipse.mylyn.builds.ui.events.*&quot;
+          sinkId=&quot;org.eclipse.mylyn.commons.notifications.ui.sink.Popup&quot;&gt;
+    &lt;/eventMapping&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+
+This example will declare a new event and assign it to the builds view notification sink. The category for the event is also declared in addition to the builds view notification sink. The last configuration element declares a mapping between all build event types and the popup notification sink.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         The value of the class attribute in sink must represent a class 
+that implements &lt;samp&gt;org.eclipse.mylyn.commons.notifications.core.NotificationSink&lt;/samp&gt;.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         Mylyn Builds comes with two event types and two different sinks for handling these notifications.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2010 Tasktop Technologies and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-v20.html
+      </documentation>
+   </annotation>
+
+</schema>

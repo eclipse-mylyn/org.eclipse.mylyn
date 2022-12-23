@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+<title>Mylyn Updates</title>
+<link>http://eclipse.org/mylyn</link>
+<description>Mylyn Updates</description>
+<language>en</language>
+<!--
+<item>
+<title>New Connectors</title>
+<link>http://eclipse.org/mylyn/new/</link>
+<pubDate>Fri, 27 May 2011 12:00:00 +0000</pubDate>
+<dc:creator>Steffen Pingel</dc:creator>
+<dc:subject>frameworkVersion=[0.0.0,3.7.0)</dc:subject>
+<guid isPermaLink="false">20110527-0000</guid>
+<description>New connectors are now available. &lt;a href="http://eclipse.org/mylyn/new/?action=discovery"&gt;Show connectors&lt;/a&gt;.</description>
+</item>
+-->
+<!--
+<item>
+<title>Mylyn Update</title>
+<link>http://eclipse.org/mylyn/new/</link>
+<pubDate>Wed, 26 Oct 2011 12:00:00 +0000</pubDate>
+<dc:creator>Steffen Pingel</dc:creator>
+<dc:subject>frameworkVersion=[0.0.0,3.7.0)</dc:subject>
+<guid isPermaLink="false">20111108-2200</guid>
+<description>Mylyn 3.7.0 is now available. &lt;a href="http://eclipse.org/mylyn/new/"&gt;See New &amp; Noteworthy&lt;/a&gt; for details.</description>
+</item>
+-->
+<item>
+<title>Mylyn Update</title>
+<link>http://eclipse.org/mylyn/new/</link>
+<pubDate>Thu, 3 Oct 2013 12:00:00 +0000</pubDate>
+<dc:creator>Steffen Pingel</dc:creator>
+<dc:subject>frameworkVersion=[0.0.0,4.0.0)</dc:subject>
+<guid isPermaLink="false">20131003-1200</guid>
+<description>Mylyn 3.9.1 is &lt;a href="http://eclipse.org/mylyn/downloads/"&gt;now available&lt;/a&gt;.</description>
+</item>
+</channel>
+</rss>

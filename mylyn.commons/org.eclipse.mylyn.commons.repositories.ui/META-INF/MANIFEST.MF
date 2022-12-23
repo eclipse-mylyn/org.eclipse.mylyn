@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.ui; singleton:=true
+Bundle-Version: 3.26.0.qualifier
+Bundle-Activator: org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesUiPlugin
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.databinding;bundle-version="0.0.0",
+ org.eclipse.core.databinding.beans;bundle-version="0.0.0",
+ org.eclipse.core.databinding.property;bundle-version="0.0.0";resolution:=optional,
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.equinox.security;bundle-version="0.0.0",
+ org.eclipse.jface.databinding;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.eclipse.ui.forms;bundle-version="0.0.0",
+ org.eclipse.ui.navigator;bundle-version="0.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.mylyn.commons.repositories.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.commons.repositories.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.commons.repositories.ui.auth;x-internal:=true,
+ org.eclipse.mylyn.internal.commons.repositories.ui.wizards;x-internal:=true

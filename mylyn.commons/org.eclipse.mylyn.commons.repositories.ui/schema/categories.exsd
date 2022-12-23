@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.commons.repositories.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.mylyn.commons.repositories.ui" id="categories" name="categories"/>
+      </appinfo>
+      <documentation>
+         This extension point is used to register categories to the Team Repositories View.
+&lt;p&gt;
+The default implementation defines the follwoing categories:
+&lt;ul&gt;
+&lt;li&gt;Tasks&lt;/li&gt;
+&lt;li&gt;Bugs&lt;/li&gt;
+&lt;li&gt;Builds&lt;/li&gt;
+&lt;li&gt;Reviews&lt;/li&gt;
+&lt;li&gt;Requirements&lt;/li&gt;
+&lt;li&gt;Others&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="category"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="category">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a unique name that can be used to identify this category
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a translatable name of the category that will be used in the view as lable
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="rank" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The rank must be an Integer Value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         1.1
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         Following is an example of the definition of the default categories.
+&lt;p&gt;
+&lt;pre&gt;
+   &lt;extension
+         point=&quot;org.eclipse.mylyn.commons.repositories.ui.category&quot;&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.tasks&quot;
+            label=&quot;Tasks&quot;
+            rank=&quot;0&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.bugs&quot;
+            label=&quot;Bugs&quot;
+            rank=&quot;100&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.build&quot;
+            label=&quot;Builds&quot;
+            rank=&quot;200&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.review&quot;
+            label=&quot;Reviews&quot;
+            rank=&quot;300&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.requirements&quot;
+            label=&quot;Requirements&quot;
+            rank=&quot;400&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
+            id=&quot;org.eclipse.mylyn.category.other&quot;
+            label=&quot;Other&quot;
+            rank=&quot;500&quot;&gt;
+      &lt;/category&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;p&gt;
+      </documentation>
+   </annotation>
+
+
+
+
+</schema>

@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Commons Tests
+Bundle-SymbolicName: org.eclipse.mylyn.commons.tests;singleton:=true
+Bundle-Version: 3.26.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.core.net;bundle-version="0.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.net;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.screenshots;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.xmlrpc;bundle-version="3.26.0",
+ org.eclipse.osgi;bundle-version="0.0.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.junit;bundle-version="4.8.2"
+Export-Package: org.eclipse.mylyn.commons.core;x-internal:=true,
+ org.eclipse.mylyn.commons.tests;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.core;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.core.storage,
+ org.eclipse.mylyn.commons.tests.manual;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.net;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.operations;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.support;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.workbench.browser;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.xmlrpc;x-internal:=true,
+ org.eclipse.mylyn.commons.ui.screenshots;x-internal:=true
+Import-Package: org.apache.xmlrpc;version="3.1.3",
+ org.apache.xmlrpc.server;version="3.1.3",
+ org.apache.xmlrpc.webserver;version="3.1.3"
+Bundle-Vendor: Eclipse Mylyn

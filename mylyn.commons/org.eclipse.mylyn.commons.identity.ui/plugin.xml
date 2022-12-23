@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="newWizards" name="newWizards" schema="schema/newWizards.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.mylyn.ui"
+            class="org.eclipse.mylyn.internal.commons.identity.ui.PeopleView"
+            icon="icons/obj16/people.gif"
+            id="org.eclipse.mylyn.commons.identity.ui.navigator.People"
+            name="People">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.linkHelper">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerContentBinding
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.mylyn.commons.identity.ui.navigator.*">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.mylyn.commons.identity.ui.navigator.*">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.eclipse.mylyn.internal.commons.identity.ui.PeopleContentProvider"
+            icon="icons/obj16/person.gif"
+            id="org.eclipse.mylyn.commons.identity.ui.navigator.People"
+            labelProvider="org.eclipse.mylyn.internal.commons.identity.ui.PersonLabelProvider"
+            name="People">
+         <possibleChildren>
+            <instanceof
+                  value="java.lang.Object">
+            </instanceof>
+         </possibleChildren>
+         <triggerPoints>
+            <instanceof
+                  value="org.eclipse.mylyn.internal.commons.identity.ui.PeopleCategory">
+            </instanceof></triggerPoints>
+         <commonSorter
+               class="org.eclipse.mylyn.internal.commons.identity.ui.PeopleSorter">
+         </commonSorter>
+      </navigatorContent>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.mylyn.commons.identity.ui.navigator.People">
+         <command
+               commandId="org.eclipse.ui.file.refresh"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.mylyn.internal.commons.identity.ui.RefreshHandler"
+            commandId="org.eclipse.ui.file.refresh">
+         <activeWhen>
+			<with variable="activePartId">
+			    <equals value="org.eclipse.mylyn.commons.identity.ui.navigator.People"/>
+			</with> 
+         </activeWhen>
+      </handler>
+   </extension>
+</plugin>
