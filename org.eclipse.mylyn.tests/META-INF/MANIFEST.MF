@@ -35,6 +35,5 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.eclipse.mylyn.tasks.tests,
  org.eclipse.mylyn.tasks.index.tests,
  org.eclipse.mylyn.trac.tests,
- org.eclipse.mylyn.team.tests,
- org.eclipse.mylyn.bugzilla.rest.core.tests;bundle-version="1.0.0"
+ org.eclipse.mylyn.team.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
