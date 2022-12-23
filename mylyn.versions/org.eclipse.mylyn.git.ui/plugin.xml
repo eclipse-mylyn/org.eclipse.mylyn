@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.versions.ui.connectors">
+      <connector
+            id="org.eclipse.egit.core.GitProvider"
+            ui="org.eclipse.mylyn.internal.git.ui.connector.GitConnectorUi">
+      </connector>
+   </extension>
+
+</plugin>

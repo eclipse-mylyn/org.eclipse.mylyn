@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.versions.core.connectors">
+      <connector
+            core="org.eclipse.mylyn.versions.tests.support.MockScmConnector"
+            id="org.eclipse.mylyn.versions.tests.repository.mock">
+      </connector>
+   </extension>
+   <extension
+         point="org.eclipse.team.core.repository">
+      <repository
+            class="org.eclipse.mylyn.versions.tests.support.MockRepositoryProvider"
+            id="org.eclipse.mylyn.versions.tests.repository.mock">
+      </repository>
+   </extension>
+
+</plugin>
