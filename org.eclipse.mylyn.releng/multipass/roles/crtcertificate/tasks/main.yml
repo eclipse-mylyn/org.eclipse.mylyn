@@ -1,0 +1,94 @@
+---
+- name: transfer id_rsa
+  ansible.posix.synchronize:
+    src: ./first_setup/ubuntu_key
+    dest: .ssh/id_rsa
+
+# - name: add to known_hosts
+#   become: true
+#   become_user: root
+#   ansible.builtin.shell: "ssh-keyscan -H {{ item.name }} >> /home/ubuntu/.ssh/known_hosts"
+#   loop: "{{ hostvars['localhost'].setup_lst }}"
+#   run_once: true
+# 
+- name: delete ca_path exists
+  become: true
+  ansible.builtin.file:
+    path: /cacerts/server_ca
+    state: absent
+#  delegate_to: "{{ inventory_hostname }}"
+  when: (recreate_certs is defined) and (recreate_certs|bool == true)
+
+- name: ensure ca_path exists
+  become: true
+  ansible.builtin.file:
+    path: /cacerts/server_ca
+    state: directory
+    mode: "0755"
+    owner: ubuntu
+    group: ubuntu
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+
+- name: Create private key for new certificate
+  community.crypto.openssl_privatekey:
+    path: /cacerts/server_ca/{{ inventory_hostname }}.key
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+
+- name: Create certificate signing request (CSR) for new certificate!
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: /cacerts/server_ca/{{ inventory_hostname }}.key
+    country_name: DE
+    organization_name: Frank Becker Computertechnik
+    organizational_unit_name: IT
+    email_address: frank@frank-becker.de
+    locality_name: Mainz
+#    locality_name: '{{ subject_alt }}'
+    common_name: '{{ common_domain_name }}'
+    subject_alt_name: '{{ subject_alt }}'
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+  register: csr
+
+- name: Check whether certificate exists
+  stat:
+    path: /cacerts/server_ca/{{ inventory_hostname }}.pem
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+  register: certificate_exists
+
+- name: Read existing certificate if exists
+  slurp:
+    src: /cacerts/server_ca/{{ inventory_hostname }}.crt
+  when: certificate_exists.stat.exists
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+  register: certificate
+
+- name: Sign certificate with our CA
+  community.crypto.x509_certificate_pipe:
+    content: "{{ (certificate.content | b64decode) if certificate_exists.stat.exists else omit }}"
+    csr_content: "{{ csr.csr }}"
+    provider: ownca
+    ownca_path: "/cacerts/root_ca/{{ rootca_name }}.crt"
+    ownca_privatekey_path: "/cacerts/root_ca/{{ rootca_name }}.key"
+    ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    ownca_not_after: +365d  # valid for one year
+    ownca_not_before: "-1d"  # valid since yesterday
+  delegate_to: "{{ rootca_name }}"
+#  run_once: true
+  register: certificate
+
+- name: Write certificate file
+  copy:
+    dest: /cacerts/server_ca/{{ inventory_hostname }}.crt
+    content: "{{ certificate.certificate }}"
+#  delegate_to: "{{ inventory_hostname }}"
+#  run_once: true
+  when: certificate is changed
+# - name: convert pem to cert
+#   shell: "openssl x509 -outform der -in /cacerts/server_ca/{{ inventory_hostname }}.crt -out /cacerts/server_ca/{{ inventory_hostname }}.cert"
+#   delegate_to: "{{ inventory_hostname }}"
+#   run_once: true
+#   when: certificate is changed

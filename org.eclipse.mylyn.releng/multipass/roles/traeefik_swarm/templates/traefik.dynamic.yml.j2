@@ -1,0 +1,21 @@
+# Dynamic configuration
+# https://docs.traefik.io/reference/dynamic-configuration/file/
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      # sniStrict: true # not work def cert
+    mintls13:
+      minVersion: VersionTLS13
+      # sniStrict: true # not work def cert
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/certificates/{{ swarm_master_name }}.crt"
+        keyFile: "/certificates/{{ swarm_master_name }}.key"
+  certificates:
+    - certFile: "/certificates/{{ swarm_master_name }}.crt"
+      keyFile: "/certificates/{{ swarm_master_name }}.key"
+      stores:
+        - default

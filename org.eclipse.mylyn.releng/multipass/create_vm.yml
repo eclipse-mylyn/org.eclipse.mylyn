@@ -1,0 +1,28 @@
+#
+# Globale Facts setzen
+#
+- hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: set global var
+      ansible.builtin.set_fact:
+        grp_prefix: "{{ prefix | default('mylyn')}}"
+        local_domain: "{{ loc_dom | default('mylyn.local')}}"
+
+    - name: build setup_lst
+      ansible.builtin.set_fact:
+        setup_lst: "{{ setup_lst | default([]) + [ { 'name': item, 'ip4': hostvars[item].ansible_host, 'disk':  hostvars[item].multipass_disk, 'memory':  hostvars[item].multipass_memory, 'cpus':  hostvars[item].multipass_cpus } ] }}"
+      with_items:
+        - "{{ groups[grp_prefix + \"_admin\"] }}"
+        - "{{ groups[grp_prefix + \"_swarm_master\"] }}"
+        - "{{ groups[grp_prefix + \"_swarm_worker\"] }}"
+    - name: "setup Liste for {{ grp_prefix }}"
+      ansible.builtin.debug: msg="{{ setup_lst }}"
+
+#
+# Multipass Instanzen erzeugen
+# 
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - role: multipass_create_vm

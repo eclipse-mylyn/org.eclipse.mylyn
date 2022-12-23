@@ -1,0 +1,66 @@
+---
+- name: Creates directory
+  ansible.builtin.file:
+        path: "/mylyn-config-dir/{{ role_name }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: Build the image
+  community.docker.docker_image:
+    name: "127.0.0.1:5000/mylyn_idx"
+    tag: 1
+    push: true
+    build:
+      path: /mylyn-config-dir/{{ role_name }}
+    source: build
+
+- name: Deploy swarm service
+  community.docker.docker_swarm_service:
+    name: mylyn_idx
+    image: "127.0.0.1:5000/mylyn_idx:1"
+    networks:
+      - ruvzcx_net
+      - cloud-socket-proxy
+    publish:       
+      - published_port: "8001"
+        target_port: "8001"
+    replicas: 1
+    update_config:
+      parallelism: 1
+      delay: 10s
+      order: start-first
+    restart_config:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 3
+      window: 120s
+    mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: bind
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: ruvzcx_net
+#      traefik.http.routers.mylyn_idx_https.rule: Host(`hello.mylyn.local`)
+      traefik.http.routers.mylyn_idx_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/mylyn_idx`)"
+      traefik.http.routers.mylyn_idx_https.entrypoints: websecure
+      traefik.http.routers.mylyn_idx_https.tls: "true"
+#     traefik.http.routers.mylyn_idx_https.tls.options: mintls13@file
+      traefik.http.routers.mylyn_idx_https.service: mylyn_idx
+      traefik.http.routers.mylyn_idx_https.middlewares: stripprefix_mylyn_idx
+      traefik.http.middlewares.stripprefix_mylyn_idx.stripprefix.prefixes: /mylyn_idx
+
+      traefik.http.services.mylyn_idx.loadbalancer.server.port: "8001"
+      traefik.http.services.mylyn_idx.loadbalancer.passhostheader: "true"
+    placement:
+      constraints:
+        - node.role == manager

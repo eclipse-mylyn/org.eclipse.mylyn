@@ -1,0 +1,92 @@
+---
+- name: all
+  block:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+     
+    - name: Install required system packages
+      ansible.builtin.apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - lsb-release
+        state: latest
+        update_cache: true
+    
+    - name: Add Docker GPG apt Key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    
+    - name: Add Docker Repository
+      ansible.builtin.apt_repository:
+        repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+    
+    - name: Update apt and install docker-ce
+      ansible.builtin.apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+    
+    - name: Install Docker Module for Python
+      ansible.builtin.pip:
+        name: docker
+    
+    - name: Add remote "ubuntu" user to "docker" group
+      ansible.builtin.user:
+        name: "ubuntu"
+        groups: "docker"
+        append: true
+        
+    # install docker-compose 1.24.0 version, but you can specify the version you need & apply executable permissions to the binary
+    - name: install docker-compose
+      ansible.builtin.get_url:
+        url: https://github.com/docker/compose/releases/download/v2.10.1/docker-compose-{{ ansible_system | lower }}-{{ ansible_architecture }}
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+    
+    # you can also create a symbolic link to /usr/bin or any other directory in your path
+    - name: Create symlink
+      ansible.builtin.file: src=/usr/local/bin/docker-compose dest=/usr/bin/docker-compose state=link
+    - name: Creates directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+      loop:
+        - /mylyn-config-dir
+        - /mylyn-runtime-dir
+    - name: pip jsondiff
+      ansible.builtin.pip:
+        name: jsondiff
+
+#    - name: Creates directory
+#      become: true
+#      ansible.builtin.file:
+#        path: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000"
+#        state: directory  
+#    - name: copy root cert
+#      become: true
+#      ansible.posix.synchronize:
+#        src: "/cacerts/server_ca/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.crt"
+#        dest: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000/ca.crt"
+#        private_key: /home/ubuntu/.ssh/id_rsa
+#      delegate_to: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+#
+#    - name: create daemon.json
+#      become: true
+#      shell: |
+#         cat << EOF > /etc/docker/daemon.json
+#         { }
+#         EOF
+#
+  become: true 

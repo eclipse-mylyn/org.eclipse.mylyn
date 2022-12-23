@@ -1,0 +1,38 @@
+---
+- name: Create a network            
+  community.docker.docker_network:  
+    driver: overlay                 
+    scope: swarm                    
+    name: cloud-socket-proxy            
+- name: Deploy swarm service
+  community.docker.docker_swarm_service:
+    name: docker-socket-proxy
+    image: tecnativa/docker-socket-proxy:latest
+    networks:
+#      - ruvzcx_net
+      - cloud-socket-proxy
+    publish:       
+      - published_port: "2375"
+        target_port: "2375"
+    replicas: 1
+    update_config:
+      parallelism: 1
+      delay: 10s
+      order: start-first
+    restart_config:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 3
+      window: 120s
+    mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: bind
+    env:
+      # permssions needed
+      NETWORKS: "1"
+      SERVICES: "1"
+      TASKS: "1"
+    placement:
+      constraints:
+        - node.role == manager

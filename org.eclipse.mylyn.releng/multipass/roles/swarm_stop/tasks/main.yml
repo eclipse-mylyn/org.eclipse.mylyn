@@ -1,0 +1,62 @@
+---
+- name: Check is docker-compose installed
+  shell: command -v docker >/dev/null 2>&1
+  register: is_docker_install
+  ignore_errors: true
+
+#- debug: msg="{{ is_docker_install.rc }}" # it returns rc 0 if installed or 127 if not
+#- debug: var=is_docker_install
+
+- name: Shows stack info
+  community.docker.docker_stack_info:
+  register: stack_info_result
+  ignore_errors: true
+#  when: stack_info_result is defined
+ 
+#- name: debug stack_info_result
+#  ansible.builtin.debug:
+#    var: stack_info_result
+
+- name: Remove service
+  community.docker.docker_stack:
+    name: "{{ item }}"
+    state: absent 
+  loop: "{{ stack_info_result.results | map(attribute='Name') }}"
+  when: stack_info_result is defined and stack_info_result.results is defined
+
+- name: Get info on Docker Swarm and extended list of registered nodes
+  community.docker.docker_swarm_info:
+    services: true
+    verbose_output: true
+  register: result_services
+#  when: is_docker_install.rc == 0 and stack_info_result is defined and stack_info_result.results is defined
+
+#- name: debug result_services
+#  ansible.builtin.debug:
+#    var: result_services
+
+- name: Remove service
+  community.docker.docker_swarm_service:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ result_services.services | map(attribute='Spec.Name') }}"
+  when: result_services is defined and result_services.services is defined
+
+# - name: remove worker from swarm
+#   community.docker.docker_swarm:
+#     state: absent
+#     force: true
+#   ignore_errors: true
+#   delegate_to: "{{ item }}"
+#   with_items:
+#     - "{{ groups[hostvars['localhost'].grp_prefix  + \"_swarm_worker\"] }}"
+#   when: stack_info_result.results is defined
+# 
+# 
+# - name: remove node from swarm
+#   community.docker.docker_swarm:
+#     state: absent
+#     force: true
+#   when: stack_info_result.results is defined
+# 
+

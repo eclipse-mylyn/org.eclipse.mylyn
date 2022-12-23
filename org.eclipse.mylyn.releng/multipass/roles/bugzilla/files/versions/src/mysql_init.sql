@@ -1,0 +1,4 @@
+CREATE DATABASE bugzilla;
+CREATE USER 'bugs'@'localhost' IDENTIFIED BY 'ovlwq8';
+GRANT ALL PRIVILEGES ON bugzilla.* TO 'bugs'@'localhost' IDENTIFIED BY 'ovlwq8' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

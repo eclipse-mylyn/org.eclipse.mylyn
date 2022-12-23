@@ -1,0 +1,60 @@
+all:
+  vars:
+    multipass_disk: 5G
+    multipass_memory: 1G
+    multipass_cpus: 1
+  children:
+    mylyn_admin:
+      hosts:
+        mylynadm01:
+    mylyn_hosts:
+      children:
+        mylyn_swarm_master:
+          hosts:
+            mylynmstr01:
+          vars:
+            multipass_disk: 10G
+            multipass_memory: 4G
+        mylyn_swarm_worker:
+          hosts:
+            mylynwrk01:
+          vars:
+            multipass_disk: 20G
+            multipass_memory: 8G
+  hosts:
+    mylynadm01:
+      ansible_connection: ssh
+      ansible_host: "192.168.64.x2"
+      ansible_user: ubuntu
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
+      ansible_ssh_private_key_file: first_setup/ubuntu_key
+      default_etc_hosts: "mylynadm01"
+    mylynmstr01:
+      ansible_connection: ssh
+      ansible_host: "192.168.64.x3"
+      ansible_user: ubuntu
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
+      ansible_ssh_private_key_file: first_setup/ubuntu_key
+      default_etc_hosts: "mylynmstr01 traefik.mylyn.local mylynmstr01.mylyn.local mylyn.local jenkins.mylyn.local hello.mylyn.local"
+    mylynwrk01:
+      ansible_connection: ssh
+      ansible_host: "192.168.64.x4"
+      ansible_user: ubuntu
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
+      ansible_ssh_private_key_file: first_setup/ubuntu_key
+      default_etc_hosts: "mylynwrk01 mylynwrk01.mylyn.local"
+    mylynwrk02:
+      ansible_connection: ssh
+      ansible_host: "192.168.64.x5"
+      ansible_user: ubuntu
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
+      ansible_ssh_private_key_file: first_setup/ubuntu_key
+      default_etc_hosts: "mylynwrk02 mylynwrk02.mylyn.local"
+      multipass_disk: 11G
+    mylynwrk03:
+      ansible_connection: ssh
+      ansible_host: "192.168.64.x6"
+      ansible_user: ubuntu
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
+      ansible_ssh_private_key_file: first_setup/ubuntu_key
+      default_etc_hosts: "mylynwrk03 mylynwrk03.mylyn.local"
