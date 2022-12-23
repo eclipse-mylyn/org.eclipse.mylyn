@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+TYPE="<%= @envtype %>"
+DIR="<%= @envbase %>"
+ID="<%= @envid %>"
+VERSION="<%= @version %>"
+PORT="<%= @port %>"
+
+echo Starting $TYPE $VERSION on port $PORT
+HUDSON_HOME=$(cd $DIR; pwd) JENKINS_HOME=$(cd $DIR; pwd) nohup java -client -Xmx128m -Djava.awt.headless=true -jar $DIR/../archive/$TYPE-$VERSION.war --httpPort=$PORT --ajp13Port=-1 --prefix=/$ID > $DIR/$TYPE.out 2>&1 &
+echo $! > $DIR/$TYPE.pid

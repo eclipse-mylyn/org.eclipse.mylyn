@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2015, 2022 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+         ArSysOp - adapt to SimRel 2022-12
+ -->
+<feature
+      id="org.eclipse.mylyn.builds.development"
+      label="%featureName"
+      version="3.26.0.qualifier"
+      provider-name="%providerName"
+      plugin="org.eclipse.mylyn.builds.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="0.0.0">
+
+   <description url="https://eclipse.org/mylyn">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.eclipse.mylyn.builds.sdk"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.jdt.junit"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.ecf.discovery"/>
+      <import plugin="org.eclipse.ecf.provider.jmdns"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.mylyn.builds.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.hudson.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

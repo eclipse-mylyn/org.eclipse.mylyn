@@ -1,0 +1,108 @@
+<!--
+    Copyright (c) 2010 Tasktop Technologies and others. 
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Tasktop Technologies - initial API and implementation
+ -->
+<project name="Hudson API JAXB" default="main" basedir="."> 
+	
+  <!-- To generate the Java classes from the Hudson/Jenkins api/schema API, 
+       download the JAXB runtime zip from https://jaxb.java.net/ and extract 
+       all the jars to the Hudson Core lib/ folder after which you may run 
+       this build helper. -->
+ 
+  <path id="classpath"> 
+    <fileset dir="lib" includes="*.jar" /> 
+  </path> 
+ 
+  <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="classpath" /> 
+
+  <target name="main" depends="xjc,clean-source">
+  </target>
+
+  <!-- Hudson/Jenkins provides the XSD schema definition for each of its 
+       components. The JAXB XJC binding compiler can create the required Java 
+       classes based on these XSD schema definitions in order to quickly 
+       conform binding classes to the supported Hudson/Jenkins REST endpoints. 
+       
+       For updates to the generated binding classes, please update the below 
+       URL links to existing Hudson/Jenkins installations. Simply add 
+       "/api/schema" to the Hudson/Jenkins resources of interest in order to 
+       access the XSD schema definitions.
+       
+       The required XSD schema definitions used in Mylyn have initially been 
+       generated from:
+       1. The Hudson/Jenkins root directory 
+          "/api/schema"
+       2. The Hudson/Jenkins users directory 
+          "/people/api/schema"
+       3. Jobs
+          a. Unit testing jobs with test reports
+          b. An example nightly builds job
+          c. A specific job build
+          d. A job with matrix configurations (Jenkins only) 
+          
+       Based on the added schema definitions, JAXB will attempt to generate 
+       binding classes. Note that there are some feature differences between 
+       Hudson and Jenkins which will result in a different output. Therefore,  
+       you may have to selectively choose what generated binding classes to 
+       keep and/or update. For example, only Jenkins supports jobs with matrix 
+       configurations. After running this build XML file as an ANT build you 
+       can find the generated binding classes in the src-gen source folder. -->
+  <target name="xjc"> 
+  	<xjc schema="https://build.eclipse.org/hudson/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
+  	<xjc schema="https://build.eclipse.org/hudson/people/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
+  	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model"/>
+  	<xjc schema="https://build.eclipse.org/hudson/job/epp-mpc-nightly/62/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
+  	<xjc schema="https://build.eclipse.org/hudson/job/emf-cdo-integration/574/testReport/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
+  	<xjc schema="http://hudson.xwiki.org/job/xwiki-product-enterprise-tests-2.4/40/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />  	
+  	<xjc schema="http://hudson.xwiki.org/job/xwiki-product-enterprise-tests-2.4/40/testReport/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
+  	<xjc schema="http://mylyn.org/jenkins-1.651.1/job/multi-config/api/schema" destdir="src-gen" package="org.eclipse.mylyn.internal.hudson.model" />
+  </target> 
+
+  <target name="clean-source">
+		<replace dir="src-gen">
+			<include name="**/*.java"/>
+  			<replacetoken><![CDATA[
+public ]]></replacetoken>
+			<replacevalue><![CDATA[
+@SuppressWarnings("all")
+public ]]></replacevalue>
+		</replace>
+	<replaceregexp flags="s">
+	  <regexp pattern="^(//.*?)package"/>
+	  <substitution expression="LICENSE package"/>
+	  <fileset dir="src-gen">
+		<include name="**/*.java"/>
+	  </fileset>
+	</replaceregexp>
+		<replace dir="src-gen">
+			<include name="**/*.java"/>
+  			<replacetoken><![CDATA[LICENSE ]]></replacetoken>
+			<replacevalue><![CDATA[/*******************************************************************************
+ * Copyright (c) 2010 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
+
+// This file was generated by the JavaTM Architecture for XML Binding(JAXB) Reference Implementation 
+// See <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Any modifications to this file will be lost upon recompilation of the source schema. 
+
+]]></replacevalue>
+		</replace>
+
+	</target>
+
+</project> 

@@ -1,0 +1,4 @@
+/testdata/*/bin
+/testdata/*/target
+/local.json
+/.local.json

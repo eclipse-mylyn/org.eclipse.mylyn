@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+TYPE="<%= @envtype %>"
+DIR="<%= @envbase %>"
+
+if [ -e $DIR/$TYPE.pid ]
+then
+ echo Stopping $TYPE $VERSION
+ kill $(cat $DIR/$TYPE.pid) || true
+ rm $DIR/$TYPE.pid
+else
+ echo $TYPE $VERSION is already stopped
+fi
