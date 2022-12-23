@@ -21,6 +21,12 @@
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/builds/"/>
+			<unit id="org.eclipse.mylyn.builds.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.builds.sdk.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.builds.development.feature.group" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/mylyn/snapshots/nightly/commons/"/>
 			<unit id="org.eclipse.mylyn.commons.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
