@@ -1,0 +1,23 @@
+{ 
+  "type": "<%= envtype %>", 
+  "url": "/<%= envid %>/", 
+  "version": "<%= version %>", 
+<% if @envinfo == "" %>
+  "info": "<%= envmode %>",
+<% else %>
+  "info": "<%= envinfo %>/<%= envmode %>",
+<% end %>
+  "tags": [
+<% if @envinfo == "DigestAuth" || @envinfo == "FormAuth" %>
+     "misc"
+<% elsif @envinfo == "Test" %>
+     "test"
+<% end %>
+  ],
+  "properties":{
+<% if @envdefault == true %>
+    "default": "1",
+<% end %>
+    "version": "<%= accessmode %>"
+  }
+}

@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0073)http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/enter_bug.cgi -->
+<!-- 1.0@bugzilla.org --><!-- 1.0@bugzilla.org --><HTML><HEAD><TITLE>Enter Bug</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- 1.0@bugzilla.org --><!-- 1.0@bugzilla.org -->
+<SCRIPT 
+type=text/javascript>
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </SCRIPT>
+
+<META content="MSHTML 6.00.2800.1400" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff onload=set_assign_to();><!-- 1.0@bugzilla.org -->
+<TABLE cellSpacing=0 cellPadding=0 width="100%" bgColor=#000000 border=0>
+  <TBODY>
+  <TR>
+    <TD>
+      <CENTER><FONT color=#ffffff size=8>This is Bugzilla 
+  </FONT></CENTER></TD></TR></TBODY></TABLE>
+<CENTER><FONT size=-1><A href="http://www.bugzilla.org/">Bugzilla</A> Version 
+2.17.6 </FONT></CENTER>
+<TABLE cellSpacing=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top align=left>
+      <TABLE cellSpacing=2 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top noWrap align=left><FONT size=+1><B>Enter 
+            Bug</B></FONT> </TD></TR></TBODY></TABLE></TD>
+    <TD vAlign=center align=left>&nbsp;</TD>
+    <TD vAlign=center align=left>This page lets you enter a new bug into 
+      Bugzilla.</TD></TR></TBODY></TABLE>
+<SCRIPT language=JavaScript type=text/javascript>
+<!--
+
+var default_owners = new Array(1);
+var components = new Array(1);
+    components[0] = "TestComponent";
+    default_owners[0] = "cubranic\x40cs.ubc.ca";
+var last_default_owner;
+function set_assign_to() {
+    // Based on the selected component, fill the "Assign To:" field
+    // with the default component owner.
+    var form = document.Create;
+    assigned_to = form.assigned_to.value
+    var index = -1;
+    if (form.component.type == 'select-one') {
+        index = form.component.selectedIndex;
+    } else if (form.component.type == 'hidden') {
+        // Assume there is only one component in the list
+        index = 0;
+    }
+    if (index != -1) {
+        var owner = default_owners[index];
+        var component = components[index];
+        if (assigned_to == last_default_owner
+            || assigned_to == owner
+            || assigned_to == ''
+            || confirm('Would you like to change\n\n' +
+                       '     "Assign To: ' + assigned_to + '"\n\n' +
+                       'to the default "' + component + '" owner:\n\n' +
+                       '     ' + owner + "?")) {
+            form.assigned_to.value = owner;
+            last_default_owner = owner;
+        }
+    }
+}
+-->
+</SCRIPT>
+
+<FORM id=Create name=Create action=post_bug.cgi method=post><INPUT type=hidden 
+value=TestProduct name=product> 
+<TABLE cellSpacing=2 cellPadding=0 border=0>
+  <TBODY>
+  <TR>
+    <TD><BR></TD></TR>
+  <TR>
+    <TD></TD>
+    <TD colSpan=3><!-- 1.0@bugzilla.org -->Before reporting a bug, please read 
+      the <A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bugwritinghelp.html">bug 
+      writing guidelines</A>, please look at the list of <A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/duplicates.cgi">most 
+      frequently reported bugs</A>, and please <A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/query.cgi">search</A> 
+      for the bug. </TD></TR>
+  <TR>
+    <TD><BR></TD></TR>
+  <TR>
+    <TD vAlign=top align=right><STRONG>Reporter:</STRONG></TD>
+    <TD vAlign=top>tanya@cs.ubc.ca</TD>
+    <TD vAlign=top align=right><STRONG>Product:</STRONG></TD>
+    <TD vAlign=top>TestProduct</TD></TR>
+  <TR>
+    <TD vAlign=top align=right><STRONG>Version:</STRONG> </TD>
+    <TD><SELECT size=5 name=version> <OPTION value=other 
+        selected>other</OPTION></SELECT> </TD>
+    <TD vAlign=top align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/describecomponents.cgi?product=TestProduct">Component</A>: 
+      </STRONG></TD>
+    <TD><SELECT onchange=set_assign_to(); size=5 name=component> <OPTION 
+        value=TestComponent selected>TestComponent</OPTION></SELECT> </TD></TR>
+  <TR>
+    <TD>&nbsp;</TD>
+    <TD colSpan=3></TD></TR>
+  <TR>
+    <TD align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bug_status.html#rep_platform">Platform</A>: 
+      </STRONG></TD>
+    <TD><SELECT name=rep_platform> <OPTION value=All>All</OPTION> <OPTION 
+        value=DEC>DEC</OPTION> <OPTION value=HP>HP</OPTION> <OPTION 
+        value=Macintosh>Macintosh</OPTION> <OPTION value=PC selected>PC</OPTION> 
+        <OPTION value=SGI>SGI</OPTION> <OPTION value=Sun>Sun</OPTION> <OPTION 
+        value=Other>Other</OPTION></SELECT> </TD>
+    <TD align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bug_status.html#op_sys">OS</A>: 
+      </STRONG></TD>
+    <TD><SELECT name=op_sys> <OPTION value=All>All</OPTION> <OPTION 
+        value="Windows 3.1">Windows 3.1</OPTION> <OPTION 
+        value="Windows 95">Windows 95</OPTION> <OPTION 
+        value="Windows 98">Windows 98</OPTION> <OPTION 
+        value="Windows ME">Windows ME</OPTION> <OPTION 
+        value="Windows 2000">Windows 2000</OPTION> <OPTION 
+        value="Windows NT">Windows NT</OPTION> <OPTION value="Windows XP" 
+        selected>Windows XP</OPTION> <OPTION value="Windows Server 2003">Windows 
+        Server 2003</OPTION> <OPTION value="Mac System 7">Mac System 7</OPTION> 
+        <OPTION value="Mac System 7.5">Mac System 7.5</OPTION> <OPTION 
+        value="Mac System 7.6.1">Mac System 7.6.1</OPTION> <OPTION 
+        value="Mac System 8.0">Mac System 8.0</OPTION> <OPTION 
+        value="Mac System 8.5">Mac System 8.5</OPTION> <OPTION 
+        value="Mac System 8.6">Mac System 8.6</OPTION> <OPTION 
+        value="Mac System 9.x">Mac System 9.x</OPTION> <OPTION 
+        value="Mac OS X 10.0">Mac OS X 10.0</OPTION> <OPTION 
+        value="Mac OS X 10.1">Mac OS X 10.1</OPTION> <OPTION 
+        value="Mac OS X 10.2">Mac OS X 10.2</OPTION> <OPTION 
+        value=Linux>Linux</OPTION> <OPTION value=BSD/OS>BSD/OS</OPTION> <OPTION 
+        value=FreeBSD>FreeBSD</OPTION> <OPTION value=NetBSD>NetBSD</OPTION> 
+        <OPTION value=OpenBSD>OpenBSD</OPTION> <OPTION value=AIX>AIX</OPTION> 
+        <OPTION value=BeOS>BeOS</OPTION> <OPTION value=HP-UX>HP-UX</OPTION> 
+        <OPTION value=IRIX>IRIX</OPTION> <OPTION 
+        value=Neutrino>Neutrino</OPTION> <OPTION value=OpenVMS>OpenVMS</OPTION> 
+        <OPTION value=OS/2>OS/2</OPTION> <OPTION value=OSF/1>OSF/1</OPTION> 
+        <OPTION value=Solaris>Solaris</OPTION> <OPTION 
+        value=SunOS>SunOS</OPTION> <OPTION value=other>other</OPTION></SELECT> 
+  </TD></TR>
+  <TR>
+    <TD align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bug_status.html#priority">Priority</A>: 
+      </STRONG></TD>
+    <TD><SELECT name=priority> <OPTION value=P1>P1</OPTION> <OPTION value=P2 
+        selected>P2</OPTION> <OPTION value=P3>P3</OPTION> <OPTION 
+        value=P4>P4</OPTION> <OPTION value=P5>P5</OPTION></SELECT> </TD>
+    <TD align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bug_status.html#bug_severity">Severity</A>: 
+      </STRONG></TD>
+    <TD><SELECT name=bug_severity> <OPTION value=blocker>blocker</OPTION> 
+        <OPTION value=critical>critical</OPTION> <OPTION 
+        value=major>major</OPTION> <OPTION value=normal selected>normal</OPTION> 
+        <OPTION value=minor>minor</OPTION> <OPTION 
+        value=trivial>trivial</OPTION> <OPTION 
+        value=enhancement>enhancement</OPTION></SELECT> </TD></TR>
+  <TR>
+    <TD>&nbsp;</TD>
+    <TD colSpan=3></TD></TR><INPUT type=hidden value=NEW name=bug_status> 
+  <TR>
+    <TD align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/bug_status.html#assigned_to">Assign 
+      To</A>: </STRONG></TD>
+    <TD colSpan=3><INPUT size=32 name=assigned_to> <NOSCRIPT>(Leave blank to 
+      assign to default component owner)</NOSCRIPT> </TD></TR>
+  <TR>
+    <TD align=right><STRONG>Cc:</STRONG></TD>
+    <TD colSpan=3><INPUT size=45 name=cc> </TD></TR>
+  <TR>
+    <TD>&nbsp;</TD>
+    <TD colSpan=3></TD></TR>
+  <TR>
+    <TD align=right><STRONG>URL:</STRONG></TD>
+    <TD colSpan=3><INPUT size=60 value=http:// name=bug_file_loc> </TD></TR>
+  <TR>
+    <TD align=right><STRONG>Summary:</STRONG></TD>
+    <TD colSpan=3><INPUT size=60 name=short_desc> </TD></TR>
+  <TR>
+    <TD vAlign=top align=right><STRONG>Description:</STRONG></TD>
+    <TD colSpan=3><TEXTAREA name=comment rows=10 wrap=hard cols=80></TEXTAREA> 
+      <BR></TD></TR>
+  <TR>
+    <TD vAlign=top align=right><STRONG><A 
+      href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/describekeywords.cgi">Keywords</A>: 
+      </STRONG></TD>
+    <TD colSpan=3><INPUT size=60 name=keywords> (optional) </TD></TR>
+  <TR>
+    <TD align=right><STRONG>Depends on:</STRONG> </TD>
+    <TD><INPUT accessKey=d name=dependson> </TD></TR>
+  <TR>
+    <TD align=right><STRONG>Blocks:</STRONG> </TD>
+    <TD><INPUT accessKey=b name=blocked> </TD></TR>
+  <TR>
+    <TD></TD>
+    <TD colSpan=3></TD></TR>
+  <TR>
+    <TD></TD>
+    <TD colSpan=3><INPUT onclick="if (this.form.short_desc.value == '')&#10;             { alert('Please enter a summary sentence for this bug.');&#10;               return false; } return true;" type=submit value="    Commit    "> 
+      &nbsp;&nbsp;&nbsp;&nbsp; <INPUT type=submit value="Remember values as bookmarkable template" name=maketemplate> 
+    </TD></TR>
+  <TR>
+    <TD></TD>
+    <TD colSpan=3><BR>We've made a guess at your operating system and 
+      platform. Please check them and, if we got it wrong, emailTHE MAINTAINER 
+      HAS NOT YET BEEN SET. </TD></TR></TBODY></TABLE><INPUT type=hidden 
+value=enter_bug name=form_name> </FORM><!-- 1.0@bugzilla.org --><!-- 1.0@bugzilla.org -->
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top bgColor=#000000>
+      <TABLE cellSpacing=0 cellPadding=10 width="100%" bgColor=lightyellow 
+      border=0>
+        <TBODY>
+        <TR>
+          <TD><!-- 1.0@bugzilla.org -->
+            <FORM action=show_bug.cgi method=get>
+            <TABLE width="100%">
+              <TBODY>
+              <TR>
+                <TD>Actions: </TD>
+                <TD vAlign=center noWrap><A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/enter_bug.cgi">New</A> 
+                  | <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/query.cgi">Search</A> 
+                  | <INPUT type=submit value=Find> bug # <INPUT size=6 name=id> 
+                  | <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/report.cgi">Reports</A> 
+                  | <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/request.cgi?requester=tanya%40cs.ubc.ca&amp;requestee=tanya%40cs.ubc.ca&amp;do_union=1&amp;group=type">My 
+                  Requests</A> | <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/votes.cgi?action=show_user">My 
+                  Votes</A> </TD>
+                <TD>&nbsp;</TD>
+                <TD vAlign=center>Edit <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/userprefs.cgi">prefs</A>, 
+                  <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/editproducts.cgi">products</A>, 
+                  <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/editflagtypes.cgi">flags</A>, 
+                  <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/editkeywords.cgi">keywords</A> 
+                  | <A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/relogin.cgi">Log&nbsp;out</A>&nbsp;tanya@cs.ubc.ca 
+                </TD></TR>
+              <TR>
+                <TD>Saved&nbsp;Searches: </TD>
+                <TD colSpan=3><A 
+                  href="http://hipikat.cs.ubc.ca:8081/bugzilla-test/bugzilla-2.17.6/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=tanya%40cs.ubc.ca&amp;emailtype1=exact&amp;emailassigned_to1=1&amp;emailreporter1=1">My&nbsp;Bugs</A> 
+                </TD></TR></TBODY></TABLE></FORM></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></BODY></HTML>

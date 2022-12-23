@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+      
+   <extension
+         id="org.eclipse.mylyn.bugzilla.repository" 
+         name="%bugzilla.repository.name"
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorUi
+            brandingIcon="icons/eview16/bugzilla-logo.gif"
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi"
+            name="%tasklist.BugzillaConnectorUi.name"
+            overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
+   </extension> 
+    <extension 
+         point="org.eclipse.mylyn.bugzilla.core.languages"> 
+      <!-- <language 
+            name="en">  
+ 		<languageAttribute command="error_login" 				response="Login"/>
+		<languageAttribute command="error_login" 				response="log in"/>
+		<languageAttribute command="error_login" 				response="check e-mail"/>
+		<languageAttribute command="error_login" 				response="Invalid Username Or Password"/>
+		<languageAttribute command="error_login" 				response="account locked"/>
+		<languageAttribute command="error_collision" 			response="Mid-air collision!"/>
+		<languageAttribute command="error_collision"			response="Mid-air collision detected!"/>
+		<languageAttribute command="error_comment_required"		response="Comment Required"/>
+		<languageAttribute command="error_logged_out" 			response="logged out"/>
+		<languageAttribute command="bad_login" 					response="Login"/>
+		<languageAttribute command="bad_login" 					response="log in"/>
+		<languageAttribute command="bad_login" 					response="check e-mail"/>
+		<languageAttribute command="bad_login" 					response="Invalid Username Or Password"/>
+		<languageAttribute command="bad_login" 					response="account locked"/>
+		<languageAttribute command="bad_login" 					response="error"/>
+		<languageAttribute command="processed" 					response="processed"/>
+		<languageAttribute command="changes_submitted" 			response="Changes submitted"/>
+		<languageAttribute command="changes_submitted" 			response="added to Bug"/>
+		<languageAttribute command="bug" 						response="Bug"/>
+		<languageAttribute command="bug" 						response="Issue"/>
+		<languageAttribute command="submitted" 					response="Submitted"/>
+		<languageAttribute command="submitted" 					response="posted"/>
+		<languageAttribute command="suspicious_action" 			response="Suspicious action"/>
+    	<languageAttribute command="error_confirm_match"		response="confirm match"/> 
+        <languageAttribute command="error_match_failed"			response="match failed"/>
+      </language> 
+      -->
+      <language 
+            name="de"> 
+            <languageAttribute command="error_login" 				response="Anmeldename erforderlich"/> 
+            <languageAttribute command="error_login" 				response="check e-mail"/> 
+            <languageAttribute command="error_login" 				response="Ung√ºltiger Benutzername oder ung√ºltiges Passwort"/> 
+            <languageAttribute command="error_login" 				response="Benutzerkonto gesperrt"/>
+            <languageAttribute command="error_collision" 			response="Kollision!"/> 
+            <languageAttribute command="error_collision"			response="Kollision festgestellt!"/>
+            <languageAttribute command="error_comment_required"		response="Kommentar erforderlich"/> 
+            <languageAttribute command="error_logged_out" 			response="Abgemeldet"/> 
+            <languageAttribute command="bad_login" 					response="Anmeldename erforderlich"/> 
+            <languageAttribute command="bad_login" 					response="check e-mail"/> 
+            <languageAttribute command="bad_login" 					response="Ung√ºltiger Benutzername oder ung√ºltiges Passwort"/> 
+            <languageAttribute command="bad_login" 					response="error"/> 
+            <languageAttribute command="bad_login" 					response="Benutzerkonto gesperrt"/>
+            <languageAttribute command="processed" 					response="processed"/> 
+            <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
+            <languageAttribute command="changes_submitted" 			response="added to Bug"/>
+            <languageAttribute command="bug" 						response="Bug"/>
+            <languageAttribute command="bug" 						response="Issue"/>
+			<languageAttribute command="submitted" 					response="Submitted"/>
+			<languageAttribute command="submitted" 					response="posted"/>
+	     	<languageAttribute command="suspicious_action"			response="Suspicious action"/> 
+    	    <languageAttribute command="error_confirm_match"		response="√úbereinstimmungen best√§tigen"/> 
+            <languageAttribute command="error_match_failed"			response="Keine √úbereinstimmung gefunden"/>
+       </language> 
+   </extension>    
+  
+     <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPageFactory"
+            id="org.eclipse.mylyn.bugzilla.ui.pageFactory">
+      </pageFactory>            
+   </extension>
+  
+   <extension point = "org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaNotObsoleteAttachmentAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.notobsolete"
+               label="%Mark_not_obsolete_Action_Label"
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
+               tooltip="%Mark_not_obsolete_Action_Tooltip">
+            <enablement> 
+              <objectState name="connectorKind" value="bugzilla"/>
+            </enablement> 
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaObsoleteAttachmentAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
+               label="%Mark_obsolete_Action_Label"
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
+               tooltip="%Mark_obsolete_Action_Tooltip">
+             <enablement> 
+              <objectState name="connectorKind" value="bugzilla"/>
+            </enablement> 
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaAttachmentUpdateAction"
+               enablesFor="1"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.update"
+               label="%Details_Action_Label"
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
+               tooltip="%Details_Action_Tooltip">
+         </action>
+         <visibility>
+               <objectState name="connectorKind" value="bugzilla"></objectState>
+         </visibility>
+         <menu
+                id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
+                label="%Mark_as_Menu_Label"
+                path="markadditions">
+         </menu>
+      </objectContribution>
+   </extension>
+</plugin>

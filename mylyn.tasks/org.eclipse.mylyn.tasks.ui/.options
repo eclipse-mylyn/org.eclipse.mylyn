@@ -1,0 +1,2 @@
+org.eclipse.mylyn.tasks.ui/debug/synchronization=true
+org.eclipse.mylyn.tasks.ui/debug/httpclient=true

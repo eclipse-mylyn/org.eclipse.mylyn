@@ -1,0 +1,859 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Bug 4 - Another Test</title>
+
+
+<link rel="Top" href="http://mylar.eclipse.org/bugs222/">
+
+  
+    <link rel="Up" href="buglist.cgi?regetlastlist=1">
+
+    <link rel="First" href="show_bug.cgi?id=1">
+    <link rel="Last" href="show_bug.cgi?id=4">
+
+
+
+        <link rel="Prev" href="show_bug.cgi?id=3">
+
+
+
+
+  
+    <link rel="Show" title="Dependency Tree"
+          href="showdependencytree.cgi?id=4">
+      <link rel="Show" title="Dependency Graph"
+            href="showdependencygraph.cgi?id=4">
+
+
+      <link rel="Show" title="Bug Activity"
+            href="show_activity.cgi?id=4">
+
+      <link rel="Show" title="Printer-Friendly Version"
+            href="show_bug.cgi?format=multiple&amp;id=4">
+
+
+  
+    <link rel="Saved&nbsp;Searches" title="My Bugs"
+          href="buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailassigned_to1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=relves%40cs.ubc.ca&amp;field0-0-0=bug_status&amp;type0-0-0=notequals&amp;value0-0-0=UNCONFIRMED&amp;field0-0-1=reporter&amp;type0-0-1=equals&amp;value0-0-1=relves%40cs.ubc.ca">
+
+
+   <link rel="Administration" title="Parameters"    
+                  href="editparams.cgi"><link rel="Administration" title="Users"    
+                  href="editusers.cgi"><link rel="Administration" title="Products"      
+                  href="editproducts.cgi"><link rel="Administration" title="Flag Types"   
+                  href="editflagtypes.cgi"><link rel="Administration" title="Groups"        
+                  href="editgroups.cgi"><link rel="Administration" title="Keywords"      
+                  href="editkeywords.cgi"><link rel="Administration" title="Whining"       
+                  href="editwhines.cgi"><link rel="Administration" title="Sanity Check"  
+                  href="sanitycheck.cgi">
+
+    
+
+    <script type="text/javascript">
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </script>
+
+    <link href="skins/standard/global.css" rel="stylesheet" type="text/css">
+
+    <link href="skins/custom/global.css" rel="stylesheet" type="text/css">
+
+
+
+    
+
+  </head>
+
+
+
+  <body onload=""
+        class="mylar-eclipse-org-bugs222 bz_bug bz_status_NEW bz_component_TestComponent bz_bug_4">
+
+
+<div id="banner">
+    <div class="intro"></div>
+
+      <p id="banner-name">
+        <span>This is Bugzilla</span>
+      </p>
+      <p id="banner-version">
+        <a href="http://www.bugzilla.org/"><span>Bugzilla</span></a>
+        <span>Version 2.22rc1</span>
+      </p>
+
+    <div class="outro"></div>
+    </div>
+
+<div id="header">
+    <h1>Bugzilla Bug 4</h1>
+
+    <h2>Another Test</h2>
+
+    <h3>Last modified: 2006-03-10 14:11:48</h3>
+
+</div>
+
+<b>Bug List:</b>
+    (4 of 4)
+
+  <a href="show_bug.cgi?id=1">First</a>
+  <a href="show_bug.cgi?id=4">Last</a>
+
+        <a href="show_bug.cgi?id=3">Prev</a>
+
+        <i><font color="#777777">Next</font></i>
+
+  &nbsp;&nbsp;<a href="buglist.cgi?regetlastlist=1">Show last search results</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="query.cgi">Search page</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="enter_bug.cgi">Enter new bug</a>
+
+<hr>
+<script type="text/javascript">
+  <!--
+
+  /* Outputs a link to call replyToComment(); used to reduce HTML output */
+  function addReplyLink(id) {
+      /* XXX this should really be updated to use the DOM Core's
+       * createElement, but finding a container isn't trivial.
+       */
+      document.write('[<a href="#add_comment" onclick="replyToComment(' + 
+                     id + ');">reply<' + '/a>]');
+  }
+
+  /* Adds the reply text to the `comment' textarea */
+  function replyToComment(id) {
+      /* pre id="comment_name_N" */
+      var text_elem = document.getElementById('comment_text_'+id);
+      var text = getText(text_elem);
+
+      /* make sure we split on all newlines -- IE or Moz use \r and \n
+       * respectively.
+       */
+      text = text.split(/\r|\n/);
+
+      var replytext = "";
+      for (var i=0; i < text.length; i++) {
+          replytext += "> " + text[i] + "\n"; 
+      }
+
+      replytext = "(In reply to comment #" + id + ")\n" + replytext + "\n";
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      textarea.value += replytext;
+
+      textarea.focus();
+  }
+
+  if (typeof Node == 'undefined') {
+      /* MSIE doesn't define Node, so provide a compatibility object */
+      window.Node = {
+          TEXT_NODE: 3,
+          ENTITY_REFERENCE_NODE: 5
+      };
+  }
+
+  /* Concatenates all text from element's childNodes. This is used
+   * instead of innerHTML because we want the actual text (and
+   * innerText is non-standard).
+   */
+  function getText(element) {
+      var child, text = "";
+      for (var i=0; i < element.childNodes.length; i++) {
+          child = element.childNodes[i];
+          var type = child.nodeType;
+          if (type == Node.TEXT_NODE || type == Node.ENTITY_REFERENCE_NODE) {
+              text += child.nodeValue;
+          } else {
+              /* recurse into nodes of other types */
+              text += getText(child);
+          }
+      }
+      return text;
+  }
+
+
+  function updateCommentTagControl(checkbox, form) {
+      if (checkbox.checked) {
+          form.comment.className='bz_private';
+      } else {
+          form.comment.className='';
+      }
+  }
+
+  //-->
+  </script>
+
+<form name="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2006-03-10 14:11:48">
+
+  <input type="hidden" name="longdesclength" value="2">
+  <input type="hidden" name="id" value="4">
+
+
+
+  <table>
+
+    <tr>
+      <td valign="top">
+        <table cellspacing="1" cellpadding="1">
+          <tr>
+
+            <td align="right">
+              <b>Bug#:</b>
+            </td>
+            <td>
+              <a href="http://mylar.eclipse.org/bugs222/show_bug.cgi?id=4">4</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b><u>P</u>roduct:</b>
+            </td><td>
+    <label for="product" accesskey="p">
+      <select name="product" id="product">
+          <option value="TestProduct" selected>TestProduct
+          </option>
+
+      </select>
+    </label>
+  </td>
+          </tr>
+
+          
+
+          <tr>
+            <td align="right">
+              <b>
+                <a href="describecomponents.cgi?product=TestProduct">
+
+                  Co<u>m</u>ponent</a>:
+              </b>
+            </td><td>
+    <label for="component" accesskey="m">
+      <select name="component" id="component">
+          <option value="TestComponent" selected>TestComponent
+          </option>
+      </select>
+
+    </label>
+  </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b>
+                <a href="page.cgi?id=fields.html#status">Status</a>:
+              </b>
+
+            </td>
+            <td>NEW</td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b>
+                <a href="page.cgi?id=fields.html#resolution">Resolution</a>:
+              </b>
+
+            </td>
+            <td>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b>
+                <a href="page.cgi?id=fields.html#assigned_to">Assigned&nbsp;To</a>:
+              </b>
+
+            </td>
+            <td>Robert Elves &lt;relves&#64;cs.ubc.ca&gt;</td>
+          </tr>
+
+        </table>
+
+      </td>
+      <td valign="top">
+
+        <table cellspacing="1" cellpadding="1">
+
+          <tr>
+            <td align="right">
+              <b><u>H</u>ardware:</b>
+            </td><td>
+    <label for="rep_platform" accesskey="h">
+      <select name="rep_platform" id="rep_platform">
+
+          <option value="All">All
+          </option>
+          <option value="PC" selected>PC
+          </option>
+          <option value="Macintosh">Macintosh
+          </option>
+          <option value="Other">Other
+          </option>
+      </select>
+    </label>
+  </td>
+
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b><u>O</u>S:</b>
+            </td><td>
+    <label for="op_sys" accesskey="o">
+      <select name="op_sys" id="op_sys">
+
+          <option value="All">All
+          </option>
+          <option value="Windows">Windows
+          </option>
+          <option value="Mac OS">Mac OS
+          </option>
+          <option value="Linux">Linux
+          </option>
+          <option value="Other" selected>Other
+          </option>
+      </select>
+
+    </label>
+  </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b>Version:</b>
+            </td><td>
+    <label for="version" accesskey="o">
+
+      <select name="version" id="version">
+          <option value="other" selected>other
+          </option>
+      </select>
+    </label>
+  </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+
+              <b><a href="page.cgi?id=fields.html#priority">Pr<u>i</u>ority</a>:</b>
+            </td><td>
+    <label for="priority" accesskey="i">
+      <select name="priority" id="priority">
+          <option value="P1">P1
+          </option>
+          <option value="P2">P2
+          </option>
+
+          <option value="P3" selected>P3
+          </option>
+          <option value="P4">P4
+          </option>
+          <option value="P5">P5
+          </option>
+      </select>
+    </label>
+  </td>
+          </tr>
+
+          <tr>
+            <td align="right">
+              <b><a href="page.cgi?id=fields.html#bug_severity">Severity</a>:</b>
+            </td><td>
+    <label for="bug_severity" accesskey="i">
+      <select name="bug_severity" id="bug_severity">
+          <option value="blocker">blocker
+          </option>
+
+          <option value="critical">critical
+          </option>
+          <option value="major">major
+          </option>
+          <option value="normal" selected>normal
+          </option>
+          <option value="minor">minor
+          </option>
+          <option value="trivial">trivial
+          </option>
+          <option value="enhancement">enhancement
+          </option>
+
+      </select>
+    </label>
+  </td>
+          </tr>
+
+            <tr>
+              <td align="right">
+                <b>
+                  Target Milestone:
+                </b>
+
+              </td><td>
+    <label for="target_milestone" accesskey="i">
+      <select name="target_milestone" id="target_milestone">
+          <option value="---" selected>---
+          </option>
+      </select>
+    </label>
+  </td>
+            </tr>
+
+        </table>
+      </td>
+
+      <td valign="top">
+
+        <table cellpadding="1" cellspacing="1">
+
+          <tr>
+            <td align="right">
+              <b>Reporter:</b>
+
+            </td>
+            <td>
+              <a href="mailto:relves&#64;cs.ubc.ca">Robert Elves &lt;relves&#64;cs.ubc.ca&gt;</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="right" valign="top">
+
+              <b><u>A</u>dd&nbsp;CC:</b>
+            </td>
+            <td><input
+  name="newcc"
+  value="" accesskey="a"  size="30" 
+>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="right" valign="top">
+
+              <b>CC:</b>
+            </td>
+            <td valign="top">
+              <input type="hidden" name="cc" value="">
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <table cellspacing="1" cellpadding="1">
+
+      
+
+
+          <tr>
+            <td align="right">
+              <b>
+
+                  <u>U</u>RL:
+              </b>
+            </td>
+            <td colspan="5">
+              <input name="bug_file_loc" accesskey="u"
+                     value="" size="60">
+            </td>
+          </tr>
+
+          <tr>
+
+            <td align="right">
+              <b><u>S</u>ummary:</b>
+            </td>
+            <td colspan="5">
+              <input name="short_desc" accesskey="s"
+                     value="Another Test" size="60">
+            </td>
+          </tr>
+
+
+        </table>
+      </td>
+
+      <td valign="top">
+        <table cellspacing="1" cellpadding="1">
+          <tr>
+            <td colspan="2" valign="top">
+            </td>
+
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+
+
+<br>
+<table cellspacing="0" cellpadding="4" border="1">
+  <tr>
+
+    <th bgcolor="#cccccc" align="left">Attachment</th>
+    <th bgcolor="#cccccc" align="left">Type</th>
+    <th bgcolor="#cccccc" align="left">Creator</th>
+    <th bgcolor="#cccccc" align="left">Created</th>
+    <th bgcolor="#cccccc" align="left">Size</th>
+    <th bgcolor="#cccccc" align="left">Actions</th>
+
+  </tr>
+      <tr >
+        <td valign="top">
+          <a href="attachment.cgi?id=1">Testing upload</a>
+        </td>
+
+        <td valign="top">text/plain
+        </td>
+
+        <td valign="top">
+
+          <a href="mailto:relves&#64;cs.ubc.ca">Robert Elves
+          </a>
+        </td>
+        <td valign="top">2006-03-10 14:11</td>
+        <td valign="top">6.87 KB</td>
+
+
+        <td valign="top">
+          <a href="attachment.cgi?id=1&amp;action=edit">Edit</a>
+
+        </td>
+      </tr>
+
+  <tr>
+    <td colspan="5">
+      <a href="attachment.cgi?bugid=4&amp;action=enter">Create a New Attachment</a> (proposed patch, testcase, etc.)
+    </td>
+      <td>
+        <a href="attachment.cgi?bugid=4&amp;action=viewall">View All</a>
+
+      </td>
+  </tr>
+</table>
+<br>
+
+
+
+  <table>
+    <tr><th align="right">Bug 4 depends on:</th>
+  <td>
+  </td>
+
+  <td>
+    <input name="dependson" accesskey="i"
+           value="">
+  </td>
+      <td rowspan="2">
+        <a href="showdependencytree.cgi?id=4">Show
+        dependency tree</a>
+
+          <br>
+          <a href="showdependencygraph.cgi?id=4">Show
+          dependency graph</a>
+
+      </td>
+    </tr>
+
+    <tr><th align="right">Bug 4 <u>b</u>locks:</th>
+  <td>
+  </td>
+  <td>
+    <input name="blocked" accesskey="b"
+           value="">
+
+  </td>
+    </tr>
+  </table>
+
+
+
+
+  <br>
+  <b>Additional <u>C</u>omments:</b>
+
+  <br>
+  <a name="add_comment"></a>
+  <textarea name="comment" id="comment" rows="10" cols="80"
+            accesskey="c"></textarea>
+
+    <br>
+    <label for="addselfcc">
+      <input type="checkbox" id="addselfcc" name="addselfcc">
+      Add relves&#64;cs.ubc.ca to CC list
+    </label>
+
+  <br>
+
+<br>
+  <input type="radio" id="knob-leave" name="knob" value="none" checked="checked">
+  <label for="knob-leave">
+    Leave as <b>NEW&nbsp;</b>
+  </label>
+  <br>
+
+
+    <input type="radio" id="knob-accept" name="knob" value="accept">
+    <label for="knob-accept">
+      Accept bug (change
+      status to <b>ASSIGNED</b>)
+    </label>
+    <br>
+
+
+      <input type="radio" id="knob-resolve" name="knob" value="resolve">
+
+      <label for="knob-resolve">
+        Resolve bug, changing 
+        <a href="page.cgi?id=fields.html#resolution">resolution</a> to
+      </label>  
+      <select name="resolution"
+              onchange="document.changeform.knob[2].checked=true">
+          <option value="FIXED">FIXED</option>
+          <option value="INVALID">INVALID</option>
+          <option value="WONTFIX">WONTFIX</option>
+
+          <option value="LATER">LATER</option>
+          <option value="REMIND">REMIND</option>
+          <option value="WORKSFORME">WORKSFORME</option>
+      </select>
+      <br>
+
+      <input type="radio" id="knob-duplicate" name="knob" value="duplicate">
+      <label for="knob-duplicate">
+
+        Resolve bug, mark it as duplicate of bug #
+      </label>
+      <input name="dup_id" size="6"
+             onchange="if (this.value != '')
+                       {document.changeform.knob[3].checked=true}">
+      <br>
+
+        <input type="radio" id="knob-reassign" name="knob" value="reassign">
+        <label for="knob-reassign">
+          <a href="page.cgi?id=fields.html#assigned_to">Reassign</a> bug to
+        </label><input
+  name="assigned_to"
+  value="relves&#64;cs.ubc.ca" onchange="if ((this.value != 'relves\x40cs.ubc.ca') &amp;&amp; (this.value != '')) {
+                               document.changeform.knob[4].checked=true;
+                          }"  accesskey="b"  size="32" 
+>
+
+        <br>
+
+        <input type="radio" id="knob-reassign-cmp" name="knob" value="reassignbycomponent">
+        <label for="knob-reassign-cmp">
+          Reassign bug to default assignee
+          of selected component
+        </label>
+        <br>
+
+  <input type="submit" value="Commit">
+  <input type="hidden" name="form_name" value="process_bug">
+
+  <p>
+    <font size="+1">
+      <b>
+        <a href="show_activity.cgi?id=4">View Bug Activity</a>
+        &nbsp; | &nbsp;
+        <a href="show_bug.cgi?format=multiple&amp;id=4">Format For Printing</a>
+        &nbsp; | &nbsp;
+
+        <a href="show_bug.cgi?ctype=xml&amp;id=4">XML</a>
+        &nbsp; | &nbsp;
+        <a href="enter_bug.cgi?cloned_bug_id=4">Clone This Bug</a>
+
+        
+      </b>
+    </font>
+
+  </p>
+
+
+
+<hr>
+<script type="text/javascript">
+  <!--
+  function updateCommentPrivacy(checkbox, id) {
+    var text_elem = document.getElementById('comment_text_'+id);
+    if (checkbox.checked) {
+        text_elem.parentNode.className='bz_private';
+    } else {
+        text_elem.parentNode.className='';
+    }
+  }
+  //-->
+  </script>
+
+
+
+
+
+
+
+
+<div >
+        <table>
+
+          <tr>
+            <td align="left">
+              <b><a name="c0" href="show_bug.cgi?id=4#c0">
+                Description</a>:</b>&nbsp;&nbsp;<script type="text/javascript"><!-- 
+                    addReplyLink(0);
+                  //--></script>
+            </td>
+            <td align="left" width="30%">
+              <b>Opened:</b> 2006-03-09 13:09
+            </td>
+
+          </tr>
+        </table>
+        
+
+
+<pre id="comment_text_0">Testing new 2.22 version capability
+</pre>
+    </div>
+  <div >
+        <br>
+        <span class="bz_comment">
+          ------- <i>Comment
+          <a name="c1" href="show_bug.cgi?id=4#c1">
+
+            #1</a> From 
+          <a href="mailto:relves&#64;cs.ubc.ca">Robert Elves</a>
+          2006-03-10 14:11:48 
+          </i>
+          <script type="text/javascript"><!-- 
+            addReplyLink(1); //--></script>
+          -------
+        </span>
+        
+
+
+<pre id="comment_text_1"><span class=""><a href="attachment.cgi?id=1&amp;action=view" title="Testing upload">Created an attachment (id=1)</a> <a href="attachment.cgi?id=1&amp;action=edit" title="Testing upload">[edit]</a></span>
+
+Testing upload
+
+The comment
+</pre>
+    </div>
+
+</form>
+
+<hr>
+<b>Bug List:</b>
+    (4 of 4)
+
+  <a href="show_bug.cgi?id=1">First</a>
+  <a href="show_bug.cgi?id=4">Last</a>
+
+        <a href="show_bug.cgi?id=3">Prev</a>
+
+        <i><font color="#777777">Next</font></i>
+
+  &nbsp;&nbsp;<a href="buglist.cgi?regetlastlist=1">Show last search results</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="query.cgi">Search page</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="enter_bug.cgi">Enter new bug</a>
+
+<br>
+<div id="footer">
+  <div class="intro"></div>
+
+
+
+
+<div id="useful-links">
+  <div id="links-actions">
+    <div class="label">Actions:</div>
+    <div class="links">
+
+        <a href="./">Home</a> | 
+        <a href="enter_bug.cgi">New</a> | 
+        <a href="query.cgi">Search</a> |
+        
+        <form action="buglist.cgi" method="get"
+              onsubmit="if (this.quicksearch.value == '')
+                        { alert('Please enter one or more search terms first.');
+                          return false; } return true;">
+            <input class="txt" type="text" name="quicksearch">
+            <input class="btn" type="submit" value="Find">
+        </form> |
+        
+        <a href="report.cgi">Reports</a> 
+        
+          | <a href="request.cgi?requester=relves%40cs.ubc.ca&amp;requestee=relves%40cs.ubc.ca&amp;do_union=1&amp;group=type">My Requests</a>
+
+        
+          | <a href="votes.cgi?action=show_user">My&nbsp;Votes</a>      
+          | <a href="sanitycheck.cgi">Sanity&nbsp;check</a>
+              | <a href="relogin.cgi">Log&nbsp;out</a>&nbsp;relves&#64;cs.ubc.ca
+    </div>
+  </div>
+
+       
+  <div id="links-edit">
+    <div class="label">Edit:</div>
+    <div class="links">
+
+        <a href="userprefs.cgi">Prefs</a> | <a href="editparams.cgi">Parameters</a>  | <a href="editsettings.cgi">User Preferences</a> | <a href="editusers.cgi">Users</a>  | <a href="editproducts.cgi">Products</a> | <a href="editflagtypes.cgi">Flags</a> | <a href="editvalues.cgi">Field Values</a> | <a href="editgroups.cgi">Groups</a> | <a href="editkeywords.cgi">Keywords</a> | <a href="editwhines.cgi">Whining</a>
+
+    </div>
+  </div>
+    
+
+    
+    
+  <div id="links-saved">
+    <div class="label">
+          Saved&nbsp;Searches:
+    </div>
+    <div class="links">
+          <a href="buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailassigned_to1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=relves%40cs.ubc.ca&amp;field0-0-0=bug_status&amp;type0-0-0=notequals&amp;value0-0-0=UNCONFIRMED&amp;field0-0-1=reporter&amp;type0-0-1=equals&amp;value0-0-1=relves%40cs.ubc.ca">My&nbsp;Bugs</a>
+
+    </div>
+  </div>
+
+  
+<div id="links-special">
+    <div class="label">&nbsp;</div>
+    <div class="links">
+      <form action="buglist.cgi" method="get">
+        <input type="hidden" name="cmdtype" value="doit">
+        <input type="hidden" name="remtype" value="asnamed">
+
+        <input type="hidden" name="add_bugids" value="1">
+        <input type="submit" value="Add"> bugs
+        <input type="text" name="bug_ids" size="8" maxlength="80"> to
+        the new saved search:
+        <input type="text" name="newqueryname" size="20" maxlength="64">
+      </form>
+    </div>
+  </div>
+
+  
+</div>
+
+  <div class="outro"></div>
+</div>
+
+</body>
+</html>

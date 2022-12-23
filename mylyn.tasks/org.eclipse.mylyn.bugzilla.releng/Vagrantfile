@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "mylyn_openjdk8"
+  config.vm.box_url = "http://mylyn.org/files/boxes/mylyn_openjdk8.box"
+
+  config.vm.network "forwarded_port", guest:  80, host: 2080
+  config.vm.network "forwarded_port", guest: 443, host: 2443
+
+  config.vm.provider "virtualbox" do |v|
+    v.name = "Mylyn Tasks - Bugzilla Repositories"
+  end
+
+  config.vm.provision "puppet" do |puppet_bugzilla|
+    puppet_bugzilla.module_path = "modules"
+    puppet_bugzilla.manifests_path = "manifests"
+    puppet_bugzilla.manifest_file = "default.pp"
+#    puppet_bugzilla.options = "--verbose --debug"
+  end
+end

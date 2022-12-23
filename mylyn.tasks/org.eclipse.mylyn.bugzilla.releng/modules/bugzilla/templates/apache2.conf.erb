@@ -1,0 +1,13 @@
+Alias /<%= @www_url %> <%= @base %>/<%= @bugzillaDir %>
+<Directory <%= @base %>/<%= @bugzillaDir %>>
+    AddHandler cgi-script .cgi
+    Options +Indexes +ExecCGI
+    DirectoryIndex index.cgi
+    AllowOverride None
+    Require all granted
+<% if @rest_enabled         %>
+    RewriteEngine on
+    RewriteBase /<%= @www_url %>/
+    RewriteRule ^rest/(.*)$ rest.cgi/$1 [NE]
+<% end %>
+</Directory>

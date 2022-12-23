@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorPageContribution">
+      <repositoryPart
+            class="org.eclipse.mylyn.internal.tasks.activity.ui.ActivityPart"
+            id="org.eclipse.mylyn.tasks.activity.ui.viewer.ActivityPart"
+            path="associations">
+      </repositoryPart>
+   </extension>
+
+</plugin>

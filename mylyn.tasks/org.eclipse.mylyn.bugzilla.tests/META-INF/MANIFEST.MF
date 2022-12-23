@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Bugzilla Connector Tests
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.tests;singleton:=true
+Bundle-Version: 3.26.0.qualifier
+Require-Bundle: org.apache.commons.io;bundle-version="0.0.0",
+ org.eclipse.compare;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.eclipse.jface.text;bundle-version="0.0.0",
+ org.eclipse.mylyn.bugzilla.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.bugzilla.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.net;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.xmlrpc;bundle-version="3.26.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.tests.util;bundle-version="3.26.0",
+ org.eclipse.search;bundle-version="0.0.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.eclipse.ui.editors;bundle-version="0.0.0",
+ org.eclipse.ui.forms;bundle-version="0.0.0",
+ org.eclipse.ui.ide;bundle-version="0.0.0",
+ org.eclipse.ui.views;bundle-version="0.0.0",
+ org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0",
+ org.junit;bundle-version="4.8.2"
+Bundle-Vendor: Eclipse Mylyn
+Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.core;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.support;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.tests.ui;x-internal:=true
+Import-Package: org.apache.xmlrpc;version="0.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

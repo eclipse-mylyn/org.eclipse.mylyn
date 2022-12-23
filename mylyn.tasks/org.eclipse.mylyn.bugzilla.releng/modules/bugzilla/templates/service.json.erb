@@ -1,0 +1,20 @@
+{
+  "type": "<%= @envtype %>",
+  "url": "/<%= @envid %>",
+  "version": "<%= @envversionInternal %>",
+  "info": "<%= @envinfo_intern %>",
+  "properties":{
+<% if @envdefault           %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"default": "1"<% end %>
+<% if @envdefault_rest      %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"default": "1"<% end %>
+<% if @custom_wf            %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"custom_wf": "<%= @custom_wf %>"<% end %>
+<% if @custom_wf_and_status %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"custom_wf_and_status": "<%= @custom_wf_and_status %>"<% end %>
+<% if !@xmlrpc_enabled      %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"xmlrpc_enabled": "<%= @xmlrpc_enabled %>"<% end %>
+<% if @desciptorfile > " "  %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"desciptorfile": "<%= @desciptorfile %>"<% end %>
+<% if @usebugaliases        %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"usebugaliases": "<%= @usebugaliases %>"<% end %>
+<% if @branch               %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"branch": "<%= @branch %>"<% end %>
+<% if @branchTag            %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"branchTag": "<%= @branchTag %>"<% end %>
+<% if @rest_enabled         %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"rest_enabled": "<%= @rest_enabled %>"<% end %>
+<% if @api_key_enabled      %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"api_key_enabled": "<%= @api_key_enabled %>"<% end %>
+<% if @testdataVersion      %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"testdataVersion": "<%= @testdataVersion %>"<% end %>
+    }
+}

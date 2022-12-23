@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.searchHandler">
+      <searchHandler
+            class="org.eclipse.mylyn.internal.tasks.index.ui.IndexSearchHandler"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+         id="org.eclipse.mylyn.tasks.index.ui.command.ResetIndex"
+         categoryId="org.eclipse.mylyn.tasks.ui.commands"
+         defaultHandler="org.eclipse.mylyn.internal.tasks.index.ui.commands.ResetIndexHandler"
+         name="%command.name">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+         <menuContribution
+               locationURI="menu:org.eclipse.mylyn.tasks.ui.views.tasks?after=additions">
+               <command
+                     commandId="org.eclipse.mylyn.tasks.index.ui.command.ResetIndex"
+                     label="%command.label"
+                     style="push">
+               </command>
+         </menuContribution>
+   </extension>
+</plugin>

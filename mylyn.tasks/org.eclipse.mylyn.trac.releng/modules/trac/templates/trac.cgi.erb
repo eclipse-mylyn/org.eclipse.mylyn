@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+import glob, os, sys
+for i in glob.glob( os.path.join('<%= prefix %>/lib', '*.egg') ):
+    sys.path = [i] + sys.path
+sys.path = ['<%= prefix %>/lib'] + sys.path
+
+try:
+    from trac.web import cgi_frontend
+    cgi_frontend.run()
+except SystemExit:
+    raise
+except Exception, e:
+    import sys
+    import traceback
+
+    print>>sys.stderr, e
+    traceback.print_exc(file=sys.stderr)
+
+    print 'Status: 500 Internal Server Error'
+    print 'Content-Type: text/plain'
+    print
+    print 'Oops...'
+    print
+    print 'Trac detected an internal error:', e
+    print
+    traceback.print_exc(file=sys.stdout)

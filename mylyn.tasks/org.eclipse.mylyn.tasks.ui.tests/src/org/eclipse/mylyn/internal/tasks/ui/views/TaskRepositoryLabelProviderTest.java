@@ -1,0 +1,61 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2022 Tasktop Technologies and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - porting to SimRel 2022-12
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.tasks.ui.views;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.ConnectorBrand;
+import org.eclipse.mylyn.internal.tasks.ui.IBrandManager;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.junit.Test;
+
+public class TaskRepositoryLabelProviderTest {
+	private final IBrandManager manager = mock(IBrandManager.class);;
+
+	private final TaskRepositoryLabelProvider labelProvider = new TaskRepositoryLabelProvider() {
+		@Override
+		protected org.eclipse.mylyn.internal.tasks.ui.IBrandManager getBrandManager() {
+			return manager;
+		};
+	};
+
+	@Test
+	public void testGetImage() {
+		Image brandingImage = new Image(Display.getCurrent(), 1, 1);
+		when(manager.getBrandingIcon("mock", "a")).thenReturn(brandingImage);
+		assertEquals(brandingImage, labelProvider.getImage(new ConnectorBrand(new MockRepositoryConnector(), "a")));
+		assertEquals(CommonImages.getImage(TasksUiImages.REPOSITORY),
+				labelProvider.getImage(new ConnectorBrand(new MockRepositoryConnector(), "b")));
+	}
+
+	@Test
+	public void testGetText() {
+		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), eq("a"))).thenReturn(
+				"Mock Brand");
+		when(manager.getConnectorLabel(any(AbstractRepositoryConnector.class), eq("b"))).thenReturn(
+				"Mock Brand B");
+		assertEquals("Mock Brand", labelProvider.getText(new ConnectorBrand(new MockRepositoryConnector(), "a")));
+		assertEquals("Mock Brand B", labelProvider.getText(new ConnectorBrand(new MockRepositoryConnector(), "b")));
+	}
+}

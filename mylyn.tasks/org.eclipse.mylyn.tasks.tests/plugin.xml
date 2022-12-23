@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2009 Tasktop Technologies and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+
+<plugin>
+
+   <extension
+         id="org.eclipse.mylyn.jira.repository"
+         name="JIRA Repository"
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector"
+            id="org.eclipse.mylyn.tasks.tests.repositories"
+            name="Mock Repository Client"/>
+      <connectorUi
+            class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi"
+            id="org.eclipse.mylyn.tasks.tests.repositories.ui"
+            name="Mock Repository Connector UI">
+      </connectorUi>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+         <!-- content types used in tests -->
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="mylyn-test-text"
+            id="org.eclipse.mylyn.tasks.tests.content-txt"
+            name="Test text content type"
+            priority="normal">
+      </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="mylyn-test-xml"
+            id="org.eclipse.mylyn.tasks.tests.content-xml"
+            name="Test XML content type"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            id="org.eclipse.mylyn.tasks.tests.provider1"
+            name="Test Provider">
+      </provider>
+      <category
+            id="org.eclipse.mylyn.tasks.tests.category1"
+            name="Test Category">
+      </category>
+      <product
+            id="org.eclipse.mylyn.tasks.tests.product1"
+            name="Test Product"
+            providerId="org.eclipse.mylyn.tasks.tests.provider1">
+      </product>
+      <mapping
+            namespace="org.eclipse.mylyn.tasks.tests"
+            productId="org.eclipse.mylyn.tasks.tests.product1">
+         <repository
+               kind="bugzilla"
+               url="https://bugs.eclipse.org/bugs">
+         </repository>
+      </mapping>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            description="Provider that has no products definded"
+            id="org.eclipse.mylyn.tasks.tests.provider2"
+            name="Invalid Test Provider">
+      </provider>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.synchronizationParticipants">
+      <participant
+            class="org.eclipse.mylyn.tasks.tests.support.MockSynchronizationParticipant"
+            id="org.eclipse.mylyn.tasks.tests.participant">
+      </participant>
+      <suppressIncoming
+            attributeId="version"
+            connectorKind="trac">
+      </suppressIncoming>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.synchronizationParticipants">
+      <participant
+            class="org.eclipse.mylyn.tasks.tests.support.MockSynchronizationParticipant"
+            id="org.eclipse.mylyn.tasks.tests.participant">
+      </participant>
+      <suppressIncoming
+            attributeId="task.common.version"
+            connectorKind="mock">
+      </suppressIncoming>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.taskActivationListeners">
+      <listener
+            id="org.eclipse.mylyn.tasks.tests.listenerTest"
+            class="org.eclipse.mylyn.tasks.tests.TaskActivityManagerTest$MockTaskActivationListenerExtension">
+      </listener>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            id="org.eclipse.mylyn.tasks.tests.provider1"
+            name="Test Provider">
+      </provider>
+      <category
+            id="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            name="Test Category">
+      </category>
+      <product
+            id="org.eclipse.mylyn.tasks.tests.productseverity"
+            name="Test Product Severity"
+            providerId="org.eclipse.mylyn.tasks.tests.provider1">
+      </product>
+      <mapping
+            namespace="org.eclipse.mylyn.tasks.tests"
+            productId="org.eclipse.mylyn.tasks.tests.productseverity">
+         <repository
+               kind="mock"
+               url="http://mockrepository.test">
+         </repository>
+         <property
+              name="severity"
+              value="blocker">
+         </property>
+      </mapping>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            description="Provider that has no products definded"
+            id="org.eclipse.mylyn.tasks.tests.provider2"
+            name="Invalid Test Provider">
+      </provider>
+   </extension>
+
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            id="org.eclipse.mylyn.tasks.tests.provider1"
+            name="Test Provider">
+      </provider>
+      <category
+            id="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            name="Test Category">
+      </category>
+      <product
+            id="org.eclipse.mylyn.tasks.tests.productseverity"
+            name="Test Product Severity"
+            providerId="org.eclipse.mylyn.tasks.tests.provider1">
+      </product>
+      <mapping
+            namespace="org.eclipse.mylyn.tasks.tests"
+            productId="org.eclipse.mylyn.tasks.tests.productseverity">
+         <repository
+               kind="mock"
+               url="http://mockrepository.test">
+         </repository>
+         <property
+              name="severity"
+              value="blocker">
+         </property>
+      </mapping>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            description="Provider that has no products definded"
+            id="org.eclipse.mylyn.tasks.tests.provider2"
+            name="Invalid Test Provider">
+      </provider>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            id="org.eclipse.mylyn.tasks.tests.provider1"
+            name="Test Provider">
+      </provider>
+      <category
+            id="org.eclipse.mylyn.tasks.tests.categoryseverity"
+            name="Test Category">
+      </category>
+      <product
+            id="org.eclipse.mylyn.tasks.tests.productnormal"
+            name="Test Product Normal"
+            providerId="org.eclipse.mylyn.tasks.tests.provider1">
+      </product>
+      <mapping
+            namespace="org.eclipse.mylyn.tasks.tests"
+            productId="org.eclipse.mylyn.tasks.tests.productnormal">
+         <repository
+               kind="mock"
+               url="http://mockrepository.test">
+         </repository>
+      </mapping>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.tests.category1"
+            description="Provider that has no products definded"
+            id="org.eclipse.mylyn.tasks.tests.provider2"
+            name="Invalid Test Provider">
+      </provider>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.repositoryConnectorContributor">
+      <contributor
+            class="org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorContributor">
+      </contributor>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector"
+            class="org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorAdapter">
+         <adapter
+               type="org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi">
+         </adapter>
+         <adapter
+               type="org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorBranding">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.tasks.tests.ui.editor.MockWikiEditorExtension"
+            id="org.eclipse.mylyn.tasks.tests.editor.mock.wiki"
+            name="MockWiki">
+      </taskEditorExtension>
+      <taskEditorExtension
+            class="org.eclipse.mylyn.tasks.tests.ui.editor.MockTextileEditorExtension"
+            id="org.eclipse.mylyn.tasks.tests.editor.mock.textile"
+            name="MockTextile">
+      </taskEditorExtension>
+   </extension>
+  
+</plugin>

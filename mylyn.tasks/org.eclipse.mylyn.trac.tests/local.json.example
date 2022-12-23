@@ -1,0 +1,11 @@
+[
+{ 
+  "type": "trac", 
+  "url": "http://localhost:2080/trac-1.0/", 
+  "version": "1.0", 
+  "info": "XML-RPC",
+  "properties":{
+    "version": "XML_RPC"
+  }
+}
+]
