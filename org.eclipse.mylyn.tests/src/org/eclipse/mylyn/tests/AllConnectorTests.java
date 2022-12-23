@@ -12,13 +12,9 @@
 
 package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite.TestConfigurationProperty;
-import org.eclipse.mylyn.gerrit.tests.AllGerritTests;
-import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.trac.tests.AllTracTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -32,7 +28,12 @@ import org.junit.runners.Suite;
 //FIXME: AF: enable tests back
 //https://github.com/eclipse-mylyn/.github/issues/3
 //	AllBugzillaRestCoreTests.class, //
-		AllBugzillaTests.class, AllHudsonTests.class, AllGerritTests.class, AllTracTests.class })
+//FIXME: AF: remove? we already did these tests during component build
+//		AllBugzillaTests.class, //
+//		AllHudsonTests.class, //
+//		AllGerritTests.class, //
+//		AllTracTests.class //
+})
 @TestConfigurationProperty()
 public class AllConnectorTests {
 	static {
