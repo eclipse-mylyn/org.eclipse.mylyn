@@ -4,14 +4,12 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
-    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -83,38 +81,6 @@
     </setupTask>
   </setupTask>
   <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="Mylyn">
-    <requirement
-        name="org.eclipse.mylyn.ide_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.java_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.pde_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.team_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.gerrit.feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.git.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.builds.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.hudson.feature.group"/>
-    <requirement
-        name="org.eclipse.egit.feature.group"/>
-    <requirement
-        name="org.eclipse.egit.mylyn.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
-    <repository
-        url="https://download.eclipse.org/egit/updates-6.1"/>
-  </setupTask>
-  <setupTask
       xsi:type="setup:CompoundTask"
       id="mylyn.basline"
       name="Baseline">
@@ -135,96 +101,43 @@
         location="${workspace.location/../api.baseline}"
         remoteURI="https://download.eclipse.org/mylyn/drops/3.25.0/mylyn-3.25.0-api.zip"/>
   </setupTask>
-  <project name="Maintainer"
-      label="Maintainer">
-    <setupTask
-        xsi:type="setup:StringSubstitutionTask"
-        name="git.clone.mylyn.all"
-        value="${git.clone.mylyn.all.location}"/>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="eclipse.target.platform"
-        defaultValue="None"
-        storageURI="scope://Workspace"/>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="mylyn.target.platform"
-        defaultValue="mylyn-e4.26"
-        storageURI="scope://Workspace"
-        label="Mylyn Target Platform">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/GlobalVariable"/>
-      <choice
-          value="mylyn-e4.26"
-          label="2022-12 - 4.26"/>
-      <choice
-          value="mylyn-e4.25"
-          label="2022-09 - 4.25"/>
-      <choice
-          value="mylyn-e4.24"
-          label="2022-06 - 4.24"/>
-      <choice
-          value="mylyn-e4.23"
-          label="2022-03 - 4.23"/>
-      <choice
-          value="mylyn-e4.14"
-          label="2019-12 - 4.14"/>
-      <choice
-          value="mylyn-e4.8"
-          label="Photon - 4.8"/>
-      <choice
-          value="mylyn-e4.7"
-          label="Oxygen - 4.7"/>
-      <choice
-          value="mylyn-e4.6"
-          label="Neon - 4.6"/>
-      <choice
-          value="mylyn-e4.5"
-          label="Mars - 4.5"/>
-      <choice
-          value="mylyn-e4.4"
-          label="Luna - 4.4"/>
-      <choice
-          value="mylyn-e4.3"
-          label="Kepler - 4.3"/>
-      <choice
-          value="mylyn-e4.2"
-          label="Junor - 4.2"/>
-      <choice
-          value="None"
-          label="None"/>
-      <choice
-          value="mylyn-emaintenance"
-          label="Maintenance"/>
-      <choice
-          value="mylyn-estaging"
-          label="Staging"/>
-      <choice
-          value="mylyn-dev-all"
-          label="Development All"/>
-      <choice
-          value="mylyn-dev-e4.3"
-          label="Development Kepler - 4.3"/>
-      <choice
-          value="mylyn-dev-e4.2"
-          label="Development Junor - 4.2"/>
-      <description>
-        Choose the target platform for mylyn.
-
-        Please use only mylyn-e4.7 or mylyn-e4.8
-        the other are defined but may be outdated!
-      </description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:EclipseIniTask"
-        option="-Doomph.redirection.mylyn"
-        value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/master/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
-        vm="true"/>
+  <setupTask
+      xsi:type="setup:ResourceCreationTask"
+      targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
+      encoding="UTF-8">
+    <description>show Workingsets</description>
+    <content>
+      &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+      &lt;section name=&quot;Workbench&quot;>
+      	&lt;section name=&quot;org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart&quot;>
+      		&lt;item key=&quot;group_libraries&quot; value=&quot;true&quot;/>
+      		&lt;item key=&quot;layout&quot; value=&quot;2&quot;/>
+      		&lt;item key=&quot;rootMode&quot; value=&quot;2&quot;/>
+      		&lt;item key=&quot;linkWithEditor&quot; value=&quot;true&quot;/>
+      		&lt;item key=&quot;memento&quot; value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;#x0A;&amp;lt;packageExplorer configured=&amp;quot;true&amp;quot; group_libraries=&amp;quot;1&amp;quot; layout=&amp;quot;2&amp;quot; linkWithEditor=&amp;quot;0&amp;quot; rootMode=&amp;quot;2&amp;quot; sortWorkingSets=&amp;quot;false&amp;quot; workingSetName=&amp;quot;Aggregate for window 1592131095741&amp;quot;&amp;gt;&amp;#x0A;&amp;lt;localWorkingSetManager&amp;gt;&amp;#x0A;&amp;lt;workingSet editPageId=&amp;quot;org.eclipse.jdt.internal.ui.OthersWorkingSet&amp;quot; factoryID=&amp;quot;org.eclipse.ui.internal.WorkingSetFactory&amp;quot; id=&amp;quot;1592131993011_11&amp;quot; label=&amp;quot;Other Projects&amp;quot; name=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;/localWorkingSetManager&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Bugzilla Rest Connetor (Preview)&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Builds&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Commons&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Context&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Reviews&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Tasks&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Versions&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Bugzilla Rest Connetor (Preview)&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Builds&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Commons&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Context&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Reviews&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Tasks&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Versions&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;customFilters userDefinedPatternsEnabled=&amp;quot;false&amp;quot;&amp;gt;&amp;#x0A;&amp;lt;xmlDefinedFilters&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.StaticsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.buildship.ui.packageexplorer.filter.gradle.buildfolder&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.mylyn.java.ui.MembersFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonSharedProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.EmptyInnerPackageFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.m2e.MavenModuleFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.buildship.ui.packageexplorer.filter.gradle.subProject&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ClosedProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.EmptyLibraryContainerFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.PackageDeclarationFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.pde.ui.BinaryProjectFilter1&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.LocalTypesFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.pde.ui.ExternalPluginLibrariesFilter1&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.FieldsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonJavaProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.SyntheticMembersFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ContainedLibraryFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.HideInnerClassFilesFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.DeprecatedMembersFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ImportDeclarationFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonJavaElementFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.LibraryFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.CuAndClassFileFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.EmptyPackageFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonPublicFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;/xmlDefinedFilters&amp;gt;&amp;#x0A;&amp;lt;/customFilters&amp;gt;&amp;#x0A;&amp;lt;/packageExplorer&amp;gt;&quot;/>
+      	&lt;/section>
+      &lt;/section>
+    </content>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:ResourceCreationTask"
+      targetURL="configuration:/.settings/org.eclipse.ui.ide.prefs"
+      encoding="UTF-8">
+    <description>Suppress prompt for default workspace already upon very first start</description>
+    <content>
+      MAX_RECENT_WORKSPACES=5
+      RECENT_WORKSPACES=${workspace.location|property}
+      RECENT_WORKSPACES_PROTOCOL=3
+      SHOW_WORKSPACE_SELECTION_DIALOG=false
+      eclipse.preferences.version=1
+    </content>
+  </setupTask>
+  <project name="mylyn"
+      label="Mylyn">
     <setupTask
         xsi:type="git:GitCloneTask"
-        id="git.clone.mylyn.all"
-        remoteURI="${mylyn-github-orga}/org.eclipse.mylyn.all"
-        recursive="true">
+        id="git.clone.mylyn"
+        remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -233,7 +146,7 @@
         </detail>
         <detail
             key="label">
-          <value>Mylyn All GitHub Repository</value>
+          <value>Mylyn GitHub Repository</value>
         </detail>
         <detail
             key="target">
@@ -246,467 +159,270 @@
             key="autocrlf"
             value="false"/>
       </configSections>
-      <description>Mylyn All</description>
+      <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.all&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1672000970093&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+		&lt;filter>
+			&lt;id>1672000970100&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources>
+</substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.builds/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824328018&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources>
+</substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.builds/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.builds-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.commons/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824365141&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources></substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.commons/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.commons-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.context/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824402475&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources></substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.context/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.context-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.reviews/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824426181&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources></substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.reviews/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.reviews-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.tasks/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824564573&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+		&lt;filter>
+			&lt;id>1671824564574&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-connector-bugzilla-rest&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+		&lt;filter>
+			&lt;id>1671824564575&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn-feature&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources>
+</substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
+        xsi:type="setup:TextModifyTask"
         excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.tasks/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.tasks-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592160951681&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        		&lt;filter>
-        			&lt;id>1592160951683&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-connector-bugzilla-rest&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
+        predecessor="git.clone.mylyn"
+        url="${git.clone.mylyn.location|uri}/mylyn.versions/.project">
+      <modification
+          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
+        <substitution>\1</substitution>
+        <substitution>\2	&lt;filteredResources>
+		&lt;filter>
+			&lt;id>1671824618875&lt;/id>
+			&lt;name>&lt;/name>
+			&lt;type>10&lt;/type>
+			&lt;matcher>
+				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
+				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
+			&lt;/matcher>
+		&lt;/filter>
+	&lt;/filteredResources>
+</substitution>
+        <substitution>\3</substitution>
+      </modification>
     </setupTask>
     <setupTask
-        xsi:type="setup:ResourceCreationTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.tasks/connector-bugzilla-rest/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>connector-bugzilla-rest-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592160951681&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:ResourceCreationTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.0"
-        successor="//@projects[name='Maintainer']/@setupTasks.14"
-        targetURL="${git.clone.mylyn.all.location|uri}/org.eclipse.mylyn.versions/.project">
-      <description>Mylyn All Maven Project</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;projectDescription>
-        	&lt;name>org.eclipse.mylyn.versions-parent&lt;/name>
-        	&lt;comment>&lt;/comment>
-        	&lt;projects>
-        	&lt;/projects>
-        	&lt;buildSpec>
-        		&lt;buildCommand>
-        			&lt;name>org.eclipse.m2e.core.maven2Builder&lt;/name>
-        			&lt;arguments>
-        			&lt;/arguments>
-        		&lt;/buildCommand>
-        	&lt;/buildSpec>
-        	&lt;natures>
-        		&lt;nature>org.eclipse.m2e.core.maven2Nature&lt;/nature>
-        	&lt;/natures>
-        	&lt;filteredResources>
-        		&lt;filter>
-        			&lt;id>1592159300227&lt;/id>
-        			&lt;name>&lt;/name>
-        			&lt;type>10&lt;/type>
-        			&lt;matcher>
-        				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-        				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-        			&lt;/matcher>
-        		&lt;/filter>
-        	&lt;/filteredResources>
-        &lt;/projectDescription>
-      </content>
-    </setupTask>
+        xsi:type="setup:EclipseIniTask"
+        option="-Doomph.redirection.mylyn"
+        value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+        vm="true"/>
     <setupTask
         xsi:type="projects:ProjectsImportTask">
       <sourceLocator
-          rootFolder="${git.clone.mylyn.all.location}"
+          rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
-        <excludedPath>org.eclipse.mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
-        <excludedPath>org.eclipse.mylyn.reviews/tbr</excludedPath>
-        <excludedPath>org.eclipse.mylyn.docs</excludedPath>
+        <excludedPath>mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
+        <excludedPath>mylyn.reviews/tbr</excludedPath>
+        <excludedPath>mylyn.docs</excludedPath>
       </sourceLocator>
       <description>Import Releng Project</description>
     </setupTask>
     <setupTask
         xsi:type="setup.workingsets:WorkingSetTask">
       <workingSet
-          name="Mylyn Builds">
-        <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.builds/.*"/>
-      </workingSet>
-      <workingSet
-          name="Mylyn Commons">
-        <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.commons/.*"/>
-      </workingSet>
-      <workingSet
-          name="Mylyn Context">
-        <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.context/.*"/>
-      </workingSet>
-      <workingSet
           name="Mylyn">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn/.*"/>
+            xsi:type="predicates:OrPredicate">
+          <operand
+              xsi:type="predicates:LocationPredicate"
+              pattern="${git.clone.mylyn.location|path}/org.eclipse.mylyn.*"/>
+          <operand
+              xsi:type="predicates:LocationPredicate"
+              pattern="${git.clone.mylyn.location|path}/org.eclipse.mylyn-*"/>
+        </predicate>
       </workingSet>
       <workingSet
-          name="Mylyn Reviews">
+          name="Commons">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.reviews/.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.commons/.*"/>
       </workingSet>
       <workingSet
-          name="Mylyn Tasks">
+          name="Tasks">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.tasks/org.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/.*"/>
       </workingSet>
       <workingSet
-          name="Mylyn Versions">
+          name="Context">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.versions/.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.context/.*"/>
       </workingSet>
       <workingSet
-          name="Bugzilla Rest Connetor (Preview)">
+          name="Builds">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.all.location|path}/org.eclipse.mylyn.tasks/connector-bugzilla-rest/.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.builds/.*"/>
       </workingSet>
-      <description>All Mylyn</description>
+      <workingSet
+          name="Reviews">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.reviews/.*"/>
+      </workingSet>
+      <workingSet
+          name="Versions">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.versions/.*"/>
+      </workingSet>
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"
-        name="${mylyn.target.platform}">
+        predecessor="//@projects[name='mylyn']/@setupTasks.10"
+        name="mylyn-e4.26">
       <description>Active Mylyn Target Platform</description>
     </setupTask>
-    <setupTask
-        xsi:type="launching:LaunchTask"
-        disabled="true"
-        predecessor="//@projects[name='Maintainer']/@setupTasks.14"
-        launcher="submodulConfig"/>
-    <setupTask
-        xsi:type="setup:ResourceCreationTask"
-        targetURL="configuration:/.settings/org.eclipse.ui.ide.prefs"
-        encoding="UTF-8">
-      <description>Suppress prompt for default workspace already upon very first start</description>
-      <content>
-        MAX_RECENT_WORKSPACES=5
-        RECENT_WORKSPACES=${workspace.location|property}
-        RECENT_WORKSPACES_PROTOCOL=3
-        SHOW_WORKSPACE_SELECTION_DIALOG=false
-        eclipse.preferences.version=1
-      </content>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:ResourceCreationTask"
-        targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
-        encoding="UTF-8">
-      <description>show Workingsets</description>
-      <content>
-        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
-        &lt;section name=&quot;Workbench&quot;>
-        	&lt;section name=&quot;org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart&quot;>
-        		&lt;item key=&quot;group_libraries&quot; value=&quot;true&quot;/>
-        		&lt;item key=&quot;layout&quot; value=&quot;2&quot;/>
-        		&lt;item key=&quot;rootMode&quot; value=&quot;2&quot;/>
-        		&lt;item key=&quot;linkWithEditor&quot; value=&quot;false&quot;/>
-        		&lt;item key=&quot;memento&quot; value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;#x0A;&amp;lt;packageExplorer configured=&amp;quot;true&amp;quot; group_libraries=&amp;quot;1&amp;quot; layout=&amp;quot;2&amp;quot; linkWithEditor=&amp;quot;0&amp;quot; rootMode=&amp;quot;2&amp;quot; sortWorkingSets=&amp;quot;false&amp;quot; workingSetName=&amp;quot;Aggregate for window 1592131095741&amp;quot;&amp;gt;&amp;#x0A;&amp;lt;localWorkingSetManager&amp;gt;&amp;#x0A;&amp;lt;workingSet editPageId=&amp;quot;org.eclipse.jdt.internal.ui.OthersWorkingSet&amp;quot; factoryID=&amp;quot;org.eclipse.ui.internal.WorkingSetFactory&amp;quot; id=&amp;quot;1592131993011_11&amp;quot; label=&amp;quot;Other Projects&amp;quot; name=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;/localWorkingSetManager&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Bugzilla Rest Connetor (Preview)&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Builds&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Commons&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Context&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Reviews&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Tasks&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Mylyn Versions&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Bugzilla Rest Connetor (Preview)&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Builds&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Commons&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Context&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Reviews&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Tasks&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Mylyn Versions&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;customFilters userDefinedPatternsEnabled=&amp;quot;false&amp;quot;&amp;gt;&amp;#x0A;&amp;lt;xmlDefinedFilters&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.StaticsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.buildship.ui.packageexplorer.filter.gradle.buildfolder&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.mylyn.java.ui.MembersFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonSharedProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.EmptyInnerPackageFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.m2e.MavenModuleFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.buildship.ui.packageexplorer.filter.gradle.subProject&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ClosedProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.EmptyLibraryContainerFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.PackageDeclarationFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.pde.ui.BinaryProjectFilter1&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.LocalTypesFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.pde.ui.ExternalPluginLibrariesFilter1&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.FieldsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonJavaProjectsFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.SyntheticMembersFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ContainedLibraryFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.HideInnerClassFilesFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.DeprecatedMembersFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.ImportDeclarationFilter&amp;quot; isEnabled=&amp;quot;true&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonJavaElementFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.LibraryFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.CuAndClassFileFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.internal.ui.PackageExplorer.EmptyPackageFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;child filterId=&amp;quot;org.eclipse.jdt.ui.PackageExplorer.NonPublicFilter&amp;quot; isEnabled=&amp;quot;false&amp;quot;/&amp;gt;&amp;#x0A;&amp;lt;/xmlDefinedFilters&amp;gt;&amp;#x0A;&amp;lt;/customFilters&amp;gt;&amp;#x0A;&amp;lt;/packageExplorer&amp;gt;&quot;/>
-        	&lt;/section>
-        &lt;/section>
-      </content>
-    </setupTask>
     <stream
-        name="master"
-        label="Master"/>
-    <description>Maintaining Mylyn</description>
+        name="main"
+        label="main"/>
+    <description>The new Setup for Mylyn hosted on GitHub</description>
   </project>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
