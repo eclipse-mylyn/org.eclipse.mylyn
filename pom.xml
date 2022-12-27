@@ -440,6 +440,12 @@
     </pluginManagement>
   </build>
   <modules>
+    <module>mylyn.commons</module>
+    <module>mylyn.tasks</module>
+    <module>mylyn.context</module>
+    <module>mylyn.versions</module>
+    <module>mylyn.builds</module>
+    <module>mylyn.reviews</module>
     <module>org.eclipse.mylyn.discovery-directory</module>
     <module>org.eclipse.mylyn.tests</module>
     <module>org.eclipse.mylyn-site</module>
