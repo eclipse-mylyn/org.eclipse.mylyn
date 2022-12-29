@@ -26,14 +26,15 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
  */
 public class BreakpointsInterestFilter extends InterestFilter {
 
-	private final AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
+	private final AbstractContextStructureBridge structureBridge = ContextCore
+			.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IBreakpoint) {
 			IBreakpoint breakpoint = (IBreakpoint) element;
-			IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
-					structureBridge.getHandleIdentifier(breakpoint));
+			IInteractionElement interactionElement = ContextCore.getContextManager()
+					.getElement(structureBridge.getHandleIdentifier(breakpoint));
 			if (interactionElement == null) {
 				return true;
 			}

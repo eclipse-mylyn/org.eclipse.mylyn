@@ -399,8 +399,8 @@ public class TaskActivityTimingTest extends TestCase {
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", null,
 				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
 				end.getTime());
-		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "",
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "", "originId",
+				"navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
 				end.getTime());
 
 		activityMonitor.parseInteractionEvent(event1, false);
@@ -656,9 +656,10 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
 		activityMonitor.reloadActivityTime();
-		assertEquals((endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
-				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TasksUiPlugin.getTaskActivityManager()
-				.getElapsedTime(task1));
+		assertEquals(
+				(endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
+						+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()),
+				TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
 	public void testCollapsedTwoTasks() {
@@ -907,7 +908,8 @@ public class TaskActivityTimingTest extends TestCase {
 		InteractionEvent event5 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
 				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, time5, time6);
 		InteractionEvent event7 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7, time7);
+				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7,
+				time7);
 
 		LegacyActivityAdaptor legacyAdaptor = new LegacyActivityAdaptor();
 		activityMonitor.parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event1), false);
@@ -917,8 +919,8 @@ public class TaskActivityTimingTest extends TestCase {
 		activityMonitor.parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event5), false);
 		// TaskActivityManager.getInstance().parseInteractionEvent(event6);
 		activityMonitor.parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event7), false);
-		long expectedTotalTime = time6.getTime() - time5.getTime() + time4.getTime() - time3.getTime()
-				+ time2.getTime() - time1.getTime();
+		long expectedTotalTime = time6.getTime() - time5.getTime() + time4.getTime() - time3.getTime() + time2.getTime()
+				- time1.getTime();
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 

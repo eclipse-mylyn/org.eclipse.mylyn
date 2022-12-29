@@ -759,7 +759,7 @@ public class ScreenshotViewer {
 	}
 
 	private static final int[][] grapGroupPoints = { //
-	/*    */{ 0, 0, 0 }, { 1, 0, 0 }, { 2, 0, 1 }, { 3, 0, 2 }, { 4, 0, 2 }, //
+			/*    */{ 0, 0, 0 }, { 1, 0, 0 }, { 2, 0, 1 }, { 3, 0, 2 }, { 4, 0, 2 }, //
 			{ 0, 1, 0 }, /*         *//*         *//*         */{ 4, 1, 2 }, //
 			{ 0, 2, 3 }, /*         *//*         *//*         */{ 4, 2, 4 }, //
 			{ 0, 3, 5 }, /*         *//*         *//*         */{ 4, 3, 7 }, //
@@ -854,8 +854,8 @@ public class ScreenshotViewer {
 
 		Image image = new Image(display, currentSelection);
 		GC gc = new GC(image);
-		gc.drawImage(workImage, currentSelection.x, currentSelection.y, currentSelection.width,
-				currentSelection.height, 0, 0, currentSelection.width, currentSelection.height);
+		gc.drawImage(workImage, currentSelection.x, currentSelection.y, currentSelection.width, currentSelection.height,
+				0, 0, currentSelection.width, currentSelection.height);
 		gc.dispose();
 		disposeImageResources();
 
@@ -1569,16 +1569,15 @@ public class ScreenshotViewer {
 							workImageGC.fillOval(start_x, start_y, width, height);
 							break;
 						case SelectToolAction.DRAW_TEXT:
-							StringBuffer text = historyDrawText.get(c);
-							{
-								Font backFont = workImageGC.getFont();
-								FontData fontData = new FontData(historyDrawFont.get(c));
-								workImageGC.setFont(new Font(getShell().getDisplay(), fontData));
-								workImageGC.setClipping(start_x, start_y, width, height);
-								workImageGC.drawText(text.toString(), start_x, start_y, true);
-								workImageGC.setClipping((Rectangle) null);
-								workImageGC.setFont(backFont);
-							}
+							StringBuffer text = historyDrawText.get(c); {
+							Font backFont = workImageGC.getFont();
+							FontData fontData = new FontData(historyDrawFont.get(c));
+							workImageGC.setFont(new Font(getShell().getDisplay(), fontData));
+							workImageGC.setClipping(start_x, start_y, width, height);
+							workImageGC.drawText(text.toString(), start_x, start_y, true);
+							workImageGC.setClipping((Rectangle) null);
+							workImageGC.setFont(backFont);
+						}
 							break;
 						}
 					}
@@ -1799,9 +1798,8 @@ public class ScreenshotViewer {
 	 */
 	public Image createImage() {
 		// use default display to support invocation from non UI thread
-		Image screenshot = new Image(Display.getDefault(), currentSelection != null
-				? currentSelection
-				: workImage.getBounds());
+		Image screenshot = new Image(Display.getDefault(),
+				currentSelection != null ? currentSelection : workImage.getBounds());
 
 		GC gc = new GC(screenshot);
 		if (currentSelection != null) {

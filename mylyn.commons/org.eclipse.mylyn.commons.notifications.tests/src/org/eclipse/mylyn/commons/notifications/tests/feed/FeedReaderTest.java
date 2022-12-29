@@ -46,8 +46,8 @@ public class FeedReaderTest extends TestCase {
 	}
 
 	public void testParse() throws Exception {
-		assertEquals(Status.OK_STATUS, reader.parse(
-				CommonTestUtil.getResource(FeedReaderTest.class, "testdata/FeedReaderTest/update1.xml"), null));
+		assertEquals(Status.OK_STATUS, reader
+				.parse(CommonTestUtil.getResource(FeedReaderTest.class, "testdata/FeedReaderTest/update1.xml"), null));
 		assertEquals(2, reader.getEntries().size());
 		Collections.sort(reader.getEntries());
 

@@ -58,8 +58,9 @@ public abstract class DiscoveryUi {
 			new DiscoveryFeedbackJob(descriptors).schedule();
 			recordInstalled(descriptors);
 		} catch (InvocationTargetException e) {
-			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
-					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
+			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+					NLS.bind(Messages.ConnectorDiscoveryWizard_installProblems,
+							new Object[] { e.getCause().getMessage() }),
 					e.getCause());
 			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return false;

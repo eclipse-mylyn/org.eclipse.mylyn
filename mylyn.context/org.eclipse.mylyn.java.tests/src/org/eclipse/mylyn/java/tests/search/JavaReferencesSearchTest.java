@@ -100,8 +100,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		// results should be not null, but have no references since the landmark
 		// is an element in a different project
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0, true);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 0, true);
 
 		// results should be not null, but have no java references since the
 		// landmark
@@ -120,8 +120,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		// are searching
 		// the file with the element in it
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 1, true);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 1, true);
 	}
 
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException {
@@ -140,8 +140,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		// results should be not null, but have no references since the landmark
 		// is an element in a different project
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0, true);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 0, true);
 
 		// results should be not null, but have no references since the
 		// interesting element
@@ -158,8 +158,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		// results should be not null, and we should get 1 result back
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 1, true);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 1, true);
 
 		// results should be null, since we have nothing to search
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
@@ -187,14 +187,14 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		// results should be not null, but have no references since the landmark
 		// is an element in a different project
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0, true);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 0, true);
 
 		// results should be not null, and have 1 reference since the project is
 		// the same
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(),
-				JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1, true);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
+				searchNode, dos, 1, true);
 
 		// results should be not null, and have 1 reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
@@ -203,8 +203,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		// results should be not null, and we should get 1 result back
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 1, true);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 1, true);
 
 		// results should be null, since we have nothing to search
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
@@ -235,14 +235,14 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		// results should be not null, but have no references since the landmark
 		// is an element in a different project
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0, true);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 0, true);
 
 		// results should be not null, and have 1 reference since the project is
 		// the same
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(),
-				JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1, true);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
+				searchNode, dos, 1, true);
 
 		// results should be not null, and have 1 reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
@@ -251,8 +251,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		// results should be not null, and we should get 1 result back
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 1, true);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode,
+				dos, 1, true);
 
 		// results should be null, since we have nothing to search
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);

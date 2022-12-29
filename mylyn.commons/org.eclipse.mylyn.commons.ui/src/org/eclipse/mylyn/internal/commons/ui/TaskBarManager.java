@@ -34,7 +34,7 @@ public class TaskBarManager {
 	private static final String TASK_BAR_MENU_MANAGER_KEY = "org.eclipse.mylyn.commons.TaskBarMenuManager.instance"; //$NON-NLS-1$
 
 	public static MenuManager getTaskBarMenuManager() {
-		Widget /* TaskItem */taskItem = getApplicationTaskItem();
+		Widget /* TaskItem */ taskItem = getApplicationTaskItem();
 		if (taskItem != null) {
 			MenuManager taskBarMenuManager = getTaskBarMenuManager(taskItem);
 			return taskBarMenuManager;
@@ -42,7 +42,7 @@ public class TaskBarManager {
 		return null;
 	}
 
-	private static Widget /* TaskItem */getApplicationTaskItem() {
+	private static Widget /* TaskItem */ getApplicationTaskItem() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && workbench.getDisplay() != null && !workbench.isClosing()) {
 
@@ -66,7 +66,7 @@ public class TaskBarManager {
 		return null;
 	}
 
-	private static TaskBarMenuManager getTaskBarMenuManager(Widget /* TaskItem */taskItem) {
+	private static TaskBarMenuManager getTaskBarMenuManager(Widget /* TaskItem */ taskItem) {
 		Assert.isNotNull(taskItem);
 		TaskBarMenuManager taskBarMenuManager;
 		Object data = taskItem.getData(TASK_BAR_MENU_MANAGER_KEY);

@@ -74,8 +74,8 @@ public class NotificationService implements INotificationService {
 		// them do their job.
 		for (Entry<NotificationSink, ArrayList<AbstractNotification>> entry : filtered.entrySet()) {
 			final NotificationSink sink = entry.getKey();
-			final NotificationSinkEvent event = new NotificationSinkEvent(new ArrayList<AbstractNotification>(
-					entry.getValue()));
+			final NotificationSinkEvent event = new NotificationSinkEvent(
+					new ArrayList<AbstractNotification>(entry.getValue()));
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, NotificationsPlugin.ID_PLUGIN, "Sink failed: " //$NON-NLS-1$

@@ -124,7 +124,8 @@ public abstract class XmlRpcOperation<T> {
 	protected Object executeCall(IProgressMonitor monitor, String method, Object... parameters) throws XmlRpcException {
 		try {
 			if (CommonXmlRpcClient.DEBUG_XMLRPC) {
-				System.err.println("Calling " + client.getLocation().getUrl() + ": " + method + " " + CoreUtil.toString(parameters)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.err.println("Calling " + client.getLocation().getUrl() + ": " + method + " " //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						+ CoreUtil.toString(parameters));
 			}
 
 			AuthenticationCredentials credentials = client.updateCredentials();

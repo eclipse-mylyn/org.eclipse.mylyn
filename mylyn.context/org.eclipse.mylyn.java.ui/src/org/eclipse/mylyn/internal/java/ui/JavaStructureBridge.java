@@ -98,7 +98,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 						}
 					}
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
-					if (parentBridge != null && ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
+					if (parentBridge != null
+							&& ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
 						if (element.getElementType() < IJavaElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
 							if (!resourceChildren.isEmpty()) {
@@ -110,7 +111,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 					return childHandles;
 				} catch (JavaModelException e) {
 					// NOTE: it would be better if this was not hard-wired but used the parent/child bridge mapping
-					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
+					AbstractContextStructureBridge parentBridge = ContextCore
+							.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get children", //$NON-NLS-1$

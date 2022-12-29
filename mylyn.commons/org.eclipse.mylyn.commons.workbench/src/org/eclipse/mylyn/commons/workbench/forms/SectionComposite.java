@@ -74,8 +74,7 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	public ExpandableComposite createSection(String title, int expansionStyle, final boolean grabExcessVerticalSpace) {
-		final ExpandableComposite section = getToolkit().createExpandableComposite(
-				getContent(),
+		final ExpandableComposite section = getToolkit().createExpandableComposite(getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
 						| expansionStyle);
 		section.titleBarTextMarginWidth = 0;
@@ -136,8 +135,8 @@ public class SectionComposite extends SharedScrolledComposite {
 			Object shellData = getShell().getData();
 			if (shellData instanceof Window) {
 				Window window = (Window) shellData;
-				Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, Math.max(currentbounds.width,
-						newSize.x), Math.max(currentbounds.height, newSize.y));
+				Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y,
+						Math.max(currentbounds.width, newSize.x), Math.max(currentbounds.height, newSize.y));
 				Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
 				getShell().setBounds(result);
 			}

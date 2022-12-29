@@ -138,8 +138,8 @@ public class ExtensionPointReader<T> {
 			return Status.CANCEL_STATUS;
 		}
 
-		MultiStatus result = new MultiStatus(pluginId, 0, NLS.bind(
-				"Extensions for {0}/{1} failed to load", pluginId, elementId), null); //$NON-NLS-1$
+		MultiStatus result = new MultiStatus(pluginId, 0,
+				NLS.bind("Extensions for {0}/{1} failed to load", pluginId, elementId), null); //$NON-NLS-1$
 
 		IExtensionPoint extensionPoint = registry.getExtensionPoint(pluginId + "." + extensionId); //$NON-NLS-1$
 		if (extensionPoint != null) {
@@ -191,13 +191,13 @@ public class ExtensionPointReader<T> {
 			if (clazz.isInstance(object)) {
 				return clazz.cast(object);
 			} else {
-				result.add(new Status(IStatus.ERROR, pluginId, NLS.bind(
-						"Class ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-						object.getClass().getCanonicalName(), getPluginId())));
+				result.add(new Status(IStatus.ERROR, pluginId,
+						NLS.bind("Class ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+								object.getClass().getCanonicalName(), getPluginId())));
 			}
 		} catch (Throwable e) {
-			result.add(new Status(IStatus.ERROR, pluginId, NLS.bind(
-					"Failed to load for extension contributed by {0}", getPluginId()), e)); //$NON-NLS-1$
+			result.add(new Status(IStatus.ERROR, pluginId,
+					NLS.bind("Failed to load for extension contributed by {0}", getPluginId()), e)); //$NON-NLS-1$
 		}
 		return null;
 	}

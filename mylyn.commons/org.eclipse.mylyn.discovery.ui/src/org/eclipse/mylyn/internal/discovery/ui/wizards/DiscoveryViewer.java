@@ -238,9 +238,8 @@ public class DiscoveryViewer {
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
 			if (connector.getCertification() != null) {
-				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0,
-						new String[] { connector.getProvider(), connector.getLicense(),
-								connector.getCertification().getName() }));
+				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0, new String[] {
+						connector.getProvider(), connector.getLicense(), connector.getCertification().getName() }));
 				if (connector.getCertification().getUrl() != null) {
 					providerLabel.addSelectionListener(new SelectionAdapter() {
 						@Override
@@ -337,8 +336,8 @@ public class DiscoveryViewer {
 				}
 				if (connector.getAvailable() != null && !connector.getAvailable()) {
 					MessageDialog.openWarning(shellProvider.getShell(),
-							Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable, NLS.bind(
-									Messages.ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable,
+							Messages.ConnectorDiscoveryWizardMainPage_warningTitleConnectorUnavailable,
+							NLS.bind(Messages.ConnectorDiscoveryWizardMainPage_warningMessageConnectorUnavailable,
 									connector.getName()));
 					return false;
 				}
@@ -523,7 +522,8 @@ public class DiscoveryViewer {
 		filterTextChanged();
 	}
 
-	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon, int dimension, boolean fallback) {
+	private Image computeIconImage(AbstractDiscoverySource discoverySource, Icon icon, int dimension,
+			boolean fallback) {
 		String imagePath;
 		switch (dimension) {
 		case 64:
@@ -764,14 +764,15 @@ public class DiscoveryViewer {
 						textFilterContainer = new Composite(filterContainer, SWT.NULL);
 					} else {
 						textFilterContainer = new Composite(filterContainer, SWT.BORDER);
-						textFilterContainer.setBackground(header.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+						textFilterContainer
+								.setBackground(header.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 					}
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(textFilterContainer);
 					GridLayoutFactory.fillDefaults().numColumns(2).applyTo(textFilterContainer);
 
 					if (nativeSearch) {
-						filterText = new Text(textFilterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH
-								| SWT.ICON_CANCEL);
+						filterText = new Text(textFilterContainer,
+								SWT.SINGLE | SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL);
 					} else {
 						filterText = new Text(textFilterContainer, SWT.SINGLE);
 					}
@@ -914,8 +915,9 @@ public class DiscoveryViewer {
 					final GradientCanvas categoryHeaderContainer = new GradientCanvas(container, SWT.NONE);
 					categoryHeaderContainer.setSeparatorVisible(true);
 					categoryHeaderContainer.setSeparatorAlignment(SWT.TOP);
-					categoryHeaderContainer.setBackgroundGradient(new Color[] { colorCategoryGradientStart,
-							colorCategoryGradientEnd }, new int[] { 100 }, true);
+					categoryHeaderContainer.setBackgroundGradient(
+							new Color[] { colorCategoryGradientStart, colorCategoryGradientEnd }, new int[] { 100 },
+							true);
 					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE1, colorCategoryGradientStart);
 					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
 
@@ -1516,8 +1518,8 @@ public class DiscoveryViewer {
 			});
 
 			if (result[0] != null && !result[0].isOK()) {
-				StatusManager.getManager().handle(result[0],
-						StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+				StatusManager.getManager()
+						.handle(result[0], StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			}
 		} catch (InvocationTargetException e) {
 			IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
@@ -1537,15 +1539,15 @@ public class DiscoveryViewer {
 			if (verifyUpdateSiteAvailability && !discovery.getConnectors().isEmpty()) {
 				try {
 					context.run(true, true, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
 							discovery.verifySiteAvailability(monitor);
 						}
 					});
 				} catch (InvocationTargetException e) {
 					IStatus status = computeStatus(e, Messages.ConnectorDiscoveryWizardMainPage_unexpectedException);
-					StatusManager.getManager().handle(status,
-							StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+					StatusManager.getManager()
+							.handle(status, StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 				} catch (InterruptedException e) {
 					// cancelled by user so nothing to do here.
 					wasCancelled = true;
@@ -1573,8 +1575,8 @@ public class DiscoveryViewer {
 
 	protected void postDiscovery(ConnectorDiscovery connectorDiscovery) {
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-			connector.setInstalled(installedFeatures != null
-					&& installedFeatures.containsAll(connector.getInstallableUnits()));
+			connector.setInstalled(
+					installedFeatures != null && installedFeatures.containsAll(connector.getInstallableUnits()));
 		}
 	}
 

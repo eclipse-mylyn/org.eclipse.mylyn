@@ -63,11 +63,13 @@ public class CommonHttpClientTest {
 	@Ignore
 	public void testCertificateAuthenticationCertificate() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
+			System.err.println(
+					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
 			return; // skip test 
 		}
 		if (!CommonTestUtil.hasCertificateCredentials()) {
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
+			System.err.println(
+					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
 			return; // skip test 
 		}
 
@@ -91,11 +93,13 @@ public class CommonHttpClientTest {
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			// bug 369805
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
+			System.err.println(
+					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
 			throw new SSLException(""); // skip test 
 		}
 		if (!CommonTestUtil.hasCertificateCredentials()) {
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
+			System.err.println(
+					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
 			throw new SSLException(""); // skip test 
 		}
 
@@ -132,7 +136,8 @@ public class CommonHttpClientTest {
 	@Test(expected = SSLException.class)
 	public void testCertificateAuthenticationNoCertificate() throws Exception {
 		if (!CommonTestUtil.isHttpsProxyBroken()) {
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationNoCertificate() due to broken https proxy");
+			System.err.println(
+					"Skipped CommonHttpClientTest.testCertificateAuthenticationNoCertificate() due to broken https proxy");
 			throw new SSLException(""); // skip test 
 		}
 
@@ -246,8 +251,8 @@ public class CommonHttpClientTest {
 	}
 
 	private Scheme setUpDefaultFactory(CommonHttpClient client) {
-		PollingSslProtocolSocketFactory factory = new PollingSslProtocolSocketFactory(new SslSupport(
-				new TrustManager[] { new TrustAllTrustManager() }, null, null, null));
+		PollingSslProtocolSocketFactory factory = new PollingSslProtocolSocketFactory(
+				new SslSupport(new TrustManager[] { new TrustAllTrustManager() }, null, null, null));
 		Scheme oldScheme = client.getHttpClient()
 				.getConnectionManager()
 				.getSchemeRegistry()

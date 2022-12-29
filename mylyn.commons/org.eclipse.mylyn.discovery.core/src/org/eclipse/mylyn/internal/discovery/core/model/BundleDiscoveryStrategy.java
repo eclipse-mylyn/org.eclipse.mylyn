@@ -39,12 +39,11 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 		if (connectors == null || categories == null) {
 			throw new IllegalStateException();
 		}
-		IExtensionPoint extensionPoint = getExtensionRegistry().getExtensionPoint(
-				ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
+		IExtensionPoint extensionPoint = getExtensionRegistry()
+				.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_loading_local_extensions, extensions.length == 0
-				? 1
-				: extensions.length);
+		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_loading_local_extensions,
+				extensions.length == 0 ? 1 : extensions.length);
 		try {
 			if (extensions.length > 0) {
 				processExtensions(new SubProgressMonitor(monitor, extensions.length), extensions);
@@ -55,9 +54,8 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 	}
 
 	protected void processExtensions(IProgressMonitor monitor, IExtension[] extensions) {
-		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_processing_extensions, extensions.length == 0
-				? 1
-				: extensions.length);
+		monitor.beginTask(Messages.BundleDiscoveryStrategy_task_processing_extensions,
+				extensions.length == 0 ? 1 : extensions.length);
 		try {
 			ConnectorDiscoveryExtensionReader extensionReader = new ConnectorDiscoveryExtensionReader();
 
@@ -79,10 +77,11 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 									DiscoveryCategory.class);
 							category.setSource(discoverySource);
 							if (!discoverySource.getPolicy().isPermitCategories()) {
-								StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-										Messages.BundleDiscoveryStrategy_categoryDisallowed,
-										new Object[] { category.getName(), category.getId(),
-												element.getContributor().getName() }), null));
+								StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+										NLS.bind(Messages.BundleDiscoveryStrategy_categoryDisallowed,
+												new Object[] { category.getName(), category.getId(),
+														element.getContributor().getName() }),
+										null));
 							} else {
 								categories.add(category);
 							}
@@ -92,13 +91,14 @@ public class BundleDiscoveryStrategy extends AbstractDiscoveryStrategy {
 							certification.setSource(discoverySource);
 							certifications.add(certification);
 						} else {
-							throw new ValidationException(NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element,
-									element.getName()));
+							throw new ValidationException(
+									NLS.bind(Messages.BundleDiscoveryStrategy_unexpected_element, element.getName()));
 						}
 					} catch (ValidationException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
 								NLS.bind(Messages.BundleDiscoveryStrategy_3, element.getContributor().getName(),
-										e.getMessage()), e));
+										e.getMessage()),
+								e));
 					}
 				}
 				monitor.worked(1);

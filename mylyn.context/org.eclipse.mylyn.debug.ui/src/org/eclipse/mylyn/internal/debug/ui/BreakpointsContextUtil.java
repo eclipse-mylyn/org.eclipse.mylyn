@@ -48,15 +48,15 @@ public class BreakpointsContextUtil {
 			exportBreakpointOperation.run(progressMonitor);
 			return new ByteArrayInputStream(exportBreakpointOperation.getBuffer().toString().getBytes("UTF-8")); //$NON-NLS-1$
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
-					"Could not export context breakpoints", e));//$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, "Could not export context breakpoints", e));//$NON-NLS-1$
 		}
 		return null;
 	}
 
 	public static List<IBreakpoint> importBreakpoints(IInteractionContext context, IProgressMonitor progressMonitor) {
-		InputStream stream = ContextCore.getContextManager().getAdditionalContextData(context,
-				DebugUiPlugin.CONTRIBUTOR_ID);
+		InputStream stream = ContextCore.getContextManager()
+				.getAdditionalContextData(context, DebugUiPlugin.CONTRIBUTOR_ID);
 		if (stream == null) {
 			return new ArrayList<IBreakpoint>();
 		}
@@ -69,14 +69,14 @@ public class BreakpointsContextUtil {
 		String breakpoints = scanner.next();
 		scanner.close();
 
-		ImportBreakpointsOperation importBreakpointOperation = new ImportBreakpointsOperation(new StringBuffer(
-				breakpoints), true, false);
+		ImportBreakpointsOperation importBreakpointOperation = new ImportBreakpointsOperation(
+				new StringBuffer(breakpoints), true, false);
 		try {
 			importBreakpointOperation.run(progressMonitor);
 			return new ArrayList<IBreakpoint>(Arrays.asList(importBreakpointOperation.getImportedBreakpoints()));
 		} catch (InvocationTargetException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
-					"Could not import context breakpoints", e));//$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, "Could not import context breakpoints", e));//$NON-NLS-1$
 		}
 		return new ArrayList<IBreakpoint>();
 	}

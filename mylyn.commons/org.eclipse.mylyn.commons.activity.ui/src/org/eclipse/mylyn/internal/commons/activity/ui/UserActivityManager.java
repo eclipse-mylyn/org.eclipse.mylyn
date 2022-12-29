@@ -144,8 +144,8 @@ public class UserActivityManager implements IUserActivityManager {
 	}
 
 	private void disableFailedMonitor(AbstractUserActivityMonitor monitor, Throwable e) {
-		StatusHandler.log(new Status(IStatus.WARNING, IActivityUiConstants.ID_PLUGIN, NLS.bind(
-				"Activity monitor ''{0}'' was disabled due to a failure", monitor.getClass()), e)); //$NON-NLS-1$
+		StatusHandler.log(new Status(IStatus.WARNING, IActivityUiConstants.ID_PLUGIN,
+				NLS.bind("Activity monitor ''{0}'' was disabled due to a failure", monitor.getClass()), e)); //$NON-NLS-1$
 		activityMonitors.remove(monitor);
 	}
 

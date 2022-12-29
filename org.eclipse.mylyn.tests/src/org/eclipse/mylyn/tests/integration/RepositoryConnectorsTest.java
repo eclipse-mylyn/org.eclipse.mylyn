@@ -41,7 +41,8 @@ public class RepositoryConnectorsTest extends TestCase {
 
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(RepositoryConnectorsTest.class.getName());
-		for (AbstractRepositoryConnector repositoryConnector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
+		for (AbstractRepositoryConnector repositoryConnector : TasksUi.getRepositoryManager()
+				.getRepositoryConnectors()) {
 			suite.addTest(new RepositoryConnectorsTest(repositoryConnector, "testConnectorKind"));
 		}
 		return suite;

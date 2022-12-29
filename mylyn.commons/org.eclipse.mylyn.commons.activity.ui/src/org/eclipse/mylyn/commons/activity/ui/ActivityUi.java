@@ -107,7 +107,8 @@ public class ActivityUi {
 			return;
 		}
 		if (getPreferenceStore().getBoolean(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED)) {
-			userActivityManager.setInactivityTimeout(getPreferenceStore().getInt(IActivityUiConstants.ACTIVITY_TIMEOUT));
+			userActivityManager
+					.setInactivityTimeout(getPreferenceStore().getInt(IActivityUiConstants.ACTIVITY_TIMEOUT));
 		} else {
 			userActivityManager.setInactivityTimeout(0);
 		}

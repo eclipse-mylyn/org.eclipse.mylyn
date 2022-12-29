@@ -89,7 +89,8 @@ public class TaskEditorExtensions {
 		if (previous != null) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					String.format("Duplicate association for repository %s: %s replaces %s", connectorKind, extensionId, //$NON-NLS-1$
-							previous), null));
+							previous),
+					null));
 		}
 	}
 

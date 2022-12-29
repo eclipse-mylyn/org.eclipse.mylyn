@@ -50,8 +50,8 @@ class CommonStorable implements ICommonStorable {
 			// validate
 			for (File child : children) {
 				if (child.isDirectory()) {
-					throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-							"The storage location ''{0}'' contains sub directories", path))); //$NON-NLS-1$
+					throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN,
+							NLS.bind("The storage location ''{0}'' contains sub directories", path))); //$NON-NLS-1$
 				}
 			}
 

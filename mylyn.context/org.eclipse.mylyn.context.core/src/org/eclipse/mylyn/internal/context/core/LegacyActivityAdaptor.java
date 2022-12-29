@@ -31,7 +31,8 @@ public class LegacyActivityAdaptor {
 
 	public InteractionEvent parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getDelta() != null && event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+			if (event.getDelta() != null
+					&& event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
 				if (event.getStructureHandle() != null && !event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)) {
 					String activatedTask = event.getStructureHandle();
 					if (activatedTask != null) {
@@ -43,7 +44,8 @@ public class LegacyActivityAdaptor {
 						return new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 								InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, currentTask,
 								InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, event.getDate(), event.getEndDate());
+								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, event.getDate(),
+								event.getEndDate());
 					} else if (currentTask == null) {
 						// bogus event remove.
 						return null;

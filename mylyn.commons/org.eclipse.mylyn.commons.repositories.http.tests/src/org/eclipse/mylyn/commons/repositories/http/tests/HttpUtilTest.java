@@ -38,9 +38,9 @@ import org.junit.Test;
  */
 public class HttpUtilTest {
 
-	private static final int /*NetUtil.*/MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
+	private static final int /*NetUtil.*/ MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
 
-	private static final int /*NetUtil.*/MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
+	private static final int /*NetUtil.*/ MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
 
 	private MockServer server;
 

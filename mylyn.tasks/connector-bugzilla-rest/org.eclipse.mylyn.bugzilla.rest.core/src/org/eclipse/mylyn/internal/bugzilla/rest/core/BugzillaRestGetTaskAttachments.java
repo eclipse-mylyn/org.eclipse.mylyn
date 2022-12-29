@@ -53,8 +53,9 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 	protected ArrayList<TaskAttribute> parseFromJson(InputStreamReader in) {
 		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<ArrayList<TaskAttribute>>() {
 		};
-		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer()).create().fromJson(
-				in, type.getType());
+		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
+				.create()
+				.fromJson(in, type.getType());
 	}
 
 	BugzillaRestTaskSchema taskSchema = BugzillaRestTaskSchema.getDefault();

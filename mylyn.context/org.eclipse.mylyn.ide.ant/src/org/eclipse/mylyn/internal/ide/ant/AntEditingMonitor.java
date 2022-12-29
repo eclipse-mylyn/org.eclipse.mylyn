@@ -38,7 +38,8 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext) {
 		if (part instanceof AntEditor) {
 
 			TextSelection textSelection = null;
@@ -74,16 +75,16 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
-							"Resolving selection failed", e)); //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Resolving selection failed", e)); //$NON-NLS-1$
 				}
 			}
 		}
 		return;
 	}
 
-	public static AntElementNode getNode(AntModel antModel, String elementPath) throws SecurityException,
-			NoSuchMethodException {
+	public static AntElementNode getNode(AntModel antModel, String elementPath)
+			throws SecurityException, NoSuchMethodException {
 		AntProjectNode topNode;
 		try {
 			topNode = antModel.getProjectNode();
@@ -96,8 +97,8 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	/**
 	 * HACK: using reflection to gain accessibility
 	 */
-	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException,
-			IllegalAccessException {
+	private static AntElementNode getNode(AntElementNode topNode, String elementPath)
+			throws NoSuchMethodException, IllegalAccessException {
 		if (topNode == null) {
 			return null;
 		}

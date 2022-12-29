@@ -271,8 +271,8 @@ public class TaskContextStore extends AbstractTaskContextStore {
 
 	private IInteractionContext copyContextInternal(ITask sourceTask, ITask targetTask) {
 		ContextCorePlugin.getContextStore().saveActiveContext();
-		final IInteractionContext result = ContextCore.getContextStore().cloneContext(sourceTask.getHandleIdentifier(),
-				targetTask.getHandleIdentifier());
+		final IInteractionContext result = ContextCore.getContextStore()
+				.cloneContext(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
 		return result;
 	}
 

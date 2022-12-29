@@ -166,7 +166,8 @@ public class AntUiBridge extends AbstractContextUiBridge {
 		if (editor instanceof AntEditor) {
 			try {
 				AntEditor ae = (AntEditor) editor;
-				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae.getAdapter(IContentOutlinePage.class);
+				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae
+						.getAdapter(IContentOutlinePage.class);
 				Class<?> clazz = ContentOutlinePage.class;
 				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {}); //$NON-NLS-1$
 				method.setAccessible(true);

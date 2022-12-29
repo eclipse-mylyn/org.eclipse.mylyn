@@ -190,15 +190,16 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	private void processWorkbenchEvent(String origin, String structureKind, String handle, long start, long end) {
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.ATTENTION, structureKind, handle, origin, null,
-						InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+		ContextCorePlugin.getContextManager()
+				.processActivityMetaContextEvent(
+						new InteractionEvent(InteractionEvent.Kind.ATTENTION, structureKind, handle, origin, null,
+								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 	}
 
 	public void addActivityTime(String handle, long start, long end) {
 		if (handle != null) {
-			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+			ContextCorePlugin.getContextManager()
+					.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
 							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
 							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
@@ -207,8 +208,8 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	public void removeActivityTime(String handle, long start, long end) {
 		if (handle != null) {
-			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+			ContextCorePlugin.getContextManager()
+					.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
 							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
 							InteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
@@ -252,8 +253,8 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	private void disableFailedMonitor(AbstractUserActivityMonitor monitor, Throwable e) {
-		StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, NLS.bind(
-				"Activity monitor ''{0}'' was disabled due to a failure", monitor.getClass()), e)); //$NON-NLS-1$
+		StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+				NLS.bind("Activity monitor ''{0}'' was disabled due to a failure", monitor.getClass()), e)); //$NON-NLS-1$
 		activityMonitors.remove(monitor);
 	}
 

@@ -65,8 +65,8 @@ public class HtmlStreamTokenizerTest extends TestCase {
 	}
 
 	public void testImgSelfTerminatingLeadingSpacePendingSpace() throws IOException, ParseException {
-		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(
-				new StringReader("<img src=\"test.png\" / >"), null);
+		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<img src=\"test.png\" / >"),
+				null);
 		HtmlStreamTokenizer.Token token = htmlStreamTokenizer.nextToken();
 		assertEquals("img", ((HtmlTag) token.getValue()).getTagName());
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());

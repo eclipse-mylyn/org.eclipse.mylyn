@@ -268,8 +268,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 			viewerManager.forceRefresh();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not initialize focused viewers", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not initialize focused viewers", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -437,7 +437,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry
+						.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (IExtension extension : extensions) {
 					IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -460,8 +461,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (provider instanceof ILabelProvider && contentType != null) {
-					ContextUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
-							(ILabelProvider) provider);
+					ContextUiPlugin.getDefault()
+							.internalAddContextLabelProvider((String) contentType, (ILabelProvider) provider);
 				} else {
 					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 							"Could not load label provider: " + provider.getClass().getCanonicalName() //$NON-NLS-1$
@@ -495,16 +496,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (bridge instanceof AbstractContextUiBridge && contentType != null) {
-					ContextUiPlugin.getDefault().internalAddBridge((String) contentType,
-							(AbstractContextUiBridge) bridge);
+					ContextUiPlugin.getDefault()
+							.internalAddBridge((String) contentType, (AbstractContextUiBridge) bridge);
 
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
 								element.getDeclaringExtension().getContributor().getName(), iconPath);
 						if (descriptor != null) {
-							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge,
-									descriptor);
+							ContextUiPlugin.getDefault()
+									.setActiveSearchIcon((AbstractContextUiBridge) bridge, descriptor);
 						}
 					}
 					String label = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
@@ -518,8 +519,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 							+ AbstractContextUiBridge.class.getCanonicalName()));
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not load bridge extension", e)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load bridge extension", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -604,8 +605,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
-		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
-				"org.eclipse.jdt.java.ui.javaContent"); //$NON-NLS-1$
+		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService()
+				.getContentExtensionById("org.eclipse.jdt.java.ui.javaContent"); //$NON-NLS-1$
 		if (javaContent != null) {
 			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
 			// TODO: find a sane way of doing this, perhaps via AbstractContextUiBridge, should be:

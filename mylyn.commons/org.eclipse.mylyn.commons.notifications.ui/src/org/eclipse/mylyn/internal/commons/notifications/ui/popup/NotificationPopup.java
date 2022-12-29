@@ -86,8 +86,8 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 //				final TaskScalingHyperlink itemLink = new TaskScalingHyperlink(notificationComposite, SWT.BEGINNING
 //						| SWT.NO_FOCUS);
 
-				final ScalingHyperlink itemLink = new ScalingHyperlink(notificationComposite, SWT.BEGINNING
-						| SWT.NO_FOCUS);
+				final ScalingHyperlink itemLink = new ScalingHyperlink(notificationComposite,
+						SWT.BEGINNING | SWT.NO_FOCUS);
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
 				itemLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				itemLink.registerMouseTrackListener();

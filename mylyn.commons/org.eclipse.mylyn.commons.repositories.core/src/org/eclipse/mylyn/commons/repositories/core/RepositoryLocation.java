@@ -162,10 +162,9 @@ public class RepositoryLocation extends PlatformObject {
 			} catch (IOException e) {
 				if (!flushCredentialsErrorLogged) {
 					flushCredentialsErrorLogged = true;
-					StatusHandler.log(new Status(
-							IStatus.ERROR,
-							RepositoriesCoreInternal.ID_PLUGIN,
-							"Unexpected error occured while flushing credentials. Credentials may not have been saved.", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, RepositoriesCoreInternal.ID_PLUGIN,
+							"Unexpected error occured while flushing credentials. Credentials may not have been saved.", //$NON-NLS-1$
+							e));
 				}
 			}
 		}
@@ -253,7 +252,8 @@ public class RepositoryLocation extends PlatformObject {
 			} catch (NumberFormatException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, RepositoriesCoreInternal.ID_PLUGIN, 0,
 						"Error occured while configuring proxy. Invalid port \"" //$NON-NLS-1$
-								+ proxyPort + "\" specified.", e)); //$NON-NLS-1$
+								+ proxyPort + "\" specified.", //$NON-NLS-1$
+						e));
 			}
 		}
 		return null;

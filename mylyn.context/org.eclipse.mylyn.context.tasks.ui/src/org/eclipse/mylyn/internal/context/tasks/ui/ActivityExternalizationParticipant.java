@@ -33,8 +33,8 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
  * @author Rob Elves
  */
 @SuppressWarnings("restriction")
-public class ActivityExternalizationParticipant extends AbstractExternalizationParticipant implements
-		ITaskActivityListener {
+public class ActivityExternalizationParticipant extends AbstractExternalizationParticipant
+		implements ITaskActivityListener {
 
 	private boolean isDirty = false;
 

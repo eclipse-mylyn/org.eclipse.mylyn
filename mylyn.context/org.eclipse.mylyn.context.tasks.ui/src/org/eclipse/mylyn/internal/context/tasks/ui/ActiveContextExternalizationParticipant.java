@@ -41,8 +41,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Shawn Minto
  */
 @SuppressWarnings("restriction")
-public class ActiveContextExternalizationParticipant extends AbstractExternalizationParticipant implements
-		ITaskActivityListener, IUserAttentionListener {
+public class ActiveContextExternalizationParticipant extends AbstractExternalizationParticipant
+		implements ITaskActivityListener, IUserAttentionListener {
 	private boolean isDirty = false;
 
 	private final ExternalizationManager manager;

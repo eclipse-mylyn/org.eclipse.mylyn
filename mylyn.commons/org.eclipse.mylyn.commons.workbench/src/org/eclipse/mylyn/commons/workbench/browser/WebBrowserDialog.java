@@ -107,8 +107,8 @@ public class WebBrowserDialog extends MessageDialog {
 				if (file != null) {
 					file.delete();
 				}
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
 								"Unexpected error while displaying page", e), StatusManager.LOG); //$NON-NLS-1$
 				return Window.CANCEL;
 			}

@@ -117,8 +117,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			}
 			if (element != null) {
 				// disabled per bug 291107: showEditorCloseWarning();
-				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
-						SOURCE_ID);
+				ContextCorePlugin.getContextManager()
+						.manipulateInterestForElement(element, false, false, false, SOURCE_ID);
 			}
 		}
 	}

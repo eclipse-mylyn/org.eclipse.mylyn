@@ -185,8 +185,8 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						SubMonitor progress = SubMonitor.convert(monitor);
-						ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault()
-								.getStateManager());
+						ContextMementoMigrator migrator = new ContextMementoMigrator(
+								ContextUiPlugin.getDefault().getStateManager());
 						migrator.setDeleteOldDataEnabled(true);
 						IStatus status = migrator.migrateContextMementos(progress);
 						if (!status.isOK()) {
@@ -223,8 +223,8 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION);
 		TasksUiPlugin.getDefault()
-		.getPreferenceStore()
-		.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
 	}
 
 	void contextActivated(ContextChangeEvent event) {

@@ -88,9 +88,8 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 
-		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit()
-				.getSource()
-				.indexOf("callee();"), "callee".length());
+		TextSelection callerSelection = new TextSelection(document,
+				typeFoo.getCompilationUnit().getSource().indexOf("callee();"), "callee".length());
 		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		monitor.selectionChanged(editorPart, callerSelection);
 
@@ -105,9 +104,8 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		assertTrue(calleeNode.getInterest().isInteresting());
 		assertEquals(1, callerNode.getRelations().size());
 
-		TextSelection callerAgain = new TextSelection(document, typeFoo.getCompilationUnit()
-				.getSource()
-				.indexOf("callee();"), "callee".length());
+		TextSelection callerAgain = new TextSelection(document,
+				typeFoo.getCompilationUnit().getSource().indexOf("callee();"), "callee".length());
 		editorPart.setHighlightRange(callerAgain.getOffset(), callerAgain.getLength(), true);
 		monitor.selectionChanged(editorPart, callerSelection);
 		assertTrue(calleeNode.getRelations().size() == 1);

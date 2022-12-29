@@ -38,7 +38,7 @@ import org.osgi.service.prefs.Preferences;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/implements IAdaptable, IContextChangeSet {
+public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ implements IAdaptable, IContextChangeSet {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title"; //$NON-NLS-1$
@@ -142,8 +142,8 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 		if (Platform.isRunning() && ResourcesUiBridgePlugin.getDefault() != null && task.isActive()) {
 			// TODO: if super is always managed correctly should remove
 			// following line
-			allResources.addAll(ResourcesUiBridgePlugin.getDefault().getInterestingResources(
-					ContextCore.getContextManager().getActiveContext()));
+			allResources.addAll(ResourcesUiBridgePlugin.getDefault()
+					.getInterestingResources(ContextCore.getContextManager().getActiveContext()));
 		}
 		return new ArrayList<IResource>(allResources);
 	}

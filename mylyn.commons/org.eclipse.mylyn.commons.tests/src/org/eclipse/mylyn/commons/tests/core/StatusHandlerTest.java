@@ -37,8 +37,8 @@ public class StatusHandlerTest extends TestCase {
 		try {
 			StatusHandler.log(status);
 
-			assertTrue(baos.toString().matches(
-					"\\[\\d{4}-\\d{2}-\\d{2}T\\d{1,2}-\\d{1,2}-\\d{1,2}\\] " + status.toString() + ",\\s+"));
+			assertTrue(baos.toString()
+					.matches("\\[\\d{4}-\\d{2}-\\d{2}T\\d{1,2}-\\d{1,2}-\\d{1,2}\\] " + status.toString() + ",\\s+"));
 		} finally {
 			baos.close();
 			System.setErr(oldErr);

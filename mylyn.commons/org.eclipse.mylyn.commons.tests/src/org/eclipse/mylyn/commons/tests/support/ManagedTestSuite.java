@@ -189,7 +189,8 @@ public class ManagedTestSuite extends TestSuite {
 		System.err.println(info);
 		System.err.print("Proxy : " + WebUtil.getProxyForUrl("http://mylyn.eclipse.org") + " (Platform)");
 		try {
-			System.err.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
+			System.err
+					.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
 		} catch (URISyntaxException e) {
 			// ignore
 		}

@@ -133,8 +133,8 @@ public class TaskContextStoreTest extends TestCase {
 
 	private void addTime(ITask task, long time) {
 		MonitorUiPlugin.getDefault()
-		.getActivityContextManager()
-		.addActivityTime(task.getHandleIdentifier(), 1, 1 + time);
+				.getActivityContextManager()
+				.addActivityTime(task.getHandleIdentifier(), 1, 1 + time);
 	}
 
 }

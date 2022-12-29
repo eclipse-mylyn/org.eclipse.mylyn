@@ -95,7 +95,8 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
+	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind,
+			boolean contributeToContext) {
 		handleNavigation(part.getSite().getId(), targetElement, kind, contributeToContext);
 	}
 
@@ -141,7 +142,8 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 * 
 	 * @since 3.1
 	 */
-	protected InteractionEvent handleElementSelection(String partId, Object selectedElement, boolean contributeToContext) {
+	protected InteractionEvent handleElementSelection(String partId, Object selectedElement,
+			boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement)) {
 			return null;
 		}

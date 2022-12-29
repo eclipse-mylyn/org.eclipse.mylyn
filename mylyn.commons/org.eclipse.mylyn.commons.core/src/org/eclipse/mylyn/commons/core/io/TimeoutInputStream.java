@@ -84,7 +84,8 @@ public class TimeoutInputStream extends FilterInputStream {
 		});
 	}
 
-	public TimeoutInputStream(InputStream in, int bufferSize, long readTimeout, long closeTimeout, boolean growWhenFull) {
+	public TimeoutInputStream(InputStream in, int bufferSize, long readTimeout, long closeTimeout,
+			boolean growWhenFull) {
 		this(in, bufferSize, readTimeout, closeTimeout);
 		this.growWhenFull = growWhenFull;
 	}

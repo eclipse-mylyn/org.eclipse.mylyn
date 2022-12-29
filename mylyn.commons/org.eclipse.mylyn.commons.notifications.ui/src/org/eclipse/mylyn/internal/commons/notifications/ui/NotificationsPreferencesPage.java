@@ -368,8 +368,8 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	}
 
 	public void reset() {
-		enableNotificationsButton.setSelection(getPreferenceStore().getBoolean(
-				NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
+		enableNotificationsButton
+				.setSelection(getPreferenceStore().getBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
 		updateEnablement();
 	}
 
@@ -388,8 +388,8 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	@Override
 	protected void performDefaults() {
-		enableNotificationsButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
+		enableNotificationsButton
+				.setSelection(getPreferenceStore().getDefaultBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
 		for (NotificationCategory category : model.getCategories()) {
 			for (NotificationEvent event : category.getEvents()) {
 				NotificationHandler handler = model.getOrCreateNotificationHandler(event);

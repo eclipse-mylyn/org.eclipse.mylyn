@@ -85,8 +85,8 @@ public abstract class AbstractMonitorLog {
 			}
 			this.outputFile = newFile;
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN,
-					"Could not set logger output file", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not set logger output file", e)); //$NON-NLS-1$
 		}
 		startMonitoring();
 		return newFile;

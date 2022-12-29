@@ -50,8 +50,9 @@ public class BugzillaRestConnectorNoFixtureTest {
 		TaskTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "123");
 		Date now = new Date();
 		task.setAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey(), "" + now.getTime());
-		taskData.getRoot().createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey()).setValue(
-				"" + (now.getTime() + 1));
+		taskData.getRoot()
+				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+				.setValue("" + (now.getTime() + 1));
 		assertTrue(connector.hasTaskChanged(repository, task, taskData));
 	}
 
@@ -61,8 +62,9 @@ public class BugzillaRestConnectorNoFixtureTest {
 				repository.getRepositoryUrl(), "123");
 		TaskTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "123");
 		Date now = new Date();
-		taskData.getRoot().createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey()).setValue(
-				"" + (now.getTime()));
+		taskData.getRoot()
+				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+				.setValue("" + (now.getTime()));
 		assertTrue(connector.hasTaskChanged(repository, task, taskData));
 	}
 
@@ -73,8 +75,9 @@ public class BugzillaRestConnectorNoFixtureTest {
 		TaskTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "123");
 		Date now = new Date();
 		task.setAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey(), "" + now.getTime());
-		taskData.getRoot().createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey()).setValue(
-				"" + (now.getTime()));
+		taskData.getRoot()
+				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+				.setValue("" + (now.getTime()));
 		assertTrue(!connector.hasTaskChanged(repository, task, taskData));
 	}
 

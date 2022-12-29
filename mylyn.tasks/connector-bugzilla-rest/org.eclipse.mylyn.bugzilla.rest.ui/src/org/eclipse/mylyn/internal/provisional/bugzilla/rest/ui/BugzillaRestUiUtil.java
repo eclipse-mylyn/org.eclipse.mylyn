@@ -102,8 +102,8 @@ public class BugzillaRestUiUtil {
 			BugzillaRestConnector connectorREST, TaskRepository repository, IRepositoryQuery query) {
 		try {
 			BugzillaRestSearchQueryPageSchema.getInstance().initialize(taskData);
-			connectorREST.getTaskDataHandler().initializeTaskData(repository, taskData, null,
-					new NullProgressMonitor());
+			connectorREST.getTaskDataHandler()
+					.initializeTaskData(repository, taskData, null, new NullProgressMonitor());
 			BugzillaRestSearchQueryPageSchema.getInstance().initialize(taskData);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block

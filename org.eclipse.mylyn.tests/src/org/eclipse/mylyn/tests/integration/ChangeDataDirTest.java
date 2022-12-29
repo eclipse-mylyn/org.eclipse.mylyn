@@ -85,8 +85,8 @@ public class ChangeDataDirTest extends TestCase {
 		assertTrue(taskList.getAllTasks().size() > 0);
 		TaskTestUtil.saveNow();
 
-		CommonTestUtil.copyFolderRecursively(new File(TasksUiPlugin.getDefault().getDataDirectory()), new File(
-				newDataDir));
+		CommonTestUtil.copyFolderRecursively(new File(TasksUiPlugin.getDefault().getDataDirectory()),
+				new File(newDataDir));
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 		assertTrue(taskList.getAllTasks().size() > 0);
 

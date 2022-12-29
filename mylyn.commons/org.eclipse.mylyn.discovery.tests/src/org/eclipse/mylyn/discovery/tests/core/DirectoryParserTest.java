@@ -72,8 +72,8 @@ public class DirectoryParserTest extends TestCase {
 	}
 
 	public void testParseNoNS() throws IOException {
-		Directory directory = parser.parse(new StringReader(
-				"<directory><entry url=\"http://foo.bar.nodomain/baz.jar\"/></directory>"));
+		Directory directory = parser
+				.parse(new StringReader("<directory><entry url=\"http://foo.bar.nodomain/baz.jar\"/></directory>"));
 		assertNotNull(directory);
 		assertEquals(1, directory.getEntries().size());
 		assertEquals("http://foo.bar.nodomain/baz.jar", directory.getEntries().get(0).getLocation());

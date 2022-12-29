@@ -45,8 +45,8 @@ public abstract class MonitoredOperation<T> extends Operation<T> implements ICan
 	 */
 	static void setCurrentOperation(MonitoredOperation<?> operation) {
 		if (operation != null && currentOperation.get() != null) {
-			StatusHandler.log(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-					"Unexpected operation already in progress ''{0}''", currentOperation.get()), //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN,
+					NLS.bind("Unexpected operation already in progress ''{0}''", currentOperation.get()), //$NON-NLS-1$
 					new IllegalStateException()));
 		}
 		currentOperation.set(operation);

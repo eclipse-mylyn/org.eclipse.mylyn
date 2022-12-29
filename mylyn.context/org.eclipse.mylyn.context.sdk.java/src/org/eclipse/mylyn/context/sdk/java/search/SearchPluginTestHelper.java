@@ -43,8 +43,8 @@ public class SearchPluginTestHelper extends TestCase {
 	}
 
 	public void searchResultsNotNull(ActiveSearchNotifier notifier, String handle, String kind,
-			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava) throws IOException,
-			CoreException {
+			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava)
+			throws IOException, CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
@@ -63,8 +63,8 @@ public class SearchPluginTestHelper extends TestCase {
 	}
 
 	public void searchResultsNotNullInteresting(ActiveSearchNotifier notifier, String handle, String kind,
-			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava) throws IOException,
-			CoreException {
+			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava)
+			throws IOException, CoreException {
 		notifier.mockEditorSelection(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);

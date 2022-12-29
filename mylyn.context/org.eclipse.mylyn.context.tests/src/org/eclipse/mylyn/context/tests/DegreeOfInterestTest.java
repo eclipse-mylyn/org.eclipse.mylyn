@@ -59,8 +59,8 @@ public class DegreeOfInterestTest extends TestCase {
 				"id", null, 2);
 		doi.addEvent(event2);
 
-		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle",
-				"source-id", "id", null, 750);
+		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",
+				"id", null, 750);
 		doi.addEvent(event3);
 
 		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, "kind", "handle",

@@ -55,12 +55,12 @@ public class NotificationsExtensionReader {
 		}
 		HashMap<String, NotificationCategory> categoryById = new HashMap<String, NotificationCategory>();
 
-		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0,
-				"Notifcation extensions failed to load", null); //$NON-NLS-1$
+		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0, "Notifcation extensions failed to load", //$NON-NLS-1$
+				null);
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(NotificationsPlugin.ID_PLUGIN
-				+ ".notifications"); //$NON-NLS-1$
+		IExtensionPoint repositoriesExtensionPoint = registry
+				.getExtensionPoint(NotificationsPlugin.ID_PLUGIN + ".notifications"); //$NON-NLS-1$
 		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -84,11 +84,10 @@ public class NotificationsExtensionReader {
 						if (category != null) {
 							category.addEvent(event);
 						} else {
-							result.add(new Status(
-									IStatus.ERROR,
-									NotificationsPlugin.ID_PLUGIN,
-									NLS.bind(
-											"Extension {0} contributed by {1} specify unknown category ''{2}''", new String[] { element.getNamespaceIdentifier(), element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$ //$NON-NLS-1$
+							result.add(new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN,
+									NLS.bind("Extension {0} contributed by {1} specify unknown category ''{2}''", //$NON-NLS-1$
+											new String[] { element.getNamespaceIdentifier(),
+													element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$ 
 						}
 					} else {
 						result.add(status);
@@ -113,12 +112,12 @@ public class NotificationsExtensionReader {
 
 		sinks = new ArrayList<NotificationSinkDescriptor>();
 
-		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0,
-				"Notifcation extensions failed to load", null); //$NON-NLS-1$
+		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0, "Notifcation extensions failed to load", //$NON-NLS-1$
+				null);
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(NotificationsPlugin.ID_PLUGIN
-				+ ".notifications"); //$NON-NLS-1$
+		IExtensionPoint repositoriesExtensionPoint = registry
+				.getExtensionPoint(NotificationsPlugin.ID_PLUGIN + ".notifications"); //$NON-NLS-1$
 		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();

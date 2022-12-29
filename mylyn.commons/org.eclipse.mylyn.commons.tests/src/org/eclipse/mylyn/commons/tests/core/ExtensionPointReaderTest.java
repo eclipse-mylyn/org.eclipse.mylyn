@@ -65,20 +65,20 @@ public class ExtensionPointReaderTest extends TestCase {
 		}
 	}
 
-	public static class P5ExtensionPointReaderExtensionImplementation extends
-			ExtensionPointReaderExtensionImplementation {
+	public static class P5ExtensionPointReaderExtensionImplementation
+			extends ExtensionPointReaderExtensionImplementation {
 	}
 
-	public static class PNegative5ExtensionPointReaderExtensionImplementation extends
-			ExtensionPointReaderExtensionImplementation {
+	public static class PNegative5ExtensionPointReaderExtensionImplementation
+			extends ExtensionPointReaderExtensionImplementation {
 	}
 
-	public static class P10ExtensionPointReaderExtensionImplementation extends
-			ExtensionPointReaderExtensionImplementation {
+	public static class P10ExtensionPointReaderExtensionImplementation
+			extends ExtensionPointReaderExtensionImplementation {
 	}
 
-	public static class P0ExtensionPointReaderExtensionImplementation extends
-			ExtensionPointReaderExtensionImplementation {
+	public static class P0ExtensionPointReaderExtensionImplementation
+			extends ExtensionPointReaderExtensionImplementation {
 	}
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.tests";
@@ -89,7 +89,8 @@ public class ExtensionPointReaderTest extends TestCase {
 		IStatus status = reader.read();
 		assertEquals(IStatus.OK, status.getSeverity());
 		assertEquals(
-				Arrays.asList(new ExtensionPointReaderExtension[] { new ExtensionPointReaderExtensionImplementation(), }),
+				Arrays.asList(
+						new ExtensionPointReaderExtension[] { new ExtensionPointReaderExtensionImplementation(), }),
 				reader.getItems());
 		assertEquals(new ExtensionPointReaderExtensionImplementation(), reader.getItem());
 	}
@@ -116,12 +117,12 @@ public class ExtensionPointReaderTest extends TestCase {
 				ExtensionPointReaderExtension.class);
 		IStatus status = reader.read();
 		assertEquals(IStatus.OK, status.getSeverity());
-		assertEquals(
-				Arrays.asList(new ExtensionPointReaderExtension[] {
-						new P10ExtensionPointReaderExtensionImplementation(),
+		assertEquals(Arrays
+				.asList(new ExtensionPointReaderExtension[] { new P10ExtensionPointReaderExtensionImplementation(),
 						new P5ExtensionPointReaderExtensionImplementation(),
 						new P0ExtensionPointReaderExtensionImplementation(),
-						new PNegative5ExtensionPointReaderExtensionImplementation() }), reader.getItems());
+						new PNegative5ExtensionPointReaderExtensionImplementation() }),
+				reader.getItems());
 	}
 
 	public void testReadWithCustomPriority() {
@@ -131,12 +132,12 @@ public class ExtensionPointReaderTest extends TestCase {
 		reader.setPriorityAttributeId("customPriority");
 		IStatus status = reader.read();
 		assertEquals(IStatus.OK, status.getSeverity());
-		assertEquals(
-				Arrays.asList(new ExtensionPointReaderExtension[] {
-						new P10ExtensionPointReaderExtensionImplementation(),
+		assertEquals(Arrays
+				.asList(new ExtensionPointReaderExtension[] { new P10ExtensionPointReaderExtensionImplementation(),
 						new PNegative5ExtensionPointReaderExtensionImplementation(),
 						new P0ExtensionPointReaderExtensionImplementation(),
-						new P5ExtensionPointReaderExtensionImplementation() }), reader.getItems());
+						new P5ExtensionPointReaderExtensionImplementation() }),
+				reader.getItems());
 	}
 
 }

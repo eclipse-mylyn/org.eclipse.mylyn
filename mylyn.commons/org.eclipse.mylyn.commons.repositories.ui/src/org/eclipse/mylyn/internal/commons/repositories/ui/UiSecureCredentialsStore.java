@@ -92,8 +92,8 @@ public class UiSecureCredentialsStore extends SecureCredentialsStore {
 			return (ILock) lockField.get(null);
 		} catch (Exception e) {
 			if (!loggedDeadlockDetectionFailure.getAndSet(true)) {// log only once per session
-				StatusHandler.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
-						"Deadlock detection failed", e)); //$NON-NLS-1$
+				StatusHandler
+						.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN, "Deadlock detection failed", e)); //$NON-NLS-1$
 			}
 		}
 		return null;

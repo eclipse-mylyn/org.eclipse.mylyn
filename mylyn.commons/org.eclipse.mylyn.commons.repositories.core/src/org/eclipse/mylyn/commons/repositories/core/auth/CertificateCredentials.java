@@ -48,9 +48,9 @@ public class CertificateCredentials extends AuthenticationCredentials {
 	}
 
 	protected CertificateCredentials(ICredentialsStore store, String prefix, boolean loadSecrets) {
-		this(
-				store.get(prefix + ".keyStoreFileName", null), (loadSecrets) ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-				store.get(prefix + ".keyStoreType", null), store.getBoolean(prefix + ".savePassword", false), loadSecrets); //$NON-NLS-1$ //$NON-NLS-2$  
+		this(store.get(prefix + ".keyStoreFileName", null), (loadSecrets) ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+				store.get(prefix + ".keyStoreType", null), store.getBoolean(prefix + ".savePassword", false), //$NON-NLS-1$//$NON-NLS-2$
+				loadSecrets);
 	}
 
 	@Override

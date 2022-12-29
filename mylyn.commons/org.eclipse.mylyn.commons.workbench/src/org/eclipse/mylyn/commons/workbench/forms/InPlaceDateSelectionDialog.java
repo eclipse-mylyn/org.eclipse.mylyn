@@ -62,8 +62,8 @@ public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 	@Override
 	protected Control createControl(Composite parent) {
 		getShell().setText(title);
-		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime,
-				hourOfDay, MARGIN_SIZE);
+		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay,
+				MARGIN_SIZE);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {

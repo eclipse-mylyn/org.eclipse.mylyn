@@ -168,8 +168,8 @@ public class BrowserUtil {
 				}
 				return new EditorHandle(status);
 			} else {
-				Status status = new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, NLS.bind(
-						Messages.WorkbenchUtil_Invalid_URL_Error, location), e);
+				Status status = new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
+						NLS.bind(Messages.WorkbenchUtil_Invalid_URL_Error, location), e);
 				if (!CoreUtil.TEST_MODE) {
 					MessageDialog.openError(WorkbenchUtil.getShell(), Messages.WorkbenchUtil_Open_Location_Title,
 							status.getMessage());
@@ -223,7 +223,8 @@ public class BrowserUtil {
 		}
 	}
 
-	private static EditorHandle openUrlByHandler(final IWorkbenchPage page, final String location, final int customFlags) {
+	private static EditorHandle openUrlByHandler(final IWorkbenchPage page, final String location,
+			final int customFlags) {
 		for (final AbstractUrlHandler handler : UrlHandlerInitializer.handlers) {
 			final AtomicReference<EditorHandle> result = new AtomicReference<EditorHandle>();
 			SafeRunnable.run(new ISafeRunnable() {
@@ -234,8 +235,9 @@ public class BrowserUtil {
 				public void handleException(Throwable exception) {
 					CommonsWorkbenchPlugin.getDefault()
 							.getLog()
-							.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, NLS.bind(
-									"Unexpected error in {0} while opening URL ''{1}''", handler.getClass(), location))); //$NON-NLS-1$
+							.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
+									NLS.bind("Unexpected error in {0} while opening URL ''{1}''", handler.getClass(), //$NON-NLS-1$
+											location)));
 				}
 			});
 

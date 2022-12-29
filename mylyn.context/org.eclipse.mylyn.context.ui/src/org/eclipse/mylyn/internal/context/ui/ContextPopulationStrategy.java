@@ -79,13 +79,15 @@ public class ContextPopulationStrategy {
 									for (Object element : contextItems) {
 
 										monitor.worked(1);
-										AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(element);
+										AbstractContextStructureBridge structureBridge = ContextCore
+												.getStructureBridge(element);
 										if (structureBridge != null) {
 											String handleIdentifier = structureBridge.getHandleIdentifier(element);
 											if (handleIdentifier != null) {
 												try {
-													ContextCore.getContextManager().processInteractionEvent(
-															new InteractionEvent(InteractionEvent.Kind.SELECTION,
+													ContextCore.getContextManager()
+															.processInteractionEvent(new InteractionEvent(
+																	InteractionEvent.Kind.SELECTION,
 																	structureBridge.getContentType(), handleIdentifier,
 																	PART_ID));
 												} catch (Exception e) {
@@ -110,7 +112,8 @@ public class ContextPopulationStrategy {
 												for (IViewReference viewReference : page.getViewReferences()) {
 													IViewPart viewPart = (IViewPart) viewReference.getPart(false);
 													if (viewPart != null) {
-														AbstractFocusViewAction applyAction = AbstractFocusViewAction.getActionForPart(viewPart);
+														AbstractFocusViewAction applyAction = AbstractFocusViewAction
+																.getActionForPart(viewPart);
 														if (applyAction != null) {
 															applyAction.update(true);
 														}
@@ -136,7 +139,8 @@ public class ContextPopulationStrategy {
 
 	public synchronized ContextComputationStrategy getContextComputationStrategy() {
 		if (contextComputationStrategy == null) {
-			List<ContextComputationStrategy> strategies = StrategiesExtensionPointReader.readContextComputationStrategies();
+			List<ContextComputationStrategy> strategies = StrategiesExtensionPointReader
+					.readContextComputationStrategies();
 			if (strategies.isEmpty()) {
 				disabled = true;
 			} else if (strategies.size() > 1) {

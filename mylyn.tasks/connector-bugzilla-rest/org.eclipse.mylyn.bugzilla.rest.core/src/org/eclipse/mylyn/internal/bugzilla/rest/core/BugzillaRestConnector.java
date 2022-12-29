@@ -308,8 +308,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	private void inferCompletionDate(ITask task, TaskData taskData, TaskMapper scheme, boolean isComplete) {
 		if (isComplete) {
 			Date completionDate = null;
-			List<TaskAttribute> taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
-					TaskAttribute.TYPE_COMMENT);
+			List<TaskAttribute> taskComments = taskData.getAttributeMapper()
+					.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 			if (taskComments != null && taskComments.size() > 0) {
 				TaskAttribute lastComment = taskComments.get(taskComments.size() - 1);
 				if (lastComment != null) {
@@ -371,8 +371,10 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	private Map<String, String> convertProperties(TaskRepository repository) {
-		return repository.getProperties().entrySet().stream().collect(
-				Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
+		return repository.getProperties()
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
 	}
 
 	@SuppressWarnings("restriction")

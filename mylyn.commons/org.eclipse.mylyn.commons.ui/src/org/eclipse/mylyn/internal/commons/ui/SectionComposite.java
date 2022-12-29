@@ -73,8 +73,7 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	public ExpandableComposite createSection(String title, int expansionStyle, final boolean grabExcessVerticalSpace) {
-		final ExpandableComposite section = getToolkit().createExpandableComposite(
-				getContent(),
+		final ExpandableComposite section = getToolkit().createExpandableComposite(getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
 						| expansionStyle);
 		section.titleBarTextMarginWidth = 0;
