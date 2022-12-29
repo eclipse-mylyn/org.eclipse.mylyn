@@ -26,7 +26,7 @@
       name="mylyn.workspace"
       label="Mylyn Workspace">
     <stream
-        href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@projects[name='mylyn']/@projects[name='Maintainer']/@streams[name='main']"/>
+        href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@projects[name='mylyn']/@projects[name='mylyn']/@streams[name='main']"/>
     <description>The Mylyn workspace provides access to the Mylyn's Git repositories their projects.</description>
   </workspace>
   <description>
