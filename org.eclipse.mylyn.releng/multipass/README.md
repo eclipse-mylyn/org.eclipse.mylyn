@@ -48,6 +48,7 @@ This setup is only tested on am MacBook Pro M1.
    2. on macOS we need to delete the on no longer needed IP Address 
     ```
    sudo vi /var/db/dhcpd_leases (delete the 7 lines per instance)
+   vi ~/.ssh/known_hosts (remove the old ip adress entries)
    ```
    3. recreate the VM's and start the Services with
    ```

@@ -13,7 +13,7 @@ all:
           hosts:
             mylynmstr01:
           vars:
-            multipass_disk: 10G
+            multipass_disk: 16G
             multipass_memory: 4G
         mylyn_swarm_worker:
           hosts:

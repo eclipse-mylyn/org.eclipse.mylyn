@@ -1,0 +1,99 @@
+- name: Build the image
+  community.docker.docker_image:
+    name: "127.0.0.1:5000/{{act_item.servmame}}"
+    tag: 1
+    push: true
+    build:
+      nocache: true
+      path: /mylyn-config-dir/{{ role_name }}
+      args:
+        DATA_DIR: "{{act_item.data_dir}}"
+        JENKINS_IMAGE_VERSION: "{{act_item.image_tag}}"
+    source: build
+    timeout: 180
+
+- name: delete data-volume
+  community.docker.docker_volume:
+    name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
+    state: absent
+
+- name: create data-volume
+  community.docker.docker_volume:
+    name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
+    state: present
+
+- name: docker list
+  ansible.builtin.shell: "docker run --rm --entrypoint /usr/bin/env 127.0.0.1:5000/{{act_item.servmame}}:1 sh -c 'echo $JENKINS_VERSION'"
+  register: version
+- name: print version
+  debug:
+    msg: "{{ version.stdout }}"
+
+- name: myServiceInfo {{ act_item.image_tag }}
+  set_fact:
+    extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
+- set_fact:
+    jenkins_type: "{{ 'localTest' if ('local_test_service' in extra_info_entries and extra_info_entries['local_test_service'] | bool == true) else 'jenkins' }}"
+- name: extra_info_label
+  set_fact:
+    extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
+- name: myServiceLabel
+  set_fact:
+    serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}/", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}", "host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true" {{ extra_info_label }} } }'
+
+- name: setlabels {{ act_item.image_tag }}
+  ansible.builtin.set_fact:
+    label_data:  |
+       { traefik.enable: "true" ,
+         traefik.docker.network: ruvzcx_net ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
+         traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
+         traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "8080" ,
+         org.eclipse.mylyn.service: '{{ serviceLabel  | to_json }}'
+       }
+    
+- name: Deploy swarm service
+  community.docker.docker_swarm_service:
+    name: "{{act_item.servmame}}"
+    image: "127.0.0.1:5000/{{act_item.servmame}}:1"
+    networks:
+      - ruvzcx_net
+    publish:       
+      - published_port: "{{act_item.port1}}"
+        target_port: "8080"
+      - published_port: "{{act_item.port2}}"
+        target_port: "50000"
+    env:
+#      JENKINS_USER: admin@mylyn.eclipse.org
+#      JENKINS_PASS: mylyntest
+#      JENKINS_ADMIN_ADRESS: admin@mylyn.eclipse.org
+#      JENKINS_USER: Admin
+#      JENKINS_PASS: MylynTest
+      JENKINS_ADMIN_ADRESS: mylyn@eclipse.org
+      JENKINS_URL: "https://{{ common_domain_name }}/{{act_item.servmame}}"
+      JENKINS_OPTS: "--prefix=/{{act_item.servmame}}"
+    replicas: 1
+    mounts:
+      - source: "{{ role_name }}-{{act_item.servmame}}-data-volume"
+        target: "/var/jenkins_home"
+        type: volume
+    update_config:
+      parallelism: 1
+      delay: 10s
+      order: start-first
+    restart_config:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 3
+      window: 120s
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl -sS http://localhost:{{act_item.port1}}/jenkinsci/login || exit 1"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+    labels: "{{ label_data | from_yaml }}"
+    placement:
+      constraints:
+        - node.role == worker

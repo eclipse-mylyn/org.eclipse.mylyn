@@ -1,0 +1,142 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.BooleanParameterDefinition>
+          <name>PUBLISH</name>
+          <description>If selected the build is automatically published to http://download.eclipse.org/mylyn/drops and snapshot composite repositories are updated.</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>Do not change this parameter from its default value. This parameter exists only to define a constant for use below.</description>
+          <defaultValue>preJAXB</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.3.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>ssh://git@#MYLYN_TEST_NAME#:#mylyn_git_port#/#mylyn_git_path#/org.eclipse.mylyn.all.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>${BRANCH}</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.SubmoduleOption>
+        <disableSubmodules>false</disableSubmodules>
+        <recursiveSubmodules>true</recursiveSubmodules>
+        <trackingSubmodules>true</trackingSubmodules>
+        <reference></reference>
+        <parentCredentials>false</parentCredentials>
+        <shallow>false</shallow>
+      </hudson.plugins.git.extensions.impl.SubmoduleOption>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>for f in `find . -maxdepth 1 -name &quot;org.eclipse.mylyn*&quot;`; do
+cd $f
+git checkout -B $BRANCH origin/$BRANCH
+git pull
+cd ..
+done
+
+git submodule foreach git rev-parse HEAD
+git rev-list HEAD &gt; mylyn.all.stamp</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Maven>
+      <targets>help:active-profiles
+-Doutput=dbg_active-profiles.out
+-P2019-12
+-Prelease
+clean</targets>
+      <pom>pom.xml</pom>
+      <properties>tycho.localArtifacts=ignore
+explicit-target=true
+rootDirectory=$WORKSPACE
+sign.skip=true
+pack.skip=true
+promote.skip=true
+maven.test.failure.ignore=true
+maven.test.error.ignore=true</properties>
+      <usePrivateRepository>true</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>true</injectBuildVariables>
+    </hudson.tasks.Maven>
+    <hudson.tasks.Maven>
+      <targets>help:effective-pom
+-Doutput=dbg_effective-pom.out
+-P2019-12
+-Prelease
+verify</targets>
+      <pom>pom.xml</pom>
+      <properties>tycho.localArtifacts=ignore
+explicit-target=true
+rootDirectory=$WORKSPACE
+sign.skip=true
+pack.skip=true
+promote.skip=true
+maven.test.failure.ignore=true
+maven.test.error.ignore=true</properties>
+      <usePrivateRepository>true</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>true</injectBuildVariables>
+    </hudson.tasks.Maven>
+  </builders>
+  <publishers>
+    <xunit plugin="xunit@3.0.1">
+      <tools>
+        <JUnitType>
+          <pattern>**/target/surefire-reports/*.xml</pattern>
+          <excludesPattern></excludesPattern>
+          <skipNoTestFiles>false</skipNoTestFiles>
+          <failIfNotNew>true</failIfNotNew>
+          <deleteOutputFiles>true</deleteOutputFiles>
+          <stopProcessingIfError>true</stopProcessingIfError>
+        </JUnitType>
+      </tools>
+      <thresholds/>
+      <thresholdMode>1</thresholdMode>
+      <extraConfiguration>
+        <testTimeMargin>3000</testTimeMargin>
+        <sleepTime>10</sleepTime>
+        <reduceLog>true</reduceLog>
+        <followSymlink>true</followSymlink>
+      </extraConfiguration>
+      <testDataPublishers class="empty-set"/>
+    </xunit>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.xvnc.Xvnc plugin="xvnc@1.25">
+      <takeScreenshot>false</takeScreenshot>
+      <useXauthority>true</useXauthority>
+    </hudson.plugins.xvnc.Xvnc>
+  </buildWrappers>
+</project>

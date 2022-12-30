@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<user>
+  <fullName>Administrator</fullName>
+  <properties>
+    <hudson.model.MyViewsProperty>
+      <primaryViewName>All</primaryViewName>
+      <views>
+        <hudson.model.AllView>
+          <owner class="hudson.model.MyViewsProperty" reference="../../.."/>
+          <name>All</name>
+          <filterExecutors>false</filterExecutors>
+          <filterQueue>false</filterQueue>
+        </hudson.model.AllView>
+      </views>
+    </hudson.model.MyViewsProperty>
+    <hudson.security.HudsonPrivateSecurityRealm_-Details>
+      <passwordHash>#jbcrypt:$2a$10$p6JdvYWtFWw6tTz3X2lkpOkUSOME0qJ1L/vPTmKlIwC.v/IykzQ2K</passwordHash>
+    </hudson.security.HudsonPrivateSecurityRealm_-Details>
+    <hudson.tasks.Mailer_-UserProperty>
+      <emailAddress>admin@mylyn.eclipse.org</emailAddress>
+    </hudson.tasks.Mailer_-UserProperty>
+  </properties>
+</user>

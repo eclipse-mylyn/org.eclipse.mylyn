@@ -112,6 +112,15 @@
     data_src: "/mylyn-config-dir/certs/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.key"
     state: present
 
+- name: delete data-volume
+  community.docker.docker_volume:
+    name: "registry-data-volume"
+    state: absent
+
+- name: create data-volume
+  community.docker.docker_volume:
+    name: "registry-data-volume"
+    state: present
 
 - name: local registry
   community.docker.docker_swarm_service:
@@ -120,6 +129,10 @@
     publish:       
       - published_port: "5000"
         target_port: "5000"
+    mounts:
+      - source: "registry-data-volume"
+        target: "/var/lib/registry"
+        type: volume
     env:
       REGISTRY_HTTP_ADDR: 0.0.0.0:5000
       REGISTRY_HTTP_TLS_CERTIFICATE: /run/secrets/master.crt

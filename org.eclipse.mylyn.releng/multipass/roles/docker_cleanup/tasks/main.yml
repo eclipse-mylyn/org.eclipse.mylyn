@@ -4,11 +4,6 @@
     containers: true
   register: docker_info
 
-- debug:
-    var: docker_info
-- debug:
-    var: docker_info.containers
-
 - name: Stop running containers
   community.docker.docker_container:
     name: "{{ item }}"
@@ -33,18 +28,18 @@
   failed_when: false
 #  when: (docker_info_stop.containers | length)  != 0
 
-- name: Get details of all images
+- name: Get details of all own images
   community.docker.docker_host_info:
     images: true
     verbose_output: true
   register: image_info
   when: (pruneImages is undefined) or ((pruneImages is defined) and (pruneImages == 'yes'))
-- name: Remove all images
+- name: Remove all own images
   community.docker.docker_image:
     name: "{{ item }}"
     state: absent
     force_absent: true
-  loop: "{{ image_info.images | map(attribute='Id') | list }}"
+  loop: "{{ image_info.images |  selectattr('RepoTags', 'search', '127.0.0.1:5000') | map(attribute='Id') }}"
   when: (pruneImages is undefined) or ((pruneImages is defined) and (pruneImages == 'yes'))
 
 - name: Get volumes
@@ -68,9 +63,6 @@
     excludes: 'certs'
   register: cleanup_config_dir
   ignore_errors: true
-#- name: debug dirs in mylyn-config-dir
-#  debug:
-#    var: cleanup_config_dir
 - name: delete config directory content
   tags:
     - clean-mylyn-dir
@@ -80,15 +72,22 @@
   become: true
   with_items: "{{  cleanup_config_dir.files | map(attribute='path') | list  }}"
 
-- name: change project
+- name: delete runtime directory
   tags:
     - clean-mylyn-dir
-  ansible.builtin.shell: |
-       # rm -r /tmp/ruvsetups
-       # rm /home/ubuntu/.ssh/known_hosts
-       sudo rm -r /mylyn-runtime-dir/*
-  failed_when: false
-  changed_when: false
+  ansible.builtin.file:
+    path: /mylyn-runtime-dir
+    state: absent
+  become: true
+  ignore_errors: true
+
+#- name: change project
+#  tags:
+#    - clean-mylyn-dir
+#  ansible.builtin.shell: |
+#       sudo rm -r /mylyn-runtime-dir/*
+#  failed_when: false
+#  changed_when: false
 
 #- name: Remove network
 #  community.docker.docker_network:
@@ -110,3 +109,15 @@
     networks: "{{ deleteNetwork | default('false') }}"
     volumes: true
     builder_cache: true
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  become: true
+  loop:
+    - /mylyn-config-dir
+    - /mylyn-runtime-dir

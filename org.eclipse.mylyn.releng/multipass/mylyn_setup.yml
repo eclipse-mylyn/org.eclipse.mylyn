@@ -105,10 +105,14 @@
             owner: ubuntu
             group: ubuntu
             mode: '0755'
+      tags:
+        - base_software
     - name: Synchronization root ca
       ansible.posix.synchronize:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
+      tags:
+        - base_software
       delegate_to: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
       loop:
         - {src: "/cacerts/root_ca/{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}.crt", dest: "/mylyn-config-dir/certs/rootca.crt"}
@@ -117,6 +121,8 @@
       ansible.posix.synchronize:
         src:  "/cacerts/server_ca/"
         dest: /mylyn-config-dir/certs
+      tags:
+        - base_software
       delegate_to: "{{ item }}"
       with_items: 
         - "{{ groups[hostvars['localhost'].grp_prefix + \"_hosts\"] }}"
@@ -163,11 +169,15 @@
 #    - role: hello
 #      vars:
 #        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-#    - role: jenkins
-#      tags:
-#        - jenkins
-#      vars:
-#        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+    - role: jenkins
+      tags:
+        - jenkins
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        jenkins_instances:
+          - {  servmame: "jenkins-2_303_3", port1: 8081, port2: 50001, data_dir: "jenkins-2.303.3", image_tag: "2.303.3-lts-jdk11", extra_info: '"default": "true"' }
+          - {  servmame: "jenkins-2_375_1", port1: 8083, port2: 50003, data_dir: "jenkins-2.303.3", image_tag: "2.375.1-lts", extra_info: '' }
+          - {  servmame: "jenkinsci", port1: 8082, port2: 50002, data_dir: "jenkinsci", image_tag: "2.375.1-lts", extra_info: '"local_test_service":"true"' }
     - role: bugzilla
       tags:
         - bugzilla

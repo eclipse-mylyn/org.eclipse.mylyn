@@ -1,0 +1,125 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BRANCH</name>
+          <description></description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>master</string>
+              <string>m_3_25_x</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.5.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>ssh://git@#MYLYN_TEST_NAME#:#mylyn_git_port#/#mylyn_git_path#/org.eclipse.mylyn.commons.git</url>
+        <credentialsId>MylynAdmin</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>$BRANCH</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>set
+</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Maven>
+      <targets>help:effective-pom -Doutput=dbg_effective-pom.out
+-B
+-V
+-Dexplicit-target
+-Pstrict
+-Dtycho.debug.resolver=true
+-X
+clean
+verify</targets>
+      <pom>pom.xml</pom>
+      <properties>test.uservmargs=-Dmylyn.test.skipBrowserTests=true
+coverage.skip=false</properties>
+      <usePrivateRepository>true</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>true</injectBuildVariables>
+    </hudson.tasks.Maven>
+    <hudson.tasks.Shell>
+      <command>rm -f *.stamp
+git rev-parse HEAD &gt; org.eclipse.mylyn.commons.stamp
+rm -rf /downloads/mylyn/snapshots/nightly/$BRANCH/commons/*
+cp -r org.eclipse.mylyn.commons.stamp org.eclipse.mylyn.commons-site/target/site/* /downloads/mylyn/snapshots/nightly/$BRANCH/commons/
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.48">
+      <testResults>**/target/surefire-reports/*.xml</testResults>
+      <keepLongStdio>false</keepLongStdio>
+      <healthScaleFactor>1.0</healthScaleFactor>
+      <allowEmptyResults>false</allowEmptyResults>
+      <skipPublishingChecks>false</skipPublishingChecks>
+      <checksName></checksName>
+    </hudson.tasks.junit.JUnitResultArchiver>
+    <hudson.tasks.Fingerprinter>
+      <targets>*.stamp</targets>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+    </hudson.tasks.Fingerprinter>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>*.stamp,**/*-site/target/site/**</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+      <followSymlinks>true</followSymlinks>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.39">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
+          </configs>
+          <projects>mylyn-versions-nightly</projects>
+          <condition>UNSTABLE_OR_BETTER</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+        </hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.BuildTrigger>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.xvnc.Xvnc plugin="xvnc@1.25">
+      <takeScreenshot>false</takeScreenshot>
+      <useXauthority>true</useXauthority>
+    </hudson.plugins.xvnc.Xvnc>
+  </buildWrappers>
+</project>
