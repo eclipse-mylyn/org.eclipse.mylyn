@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -131,10 +131,10 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				char[] nextWord = searchText.toCharArray();
 				nextWord[searchText.length() - 1]++;
 
-				// filter matching keys 
+				// filter matching keys
 				addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
 
-				// add matching keys based on pretty names 
+				// add matching keys based on pretty names
 				addMatchingProposalsByPrettyName(addressSet, searchText);
 			}
 		}
@@ -163,7 +163,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		if (value != null) {
 			String tokens[] = value.split("\\s"); //$NON-NLS-1$
 			for (String token : tokens) {
-				if (token.toLowerCase().startsWith(searchText)) {
+				if (token.toLowerCase().contains(searchText)) {
 					return true;
 				}
 			}
@@ -301,7 +301,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private void addPerson(TaskData data, Set<String> addresses, String key) {
 		TaskAttribute attribute = data.getRoot().getMappedAttribute(key);
-		// ignore modifiable attributes which may have a value edited by the user which may not be a valid proposal 
+		// ignore modifiable attributes which may have a value edited by the user which may not be a valid proposal
 		if (attribute != null && attribute.getMetaData().isReadOnly()) {
 			addPerson(data, addresses, attribute);
 		}
