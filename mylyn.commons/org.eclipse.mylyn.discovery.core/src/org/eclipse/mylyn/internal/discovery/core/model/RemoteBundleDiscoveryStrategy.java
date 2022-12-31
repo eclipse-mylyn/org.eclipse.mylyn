@@ -192,7 +192,8 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 				registryStrategy.setBundles(bundleFileToDirectoryEntry);
 				IExtensionRegistry extensionRegistry = new ExtensionRegistry(registryStrategy, this, this);
 				try {
-					IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
+					IExtensionPoint extensionPoint = extensionRegistry
+							.getExtensionPoint(ConnectorDiscoveryExtensionReader.EXTENSION_POINT_ID);
 					if (extensionPoint != null) {
 						IExtension[] extensions = extensionPoint.getExtensions();
 						if (extensions.length > 0) {
@@ -228,11 +229,12 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 			for (int attemptCount = 0; attemptCount < maxDiscoveryJarDownloadAttempts; ++attemptCount) {
 				try {
 					if (!bundleUrl.startsWith("https://") && !bundleUrl.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
-						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS.bind(
-								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
+						StatusHandler.log(new Status(IStatus.WARNING, DiscoveryCore.ID_PLUGIN, NLS
+								.bind(Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
 						continue;
 					}
-					File target = File.createTempFile(WebUtil.getFileNameFor(bundleUrl) + "_", ".jar", temporaryStorage); //$NON-NLS-1$ //$NON-NLS-2$
+					File target = File.createTempFile(WebUtil.getFileNameFor(bundleUrl) + "_", ".jar", //$NON-NLS-1$//$NON-NLS-2$
+							temporaryStorage);
 
 					if (monitor.isCanceled()) {
 						break;
@@ -249,8 +251,9 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 					}
 					file = target;
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl, e.getMessage()),
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+							NLS.bind(Messages.RemoteBundleDiscoveryStrategy_cannot_download_bundle, bundleUrl,
+									e.getMessage()),
 							e));
 					if (isUnknownHostException(e)) {
 						break;

@@ -374,8 +374,8 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 						historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_FILTER));
 					} else {
 						historyTable.setSorter(null);
-						historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(),
-								MAX_HISTORY_NO_FILTER));
+						historyTable
+								.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
 					}
 					setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
 					if (!shouldOpen()) {

@@ -67,13 +67,13 @@ public class NotificationElement {
 
 	public IStatus validate() {
 		if (id == null) {
-			return new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN, NLS.bind(
-					"Extension {0} contributed by {1} does not specify id attribute", element.getNamespaceIdentifier(), //$NON-NLS-1$
-					getPluginId())); //NON-NLS-1$
+			return new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN,
+					NLS.bind("Extension {0} contributed by {1} does not specify id attribute", //$NON-NLS-1$
+							element.getNamespaceIdentifier(), getPluginId())); //NON-NLS-1$
 		} else if (label == null) {
-			return new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN, NLS.bind(
-					"Extension {0} contributed by {1} does not specify label attribute", //$NON-NLS-1$
-					element.getNamespaceIdentifier(), getPluginId())); //NON-NLS-1$
+			return new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN,
+					NLS.bind("Extension {0} contributed by {1} does not specify label attribute", //$NON-NLS-1$
+							element.getNamespaceIdentifier(), getPluginId())); //NON-NLS-1$
 		}
 		return Status.OK_STATUS;
 	}

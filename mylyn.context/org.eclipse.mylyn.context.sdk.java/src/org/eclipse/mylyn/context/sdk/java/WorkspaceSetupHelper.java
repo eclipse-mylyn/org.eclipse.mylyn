@@ -150,8 +150,8 @@ public class WorkspaceSetupHelper {
 		clearDoiModel();
 	}
 
-	public static IWorkspaceRoot setupWorkspace() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static IWorkspaceRoot setupWorkspace()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (isSetup) {
 			clearDoiModel();
 			return workspaceRoot;
@@ -216,40 +216,40 @@ public class WorkspaceSetupHelper {
 		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new InteractionContextScaling());
 	}
 
-	public static InteractionContext getContext() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static InteractionContext getContext()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (!isSetup) {
 			setupWorkspace();
 		}
 		return taskscape;
 	}
 
-	public static IJavaProject getJdtCoreDomProject() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static IJavaProject getJdtCoreDomProject()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (!isSetup) {
 			setupWorkspace();
 		}
 		return jdtCoreDomProject.getJavaProject();
 	}
 
-	public static IJavaProject getProject1() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static IJavaProject getProject1()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (!isSetup) {
 			setupWorkspace();
 		}
 		return project1;
 	}
 
-	public static IJavaProject getProject2() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static IJavaProject getProject2()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (!isSetup) {
 			setupWorkspace();
 		}
 		return project2;
 	}
 
-	public static IWorkspaceRoot getWorkspaceRoot() throws CoreException, IOException, InvocationTargetException,
-			InterruptedException {
+	public static IWorkspaceRoot getWorkspaceRoot()
+			throws CoreException, IOException, InvocationTargetException, InterruptedException {
 		if (!isSetup) {
 			setupWorkspace();
 		}

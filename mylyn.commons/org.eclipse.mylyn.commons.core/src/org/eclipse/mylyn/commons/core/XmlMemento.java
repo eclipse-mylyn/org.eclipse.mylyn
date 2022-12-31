@@ -322,7 +322,8 @@ public final class XmlMemento {
 		} catch (NumberFormatException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN,
 					"Memento problem - Invalid float for key: " //$NON-NLS-1$
-							+ key + " value: " + strValue, e)); //$NON-NLS-1$
+							+ key + " value: " + strValue, //$NON-NLS-1$
+					e));
 			return null;
 		}
 	}
@@ -355,7 +356,8 @@ public final class XmlMemento {
 		} catch (NumberFormatException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN,
 					"Memento problem - invalid integer for key: " + key //$NON-NLS-1$
-							+ " value: " + strValue, e)); //$NON-NLS-1$
+							+ " value: " + strValue, //$NON-NLS-1$
+					e));
 			return null;
 		}
 	}

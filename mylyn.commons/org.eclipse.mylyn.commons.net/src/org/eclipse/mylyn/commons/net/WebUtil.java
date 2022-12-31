@@ -415,8 +415,8 @@ public class WebUtil {
 	static Credentials getCredentials(final String username, final String password, final InetAddress address) {
 		int i = username.indexOf("\\"); //$NON-NLS-1$
 		if (i > 0 && i < username.length() - 1 && address != null) {
-			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
-					i));
+			return new NTCredentials(username.substring(i + 1), password, address.getHostName(),
+					username.substring(0, i));
 		} else {
 			return new UsernamePasswordCredentials(username, password);
 		}
@@ -508,8 +508,9 @@ public class WebUtil {
 			throws IOException {
 //		return method.getResponseBodyAsStream();
 		monitor = Policy.monitorFor(monitor);
-		return new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE,
-				POLL_INTERVAL, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
+		return new PollingInputStream(
+				new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE, POLL_INTERVAL, CLOSE_TIMEOUT),
+				POLL_ATTEMPTS, monitor);
 	}
 
 	/**
@@ -542,11 +543,12 @@ public class WebUtil {
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
-						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
-								method.getResponseCharSet()));
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(in, method.getResponseCharSet()));
 						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 						try {
-							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer
+									.nextToken()) {
 								if (token.getType() == Token.TAG) {
 									HtmlTag tag = (HtmlTag) token.getValue();
 									if (tag.getTagType() == Tag.TITLE) {
@@ -787,7 +789,8 @@ public class WebUtil {
 		}
 		if (proxyHost != null && proxyHost.length() > 0) {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
+			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0
+					&& proxyPassword.length() > 0);
 			if (authenticated) {
 				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
 			} else {

@@ -142,8 +142,8 @@ public class ProjectTeamPage extends PropertyPage {
 		if (!enabled) {
 			configurationHyperlink.setForeground(JFaceColors.getHyperlinkText(getShell().getDisplay()));
 		} else {
-			configurationHyperlink.setForeground(getShell().getDisplay().getSystemColor(
-					SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
+			configurationHyperlink
+					.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
 		}
 	}
 

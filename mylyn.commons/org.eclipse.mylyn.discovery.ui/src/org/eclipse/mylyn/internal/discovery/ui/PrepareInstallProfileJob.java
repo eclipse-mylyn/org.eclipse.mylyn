@@ -116,8 +116,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 	@Override
 	public IStatus uninstall(UninstallRequest request, IProgressMonitor progressMonitor)
 			throws InvocationTargetException, InterruptedException {
-		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession()).getProfile(
-				ProvisioningUI.getDefaultUI().getProfileId());
+		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
+				.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
 		if (profile == null) {
 			throw new IllegalStateException("No valid profile defined"); //$NON-NLS-1$
 		}
@@ -126,16 +126,16 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 			SubMonitor monitor = SubMonitor.convert(progressMonitor, Messages.InstallConnectorsJob_task_configuring,
 					100);
 			try {
-				repositoryLocations = new HashSet<URI>(Arrays.asList(provisioningUI.getRepositoryTracker()
-						.getKnownRepositories(provisioningUI.getSession())));
+				repositoryLocations = new HashSet<URI>(Arrays.asList(
+						provisioningUI.getRepositoryTracker().getKnownRepositories(provisioningUI.getSession())));
 
 				final List<IInstallableUnit> ius = new ArrayList<IInstallableUnit>();
 				IQueryResult<IInstallableUnit> result = profile.available(QueryUtil.createIUGroupQuery(), monitor);
 				for (Iterator<IInstallableUnit> it = result.iterator(); it.hasNext();) {
 					IInstallableUnit iu = it.next();
 					try {
-						org.osgi.framework.Version version = new org.osgi.framework.Version(iu.getVersion()
-								.getOriginal());
+						org.osgi.framework.Version version = new org.osgi.framework.Version(
+								iu.getVersion().getOriginal());
 						InstalledItem<IInstallableUnit> item = new InstalledItem<IInstallableUnit>(iu, iu.getId(),
 								version);
 						if (request.select(item)) {
@@ -178,8 +178,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 			URI[] repositories) throws CoreException {
 		final UninstallOperation uninstallOperation = provisioningUI.getUninstallOperation(Arrays.asList(ius),
 				repositories);
-		IStatus operationStatus = uninstallOperation.resolveModal(new SubProgressMonitor(monitor,
-				installableConnectors.size()));
+		IStatus operationStatus = uninstallOperation
+				.resolveModal(new SubProgressMonitor(monitor, installableConnectors.size()));
 		if (operationStatus.getSeverity() > IStatus.WARNING) {
 			throw new CoreException(operationStatus);
 		}
@@ -189,8 +189,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 	private InstallOperation resolveInstall(IProgressMonitor monitor, final IInstallableUnit[] ius, URI[] repositories)
 			throws CoreException {
 		final InstallOperation installOperation = provisioningUI.getInstallOperation(Arrays.asList(ius), repositories);
-		IStatus operationStatus = installOperation.resolveModal(new SubProgressMonitor(monitor,
-				installableConnectors.size()));
+		IStatus operationStatus = installOperation
+				.resolveModal(new SubProgressMonitor(monitor, installableConnectors.size()));
 		if (operationStatus.getSeverity() > IStatus.WARNING) {
 			throw new CoreException(operationStatus);
 		}
@@ -277,8 +277,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 				if (detailedMessage.length() > 0) {
 					detailedMessage += Messages.InstallConnectorsJob_commaSeparator;
 				}
-				detailedMessage += NLS.bind(Messages.PrepareInstallProfileJob_notFoundDescriptorDetail, new Object[] {
-						descriptor.getName(), unavailableIds.toString(), descriptor.getSiteUrl() });
+				detailedMessage += NLS.bind(Messages.PrepareInstallProfileJob_notFoundDescriptorDetail,
+						new Object[] { descriptor.getName(), unavailableIds.toString(), descriptor.getSiteUrl() });
 			}
 		}
 
@@ -289,13 +289,13 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					okayToProceed[0] = MessageDialog.openQuestion(DiscoveryUiUtil.getShell(),
-							Messages.InstallConnectorsJob_questionProceed,
-							NLS.bind(Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
+							Messages.InstallConnectorsJob_questionProceed, NLS.bind(
+									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
 				}
 			});
 			if (!okayToProceed[0]) {
-				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
-						Messages.InstallConnectorsJob_connectorsNotAvailable, detailedMessage), null));
+				throw new CoreException(new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN,
+						NLS.bind(Messages.InstallConnectorsJob_connectorsNotAvailable, detailedMessage), null));
 			}
 		}
 	}
@@ -350,8 +350,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		return installableUnits;
 	}
 
-	private List<IMetadataRepository> addRepositories(SubMonitor monitor) throws MalformedURLException,
-			URISyntaxException, ProvisionException {
+	private List<IMetadataRepository> addRepositories(SubMonitor monitor)
+			throws MalformedURLException, URISyntaxException, ProvisionException {
 		// tell p2 that it's okay to use these repositories
 		ProvisioningSession session = ProvisioningUI.getDefaultUI().getSession();
 		RepositoryTracker repositoryTracker = ProvisioningUI.getDefaultUI().getRepositoryTracker();
@@ -379,8 +379,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		// fetch meta-data for these repositories
 		ArrayList<IMetadataRepository> repositories = new ArrayList<IMetadataRepository>();
 		monitor.setWorkRemaining(repositories.size());
-		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) session.getProvisioningAgent().getService(
-				IMetadataRepositoryManager.SERVICE_NAME);
+		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) session.getProvisioningAgent()
+				.getService(IMetadataRepositoryManager.SERVICE_NAME);
 		for (URI uri : repositoryLocations) {
 			checkCancelled(monitor);
 			IMetadataRepository repository = manager.loadRepository(uri, monitor.newChild(1));
@@ -407,8 +407,8 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 	@Override
 	public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
 		Set<String> features = new HashSet<String>();
-		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession()).getProfile(
-				ProvisioningUI.getDefaultUI().getProfileId());
+		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
+				.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
 		if (profile != null) {
 			IQueryResult<IInstallableUnit> result = profile.available(QueryUtil.createIUGroupQuery(), monitor);
 			for (Iterator<IInstallableUnit> it = result.iterator(); it.hasNext();) {

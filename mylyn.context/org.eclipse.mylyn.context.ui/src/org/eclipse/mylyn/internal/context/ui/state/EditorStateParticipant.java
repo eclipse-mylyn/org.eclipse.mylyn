@@ -95,8 +95,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	public void saveDefaultState(ContextState memento) {
 		// save platform preference setting
 		Workbench workbench = (Workbench) PlatformUI.getWorkbench();
-		previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(
-				IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+		previousCloseEditorsSetting = workbench.getPreferenceStore()
+				.getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 		workbench.getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
 	}
 
@@ -151,8 +151,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				ContextUi.getUiBridge(activeNode.getContentType()).open(activeNode);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
-					"Failed to open editors on activation", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Failed to open editors on activation", e)); //$NON-NLS-1$
 		} finally {
 			ContextCore.getContextManager().setContextCapturePaused(false);
 		}
@@ -242,8 +242,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 					saveEditors_e_4_legacy((WorkbenchPage) window.getActivePage(), memento);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
-						"Saving of editor state failed", e)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Saving of editor state failed", e)); //$NON-NLS-1$
 				failed = true;
 			}
 		}
@@ -261,8 +261,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	}
 
 	protected void saveEditors_e_8_2(IWorkbenchPage page, IMemento memento) throws Exception {
-		Method getEditorStateMethod = IWorkbenchPage.class.getDeclaredMethod(
-				"getEditorState", IEditorReference[].class, boolean.class); //$NON-NLS-1$
+		Method getEditorStateMethod = IWorkbenchPage.class.getDeclaredMethod("getEditorState", IEditorReference[].class, //$NON-NLS-1$
+				boolean.class);
 		IMemento[] states = (IMemento[]) getEditorStateMethod.invoke(page, page.getEditorReferences(), true);
 
 		for (IMemento state : states) {
@@ -381,8 +381,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
-					"Restoring of editor state failed", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Restoring of editor state failed", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -391,8 +391,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	 */
 	private boolean is_3_8_2() {
 		try {
-			IWorkbenchPage.class.getDeclaredMethod(
-					"openEditors", IEditorInput[].class, String[].class, IMemento[].class, int.class, int.class); //$NON-NLS-1$
+			IWorkbenchPage.class.getDeclaredMethod("openEditors", IEditorInput[].class, String[].class, //$NON-NLS-1$
+					IMemento[].class, int.class, int.class);
 			return true;
 		} catch (NoSuchMethodException e) {
 			return false;
@@ -413,10 +413,10 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		}
 	}
 
-	private void restoreEditors_e_3_8_2(WorkbenchPage page, final ArrayList<?> visibleEditors,
-			final MultiStatus result, Set<IMemento> editorMementoSet) throws Exception {
-		Method openEditorsMethod = IWorkbenchPage.class.getDeclaredMethod(
-				"openEditors", IEditorInput[].class, String[].class, IMemento[].class, int.class, int.class); //$NON-NLS-1$
+	private void restoreEditors_e_3_8_2(WorkbenchPage page, final ArrayList<?> visibleEditors, final MultiStatus result,
+			Set<IMemento> editorMementoSet) throws Exception {
+		Method openEditorsMethod = IWorkbenchPage.class.getDeclaredMethod("openEditors", IEditorInput[].class, //$NON-NLS-1$
+				String[].class, IMemento[].class, int.class, int.class);
 		openEditorsMethod.invoke(page, null, null, editorMementoSet.toArray(new IMemento[0]),
 				IWorkbenchPage.MATCH_INPUT, 0);
 	}
@@ -466,14 +466,16 @@ public class EditorStateParticipant extends ContextStateParticipant {
 
 		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("getEditors"); //$NON-NLS-1$
 
-		List<IEditorReference> alreadyVisibleEditors = Arrays.asList((IEditorReference[]) getEditorsMethod.invoke(editorManager));
+		List<IEditorReference> alreadyVisibleEditors = Arrays
+				.asList((IEditorReference[]) getEditorsMethod.invoke(editorManager));
 		Set<String> restoredPartNames = new HashSet<String>();
 		for (IEditorReference editorReference : alreadyVisibleEditors) {
 			restoredPartNames.add(editorReference.getPartName());
 		}
 
-		Method restoreEditorStateMethod = editorManager.getClass().getDeclaredMethod("restoreEditorState", //$NON-NLS-1$
-				IMemento.class, ArrayList.class, IEditorReference[].class, MultiStatus.class);
+		Method restoreEditorStateMethod = editorManager.getClass()
+				.getDeclaredMethod("restoreEditorState", //$NON-NLS-1$
+						IMemento.class, ArrayList.class, IEditorReference[].class, MultiStatus.class);
 
 		for (IMemento editorMemento : editorMementoSet) {
 			String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
@@ -484,8 +486,9 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 		}
 
-		Method setVisibleEditorMethod = editorManager.getClass().getDeclaredMethod("setVisibleEditor", //$NON-NLS-1$
-				IEditorReference.class, boolean.class);
+		Method setVisibleEditorMethod = editorManager.getClass()
+				.getDeclaredMethod("setVisibleEditor", //$NON-NLS-1$
+						IEditorReference.class, boolean.class);
 		for (int i = 0; i < visibleEditors.size(); i++) {
 			setVisibleEditorMethod.invoke(editorManager, visibleEditors.get(i), false);
 		}
@@ -548,13 +551,14 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		final AtomicBoolean result = new AtomicBoolean();
 		SafeRunnable.run(new ISafeRunnable() {
 			public void run() throws Exception {
-				ContextAwareEditorInput inputContext = (ContextAwareEditorInput) input.getAdapter(ContextAwareEditorInput.class);
+				ContextAwareEditorInput inputContext = (ContextAwareEditorInput) input
+						.getAdapter(ContextAwareEditorInput.class);
 				result.set(inputContext != null && inputContext.forceClose(contextHandle));
 			}
 
 			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
-						"Failed to verify editor status", e)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Failed to verify editor status", e)); //$NON-NLS-1$
 			}
 		});
 		return result.get();
@@ -570,7 +574,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 					if (editor instanceof IContextAwareEditor) {
 						result[0] = ((IContextAwareEditor) editor).canClose();
 					} else {
-						IContextAwareEditor contextAware = (IContextAwareEditor) editor.getAdapter(IContextAwareEditor.class);
+						IContextAwareEditor contextAware = (IContextAwareEditor) editor
+								.getAdapter(IContextAwareEditor.class);
 						if (contextAware != null) {
 							result[0] = contextAware.canClose();
 						}
@@ -589,10 +594,9 @@ public class EditorStateParticipant extends ContextStateParticipant {
 
 	@Override
 	public boolean isEnabled() {
-		return enabled
-				&& ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
+		return enabled && ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
 	}
 
 	public void setEnabled(boolean enabled) {

@@ -88,14 +88,14 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+		ContextCorePlugin.getContextManager()
+				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
 						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+		ContextCorePlugin.getContextManager()
+				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
 						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
@@ -106,9 +106,10 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		new RefactorRepositoryUrlOperation(firstUrl, secondUrl).run(new NullProgressMonitor());
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(5 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
-		assertEquals(10 * 60 * 1000, TasksUiPlugin.getTaskActivityManager()
-				.getElapsedTime(new MockTask(secondUrl, "2")));
+		assertEquals(5 * 60 * 1000,
+				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
+		assertEquals(10 * 60 * 1000,
+				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 

@@ -72,8 +72,7 @@ public class ContextMementoMigratorTest extends TestCase {
 		migrator.setDeleteOldDataEnabled(true);
 		IStatus status = migrator.migrateContextMementos(SubMonitor.convert(null));
 		assertEquals(IStatus.OK, status.getSeverity());
-		assertEquals(
-				"",
+		assertEquals("",
 				ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
@@ -86,7 +85,8 @@ public class ContextMementoMigratorTest extends TestCase {
 				.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
 						ID_PLANNING_PERSPECTIVE);
 
-		IStatus status = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager()).migrateContextMementos(SubMonitor.convert(null));
+		IStatus status = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager())
+				.migrateContextMementos(SubMonitor.convert(null));
 		assertEquals(IStatus.OK, status.getSeverity());
 
 		InteractionContext context = new InteractionContext(task.getHandleIdentifier(),
@@ -97,8 +97,7 @@ public class ContextMementoMigratorTest extends TestCase {
 		IMemento memento = state.getMemento("org.eclipse.mylyn.context.ui.perspectives");
 		assertNotNull(memento);
 		assertEquals(ID_PLANNING_PERSPECTIVE, memento.getString("activeId"));
-		assertEquals(
-				ID_PLANNING_PERSPECTIVE,
+		assertEquals(ID_PLANNING_PERSPECTIVE,
 				ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));

@@ -58,8 +58,9 @@ public class CommonTestUtil {
 	 * Copies the given source file to the given destination file.
 	 */
 	public static void copy(File source, File dest) throws IOException {
-		try (InputStream in = new FileInputStream(source); OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
-				transferData(in, out);
+		try (InputStream in = new FileInputStream(source);
+				OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
+			transferData(in, out);
 		}
 	}
 

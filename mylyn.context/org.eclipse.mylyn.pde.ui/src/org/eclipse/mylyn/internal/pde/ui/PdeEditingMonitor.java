@@ -50,7 +50,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext) {
 		if (part instanceof ManifestEditor) {
 			TextSelection textSelection = null;
 			IEditorInput in = null;
@@ -68,7 +69,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 			}
 
 			// make sure that the selection is a text selection
-			if (!(editor.getSelection() instanceof TextSelection || editor.getSelection() instanceof StructuredSelection)) {
+			if (!(editor.getSelection() instanceof TextSelection
+					|| editor.getSelection() instanceof StructuredSelection)) {
 				return;
 			} else if (editor.getSelection() instanceof StructuredSelection) {
 				StructuredSelection s = (StructuredSelection) editor.getSelection();
@@ -104,7 +106,11 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						// fix a bug when there is a selection and the editor
 						// input is the manifest.mf file
 						// not the plugin.xml
-						if (fei.getFile().getFullPath().toString().toLowerCase(Locale.ENGLISH).endsWith("/manifest.mf")) { //$NON-NLS-1$
+						if (fei.getFile()
+								.getFullPath()
+								.toString()
+								.toLowerCase(Locale.ENGLISH)
+								.endsWith("/manifest.mf")) { //$NON-NLS-1$
 							return;
 						}
 
@@ -124,8 +130,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
-							"Could not resolve selection", e)); //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not resolve selection", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -156,8 +162,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						hashCode);
 			}
 			if (node == null) {
-				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensionPoints(),
-						offset, hashCode);
+				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensionPoints(), offset,
+						hashCode);
 			}
 			if (node == null) {
 				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensions(), offset,
@@ -180,8 +186,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 			model.setEnabled(true);
 		}
 
-		PluginObjectNode node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getLibraries(),
-				num, hashCode);
+		PluginObjectNode node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getLibraries(), num,
+				hashCode);
 		if (node == null) {
 			node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getImports(), num, hashCode);
 		}

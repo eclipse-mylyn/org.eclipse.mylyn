@@ -85,8 +85,8 @@ public class CommonListenerList<T> implements Iterable<T> {
 		for (final T listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, pluginId, NLS.bind(
-							"Unexpected error notifying listener {0}", listener.getClass()), e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, pluginId,
+							NLS.bind("Unexpected error notifying listener {0}", listener.getClass()), e)); //$NON-NLS-1$
 					remove(listener);
 				}
 

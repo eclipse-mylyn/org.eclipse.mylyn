@@ -84,7 +84,8 @@ public class GravatarConnector extends IdentityConnector {
 
 	@Override
 	public boolean supportsImageSize(int preferredWidth, int preferredHeight) {
-		return (preferredWidth >= 1 && preferredWidth <= 512 && preferredHeight >= 1 && preferredHeight <= 512 && preferredWidth == preferredHeight);
+		return (preferredWidth >= 1 && preferredWidth <= 512 && preferredHeight >= 1 && preferredHeight <= 512
+				&& preferredWidth == preferredHeight);
 	}
 
 	@Override

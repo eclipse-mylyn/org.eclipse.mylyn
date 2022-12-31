@@ -37,7 +37,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public final class ResourcesUi {
 
-	public static void addResourceToContext(final Set<IResource> resources, final InteractionEvent.Kind interactionKind) {
+	public static void addResourceToContext(final Set<IResource> resources,
+			final InteractionEvent.Kind interactionKind) {
 		ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resources, interactionKind);
 	}
 

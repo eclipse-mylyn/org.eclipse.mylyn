@@ -175,8 +175,8 @@ public class DatePicker extends Composite {
 					}
 				}
 
-				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton,
-						newCalendar, DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
+				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton, newCalendar,
+						DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
 				dialog.addEventListener(new IInPlaceDialogListener() {
 
 					public void buttonPressed(InPlaceDialogEvent event) {

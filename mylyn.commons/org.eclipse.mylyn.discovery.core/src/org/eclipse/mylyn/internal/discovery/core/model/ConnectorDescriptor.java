@@ -108,9 +108,7 @@ public class ConnectorDescriptor {
 
 	/**
 	 * A description of the connector. Plug-ins should provide a description, especially if the description is not
-	 * self-evident from the @name and
-	 * 
-	 * @organization.
+	 * self-evident from the @name and @organization.
 	 */
 	public String getDescription() {
 		return description;

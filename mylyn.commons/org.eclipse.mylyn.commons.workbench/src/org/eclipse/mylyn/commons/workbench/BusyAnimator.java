@@ -82,8 +82,8 @@ public class BusyAnimator {
 			} catch (Exception e) {
 				CommonsWorkbenchPlugin.getDefault()
 						.getLog()
-						.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
-								"Failed to update animation", e)); //$NON-NLS-1$
+						.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, "Failed to update animation", //$NON-NLS-1$
+								e));
 			}
 		}
 

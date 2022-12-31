@@ -396,8 +396,9 @@ public class BugzillaRestConfiguration implements Serializable {
 		TaskAttribute attribute = bugReport.getRoot()
 				.createAttribute(TaskAttribute.PREFIX_OPERATION + attributeStatusValue);
 		if (attributeStatusValue.equals("RESOLVED")) {
-			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-					BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
+			attribute.getMetaData()
+					.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+							BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
 		}
 
 		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
@@ -412,8 +413,9 @@ public class BugzillaRestConfiguration implements Serializable {
 							.createAttribute(TaskAttribute.PREFIX_OPERATION + statusTransition.name);
 					TaskOperation.applyTo(attribute, statusTransition.name, statusTransition.name);
 					if (statusTransition.name != null && statusTransition.name.equals("RESOLVED")) {
-						TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(
-								"resolutionInput");
+						TaskAttribute attrResolvedInput = attribute.getTaskData()
+								.getRoot()
+								.createAttribute("resolutionInput");
 						attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 						attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "resolutionInput");
 						Field resolution = getFieldWithName("resolution");
@@ -428,11 +430,13 @@ public class BugzillaRestConfiguration implements Serializable {
 		}
 		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "duplicate");
 		TaskOperation.applyTo(attribute, "duplicate", "Mark as Duplicate");
-		TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().getAttribute(
-				BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
+		TaskAttribute attrResolvedInput = attribute.getTaskData()
+				.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
 		if (attrResolvedInput == null) {
-			attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(
-					BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
+			attrResolvedInput = attribute.getTaskData()
+					.getRoot()
+					.createAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
 		}
 		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
 		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, attrResolvedInput.getId());

@@ -44,8 +44,8 @@ public class FocusedDOMCompletionProposalComputer extends DOMCompletionProposalC
 	}
 
 	private boolean shouldReturnResults() {
-		Set<String> disabledIds = CDTContentAssistUtils.getDisableContentAssistIds(CUIPlugin.getDefault()
-				.getPreferenceStore());
+		Set<String> disabledIds = CDTContentAssistUtils
+				.getDisableContentAssistIds(CUIPlugin.getDefault().getPreferenceStore());
 		if (!disabledIds.contains(CDTContentAssistUtils.ASSIST_CDT_TYPE)) {
 			// do not return duplicates if the default parser completions is enabled
 			return false;

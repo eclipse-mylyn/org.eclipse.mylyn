@@ -122,7 +122,8 @@ public class WorkbenchActionSupport implements ISelectionChangedListener {
 		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
+		pasteAction
+				.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_PASTE);
 
 		copyAction = new GlobalAction(ActionFactory.COPY.getId());

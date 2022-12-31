@@ -82,9 +82,10 @@ public class ActivityUiPreferencePage extends PreferencePage implements IWorkben
 	public boolean performCancel() {
 		int minutes = getPreferenceStore().getInt(IActivityUiConstants.ACTIVITY_TIMEOUT) / MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
-		timeoutEnabledButton.setSelection(getPreferenceStore().getBoolean(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED));
-		activityTrackingEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				IActivityUiConstants.ACTIVITY_TRACKING_ENABLED));
+		timeoutEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED));
+		activityTrackingEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED));
 		return true;
 	}
 
@@ -94,11 +95,11 @@ public class ActivityUiPreferencePage extends PreferencePage implements IWorkben
 		int activityTimeoutMinutes = getPreferenceStore().getDefaultInt(IActivityUiConstants.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
-		timeoutEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton
+				.setSelection(getPreferenceStore().getDefaultBoolean(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED));
 
-		activityTrackingEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				IActivityUiConstants.ACTIVITY_TRACKING_ENABLED));
+		activityTrackingEnabledButton
+				.setSelection(getPreferenceStore().getDefaultBoolean(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED));
 	}
 
 	private Group createTaskActivityGroup(Composite container) {
@@ -107,8 +108,8 @@ public class ActivityUiPreferencePage extends PreferencePage implements IWorkben
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		boolean activityTrackingEnabled = getPreferenceStore().getBoolean(
-				IActivityUiConstants.ACTIVITY_TRACKING_ENABLED);
+		boolean activityTrackingEnabled = getPreferenceStore()
+				.getBoolean(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED);
 
 		boolean timeoutEnabled = getPreferenceStore().getBoolean(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED);
 

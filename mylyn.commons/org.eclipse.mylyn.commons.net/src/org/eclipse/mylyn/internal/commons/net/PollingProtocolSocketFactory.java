@@ -38,8 +38,8 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 		return factory.createSocket(host, port);
 	}
 
-	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort) throws IOException,
-			UnknownHostException {
+	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort)
+			throws IOException, UnknownHostException {
 		return factory.createSocket(host, port, localAddress, localPort);
 	}
 

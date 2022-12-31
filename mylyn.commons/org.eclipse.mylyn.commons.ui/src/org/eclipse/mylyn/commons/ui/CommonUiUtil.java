@@ -60,8 +60,8 @@ public class CommonUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				throw (CoreException) e.getCause();
 			} else {
-				Platform.getLog(Platform.getBundle(CommonsUiConstants.ID_PLUGIN)).log(
-						new Status(IStatus.ERROR, CommonsUiConstants.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
+				Platform.getLog(Platform.getBundle(CommonsUiConstants.ID_PLUGIN))
+						.log(new Status(IStatus.ERROR, CommonsUiConstants.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
 			}
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();

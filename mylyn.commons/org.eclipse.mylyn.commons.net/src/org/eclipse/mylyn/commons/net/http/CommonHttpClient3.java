@@ -36,7 +36,8 @@ import org.eclipse.mylyn.commons.net.WebUtil;
  */
 public class CommonHttpClient3 {
 
-	static final boolean DEBUG_AUTH = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.http/debug/authentication")); //$NON-NLS-1$
+	static final boolean DEBUG_AUTH = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.http/debug/authentication")); //$NON-NLS-1$
 
 	private static final String DEFAULT_USER_AGENT = "Apache XML-RPC/3.0"; //$NON-NLS-1$
 

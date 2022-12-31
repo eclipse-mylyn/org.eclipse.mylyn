@@ -51,6 +51,7 @@ public class BugzillaRestTaskEditorPeoplePart extends TaskEditorPeoplePart {
 		}
 		return attributes;
 	}
+
 	private void addSelfToCC(List<TaskAttribute> attributes) {
 		if (getTaskData().isNew()) {
 			return;

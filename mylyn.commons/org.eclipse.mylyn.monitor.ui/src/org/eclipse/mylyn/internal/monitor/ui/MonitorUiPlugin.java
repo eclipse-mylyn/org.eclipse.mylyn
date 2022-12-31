@@ -390,8 +390,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private void updateActivityTimout() {
 		if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
-					ActivityContextManager.ACTIVITY_TIMEOUT));
+			activityContextManager
+					.setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
 		} else {
 			activityContextManager.setInactivityTimeout(0);
 		}

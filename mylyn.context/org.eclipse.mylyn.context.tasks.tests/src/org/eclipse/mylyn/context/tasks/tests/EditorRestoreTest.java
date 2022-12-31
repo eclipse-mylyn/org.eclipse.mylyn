@@ -92,8 +92,8 @@ public class EditorRestoreTest extends TestCase {
 		ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 		// need to ensure that the context is empty otherwise the last element is opened in addition to the task
 		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		TaskEditorInput input = new TaskEditorInput(repository, task);
 
 		TasksUiUtil.openTask(task);

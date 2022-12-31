@@ -57,7 +57,8 @@ public class BundleDiscoveryStrategyTest extends TestCase {
 		assertNotNull(category);
 		DiscoveryConnector connector = findConnectorById("org.eclipse.mylyn.discovery.tests.connectorDescriptor1");
 		assertNotNull(connector);
-		DiscoveryCertification certification = findCertificationById("org.eclipse.mylyn.discovery.tests.certification1");
+		DiscoveryCertification certification = findCertificationById(
+				"org.eclipse.mylyn.discovery.tests.certification1");
 		assertNotNull(certification);
 	}
 

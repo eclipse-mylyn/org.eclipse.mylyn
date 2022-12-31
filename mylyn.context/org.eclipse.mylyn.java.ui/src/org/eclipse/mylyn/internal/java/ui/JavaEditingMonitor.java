@@ -70,7 +70,8 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 					Object selectedObject = iterator.next();
 					if (selectedObject instanceof IJavaElement) {
-						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IJavaElement) selectedObject);
+						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(
+								(IJavaElement) selectedObject);
 						if (checkedElement == null) {
 							return;
 						} else {

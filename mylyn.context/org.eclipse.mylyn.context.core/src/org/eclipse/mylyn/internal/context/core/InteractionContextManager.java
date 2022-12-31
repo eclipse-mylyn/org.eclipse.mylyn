@@ -220,15 +220,15 @@ public class InteractionContextManager implements IInteractionContextManager {
 				activityEvents.clear();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Error during meta activity collapse", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Error during meta activity collapse", e)); //$NON-NLS-1$
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) {
-		if (numInterestingErrors > ((InteractionContextScaling) ContextCore.getCommonContextScaling()).getMaxNumInterestingErrors()
-				|| activeContext.getContextMap().isEmpty()) {
+		if (numInterestingErrors > ((InteractionContextScaling) ContextCore.getCommonContextScaling())
+				.getMaxNumInterestingErrors() || activeContext.getContextMap().isEmpty()) {
 			return;
 		}
 		InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, kind, handle,
@@ -285,9 +285,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				for (final IContextListener listener : contextListeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
-							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-									"Listener failed: " //$NON-NLS-1$
-									+ listener.getClass(), e));
+							StatusHandler
+									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -304,9 +304,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				for (final IContextListener listener : contextListeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
-							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-									"Listener failed: " //$NON-NLS-1$
-									+ listener.getClass(), e));
+							StatusHandler
+									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -457,9 +457,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 				for (final IContextListener listener : contextListeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
-							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-									"Listener failed: " //$NON-NLS-1$
-									+ listener.getClass(), e));
+							StatusHandler
+									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -479,7 +479,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 //			saveActivityMetaContext();
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -785,8 +786,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return contextCapturePaused;
 	}
 
-	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted,
-			boolean previouslyPropagated, IInteractionElement node) {
+	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted, boolean previouslyPropagated,
+			IInteractionElement node) {
 		float currentInterest = node.getInterest().getValue();
 		if (previousInterest <= 0 && currentInterest > 0) {
 			return true;
@@ -821,11 +822,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 			try {
 				metaContextLock.acquire();
 
-				activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				activityMetaContext = (InteractionContext) contextStore
+						.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 				if (activityMetaContext == null || activityMetaContext.getInteractionHistory().isEmpty()) {
-					File contextHistory = contextStore.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+					File contextHistory = contextStore
+							.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 					if (restoreSnapshot(contextHistory)) {
-						activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+						activityMetaContext = (InteractionContext) contextStore
+								.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 					}
 				}
 
@@ -940,8 +944,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 	@Deprecated
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
-		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId,
-				context, false);
+		return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, context,
+				false);
 	}
 
 	/**
@@ -971,7 +975,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * @return true if interest was manipulated successfully
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
-			boolean preserveUninteresting, String sourceId, IInteractionContext context, boolean isExplicitManipulation) {
+			boolean preserveUninteresting, String sourceId, IInteractionContext context,
+			boolean isExplicitManipulation) {
 		Set<IInteractionElement> changedElements = new HashSet<IInteractionElement>();
 		boolean manipulated = manipulateInterestForElementHelper(element, increment, forceLandmark,
 				preserveUninteresting, sourceId, context, changedElements, null, isExplicitManipulation);
@@ -1004,8 +1009,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		Object objectForHandle = bridge.getObjectForHandle(element.getHandleIdentifier());
 		String parentContentType = bridge.getParentContentType();
 		if (parentContentType != null && objectForHandle != null) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-					parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault()
+					.getStructureBridge(parentContentType);
 
 			if (parentBridge != null && parentBridge != forcedBridge) {
 				String parentBridgeHandle = parentBridge.getHandleIdentifier(objectForHandle);
@@ -1096,8 +1101,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return newMetaContext;
 	}
 
-	private void notifyElementsDeleted(final IInteractionContext context,
-			final List<IInteractionElement> interestDelta, final boolean isExplicitManipulation) {
+	private void notifyElementsDeleted(final IInteractionContext context, final List<IInteractionElement> interestDelta,
+			final boolean isExplicitManipulation) {
 		if (!interestDelta.isEmpty()) {
 			for (final IContextListener listener : contextListeners) {
 				SafeRunner.run(new ISafeRunnable() {
@@ -1287,8 +1292,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		Object objectForHandle = bridge.getObjectForHandle(node.getHandleIdentifier());
 		String parentBridgeContentType = bridge.getParentContentType();
 		if (parentBridgeContentType != null && objectForHandle != null) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-					parentBridgeContentType);
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault()
+					.getStructureBridge(parentBridgeContentType);
 
 			if (parentBridge != null && parentBridge != forcedBridge) {
 				String parentHandle = parentBridge.getHandleIdentifier(objectForHandle);
@@ -1307,8 +1312,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 					}
 					if (!handles.contains(parentHandle)) {
 						handles.add(parentHandle);
-						parentBridgeElement = addInteractionEvent(interactionContext, new InteractionEvent(
-								InteractionEvent.Kind.PROPAGATION, parentBridge.getContentType(), parentHandle, origin));
+						parentBridgeElement = addInteractionEvent(interactionContext,
+								new InteractionEvent(InteractionEvent.Kind.PROPAGATION, parentBridge.getContentType(),
+										parentHandle, origin));
 					} else {
 						parentBridgeElement = interactionContext.get(parentHandle);
 					}
@@ -1371,15 +1377,15 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 
 			// NOTE: this might be redundant
-			if (parentElement != null && kind.isUserEvent()
-					&& parentElement.getInterest().getValue() < ContextCore.getCommonContextScaling().getInteresting()) {
+			if (parentElement != null && kind.isUserEvent() && parentElement.getInterest()
+					.getValue() < ContextCore.getCommonContextScaling().getInteresting()) {
 				float parentOffset = ContextCore.getCommonContextScaling().getInteresting()
 						- parentElement.getInterest().getValue() + increment;
 				if (!handles.contains(parentHandle)) {
 					handles.add(parentHandle);
-					addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-							parentElement.getContentType(), parentElement.getHandleIdentifier(),
-							SOURCE_ID_DECAY_CORRECTION, parentOffset));
+					addInteractionEvent(interactionContext,
+							new InteractionEvent(InteractionEvent.Kind.MANIPULATION, parentElement.getContentType(),
+									parentElement.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION, parentOffset));
 				} else {
 					parentElement = interactionContext.get(parentElement.getHandleIdentifier());
 				}
@@ -1427,15 +1433,15 @@ public class InteractionContextManager implements IInteractionContextManager {
 			if (notify) {
 				List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 				changed.add(element);
-				final ContextChangeEvent contextChangeEvent = new ContextChangeEvent(
-						ContextChangeKind.INTEREST_CHANGED, handle, null, changed);
+				final ContextChangeEvent contextChangeEvent = new ContextChangeEvent(ContextChangeKind.INTEREST_CHANGED,
+						handle, null, changed);
 
 				for (final IContextListener listener : contextListeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
-							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-									"Listener failed: " //$NON-NLS-1$
-									+ listener.getClass(), e));
+							StatusHandler
+									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+											+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {

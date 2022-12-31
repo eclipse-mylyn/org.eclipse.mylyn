@@ -41,7 +41,8 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 
 	private BreakpointsListener breakpointsListener;
 
-	private final AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
+	private final AbstractContextStructureBridge structureBridge = ContextCore
+			.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
 	public InputStream getDataAsStream(IInteractionContext context) {
 		List<IBreakpoint> breakpoints = getContextBreakpoints(context);

@@ -43,9 +43,11 @@ import org.eclipse.osgi.util.NLS;
  */
 public class CommonXmlRpcClient {
 
-	static final boolean DEBUG_AUTH = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/authentication")); //$NON-NLS-1$
+	static final boolean DEBUG_AUTH = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/authentication")); //$NON-NLS-1$
 
-	static final boolean DEBUG_XMLRPC = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/xmlrpc")); //$NON-NLS-1$
+	static final boolean DEBUG_XMLRPC = Boolean
+			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/xmlrpc")); //$NON-NLS-1$
 
 	private static final String DEFAULT_CHARSET = "UTF-8"; //$NON-NLS-1$
 
@@ -151,8 +153,9 @@ public class CommonXmlRpcClient {
 					Header contentTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
 					if (contentTypeHeader == null || !DEFAULT_CONTENT_TYPE.equals(contentTypeHeader.getValue())) {
 						throw new XmlRpcIllegalContentTypeException(
-								NLS.bind(
-										"The server returned an unexpected content type: ''{0}''", contentTypeHeader.getValue()), contentTypeHeader.getValue()); //$NON-NLS-1$
+								NLS.bind("The server returned an unexpected content type: ''{0}''", //$NON-NLS-1$
+										contentTypeHeader.getValue()),
+								contentTypeHeader.getValue());
 					}
 				}
 				AuthScheme authScheme = method.getHostAuthState().getAuthScheme();

@@ -91,8 +91,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	private void setToolAction(int tool) {
 		if (tool == CAPTURE_DROP_DOWN_MENU) {
 			selectedItemID = CAPTURE_DESKTOP;
-			initMenu(
-					tool,
+			initMenu(tool,
 					new ToolActionItem[] {
 							new ToolActionItem(CAPTURE_DESKTOP, Messages.SelectToolAction_Desktop,
 									ScreenshotImages.MONITOR_OBJ), //
@@ -108,29 +107,28 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 		if (tool == ZOOM_DROP_DOWN_MENU) {
 			selectedItemID = ZOOM_FIT;
-			initMenu(tool, new ToolActionItem[] { new ToolActionItem(ZOOM_FIT, Messages.SelectToolAction_Fit, null),
-					new ToolActionItem(50, Messages.SelectToolAction_ZoomHalf, null),
-					new ToolActionItem(100, Messages.SelectToolAction_Zoom1X, null),
-					new ToolActionItem(200, Messages.SelectToolAction_Zoom2X, null),
-					new ToolActionItem(400, Messages.SelectToolAction_Zoom4X, null),
-					new ToolActionItem(800, Messages.SelectToolAction_Zoom8X, null) });
+			initMenu(tool,
+					new ToolActionItem[] { new ToolActionItem(ZOOM_FIT, Messages.SelectToolAction_Fit, null),
+							new ToolActionItem(50, Messages.SelectToolAction_ZoomHalf, null),
+							new ToolActionItem(100, Messages.SelectToolAction_Zoom1X, null),
+							new ToolActionItem(200, Messages.SelectToolAction_Zoom2X, null),
+							new ToolActionItem(400, Messages.SelectToolAction_Zoom4X, null),
+							new ToolActionItem(800, Messages.SelectToolAction_Zoom8X, null) });
 			return;
 		}
 
 		if (tool == LINETYPE_TOOLBAR) {
 			selectedItemID = SWT.LINE_SOLID;
-			initBar(tool,
-					new ToolActionItem[] {
-							new ToolActionItem(SWT.LINE_SOLID, Messages.SelectToolAction_Solid_Line,
-									ScreenshotImages.LINE_SOLD),
-							new ToolActionItem(SWT.LINE_DOT, Messages.SelectToolAction_Dotted_Line,
-									ScreenshotImages.LINE_DOT),
-							new ToolActionItem(SWT.LINE_DASH, Messages.SelectToolAction_Dashed_Line,
-									ScreenshotImages.LINE_DASH),
-							new ToolActionItem(SWT.LINE_DASHDOT, Messages.SelectToolAction_Dashed_Line_1_dot,
-									ScreenshotImages.LINE_DASH1D),
-							new ToolActionItem(SWT.LINE_DASHDOTDOT, Messages.SelectToolAction_Dashed_Line_2_dots,
-									ScreenshotImages.LINE_DASH2D) });
+			initBar(tool, new ToolActionItem[] {
+					new ToolActionItem(SWT.LINE_SOLID, Messages.SelectToolAction_Solid_Line,
+							ScreenshotImages.LINE_SOLD),
+					new ToolActionItem(SWT.LINE_DOT, Messages.SelectToolAction_Dotted_Line, ScreenshotImages.LINE_DOT),
+					new ToolActionItem(SWT.LINE_DASH, Messages.SelectToolAction_Dashed_Line,
+							ScreenshotImages.LINE_DASH),
+					new ToolActionItem(SWT.LINE_DASHDOT, Messages.SelectToolAction_Dashed_Line_1_dot,
+							ScreenshotImages.LINE_DASH1D),
+					new ToolActionItem(SWT.LINE_DASHDOTDOT, Messages.SelectToolAction_Dashed_Line_2_dots,
+							ScreenshotImages.LINE_DASH2D) });
 			return;
 		}
 
@@ -145,29 +143,29 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		if (tool == DRAWARROW_TOOLBAR) {
 			showSelection = true;
 			selectedItemID = DRAW_ARROW1;
-			initBar(tool, new ToolActionItem[] {
-					new ToolActionItem(DRAW_ARROW1, Messages.SelectToolAction_Single_Side_Arrow,
-							ScreenshotImages.EDIT_ARROW1),
-					new ToolActionItem(DRAW_ARROW2, Messages.SelectToolAction_Both_Side_Arrow,
-							ScreenshotImages.EDIT_ARROW2) });
+			initBar(tool,
+					new ToolActionItem[] {
+							new ToolActionItem(DRAW_ARROW1, Messages.SelectToolAction_Single_Side_Arrow,
+									ScreenshotImages.EDIT_ARROW1),
+							new ToolActionItem(DRAW_ARROW2, Messages.SelectToolAction_Both_Side_Arrow,
+									ScreenshotImages.EDIT_ARROW2) });
 			selectedItemID = -1;
 			return;
 		}
 		if (tool == DRAWBOX_TOOLBAR) {
 			showSelection = true;
 			selectedItemID = DRAW_RBOX;
-			initBar(tool,
-					new ToolActionItem[] {
-							new ToolActionItem(DRAW_BOX, Messages.SelectToolAction_Rectangle, ScreenshotImages.EDIT_BOX),
-							new ToolActionItem(DRAW_RBOX, Messages.SelectToolAction_Round_Rectangle,
-									ScreenshotImages.EDIT_RBOX),
-							new ToolActionItem(DRAW_OVAL, Messages.SelectToolAction_Oval, ScreenshotImages.EDIT_OVAL),
-							new ToolActionItem(DRAW_FILL_BOX, Messages.SelectToolAction_Fill_Rectangle,
-									ScreenshotImages.EDIT_FILL_BOX),
-							new ToolActionItem(DRAW_FILL_RBOX, Messages.SelectToolAction_Fill_Round_Rectangle,
-									ScreenshotImages.EDIT_FILL_RBOX),
-							new ToolActionItem(DRAW_FILL_OVAL, Messages.SelectToolAction_Fill_Oval,
-									ScreenshotImages.EDIT_FILL_OVAL) });
+			initBar(tool, new ToolActionItem[] {
+					new ToolActionItem(DRAW_BOX, Messages.SelectToolAction_Rectangle, ScreenshotImages.EDIT_BOX),
+					new ToolActionItem(DRAW_RBOX, Messages.SelectToolAction_Round_Rectangle,
+							ScreenshotImages.EDIT_RBOX),
+					new ToolActionItem(DRAW_OVAL, Messages.SelectToolAction_Oval, ScreenshotImages.EDIT_OVAL),
+					new ToolActionItem(DRAW_FILL_BOX, Messages.SelectToolAction_Fill_Rectangle,
+							ScreenshotImages.EDIT_FILL_BOX),
+					new ToolActionItem(DRAW_FILL_RBOX, Messages.SelectToolAction_Fill_Round_Rectangle,
+							ScreenshotImages.EDIT_FILL_RBOX),
+					new ToolActionItem(DRAW_FILL_OVAL, Messages.SelectToolAction_Fill_Oval,
+							ScreenshotImages.EDIT_FILL_OVAL) });
 			selectedItemID = -1;
 			return;
 		}
@@ -186,11 +184,12 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 		if (tool == LINEBOLD_TOOLBAR) {
 			selectedItemID = 4;
-			initBar(tool, new ToolActionItem[] {
-					new ToolActionItem(1, Messages.SelectToolAction_1dot, ScreenshotImages.LINE_BOLD1),
-					new ToolActionItem(2, Messages.SelectToolAction_2dots, ScreenshotImages.LINE_BOLD2),
-					new ToolActionItem(4, Messages.SelectToolAction_4dots, ScreenshotImages.LINE_BOLD4),
-					new ToolActionItem(8, Messages.SelectToolAction_8dots, ScreenshotImages.LINE_BOLD8) });
+			initBar(tool,
+					new ToolActionItem[] {
+							new ToolActionItem(1, Messages.SelectToolAction_1dot, ScreenshotImages.LINE_BOLD1),
+							new ToolActionItem(2, Messages.SelectToolAction_2dots, ScreenshotImages.LINE_BOLD2),
+							new ToolActionItem(4, Messages.SelectToolAction_4dots, ScreenshotImages.LINE_BOLD4),
+							new ToolActionItem(8, Messages.SelectToolAction_8dots, ScreenshotImages.LINE_BOLD8) });
 			return;
 		}
 
@@ -357,9 +356,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 	private Image createFontImage(FontData fontData, RGB rgb, boolean select) {
 		Display display = parent.getDisplay();
-		Color ButtonFace = display.getSystemColor((select)
-				? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW
-				: SWT.COLOR_WIDGET_BACKGROUND);
+		Color ButtonFace = display
+				.getSystemColor((select) ? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW : SWT.COLOR_WIDGET_BACKGROUND);
 		int x = 16, y = 16;
 		Image image = new Image(display, x, y);
 		GC gc = new GC(image);
@@ -468,9 +466,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 					if (bMenu) {
 						if (Platform.getWS().equalsIgnoreCase(Platform.WS_WIN32)
 								|| Platform.getWS().equalsIgnoreCase(Platform.WS_WPF)) {
-							Color FOREGROUND = display.getSystemColor((getEnabled())
-									? SWT.COLOR_WIDGET_FOREGROUND
-									: SWT.COLOR_WIDGET_DARK_SHADOW);
+							Color FOREGROUND = display.getSystemColor(
+									(getEnabled()) ? SWT.COLOR_WIDGET_FOREGROUND : SWT.COLOR_WIDGET_DARK_SHADOW);
 							e.gc.setForeground(FOREGROUND);
 							int x = iconSize.x + G;
 							int y = S + B + M;
@@ -482,9 +479,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 								h -= 2;
 							}
 						} else {
-							Color FOREGROUND = display.getSystemColor((getEnabled())
-									? SWT.COLOR_WIDGET_DARK_SHADOW
-									: SWT.COLOR_WIDGET_NORMAL_SHADOW);
+							Color FOREGROUND = display.getSystemColor(
+									(getEnabled()) ? SWT.COLOR_WIDGET_DARK_SHADOW : SWT.COLOR_WIDGET_NORMAL_SHADOW);
 							e.gc.setForeground(FOREGROUND);
 							int x = iconSize.x + G;
 							int y = S + B + M;

@@ -30,8 +30,8 @@ public class WebBrowserDialogTest extends TestCase {
 	private class TestWebBrowserDialog extends WebBrowserDialog {
 		private Composite parent;
 
-		public TestWebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage,
-				String dialogMessage, int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
+		public TestWebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
+				int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
 			super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
 					defaultIndex);
 		}

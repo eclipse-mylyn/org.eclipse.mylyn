@@ -60,7 +60,7 @@ public class CommonHttpResponse implements ICancellableOperation {
 
 	/**
 	 * @deprecated use
-	 *             {@link CommonHttpResponse#CommonHttpResponse(HttpRequest, HttpResponse, CancellableOperationMonitorThread, IOperationMonitor)	
+	 *             {@link CommonHttpResponse#CommonHttpResponse(HttpRequest, HttpResponse, CancellableOperationMonitorThread, IOperationMonitor)
 	 */
 	@Deprecated
 	public CommonHttpResponse(HttpRequest request, HttpResponse response) {

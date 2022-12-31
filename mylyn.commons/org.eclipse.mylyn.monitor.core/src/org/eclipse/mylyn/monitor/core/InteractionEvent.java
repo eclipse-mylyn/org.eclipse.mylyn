@@ -212,7 +212,8 @@ public class InteractionEvent {
 	/**
 	 * For parameter description see this class's getters.
 	 */
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId,
+			float interestContribution) {
 		this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default //$NON-NLS-1$ //$NON-NLS-2$
 		// contribution
 	}

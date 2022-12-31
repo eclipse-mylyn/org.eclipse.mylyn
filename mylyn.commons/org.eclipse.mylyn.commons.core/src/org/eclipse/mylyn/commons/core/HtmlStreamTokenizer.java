@@ -355,10 +355,10 @@ public class HtmlStreamTokenizer {
 				}
 				if (escape != null) {
 					Character character = parseReference(escape);
-					if (character != null
-							&& !((0x0A == character || 0x0D == character || 0x09 == ch)
-									|| (character >= 0x20 && character <= 0xD7FF)
-									|| (character >= 0xE000 && character <= 0xFFFD) || (character >= 0x10000 && character <= 0x10FFFF))) {
+					if (character != null && !((0x0A == character || 0x0D == character || 0x09 == ch)
+							|| (character >= 0x20 && character <= 0xD7FF)
+							|| (character >= 0xE000 && character <= 0xFFFD)
+							|| (character >= 0x10000 && character <= 0x10FFFF))) {
 						// Character is an invalid xml character
 						// http://www.w3.org/TR/REC-xml/#charsets
 						character = null;

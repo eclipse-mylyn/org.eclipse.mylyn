@@ -35,7 +35,8 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 	private static final String ID_SYNCHRONIZE_VIEW = "org.eclipse.team.sync.views.SynchronizeView"; //$NON-NLS-1$
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext) {
 		// ignore events from the synchronize view to avoid files jumping between change sets when selected
 		if (ID_SYNCHRONIZE_VIEW.equals(part.getSite().getId())) {
 			return;

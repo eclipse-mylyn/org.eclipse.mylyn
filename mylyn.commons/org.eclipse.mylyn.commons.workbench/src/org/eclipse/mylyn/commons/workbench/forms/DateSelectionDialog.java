@@ -45,7 +45,8 @@ public class DateSelectionDialog extends Dialog {
 
 	private int hourOfDay = 0;
 
-	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title, boolean includeTime, int hourOfDay) {
+	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title, boolean includeTime,
+			int hourOfDay) {
 		super(parentShell);
 		this.includeTime = includeTime;
 		this.hourOfDay = hourOfDay;
@@ -61,7 +62,8 @@ public class DateSelectionDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText(title);
-		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay);
+		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime,
+				hourOfDay);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {

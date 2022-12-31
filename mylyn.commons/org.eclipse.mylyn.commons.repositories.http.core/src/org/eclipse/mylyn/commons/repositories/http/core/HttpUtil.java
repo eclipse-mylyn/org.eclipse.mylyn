@@ -261,8 +261,9 @@ public class HttpUtil {
 		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
 			InetSocketAddress address = (InetSocketAddress) proxy.address();
 
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-					new HttpHost(address.getHostName(), address.getPort()));
+			client.getParams()
+					.setParameter(ConnRoutePNames.DEFAULT_PROXY,
+							new HttpHost(address.getHostName(), address.getPort()));
 
 			if (proxy instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;

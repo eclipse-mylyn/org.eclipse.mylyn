@@ -72,8 +72,8 @@ class DiscoveryRegistryStrategy extends RegistryStrategy {
 		// extension point itself
 		try {
 			Bundle bundle = Platform.getBundle(DiscoveryCore.ID_PLUGIN);
-			IContributor contributor = new RegistryContributor(bundle.getSymbolicName(), bundle.getSymbolicName(),
-					null, null);
+			IContributor contributor = new RegistryContributor(bundle.getSymbolicName(), bundle.getSymbolicName(), null,
+					null);
 
 			InputStream inputStream = bundle.getEntry("plugin.xml").openStream(); //$NON-NLS-1$
 			try {
@@ -94,8 +94,8 @@ class DiscoveryRegistryStrategy extends RegistryStrategy {
 			try {
 				processBundle(registry, bundleFile.getValue(), bundleFile.getKey());
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						Messages.DiscoveryRegistryStrategy_cannot_load_bundle, new Object[] {
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						NLS.bind(Messages.DiscoveryRegistryStrategy_cannot_load_bundle, new Object[] {
 								bundleFile.getKey().getName(), bundleFile.getValue().getLocation(), e.getMessage() }),
 						e));
 			}

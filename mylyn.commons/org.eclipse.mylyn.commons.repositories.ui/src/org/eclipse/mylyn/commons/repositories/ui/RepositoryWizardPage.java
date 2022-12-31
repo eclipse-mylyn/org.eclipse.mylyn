@@ -94,8 +94,8 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		return part.needsValidation();
 	}
 
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		getContainer().run(fork, cancelable, runnable);
 	}
 

@@ -38,9 +38,11 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShe
 
 	public ConnectorDiscoveryWizardMainPage() {
 		super(ConnectorDiscoveryWizardMainPage.class.getSimpleName());
-		setTitle(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
+		setTitle(
+				org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_connectorDiscovery);
 		// setImageDescriptor(image);
-		setDescription(org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_pageDescription);
+		setDescription(
+				org.eclipse.mylyn.internal.discovery.ui.wizards.Messages.ConnectorDiscoveryWizardMainPage_pageDescription);
 		setPageComplete(false);
 	}
 

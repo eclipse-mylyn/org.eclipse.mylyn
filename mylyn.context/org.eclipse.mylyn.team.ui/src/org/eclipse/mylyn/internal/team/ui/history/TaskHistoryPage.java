@@ -141,10 +141,10 @@ public class TaskHistoryPage extends HistoryPage {
 	public static boolean canShowHistoryFor(Object object) {
 		ITask task = getTask(object);
 		if (task != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					task.getConnectorKind());
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(task.getConnectorKind());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			return connector.canGetTaskHistory(repository, task);
 		}
 		return false;
@@ -224,13 +224,13 @@ public class TaskHistoryPage extends HistoryPage {
 					configuration.setRightLabel(Messages.TaskHistoryPage_New_Value_Label);
 					CompareEditorInput editorInput = new CompareEditorInput(configuration) {
 						@Override
-						protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
+						protected Object prepareInput(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
 							try {
 								AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 										.getRepositoryConnector(history.getTask().getConnectorKind());
-								TaskData newData = connector.getTaskData(history.getRepository(), history.getTask()
-										.getTaskId(), monitor);
+								TaskData newData = connector.getTaskData(history.getRepository(),
+										history.getTask().getTaskId(), monitor);
 								TaskData oldData = TasksUiInternal.computeTaskData(newData, history, revision.getId(),
 										monitor);
 								return new TaskDataDiffNode(Differencer.CHANGE, oldData, newData);
@@ -283,10 +283,10 @@ public class TaskHistoryPage extends HistoryPage {
 
 		final ITask task = getTask();
 		if (task != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					task.getConnectorKind());
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(task.getConnectorKind());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			refreshOperation = new GetTaskHistoryJob(connector, repository, task);
 			refreshOperation.addJobChangeListener(new JobChangeAdapter() {
 				@Override
@@ -343,7 +343,8 @@ public class TaskHistoryPage extends HistoryPage {
 	private void schedule(final Job job) {
 		final IWorkbenchPartSite site = getWorkbenchSite();
 		if (site != null) {
-			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site.getAdapter(IWorkbenchSiteProgressService.class);
+			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site
+					.getAdapter(IWorkbenchSiteProgressService.class);
 			if (progress != null) {
 				progress.schedule(job, 0, true);
 				return;

@@ -193,8 +193,7 @@ public class GradientColors {
 			return impliedBg;
 		}
 		// use the theme background only if it is significantly different than the implied
-		if (absoluteDifference(themeBg.red, impliedBg.red) < 40
-				&& absoluteDifference(themeBg.blue, impliedBg.blue) < 40
+		if (absoluteDifference(themeBg.red, impliedBg.red) < 40 && absoluteDifference(themeBg.blue, impliedBg.blue) < 40
 				&& absoluteDifference(themeBg.green, impliedBg.green) < 40) {
 			return impliedBg;
 		}

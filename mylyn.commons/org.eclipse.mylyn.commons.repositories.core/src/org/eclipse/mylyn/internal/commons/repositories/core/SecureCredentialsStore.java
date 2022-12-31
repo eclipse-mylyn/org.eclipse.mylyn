@@ -235,9 +235,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 	private void handle(StorageException e) {
 		if (!loggedStorageException) {
 			loggedStorageException = true;
-			StatusHandler.log(new Status(
-					IStatus.ERROR,
-					RepositoriesCoreInternal.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.ERROR, RepositoriesCoreInternal.ID_PLUGIN,
 					"Unexpected error accessing secure storage, falling back to in memory store for credentials. Some credentials may not be saved.", //$NON-NLS-1$
 					e));
 		}

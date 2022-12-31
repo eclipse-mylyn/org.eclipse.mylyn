@@ -116,8 +116,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 		// the Task-Focused category should be disabled if the user reverts to the default 
 		String defaultValue = javaPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		javaPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, defaultValue
-				+ JavaUiUtil.ASSIST_MYLYN_ALL + JavaUiUtil.SEPARATOR_CODEASSIST);
+		javaPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
+				defaultValue + JavaUiUtil.ASSIST_MYLYN_ALL + JavaUiUtil.SEPARATOR_CODEASSIST);
 	}
 
 	public void changeProcessorCount(IPreferenceStore javaPrefs, int delta) {

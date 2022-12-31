@@ -281,8 +281,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 
 		MockResourceDelta child = MockResourceDelta.createMockDelta(
-				"/" + project.getProject().getName() + "/" + folder.getName(), new String[] { "/" + folder.getName()
-						+ "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
+				"/" + project.getProject().getName() + "/" + folder.getName(),
+				new String[] { "/" + folder.getName() + "/test.txt" },
+				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
 
 		delta.setChildren(new ResourceDelta[] { child });
 

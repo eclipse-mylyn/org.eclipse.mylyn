@@ -63,13 +63,13 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 		if (socket instanceof SSLSocket) {
 			return socket;
 		} else {
-			return getSslSupport(params).getSocketFactory().createSocket(socket, remoteAddress.getHostName(),
-					remoteAddress.getPort(), true);
+			return getSslSupport(params).getSocketFactory()
+					.createSocket(socket, remoteAddress.getHostName(), remoteAddress.getPort(), true);
 		}
 	}
 
-	public Socket createLayeredSocket(Socket socket, String target, int port, boolean autoClose) throws IOException,
-			UnknownHostException {
+	public Socket createLayeredSocket(Socket socket, String target, int port, boolean autoClose)
+			throws IOException, UnknownHostException {
 		return NetUtil.configureSocket(getDefaultSocketFactory().createSocket(socket, target, port, autoClose));
 	}
 

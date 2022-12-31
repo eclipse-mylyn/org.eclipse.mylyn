@@ -36,8 +36,8 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 	 */
 	public AbstractCommandMonitor() {
 		try {
-			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(
-					ICommandService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getAdapter(ICommandService.class);
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
@@ -47,8 +47,8 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 
 	public void dispose() {
 		try {
-			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(
-					ICommandService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getAdapter(ICommandService.class);
 			commandService.removeExecutionListener(this);
 		} catch (NullPointerException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor.", e)); //$NON-NLS-1$

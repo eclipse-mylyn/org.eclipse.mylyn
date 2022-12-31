@@ -83,17 +83,17 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 		IInteractionElement fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 
-		IInteractionElement projectElement = ContextCore.getContextManager().getElement(
-				new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
+		IInteractionElement projectElement = ContextCore.getContextManager()
+				.getElement(new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(projectElement.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
-				false, "test"));
+		assertTrue(ContextCorePlugin.getContextManager()
+				.manipulateInterestForElement(projectElement, false, false, false, "test"));
 
-		projectElement = ContextCore.getContextManager().getElement(
-				new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
+		projectElement = ContextCore.getContextManager()
+				.getElement(new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
 
 		fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 
@@ -112,14 +112,14 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		resourceMonitor.selectionChanged(part, new StructuredSelection(file));
 
 		IInteractionElement fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
-		IInteractionElement projectElement = ContextCore.getContextManager().getElement(
-				javaCu.getJavaProject().getHandleIdentifier());
+		IInteractionElement projectElement = ContextCore.getContextManager()
+				.getElement(javaCu.getJavaProject().getHandleIdentifier());
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(method.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
-				false, "test"));
+		assertTrue(ContextCorePlugin.getContextManager()
+				.manipulateInterestForElement(projectElement, false, false, false, "test"));
 
 		fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 		assertFalse(fileElement.getInterest().isInteresting());
@@ -140,8 +140,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(clazz.getInterest().isInteresting());
 		assertTrue(cu.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(packageNode, false, false, false,
-				"test"));
+		assertTrue(ContextCorePlugin.getContextManager()
+				.manipulateInterestForElement(packageNode, false, false, false, "test"));
 
 		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
 		clazz = ContextCore.getContextManager().getElement(javaType.getHandleIdentifier());
@@ -169,8 +169,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(node.getInterest().isLandmark());
 		action.changeInterestForSelected(true);
 
-		assertEquals((scaling.getForcedLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION), node.getInterest()
-				.getValue());
+		assertEquals((scaling.getForcedLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION),
+				node.getInterest().getValue());
 
 		action.changeInterestForSelected(false);
 
@@ -192,8 +192,9 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		}
 
 		public void changeInterestForSelected(boolean increment) {
-			assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(
-					ContextCore.getContextManager().getActiveElement(), increment, false, true, ""));
+			assertTrue(ContextCorePlugin.getContextManager()
+					.manipulateInterestForElement(ContextCore.getContextManager().getActiveElement(), increment, false,
+							true, ""));
 		}
 	}
 }

@@ -30,7 +30,8 @@ public class EmptyRepositoryCategoriesFilter extends ViewerFilter {
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof RepositoryCategory) {
-			return ((ITreeContentProvider) ((StructuredViewer) viewer).getContentProvider()).getChildren(element).length > 0;
+			return ((ITreeContentProvider) ((StructuredViewer) viewer).getContentProvider())
+					.getChildren(element).length > 0;
 		}
 		return true;
 	}

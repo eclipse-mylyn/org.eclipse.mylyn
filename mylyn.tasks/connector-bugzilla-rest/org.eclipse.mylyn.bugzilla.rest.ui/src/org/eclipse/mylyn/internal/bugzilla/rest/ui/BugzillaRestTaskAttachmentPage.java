@@ -112,8 +112,9 @@ public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
 				flagComposite = createFlagSection(pageComposite);
 			}
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-				TaskAttribute stateAttribute = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(
-						attribute);
+				TaskAttribute stateAttribute = attribute.getTaskData()
+						.getAttributeMapper()
+						.getAssoctiatedAttribute(attribute);
 				TaskAttribute requesteeAttribute = attribute.getAttribute("requestee");
 				Label flagLiteral = new Label(flagComposite, SWT.NONE);
 				flagLiteral.setText(stateAttribute.getMetaData().getLabel());

@@ -27,7 +27,8 @@ public class BreakpointsListener implements IBreakpointsListener {
 
 	private final String ORIGIN_ID = "org.eclipse.debug.ui"; //$NON-NLS-1$
 
-	private final AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
+	private final AbstractContextStructureBridge structureBridge = ContextCore
+			.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
 	public void breakpointsAdded(IBreakpoint[] breakpoints) {
 		breakpointsChanged(breakpoints, new IMarkerDelta[breakpoints.length]);
@@ -35,8 +36,8 @@ public class BreakpointsListener implements IBreakpointsListener {
 
 	public void breakpointsRemoved(IBreakpoint[] breakpoints, IMarkerDelta[] deltas) {
 		for (IBreakpoint breakpoint : breakpoints) {
-			IInteractionElement element = ContextCore.getContextManager().getElement(
-					structureBridge.getHandleIdentifier(breakpoint));
+			IInteractionElement element = ContextCore.getContextManager()
+					.getElement(structureBridge.getHandleIdentifier(breakpoint));
 			if (element != null) {
 				ContextCore.getContextManager().deleteElement(element);
 			}

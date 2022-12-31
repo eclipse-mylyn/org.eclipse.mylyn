@@ -45,7 +45,8 @@ public class RepositoriesViewTest {
 	@SuppressWarnings("nls")
 	@Test
 	public void testRepositoriesViewNoFilter() {
-		RepositoriesView view = (RepositoriesView) WorkbenchUtil.findViewInActiveWindow(RepositoryUi.ID_VIEW_REPOSITORIES);
+		RepositoriesView view = (RepositoriesView) WorkbenchUtil
+				.findViewInActiveWindow(RepositoryUi.ID_VIEW_REPOSITORIES);
 		assertNotNull(view);
 		ViewerFilter[] filters = view.getCommonViewer().getFilters();
 		assertNotNull(filters);

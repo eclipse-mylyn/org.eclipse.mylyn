@@ -72,7 +72,8 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 				KeyStore keyStore = KeyStore.getInstance(type);
 				char[] password = System.getProperty(KEY_STORE_PASSWORD).toCharArray();
 				keyStore.load(new FileInputStream(System.getProperty(KEY_STORE)), password);
-				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+				KeyManagerFactory keyManagerFactory = KeyManagerFactory
+						.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
@@ -98,8 +99,8 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 		this.hasKeyManager = false;
 	}
 
-	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
-			UnknownHostException {
+	public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
+			throws IOException, UnknownHostException {
 		return NetUtil.configureSocket(getSocketFactory().createSocket(socket, host, port, autoClose));
 	}
 

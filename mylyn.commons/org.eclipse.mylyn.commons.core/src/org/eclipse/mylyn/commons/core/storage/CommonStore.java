@@ -142,8 +142,8 @@ public class CommonStore {
 			File newFile = getFile(newPath, false);
 			newFile.getParentFile().mkdirs();
 			if (!oldFile.renameTo(newFile)) {
-				throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-						"The target path ''{0}'' already exists", newPath))); //$NON-NLS-1$
+				throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN,
+						NLS.bind("The target path ''{0}'' already exists", newPath))); //$NON-NLS-1$
 			}
 		}
 	}

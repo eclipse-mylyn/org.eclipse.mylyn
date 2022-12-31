@@ -116,7 +116,8 @@ public class NetUtil {
 	public static Proxy createProxy(String proxyHost, int proxyPort, String username, String password, String domain) {
 		if (proxyHost != null && proxyHost.length() > 0) {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			boolean authenticated = (username != null && password != null && username.length() > 0 && password.length() > 0);
+			boolean authenticated = (username != null && password != null && username.length() > 0
+					&& password.length() > 0);
 			if (authenticated) {
 				return new AuthenticatedProxy(Type.HTTP, sockAddr, username, password, domain);
 			} else {
@@ -284,8 +285,8 @@ public class NetUtil {
 				((SSLSocket) socket).setEnabledProtocols(enabledProtocols);
 			} catch (IllegalArgumentException e) {
 				if (!loggedEnabledProtocolsException.getAndSet(true)) {
-					StatusHandler.log(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-							"Failed to configure SSL protocols ''{0}''", Arrays.toString(enabledProtocols)))); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN,
+							NLS.bind("Failed to configure SSL protocols ''{0}''", Arrays.toString(enabledProtocols)))); //$NON-NLS-1$
 				}
 			}
 		}
@@ -312,8 +313,8 @@ public class NetUtil {
 			try {
 				return Integer.parseInt(property);
 			} catch (NumberFormatException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Unable to parse property {0}", key))); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, CommonsCorePlugin.ID_PLUGIN,
+						NLS.bind("Unable to parse property {0}", key))); //$NON-NLS-1$
 			}
 		}
 		return defaultValue;

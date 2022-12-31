@@ -207,8 +207,8 @@ public class WorkbenchUtil {
 			IPluginContribution contribution = (IPluginContribution) object;
 			if (contribution.getPluginId() != null) {
 				IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
-				IIdentifier identifier = workbenchActivitySupport.getActivityManager().getIdentifier(
-						createUnifiedId(contribution));
+				IIdentifier identifier = workbenchActivitySupport.getActivityManager()
+						.getIdentifier(createUnifiedId(contribution));
 				return identifier.isEnabled();
 			}
 		}

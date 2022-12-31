@@ -57,8 +57,8 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task != null) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						task.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(task.getConnectorKind());
 				if (connector != null) {
 					return connector.getTaskIdPrefix();
 				}
@@ -279,8 +279,8 @@ public class CommitTemplateVariables {
 			try {
 				taskData = TasksUi.getTaskDataManager().getTaskData(task);
 				if (taskData != null) {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(task.getConnectorKind());
 					return connector.getTaskMapping(taskData);
 				}
 			} catch (CoreException e) {

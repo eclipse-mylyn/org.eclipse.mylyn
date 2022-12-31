@@ -67,8 +67,8 @@ public class UserCredentials extends AuthenticationCredentials {
 	}
 
 	protected UserCredentials(ICredentialsStore store, String prefix, boolean loadSecrets) throws StorageException {
-		this(
-				store.get(prefix + ".user", ""), (loadSecrets) ? store.get(prefix + ".password", "") : "", store.get(prefix + ".domain", null), //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		this(store.get(prefix + ".user", ""), (loadSecrets) ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+				store.get(prefix + ".domain", null), //$NON-NLS-1$
 				store.getBoolean(prefix + ".savePassword", false), loadSecrets); //$NON-NLS-1$
 	}
 

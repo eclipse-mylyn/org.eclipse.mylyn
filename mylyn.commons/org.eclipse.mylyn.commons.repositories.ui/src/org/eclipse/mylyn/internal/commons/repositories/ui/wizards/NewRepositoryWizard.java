@@ -111,7 +111,8 @@ public class NewRepositoryWizard extends Wizard {
 				setWindowTitle(WorkbenchMessages.NewWizard_title);
 			}
 		}
-		setDefaultPageImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
+		setDefaultPageImageDescriptor(
+				WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
 		setNeedsProgressMonitor(true);
 	}
 

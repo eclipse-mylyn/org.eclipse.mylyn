@@ -146,9 +146,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)
 				&& !ResourcesUiBridgePlugin.getDefault().getPreferenceStore().isDefault(PREF_RESOURCES_IGNORED_ANT)) {
 			// we are using the new ant patterns
-			exclusions = getResourceExclusionsFromMemento(ResourcesUiBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getString(PREF_RESOURCES_IGNORED_ANT));
+			exclusions = getResourceExclusionsFromMemento(
+					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED_ANT));
 		} else if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED)) {
 			//we are using the old patterns
 			String read = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
@@ -162,16 +161,14 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 			setExcludedResourcePatterns(exclusions);
 		} else {
 			// make sure that we load the default preferences if it is a clean workspace
-			exclusions = getResourceExclusionsFromMemento(ResourcesUiBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getString(PREF_RESOURCES_IGNORED_ANT));
+			exclusions = getResourceExclusionsFromMemento(
+					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED_ANT));
 		}
 
 		cachedExclusionPatterns = new HashSet<String>(exclusions);
 
-		if (!RESOURCE_PATTERN_VERSION.equals(ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.getString(PREF_RESOURCE_PATTERNS_VERSION))) {
+		if (!RESOURCE_PATTERN_VERSION.equals(
+				ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCE_PATTERNS_VERSION))) {
 			cachedExclusionPatterns.addAll(ADDED_PATTERNS_1_0);
 			ResourcesUiBridgePlugin.getDefault()
 					.getPreferenceStore()

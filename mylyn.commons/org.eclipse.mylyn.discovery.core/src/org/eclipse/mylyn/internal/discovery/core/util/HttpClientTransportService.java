@@ -67,8 +67,8 @@ public class HttpClientTransportService implements ITransportService {
 
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil
+						.createHostConfiguration(client, location, monitor);
 				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);
@@ -123,8 +123,8 @@ public class HttpClientTransportService implements ITransportService {
 			boolean success = false;
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil
+						.createHostConfiguration(client, location, monitor);
 				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = org.eclipse.mylyn.commons.net.WebUtil.getResponseBodyAsStream(method, monitor);
@@ -164,8 +164,8 @@ public class HttpClientTransportService implements ITransportService {
 
 			HeadMethod method = new HeadMethod(location.getUrl());
 			try {
-				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil.createHostConfiguration(
-						client, location, monitor);
+				HostConfiguration hostConfiguration = org.eclipse.mylyn.commons.net.WebUtil
+						.createHostConfiguration(client, location, monitor);
 				int result = org.eclipse.mylyn.commons.net.WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					Header lastModified = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$

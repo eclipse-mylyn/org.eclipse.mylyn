@@ -74,8 +74,9 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 
 		} catch (Exception e) {
-			CommonsWorkbenchPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
+			CommonsWorkbenchPlugin.getDefault()
+					.getLog()
+					.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
 		setInitialText(LABEL_FIND);
 	}

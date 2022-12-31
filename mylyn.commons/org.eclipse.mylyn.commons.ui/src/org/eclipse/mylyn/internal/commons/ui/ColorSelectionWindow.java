@@ -64,12 +64,8 @@ public class ColorSelectionWindow extends Window {
 		Composite colorComposite = new Composite(parent, SWT.NONE);
 		colorComposite.setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		colorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		colorComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(8)
-				.spacing(1, 1)
-				.margins(1, 1)
-				.equalWidth(true)
-				.create());
+		colorComposite.setLayout(
+				GridLayoutFactory.fillDefaults().numColumns(8).spacing(1, 1).margins(1, 1).equalWidth(true).create());
 
 		// EGA classic palette
 		colors = new ColorCanvas[16];
