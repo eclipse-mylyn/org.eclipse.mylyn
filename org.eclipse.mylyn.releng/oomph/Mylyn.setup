@@ -29,10 +29,6 @@
         href="MylynConfiguration.setup#/"/>
   </annotation>
   <setupTask
-      xsi:type="setup:RedirectionTask"
-      sourceURL="http://subclipse.tigris.org/update_1.8.x"
-      targetURL="https://subclipse.github.io/updates/subclipse/1.8.x"/>
-  <setupTask
       xsi:type="setup:CompoundTask"
       name="Global Variables">
     <setupTask
