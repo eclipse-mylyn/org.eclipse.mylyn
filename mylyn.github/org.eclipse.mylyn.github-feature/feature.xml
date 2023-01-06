@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.mylyn.github.feature"
+      label="%featureName"
+      version="6.2.0.qualifier"
+      provider-name="%providerName"
+      plugin="org.eclipse.egit"
+      license-feature="org.eclipse.license"
+      license-feature-version="0.0.0">
+
+   <description url="http://www.eclipse.org/egit">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="license.html">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="https://download.eclipse.org/egit/github/updates"/>
+   </url>
+
+   <requires>
+      <import feature="org.eclipse.egit" version="6.2.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.20.0" match="greaterOrEqual"/>
+      <import plugin="com.google.gson" version="1.6" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.mylyn.github.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.github.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.egit.github.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.gson"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.github.doc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

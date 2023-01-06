@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Mylyn GitHub Connector User Guide</title>
+		<link type="text/css" rel="stylesheet" href="../../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Mylyn GitHub Connector User Guide</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table><hr class="navigation-separator"/>
+		<h2 id="Overview">Overview</h2>
+		<p>The EGit Mylyn GitHub connector supports creating task repositories for working with 
+			<a href="http://www.github.com" target="egit_github_external">GitHub</a> issues and 
+			<a href="http://gist.github.com" target="egit_github_external">Gists</a>.  A GitHub issue task repository is required for each GitHub project repository you want to access issues for.  A single Gist repository allows you to access all Gists on 
+			<a href="http://gist.github.com" target="egit_github_external">http://gist.github.com</a>.
+		</p>
+		<p>The latest version of the EGit Mylyn GitHub connector can be installed from following update site:</p>
+		<p>
+			<a href="https://download.eclipse.org/egit/github/updates-nightly" target="egit_github_external">https://download.eclipse.org/egit/github/updates-nightly</a>
+		</p>
+		<h2 id="Getting_Started">Getting Started</h2>
+		<p>The Mylyn GitHub connector supports bulk adding all your GitHub repositories to the Mylyn Task Repositorities view.</p>
+		<ol>
+			<li>Select 
+				<b>File &gt; Import...</b>
+			</li>
+			<li>Select the 
+				<i>GitHub Task Repositories</i> node under the 
+				<i>Tasks</i> category
+			</li>
+			<li>Select 
+				<b>Next</b>
+			</li>
+			<li>Enter your GitHub login name and password on the credentials wizard page</li>
+			<li>Select 
+				<b>Next</b>
+			</li>
+			<li>Check all the GitHub repositories that you want to access issues from.</li>
+			<li>Select 
+				<b>Finish</b>
+			</li>
+			<li>Open the 
+				<i>Task Repositories</i> view to browse the newly added task repositories and add queries or create new tasks.
+			</li>
+		</ol>
+		<h2 id="Issues">Issues</h2>
+		<h3 id="Queries">Queries</h3>
+		<p>GitHub issue task repositories support creating queries that filter by the following fields:</p>
+		<ul>
+			<li>State (open or closed)</li>
+			<li>Milestones</li>
+			<li>Mentions</li>
+			<li>Assignee</li>
+			<li>Labels</li>
+		</ul>
+		<p>Note that when multiple filters are used in the same query the returned issues will match 
+			<b>all</b> of the filters.  The minimum required for a valid query is at least one status selected and a non-empty title.
+		</p>
+		<p>
+			<img align="middle" border="0" src="images/GitHubMylynIssueQueryPage.png"/>
+		</p>
+		<h3 id="Issue_Editor">Issue Editor</h3>
+		<p>The GitHub issue task editor supports the following:</p>
+		<ul>
+			<li>Editing the title &amp; description</li>
+			<li>Adding a new comment</li>
+			<li>Closing &amp; reopening the issue from the 
+				<i>Actions</i> section
+			</li>
+			<li>Assigning the issue to someone from the 
+				<i>People</i> section
+			</li>
+			<li>Adding and removing labels from the 
+				<i>Attributes</i> section
+			</li>
+			<li>Updating the milestone from the 
+				<i>Attributes</i> section
+			</li>
+		</ul>
+		<p>
+			<img align="middle" border="0" src="images/GitHubMylynIssueEditor.png"/>
+		</p>
+		<h2 id="Gists">Gists</h2>
+		<h3 id="Creating">Creating</h3>
+		<p>Gists can be created by selecting text in a editor or files in an explorer and selecting either the 
+			<i>GitHub</i> &gt; 
+			<b>Create Private Gist</b> or  
+			<i>GitHub</i> &gt; 
+			<b>Create Public Gist</b> context menu.  The Gist will be created in a background job and a notification popup will display with a link to open the newly created Gist.
+		</p>
+		<h3 id="Queries_2">Queries</h3>
+		<p>Gist queries only support filtering by a specified GitHub login name.</p>
+		<h3 id="Gist_Editor">Gist Editor</h3>
+		<p>The task editor for Gists supports the following:</p>
+		<ul>
+			<li>Editing the description</li>
+			<li>Adding a new comment </li>
+			<li>Opening the files in a gist in an editor</li>
+			<li>Adding new files to the gist</li>
+			<li>Replacing the content of a file currently in the gist</li>
+			<li>Cloning the gist to a local Eclipse project</li>
+		</ul>
+		<p>
+			<img align="middle" border="0" src="images/GitHubMylynGistEditor.png"/>
+		</p>
+		<h2 id="Frequently_Asked_Questions_.28FAQ.29">Frequently Asked Questions (FAQ)</h2>
+		<ul>
+			<li>Does the connector support GitHub API tokens?
+				<ul>
+					<li>
+						<b>No</b>,  API tokens are no longer supported by the GitHub v3 API which the connector uses for requests.
+					</li>
+				</ul>
+			</li>
+			<li>Are GitHub API requests made over HTTPS?
+				<ul>
+					<li>
+						<b>Yes</b>, all requests made through the GitHub API are over HTTPS.
+					</li>
+				</ul>
+			</li>
+		</ul><hr class="navigation-separator"/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table>
+	</body>
+</html>
