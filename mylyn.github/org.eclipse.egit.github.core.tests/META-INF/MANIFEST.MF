@@ -13,11 +13,10 @@ Import-Package: com.google.gson;version="[1.6.0,3.0.0]",
  org.eclipse.egit.github.core.event;version="[6.2.0,6.3.0)",
  org.eclipse.egit.github.core.service;version="[6.2.0,6.3.0)",
  org.eclipse.egit.github.core.util;version="[6.2.0,6.3.0)",
- org.mockito;version="[2.13.0,3.0.0)",
+ org.mockito;version="4.8.1",
  org.mockito.junit;version="2.13.0",
- org.mockito.runners;version="[2.13.0,3.0.0)",
- org.mockito.stubbing;version="[2.13.0,3.0.0)"
+ org.mockito.stubbing;version="4.8.1",
+ org.objenesis;version="3.3.0"
 Require-Bundle: org.junit;bundle-version="[4.13.0,5.0.0)",
- org.hamcrest;bundle-version="[1.1.0,2.0.0)",
- org.objenesis;bundle-version="[2.6.0,3.0.0)"
+ org.hamcrest;bundle-version="[1.1.0,2.0.0)"
 Bundle-Vendor: %Bundle-Vendor

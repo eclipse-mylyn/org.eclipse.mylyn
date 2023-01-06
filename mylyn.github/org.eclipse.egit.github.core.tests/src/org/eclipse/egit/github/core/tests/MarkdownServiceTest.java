@@ -15,7 +15,7 @@ package org.eclipse.egit.github.core.tests;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.service.MarkdownService.MODE_MARKDOWN;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static  org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import java.io.ByteArrayInputStream;
