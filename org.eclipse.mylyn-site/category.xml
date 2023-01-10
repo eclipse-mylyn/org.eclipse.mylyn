@@ -187,6 +187,10 @@
 		<category name="org.eclipse.mylyn.tests.category" />
 	</feature>
 	<feature
+		id="org.eclipse.mylyn.context.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
 		id="org.eclipse.mylyn.test_feature">
 		<category name="org.eclipse.mylyn.tests.category" />
 	</feature>
