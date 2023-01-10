@@ -163,7 +163,7 @@
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
-		id="org.eclipse.mylyn.test_feature">
+		id="org.eclipse.mylyn.tasks.index">
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
@@ -184,6 +184,10 @@
 	</category-def>
 	<feature
 		id="org.eclipse.mylyn.commons.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.test_feature">
 		<category name="org.eclipse.mylyn.tests.category" />
 	</feature>
 </site>
