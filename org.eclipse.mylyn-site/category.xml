@@ -183,6 +183,10 @@
 		</description>
 	</category-def>
 	<feature
+		id="org.eclipse.mylyn.builds.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
 		id="org.eclipse.mylyn.commons.development">
 		<category name="org.eclipse.mylyn.tests.category" />
 	</feature>
