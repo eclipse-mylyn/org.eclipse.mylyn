@@ -55,14 +55,6 @@ pipeline {
 						mkdir -p ${DOWNLOAD_AREA}"
 					scp -r mylyn.reviews/org.eclipse.mylyn.reviews.site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
 				'''
-				sh '''
-					DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/versions/
-					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
-					ssh genie.mylyn@projects-storage.eclipse.org "\
-						rm -rf  ${DOWNLOAD_AREA}/* && \
-						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r mylyn.versions/org.eclipse.mylyn.versions-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
-				'''
 				}
 			}
 		}
