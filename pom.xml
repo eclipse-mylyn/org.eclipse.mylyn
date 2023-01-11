@@ -17,6 +17,7 @@
         <qualifier>-SNAPSHOT</qualifier>
         <tycho-version>3.0.1</tycho-version>
         <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs</tycho.scmUrl>
+        <nexus.autoReleaseAfterClose>false</nexus.autoReleaseAfterClose>
     </properties>
     <build>
         <pluginManagement>
@@ -107,7 +108,7 @@
                 <configuration>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                    <autoReleaseAfterClose>${nexus.autoReleaseAfterClose}</autoReleaseAfterClose>
                 </configuration>
             </plugin>
             <plugin>
