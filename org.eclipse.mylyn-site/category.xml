@@ -47,6 +47,10 @@
 		<category name="org.eclipse.mylyn.integrations.category" />
 	</feature>
 	<feature
+		id="org.eclipse.mylyn.discovery">
+		<category name="org.eclipse.mylyn.integrations.category" />
+	</feature>
+	<feature
 		id="org.eclipse.mylyn.gerrit.feature">
 		<category name="org.eclipse.mylyn.integrations.category" />
 	</feature>
@@ -107,6 +111,10 @@
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
+		id="org.eclipse.mylyn.commons.activity">
+		<category name="org.eclipse.mylyn.sdk.category" />
+	</feature>
+	<feature
 		id="org.eclipse.mylyn.commons.identity">
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
@@ -127,7 +135,15 @@
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
+		id="org.eclipse.mylyn.commons.tck">
+		<category name="org.eclipse.mylyn.sdk.category" />
+	</feature>
+	<feature
 		id="org.eclipse.mylyn.context.sdk">
+		<category name="org.eclipse.mylyn.sdk.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.monitor">
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
@@ -147,7 +163,7 @@
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
-		id="org.eclipse.mylyn.test_feature">
+		id="org.eclipse.mylyn.tasks.index">
 		<category name="org.eclipse.mylyn.sdk.category" />
 	</feature>
 	<feature
@@ -157,5 +173,37 @@
 	<feature
 		id="org.eclipse.mylyn.versions.sdk">
 		<category name="org.eclipse.mylyn.sdk.category" />
+	</feature>
+	<category-def
+		name="org.eclipse.mylyn.tests.category"
+		label="Mylyn Tests"
+	>
+		<description>
+			Tests for Mylyn functionality.
+		</description>
+	</category-def>
+	<feature
+		id="org.eclipse.mylyn.builds.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.commons.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.context.development">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.reviews.development.feature">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.test_feature">
+		<category name="org.eclipse.mylyn.tests.category" />
+	</feature>
+	<feature
+		id="org.eclipse.mylyn.versions.development">
+		<category name="org.eclipse.mylyn.tests.category" />
 	</feature>
 </site>

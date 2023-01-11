@@ -40,7 +40,6 @@
     <module>org.eclipse.mylyn.help.ui</module>
     <module>org.eclipse.mylyn.sdk-feature</module>
     <module>org.eclipse.mylyn.test-feature</module>
-    <module>org.eclipse.mylyn.tasks-site</module>
     <module>org.eclipse.mylyn.tasks.activity.core</module>
     <module>org.eclipse.mylyn.tasks.activity.tests</module>
     <module>org.eclipse.mylyn.tasks.activity.ui</module>
