@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2023 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,6 @@ import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
 
@@ -54,7 +53,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 			SpanType... spanTypes) {
 		checkState(!alternatives.containsKey(spanType), "Duplicate %s", spanType); //$NON-NLS-1$
 		checkArgument(spanTypes.length > 0);
-		alternatives.put(spanType, ImmutableList.copyOf(spanTypes));
+		alternatives.put(spanType, List.of(spanTypes));
 	}
 
 	SpanStrategies(Set<SpanType> elementTypes, List<SpanHtmlElementStrategy> spanElementStrategies) {

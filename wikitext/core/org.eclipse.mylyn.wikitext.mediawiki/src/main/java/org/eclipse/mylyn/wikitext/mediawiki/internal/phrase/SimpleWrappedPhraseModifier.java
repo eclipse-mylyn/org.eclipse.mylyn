@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2023 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * @author David Green
  */
@@ -35,7 +33,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		private final boolean nesting;
 
 		public SimplePhraseModifierProcessor(SpanType[] spanType, boolean nesting) {
-			this.spanType = ImmutableList.copyOf(spanType);
+			this.spanType = List.of(spanType);
 			this.nesting = nesting;
 		}
 

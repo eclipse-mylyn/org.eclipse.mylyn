@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2023 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -31,8 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.google.common.collect.ImmutableList;
 
 public class HtmlParserTest {
 	static class EndEvent {
@@ -239,7 +237,7 @@ public class HtmlParserTest {
 			}
 		};
 		parse(content, builder);
-		assertEquals(ImmutableList.copyOf(expectedEventTypes), actualEventTypes);
+		assertEquals(List.of(expectedEventTypes), actualEventTypes);
 	}
 
 	@Test

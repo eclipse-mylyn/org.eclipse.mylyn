@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2023 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-
-import com.google.common.collect.ImmutableList;
 
 class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlElementStrategy<BlockType>> {
 
@@ -58,7 +56,7 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 			BlockType... blockTypes) {
 		checkState(!alternatives.containsKey(blockType), "Duplicate %s", blockType); //$NON-NLS-1$
 		checkArgument(blockTypes.length > 0);
-		alternatives.put(blockType, ImmutableList.copyOf(blockTypes));
+		alternatives.put(blockType, List.of(blockTypes));
 	}
 
 	BlockStrategies(Set<BlockType> blockTypes) {
