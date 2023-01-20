@@ -18,22 +18,34 @@ This setup is only tested on am MacBook Pro M1.
      ```
    - create the 3 VM's
      ```
-     ansible-playbook create_vm.yml --ask-become-pass
+     ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=container"
+     or
+     ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=swarm"
+     or
+     ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=single"
      ```
      This creates the 3 VM's and make sure that /etc/hosts contains the correct entries
      and also update the inventory.yml with the new IP addresses of the VM's.
      During the first time run we create a sshkey for all instances in folder first_setup
 3. First time Setup the VM's
    ```
-   ansible-playbook mylyn_setup.yml
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=container"
+   or
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=swarm"
+   or
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
 4. restart the services the VM's 
    ```
-   ansible-playbook mylyn_setup.yml --skip-tags base_software
+   ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="docker_run_mode=container"
+   or
+   ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="docker_run_mode=swarm"
+   or
+   ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="docker_run_mode=single"
    ```
    or with recreate the Docker swarm 
    ```
-   ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="swarm_recreate=true"
+   ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="swarm_recreate=true" --extra-vars="docker_run_mode=swarm"
    ```
 
 5. delete VM's and recreate VM's
@@ -52,6 +64,17 @@ This setup is only tested on am MacBook Pro M1.
    ```
    3. recreate the VM's and start the Services with
    ```
+   ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=container"
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=container"
+   because container is Default you can also use 
    ansible-playbook create_vm.yml --ask-become-pass
    ansible-playbook mylyn_setup.yml
+   or
+   ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=swarm"
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=swarm"
+   or
+   ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=single"
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
+   
+Scrach Pad

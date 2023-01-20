@@ -14,16 +14,23 @@
 
 - name: Get infos on network
   community.docker.docker_network_info:
-    name: ruvzcx_net
+    name: mylyn_net
   register: network_result
+
+- name: Remove network
+  community.docker.docker_network:
+    name: mylyn_net
+    state: absent
+    force: true
+  when: network_result.exists and network_result.network.Scope != 'swarm'
+  register: network_result_delete
 
 - name: Create a network
   community.docker.docker_network:
     driver: overlay
     scope: swarm
-#    attachable: true
-    name: ruvzcx_net
-  when: not network_result.exists 
+    name: mylyn_net
+  when: (not network_result.exists) or (network_result_delete.changed)
 
 - name: Get info on Docker Swarm
   community.docker.docker_swarm_info:
@@ -41,7 +48,6 @@
   run_once: true
   delegate_to: localhost
   delegate_facts: true
-
 
 - name: add node to swarm as worker
   community.docker.docker_swarm:

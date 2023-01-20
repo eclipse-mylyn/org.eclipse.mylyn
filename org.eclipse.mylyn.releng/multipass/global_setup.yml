@@ -1,0 +1,54 @@
+    - name: set global var
+      ansible.builtin.set_fact:
+        grp_prefix: "{{ prefix | default('mylyn')}}"
+        local_domain: "{{ loc_dom | default('mylyn.local')}}"
+        docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
+        docker_mode_global: "{{ docker_run_mode | default('container') }}"
+        
+    - name: build setup_lst_tmp
+      ansible.builtin.set_fact:
+        setup_lst_tmp: 
+         "{{ groups[grp_prefix + \"_admin\"]  + groups[grp_prefix + \"_swarm_master\"] }}" 
+        setup_noadmin_vm_list: 
+         "{{ groups[grp_prefix + \"_swarm_master\"] }}" 
+
+    - name: build setup_lst_tmp1
+      ansible.builtin.set_fact:
+        setup_lst_tmp:  
+         "{{ setup_lst_tmp  +  groups[grp_prefix + \"_swarm_worker\" ] }}"
+        setup_noadmin_vm_list: 
+         "{{ setup_noadmin_vm_list  +  groups[grp_prefix + \"_swarm_worker\" ] }}"
+      when: (docker_mode_global == 'swarm')
+    - name: set global var 2
+      ansible.builtin.set_fact:
+        rootca_server_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+        prim_install_server_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+    - name: build setup_lst_tmp2
+      ansible.builtin.set_fact:
+        setup_lst_tmp:  
+         "{{ groups[grp_prefix + \"_swarm_master\" ] }}"
+        setup_noadmin_vm_list: 
+         "{{ groups[grp_prefix + \"_swarm_master\" ] }}"
+        rootca_server_name:
+         "{{ prim_install_server_name }}"
+      when: (docker_mode_global == 'single')
+ 
+    - name: build setup_lst
+      ansible.builtin.set_fact:
+        setup_lst: "{{ setup_lst | default([]) + [ { 'name': item, 'ip4': hostvars[item].ansible_host, 'disk':  hostvars[item].multipass_disk, 'memory':  hostvars[item].multipass_memory, 'cpus':  hostvars[item].multipass_cpus } ] }}"
+      with_items:
+        - "{{ setup_lst_tmp }}"
+       
+#    - ansible.builtin.debug: msg="admin = {{ item }}"											# verbosity=3
+#      with_items:
+#        - "{{ groups[grp_prefix + \"_admin\"] }}"
+#    - ansible.builtin.debug: msg="master = {{ item }}"											# verbosity=3
+#      with_items:
+#        - "{{ groups[grp_prefix + \"_swarm_master\"] }}"
+#    - ansible.builtin.debug: msg="worker = {{ item }}"											# verbosity=3
+#      with_items:
+#        - "{{ groups[grp_prefix + \"_swarm_worker\"] }}"
+    - ansible.builtin.debug: msg="all hosts = {{ setup_lst }}" 									# verbosity=3
+    - ansible.builtin.debug: msg="all non admin vm = {{ setup_noadmin_vm_list }}"				# verbosity=3
+    - ansible.builtin.debug: msg="rootca_server_name = {{ rootca_server_name }}"				# verbosity=3
+    - ansible.builtin.debug: msg="prim_install_server_name = {{ prim_install_server_name }}"	# verbosity=3

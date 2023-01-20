@@ -91,7 +91,7 @@
 
 #- name: Remove network
 #  community.docker.docker_network:
-#    name: ruvzcx_net
+#    name: mylyn_net
 #    state: absent
 #    force: true
 #  when: (deleteNetwork is defined) and (deleteNetwork|bool == true)

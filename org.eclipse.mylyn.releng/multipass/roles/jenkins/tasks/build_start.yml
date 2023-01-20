@@ -45,7 +45,7 @@
   ansible.builtin.set_fact:
     label_data:  |
        { traefik.enable: "true" ,
-         traefik.docker.network: ruvzcx_net ,
+         traefik.docker.network: mylyn_net ,
          traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
@@ -59,18 +59,13 @@
     name: "{{act_item.servmame}}"
     image: "127.0.0.1:5000/{{act_item.servmame}}:1"
     networks:
-      - ruvzcx_net
+      - mylyn_net
     publish:       
       - published_port: "{{act_item.port1}}"
         target_port: "8080"
       - published_port: "{{act_item.port2}}"
         target_port: "50000"
     env:
-#      JENKINS_USER: admin@mylyn.eclipse.org
-#      JENKINS_PASS: mylyntest
-#      JENKINS_ADMIN_ADRESS: admin@mylyn.eclipse.org
-#      JENKINS_USER: Admin
-#      JENKINS_PASS: MylynTest
       JENKINS_ADMIN_ADRESS: mylyn@eclipse.org
       JENKINS_URL: "https://{{ common_domain_name }}/{{act_item.servmame}}"
       JENKINS_OPTS: "--prefix=/{{act_item.servmame}}"
@@ -97,3 +92,22 @@
     placement:
       constraints:
         - node.role == worker
+  when: ((docker_mode is defined) and (docker_mode == 'swarm'))
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "{{act_item.servmame}}"
+    image: "127.0.0.1:5000/{{act_item.servmame}}:1"
+    ports:       
+      - "{{act_item.port1}}:8080"
+      - "{{act_item.port2}}:50000"
+    networks:
+      - name: mylyn_net
+    env:
+      JENKINS_ADMIN_ADRESS: "mylyn@eclipse.org"
+      JENKINS_URL: "https://{{ common_domain_name }}/{{act_item.servmame}}"
+      JENKINS_OPTS: "--prefix=/{{act_item.servmame}}"
+    volumes:
+      - "{{ role_name }}-{{act_item.servmame}}-data-volume:/var/jenkins_home"
+    labels: "{{ label_data | from_yaml }}"
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
