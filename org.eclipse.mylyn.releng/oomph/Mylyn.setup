@@ -355,6 +355,13 @@
         <excludedPath>mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
         <excludedPath>mylyn.reviews/tbr</excludedPath>
         <excludedPath>mylyn.docs</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.core</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.core.tests</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.releng</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.tests</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.ui</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac.ui.tests</excludedPath>
+        <excludedPath>mylyn.tasks/org.eclipse.mylyn.trac-feature</excludedPath>
       </sourceLocator>
       <description>Import Releng Project</description>
     </setupTask>
