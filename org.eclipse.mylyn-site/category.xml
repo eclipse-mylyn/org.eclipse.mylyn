@@ -86,10 +86,6 @@
 		id="org.eclipse.mylyn.subclipse">
 		<category name="org.eclipse.mylyn.integrations.category" />
 	</feature>
-	<feature
-		id="org.eclipse.mylyn.trac_feature">
-		<category name="org.eclipse.mylyn.integrations.category" />
-	</feature>
 	<category-def
 		name="org.eclipse.mylyn.sdk.category"
 		label="Mylyn SDK and Framework"

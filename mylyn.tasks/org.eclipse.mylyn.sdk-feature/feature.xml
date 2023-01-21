@@ -38,10 +38,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.trac_feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.mylyn.bugzilla_feature"
          version="0.0.0"/>
 
