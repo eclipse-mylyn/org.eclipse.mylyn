@@ -4,38 +4,11 @@
 - hosts: localhost
   gather_facts: true
   tasks:
-    - name: set global var
-      ansible.builtin.set_fact:
-        grp_prefix: "{{ prefix | default('mylyn')}}"
-        local_domain: "{{ loc_dom | default('mylyn.local')}}"
-        docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
-        
-    - name: build setup_lst
-      ansible.builtin.set_fact:
-        setup_lst: "{{ setup_lst | default([]) + [ { 'name': item, 'ip4': hostvars[item].ansible_host } ] }}"
-      with_items:
-        - "{{ groups[grp_prefix + \"_admin\"] }}"
-        - "{{ groups[grp_prefix + \"_swarm_master\"] }}"
-        - "{{ groups[grp_prefix + \"_swarm_worker\"] }}"
-    - name: "setup Liste for {{ grp_prefix }}"
-      ansible.builtin.debug: msg="{{ setup_lst }}"
-#
-# Debugausgaben
-#
-- hosts: localhost
-  gather_facts: true
-  tasks:
-    - ansible.builtin.debug: msg="host = {{ item }}" verbosity=3
-      with_items:
-        - "{{ groups[grp_prefix + \"_admin\"] }}"
-    - ansible.builtin.debug: msg="master = {{ item }}" verbosity=3
-      with_items:
-        - "{{ groups[grp_prefix + \"_swarm_master\"] }}"
-    - ansible.builtin.debug: msg="worker = {{ item }}" verbosity=3
-      with_items:
-        - "{{ groups[grp_prefix + \"_swarm_worker\"] }}"
-    - ansible.builtin.debug: msg="Hallo local {{ grp_prefix }}" verbosity=3
+    - name: include global mode
+      ansible.builtin.include_tasks:
+        file: "global_setup.yml"
 
+#
 - hosts: localhost
   gather_facts: false
   roles:
@@ -46,10 +19,10 @@
 #
 # Admin Instanz für Zertifikate und root ca 
 #
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+- hosts: "{{ hostvars['localhost'].rootca_server_name }}"
   gather_facts: false
   vars:
-    rootca_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
     - role: crtrootca
       vars:
@@ -68,10 +41,10 @@
 #
 # Alle normalen Knoten mit Zertifikaten versorgen
 #
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_hosts\"] }}"
+- hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
   vars:
-    rootca_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
     - role: crtcertificate
       tags:
@@ -81,14 +54,6 @@
         subject_alt: 
           - "DNS:{{ inventory_hostname }}.{{ hostvars['localhost'].local_domain }}"
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-    - role: dockerhost
-      tags:
-        - base_software
-#
-# Alle normalen Knoten Docker installieren
-#
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_hosts\"] }}"
-  roles:
     - role: dockerhost
       tags:
         - base_software
@@ -105,69 +70,85 @@
             owner: ubuntu
             group: ubuntu
             mode: '0755'
+      tags:
+        - base_software
     - name: Synchronization root ca
       ansible.posix.synchronize:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
-      delegate_to: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+      tags:
+        - base_software
+      delegate_to: "{{ hostvars['localhost'].rootca_server_name }}"
       loop:
-        - {src: "/cacerts/root_ca/{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}.crt", dest: "/mylyn-config-dir/certs/rootca.crt"}
-        - {src: "/cacerts/root_ca/{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}.key", dest: "/mylyn-config-dir/certs/rootca.key"}
+        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.crt", dest: "/mylyn-config-dir/certs/rootca.crt"}
+        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.key", dest: "/mylyn-config-dir/certs/rootca.key"}
     - name: get worker certificates
       ansible.posix.synchronize:
         src:  "/cacerts/server_ca/"
         dest: /mylyn-config-dir/certs
+      tags:
+        - base_software
       delegate_to: "{{ item }}"
       with_items: 
-        - "{{ groups[hostvars['localhost'].grp_prefix + \"_hosts\"] }}"
+        -  "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
 #
 # Neuen Docker Swarm Leader installieren laufende stacks und services löschen
 # Servies starten
 #
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+- hosts: "{{ hostvars['localhost'].prim_install_server_name }}"
   gather_facts: false
   vars:
-    swarm_master_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+    swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
+
   roles:
-    - role: swarm_recreate
-      when: hostvars['localhost'].docker_swarm_recreate | bool == true
+    - role: swarm_delete
+      when: ((hostvars['localhost'].docker_swarm_recreate | bool == true) or (hostvars['localhost'].docker_mode_global == "container"))
       tags:
         - docker_swarm_recreate
     - role: swarm_setup
+      when:  hostvars['localhost'].docker_mode_global == "swarm"
       tags:
         - docker_swarm_setup
     - role: swarm_stop
       when: hostvars['localhost'].docker_swarm_recreate | bool == false
 
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_hosts\"] }}"
+- hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
   vars:
-    rootca_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
+    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
     - role: docker_cleanup
       tags:
         - docker_cleanup
-
-- hosts: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+#
+# Services installieren
+# 
+- hosts: "{{ hostvars['localhost'].prim_install_server_name  }}"
   gather_facts: false
   vars:
-    swarm_master_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+    swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
+    docker_mode: "{{ hostvars['localhost'].docker_mode_global }}"
   roles:
-    - role: traeefik_swarm
+    - role: traeefik
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
     - role: socket-proxy
     - role: mylyn_idx
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-#    - role: hello
-#      vars:
-#        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-#    - role: jenkins
-#      tags:
-#        - jenkins
-#      vars:
-#        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+#    #    - role: hello
+#    #      vars:
+#    #        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+    - role: jenkins
+      tags:
+        - jenkins
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        jenkins_instances:
+#          - {  servmame: "jenkins-2_303_3", port1: 8081, port2: 50001, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:2.303.3-lts-jdk11", extra_info: '' }
+#          - {  servmame: "jenkins-1_651_1", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins:1.651.1", extra_info: '"' }
+          - {  servmame: "jenkins-2_375_2", port1: 8083, port2: 50003, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:2.375.2-lts", extra_info: '"default": "true"' }
+#          - {  servmame: "jenkinsci", port1: 8082, port2: 50002, data_dir: "jenkinsci", image_tag: "jenkins/jenkins:2.375.2-lts", extra_info: '"local_test_service":"true"' }
     - role: bugzilla
       tags:
         - bugzilla
@@ -175,9 +156,9 @@
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
         bugzilla_instances:
           - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4", port1: 8090, port2: 8490, image_tag: "4.4", extra_info: '"default": "true"' }
-          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf", port1: 8091, port2: 8491, image_tag: "4.4-custom_wf", extra_info: '"custom_wf":"true"' }
-          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf-and-status", port1: 8092, port2: 8492, image_tag: "4.4-custom_wf_a_s", extra_info: '"custom_wf_and_status":"true"' }
-          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-bugaliases", port1: 8093, port2: 8493, image_tag: "4.4-bugaliases", extra_info: '"use_bug_alias":"true"' }
-          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
-          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
-          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
+#          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf", port1: 8091, port2: 8491, image_tag: "4.4-custom_wf", extra_info: '"custom_wf":"true"' }
+#          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf-and-status", port1: 8092, port2: 8492, image_tag: "4.4-custom_wf_a_s", extra_info: '"custom_wf_and_status":"true"' }
+#          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-bugaliases", port1: 8093, port2: 8493, image_tag: "4.4-bugaliases", extra_info: '"use_bug_alias":"true"' }
+#          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
+#          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
+#          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }

@@ -7,20 +7,18 @@ all:
     mylyn_admin:
       hosts:
         mylynadm01:
-    mylyn_hosts:
-      children:
-        mylyn_swarm_master:
-          hosts:
-            mylynmstr01:
-          vars:
-            multipass_disk: 10G
-            multipass_memory: 4G
-        mylyn_swarm_worker:
-          hosts:
-            mylynwrk01:
-          vars:
-            multipass_disk: 20G
-            multipass_memory: 8G
+    mylyn_swarm_master:
+      hosts:
+        mylynmstr01:
+      vars:
+        multipass_disk: 16G
+        multipass_memory: 4G
+    mylyn_swarm_worker:
+      hosts:
+        mylynwrk01:
+      vars:
+        multipass_disk: 20G
+        multipass_memory: 8G
   hosts:
     mylynadm01:
       ansible_connection: ssh

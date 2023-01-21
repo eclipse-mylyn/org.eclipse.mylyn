@@ -1,0 +1,16 @@
+credentials
+plain-credentials
+workflow-support
+durable-task
+matrix-project
+ws-cleanup
+mailer
+git-client
+git-server
+github-api
+git
+github
+github-branch-source
+pipeline-github-lib
+matrix-auth
+ldap

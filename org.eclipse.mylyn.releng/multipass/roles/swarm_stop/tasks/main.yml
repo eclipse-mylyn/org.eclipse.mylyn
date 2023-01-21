@@ -29,6 +29,8 @@
     services: true
     verbose_output: true
   register: result_services
+  when: stack_info_result is defined and stack_info_result.results is defined
+
 #  when: is_docker_install.rc == 0 and stack_info_result is defined and stack_info_result.results is defined
 
 #- name: debug result_services

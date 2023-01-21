@@ -1,0 +1,58 @@
+- name: Merge node labels and new labels
+  community.docker.docker_node:
+    hostname: "{{ inventory_hostname }}"
+    labels:
+      proxy: 'true'
+      
+- name: Deploy swarm service
+  community.docker.docker_swarm_service:
+    name: traefik
+    image: traefik:latest
+    mode: global
+    args:
+      - "--configFile=/etc/traefik/traefik.yml"
+    publish:       
+      - published_port: "80"
+        target_port: "80"
+      - published_port: "443"
+        target_port: "443"
+    networks:
+      - mylyn_net
+    placement:
+      constraints:
+        - node.role == manager
+    mounts:
+      - source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+        type: bind
+      - source: "/mylyn-runtime-dir/{{ role_name }}/logs"
+        target: "/logs"
+        type: bind
+      - source: "/mylyn-config-dir/{{ role_name }}/etc-traefik"
+        target: "/etc/traefik"
+        type: bind
+      - source: "/mylyn-config-dir/certs"
+        target: "/certificates"
+        type: bind
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: mylyn_net
+
+      traefik.http.routers.http-catchall.rule: hostregexp(`{host:.+}`)
+      traefik.http.routers.http-catchall.entrypoints: web
+      traefik.http.routers.http-catchall.middlewares: redirect-to-https
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+
+      traefik.http.routers.api_traefik.rule: Host(`traefik.{{common_domain_name}}`)
+      traefik.http.routers.api_traefik.service: api@internal
+      traefik.http.routers.api_traefik.entrypoints: websecure
+      traefik.http.routers.api_traefik.tls: "true"
+      traefik.http.routers.api_traefik1.rule: Host(`{{common_domain_name}}`) && (PathPrefix(`/traefikdashboard`) || PathPrefix(`/api`))
+      traefik.http.routers.api_traefik1.service: api@internal
+      traefik.http.routers.api_traefik1.entrypoints: websecure
+      traefik.http.routers.api_traefik1.tls: "true"
+      traefik.http.routers.api_traefik1.middlewares: stripprefix_api
+      traefik.http.middlewares.stripprefix_api.stripprefix.prefixes: /traefikdashboard
+      
+      traefik.http.services.api.loadbalancer.passhostheader: "true"
+      traefik.http.services.api.loadbalancer.server.port: "8080" 
