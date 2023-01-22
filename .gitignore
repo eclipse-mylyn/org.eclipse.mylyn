@@ -3,4 +3,4 @@
 *.rej
 *~
 !/org.eclipse.mylyn.releng/bin
-/.DS_Store
+**/.DS_Store

@@ -158,191 +158,6 @@
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1672000970093&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-		&lt;filter>
-			&lt;id>1672000970100&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources>
-</substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.builds/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824328018&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources>
-</substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.commons/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824365141&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources></substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.context/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824402475&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources></substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.reviews/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824426181&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources></substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.tasks/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824564573&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-		&lt;filter>
-			&lt;id>1671824564574&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-connector-bugzilla-rest&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-		&lt;filter>
-			&lt;id>1671824564575&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn-feature&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources>
-</substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:TextModifyTask"
-        excludedTriggers="BOOTSTRAP"
-        predecessor="git.clone.mylyn"
-        url="${git.clone.mylyn.location|uri}/mylyn.versions/.project">
-      <modification
-          pattern="(&lt;/natures>)(&#xA;)(&lt;/projectDescription>)">
-        <substitution>\1</substitution>
-        <substitution>\2	&lt;filteredResources>
-		&lt;filter>
-			&lt;id>1671824618875&lt;/id>
-			&lt;name>&lt;/name>
-			&lt;type>10&lt;/type>
-			&lt;matcher>
-				&lt;id>org.eclipse.ui.ide.multiFilter&lt;/id>
-				&lt;arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*&lt;/arguments>
-			&lt;/matcher>
-		&lt;/filter>
-	&lt;/filteredResources>
-</substitution>
-        <substitution>\3</substitution>
-      </modification>
-    </setupTask>
-    <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.mylyn"
         value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
@@ -382,7 +197,22 @@
           name="Tasks">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn..*"/>
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors"/>
+      </workingSet>
+      <workingSet
+          name="Tasks Connector Bugzilla">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla.*"/>
+      </workingSet>
+      <workingSet
+          name="Tasks Connector Trac">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/trac.*"/>
       </workingSet>
       <workingSet
           name="Context">
@@ -411,7 +241,7 @@
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"
-        predecessor="//@projects[name='mylyn']/@setupTasks.10"
+        predecessor="//@projects[name='mylyn']/@setupTasks.3"
         name="mylyn-e4.26">
       <description>Active Mylyn Target Platform</description>
     </setupTask>

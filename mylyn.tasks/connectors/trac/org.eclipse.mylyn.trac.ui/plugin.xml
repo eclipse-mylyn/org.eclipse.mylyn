@@ -41,4 +41,28 @@
             targetId="org.eclipse.mylyn.tasks.ui.TaskEditor">
       </hyperlinkDetector>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
+            description="%connectorDescriptor.description.trac"
+            groupId="extra"
+            id="org.eclipse.mylyn.trac_feature"
+            kind="task"
+            license="%connectorDescriptor.license.trac"
+            name="%connectorDescriptor.name.trac"
+            provider="%connectorDescriptor.provider.trac"
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.trac">
+         <icon
+               image32="images/trac32.png"
+               image64="images/trac64.png">
+         </icon>
+         <overview
+               screenshot="images/trac-screenshot-320x240.png"
+               summary="%connectorDescriptor.overview.summary.trac"
+               url="http://eclipse.org/mylyn/">
+         </overview>
+      </connectorDescriptor>
+ 	</extension>
 </plugin>
