@@ -1,0 +1,115 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.BooleanParameterDefinition>
+          <name>PUBLISH</name>
+          <description>If selected the build is automatically published to http://download.eclipse.org/mylyn/drops and snapshot composite repositories are updated.</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>Do not change this parameter from its default value. This parameter exists only to define a constant for use below.</description>
+          <defaultValue>m_3_25_x</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.3.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>ssh://git@#MYLYN_TEST_NAME#:#mylyn_git_port#/#mylyn_git_path#/org.eclipse.mylyn.all.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>${BRANCH}</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.SubmoduleOption>
+        <disableSubmodules>false</disableSubmodules>
+        <recursiveSubmodules>true</recursiveSubmodules>
+        <trackingSubmodules>true</trackingSubmodules>
+        <reference></reference>
+        <parentCredentials>false</parentCredentials>
+        <shallow>false</shallow>
+      </hudson.plugins.git.extensions.impl.SubmoduleOption>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>for f in `find . -maxdepth 1 -name &quot;org.eclipse.mylyn*&quot; -not -name &quot;*docs&quot; -not -name &quot;*versions&quot;`; do
+cd $f
+git checkout -B $BRANCH origin/$BRANCH
+git pull
+cd ..
+done
+
+# work around lack of a release branch in o.e.m.versions
+#(cd org.eclipse.mylyn.versions; git checkout 1ed85d58f4aea6cc04d45c2b4ac434d00dfe161b) # version 1.18
+(cd org.eclipse.mylyn.versions; git checkout c4cd056fee22f999dc9630512dcd0833b2eab1ca) # version 1.17 after license update
+#(cd org.eclipse.mylyn.versions; git checkout eb443c7c6785c12deb98dfd51707fa89c384efc5) # version 1.17
+#(cd org.eclipse.mylyn.versions; git checkout f7c75c1610ba0051b90bcd570998636b157a1f49) # version 1.16
+
+(cd org.eclipse.mylyn.versions; sed -i &apos;s#http://subclipse.tigris.org/update_1.8.x/#https://subclipse.github.io/updates/subclipse/1.8.x/#g&apos; pom.xml; sed -i &apos;s#3.25.0-SNAPSHOT#3.25.2-SNAPSHOT#g&apos; pom.xml )
+(cd org.eclipse.mylyn.reviews; sed -i &apos;s#3.25.0-SNAPSHOT#3.25.2-SNAPSHOT#g&apos; pom.xml )
+(cd org.eclipse.mylyn.builds; sed -i &apos;s#version=&quot;3.25.0&quot;#version=&quot;3.25.2&quot;#g&apos;  org.eclipse.mylyn.builds-feature/feature.xml )
+
+# until review is merged
+#(cd org.eclipse.mylyn.builds; sed -i 's#3.25.1-SNAPSHOT#3.25.2-SNAPSHOT#g' pom.xml )
+
+# for nexus2 on docker local tests environment
+(cd org.eclipse.mylyn.versions; sed -i &apos;s#https://repo.eclipse.org/content/repositories/mylyn-#https://#MYLYN_TEST_NAME#/nexus2/content/repositories/#g&apos; pom.xml )
+
+
+git submodule foreach git rev-parse HEAD
+git rev-list HEAD &gt; mylyn.all.stamp</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Maven>
+      <targets>help:effective-pom
+-Doutput=dbg_effective-pom.out
+-P2019-12
+-Prelease
+clean
+package</targets>
+      <pom>pom.xml</pom>
+      <properties>maven.test.skip=true
+tycho.localArtifacts=ignore
+explicit-target=true
+rootDirectory=$WORKSPACE
+sign.skip=true</properties>
+      <usePrivateRepository>true</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>true</injectBuildVariables>
+    </hudson.tasks.Maven>
+  </builders>
+  <publishers/>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.xvnc.Xvnc plugin="xvnc@1.25">
+      <takeScreenshot>false</takeScreenshot>
+      <useXauthority>true</useXauthority>
+    </hudson.plugins.xvnc.Xvnc>
+  </buildWrappers>
+</project>

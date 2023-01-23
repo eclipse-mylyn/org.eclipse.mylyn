@@ -1,0 +1,23 @@
+---
+- name: Creates directory
+  ansible.builtin.file:
+        path: "/mylyn-config-dir/{{ role_name }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: Build and start
+  ansible.builtin.include_tasks:
+    file: build_start.yml
+  with_items: 
+    "{{ jenkins_instances }}"
+  loop_control:
+    loop_var: act_item

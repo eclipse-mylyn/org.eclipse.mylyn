@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -70,6 +70,8 @@ public class CommonTestUtil {
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
 	private static final String KEY_IGNORE_LOCAL_SERVICES = "org.eclipse.mylyn.tests.ignore.local.services";
+
+	private static final String KEY_IGNORE_GLOBAL_SERVICES = "org.eclipse.mylyn.tests.ignore.global.services";
 
 	private final static int MAX_RETRY = 5;
 
@@ -563,6 +565,10 @@ public class CommonTestUtil {
 	 */
 	public static boolean ignoreLocalTestServices() {
 		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_LOCAL_SERVICES));
+	}
+
+	public static boolean ignoreGlobalTestServices() {
+		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_GLOBAL_SERVICES));
 	}
 
 	public static boolean isBehindProxy() {

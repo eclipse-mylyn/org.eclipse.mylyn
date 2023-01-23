@@ -10,10 +10,10 @@
         GIT_BRANCH_TAG: "{{ act_item.git_branch }}"
         EXTRAINFO: "{{ act_item.extra_info }}"
     source: build
-  register: build_out
-- name: build_out {{ act_item.image_tag }}
-  debug:
-    var: build_out.stdout_lines
+#  register: build_out
+#- name: build_out {{ act_item.image_tag }}
+#  debug:
+#    var: build_out.stdout_lines
 - name: get version {{ act_item.image_tag }}
   ansible.builtin.shell: |
     docker run --rm 127.0.0.1:5000/bugzilla:{{ act_item.image_tag }} sh -c 'cat /var/www/html/Bugzilla/Constants.pm | grep "BUGZILLA_VERSION =>"'   | cut -d'"' -f 2 
@@ -60,7 +60,7 @@
 #    contname: "bugzilla{{ act_item.image_tag }}"
     label_data:  |
        { traefik.enable: "true" ,
-         traefik.docker.network: ruvzcx_net ,
+         traefik.docker.network: mylyn_net ,
          traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
@@ -85,7 +85,7 @@
     name: "{{ act_item.servmame}}"
     image: "127.0.0.1:5000/bugzilla:{{ act_item.image_tag }}"
     networks:
-      - ruvzcx_net
+      - mylyn_net
 #    publish:       
 #      - published_port: "{{ act_item.port1 }}"
 #        target_port: "{{ act_item.port1 }}"
@@ -110,7 +110,23 @@
     labels: "{{ label_data | from_yaml }}"
     placement:
       constraints:
-#        - node.role == manager
        - node.role == worker
+  when: ((docker_mode is defined) and (docker_mode == 'swarm'))
 
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "{{ act_item.servmame}}"
+    image: "127.0.0.1:5000/bugzilla:{{ act_item.image_tag }}"
+    ports:       
+      - "{{act_item.port1}}:80"
+    networks:
+      - name: mylyn_net
+    env:
+      BASE_URL: "{{ common_domain_name }}"
+      BUG_SERVICE_NAME: "{{ act_item.servmame}}"
+      CERT_FILE_NAME: "mylynmstr01"
+    volumes:
+      - "/mylyn-config-dir/certs:/certificates"
+    labels: "{{ label_data | from_yaml }}"
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
 ...

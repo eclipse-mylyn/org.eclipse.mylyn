@@ -21,14 +21,31 @@
     push: true
     build:
       path: /mylyn-config-dir/{{ role_name }}
+      args:
+        APP_VERSION: "{{ docker_mode }}"
     source: build
+
+- name: setlabels {{ act_item.image_tag }}
+  ansible.builtin.set_fact:
+    label_data: 
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.mylyn_idx_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/mylyn_idx`)",
+         traefik.http.routers.mylyn_idx_https.entrypoints: "websecure", 
+         traefik.http.routers.mylyn_idx_https.tls: "true",
+         traefik.http.routers.mylyn_idx_https.service: "mylyn_idx",
+         traefik.http.routers.mylyn_idx_https.middlewares: "stripprefix_mylyn_idx",
+         traefik.http.middlewares.stripprefix_mylyn_idx.stripprefix.prefixes: "/mylyn_idx",
+         traefik.http.services.mylyn_idx.loadbalancer.server.port: "8001",
+         traefik.http.services.mylyn_idx.loadbalancer.passhostheader: "true"
+       }
 
 - name: Deploy swarm service
   community.docker.docker_swarm_service:
     name: mylyn_idx
     image: "127.0.0.1:5000/mylyn_idx:1"
     networks:
-      - ruvzcx_net
+      - mylyn_net
       - cloud-socket-proxy
     publish:       
       - published_port: "8001"
@@ -47,20 +64,21 @@
       - source: "/var/run/docker.sock"
         target: "/var/run/docker.sock"
         type: bind
-    labels:
-      traefik.enable: "true"
-      traefik.docker.network: ruvzcx_net
-#      traefik.http.routers.mylyn_idx_https.rule: Host(`hello.mylyn.local`)
-      traefik.http.routers.mylyn_idx_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/mylyn_idx`)"
-      traefik.http.routers.mylyn_idx_https.entrypoints: websecure
-      traefik.http.routers.mylyn_idx_https.tls: "true"
-#     traefik.http.routers.mylyn_idx_https.tls.options: mintls13@file
-      traefik.http.routers.mylyn_idx_https.service: mylyn_idx
-      traefik.http.routers.mylyn_idx_https.middlewares: stripprefix_mylyn_idx
-      traefik.http.middlewares.stripprefix_mylyn_idx.stripprefix.prefixes: /mylyn_idx
-
-      traefik.http.services.mylyn_idx.loadbalancer.server.port: "8001"
-      traefik.http.services.mylyn_idx.loadbalancer.passhostheader: "true"
+    labels: "{{ label_data | from_yaml }}"
     placement:
       constraints:
         - node.role == manager
+  when: ((docker_mode is defined) and (docker_mode == 'swarm'))
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: mylyn_idx
+    image: "127.0.0.1:5000/mylyn_idx:1"
+    ports:       
+      - "8001:8001"
+    networks:
+      - name: mylyn_net
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    labels: "{{ label_data | from_yaml }}"
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
