@@ -18,6 +18,6 @@ jobs:
   call-license-check:
     uses: eclipse/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
     with:
-      projectId: technology.tycho
+      projectId: technology.mylyn
     secrets:
       gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
