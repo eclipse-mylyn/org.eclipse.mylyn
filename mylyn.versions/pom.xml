@@ -34,9 +34,6 @@
     <module>org.eclipse.mylyn.git-feature</module>
     <module>org.eclipse.mylyn.git.core</module>
     <module>org.eclipse.mylyn.git.ui</module>
-    <module>org.eclipse.mylyn.subclipse-feature</module>
-    <module>org.eclipse.mylyn.subclipse.core</module>
-    <module>org.eclipse.mylyn.subclipse.ui</module>
     <module>org.eclipse.mylyn.versions-feature</module>
     <module>org.eclipse.mylyn.versions.core</module>
     <module>org.eclipse.mylyn.versions.development-feature</module>

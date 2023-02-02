@@ -37,10 +37,6 @@
          id="org.eclipse.mylyn.versions.sdk"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.mylyn.subclipse"
-         version="0.0.0"/>
-
    <plugin
          id="org.eclipse.mylyn.versions.tests"
          download-size="0"
