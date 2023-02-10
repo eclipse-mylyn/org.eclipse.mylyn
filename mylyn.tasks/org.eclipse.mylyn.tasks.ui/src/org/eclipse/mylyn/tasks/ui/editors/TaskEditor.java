@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -575,8 +575,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 	IFormPage[] getPages() {
 		List<IFormPage> formPages = new ArrayList<IFormPage>();
 		if (pages != null) {
-			for (int i = 0; i < pages.size(); i++) {
-				Object page = pages.get(i);
+			for (Object page : pages) {
 				if (page instanceof IFormPage) {
 					formPages.add((IFormPage) page);
 				}
@@ -1060,10 +1059,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		leftToolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		if (needsContext) {
-			leftToolBarManager.add(activateAction);
-		}
-
 		// add external contributions
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && leftToolBarManager instanceof ContributionManager) {
@@ -1073,6 +1068,10 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 					: taskEditorInput.getTaskRepository();
 			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepository.getConnectorKind());
+		}
+
+		if (needsContext) {
+			leftToolBarManager.add(activateAction);
 		}
 
 		leftToolBarManager.update(true);
