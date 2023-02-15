@@ -143,6 +143,18 @@ public class MarkupToEclipseHelpMojoTest {
 	}
 
 	@Test
+	public void processNonMarkupFileOverwritesTargetFile() throws IOException {
+		URL resource = MarkupToEclipseHelpMojoTest.class.getResource("/test.textile");
+		File file = new File(resource.getPath());
+
+		markupToEclipseHelp.process(file, "", null);
+		markupToEclipseHelp.process(file, "", null);
+
+		assertTrue(computeOutputFile("test.textile").exists());
+		assertHasContent("test.textile", Files.readString(file.toPath(), StandardCharsets.UTF_8));
+	}
+
+	@Test
 	public void configureStylesheetUrls() {
 		markupToEclipseHelp.stylesheetUrls = Arrays.asList("test/foo.css", "bar.css");
 		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);

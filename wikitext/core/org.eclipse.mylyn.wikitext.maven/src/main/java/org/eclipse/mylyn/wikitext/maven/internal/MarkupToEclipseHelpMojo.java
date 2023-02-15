@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -236,7 +237,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		ensureFolderExists("target folder", targetFolder, true);
 		File targetFile = new File(targetFolder, sourceFile.getName());
 		try {
-			Files.copy(sourceFile.toPath(), targetFile.toPath());
+			Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new BuildFailureException(
 					format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile, e.getMessage()), e);
