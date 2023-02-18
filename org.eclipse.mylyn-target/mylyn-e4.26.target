@@ -69,9 +69,14 @@
 			<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
 			<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 		</location>
-		<location path="/Users/frank/eclipse/mylyn-main/git/org.eclipse.mylyn/org.eclipse.mylyn-target/github" type="Directory"/>
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.mylyn.github</groupId>
+					<artifactId>org.eclipse.egit.github.core</artifactId>
+					<version>6.1.0.202203080745-r</version>
+					<type>jar</type>
+				</dependency>
 				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-inline</artifactId>
@@ -79,6 +84,12 @@
 					<type>jar</type>
 				</dependency>
 			</dependencies>
+			<repositories>
+				<repository>
+					<id>Id1</id>
+					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+				</repository>
+			</repositories>
 			<instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
