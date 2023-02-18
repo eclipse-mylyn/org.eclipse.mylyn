@@ -86,7 +86,7 @@
 			</dependencies>
 			<repositories>
 				<repository>
-					<id>Id1</id>
+					<id>eclipse-egit</id>
 					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
 				</repository>
 			</repositories>
