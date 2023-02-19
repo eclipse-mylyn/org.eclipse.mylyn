@@ -11,13 +11,9 @@ Export-Package: org.eclipse.mylyn.internal.github.core;version="6.2.0";x-friends
  org.eclipse.mylyn.internal.github.core.gist;version="6.2.0";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.issue;version="6.2.0";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.pr;version="6.2.0";x-friends:="org.eclipse.mylyn.github.ui"
-Require-Bundle: org.eclipse.mylyn.tasks.core;bundle-version="[3.20.0,4.0.0)",
- org.eclipse.mylyn.commons.net;bundle-version="[3.20.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="3.26.100"
-Import-Package: org.eclipse.egit.core,
- org.eclipse.egit.github.core;version="6.2.0",
- org.eclipse.egit.github.core.client;version="6.2.0",
- org.eclipse.egit.github.core.service;version="6.2.0",
- org.eclipse.egit.github.core.util;version="6.2.0",
- org.eclipse.jgit.lib;version="[6.2.0,6.3.0)",
- org.eclipse.jgit.transport;version="[6.2.0,6.3.0)"
+Require-Bundle: org.eclipse.mylyn.tasks.core;bundle-version="[3.26.0,4.0.0)",
+ org.eclipse.mylyn.commons.net;bundle-version="[3.26.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.19.0,4.0.0)",
+ org.eclipse.egit.core;bundle-version="6.2.0",
+ org.eclipse.egit.github.core,
+ org.eclipse.jgit;bundle-version="6.2.0"

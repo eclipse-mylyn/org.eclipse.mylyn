@@ -4,3 +4,6 @@
 *~
 !/org.eclipse.mylyn.releng/bin
 /.DS_Store
+**/.DS_Store
+**/org.eclipse*/bin
+**/org.eclipse*/target
