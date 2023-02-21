@@ -478,7 +478,7 @@ public class RepositoryLocationPart {
 	}
 
 	public boolean isValidUrl(String url) {
-		if (url.startsWith("https://") || url.startsWith("https://")) { //$NON-NLS-1$//$NON-NLS-2$
+		if (url.startsWith("https://") || url.startsWith("http://")) { //$NON-NLS-1$//$NON-NLS-2$
 			try {
 				new URI(url);
 				return true;
