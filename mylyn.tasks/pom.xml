@@ -52,6 +52,21 @@
     <module>org.eclipse.mylyn.tasks.ui</module>
     <module>org.eclipse.mylyn.tasks.ui.tests</module>
     <module>org.eclipse.mylyn.tests.util</module>
-    <module>connectors</module>
+    <module>org.eclipse.mylyn.bugzilla-feature</module>
+    <module>org.eclipse.mylyn.bugzilla.core</module>
+    <module>org.eclipse.mylyn.bugzilla.tests</module>
+    <module>org.eclipse.mylyn.bugzilla.ui</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.feature</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.core</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.core.tests</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.tests</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.ui</module>
+    <module>org.eclipse.mylyn.bugzilla.rest.ui.tests</module>
+    <module>org.eclipse.mylyn.trac-feature</module>
+    <module>org.eclipse.mylyn.trac.core</module>
+    <module>org.eclipse.mylyn.trac.core.tests</module>
+    <module>org.eclipse.mylyn.trac.tests</module>
+    <module>org.eclipse.mylyn.trac.ui</module>
+    <module>org.eclipse.mylyn.trac.ui.tests</module>
   </modules>
 </project>

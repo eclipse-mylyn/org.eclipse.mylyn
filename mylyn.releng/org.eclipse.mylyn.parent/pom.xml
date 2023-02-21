@@ -28,7 +28,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>3.0.1</tycho-version>
+  <tycho-version>3.0.1</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
@@ -138,6 +138,17 @@
         <plugins>
           <plugin>
             <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-surefire-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <skip>${test.component.skip}</skip>
+              <testSuite>${project.artifactId}</testSuite>
+              <testClass>${test.suite}</testClass>
+              <argLine> ${tycho-surefire-argLine}</argLine>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <version>${tycho-version}</version>
             <configuration>
@@ -176,8 +187,8 @@
               </environments>
               <target>
                 <artifact>
-				<!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-				<!--
+                <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
+                <!--
                   <groupId>${project.parent.groupId}</groupId>
                   <artifactId>${project.parent.groupId}-target</artifactId> 
                 -->
@@ -246,8 +257,8 @@
               </environments>
               <target>
                 <artifact>
-				<!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-				<!--
+                <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
+                <!--
                   <groupId>${project.parent.groupId}</groupId>
                   <artifactId>${project.parent.groupId}-target</artifactId> 
                 -->
@@ -309,6 +320,18 @@
         </pluginRepository>
       </pluginRepositories>
     </profile>
+  <profile>
+    <id>macosx</id>
+    <activation>
+      <os>
+      <name>mac os x</name>
+        <family>mac</family>
+      </os>
+    </activation>
+    <properties>
+      <test.osvmargs>-XstartOnFirstThread</test.osvmargs>
+    </properties>
+  </profile>
   </profiles>
 
   <build>
@@ -449,6 +472,4 @@
       </plugins>
     </pluginManagement>
   </build>
-  <modules>
-  </modules>
 </project>

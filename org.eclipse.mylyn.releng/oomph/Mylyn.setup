@@ -206,13 +206,13 @@
           name="Tasks Connector Bugzilla">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.bugzilla.*"/>
       </workingSet>
       <workingSet
           name="Tasks Connector Trac">
         <predicate
             xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/trac.*"/>
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
       </workingSet>
       <workingSet
           name="Context">
