@@ -59,6 +59,7 @@
 		<dist.archive>${basedir}/target/drops</dist.archive>
 		<dist.site></dist.site>
 		<target-platform>mylyn-e${target-version}</target-platform>
+		<test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
 	</properties>
 	<mailingLists>
 		<mailingList>
@@ -307,30 +308,18 @@
 				</pluginRepository>
 			</pluginRepositories>
 		</profile>
-    <profile>
-      <id>macosx</id>
-      <activation>
-        <os>
-          <name>mac os x</name>
-          <family>mac</family>
-        </os>
-      </activation>
-      <properties>
-        <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs} -XstartOnFirstThread</test.vmargs>
-      </properties>
-    </profile>
-    <profile>
-      <id>other-os</id>
-      <activation>
-        <os>
-          <name>not-mac</name>
-          <family>!mac</family>
-        </os>
-      </activation>
-      <properties>
-        <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
-      </properties>
-    </profile>
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<test.osvmargs>-XstartOnFirstThread</test.osvmargs>
+			</properties>
+		</profile>
 	</profiles>
 	<build>
 		<plugins>
