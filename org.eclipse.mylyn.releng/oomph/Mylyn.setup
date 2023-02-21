@@ -381,8 +381,17 @@
       <workingSet
           name="Tasks">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/.*"/>
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:LocationPredicate"
+              pattern="${git.clone.mylyn.location|path}/mylyn.tasks/.*"/>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:LocationPredicate"
+                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
+          </operand>
+        </predicate>
       </workingSet>
       <workingSet
           name="Context">
@@ -407,6 +416,12 @@
         <predicate
             xsi:type="predicates:LocationPredicate"
             pattern="${git.clone.mylyn.location|path}/mylyn.versions/.*"/>
+      </workingSet>
+      <workingSet
+          name="Trac Connector">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
       </workingSet>
     </setupTask>
     <setupTask
