@@ -355,6 +355,8 @@
         <excludedPath>mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
         <excludedPath>mylyn.reviews/tbr</excludedPath>
         <excludedPath>mylyn.docs</excludedPath>
+        <excludedPath>/org.eclipse.mylyn.java.tests/target</excludedPath>
+        <excludedPath>org.eclipse.mylar.tests.project1</excludedPath>
       </sourceLocator>
       <description>Import Releng Project</description>
     </setupTask>
@@ -407,6 +409,18 @@
         <predicate
             xsi:type="predicates:LocationPredicate"
             pattern="${git.clone.mylyn.location|path}/mylyn.versions/.*"/>
+      </workingSet>
+      <workingSet
+          name="Github">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.github/.*"/>
+      </workingSet>
+      <workingSet
+          name="egit">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
       </workingSet>
     </setupTask>
     <setupTask

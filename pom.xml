@@ -27,6 +27,7 @@
   <name>Mylyn Root</name>
   <packaging>pom</packaging>
   <modules>
+    <module>org.eclipse.mylyn-target</module>
     <module>mylyn.commons</module>
     <module>mylyn.tasks</module>
     <module>mylyn.context</module>
@@ -34,10 +35,9 @@
     <module>mylyn.builds</module>
     <module>mylyn.reviews</module>
     <module>org.eclipse.mylyn.discovery-directory</module>
-    <module>org.eclipse.mylyn.tests</module>
-    <module>org.eclipse.mylyn-site</module>
-    <module>org.eclipse.mylyn-target</module>
     <module>mylyn.egit</module>
     <module>mylyn.github</module>
+    <module>org.eclipse.mylyn.tests</module>
+    <module>org.eclipse.mylyn-site</module>
   </modules>
 </project>

@@ -20,13 +20,9 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="https://download.eclipse.org/egit/github/updates"/>
-   </url>
-
    <requires>
-      <import feature="org.eclipse.egit" version="6.2.0" match="equivalent"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.20.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.egit" version="6.4.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.26.0" match="equivalent"/>
       <import plugin="com.google.gson" version="1.6" match="greaterOrEqual"/>
    </requires>
 

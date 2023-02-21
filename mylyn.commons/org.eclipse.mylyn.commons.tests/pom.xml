@@ -13,22 +13,4 @@
   <properties>
     <test.suite>${project.artifactId}.AllCommonsTests</test.suite>
   </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <skip>${test.component.skip}</skip>
-          <testSuite>${project.artifactId}</testSuite>
-          <testClass>${test.suite}</testClass>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
