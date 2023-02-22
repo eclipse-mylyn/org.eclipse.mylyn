@@ -54,7 +54,7 @@
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.trac_feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
+      <category name="trac.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.builds">
       <category name="org.eclipse.mylyn.sdk.category"/>
@@ -144,11 +144,6 @@
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="github_connector" label="GitHub Connector">
-      <description>
-         Connector for Github Issues, Pull Requests and Gists
-      </description>
-   </category-def>
    <category-def name="org.eclipse.mylyn.sdk.category" label="Mylyn SDK and Framework">
       <description>
          Source code and documentation for integrators building on Mylyn.
@@ -158,5 +153,11 @@
       <description>
          Tests for Mylyn functionality.
       </description>
+   </category-def>
+   <category-def name="trac.connector" label="Trac Connector">
+      <category name="org.eclipse.mylyn.integrations.category"/>
+   </category-def>
+   <category-def name="github_connector" label="GitHub Connector">
+      <category name="org.eclipse.mylyn.integrations.category"/>
    </category-def>
 </site>
