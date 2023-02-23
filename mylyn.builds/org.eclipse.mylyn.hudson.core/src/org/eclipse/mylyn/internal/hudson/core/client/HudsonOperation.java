@@ -280,13 +280,11 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		}
 
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials == null) {
-			throw new IllegalStateException("Authentication requested without valid credentials");
+		if (credentials != null) {
+			String encodedCreds = "Basic " + Base64.getEncoder()
+					.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes());
+			post.addHeader("Authorization", encodedCreds);
 		}
-
-		String encodedCreds = "Basic " + Base64.getEncoder()
-				.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes());
-		post.addHeader("Authorization", encodedCreds);
 	}
 
 	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor)
