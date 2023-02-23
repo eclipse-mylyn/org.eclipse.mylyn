@@ -104,6 +104,10 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 				}
 			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
 				legacyAuthentication(monitor, credentials); // Do we still need to try the old way???
+			} else if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+				throw new AuthenticationException(response.getStatusLine().getReasonPhrase(),
+						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+								AuthenticationType.REPOSITORY));
 			} else {
 				validate(response, monitor);
 
