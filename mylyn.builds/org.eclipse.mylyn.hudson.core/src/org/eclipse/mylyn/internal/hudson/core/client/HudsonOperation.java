@@ -12,13 +12,9 @@
 
 package org.eclipse.mylyn.internal.hudson.core.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -26,11 +22,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.text.html.HTML.Tag;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -38,10 +32,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.commons.core.HtmlTag;
-import org.eclipse.mylyn.commons.core.HtmlUtil;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
@@ -59,6 +49,7 @@ import org.eclipse.osgi.util.NLS;
 public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	private static final String JSESSIONID = "JSESSIONID";
+
 	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
 
 	public HudsonOperation(CommonHttpClient client) {
@@ -105,14 +96,12 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 										getClient().getLocation(), AuthenticationType.REPOSITORY));
 					}
 				}
-			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-				legacyAuthentication(monitor, credentials); // Do we still need to try the old way???
 			} else if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				throw new AuthenticationException(response.getStatusLine().getReasonPhrase(),
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else {
-				validate(response, monitor);
+				validate(response, monitor); // Check for proxy errors and such
 
 				throw new AuthenticationException("Authentication failed",
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
@@ -122,100 +111,6 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			HttpUtil.release(request, response, monitor);
 		}
 
-	}
-
-	@Deprecated
-	private void legacyAuthentication(IOperationMonitor monitor, UserCredentials credentials)
-			throws UnsupportedEncodingException, IOException, AuthenticationException {
-		HttpPost request = createPostRequest(baseUrl() + "j_acegi_security_check"); //$NON-NLS-1$
-		HttpResponse response = executeAuthenticationRequest(monitor, credentials, request);
-		try {
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-				HttpUtil.release(request, response, monitor);
-
-				// re-try at new location used by Hudson 3.0
-				request = createPostRequest(baseUrl() + "j_spring_security_check"); //$NON-NLS-1$
-				response = executeAuthenticationRequest(monitor, credentials, request);
-			}
-
-			// check for proxy authentication request
-			validate(response, monitor);
-
-			// validate form submission
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
-				getClient().setAuthenticated(false);
-				System.err.println(EntityUtils.toString(response.getEntity()));
-				throw new IOException(NLS.bind("Unexpected response from server while logging in: {0}",
-						HttpUtil.getStatusText(statusCode)));
-			}
-
-			// validate form response
-			Header header = response.getFirstHeader("Location"); //$NON-NLS-1$
-			if (header != null && header.getValue().endsWith("/loginError")) { //$NON-NLS-1$
-				getClient().setAuthenticated(false);
-				throw new AuthenticationException("Authentication failed",
-						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
-								AuthenticationType.REPOSITORY));
-			}
-
-			// success
-			getClient().setAuthenticated(hasValidatAuthenticationState());
-
-			updateCrumb(monitor);
-		} finally {
-			HttpUtil.release(request, response, monitor);
-		}
-	}
-
-	@Deprecated
-	private HttpResponse executeAuthenticationRequest(IOperationMonitor monitor, UserCredentials credentials,
-			HttpPost request) throws UnsupportedEncodingException, IOException {
-		HudsonLoginForm form = new HudsonLoginForm();
-		form.j_username = credentials.getUserName();
-		form.j_password = credentials.getPassword();
-		form.from = ""; //$NON-NLS-1$
-		request.setEntity(form.createEntity());
-		HttpResponse response = getClient().execute(request, monitor);
-		return response;
-	}
-
-	@Deprecated
-	private void updateCrumb(IOperationMonitor monitor) throws IOException {
-		HttpGet request = super.createGetRequest(baseUrl());
-		HttpResponse response = getClient().execute(request, monitor);
-		try {
-			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
-			try {
-				String charSet = EntityUtils.getContentCharSet(response.getEntity());
-				try (BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in, (charSet != null) ? charSet : "UTF-8"))) {
-					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer
-							.nextToken()) {
-						if (token.getType() == Token.TAG) {
-							// <script>crumb.init(".crumb", "8aae0557456447d391f81f2ef2eafa4d");</script>
-							HtmlTag tag = (HtmlTag) token.getValue();
-							if (tag.getTagType() == Tag.SCRIPT) {
-								String text = HtmlUtil.getTextContent(tokenizer);
-								Pattern pattern = Pattern.compile("crumb.init\\(\".*\",\\s*\"([a-zA-Z0-9]*)\"\\)"); //$NON-NLS-1$
-								Matcher matcher = pattern.matcher(text);
-								if (matcher.find()) {
-									getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, matcher.group(1));
-									break;
-								}
-							}
-						}
-					}
-				}
-			} catch (ParseException e) {
-				// ignore
-			} finally {
-				in.close();
-			}
-		} finally {
-			HttpUtil.release(request, response, monitor);
-		}
 	}
 
 	public T run() throws HudsonException {
@@ -328,7 +223,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if (JSESSIONID.equals(cookie.getName()) || cookie.getName().startsWith(JSESSIONID)) { //$NON-NLS-2$
+				if (JSESSIONID.equals(cookie.getName()) || cookie.getName().startsWith(JSESSIONID)) {
 					return !cookie.isExpired(new Date());
 				}
 			}
