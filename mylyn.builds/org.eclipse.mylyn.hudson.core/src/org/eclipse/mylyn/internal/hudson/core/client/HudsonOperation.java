@@ -86,7 +86,9 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		try {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				try (InputStream inStream = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor)) {
-					String text = IOUtils.toString(inStream, Charset.defaultCharset());
+					String charSet = EntityUtils.getContentCharSet(response.getEntity());
+					String text = IOUtils.toString(inStream,
+							charSet != null ? Charset.forName(charSet) : Charset.defaultCharset());
 					Pattern pattern = Pattern.compile("\\.*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\""); //$NON-NLS-1$
 					Matcher matcher = pattern.matcher(text);
 					if (matcher.find()) {
@@ -95,7 +97,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 						// success
 						getClient().setAuthenticated(true);
 
-						getClient().getLocation().setProperty(ID_CONTEXT_CRUMB, crumb);
+						getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, crumb);
 					} else {
 						throw new AuthenticationException("Authentication failed",
 								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
@@ -198,7 +200,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 								Pattern pattern = Pattern.compile("crumb.init\\(\".*\",\\s*\"([a-zA-Z0-9]*)\"\\)"); //$NON-NLS-1$
 								Matcher matcher = pattern.matcher(text);
 								if (matcher.find()) {
-									getClient().getLocation().setProperty(ID_CONTEXT_CRUMB, matcher.group(1));
+									getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, matcher.group(1));
 									break;
 								}
 							}
