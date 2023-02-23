@@ -58,6 +58,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
+	private static final String JSESSIONID = "JSESSIONID";
 	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
 
 	public HudsonOperation(CommonHttpClient client) {
@@ -327,7 +328,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if ("JSESSIONID".equals(cookie.getName()) || cookie.getName().startsWith("JSESSIONID")) { //$NON-NLS-2$
+				if (JSESSIONID.equals(cookie.getName()) || cookie.getName().startsWith(JSESSIONID)) { //$NON-NLS-2$
 					return !cookie.isExpired(new Date());
 				}
 			}
