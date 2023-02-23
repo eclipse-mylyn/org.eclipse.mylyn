@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,12 +29,14 @@ import java.util.regex.Pattern;
 import javax.swing.text.html.HTML.Tag;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
@@ -70,11 +74,52 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	@Override
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
+		getClient().setAuthenticated(false);
+
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials == null) {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
 
+		HttpGet request = createGetRequest(baseUrl() + "crumbIssuer/api/json"); //$NON-NLS-1$
+		HttpResponse response = getClient().execute(request, monitor);
+		try {
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				try (InputStream inStream = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor)) {
+					String text = IOUtils.toString(inStream, Charset.defaultCharset());
+					Pattern pattern = Pattern.compile("\\.*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\""); //$NON-NLS-1$
+					Matcher matcher = pattern.matcher(text);
+					if (matcher.find()) {
+						String crumb = matcher.group(1);
+
+						// success
+						getClient().setAuthenticated(true);
+
+						getClient().getLocation().setProperty(ID_CONTEXT_CRUMB, crumb);
+					} else {
+						throw new AuthenticationException("Authentication failed",
+								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+										getClient().getLocation(), AuthenticationType.REPOSITORY));
+					}
+				}
+			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+				legacyAuthentication(monitor, credentials); // Do we still need to try the old way???
+			} else {
+				validate(response, monitor);
+
+				throw new AuthenticationException("Authentication failed",
+						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+								AuthenticationType.REPOSITORY));
+			}
+		} finally {
+			HttpUtil.release(request, response, monitor);
+		}
+
+	}
+
+	@Deprecated
+	private void legacyAuthentication(IOperationMonitor monitor, UserCredentials credentials)
+			throws UnsupportedEncodingException, IOException, AuthenticationException {
 		HttpPost request = createPostRequest(baseUrl() + "j_acegi_security_check"); //$NON-NLS-1$
 		HttpResponse response = executeAuthenticationRequest(monitor, credentials, request);
 		try {
@@ -109,14 +154,15 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 			// success
 			getClient().setAuthenticated(hasValidatAuthenticationState());
+
+			updateCrumb(monitor);
 		} finally {
 			HttpUtil.release(request, response, monitor);
 		}
-
-		updateCrumb(monitor);
 	}
 
-	public HttpResponse executeAuthenticationRequest(IOperationMonitor monitor, UserCredentials credentials,
+	@Deprecated
+	private HttpResponse executeAuthenticationRequest(IOperationMonitor monitor, UserCredentials credentials,
 			HttpPost request) throws UnsupportedEncodingException, IOException {
 		HudsonLoginForm form = new HudsonLoginForm();
 		form.j_username = credentials.getUserName();
@@ -127,27 +173,30 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		return response;
 	}
 
+	@Deprecated
 	private void updateCrumb(IOperationMonitor monitor) throws IOException {
-		HttpGet request = createGetRequest(baseUrl());
+		HttpGet request = super.createGetRequest(baseUrl());
 		HttpResponse response = getClient().execute(request, monitor);
 		try {
 			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
 			try {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in, (charSet != null) ? charSet : "UTF-8")); //$NON-NLS-1$
-				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG) {
-						// <script>crumb.init(".crumb", "8aae0557456447d391f81f2ef2eafa4d");</script>
-						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == Tag.SCRIPT) {
-							String text = HtmlUtil.getTextContent(tokenizer);
-							Pattern pattern = Pattern.compile("crumb.init\\(\".*\",\\s*\"([a-zA-Z0-9]*)\"\\)"); //$NON-NLS-1$
-							Matcher matcher = pattern.matcher(text);
-							if (matcher.find()) {
-								getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, matcher.group(1));
-								break;
+				try (BufferedReader reader = new BufferedReader(
+						new InputStreamReader(in, (charSet != null) ? charSet : "UTF-8"))) {
+					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer
+							.nextToken()) {
+						if (token.getType() == Token.TAG) {
+							// <script>crumb.init(".crumb", "8aae0557456447d391f81f2ef2eafa4d");</script>
+							HtmlTag tag = (HtmlTag) token.getValue();
+							if (tag.getTagType() == Tag.SCRIPT) {
+								String text = HtmlUtil.getTextContent(tokenizer);
+								Pattern pattern = Pattern.compile("crumb.init\\(\".*\",\\s*\"([a-zA-Z0-9]*)\"\\)"); //$NON-NLS-1$
+								Matcher matcher = pattern.matcher(text);
+								if (matcher.find()) {
+									getClient().getLocation().setProperty(ID_CONTEXT_CRUMB, matcher.group(1));
+									break;
+								}
 							}
 						}
 					}
@@ -207,11 +256,31 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected HttpPost createPostRequest(String requestPath) {
 		HttpPost post = super.createPostRequest(requestPath);
-		String crumb = (String) getClient().getContext().getAttribute(ID_CONTEXT_CRUMB);
+		setupAuthentication(post);
+		return post;
+	}
+
+	@Override
+	protected HttpGet createGetRequest(String requestPath) {
+		HttpGet get = super.createGetRequest(requestPath);
+		setupAuthentication(get);
+		return get;
+	}
+
+	private void setupAuthentication(AbstractHttpMessage post) {
+		String crumb = getClient().getLocation().getProperty(ID_CONTEXT_CRUMB);
 		if (crumb != null) {
 			post.addHeader(ID_CONTEXT_CRUMB, crumb);
 		}
-		return post;
+
+		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials == null) {
+			throw new IllegalStateException("Authentication requested without valid credentials");
+		}
+
+		String encodedCreds = "Basic " + Base64.getEncoder()
+				.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes());
+		post.addHeader("Authorization", encodedCreds);
 	}
 
 	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor)
@@ -254,7 +323,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if ("JSESSIONID".equals(cookie.getName())) { //$NON-NLS-1$
+				if ("JSESSIONID".equals(cookie.getName()) || cookie.getName().startsWith("JSESSIONID")) { //$NON-NLS-2$
 					return !cookie.isExpired(new Date());
 				}
 			}
