@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.hudson.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -78,11 +77,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
 
-		// Need the host part of the url
-		URI url = URI.create(baseUrl());
-		String hostUrl = url.getScheme() + "://" + url.getAuthority() + "/";
-
-		HttpGet request = createGetRequest(hostUrl + "crumbIssuer/api/json"); //$NON-NLS-1$
+		HttpGet request = createGetRequest(baseUrl() + "crumbIssuer/api/json"); //$NON-NLS-1$
 		HttpResponse response = getClient().execute(request, monitor);
 		try {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
