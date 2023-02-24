@@ -54,7 +54,6 @@
 			<unit id="com.sun.xml.bind" version="0.0.0"/>
 			<unit id="jakarta.activation" version="1.2.2.v20221112-0806"/>
 			<unit id="jakarta.servlet" version="0.0.0"/>
-			<unit id="jakarta.xml.bind" version="0.0.0"/>
 			<unit id="org.apache.commons.lang" version="0.0.0"/>
 			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
 			<unit id="org.apache.xerces" version="0.0.0"/>
