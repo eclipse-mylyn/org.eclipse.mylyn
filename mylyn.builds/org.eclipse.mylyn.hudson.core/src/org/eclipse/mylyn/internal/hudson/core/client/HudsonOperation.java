@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.hudson.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -28,7 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.util.EntityUtils;
@@ -50,7 +51,11 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	private static final String JSESSIONID = "JSESSIONID";
 
+	private static final String JSESSIONID_NAME = "JSESSIONID_NAME";
+
 	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
+
+	private static final String ID_CONTEXT_CRUMB_HEADER = ".crumbHeader"; //$NON-NLS-1$
 
 	public HudsonOperation(CommonHttpClient client) {
 		super(client);
@@ -73,7 +78,11 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
 
-		HttpGet request = createGetRequest(baseUrl() + "crumbIssuer/api/json"); //$NON-NLS-1$
+		// Need the host part of the url
+		URI url = URI.create(baseUrl());
+		String hostUrl = url.getScheme() + "://" + url.getAuthority() + "/";
+
+		HttpGet request = createGetRequest(hostUrl + "crumbIssuer/api/json"); //$NON-NLS-1$
 		HttpResponse response = getClient().execute(request, monitor);
 		try {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -81,15 +90,28 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 					String charSet = EntityUtils.getContentCharSet(response.getEntity());
 					String text = IOUtils.toString(inStream,
 							charSet != null ? Charset.forName(charSet) : Charset.defaultCharset());
-					Pattern pattern = Pattern.compile("\\.*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\""); //$NON-NLS-1$
+					Pattern pattern = Pattern
+							.compile(".*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\".*\"crumbRequestField\":.*?\"(.*)\""); //$NON-NLS-1$
 					Matcher matcher = pattern.matcher(text);
 					if (matcher.find()) {
 						String crumb = matcher.group(1);
-
+						String crumbHeader = matcher.group(2);
 						// success
 						getClient().setAuthenticated(true);
 
 						getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, crumb);
+						getClient().getContext().setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
+
+						List<Cookie> cookies = new ArrayList<>(
+								getClient().getHttpClient().getCookieStore().getCookies());
+						for (Cookie cookie : cookies) {
+							if (cookie.getName().startsWith(JSESSIONID)) {
+								getClient().getContext().setAttribute(JSESSIONID_NAME, cookie.getName());
+								getClient().getContext().setAttribute(JSESSIONID, cookie.getValue());
+								break;
+							}
+
+						}
 					} else {
 						throw new AuthenticationException("Authentication failed",
 								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
@@ -156,30 +178,33 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	}
 
 	@Override
-	protected HttpPost createPostRequest(String requestPath) {
-		HttpPost post = super.createPostRequest(requestPath);
-		setupAuthentication(post);
-		return post;
+	protected void configure(HttpRequestBase request) {
+		setupAuthentication(request);
 	}
 
-	@Override
-	protected HttpGet createGetRequest(String requestPath) {
-		HttpGet get = super.createGetRequest(requestPath);
-		setupAuthentication(get);
-		return get;
-	}
+	private void setupAuthentication(AbstractHttpMessage request) {
 
-	private void setupAuthentication(AbstractHttpMessage post) {
-		String crumb = getClient().getLocation().getProperty(ID_CONTEXT_CRUMB);
+		/* Supposed to allow one to fire up a build using ones password.
+		 * Doesn't work for some reason. Need to use API token for PW
+		 * Leave in as a reminder for now. GNL
+		 */
+		//		String sessionId = (String) getClient().getContext().getAttribute(JSESSIONID);
+		//		if (sessionId != null) {
+		//			request.addHeader((String) getClient().getContext().getAttribute(JSESSIONID), sessionId);
+		//			request.addHeader((String) getClient().getContext().getAttribute(JSESSIONID_NAME), sessionId);
+		//		}
+
+		String crumb = (String) getClient().getContext().getAttribute(ID_CONTEXT_CRUMB);
 		if (crumb != null) {
-			post.addHeader(ID_CONTEXT_CRUMB, crumb);
+			String crumbHeader = (String) getClient().getContext().getAttribute(ID_CONTEXT_CRUMB_HEADER);
+			request.addHeader(crumbHeader, crumb);
 		}
 
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
 			String encodedCreds = "Basic " + Base64.getEncoder()
 					.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes());
-			post.addHeader("Authorization", encodedCreds);
+			request.addHeader("Authorization", encodedCreds);
 		}
 	}
 
@@ -209,7 +234,9 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected boolean needsAuthentication() {
 		if (hasCredentials()) {
-			boolean authenticated = getClient().isAuthenticated() && hasValidatAuthenticationState();
+			boolean authenticated = getClient().isAuthenticated()
+					&& getClient().getContext().getAttribute(ID_CONTEXT_CRUMB) != null
+					&& hasValidatAuthenticationState();
 			return !authenticated;
 		}
 		return false;
