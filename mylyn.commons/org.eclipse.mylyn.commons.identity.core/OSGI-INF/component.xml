@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="https://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.mylyn.commons.identity.core">
+<component name="org.eclipse.mylyn.commons.identity.core">
    <implementation class="org.eclipse.mylyn.internal.commons.identity.core.IdentityService"/>
    <service>
       <provide interface="org.eclipse.mylyn.commons.identity.core.IIdentityService"/>
    </service>
-</scr:component>
+</component>
