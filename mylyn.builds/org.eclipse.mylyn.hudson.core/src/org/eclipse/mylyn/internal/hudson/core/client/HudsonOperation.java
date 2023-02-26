@@ -232,6 +232,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 				}
 			} catch (ParseException e) {
 				// ignore
+			}
 		} finally {
 			HttpUtil.release(request, response, monitor);
 		}
