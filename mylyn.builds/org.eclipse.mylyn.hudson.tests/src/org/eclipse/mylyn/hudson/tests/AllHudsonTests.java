@@ -21,12 +21,9 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonUrlTest;
-import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
-import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
@@ -60,7 +57,9 @@ public class AllHudsonTests {
 		suite.addTestSuite(HudsonUrlTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
-			suite.addTestSuite(HudsonValidationTest.class);
+			//FIXME: AF: https://mylyn.org does not have a valid certificate
+			//https://github.com/eclipse-mylyn/.github/issues/3
+//			suite.addTestSuite(HudsonValidationTest.class);
 			List<HudsonFixture> fixtures;
 			try {
 				fixtures = configuration.discover(HudsonFixture.class, "hudson");
@@ -69,16 +68,22 @@ public class AllHudsonTests {
 						"No hudson fixtures found, will look for jenkins fixtures", e));
 				fixtures = new ArrayList<HudsonFixture>();
 			}
-			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
+			//FIXME: AF: https://mylyn.org does not have a valid certificate
+			//https://github.com/eclipse-mylyn/.github/issues/3
+//			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
 			for (HudsonFixture fixture : fixtures) {
 				if (fixture.isExcluded()
 						|| (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken())) {
 					continue;
 				}
 				fixture.createSuite(suite);
-				fixture.add(HudsonClientTest.class);
+				//FIXME: AF: fix required infra and enable test back
+				//https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds/issues/8
+//				fixture.add(HudsonClientTest.class);
 				if (!fixture.isUseCertificateAuthentication()) {
-					fixture.add(HudsonIntegrationTest.class);
+					//FIXME: AF: fix required infra and enable test back
+					//https://github.com/eclipse-mylyn/org.eclipse.mylyn.builds/issues/8
+//					fixture.add(HudsonIntegrationTest.class);
 				}
 				fixture.done();
 			}
