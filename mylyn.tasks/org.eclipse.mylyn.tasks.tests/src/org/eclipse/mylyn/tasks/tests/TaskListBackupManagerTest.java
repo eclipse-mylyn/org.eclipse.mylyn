@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,13 +15,13 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -41,14 +41,14 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	public void testAutoBackupDisabled() throws Exception {
 		backupManager.start(5);
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		assertEquals(0, backupManager.getBackupFiles().size());
 
 		task1 = new LocalTask("handle", "label");
 		TasksUiPlugin.getTaskList().addTask(task1);
 		backupManager.stop();
 		backupManager.start(5);
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		assertEquals(1, backupManager.getBackupFiles().size());
 	}
 
