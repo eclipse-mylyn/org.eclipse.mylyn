@@ -390,7 +390,34 @@
               xsi:type="predicates:NotPredicate">
             <operand
                 xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
+                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors.*"/>
+          </operand>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:LocationPredicate"
+                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.tasks.tests/.*"/>
+          </operand>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:LocationPredicate"
+                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.tasks.tests/target/.*"/>
+          </operand>
+        </predicate>
+      </workingSet>
+      <workingSet
+          name="Task Connectors">
+        <predicate
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:LocationPredicate"
+              pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors.*"/>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:NamePredicate"
+                pattern="org.eclipse.mylyn.*"/>
           </operand>
           <operand
               xsi:type="predicates:NotPredicate">
@@ -405,6 +432,24 @@
                 pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
           </operand>
         </predicate>
+      </workingSet>
+      <workingSet
+          name="Trac Connector">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/trac/.*"/>
+      </workingSet>
+      <workingSet
+          name="Bugzilla Connector">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla/.*"/>
+      </workingSet>
+      <workingSet
+          name="Bugzilla Rest Connector">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla-rest/.*"/>
       </workingSet>
       <workingSet
           name="Context">
