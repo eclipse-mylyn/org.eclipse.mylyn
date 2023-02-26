@@ -145,7 +145,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	}
 
-	@Deprecated(forRemoval = true) // Needed for unit tests against https://mylyn.org/hudson-3.3.3
+	@Deprecated // Needed for unit tests against https://mylyn.org/hudson-3.3.3
 	private void legacyAuthentication(IOperationMonitor monitor, UserCredentials credentials)
 			throws UnsupportedEncodingException, IOException, AuthenticationException {
 		HttpPost request = createPostRequest(baseUrl() + "j_acegi_security_check"); //$NON-NLS-1$
@@ -189,7 +189,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		}
 	}
 
-	@Deprecated(forRemoval = true) // Needed for unit tests against https://mylyn.org/hudson-3.3.3
+	@Deprecated // Needed for unit tests against https://mylyn.org/hudson-3.3.3
 	private HttpResponse executeAuthenticationRequest(IOperationMonitor monitor, UserCredentials credentials,
 			HttpPost request) throws UnsupportedEncodingException, IOException {
 		HudsonLoginForm form = new HudsonLoginForm();
@@ -201,12 +201,11 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		return response;
 	}
 
-	@Deprecated(forRemoval = true) // Needed for unit tests against https://mylyn.org/hudson-3.3.3
+	@Deprecated // Needed for unit tests against https://mylyn.org/hudson-3.3.3
 	private void updateCrumb(IOperationMonitor monitor) throws IOException {
 		HttpGet request = super.createGetRequest(baseUrl());
 		HttpResponse response = getClient().execute(request, monitor);
-		try {
-			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
+		try (InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor)) {
 			try {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
 				try (BufferedReader reader = new BufferedReader(
@@ -233,9 +232,6 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 				}
 			} catch (ParseException e) {
 				// ignore
-			} finally {
-				in.close();
-			}
 		} finally {
 			HttpUtil.release(request, response, monitor);
 		}
