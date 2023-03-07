@@ -59,11 +59,27 @@ import org.eclipse.osgi.util.NLS;
  */
 public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
-	private static final String JSESSIONID = "JSESSIONID";
+	// Find the crumb and crumb header
+	private static final String CRUMB_REGEX = ".*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\".*\"crumbRequestField\":.*?\"(.*)\""; //$NON-NLS-1$
 
+	// HTTP user/pw
+	private static final String AUTHORIZATION_BASIC_TYPE = "Basic "; //$NON-NLS-1$
+
+	// HTTP request Authorization header
+	private static final String AUTHORIZATION_HEADER = "Authorization"; //$NON-NLS-1$
+
+	// SessionId cookie
+	private static final String JSESSIONID = "JSESSIONID"; //$NON-NLS-1$
+
+	// Old style crumb strings
 	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
 
 	private static final String ID_CONTEXT_CRUMB_HEADER = ".crumbHeader"; //$NON-NLS-1$
+
+	// Authentication failures
+	private static final String AUTHENTICATION_FAILED = "Authentication failed"; //$NON-NLS-1$
+
+	private static final String AUTHENTICATION_REQUESTED_WITHOUT_VALID_CREDENTIALS = "Authentication requested without valid credentials"; //$NON-NLS-1$
 
 	public HudsonOperation(CommonHttpClient client) {
 		super(client);
@@ -83,7 +99,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		getClient().clearAttributes();
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials == null) {
-			throw new IllegalStateException("Authentication requested without valid credentials");
+			throw new IllegalStateException(AUTHENTICATION_REQUESTED_WITHOUT_VALID_CREDENTIALS);
 		}
 
 		HttpGet request = createGetRequest(baseUrl() + "crumbIssuer/api/json"); //$NON-NLS-1$
@@ -94,8 +110,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 					String charSet = EntityUtils.getContentCharSet(response.getEntity());
 					String text = IOUtils.toString(inStream,
 							charSet != null ? Charset.forName(charSet) : Charset.defaultCharset());
-					Pattern crumbPattern = Pattern
-							.compile(".*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\".*\"crumbRequestField\":.*?\"(.*)\""); //$NON-NLS-1$
+					Pattern crumbPattern = Pattern.compile(CRUMB_REGEX);
 					Matcher matcher = crumbPattern.matcher(text);
 					if (matcher.find()) {
 						String crumb = matcher.group(1);
@@ -106,7 +121,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 						getClient().setAttribute(ID_CONTEXT_CRUMB, crumb);
 						getClient().setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
 					} else {
-						throw new AuthenticationException("Authentication failed",
+						throw new AuthenticationException(AUTHENTICATION_FAILED,
 								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
 										getClient().getLocation(), AuthenticationType.REPOSITORY));
 					}
@@ -120,7 +135,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			} else {
 				validate(response, monitor); // Check for proxy errors and such
 
-				throw new AuthenticationException("Authentication failed",
+				throw new AuthenticationException(AUTHENTICATION_FAILED,
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			}
@@ -152,7 +167,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
 				getClient().setAuthenticated(false);
 				System.err.println(EntityUtils.toString(response.getEntity()));
-				throw new IOException(NLS.bind("Unexpected response from server while logging in: {0}",
+				throw new IOException(NLS.bind("Unexpected response from server while logging in: {0}", //$NON-NLS-1$
 						HttpUtil.getStatusText(statusCode)));
 			}
 
@@ -160,7 +175,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			Header header = response.getFirstHeader("Location"); //$NON-NLS-1$
 			if (header != null && header.getValue().endsWith("/loginError")) { //$NON-NLS-1$
 				getClient().setAuthenticated(false);
-				throw new AuthenticationException("Authentication failed",
+				throw new AuthenticationException(AUTHENTICATION_FAILED,
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			}
@@ -290,9 +305,9 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
-			String encodedCreds = "Basic " + Base64.getEncoder()
-					.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes());
-			request.addHeader("Authorization", encodedCreds);
+			String encodedCreds = AUTHORIZATION_BASIC_TYPE + Base64.getEncoder()
+					.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes()); //$NON-NLS-1$
+			request.addHeader(AUTHORIZATION_HEADER, encodedCreds);
 		}
 	}
 
@@ -312,9 +327,9 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		if (statusCode != expected) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new HudsonResourceNotFoundException(
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
+						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath())); //$NON-NLS-1$
 			}
-			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}",
+			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", //$NON-NLS-1$
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 	}
