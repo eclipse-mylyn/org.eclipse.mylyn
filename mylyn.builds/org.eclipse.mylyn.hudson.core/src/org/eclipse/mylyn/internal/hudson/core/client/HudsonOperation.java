@@ -37,7 +37,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
@@ -62,8 +61,6 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	private static final String JSESSIONID = "JSESSIONID";
 
-	private static final String JSESSIONID_NAME = "JSESSIONID_NAME";
-
 	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
 
 	private static final String ID_CONTEXT_CRUMB_HEADER = ".crumbHeader"; //$NON-NLS-1$
@@ -83,7 +80,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 		getClient().setAuthenticated(false);
-
+		getClient().clearAttributes();
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials == null) {
 			throw new IllegalStateException("Authentication requested without valid credentials");
@@ -97,29 +94,17 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 					String charSet = EntityUtils.getContentCharSet(response.getEntity());
 					String text = IOUtils.toString(inStream,
 							charSet != null ? Charset.forName(charSet) : Charset.defaultCharset());
-					Pattern pattern = Pattern
+					Pattern crumbPattern = Pattern
 							.compile(".*?\"crumb\":\\s*\"([a-zA-Z0-9]*)\".*\"crumbRequestField\":.*?\"(.*)\""); //$NON-NLS-1$
-					Matcher matcher = pattern.matcher(text);
+					Matcher matcher = crumbPattern.matcher(text);
 					if (matcher.find()) {
 						String crumb = matcher.group(1);
 						String crumbHeader = matcher.group(2);
 						// success
 						getClient().setAuthenticated(true);
 
-						HttpContext context = getClient().getContext();
-						context.setAttribute(ID_CONTEXT_CRUMB, crumb);
-						context.setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
-
-						List<Cookie> cookies = new ArrayList<>(
-								getClient().getHttpClient().getCookieStore().getCookies());
-						for (Cookie cookie : cookies) {
-							if (cookie.getName().startsWith(JSESSIONID)) {
-								context.setAttribute(JSESSIONID_NAME, cookie.getName());
-								context.setAttribute(JSESSIONID, cookie.getValue());
-								break;
-							}
-
-						}
+						getClient().setAttribute(ID_CONTEXT_CRUMB, crumb);
+						getClient().setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
 					} else {
 						throw new AuthenticationException("Authentication failed",
 								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
@@ -222,7 +207,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 								Matcher matcher = pattern.matcher(text);
 								if (matcher.find()) {
 									HttpContext context = getClient().getContext();
-									context.setAttribute(ID_CONTEXT_CRUMB, matcher.group(1));
+									String crumb = matcher.group(1);
+									getClient().setAttribute(ID_CONTEXT_CRUMB, crumb);
 									context.setAttribute(ID_CONTEXT_CRUMB_HEADER, ID_CONTEXT_CRUMB);
 									break;
 								}
@@ -281,26 +267,24 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	}
 
 	@Override
-	protected void configure(HttpRequestBase request) {
+	protected HttpGet createGetRequest(String requestPath) {
+		HttpGet request = super.createGetRequest(requestPath);
 		setupAuthentication(request);
+		return request;
 	}
 
-	private void setupAuthentication(AbstractHttpMessage request) {
+	@Override
+	protected HttpPost createPostRequest(String requestPath) {
+		HttpPost request = super.createPostRequest(requestPath);
+		setupAuthentication(request);
+		return request;
+	}
 
-		/* Supposed to allow one to fire up a build using ones password.
-		 * Doesn't work for some reason. Need to use API token for PW
-		 * Leave in as a reminder for now. GNL
-		 */
-		//		String sessionId = (String) getClient().getContext().getAttribute(JSESSIONID);
-		//		if (sessionId != null) {
-		//			request.addHeader((String) getClient().getContext().getAttribute(JSESSIONID), sessionId);
-		//			request.addHeader((String) getClient().getContext().getAttribute(JSESSIONID_NAME), sessionId);
-		//		}
+	private void setupAuthentication(HttpRequestBase request) {
 
-		HttpContext context = getClient().getContext();
-		String crumb = (String) context.getAttribute(ID_CONTEXT_CRUMB);
+		String crumb = (String) getClient().getAttribute(ID_CONTEXT_CRUMB);
 		if (crumb != null && !crumb.isEmpty()) {
-			String crumbHeader = (String) context.getAttribute(ID_CONTEXT_CRUMB_HEADER);
+			String crumbHeader = (String) getClient().getAttribute(ID_CONTEXT_CRUMB_HEADER);
 			request.addHeader(crumbHeader, crumb);
 		}
 
@@ -338,8 +322,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected boolean needsAuthentication() {
 		if (hasCredentials()) {
-			boolean authenticated = getClient().isAuthenticated()
-					&& getClient().getContext().getAttribute(ID_CONTEXT_CRUMB) != null
+			boolean authenticated = getClient().isAuthenticated() && getClient().getAttribute(ID_CONTEXT_CRUMB) != null
 					&& hasValidatAuthenticationState();
 			return !authenticated;
 		}
@@ -355,7 +338,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (JSESSIONID.equals(cookie.getName()) || cookie.getName().startsWith(JSESSIONID)) {
-					return !cookie.isExpired(new Date());
+					boolean expired = cookie.isExpired(new Date());
+					return !expired;
 				}
 			}
 		}
