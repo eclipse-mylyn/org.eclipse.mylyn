@@ -34,7 +34,6 @@
    </license>
 
    <requires>
-      <import plugin="jakarta.activation" version="1.2.2" match="greaterOrEqual"/>
       <import plugin="jakarta.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="com.sun.xml.bind" version="2.3.3" match="equivalent"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="equivalent"/>
