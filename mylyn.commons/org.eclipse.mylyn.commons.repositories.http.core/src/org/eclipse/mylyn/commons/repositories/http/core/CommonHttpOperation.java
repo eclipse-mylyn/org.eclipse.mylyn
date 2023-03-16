@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -81,7 +81,7 @@ public abstract class CommonHttpOperation<T> {
 			return executeOnce(request, monitor);
 		} catch (AuthenticationException e) {
 			if (requestCredentials) {
-				// new credentials were not correct either  
+				// new credentials were not correct either
 				invalidateAuthentication(e, monitor);
 				throw e;
 			}
@@ -119,9 +119,9 @@ public abstract class CommonHttpOperation<T> {
 		// force authentication
 		if (needsAuthentication()) {
 			authenticate(monitor);
-			configure(request);
 		}
 
+		configure(request);
 		HttpResponse response = client.execute(request, monitor);
 		try {
 			validate(response, monitor);

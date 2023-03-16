@@ -20,9 +20,10 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <skip>${test.component.skip}</skip> 
+          <skip>${test.component.skip}</skip>
           <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.suite}</testClass>
+          <useUIHarness>false</useUIHarness>
         </configuration>
       </plugin>
       <plugin>

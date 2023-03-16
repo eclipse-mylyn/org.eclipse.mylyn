@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,6 +13,8 @@
 package org.eclipse.mylyn.commons.repositories.http.core;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.TrustManager;
 
@@ -44,7 +46,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 
 /**
  * Provides an abstraction for connecting to a {@link RepositoryLocation} through HTTP.
- * 
+ *
  * @author Steffen Pingel
  */
 public class CommonHttpClient {
@@ -60,6 +62,8 @@ public class CommonHttpClient {
 	private AbstractHttpClient httpClient;
 
 	private final RepositoryLocation location;
+
+	private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
 	private CancellableOperationMonitorThread monitorThread = CancellableOperationMonitorThread.getInstance();
 
@@ -211,6 +215,22 @@ public class CommonHttpClient {
 
 	public void setMonitorThread(CancellableOperationMonitorThread monitorThread) {
 		this.monitorThread = monitorThread;
+	}
+
+	public void setAttribute(String key, Object value) {
+		attributes.put(key, value);
+	}
+
+	public Object getAttribute(String key) {
+		return attributes.get(key);
+	}
+
+	public void removeAttribute(String key) {
+		attributes.remove(key);
+	}
+
+	public void clearAttributes() {
+		attributes.clear();
 	}
 
 }
