@@ -100,12 +100,6 @@
 			includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
-					<groupId>org.eclipse.mylyn.github</groupId>
-					<artifactId>org.eclipse.egit.github.core</artifactId>
-					<version>6.1.0.202203080745-r</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-inline</artifactId>
 					<version>4.8.1</version>
@@ -133,6 +127,27 @@
 					<groupId>com.sun.activation</groupId>
 					<artifactId>jakarta.activation</artifactId>
 					<version>2.0.1</version>
+				</dependency>
+			</dependencies>
+			<instructions><![CDATA[
+Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
+version:               ${version_cleanup;${mvnVersion}}
+Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
+Bundle-Version:        ${version}
+Import-Package:        *;resolution:=optional
+Export-Package:        *;version="${version}";-noimport:=true
+DynamicImport-Package: *
+]]></instructions>
+		</location>
+		<location includeDependencyDepth="infinite"
+			includeDependencyScopes="compile,provided,runtime"
+			includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.mylyn.github</groupId>
+					<artifactId>org.eclipse.egit.github.core</artifactId>
+					<version>6.1.0.202203080745-r</version>
+					<type>jar</type>
 				</dependency>
 			</dependencies>
 			<repositories>
