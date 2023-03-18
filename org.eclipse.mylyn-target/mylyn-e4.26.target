@@ -153,8 +153,7 @@ DynamicImport-Package: *
 			<repositories>
 				<repository>
 					<id>eclipse-egit</id>
-					<url>
-						https://repo.eclipse.org/content/repositories/egit-releases/</url>
+					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
 				</repository>
 			</repositories>
 			<instructions><![CDATA[
