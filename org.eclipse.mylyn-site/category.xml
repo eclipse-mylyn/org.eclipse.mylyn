@@ -131,6 +131,9 @@
    <feature id="org.eclipse.mylyn.versions.development">
       <category name="org.eclipse.mylyn.tests.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.github.feature" version="6.2.0.qualifier">
+      <category name="github_connector"/>
+   </feature>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
@@ -152,6 +155,9 @@
       </description>
    </category-def>
    <category-def name="trac.connector" label="Trac Connector">
+      <category name="org.eclipse.mylyn.integrations.category"/>
+   </category-def>
+   <category-def name="github_connector" label="GitHub Connector">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </category-def>
 </site>

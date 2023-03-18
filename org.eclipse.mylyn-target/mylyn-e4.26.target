@@ -13,8 +13,9 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/egit/updates-6.4/"/>
-			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.egit.feature.group" version="6.4.0.202211300538-r"/>
+			<unit id="org.eclipse.jgit.feature.group" version="6.4.0.202211300538-r"/>
+			<unit id="org.eclipse.jgit.lfs.feature.group" version="6.4.0.202211300538-r"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.32/"/>
@@ -71,12 +72,24 @@
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
+					<groupId>org.eclipse.mylyn.github</groupId>
+					<artifactId>org.eclipse.egit.github.core</artifactId>
+					<version>6.1.0.202203080745-r</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-inline</artifactId>
 					<version>4.8.1</version>
 					<type>jar</type>
 				</dependency>
 			</dependencies>
+			<repositories>
+				<repository>
+					<id>eclipse-egit</id>
+					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+				</repository>
+			</repositories>
 			<instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}

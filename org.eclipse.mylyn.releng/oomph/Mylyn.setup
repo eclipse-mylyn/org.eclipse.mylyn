@@ -355,6 +355,7 @@
         <excludedPath>mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
         <excludedPath>mylyn.reviews/tbr</excludedPath>
         <excludedPath>mylyn.docs</excludedPath>
+        <excludedPath>/org.eclipse.mylyn.java.tests/target</excludedPath>
       </sourceLocator>
       <description>Import Releng Project</description>
     </setupTask>
@@ -418,6 +419,18 @@
                 xsi:type="predicates:NamePredicate"
                 pattern="org.eclipse.mylyn.*"/>
           </operand>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:LocationPredicate"
+                pattern="${git.clone.mylyn.location|path}/mylyn.github/.*"/>
+          </operand>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:LocationPredicate"
+                pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
+          </operand>
         </predicate>
       </workingSet>
       <workingSet
@@ -441,8 +454,23 @@
       <workingSet
           name="Context">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.context/.*"/>
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:LocationPredicate"
+              pattern="${git.clone.mylyn.location|path}/mylyn.context/.*"/>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:NamePredicate"
+                pattern="org.eclipse.mylar.tests.projec.*"/>
+          </operand>
+          <operand
+              xsi:type="predicates:NotPredicate">
+            <operand
+                xsi:type="predicates:NamePredicate"
+                pattern="workspace-helper-project.*"/>
+          </operand>
+        </predicate>
       </workingSet>
       <workingSet
           name="Builds">
@@ -461,7 +489,25 @@
         <predicate
             xsi:type="predicates:LocationPredicate"
             pattern="${git.clone.mylyn.location|path}/mylyn.versions/.*"/>
-       </workingSet>
+      </workingSet>
+      <workingSet
+          name="Github">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.github/.*"/>
+      </workingSet>
+      <workingSet
+          name="egit">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
+      </workingSet>
+      <workingSet
+          name="Trac Connector">
+        <predicate
+            xsi:type="predicates:LocationPredicate"
+            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
+      </workingSet>
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"

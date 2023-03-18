@@ -14,25 +14,22 @@
  *******************************************************************************
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn.parent</artifactId>
   <version>3.26.0-SNAPSHOT</version>
   <name>Mylyn Parent</name>
   <packaging>pom</packaging>
-
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
-
   <properties>
     <tycho-version>3.0.3</tycho-version>
     <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
     <tycho.testArgLine></tycho.testArgLine>
     <analysis.skip>true</analysis.skip>
-
     <coverage.skip>true</coverage.skip>
     <coverage.filter></coverage.filter>
     <coverage.destFile>../target/jacoco.exec</coverage.destFile>
@@ -40,7 +37,6 @@
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>${coverage.destFile}</sonar.jacoco.reportPath>
     <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
-
     <test.skip>${maven.test.skip}</test.skip>
     <test.linux.skip>true</test.linux.skip>
     <test.osx.skip>true</test.osx.skip>
@@ -49,25 +45,22 @@
     <test.integration.skip>${test.all.skip}</test.integration.skip>
     <test.performance.skip>${test.skip}</test.performance.skip>
     <test.system.skip>${test.skip}</test.system.skip>
-    <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
     <test.uservmargs></test.uservmargs>
     <test.osvmargs></test.osvmargs>
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password} ${test.userargs}</test.args>
     <test.userargs></test.userargs>
     <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
     <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
-
     <sign.skip>true</sign.skip>
     <pack.skip>false</pack.skip>
     <promote.skip>true</promote.skip>
-
     <dist.qualifier>'N'yyyyMMdd-HHmm</dist.qualifier>
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
     <target-platform>mylyn-e${target-version}</target-platform>
+    <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
   </properties>
-
   <mailingLists>
     <mailingList>
       <name>Mylyn Commons Mailing List</name>
@@ -77,7 +70,6 @@
       <archive>https://dev.eclipse.org/mhonarc/lists/mylyn-commons-dev</archive>
     </mailingList>
   </mailingLists>
-
   <issueManagement>
     <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons/issues</url>
     <system>GitHub Issues</system>
@@ -102,7 +94,6 @@
       <url>https://download.eclipse.org/cbi/updates/license/</url>
     </repository>
   </repositories>
-
   <licenses>
     <license>
       <name>Eclipse Public License v2.0</name>
@@ -118,12 +109,10 @@
       </comments>
     </license>
   </licenses>
-
   <organization>
     <name>Eclipse Foundation</name>
     <url>https://www.eclipse.org/</url>
   </organization>
-
   <profiles>
     <!-- Target definition profiles -->
     <!-- Needs to be specified first to allow target profiles to override settings -->
@@ -187,13 +176,13 @@
               </environments>
               <target>
                 <artifact>
-				<!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-				<!--
+                  <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
+                  <!--
                   <groupId>${project.parent.groupId}</groupId>
                   <artifactId>${project.parent.groupId}-target</artifactId> 
                 -->
                   <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId> 
+                  <artifactId>org.eclipse.mylyn-target</artifactId>
                   <version>${project.parent.version}</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
@@ -257,13 +246,13 @@
               </environments>
               <target>
                 <artifact>
-				<!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-				<!--
+                  <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
+                  <!--
                   <groupId>${project.parent.groupId}</groupId>
                   <artifactId>${project.parent.groupId}-target</artifactId> 
                 -->
                   <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId> 
+                  <artifactId>org.eclipse.mylyn-target</artifactId>
                   <version>${project.parent.version}</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
@@ -273,7 +262,6 @@
         </plugins>
       </build>
     </profile>
-
     <!-- Target profiles -->
     <profile>
       <id>default-target</id>
@@ -333,7 +321,6 @@
       </properties>
     </profile>
   </profiles>
-
   <build>
     <plugins>
       <plugin>
@@ -472,6 +459,5 @@
       </plugins>
     </pluginManagement>
   </build>
-  <modules>
-  </modules>
+  <modules></modules>
 </project>

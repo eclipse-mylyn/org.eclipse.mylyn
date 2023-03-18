@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2011, Red Hat, Inc.
+Copyright (C) 2011, Chris Aniszczyk <caniszczyk@gmail.com>
+                    Christian Trutz <christian.trutz@gmail.com>
+
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License 2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-2.0/
+
+SPDX-License-Identifier: EPL-2.0
+-->
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.eclipse.mylyn.github</groupId>
+		<artifactId>org.eclipse.mylyn.github-parent</artifactId>
+		<version>3.26.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>org.eclipse.mylyn.github.doc</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<version>6.2.0-SNAPSHOT</version>
+	<name>Eclipse EGit Mylyn GitHub Documentation</name>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>optional</artifactId>
+						<version>1.5.4</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.mylyn.docs</groupId>
+						<artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
+						<version>3.0.9</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.mylyn.docs</groupId>
+						<artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
+						<version>3.0.9</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks if="update.doc">
+								<ant target="all" inheritRefs="true" antfile="build-help.xml" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
