@@ -51,45 +51,46 @@
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository"/>
-      <unit id="com.google.gson" version="0.0.0"/>
-      <unit id="com.sun.xml.bind" version="0.0.0"/>
-      <unit id="jakarta.servlet" version="0.0.0"/>
-      <unit id="org.apache.commons.lang" version="0.0.0"/>
-      <unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
-      <unit id="org.apache.xerces" version="0.0.0"/>
-      <unit id="org.apache.xmlrpc.client" version="0.0.0"/>
-      <unit id="org.apache.xmlrpc.common" version="0.0.0"/>
-      <unit id="org.apache.xmlrpc.server" version="0.0.0"/>
-      <unit id="org.mockito.mockito-core" version="0.0.0"/>
-      <unit id="org.objenesis" version="0.0.0"/>
+      <unit id="com.google.gson" version="2.9.1.v20220915-1632"/>
+      <unit id="com.sun.xml.bind" version="2.3.3.v20221112-0806"/>
+      <unit id="jakarta.servlet" version="5.0.0.v20221112-0806"/>
+      <unit id="org.apache.commons.lang" version="2.6.0.v20220406-2305"/>
+      <unit id="org.apache.httpcomponents.httpclient" version="4.5.13.v20221112-0806"/>
+      <unit id="org.apache.xerces" version="2.12.2.v20220131-0835"/>
+      <unit id="org.apache.xmlrpc.client" version="3.1.3.v20160817-1930"/>
+      <unit id="org.apache.xmlrpc.common" version="3.1.3.v20181004-1955"/>
+      <unit id="org.apache.xmlrpc.server" version="3.1.3.v20181004-1955"/>
+      <unit id="org.mockito.mockito-core" version="4.8.1.v20221103-2317"/>
+      <unit id="org.objenesis" version="3.3.0.v20221103-2317"/>
+        <unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
       <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
       <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
     </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-      <dependencies>
-        <dependency>
-          <groupId>org.eclipse.mylyn.github</groupId>
-          <artifactId>org.eclipse.egit.github.core</artifactId>
-          <version>6.1.0.202203080745-r</version>
-          <type>jar</type>
-        </dependency>
-        <dependency>
-          <groupId>org.mockito</groupId>
-          <artifactId>mockito-inline</artifactId>
-          <version>4.8.1</version>
-          <type>jar</type>
-        </dependency>
-      </dependencies>
-      <repositories>
-        <repository>
-          <id>eclipse-egit</id>
-          <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
-        </repository>
-      </repositories>
-      <instructions><![CDATA[
+      <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+          <dependencies>
+              <dependency>
+                  <groupId>org.eclipse.mylyn.github</groupId>
+                  <artifactId>org.eclipse.egit.github.core</artifactId>
+                  <version>6.1.0.202203080745-r</version>
+                  <type>jar</type>
+              </dependency>
+              <dependency>
+                  <groupId>org.mockito</groupId>
+                  <artifactId>mockito-inline</artifactId>
+                  <version>4.8.1</version>
+                  <type>jar</type>
+              </dependency>
+          </dependencies>
+          <repositories>
+              <repository>
+                  <id>eclipse-egit</id>
+                  <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+              </repository>
+          </repositories>
+          <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -98,16 +99,17 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-    </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-      <dependencies>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>4.0.2</version>
-        </dependency>
-      </dependencies>
-      <instructions><![CDATA[
+      </location>
+      <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+          <dependencies>
+              <dependency>
+                  <groupId>com.sun.xml.bind</groupId>
+                  <artifactId>jaxb-impl</artifactId>
+                  <version>4.0.2</version>
+                  <type>jar</type>
+              </dependency>
+          </dependencies>
+          <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -116,16 +118,17 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-    </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-      <dependencies>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.0</version>
-        </dependency>
-      </dependencies>
-      <instructions><![CDATA[
+      </location>
+      <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+          <dependencies>
+              <dependency>
+                  <groupId>jakarta.xml.bind</groupId>
+                  <artifactId>jakarta.xml.bind-api</artifactId>
+                  <version>4.0.0</version>
+                  <type>jar</type>
+              </dependency>
+          </dependencies>
+          <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -134,24 +137,6 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-    </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-      <dependencies>
-        <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>osgi-resource-locator</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-      </dependencies>
-      <instructions><![CDATA[
-Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
-version:               ${version_cleanup;${mvnVersion}}
-Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
-Bundle-Version:        ${version}
-Import-Package:        *;resolution:=optional
-Export-Package:        *;version="${version}";-noimport:=true
-DynamicImport-Package: *
-]]></instructions>
-    </location>
+      </location>
   </locations>
 </target>
