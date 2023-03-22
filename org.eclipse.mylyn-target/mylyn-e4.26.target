@@ -38,9 +38,6 @@
       <unit id="com.google.guava" version="0.0.0"/>
       <unit id="com.thoughtworks.qdox" version="0.0.0"/>
       <unit id="javax.xml.stream" version="0.0.0"/>
-      <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
-      <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
-      <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
       <unit id="org.hamcrest" version="0.0.0"/>
       <unit id="org.hamcrest.core" version="0.0.0"/>
       <unit id="org.hamcrest.generator" version="0.0.0"/>
@@ -63,6 +60,12 @@
       <unit id="org.mockito.mockito-core" version="4.8.1.v20221103-2317"/>
       <unit id="org.objenesis" version="3.3.0.v20221103-2317"/>
         <unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
+        <unit id="org.apache.lucene.core" version="8.4.1.v20221112-0806"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230302014618/repository"/>
+        <unit id="org.apache.lucene.queryparser" version="7.5.0.v20181003-1532"/>
+        <unit id="org.apache.lucene.analyzers-common" version="8.4.1.v20221112-0806"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
