@@ -1,96 +1,95 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 <target name="mylyn-e4.26">
-	<locations>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/cbi/updates/license/"/>
-			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
-			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/updates-6.4/"/>
-			<unit id="org.eclipse.egit.feature.group" version="6.4.0.202211300538-r"/>
-			<unit id="org.eclipse.jgit.feature.group" version="6.4.0.202211300538-r"/>
-			<unit id="org.eclipse.jgit.lfs.feature.group" version="6.4.0.202211300538-r"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.32/"/>
-			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/rt/ecf/3.14.37/site.p2/3.14.37.v20221119-2038/"/>
-			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/cdt/releases/11.0/"/>
-			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
-			<unit id="com.google.gerrit.common" version="0.0.0"/>
-			<unit id="com.google.gerrit.prettify" version="0.0.0"/>
-			<unit id="com.google.gerrit.reviewdb" version="0.0.0"/>
-			<unit id="com.google.guava" version="0.0.0"/>
-			<unit id="com.thoughtworks.qdox" version="0.0.0"/>
-			<unit id="javax.xml.stream" version="0.0.0"/>
-			<unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
-			<unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
-			<unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
-			<unit id="org.hamcrest" version="0.0.0"/>
-			<unit id="org.hamcrest.core" version="0.0.0"/>
-			<unit id="org.hamcrest.generator" version="0.0.0"/>
-			<unit id="org.hamcrest.integration" version="0.0.0"/>
-			<unit id="org.hamcrest.library" version="0.0.0"/>
-			<unit id="org.hamcrest.text" version="0.0.0"/>
-			<unit id="org.mockito" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository"/>
-			<unit id="com.google.gson" version="0.0.0"/>
-			<unit id="com.sun.xml.bind" version="0.0.0"/>
-			<unit id="jakarta.activation" version="1.2.2.v20221112-0806"/>
-			<unit id="jakarta.servlet" version="0.0.0"/>
-			<unit id="org.apache.commons.lang" version="0.0.0"/>
-			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
-			<unit id="org.apache.xerces" version="0.0.0"/>
-			<unit id="org.apache.xmlrpc.client" version="0.0.0"/>
-			<unit id="org.apache.xmlrpc.common" version="0.0.0"/>
-			<unit id="org.apache.xmlrpc.server" version="0.0.0"/>
-			<unit id="org.mockito.mockito-core" version="0.0.0"/>
-			<unit id="org.objenesis" version="0.0.0"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
-			<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
-			<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
-		</location>
-		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
-				<dependency>
-					<groupId>org.eclipse.mylyn.github</groupId>
-					<artifactId>org.eclipse.egit.github.core</artifactId>
-					<version>6.1.0.202203080745-r</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-inline</artifactId>
-					<version>4.8.1</version>
-					<type>jar</type>
-				</dependency>
-			</dependencies>
-			<repositories>
-				<repository>
-					<id>eclipse-egit</id>
-					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
-				</repository>
-			</repositories>
-			<instructions><![CDATA[
+  <locations>
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/cbi/updates/license/"/>
+      <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/egit/updates-6.4/"/>
+      <unit id="org.eclipse.egit.feature.group" version="6.4.0.202211300538-r"/>
+      <unit id="org.eclipse.jgit.feature.group" version="6.4.0.202211300538-r"/>
+      <unit id="org.eclipse.jgit.lfs.feature.group" version="6.4.0.202211300538-r"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.32/"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/rt/ecf/3.14.37/site.p2/3.14.37.v20221119-2038/"/>
+      <unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/tools/cdt/releases/11.0/"/>
+      <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
+      <unit id="com.google.gerrit.common" version="0.0.0"/>
+      <unit id="com.google.gerrit.prettify" version="0.0.0"/>
+      <unit id="com.google.gerrit.reviewdb" version="0.0.0"/>
+      <unit id="com.google.guava" version="0.0.0"/>
+      <unit id="com.thoughtworks.qdox" version="0.0.0"/>
+      <unit id="javax.xml.stream" version="0.0.0"/>
+      <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
+      <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
+      <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
+      <unit id="org.hamcrest" version="0.0.0"/>
+      <unit id="org.hamcrest.core" version="0.0.0"/>
+      <unit id="org.hamcrest.generator" version="0.0.0"/>
+      <unit id="org.hamcrest.integration" version="0.0.0"/>
+      <unit id="org.hamcrest.library" version="0.0.0"/>
+      <unit id="org.hamcrest.text" version="0.0.0"/>
+      <unit id="org.mockito" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository"/>
+      <unit id="com.google.gson" version="0.0.0"/>
+      <unit id="com.sun.xml.bind" version="0.0.0"/>
+      <unit id="jakarta.servlet" version="0.0.0"/>
+      <unit id="org.apache.commons.lang" version="0.0.0"/>
+      <unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
+      <unit id="org.apache.xerces" version="0.0.0"/>
+      <unit id="org.apache.xmlrpc.client" version="0.0.0"/>
+      <unit id="org.apache.xmlrpc.common" version="0.0.0"/>
+      <unit id="org.apache.xmlrpc.server" version="0.0.0"/>
+      <unit id="org.mockito.mockito-core" version="0.0.0"/>
+      <unit id="org.objenesis" version="0.0.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
+      <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
+      <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse.mylyn.github</groupId>
+          <artifactId>org.eclipse.egit.github.core</artifactId>
+          <version>6.1.0.202203080745-r</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-inline</artifactId>
+          <version>4.8.1</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+      <repositories>
+        <repository>
+          <id>eclipse-egit</id>
+          <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+        </repository>
+      </repositories>
+      <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -99,16 +98,16 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-		</location>
-		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
-				<dependency>
-				    <groupId>com.sun.xml.bind</groupId>
-				    <artifactId>jaxb-impl</artifactId>
-				    <version>2.3.3</version>
-				</dependency>
-			</dependencies>
-			<instructions><![CDATA[
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+      <dependencies>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+      </dependencies>
+      <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -117,16 +116,16 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-		</location>
-		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
-				<dependency>
-				    <groupId>jakarta.xml.bind</groupId>
-				    <artifactId>jakarta.xml.bind-api</artifactId>
-				    <version>2.3.3</version>
-				</dependency>
-			</dependencies>
-			<instructions><![CDATA[
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+      <dependencies>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+      </dependencies>
+      <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -135,16 +134,16 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-		</location>
-		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
-			<dependencies>
-				<dependency>
-				    <groupId>org.glassfish.hk2</groupId>
-				    <artifactId>osgi-resource-locator</artifactId>
-				    <version>2.4.0</version>
-				</dependency>
-			</dependencies>
-			<instructions><![CDATA[
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+      <dependencies>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>osgi-resource-locator</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+      </dependencies>
+      <instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -153,6 +152,6 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-		</location>
-	</locations>
+    </location>
+  </locations>
 </target>
