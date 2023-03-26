@@ -34,9 +34,6 @@
    </license>
 
    <requires>
-      <import plugin="jakarta.xml.bind" version="2.3.3" match="equivalent"/>
-      <import plugin="com.sun.xml.bind" version="2.3.3" match="equivalent"/>
-      <import plugin="javax.xml.stream" version="1.0.1" match="equivalent"/>
       <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="greaterOrEqual"/>
    </requires>
 
