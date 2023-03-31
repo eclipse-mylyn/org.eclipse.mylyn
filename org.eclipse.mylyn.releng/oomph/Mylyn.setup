@@ -502,12 +502,6 @@
             xsi:type="predicates:LocationPredicate"
             pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
       </workingSet>
-      <workingSet
-          name="Trac Connector">
-        <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.trac.*"/>
-      </workingSet>
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"
