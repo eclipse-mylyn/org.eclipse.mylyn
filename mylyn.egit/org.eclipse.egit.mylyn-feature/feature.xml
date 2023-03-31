@@ -26,7 +26,7 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.egit" version="6.4.0" match="equivalent"/>
+      <import feature="org.eclipse.egit" version="6.2.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.mylyn.team_feature" version="3.26.0" match="equivalent"/>
    </requires>
 
