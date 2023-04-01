@@ -29,12 +29,6 @@
    <feature id="org.eclipse.mylyn.discovery">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.gerrit.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.gerrit.dashboard.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.git">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
