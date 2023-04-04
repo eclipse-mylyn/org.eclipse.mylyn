@@ -39,4 +39,4 @@ Export-Package: org.eclipse.mylyn.java.tests;x-internal:=true,
  org.eclipse.mylyn.java.tests.search;x-internal:=true,
  org.eclipse.mylyn.java.tests.tasks;x-internal:=true,
  org.eclipse.mylyn.java.tests.xml;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17

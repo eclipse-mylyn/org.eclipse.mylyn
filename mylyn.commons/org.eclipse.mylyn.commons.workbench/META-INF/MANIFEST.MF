@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.core.expressions;bundle-version="0.0.0",
  org.eclipse.ui.workbench;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin
 Export-Package: org.eclipse.mylyn.commons.workbench,
  org.eclipse.mylyn.commons.workbench.browser,

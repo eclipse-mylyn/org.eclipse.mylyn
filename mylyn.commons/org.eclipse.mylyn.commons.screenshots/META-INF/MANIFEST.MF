@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.screenshots;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jface;bundle-version="3.3.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.ui.screenshots,
  org.eclipse.mylyn.internal.commons.ui.screenshots;x-internal:=true
 Bundle-Vendor: %Bundle-Vendor

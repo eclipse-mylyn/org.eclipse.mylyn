@@ -32,7 +32,7 @@ Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
  org.eclipse.ui.navigator;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,

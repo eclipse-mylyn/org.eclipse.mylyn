@@ -32,5 +32,5 @@ Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.templates;x-internal:=true,
  org.eclipse.mylyn.team.ui
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin

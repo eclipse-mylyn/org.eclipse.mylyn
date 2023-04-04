@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.tests.util;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17

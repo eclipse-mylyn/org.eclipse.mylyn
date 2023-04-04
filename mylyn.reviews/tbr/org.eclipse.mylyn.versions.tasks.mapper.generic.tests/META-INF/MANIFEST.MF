@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.versions.tasks.mapper.generic.tests;singl
 Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.versions.tasks.mapper.generic
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)",

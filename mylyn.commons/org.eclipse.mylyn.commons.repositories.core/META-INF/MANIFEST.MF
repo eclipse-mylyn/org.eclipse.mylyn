@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.core;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.repositories.core;x-friends:="org.eclipse.mylyn.commons.repositories.http.core,org.eclipse.mylyn.commons.repositories.ui",
  org.eclipse.mylyn.commons.repositories.core.auth;x-friends:="org.eclipse.mylyn.commons.repositories.http.core,org.eclipse.mylyn.commons.repositories.ui",
  org.eclipse.mylyn.internal.commons.repositories.core;x-internal:=true

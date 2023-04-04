@@ -14,5 +14,5 @@ Import-Package: org.apache.xmlrpc;version="3.1.3",
  org.apache.xmlrpc.common;version="3.1.3",
  org.apache.xmlrpc.serializer;version="3.1.3",
  org.apache.xmlrpc.util;version="3.1.3"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin

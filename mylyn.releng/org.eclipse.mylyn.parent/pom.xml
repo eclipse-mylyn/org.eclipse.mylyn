@@ -416,7 +416,7 @@
           <configuration>
             <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
-            <targetJdk>1.8</targetJdk>
+            <targetJdk>17</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
             <skip>${analysis.skip}</skip>
