@@ -18,6 +18,7 @@ package org.eclipse.mylyn.internal.github.ui.issue;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -105,8 +106,8 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		boolean isToken = Boolean.parseBoolean(
 				taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
-		boolean noUser = !isToken
-				&& (cred.getUserName() == null || cred.getUserName().isEmpty());
+		boolean noUser = !isToken && cred != null
+				&& StringUtils.isEmpty(cred.getUserName());
 		if (cred == null || noUser) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
