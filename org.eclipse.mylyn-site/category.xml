@@ -107,10 +107,6 @@
    <feature id="org.eclipse.mylyn.versions.sdk">
       <category name="org.eclipse.mylyn.sdk.category"/>
    </feature>
-   <bundle id="com.sun.xml.bind"/>
-   <bundle id="jakarta.xml.bind"/>
-   <bundle id="javax.xml.stream"/>
-   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <feature id="org.eclipse.mylyn.builds.development">
       <category name="org.eclipse.mylyn.tests.category"/>
    </feature>
@@ -132,6 +128,13 @@
    <feature id="org.eclipse.mylyn.github.feature" version="6.2.0.qualifier">
       <category name="github_connector"/>
    </feature>
+   <bundle id="com.sun.xml.bind"/>
+   <bundle id="jakarta.xml.bind"/>
+   <bundle id="javax.xml.stream"/>
+   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <bundle id="org.apache.lucene.core"/>
+   <bundle id="org.apache.lucene.analyzers-common"/>
+   <bundle id="org.apache.lucene.queryparser"/>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
