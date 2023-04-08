@@ -21,7 +21,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -676,7 +675,7 @@ public class CommentPopupDialogTest extends TestCase {
 		String[] commentLabel = ((Label) controls[0]).getText().split("   ");
 		assertEquals(2, commentLabel.length);
 		assertEquals(USER_NAME, commentLabel[0]);
-		DateFormat format = new SimpleDateFormat("MMM d, yyyy, h:mm aa");
+		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 		assertEquals(format.format(commentDate), commentLabel[1]);
 
 		if (isDraft) {
