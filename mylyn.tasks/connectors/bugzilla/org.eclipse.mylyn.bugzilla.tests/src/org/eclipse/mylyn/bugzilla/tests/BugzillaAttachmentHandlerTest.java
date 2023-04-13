@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,8 +12,6 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
-
-import static org.junit.Assume.assumeTrue;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -311,7 +309,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	public void testAttachmentWithUnicode() throws Exception {
 		String osName = System.getProperty("os.name").toLowerCase();
-		assumeTrue(!osName.startsWith("mac os x"));
+		if (osName.startsWith("mac os x")) {
+			return;
+		}
 		// macos X with APFS can not handle this
 		testAttachmentWithSpecialCharacters(
 				"\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");

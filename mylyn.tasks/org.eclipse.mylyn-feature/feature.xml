@@ -40,9 +40,9 @@
       <import plugin="org.apache.commons.lang" version="2.3.0" match="compatible"/>
       <import plugin="org.apache.commons.logging" version="1.0.4" match="compatible"/>
       <import plugin="org.apache.commons.httpclient" version="3.1.0" match="compatible"/>
-      <import plugin="org.apache.lucene.core" version="6.1.0" match="equivalent"/>
-      <import plugin="org.apache.lucene.analyzers-common" version="6.1.0" match="equivalent"/>
-      <import plugin="org.apache.lucene.queryparser" version="6.1.0" match="equivalent"/>
+      <import plugin="org.apache.lucene.lucene-core" version="9.5.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.lucene.lucene-analyzers-common" version="8.11.2" match="greaterOrEqual"/>
+      <import plugin="org.apache.lucene.lucene-queryparser" version="9.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.26.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.identity" version="3.26.0" match="compatible"/>
