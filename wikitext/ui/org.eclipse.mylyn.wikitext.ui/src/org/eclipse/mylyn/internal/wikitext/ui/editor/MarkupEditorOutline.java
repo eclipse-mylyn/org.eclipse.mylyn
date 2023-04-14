@@ -156,7 +156,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 			setDescription(Messages.MarkupEditor_collapseAllAction_description);
 			setToolTipText(Messages.MarkupEditor_collapseAllAction_tooltip);
 			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
-					"icons/collapseall.gif")); //$NON-NLS-1$
+					"icons/collapseall.png")); //$NON-NLS-1$
 			this.viewer = viewer;
 		}
 

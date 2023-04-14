@@ -21,7 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * An action that invokes context help with a specific help context id.
- * 
+ *
  * @author David Green
  */
 public class ContextHelpAction extends Action {
@@ -35,7 +35,7 @@ public class ContextHelpAction extends Action {
 		this.contextId = contextId;
 		setToolTipText(Messages.ContextHelpAction_tooltip);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
-				"icons/help.gif")); //$NON-NLS-1$
+				"icons/help.png")); //$NON-NLS-1$
 	}
 
 	public ContextHelpAction() {

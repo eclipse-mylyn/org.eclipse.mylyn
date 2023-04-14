@@ -176,7 +176,7 @@
         class="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor"
         contributorClass="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditorActionBarContributor"
         default="true"
-        icon="icons/editor-icon.gif"
+        icon="icons/editor-icon.png"
         id="org.eclipse.mylyn.wikitext.ui.editor.markupEditor"
         name="%editor.name.0"
         symbolicFontName="org.eclipse.mylyn.wikitext.ui.presentation.textFont">
@@ -278,7 +278,7 @@
           locationURI="menu:help?before=group.assist">
        <command
              commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
-             icon="icons/help.gif"
+             icon="icons/help.png"
              label="%command.label.3"
              style="push"
              tooltip="%command.tooltip.3">
