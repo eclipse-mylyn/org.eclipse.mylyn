@@ -15,29 +15,30 @@
 <plugin>
    <extension
          point="org.eclipse.mylyn.builds.ui.connectors">
+         <!-- Need a reference to the Hudson connector so old connector definitsion can be loaded and converted -->
       <connector
-            core="org.eclipse.mylyn.internal.hudson.core.HudsonConnector"
+            core="org.eclipse.mylyn.internal.jenkins.core.HudsonConnector"
             icon="icons/obj16/hudson.png"
             kind="org.eclipse.mylyn.hudson"
             label="Hudson"
-            ui="org.eclipse.mylyn.internal.hudson.ui.HudsonConnectorUi">
+            ui="org.eclipse.mylyn.internal.jenkins.ui.HudsonConnectorUi">
       </connector>
    </extension>
    <extension
          point="org.eclipse.mylyn.builds.ui.connectors">
       <connector
-            core="org.eclipse.mylyn.internal.hudson.core.HudsonConnector"
+            core="org.eclipse.mylyn.internal.jenkins.core.HudsonConnector"
             icon="icons/obj16/hudson.png"
             kind="org.eclipse.mylyn.jenkins"
             label="Jenkins"
-            ui="org.eclipse.mylyn.internal.hudson.ui.HudsonConnectorUi">
+            ui="org.eclipse.mylyn.internal.jenkins.ui.HudsonConnectorUi">
       </connector>
    </extension>
    <extension
          point="org.eclipse.mylyn.commons.repositories.ui.newWizards">
       <wizard
             category="org.eclipse.mylyn.builds.ui.category.Builds"
-            class="org.eclipse.mylyn.internal.hudson.ui.NewHudsonServerWizard"
+            class="org.eclipse.mylyn.internal.jenkins.ui.NewHudsonServerWizard"
             icon="icons/obj16/hudson.png"
             id="org.eclipse.mylyn.jenkins"
             name="Hudson (supports Jenkins)">
@@ -49,7 +50,7 @@
    <extension
          point="org.eclipse.mylyn.builds.ui.startup">
       <startup
-            class="org.eclipse.mylyn.internal.hudson.ui.HudsonStartup">
+            class="org.eclipse.mylyn.internal.jenkins.ui.HudsonStartup">
       </startup>
    </extension>
 

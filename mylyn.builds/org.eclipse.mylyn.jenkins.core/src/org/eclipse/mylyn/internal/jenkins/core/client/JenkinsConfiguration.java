@@ -10,7 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.hudson.core.client;
+package org.eclipse.mylyn.internal.jenkins.core.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -19,20 +19,15 @@ import java.util.Map;
 /**
  * @author Steffen Pingel
  */
-@Deprecated
-public class HudsonConfiguration implements Serializable {
+public class JenkinsConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Map<String, String> jobNameById = new HashMap<String, String>();
+	public Map<String, String> jobNameById = new HashMap<>();
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HudsonConfiguration [jobNameById=");
-		builder.append(jobNameById);
-		builder.append("]");
-		return builder.toString();
+		return "JenkinsConfiguration [jobNameById=" + jobNameById + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

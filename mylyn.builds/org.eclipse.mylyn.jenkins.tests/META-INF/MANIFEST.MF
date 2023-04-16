@@ -18,8 +18,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse Mylyn
-Export-Package: org.eclipse.mylyn.hudson.tests;x-internal:=true,
- org.eclipse.mylyn.hudson.tests.client;x-internal:=true,
- org.eclipse.mylyn.hudson.tests.core;x-internal:=true,
- org.eclipse.mylyn.hudson.tests.integration,
- org.eclipse.mylyn.hudson.tests.support;x-internal:=true
+Export-Package: org.eclipse.mylyn.jenkins.tests;x-internal:=true,
+ org.eclipse.mylyn.jenkins.tests.client;x-internal:=true,
+ org.eclipse.mylyn.jenkins.tests.core;x-internal:=true,
+ org.eclipse.mylyn.jenkins.tests.integration,
+ org.eclipse.mylyn.jenkins.tests.support;x-internal:=true

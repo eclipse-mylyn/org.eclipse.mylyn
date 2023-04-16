@@ -54,7 +54,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.hudson.tests"
+         id="org.eclipse.mylyn.jenkins.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"

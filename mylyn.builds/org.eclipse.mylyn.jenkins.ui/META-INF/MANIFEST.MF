@@ -19,5 +19,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
-Export-Package: org.eclipse.mylyn.internal.hudson.ui;x-internal:=true
-Bundle-Activator: org.eclipse.mylyn.internal.hudson.ui.HudsonUiPlugin
+Export-Package: org.eclipse.mylyn.internal.jenkins.ui;x-internal:=true
+Bundle-Activator: org.eclipse.mylyn.internal.jenkins.ui.HudsonUiPlugin

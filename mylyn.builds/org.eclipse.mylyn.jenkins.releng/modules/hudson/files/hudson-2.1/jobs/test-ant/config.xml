@@ -6,7 +6,7 @@
   <properties/>
   <scm class="hudson.scm.CVSSCM">
     <cvsroot>:pserver:anonymous@dev.eclipse.org:/cvsroot/tools</cvsroot>
-    <module>org.eclipse.mylyn/sandbox/org.eclipse.mylyn.hudson.tests/testdata/org.eclipse.mylyn.builds.sample.ant</module>
+    <module>org.eclipse.mylyn/sandbox/org.eclipse.mylyn.jackson.tests/testdata/org.eclipse.mylyn.builds.sample.ant</module>
     <canUseUpdate>true</canUseUpdate>
     <flatten>true</flatten>
     <isTag>false</isTag>

@@ -167,7 +167,7 @@
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
-        <excludedPath>mylyn.builds/org.eclipse.mylyn.hudson.tests/testdata</excludedPath>
+        <excludedPath>mylyn.builds/org.eclipse.mylyn.jenkins.tests/testdata</excludedPath>
         <excludedPath>mylyn.reviews/tbr</excludedPath>
         <excludedPath>mylyn.docs</excludedPath>
         <excludedPath>/org.eclipse.mylyn.java.tests/target</excludedPath>

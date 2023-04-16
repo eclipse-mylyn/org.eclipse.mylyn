@@ -56,14 +56,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.hudson.core.source"
+         id="org.eclipse.mylyn.jenkins.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.hudson.ui.source"
+         id="org.eclipse.mylyn.jenkins.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
