@@ -65,7 +65,7 @@
 			<property name="product" value="Mylyn Builds"/>
 			<property name="component" value="Framework"/>
 		</mapping>
-		<mapping namespace="org.eclipse.mylyn.hudson" productId="org.eclipse.mylyn">
+		<mapping namespace="org.eclipse.mylyn.jenkins" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Builds"/>
 			<property name="component" value="Hudson Connector"/>
 		</mapping>

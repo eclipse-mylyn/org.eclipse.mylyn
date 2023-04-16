@@ -32,7 +32,7 @@
    <feature id="org.eclipse.mylyn.git">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.hudson">
+   <feature id="org.eclipse.mylyn.jenkins">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.ide_feature">

@@ -13,7 +13,7 @@
          ArSysOp - adapt to SimRel 2022-12
  -->
 <feature
-      id="org.eclipse.mylyn.builds.sdk"
+      id="org.eclipse.mylyn.jenkins"
       label="%featureName"
       version="3.26.0.qualifier"
       provider-name="%providerName"
@@ -33,44 +33,21 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.mylyn.jenkins"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.mylyn.builds"
-         version="0.0.0"/>
+   <requires>
+      <import plugin="com.google.gson" version="2.1.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.builds" version="3.26.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.http" version="3.26.0" match="compatible"/>
+   </requires>
 
    <plugin
-         id="org.eclipse.mylyn.builds.core.source"
+         id="org.eclipse.mylyn.hudson.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.builds.ui.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.hudson.core.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.hudson.ui.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.gson"
+         id="org.eclipse.mylyn.hudson.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

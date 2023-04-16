@@ -198,7 +198,7 @@
             categoryId="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
             description="%connectorDescriptor.description.hudson"
             groupId="extra"
-            id="org.eclipse.mylyn.hudson"
+            id="org.eclipse.mylyn.jenkins"
             kind="task"
             license="%connectorDescriptor.license.hudson"
             name="%connectorDescriptor.name.hudson"
