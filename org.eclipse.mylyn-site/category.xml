@@ -133,8 +133,8 @@
    <bundle id="javax.xml.stream"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="org.apache.lucene.lucene-core"/>
+   <bundle id="org.apache.lucene.lucene-analysis-common"/>
    <bundle id="org.apache.lucene.lucene-queryparser"/>
-   <bundle id="org.apache.lucene.lucene-analyzers-common"/>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.

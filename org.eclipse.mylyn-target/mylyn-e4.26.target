@@ -38,13 +38,6 @@
 			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="com.thoughtworks.qdox" version="0.0.0"/>
 			<unit id="javax.xml.stream" version="0.0.0"/>
-<!--
-			<unit id="org.apache.lucene.analyzers-common"
-				version="6.1.0.v20161115-1612" />
-			<unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820" />
-			<unit id="org.apache.lucene.queryparser"
-				version="6.1.0.v20161115-1612" />
--->
 			<unit id="org.hamcrest" version="0.0.0"/>
 			<unit id="org.hamcrest.core" version="0.0.0"/>
 			<unit id="org.hamcrest.generator" version="0.0.0"/>
@@ -76,9 +69,9 @@
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-inline</artifactId>
-					<version>4.8.1</version>
+					<groupId>com.sun.activation</groupId>
+					<artifactId>jakarta.activation</artifactId>
+					<version>2.0.1</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
@@ -94,15 +87,22 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>org.glassfish.hk2</groupId>
-					<artifactId>osgi-resource-locator</artifactId>
-					<version>2.4.0</version>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-analysis-common</artifactId>
+					<version>9.5.0</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>com.sun.activation</groupId>
-					<artifactId>jakarta.activation</artifactId>
-					<version>2.0.1</version>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-core</artifactId>
+					<version>9.5.0</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-queryparser</artifactId>
+					<version>9.5.0</version>
+					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.eclipse.mylyn.github</groupId>
@@ -110,27 +110,18 @@
 					<version>6.1.0.202203080745-r</version>
 					<type>jar</type>
 				</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
-<dependency>
-    <groupId>org.apache.lucene</groupId>
-    <artifactId>lucene-core</artifactId>
-    <version>9.5.0</version>
+				<dependency>
+					<groupId>org.glassfish.hk2</groupId>
+					<artifactId>osgi-resource-locator</artifactId>
+					<version>2.4.0</version>
 					<type>jar</type>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
-<dependency>
-    <groupId>org.apache.lucene</groupId>
-    <artifactId>lucene-queryparser</artifactId>
-    <version>9.5.0</version>
+				</dependency>
+				<dependency>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-inline</artifactId>
+					<version>4.8.1</version>
 					<type>jar</type>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
-<dependency>
-    <groupId>org.apache.lucene</groupId>
-    <artifactId>lucene-analyzers-common</artifactId>
-    <version>8.11.2</version>
-					<type>jar</type>
-</dependency>
+				</dependency>
 			</dependencies>
 			<repositories>
 				<repository>
