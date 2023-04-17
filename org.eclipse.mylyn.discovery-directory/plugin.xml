@@ -206,10 +206,11 @@
             siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
             statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.jenkins">
          <icon
-               image32="images/hudson-32.png">
+               image32="images/jenkins-32.png"
+               image48="images/jenkins-48.png">
          </icon>
          <overview
-               screenshot="images/hudson-screenshot.png"
+               screenshot="images/jenkins-screenshot-320x240.png"
                summary="%overview.summary.jenkins"
                url="http://eclipse.org/mylyn">
          </overview>

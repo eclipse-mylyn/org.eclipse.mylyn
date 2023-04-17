@@ -28,7 +28,7 @@
          point="org.eclipse.mylyn.builds.ui.connectors">
       <connector
             core="org.eclipse.mylyn.internal.jenkins.core.JenkinsConnector"
-            icon="icons/obj16/hudson.png"
+            icon="icons/obj16/jenkins.png"
             kind="org.eclipse.mylyn.jenkins"
             label="Jenkins"
             ui="org.eclipse.mylyn.internal.jenkins.ui.JenkinsConnectorUi">
@@ -39,7 +39,7 @@
       <wizard
             category="org.eclipse.mylyn.builds.ui.category.Builds"
             class="org.eclipse.mylyn.internal.jenkins.ui.NewJenkinsServerWizard"
-            icon="icons/obj16/hudson.png"
+            icon="icons/obj16/jenkins.png"
             id="org.eclipse.mylyn.jenkins"
             name="Jenkins">
          <description>
