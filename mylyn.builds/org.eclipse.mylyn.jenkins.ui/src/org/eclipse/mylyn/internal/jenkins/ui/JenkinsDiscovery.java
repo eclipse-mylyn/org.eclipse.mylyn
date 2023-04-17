@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2014 Itema AS and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Torkild U. Resheim - initial API and implementation
@@ -39,7 +39,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * This class implements a mechanism for discovering Hudson and Jenkins servers through the use of Multicast DNS (MDNS).
- * 
+ *
  * @author Torkild U. Resheim, Itema AS
  * @author Steffen Pingel
  */
@@ -70,23 +70,6 @@ public class JenkinsDiscovery {
 										new Object[] { serviceInfo.getLocation().getHost() }));
 					} else {
 						issueJenkinsNotification(properties);
-					}
-				} catch (URISyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JenkinsConnectorUi.ID_PLUGIN,
-							NLS.bind(Messages.Discovery_IncorrectURI,
-									new Object[] { properties.getProperty(URL_PROPERTY).toString() }),
-							e));
-				}
-			}
-			if (serviceTypeId.getName().equals(HUDSON_MDNS_ID)) {
-				IServiceProperties properties = serviceInfo.getServiceProperties();
-				try {
-					if (properties.getProperty(URL_PROPERTY) == null) {
-						notifyMessage(Messages.HudsonDiscovery_MessageTitle,
-								NLS.bind(Messages.HudsonDiscovery_MissingURL,
-										new Object[] { serviceInfo.getLocation().getHost() }));
-					} else {
-						issueHudsonNotification(properties);
 					}
 				} catch (URISyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JenkinsConnectorUi.ID_PLUGIN,
@@ -129,7 +112,7 @@ public class JenkinsDiscovery {
 
 	/**
 	 * Determines whether or not the detected server is a new server or not.
-	 * 
+	 *
 	 * @param url
 	 *            the server URL
 	 * @param id
@@ -152,7 +135,7 @@ public class JenkinsDiscovery {
 	public void start() {
 		try {
 			container = getContainer();
-			final IDiscoveryLocator adapter = (IDiscoveryLocator) container.getAdapter(IDiscoveryLocator.class);
+			final IDiscoveryLocator adapter = container.getAdapter(IDiscoveryLocator.class);
 			adapter.addServiceListener(new HudsonServiceListener());
 			container.connect(null, null);
 
@@ -174,15 +157,6 @@ public class JenkinsDiscovery {
 
 	private void notifyMessage(String title, String description) {
 		BuildsUi.serverDiscovered(title, description);
-	}
-
-	private void issueHudsonNotification(IServiceProperties properties) throws URISyntaxException {
-		String url = properties.getProperty(URL_PROPERTY).toString();
-		String id = getId(properties);
-		if (isNew(url, id)) {
-			notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(Messages.HudsonDiscovery_MessageText,
-					new Object[] { url, Messages.HudsonDiscovery_ServerName, url, id }));
-		}
 	}
 
 	private void issueJenkinsNotification(IServiceProperties properties) throws URISyntaxException {

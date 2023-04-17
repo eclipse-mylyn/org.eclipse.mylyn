@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Hudson Connector
+Bundle-Name: Mylyn Jenkins Connector
 Bundle-SymbolicName: org.eclipse.mylyn.jenkins.tests;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",

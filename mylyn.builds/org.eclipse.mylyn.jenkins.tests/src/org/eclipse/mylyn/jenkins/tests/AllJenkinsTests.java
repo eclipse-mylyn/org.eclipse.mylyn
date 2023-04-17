@@ -11,17 +11,12 @@
 
 package org.eclipse.mylyn.jenkins.tests;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin;
 import org.eclipse.mylyn.jenkins.tests.client.JenkinsClientTest;
 import org.eclipse.mylyn.jenkins.tests.client.JenkinsUrlTest;
 import org.eclipse.mylyn.jenkins.tests.client.JenkinsValidationTest;
@@ -61,15 +56,7 @@ public class AllJenkinsTests {
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(JenkinsValidationTest.class);
-			List<JenkinsFixture> fixtures;
-			try {
-				fixtures = configuration.discover(JenkinsFixture.class, "hudson");
-			} catch (RuntimeException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, JenkinsCorePlugin.ID_PLUGIN,
-						"No hudson fixtures found, will look for jenkins fixtures", e));
-				fixtures = new ArrayList<JenkinsFixture>();
-			}
-			fixtures.addAll(configuration.discover(JenkinsFixture.class, "jenkins"));
+			List<JenkinsFixture> fixtures = configuration.discover(JenkinsFixture.class, "jenkins");
 			for (JenkinsFixture fixture : fixtures) {
 				if (fixture.isExcluded()
 						|| (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken())) {

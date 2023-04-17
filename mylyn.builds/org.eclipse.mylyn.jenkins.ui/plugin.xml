@@ -41,7 +41,7 @@
             class="org.eclipse.mylyn.internal.jenkins.ui.NewJenkinsServerWizard"
             icon="icons/obj16/hudson.png"
             id="org.eclipse.mylyn.jenkins"
-            name="Hudson (supports Jenkins)">
+            name="Jenkins">
          <description>
             Connects to continuous integration servers. Supports Hudson and Jenkins.
          </description>

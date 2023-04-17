@@ -67,7 +67,7 @@
 		</mapping>
 		<mapping namespace="org.eclipse.mylyn.jenkins" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Builds"/>
-			<property name="component" value="Hudson Connector"/>
+			<property name="component" value="Jenkins Connector"/>
 		</mapping>
 		<!-- Mylyn Commons -->
 		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">

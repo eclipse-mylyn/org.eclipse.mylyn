@@ -196,15 +196,15 @@
       </connectorDescriptor>
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
-            description="%connectorDescriptor.description.hudson"
+            description="%connectorDescriptor.description.jenkins"
             groupId="extra"
             id="org.eclipse.mylyn.jenkins"
             kind="task"
-            license="%connectorDescriptor.license.hudson"
-            name="%connectorDescriptor.name.hudson"
-            provider="%connectorDescriptor.provider.hudson"
+            license="%connectorDescriptor.license.jenkins"
+            name="%connectorDescriptor.name.jenkins"
+            provider="%connectorDescriptor.provider.jenkins"
             siteUrl="http://download.eclipse.org/mylyn/snapshots/3.25"
-            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.hudson">
+            statsUrl="http://stats.mylyn.org/discovery/3.25/org.eclipse.mylyn.jenkins">
          <icon
                image32="images/hudson-32.png">
          </icon>
