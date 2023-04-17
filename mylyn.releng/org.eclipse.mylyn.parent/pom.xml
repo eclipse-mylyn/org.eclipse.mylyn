@@ -58,6 +58,7 @@
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
+    <timestampProvider>jgit</timestampProvider>
     <target-platform>mylyn-e${target-version}</target-platform>
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
   </properties>
@@ -387,7 +388,7 @@
             <sourceReferences>
               <generate>true</generate>
             </sourceReferences>
-            <timestampProvider>jgit</timestampProvider>
+            <timestampProvider>${timestampProvider}</timestampProvider>
             <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
           </configuration>
         </plugin>
