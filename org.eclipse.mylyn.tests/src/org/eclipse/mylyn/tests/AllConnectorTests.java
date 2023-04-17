@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
 //	AllBugzillaRestCoreTests.class, //
 //FIXME: AF: remove? we already did these tests during component build
 //		AllBugzillaTests.class, //
-//		AllHudsonTests.class, //
+//		AllJenkinsTests.class, //
 //		AllGerritTests.class, //
 //		AllTracTests.class //
 })

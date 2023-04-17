@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.jenkins.core.messages"; //$NON-NLS-1$
 
-	public static String HudsonServerBehaviour_Validation_succesful;
+	public static String JenkinsServerBehaviour_Validation_succesful;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

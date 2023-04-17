@@ -20,7 +20,7 @@ Export-Package: org.eclipse.mylyn.internal.hudson.model;x-friends:="org.eclipse.
  org.eclipse.mylyn.internal.jenkins.core;x-friends:="org.eclipse.mylyn.jenkins.ui",
  org.eclipse.mylyn.internal.jenkins.core.client;x-friends:="org.eclipse.mylyn.jenkins.ui",
  org.eclipse.mylyn.jenkins.core;x-friends:="org.eclipse.mylyn.jenkins.ui"
-Bundle-Activator: org.eclipse.mylyn.internal.jenkins.core.HudsonCorePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin
 Import-Package: com.google.gson;version="[2.7.0,2.9.2)",
  com.sun.xml.bind;version="2.3.3",
  javax.xml.bind;version="2.3.3",
