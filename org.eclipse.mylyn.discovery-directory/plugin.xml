@@ -210,7 +210,7 @@
          </icon>
          <overview
                screenshot="images/hudson-screenshot.png"
-               summary="%overview.summary.hudson"
+               summary="%overview.summary.jenkins"
                url="http://eclipse.org/mylyn">
          </overview>
       </connectorDescriptor>

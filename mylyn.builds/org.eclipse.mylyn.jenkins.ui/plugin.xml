@@ -43,7 +43,7 @@
             id="org.eclipse.mylyn.jenkins"
             name="Jenkins">
          <description>
-            Connects to continuous integration servers. Supports Hudson and Jenkins.
+            Connects to continuous integration servers. Supports Jenkins.
          </description>
       </wizard>
    </extension>
