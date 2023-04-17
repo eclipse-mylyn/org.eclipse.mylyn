@@ -38,7 +38,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * This class implements a mechanism for discovering Hudson and Jenkins servers through the use of Multicast DNS (MDNS).
+ * This class implements a mechanism for discovering Jenkins servers through the use of Multicast DNS (MDNS).
  *
  * @author Torkild U. Resheim, Itema AS
  * @author Steffen Pingel
@@ -54,7 +54,7 @@ public class JenkinsDiscovery {
 		public abstract boolean triggerDiscovery();
 	}
 
-	private final class HudsonServiceListener extends AbstractServiceListener implements IServiceListener {
+	private final class JenkinsServiceListener extends AbstractServiceListener implements IServiceListener {
 		public void serviceDiscovered(IServiceEvent anEvent) {
 			IServiceInfo serviceInfo = anEvent.getServiceInfo();
 			IServiceID serviceId = serviceInfo.getServiceID();
@@ -136,7 +136,7 @@ public class JenkinsDiscovery {
 		try {
 			container = getContainer();
 			final IDiscoveryLocator adapter = container.getAdapter(IDiscoveryLocator.class);
-			adapter.addServiceListener(new HudsonServiceListener());
+			adapter.addServiceListener(new JenkinsServiceListener());
 			container.connect(null, null);
 
 		} catch (ContainerCreateException e) {
