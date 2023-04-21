@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -217,6 +217,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		specialFields.add(FIELD_TASK_KEY);
 		specialFields.add(FIELD_ATTACHMENT_NAME);
 		specialFields.add(FIELD_NOTES);
+		specialFields.add(DefaultTaskSchema.getInstance().DATE_COMPLETION);
+		specialFields.add(DefaultTaskSchema.getInstance().DATE_CREATION);
+		specialFields.add(DefaultTaskSchema.getInstance().DATE_DUE);
+		specialFields.add(DefaultTaskSchema.getInstance().DATE_MODIFICATION);
 
 		addIndexedField(FIELD_IDENTIFIER);
 		addIndexedField(FIELD_TASK_KEY);

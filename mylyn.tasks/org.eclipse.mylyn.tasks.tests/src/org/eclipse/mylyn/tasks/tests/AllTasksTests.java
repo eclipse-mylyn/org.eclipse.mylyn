@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -79,6 +79,7 @@ public class AllTasksTests {
 	}
 
 	public static void addTests(TestSuite suite) {
+		suite.addTestSuite(ScheduledTaskContainerTest.class);
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryCredentialsTest.class);
@@ -165,7 +166,6 @@ public class AllTasksTests {
 		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
 		suite.addTestSuite(SynchronizeTasksJobTest.class);
 		suite.addTestSuite(TaskAttributeTest.class);
-		suite.addTestSuite(ScheduledTaskContainerTest.class);
 		suite.addTestSuite(RepositoryConnectorContributorTest.class);
 		suite.addTestSuite(TaskInitializationDataTest.class);
 		suite.addTestSuite(TaskDataDiffTest.class);

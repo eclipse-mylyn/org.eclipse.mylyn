@@ -8,9 +8,9 @@ Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,
  org.eclipse.mylyn.tests.misc;x-internal:=true
 Bundle-ClassPath: .
-Require-Bundle: org.apache.lucene.analyzers-common;bundle-version="[6.1.0,8.0.0)",
- org.apache.lucene.core;bundle-version="[6.1.0,8.0.0)",
- org.apache.lucene.queryparser;bundle-version="[6.1.0,8.8.0)",
+Require-Bundle: org.apache.lucene.lucene-analysis-common;bundle-version="9.5.0",
+ org.apache.lucene.lucene-core;bundle-version="9.5.0",
+ org.apache.lucene.lucene-queryparser;bundle-version="9.5.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.mylyn.bugzilla.tests;bundle-version="3.26.0",
