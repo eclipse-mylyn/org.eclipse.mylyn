@@ -16,16 +16,16 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1672000970093</id>
+			<id>1682142457282</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-org.eclipse.mylyn.*</arguments>
+				<arguments>1.0-name-matches-false-false-org.eclipse.mylyn*</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1672000970100</id>
+			<id>1682142457284</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
