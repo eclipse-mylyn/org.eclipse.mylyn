@@ -27,6 +27,9 @@
    <feature url="features/org.eclipse.mylyn.docs.epub.sdk_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <bundle id="com.google.guava">
+     <category name="SDK"/>
+   </bundle>
    <category-def name="Features" label="Mylyn Docs Features">
       <description>
          Tools.
