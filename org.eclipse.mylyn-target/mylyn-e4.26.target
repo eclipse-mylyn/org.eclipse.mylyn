@@ -121,12 +121,6 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>org.eclipse.mylyn.github</groupId>
-					<artifactId>org.eclipse.egit.github.core</artifactId>
-					<version>6.1.0.202203080745-r</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
 					<groupId>org.glassfish.hk2</groupId>
 					<artifactId>osgi-resource-locator</artifactId>
 					<version>2.4.0</version>
