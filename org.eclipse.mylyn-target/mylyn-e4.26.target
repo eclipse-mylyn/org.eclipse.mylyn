@@ -66,6 +66,22 @@
 			<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
 			<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 		</location>
+		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" label="EGit GitHub" missingManifest="error" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.mylyn.github</groupId>
+					<artifactId>org.eclipse.egit.github.core</artifactId>
+					<version>6.1.0.202203080745-r</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+			<repositories>
+				<repository>
+					<id>eclipse-egit</id>
+					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+				</repository>
+			</repositories>
+		</location>
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
@@ -105,12 +121,6 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>org.eclipse.mylyn.github</groupId>
-					<artifactId>org.eclipse.egit.github.core</artifactId>
-					<version>6.1.0.202203080745-r</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
 					<groupId>org.glassfish.hk2</groupId>
 					<artifactId>osgi-resource-locator</artifactId>
 					<version>2.4.0</version>
@@ -123,12 +133,6 @@
 					<type>jar</type>
 				</dependency>
 			</dependencies>
-			<repositories>
-				<repository>
-					<id>eclipse-egit</id>
-					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
-				</repository>
-			</repositories>
 			<instructions><![CDATA[
 Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
