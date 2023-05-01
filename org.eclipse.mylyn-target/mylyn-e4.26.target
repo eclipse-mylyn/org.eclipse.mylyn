@@ -82,6 +82,15 @@
 				</repository>
 			</repositories>
 		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/oomph/simrel-maven-bnd/2023-06/"/>
+			<unit id="org.apache.lucene.lucene-analysis-common" version="0.0.0"/>
+			<unit id="org.apache.lucene.lucene-core" version="0.0.0"/>
+			<unit id="org.apache.lucene.lucene-queries" version="0.0.0"/>
+			<unit id="org.apache.lucene.lucene-queryparser" version="0.0.0"/>
+			<unit id="org.apache.lucene.lucene-sandbox" version="0.0.0"/>
+			<unit id="org.mockito.mockito-inline" version="0.0.0"/>
+		</location>
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
@@ -103,33 +112,9 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-analysis-common</artifactId>
-					<version>9.5.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-					<version>9.5.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-queryparser</artifactId>
-					<version>9.5.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
 					<groupId>org.glassfish.hk2</groupId>
 					<artifactId>osgi-resource-locator</artifactId>
 					<version>2.4.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-inline</artifactId>
-					<version>4.8.1</version>
 					<type>jar</type>
 				</dependency>
 			</dependencies>
