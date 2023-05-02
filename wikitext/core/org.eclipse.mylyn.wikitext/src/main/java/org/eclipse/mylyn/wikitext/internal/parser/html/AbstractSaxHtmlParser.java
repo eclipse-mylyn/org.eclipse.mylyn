@@ -295,7 +295,8 @@ public abstract class AbstractSaxHtmlParser {
 				for (int x = 0; x < length; ++x) {
 					int index = start + x;
 					char c = ch[index];
-					if (Character.isWhitespace(c)) {
+					// preserve ideographic whitespace U+3000
+					if (Character.isWhitespace(c) && c != '\u3000') {
 						if (previousWhitespaceIndex == index - 1) {
 							previousWhitespaceIndex = index;
 							continue;
