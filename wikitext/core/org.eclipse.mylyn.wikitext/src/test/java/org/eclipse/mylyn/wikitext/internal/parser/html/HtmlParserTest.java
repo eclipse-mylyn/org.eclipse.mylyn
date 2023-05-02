@@ -245,6 +245,36 @@ public class HtmlParserTest {
 		assertParse("<pre>some\ncode</pre>", "<body><pre>some\ncode</pre></body>");
 	}
 
+	@Test
+	public void paragraphWithSpacePreserved() {
+		assertParse("<p>foo bar</p>", "<body><p>foo bar</p></body>");
+	}
+
+	@Test
+	public void preformattedWithSpacePreserved() {
+		assertParse("<pre>foo bar</pre>", "<body><pre>foo bar</pre></body>");
+	}
+
+	@Test
+	public void paragraphWithExtraSpacesCollapsed() {
+		assertParse("<p>foo bar</p>", "<body><p>foo  bar</p></body>");
+	}
+
+	@Test
+	public void preformattedWithExtraSpacesPreserved() {
+		assertParse("<pre>foo  bar</pre>", "<body><pre>foo  bar</pre></body>");
+	}
+
+	@Test
+	public void paragraphWithIdeographicSpacePreserved() {
+		assertParse("<p>foo　bar</p>", "<body><p>foo　bar</p></body>");
+	}
+
+	@Test
+	public void preformattedWithIdeographicSpacePreserved() {
+		assertParse("<pre>foo　bar</pre>", "<body><pre>foo　bar</pre></body>");
+	}
+
 	private void assertParse(String expected, String content) {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = new HtmlDocumentBuilder(out);
