@@ -4,7 +4,7 @@
       label="%featureName"
       version="6.2.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.egit"
+      plugin="org.eclipse.mylyn.tasks.core"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
 
