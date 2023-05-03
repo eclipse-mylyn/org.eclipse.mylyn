@@ -72,21 +72,9 @@
 			<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.6"/>
 			<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.22"/>
 		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" label="EGit GitHub" missingManifest="error" type="Maven">
-			<dependencies>
-				<dependency>
-					<groupId>org.eclipse.mylyn.github</groupId>
-					<artifactId>org.eclipse.egit.github.core</artifactId>
-					<version>6.1.0.202203080745-r</version>
-					<type>jar</type>
-				</dependency>
-			</dependencies>
-			<repositories>
-				<repository>
-					<id>eclipse-egit</id>
-					<url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
-				</repository>
-			</repositories>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/egit/github/updates/"/>
+			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/oomph/simrel-maven-bnd/2023-06/"/>
