@@ -134,11 +134,16 @@
    <bundle id="javax.activation" version="2.0.0.v20221203-1659"/>
    <bundle id="javax.xml.stream"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <bundle id="org.apache.commons.logging"/>
    <bundle id="org.apache.lucene.lucene-analysis-common"/>
    <bundle id="org.apache.lucene.lucene-core"/>
    <bundle id="org.apache.lucene.lucene-queries"/>
    <bundle id="org.apache.lucene.lucene-queryparser"/>
    <bundle id="org.apache.lucene.lucene-sandbox"/>
+   <bundle id="org.apache.xml.resolver"/>
+   <bundle id="org.apache.xmlrpc.client"/>
+   <bundle id="org.apache.xmlrpc.common"/>
+   <bundle id="org.apache.xmlrpc.server"/>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
