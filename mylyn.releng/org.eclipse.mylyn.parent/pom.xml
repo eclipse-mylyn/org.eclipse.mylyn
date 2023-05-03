@@ -54,7 +54,7 @@
     <sign.skip>true</sign.skip>
     <pack.skip>false</pack.skip>
     <promote.skip>true</promote.skip>
-    <dist.qualifier>'N'yyyyMMdd-HHmm</dist.qualifier>
+    <dist.qualifier>'v'yyyyMMdd-HHmm</dist.qualifier>
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
