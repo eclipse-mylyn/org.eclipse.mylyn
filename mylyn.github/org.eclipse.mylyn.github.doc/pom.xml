@@ -43,7 +43,7 @@ SPDX-License-Identifier: EPL-2.0
 					<dependency>
 						<groupId>org.eclipse.mylyn.docs</groupId>
 						<artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
-						<version>3.0.46.202301111837</version>
+						<version>3.0.47.202305042122</version>
 					</dependency>
 				</dependencies>
 				<executions>
