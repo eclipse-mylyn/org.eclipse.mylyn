@@ -58,7 +58,6 @@ pipeline {
 						-Dmaven.test.failure.ignore=true \
 						-Dmaven.test.error.ignore=true \
 						-Ddash.fail=false \
-						-Dorg.eclipse.storage.user=genie.cbi \
 						-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
 						-Dbuild.type=$BUILD_TYPE \
 						-Dgit.commit=$GIT_COMMIT \
