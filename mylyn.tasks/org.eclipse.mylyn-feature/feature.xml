@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn_feature"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="3.26.1.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.tasks.core"
       license-feature="org.eclipse.license"
@@ -43,13 +43,13 @@
       <import plugin="org.apache.lucene.lucene-analysis-common" version="9.5.0" match="greaterOrEqual"/>
       <import plugin="org.apache.lucene.lucene-core" version="9.5.0" match="greaterOrEqual"/>
       <import plugin="org.apache.lucene.lucene-queryparser" version="9.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.identity" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.notifications" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.discovery" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.monitor" version="3.26.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.identity" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.notifications" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.discovery" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.monitor" version="3.26.1" match="compatible"/>
    </requires>
 
    <plugin

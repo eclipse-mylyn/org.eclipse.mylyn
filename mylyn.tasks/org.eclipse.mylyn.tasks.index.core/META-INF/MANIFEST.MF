@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.index.core
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 3.26.1.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.apache.lucene.lucene-analysis-common;bundle-version="9.5.0",
  org.apache.lucene.lucene-core;bundle-version="9.5.0",
  org.apache.lucene.lucene-queryparser;bundle-version="9.5.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
- org.eclipse.mylyn.tasks.core;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.26.0"
+ org.eclipse.mylyn.tasks.core;bundle-version="3.26.1",
+ org.eclipse.mylyn.commons.core;bundle-version="3.26.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.tasks.index.core;x-internal:=true

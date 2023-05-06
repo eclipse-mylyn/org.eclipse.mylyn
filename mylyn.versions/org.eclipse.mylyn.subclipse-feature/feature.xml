@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.mylyn.subclipse"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="3.26.1.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.versions.core"
       license-feature="org.eclipse.license"
@@ -34,7 +34,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.versions" version="3.26.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions" version="3.26.1" match="compatible"/>
       <import plugin="org.tigris.subversion.subclipse.core" version="1.6.17" match="greaterOrEqual"/>
    </requires>
 

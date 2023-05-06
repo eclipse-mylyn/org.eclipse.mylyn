@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Tests
 Bundle-SymbolicName: org.eclipse.mylyn.trac.core.tests;singleton:=true
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 3.26.1.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.trac.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
