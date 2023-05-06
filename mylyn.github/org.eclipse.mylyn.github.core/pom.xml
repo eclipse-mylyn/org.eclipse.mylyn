@@ -22,5 +22,5 @@
 	<artifactId>org.eclipse.mylyn.github.core</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<name>Eclipse EGit Mylyn GitHub Core</name>
-	<version>6.2.0-SNAPSHOT</version>
+	<version>6.2.1-SNAPSHOT</version>
 </project>

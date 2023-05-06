@@ -18,7 +18,7 @@
 		<artifactId>org.eclipse.mylyn.github-parent</artifactId>
 		<version>3.26.1-SNAPSHOT</version>
 	</parent>
-	<version>6.2.0-SNAPSHOT</version>
+	<version>6.2.1-SNAPSHOT</version>
 	<artifactId>org.eclipse.mylyn.github.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 	<name>Eclipse EGit Mylyn GitHub Test Plug-in</name>
