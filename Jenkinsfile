@@ -61,8 +61,7 @@ pipeline {
 							-Ddash.fail=false \
 							-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
 							-Dbuild.type=$BUILD_TYPE \
-							-Dgit.commit=$GIT_COMMIT \
-							-Dbuild.id=$BUILD_NUMBER 
+							-Dgit.commit=$GIT_COMMIT
 						'''
 					}
 				}
