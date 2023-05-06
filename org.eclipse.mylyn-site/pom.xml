@@ -34,6 +34,7 @@
     <org.eclipse.justj.p2.manager.extra.args></org.eclipse.justj.p2.manager.extra.args>
     <org.eclipse.justj.p2.manager.relative>updates</org.eclipse.justj.p2.manager.relative>
     <org.eclipse.justj.p2.manager.build.url>http://www.example.com/</org.eclipse.justj.p2.manager.build.url>
+    <git.commit>unknown</git.commit>
     <build.type>nightly</build.type>
   </properties>
 
@@ -93,6 +94,7 @@
                     -relative ${org.eclipse.justj.p2.manager.relative}
                     -version-iu org.eclipse.mylyn.sdk_feature.
                     -iu-filter-pattern org.eclipse.mylyn.*
+                    -commit https://github.com/eclipse-mylyn/org.eclipse.mylyn/commit/${git.commit}
                     -target-url https://download.eclipse.org/mylyn
                     -promote ${project.build.directory}/repository
                     -timestamp ${build.timestamp}
