@@ -47,22 +47,24 @@ pipeline {
 		}
 		stage('Build') {
 			steps {
-				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh '''
-						mvn \
-						clean \
-						verify \
-						-B \
-						$MAVEN_PROFILES \
-						-Dmaven.repo.local=$WORKSPACE/.m2/repository \
-						-Dmaven.test.failure.ignore=true \
-						-Dmaven.test.error.ignore=true \
-						-Ddash.fail=false \
-						-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
-						-Dbuild.type=$BUILD_TYPE \
-						-Dgit.commit=$GIT_COMMIT \
-						-Dbuild.id=$BUILD_NUMBER 
-					'''
+				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+					wrap([$class: 'Xvnc', useXauthority: true]) {
+						sh '''
+							mvn \
+							clean \
+							verify \
+							-B \
+							$MAVEN_PROFILES \
+							-Dmaven.repo.local=$WORKSPACE/.m2/repository \
+							-Dmaven.test.failure.ignore=true \
+							-Dmaven.test.error.ignore=true \
+							-Ddash.fail=false \
+							-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
+							-Dbuild.type=$BUILD_TYPE \
+							-Dgit.commit=$GIT_COMMIT \
+							-Dbuild.id=$BUILD_NUMBER 
+						'''
+					}
 				}
 			}
 			post {
