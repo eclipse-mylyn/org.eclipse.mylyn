@@ -11,34 +11,65 @@ pipeline {
 		maven 'apache-maven-latest'
 		jdk 'openjdk-jdk17-latest'
 	}
+	parameters {
+		choice(
+			name: 'BUILD_TYPE',
+			choices: ['nightly', 'milestone', 'release'],
+			description: '''
+			Choose the type of build.
+			Note that a release build will not promote the build, but rather will promote the most recent milestone build.
+			'''
+		)
+		booleanParam(
+			name: 'PROMOTE',
+			defaultValue: true,
+			description: 'Whether to promote the build to the download server.'
+		)
+	}
 	stages {
+		stage('Display Parameters') {
+				steps {
+						echo "BUILD_TYPE=${params.BUILD_TYPE}"
+						echo "PROMOTE=${params.PROMOTE}"
+						script {
+								env.BUILD_TYPE = params.BUILD_TYPE
+								if (env.BRANCH_NAME == 'main') {
+									if (params.PROMOTE) {
+										env.MAVEN_PROFILES = "-Psign -Ppromote"
+									} else {
+										env.MAVEN_PROFILES = "-Psign"
+									}
+								} else {
+									env.MAVEN_PROFILES = ""
+								}
+						}
+				}
+		}
 		stage('Build') {
 			steps {
 				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh 'mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false'
+					sh '''
+						mvn \
+						clean \
+						verify \
+						-B \
+						$MAVEN_PROFILES \
+						-Dmaven.repo.local=$WORKSPACE/.m2/repository \
+						-Dmaven.test.failure.ignore=true \
+						-Dmaven.test.error.ignore=true \
+						-Ddash.fail=false \
+						-Dorg.eclipse.storage.user=genie.cbi \
+						-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
+						-Dbuild.type=$BUILD_TYPE \
+						-Dgit.commit=$GIT_COMMIT \
+						-Dbuild.id=$BUILD_NUMBER 
+					'''
 				}
 			}
 			post {
 				always {
 					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
 					junit '**/target/surefire-reports/TEST-*.xml'
-				}
-			}
-		}
-		stage('Deploy Snapshot') {
-			when {
-				branch 'main'
-			}
-			steps {
-				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
-				sh '''
-					DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/mylyn/
-					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
-					ssh genie.mylyn@projects-storage.eclipse.org "\
-						rm -rf  ${DOWNLOAD_AREA}/* && \
-						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r org.eclipse.mylyn-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
-				'''
 				}
 			}
 		}
