@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Bugzilla Rest Connector
+Bundle-Name: Mylyn Bugzilla Rest Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn

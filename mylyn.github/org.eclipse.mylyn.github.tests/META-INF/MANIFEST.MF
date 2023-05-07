@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse EGit Mylyn GitHub Tests
+Bundle-Name: Mylyn GitHub Tests
 Automatic-Module-Name: org.eclipse.mylyn.github.tests
 Bundle-SymbolicName: org.eclipse.mylyn.github.tests
 Bundle-Version: 6.2.0.qualifier
