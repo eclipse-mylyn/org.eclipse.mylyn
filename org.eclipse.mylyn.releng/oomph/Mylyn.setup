@@ -8,8 +8,9 @@
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -82,6 +83,7 @@
       name="Baseline">
     <setupTask
         xsi:type="setup:VariableTask"
+        disabled="true"
         type="FOLDER"
         name="mylyn.baseline.location"
         defaultValue="$${workspace.location/../api.baseline}"
@@ -92,10 +94,50 @@
     <setupTask
         xsi:type="pde:APIBaselineTask"
         id="mylyn.baseline"
+        disabled="true"
         name="Mylyn"
         version="3.25"
         location="${workspace.location/../api.baseline}"
         remoteURI="https://download.eclipse.org/mylyn/drops/3.25.0/mylyn-3.25.0-api.zip"/>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask"
+        id="mylyn.target.api"
+        targetName="Mylyn Modular Target for API"
+        activateTarget="false">
+      <targlet
+          name="Mylyn"
+          includeSources="false">
+        <requirement
+            name="org.eclipse.mylyn_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.context_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.trac_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.discovery.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.ide_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.java_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.pde_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.team_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
+        <repositoryList
+            name="latest">
+          <repository
+              url="https://download.eclipse.org/mylyn/releases/3.25/"/>
+          <repository
+              url="https://download.eclipse.org/eclipse/updates/4.27/R-4.27-202303020300"/>
+        </repositoryList>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="pde:APIBaselineFromTargetTask"
+        name="Mylyn latest API"
+        targetName="Mylyn Modular Target for API"/>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
