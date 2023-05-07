@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.mylyn.bugzilla.rest.ui
+Bundle-Name: Mylyn Bugzilla Rest Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.ui;singleton:=true
 Bundle-Version: 3.26.0.qualifier
 Require-Bundle: com.google.guava;bundle-version="21.0.0",

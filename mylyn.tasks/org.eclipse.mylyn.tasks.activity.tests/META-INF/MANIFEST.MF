@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tasks Activity
+Bundle-Name: Mylyn Tasks Activity Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.activity.tests
 Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
