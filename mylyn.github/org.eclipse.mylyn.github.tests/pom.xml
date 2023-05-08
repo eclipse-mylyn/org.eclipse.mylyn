@@ -21,5 +21,5 @@
 	<version>6.2.1-SNAPSHOT</version>
 	<artifactId>org.eclipse.mylyn.github.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-	<name>Eclipse EGit Mylyn GitHub Test Plug-in</name>
+	<name>Eclipse Mylyn GitHub Test Plug-in</name>
 </project>

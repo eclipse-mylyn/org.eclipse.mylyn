@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.mylyn.bugzilla.rest.core
+Bundle-Name: Mylyn Bugzilla Rest Connector Core
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core;singleton:=true
 Bundle-Version: 3.26.1.qualifier
 Require-Bundle: com.google.gson;bundle-version="0.0.0",

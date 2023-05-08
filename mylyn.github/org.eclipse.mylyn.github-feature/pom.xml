@@ -22,5 +22,5 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.eclipse.mylyn.github.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<name>Eclipse EGit Mylyn GitHub Feature</name>
+	<name>Eclipse Mylyn GitHub Feature</name>
 </project>

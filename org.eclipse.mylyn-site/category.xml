@@ -128,6 +128,9 @@
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="github_connector"/>
    </feature>
+   <feature id="org.eclipse.egit.mylyn">
+      <category name="org.eclipse.mylyn.integrations.category"/>
+   </feature>
    <bundle id="com.sun.xml.bind"/>
    <bundle id="jakarta.xml.bind"/>
    <bundle id="javax.activation" version="1.2.2.v20221203-1659"/>
