@@ -100,9 +100,9 @@
                     -timestamp ${build.timestamp}
                     -type ${build.type}
                     -breadcrumb "Mylyn https://www.eclipse.org/mylyn"
-                    -favicon ${project.baseUri}../mylyn.commons/org.eclipse.mylyn.commons.core/feature.gif
+                    -favicon https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/mylyn.commons/org.eclipse.mylyn.commons.core/feature.gif
                     -xtitle-image https://www.eclipse.org/jetty/common/images/jetty-logo.svg
-                    -body-image ${project.baseUri}../mylyn.commons/org.eclipse.mylyn.commons.core/feature.gif
+                    -body-image https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/mylyn.commons/org.eclipse.mylyn.commons.core/feature.gif
                     ${org.eclipse.justj.p2.manager.extra.args}
                   </appArgLine>
                 </configuration>
