@@ -43,7 +43,6 @@
 	<module>org.eclipse.mylyn.reviews.core</module>
 	<module>org.eclipse.mylyn.reviews.core.tests</module>
 	<module>org.eclipse.mylyn.reviews.feature</module>
-	<module>org.eclipse.mylyn.reviews.development.feature</module>
 	<module>org.eclipse.mylyn.reviews.sdk.feature</module>
 	<module>org.eclipse.mylyn.reviews.tests</module>
 	<module>org.eclipse.mylyn.reviews.edit</module>
