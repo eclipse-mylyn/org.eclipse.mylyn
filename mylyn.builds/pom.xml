@@ -35,7 +35,6 @@
     <module>org.eclipse.mylyn.builds.core</module>
     <module>org.eclipse.mylyn.builds.tests</module>
     <module>org.eclipse.mylyn.builds.ui</module>
-    <module>org.eclipse.mylyn.builds.development-feature</module>
     <module>org.eclipse.mylyn.builds.sdk-feature</module>
     <module>org.eclipse.mylyn.hudson-feature</module>
     <module>org.eclipse.mylyn.hudson.core</module>

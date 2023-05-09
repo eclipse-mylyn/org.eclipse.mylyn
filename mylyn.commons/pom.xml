@@ -43,7 +43,6 @@
     <module>org.eclipse.mylyn.commons.activity-feature</module>
     <module>org.eclipse.mylyn.commons.activity.tests</module>
     <module>org.eclipse.mylyn.commons.activity.ui</module>
-    <module>org.eclipse.mylyn.commons.development-feature</module>
     <module>org.eclipse.mylyn.commons.identity-feature</module>
     <module>org.eclipse.mylyn.commons.identity.core</module>
     <module>org.eclipse.mylyn.commons.identity.ui</module>
