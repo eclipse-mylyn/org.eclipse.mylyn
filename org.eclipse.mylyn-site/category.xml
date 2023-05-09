@@ -107,24 +107,6 @@
    <feature id="org.eclipse.mylyn.versions.sdk">
       <category name="org.eclipse.mylyn.sdk.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.builds.development">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.commons.development">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.context.development">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.reviews.development.feature">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.test_feature">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.versions.development">
-      <category name="org.eclipse.mylyn.tests.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="github_connector"/>
    </feature>
@@ -161,11 +143,6 @@
    <category-def name="org.eclipse.mylyn.sdk.category" label="Mylyn SDK and Framework">
       <description>
          Source code and documentation for integrators building on Mylyn.
-      </description>
-   </category-def>
-   <category-def name="org.eclipse.mylyn.tests.category" label="Mylyn Tests">
-      <description>
-         Tests for Mylyn functionality.
       </description>
    </category-def>
    <category-def name="trac.connector" label="Trac Connector">
