@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.mylyn.hudson"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="3.26.1.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.builds.core"
       license-feature="org.eclipse.license"
@@ -35,8 +35,8 @@
 
    <requires>
       <import plugin="com.google.gson" version="2.1.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.builds" version="3.26.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories.http" version="3.26.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.builds" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.http" version="3.26.1" match="compatible"/>
    </requires>
 
    <plugin

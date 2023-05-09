@@ -125,7 +125,7 @@
    <feature id="org.eclipse.mylyn.versions.development">
       <category name="org.eclipse.mylyn.tests.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.github.feature" version="6.2.0.qualifier">
+   <feature id="org.eclipse.mylyn.github.feature">
       <category name="github_connector"/>
    </feature>
    <feature id="org.eclipse.egit.mylyn">

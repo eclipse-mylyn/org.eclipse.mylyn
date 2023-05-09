@@ -18,12 +18,12 @@ SPDX-License-Identifier: EPL-2.0
 	<parent>
 		<groupId>org.eclipse.mylyn.github</groupId>
 		<artifactId>org.eclipse.mylyn.github-parent</artifactId>
-		<version>3.26.0-SNAPSHOT</version>
+		<version>3.26.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.eclipse.mylyn.github.doc</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>6.2.0-SNAPSHOT</version>
+	<version>6.2.1-SNAPSHOT</version>
 	<name>Eclipse Mylyn GitHub Documentation</name>
 	<build>
 		<plugins>

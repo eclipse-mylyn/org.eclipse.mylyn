@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.mylyn.context.development"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="3.26.1.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.context.core"
       license-feature="org.eclipse.license"

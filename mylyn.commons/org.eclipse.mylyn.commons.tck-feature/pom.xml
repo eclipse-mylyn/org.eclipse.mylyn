@@ -5,7 +5,7 @@
   <parent>
     <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
     <groupId>org.eclipse.mylyn.commons</groupId>
-    <version>3.26.0-SNAPSHOT</version>
+    <version>3.26.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.commons.tck</artifactId>
   <packaging>eclipse-feature</packaging>

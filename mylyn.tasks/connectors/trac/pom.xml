@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.eclipse.mylyn.tasks</groupId>
     <artifactId>org.eclipse.mylyn.tasks.connectors</artifactId>
-    <version>3.26.0-SNAPSHOT</version>
+    <version>3.26.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.tasks.connector-trac</artifactId>
   <name>Mylyn Task Connector Trac</name>

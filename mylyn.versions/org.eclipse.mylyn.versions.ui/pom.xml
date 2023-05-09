@@ -19,10 +19,10 @@
   <parent>
     <artifactId>org.eclipse.mylyn.versions-parent</artifactId>
     <groupId>org.eclipse.mylyn.versions</groupId>
-    <version>3.26.0-SNAPSHOT</version>
+    <version>3.26.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.versions.ui</artifactId>
-  <version>3.26.0-SNAPSHOT</version>
+  <version>3.26.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
