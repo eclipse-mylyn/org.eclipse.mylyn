@@ -77,9 +77,6 @@
    <feature id="org.eclipse.mylyn.commons.sdk">
       <category name="org.eclipse.mylyn.sdk.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.commons.tck">
-      <category name="org.eclipse.mylyn.sdk.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.context.sdk">
       <category name="org.eclipse.mylyn.sdk.category"/>
    </feature>
