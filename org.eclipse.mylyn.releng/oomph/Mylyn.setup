@@ -366,6 +366,7 @@
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
+        id="mylyn.github.admin.create.projectfile"
         predecessor="git.clone.mylyn.github.admin"
         targetURL="${git.clone.mylyn.github.admin.location|uri}/.project"
         encoding="UTF-8">
@@ -385,7 +386,7 @@
     </setupTask>
     <setupTask
         xsi:type="projects:ProjectsImportTask"
-        predecessor="//@projects[name='github.admin']/@setupTasks.1">
+        predecessor="mylyn.github.admin.create.projectfile">
       <sourceLocator
           rootFolder="${git.clone.mylyn.github.admin.location}"/>
       <description>Import Releng Project</description>
