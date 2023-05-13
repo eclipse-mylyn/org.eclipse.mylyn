@@ -126,10 +126,6 @@
         </repositoryList>
       </targlet>
     </setupTask>
-    <setupTask
-        xsi:type="pde:APIBaselineFromTargetTask"
-        name="Mylyn latest API"
-        targetName="Mylyn Modular Target for API"/>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
@@ -212,50 +208,36 @@
       <description>Import Releng Project</description>
     </setupTask>
     <setupTask
-        xsi:type="setup.workingsets:WorkingSetTask">
+        xsi:type="setup.workingsets:WorkingSetTask"
+        id="mylyn.workingsets">
       <workingSet
           name="Mylyn">
         <predicate
             xsi:type="predicates:OrPredicate">
           <operand
-              xsi:type="predicates:LocationPredicate"
-              pattern="${git.clone.mylyn.location|path}/org.eclipse.mylyn.*"/>
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn-aggregator"
+              relativePathPattern="org.eclipse.mylyn.*"/>
           <operand
-              xsi:type="predicates:LocationPredicate"
-              pattern="${git.clone.mylyn.location|path}/org.eclipse.mylyn-*"/>
+              xsi:type="predicates:NamePredicate"
+              pattern=".*[-.]parent|.*-aggregator"/>
         </predicate>
       </workingSet>
       <workingSet
           name="Commons">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.commons/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.commons/.*"/>
       </workingSet>
       <workingSet
           name="Tasks">
         <predicate
             xsi:type="predicates:AndPredicate">
           <operand
-              xsi:type="predicates:LocationPredicate"
-              pattern="${git.clone.mylyn.location|path}/mylyn.tasks/.*"/>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors.*"/>
-          </operand>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.tasks.tests/.*"/>
-          </operand>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.tasks/org.eclipse.mylyn.tasks.tests/target/.*"/>
-          </operand>
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn-aggregator"
+              relativePathPattern="mylyn.tasks/org.eclipse.mylyn.*"/>
         </predicate>
       </workingSet>
       <workingSet
@@ -263,101 +245,81 @@
         <predicate
             xsi:type="predicates:AndPredicate">
           <operand
-              xsi:type="predicates:LocationPredicate"
-              pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors.*"/>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:NamePredicate"
-                pattern="org.eclipse.mylyn.*"/>
-          </operand>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.github/.*"/>
-          </operand>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:LocationPredicate"
-                pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
-          </operand>
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn-aggregator"
+              relativePathPattern="mylyn.tasks/connectors"/>
         </predicate>
       </workingSet>
       <workingSet
           name="Trac Connector">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/trac/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.tasks/connectors/trac/.*"/>
       </workingSet>
       <workingSet
           name="Bugzilla Connector">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.tasks/connectors/bugzilla/.*"/>
       </workingSet>
       <workingSet
           name="Bugzilla Rest Connector">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.tasks/connectors/bugzilla-rest/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.tasks/connectors/bugzilla-rest/.*"/>
       </workingSet>
       <workingSet
           name="Context">
         <predicate
             xsi:type="predicates:AndPredicate">
           <operand
-              xsi:type="predicates:LocationPredicate"
-              pattern="${git.clone.mylyn.location|path}/mylyn.context/.*"/>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:NamePredicate"
-                pattern="org.eclipse.mylar.tests.projec.*"/>
-          </operand>
-          <operand
-              xsi:type="predicates:NotPredicate">
-            <operand
-                xsi:type="predicates:NamePredicate"
-                pattern="workspace-helper-project.*"/>
-          </operand>
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn-aggregator"
+              relativePathPattern="mylyn.context/.*"/>
         </predicate>
       </workingSet>
       <workingSet
           name="Builds">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.builds/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.builds/.*"/>
       </workingSet>
       <workingSet
           name="Reviews">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.reviews/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.reviews/.*"/>
       </workingSet>
       <workingSet
           name="Versions">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.versions/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.versions/.*"/>
       </workingSet>
       <workingSet
-          name="Github">
+          name="GitHub">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.github/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.github/.*"/>
       </workingSet>
       <workingSet
-          name="egit">
+          name="EGit">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.location|path}/mylyn.egit/.*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.egit/.*"/>
       </workingSet>
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"
-        predecessor="//@projects[name='mylyn']/@setupTasks.3"
+        predecessor="mylyn.workingsets"
         name="mylyn-e4.26">
       <description>Active Mylyn Target Platform</description>
     </setupTask>
@@ -429,12 +391,13 @@
       <description>Import Releng Project</description>
     </setupTask>
     <setupTask
-        xsi:type="setup.workingsets:WorkingSetTask">
+        xsi:type="setup.workingsets:WorkingSetTask"
+        id="github.admin.workingsets">
       <workingSet
           name="Administration">
         <predicate
-            xsi:type="predicates:LocationPredicate"
-            pattern="${git.clone.mylyn.github.admin.location|path}/*"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project=".github"/>
       </workingSet>
     </setupTask>
     <stream
