@@ -126,6 +126,10 @@
         </repositoryList>
       </targlet>
     </setupTask>
+    <setupTask
+        xsi:type="pde:APIBaselineFromTargetTask"
+        name="Mylyn Baseline"
+        targetName="Mylyn Modular Target for API"/>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
