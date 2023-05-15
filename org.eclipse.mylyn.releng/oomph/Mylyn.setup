@@ -78,60 +78,6 @@
     </setupTask>
   </setupTask>
   <setupTask
-      xsi:type="setup:CompoundTask"
-      id="mylyn.basline"
-      name="Baseline">
-    <setupTask
-        xsi:type="setup.targlets:TargletTask"
-        id="mylyn.target.api"
-        targetName="Mylyn Modular Target for API"
-        activateTarget="false">
-      <targlet
-          name="Mylyn"
-          includeSources="false">
-        <requirement
-            name="org.eclipse.mylyn_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.context_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.trac_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.discovery.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.ide_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.java_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.pde_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.team_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.git.feature.group"/>
-        <requirement
-            name="org.eclipse.cdt.mylyn.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.github.feature.feature.group"/>
-        <repositoryList
-            name="latest">
-          <repository
-              url="https://download.eclipse.org/mylyn/releases/3.26"/>
-          <repository
-              url="https://download.eclipse.org/egit/updates-6.2"/>
-          <repository
-              url="https://download.eclipse.org/tools/cdt/releases/11.0"/>
-          <repository
-              url="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
-        </repositoryList>
-      </targlet>
-    </setupTask>
-    <setupTask
-        xsi:type="pde:APIBaselineFromTargetTask"
-        name="Mylyn Baseline"
-        targetName="Mylyn Modular Target for API"/>
-  </setupTask>
-  <setupTask
       xsi:type="setup:ResourceCreationTask"
       targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
       encoding="UTF-8">
@@ -211,6 +157,64 @@
       </sourceLocator>
       <description>Import Releng Project</description>
     </setupTask>
+    <setupTask
+        xsi:type="pde:TargetPlatformTask"
+        predecessor="mylyn.workingsets"
+        name="mylyn-e4.26">
+      <description>Active Mylyn Target Platform</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask"
+        id="mylyn.target.api"
+        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.2 //@projects[name='mylyn']/@setupTasks.3"
+        targetName="Mylyn Modular Target for API"
+        activateTarget="false">
+      <targlet
+          name="Mylyn"
+          includeSources="false">
+        <requirement
+            name="org.eclipse.mylyn_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.context_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.trac_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.discovery.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.ide_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.java_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.pde_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.team_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.git.feature.group"/>
+        <requirement
+            name="org.eclipse.cdt.mylyn.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.github.feature.feature.group"/>
+        <repositoryList
+            name="latest">
+          <repository
+              url="https://download.eclipse.org/mylyn/releases/3.26"/>
+          <repository
+              url="https://download.eclipse.org/egit/updates-6.2"/>
+          <repository
+              url="https://download.eclipse.org/tools/cdt/releases/11.0"/>
+          <repository
+              url="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
+        </repositoryList>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="pde:APIBaselineFromTargetTask"
+        id="mylyn.api.baseline"
+        predecessor="mylyn.target.api"
+        name="Mylyn Baseline"
+        targetName="Mylyn Modular Target for API"/>
     <setupTask
         xsi:type="setup.workingsets:WorkingSetTask"
         id="mylyn.workingsets">
@@ -320,12 +324,6 @@
             project="org.eclipse.mylyn-aggregator"
             relativePathPattern="mylyn.egit/.*"/>
       </workingSet>
-    </setupTask>
-    <setupTask
-        xsi:type="pde:TargetPlatformTask"
-        predecessor="mylyn.workingsets"
-        name="mylyn-e4.26">
-      <description>Active Mylyn Target Platform</description>
     </setupTask>
     <stream
         name="main"
