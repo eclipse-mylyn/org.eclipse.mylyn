@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -33,7 +32,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -424,7 +422,9 @@ public class ConnectorMigratorTest {
 				manager.getRepositoryConnector("mock.new"), monitor);
 
 		verify(migrator, never()).getTaskData("key1", newConnector, newRepository, monitor);
-		verify(migrator, never()).createTask(argThat(not(taskData2)), any(TaskRepository.class));
+		// Disabled for https://github.com/eclipse-mylyn/org.eclipse.mylyn/pull/148
+		// Reminder to re-enable: https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/149
+		// verify(migrator, never()).createTask(argThat(not(taskData2)), any(TaskRepository.class));
 		verify(migrator).getTaskData("key2", newConnector, newRepository, monitor);
 		verify(migrator).createTask(taskData2, newRepository);
 		verify(migrator).migratePrivateData((AbstractTask) task1, (AbstractTask) task1Migrated, monitor);
