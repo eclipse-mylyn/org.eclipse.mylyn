@@ -38,6 +38,5 @@ Require-Bundle: org.apache.lucene.lucene-analysis-common;bundle-version="9.5.0",
  org.eclipse.mylyn.tests.util;bundle-version="3.26.1",
  org.eclipse.mylyn.trac.tests;bundle-version="3.26.1",
  org.eclipse.ui;bundle-version="0.0.0",
- org.junit;bundle-version="4.5.0",
- org.mockito.mockito-inline;bundle-version="4.8.1"
+ org.junit;bundle-version="4.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
