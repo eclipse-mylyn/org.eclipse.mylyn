@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2014, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ActiveReviewManager startup code rework
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui;
@@ -20,10 +21,10 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.IFormPage;
 
 import com.google.common.collect.Lists;
@@ -109,12 +110,12 @@ public class ActiveReviewManager {
 		}
 	};
 
-	public ActiveReviewManager() {
-		PlatformUI.getWorkbench().addWindowListener(windowListener);
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null) {
-			activeWorkbenchWindow.addPageListener(pageListener);
-			windowListener.windowActivated(activeWorkbenchWindow);
+	void startup(IWorkbench workbench) {
+		workbench.addWindowListener(windowListener);
+		IWorkbenchWindow active = workbench.getActiveWorkbenchWindow();
+		if (active != null) {
+			active.addPageListener(pageListener);
+			windowListener.windowActivated(active);
 		}
 	}
 
