@@ -22,7 +22,7 @@
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/rt/ecf/3.14.37/site.p2/3.14.37.v20221119-2038/"/>
+			<repository location="https://download.eclipse.org/rt/ecf/3.14.38/site.p2/3.14.38.v20230507-1923/"/>
 			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -78,11 +78,11 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/oomph/simrel-maven-bnd/2023-06/"/>
-			<unit id="org.apache.lucene.lucene-analysis-common" version="0.0.0"/>
-			<unit id="org.apache.lucene.lucene-core" version="0.0.0"/>
-			<unit id="org.apache.lucene.lucene-queries" version="0.0.0"/>
-			<unit id="org.apache.lucene.lucene-queryparser" version="0.0.0"/>
-			<unit id="org.apache.lucene.lucene-sandbox" version="0.0.0"/>
+			<unit id="org.apache.lucene.analysis-common" version="0.0.0"/>
+			<unit id="org.apache.lucene.core" version="0.0.0"/>
+			<unit id="org.apache.lucene.queries" version="0.0.0"/>
+			<unit id="org.apache.lucene.queryparser" version="0.0.0"/>
+			<unit id="org.apache.lucene.sandbox" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/oomph/simrel-maven/2023-06/"/>

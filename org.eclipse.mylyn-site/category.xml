@@ -117,11 +117,11 @@
    <bundle id="javax.xml.stream"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="org.apache.commons.logging"/>
-   <bundle id="org.apache.lucene.lucene-analysis-common"/>
-   <bundle id="org.apache.lucene.lucene-core"/>
-   <bundle id="org.apache.lucene.lucene-queries"/>
-   <bundle id="org.apache.lucene.lucene-queryparser"/>
-   <bundle id="org.apache.lucene.lucene-sandbox"/>
+   <bundle id="org.apache.lucene.analysis-common"/>
+   <bundle id="org.apache.lucene.core"/>
+   <bundle id="org.apache.lucene.queries"/>
+   <bundle id="org.apache.lucene.queryparser"/>
+   <bundle id="org.apache.lucene.sandbox"/>
    <bundle id="org.apache.xml.resolver"/>
    <bundle id="org.apache.xmlrpc.client"/>
    <bundle id="org.apache.xmlrpc.common"/>
