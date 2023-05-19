@@ -42,11 +42,11 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		reviewManager = new ActiveReviewManager();
 
 		//We need to schedule initialization otherwise TasksUiPlugin hasn't finished initialization.
 		UIJob job = new UIJob(Messages.ReviewsUiPlugin_Updating_task_review_mapping) {
 			@Override
+			reviewManager = new ActiveReviewManager();
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				taskReviewsMappingStore = new TaskReviewsMappingsStore(TasksUiPlugin.getTaskList(),
 						TasksUiPlugin.getRepositoryManager());
