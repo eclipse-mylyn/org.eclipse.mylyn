@@ -1,7 +1,0 @@
-/org.eclipse*/bin
-/org.eclipse*/target
-/stubs/*/bin
-/stubs/*/target
-/target
-*.rej
-*~
