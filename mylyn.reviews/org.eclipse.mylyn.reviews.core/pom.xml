@@ -17,9 +17,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn.reviews.parent</artifactId>
-    <groupId>org.eclipse.mylyn.reviews</groupId>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn.parent</artifactId>
     <version>3.26.1-SNAPSHOT</version>
+    <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.reviews.core</artifactId>
   <packaging>eclipse-plugin</packaging>
