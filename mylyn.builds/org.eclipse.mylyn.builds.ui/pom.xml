@@ -23,7 +23,6 @@
     <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.builds.ui</artifactId>
-  <version>3.26.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
