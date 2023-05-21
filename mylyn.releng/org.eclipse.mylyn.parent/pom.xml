@@ -113,6 +113,18 @@
     <name>Eclipse Foundation</name>
     <url>https://www.eclipse.org/</url>
   </organization>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>eclipse-dash</id>
+      <url>https://repo.eclipse.org/content/repositories/dash-licenses/</url>
+      <releases>
+            <enabled>true</enabled>
+      </releases>
+      <snapshots>
+            <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
   <profiles>
     <!-- Target definition profiles -->
     <!-- Needs to be specified first to allow target profiles to override settings -->
