@@ -23,7 +23,6 @@
    <requires>
       <import feature="org.eclipse.egit" version="6.2.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.mylyn_feature" version="3.26.1" match="equivalent"/>
-      <import plugin="com.google.gson" version="1.6" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -42,13 +41,6 @@
 
    <plugin
          id="org.eclipse.egit.github.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.gson"
          download-size="0"
          install-size="0"
          version="0.0.0"
