@@ -33,10 +33,6 @@
       %license
    </license>
 
-   <requires>
-      <import plugin="com.google.guava" version="15.0.0" match="greaterOrEqual"/>
-   </requires>
-
    <includes
          id="org.eclipse.mylyn.git"
          version="0.0.0"/>
@@ -44,13 +40,6 @@
    <includes
          id="org.eclipse.mylyn.versions"
          version="0.0.0"/>
-
-   <plugin
-         id="com.google.guava"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.versions.core.source"
