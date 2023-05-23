@@ -1,5 +1,0 @@
-bin/
-target/
-*.rej
-*~
-test-attach-*.txt
