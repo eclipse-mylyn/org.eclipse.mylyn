@@ -17,13 +17,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
-    <groupId>org.eclipse.mylyn.tasks</groupId>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn.parent</artifactId>
     <version>3.26.1-SNAPSHOT</version>
+    <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.tasks</groupId>
   <artifactId>org.eclipse.mylyn.tasks.bugs</artifactId>
-  <version>3.26.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>

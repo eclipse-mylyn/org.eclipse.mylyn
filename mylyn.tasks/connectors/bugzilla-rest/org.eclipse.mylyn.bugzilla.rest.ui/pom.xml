@@ -17,13 +17,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
+    <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn.tasks.connector-bugzilla-rest</artifactId>
-    <groupId>org.eclipse.mylyn.tasks</groupId>
     <version>3.26.1-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.tasks</groupId>
   <artifactId>org.eclipse.mylyn.bugzilla.rest.ui</artifactId>
-  <version>3.26.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
