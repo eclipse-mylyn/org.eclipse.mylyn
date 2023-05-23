@@ -65,7 +65,6 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.gerrit.common.data.ApprovalDetail;
@@ -458,7 +457,7 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 			reviewHarness.getClient().rebase(reviewHarness.getShortId(), 1, new NullProgressMonitor());
 			fail("Expected to fail when rebasing a change that is already up to date");
 		} catch (GerritException e) {
-			String message = CharMatcher.JAVA_ISO_CONTROL.removeFrom(e.getMessage());
+			String message = e.getMessage().replaceAll("\\p{Cntrl}", "");
 			assertThat(message, is("Change is already up to date."));
 		}
 	}
@@ -615,7 +614,7 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 					.cherryPick(reviewHarness.getShortId(), 1, message, dest, new NullProgressMonitor());
 			fail("Expected to get an exception when cherry picking");
 		} catch (GerritException e) {
-			String receivedMessage = CharMatcher.JAVA_ISO_CONTROL.removeFrom(e.getMessage());
+			String receivedMessage = e.getMessage().replaceAll("\\p{Cntrl}", "");
 			assertThat(receivedMessage, is(errMsg));
 		}
 	}

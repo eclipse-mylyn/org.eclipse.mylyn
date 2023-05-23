@@ -35,7 +35,6 @@
 			<unit id="com.google.gerrit.common" version="0.0.0"/>
 			<unit id="com.google.gerrit.prettify" version="0.0.0"/>
 			<unit id="com.google.gerrit.reviewdb" version="0.0.0"/>
-			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="com.thoughtworks.qdox" version="0.0.0"/>
 			<unit id="javax.xml.stream" version="0.0.0"/>
 			<unit id="org.hamcrest" version="0.0.0"/>
@@ -44,12 +43,9 @@
 			<unit id="org.hamcrest.integration" version="0.0.0"/>
 			<unit id="org.hamcrest.library" version="0.0.0"/>
 			<unit id="org.hamcrest.text" version="0.0.0"/>
-			<unit id="org.mockito" version="0.0.0"/>
-			<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository/"/>
-			<unit id="com.google.gson" version="0.0.0"/>
 			<unit id="jakarta.servlet" version="0.0.0"/>
 			<unit id="org.apache.commons.lang" version="0.0.0"/>
 			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
@@ -66,6 +62,7 @@
 			<unit id="javax.activation" version="1.2.2.v20221203-1659" />
 			<unit id="javax.activation" version="2.0.0.v20221203-1659" />
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916" />
+			<unit id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://subclipse.github.io/updates/subclipse/1.8.x/"/>
@@ -86,6 +83,8 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/oomph/simrel-maven/2023-06/"/>
+			<unit id="com.google.guava" version="0.0.0"/>
+			<unit id="com.google.gson" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
 		</location>
 	</locations>

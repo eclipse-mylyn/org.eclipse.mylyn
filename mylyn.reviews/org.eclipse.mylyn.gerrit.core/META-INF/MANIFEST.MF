@@ -4,7 +4,7 @@ Bundle-Name: Mylyn Gerrit Connector Core
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core;singleton:=true
 Bundle-Version: 3.26.1.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin
-Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
+Require-Bundle: com.google.guava;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.emf.common;bundle-version="0.0.0",
@@ -36,9 +36,9 @@ Import-Package: com.google.common.base;version="15.0.0",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.prettify.common;version="2.1.5",
  com.google.gerrit.reviewdb;version="2.1.5",
- com.google.gson;version="[2.7.0,3.0.0)",
- com.google.gson.annotations;version="[2.7.0,3.0.0)",
- com.google.gson.reflect;version="[2.7.0,3.0.0)",
+ com.google.gson;version="2.9.1",
+ com.google.gson.annotations;version="2.9.1",
+ com.google.gson.reflect;version="2.9.1",
  com.google.gwt.user.client.rpc;version="2.0.4",
  com.google.gwtjsonrpc.client;version="1.2.4",
  com.google.gwtjsonrpc.client.impl.ser;version="1.2.4",
