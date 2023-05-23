@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
 Bundle-Version: 3.26.1.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: com.google.guava;bundle-version="21.0.0",
+Require-Bundle: com.google.guava;bundle-version="0.0.0",
  net.bytebuddy.byte-buddy;bundle-version="1.12.18",
  net.bytebuddy.byte-buddy-agent;bundle-version="1.12.18",
  org.eclipse.core.runtime;bundle-version="0.0.0",

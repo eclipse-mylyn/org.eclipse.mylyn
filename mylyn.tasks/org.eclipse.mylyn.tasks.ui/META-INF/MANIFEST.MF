@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.ui;singleton:=true
 Bundle-Version: 3.26.1.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin
-Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
+Require-Bundle: com.google.guava;bundle-version="0.0.0",
  org.eclipse.compare;bundle-version="0.0.0",
  org.eclipse.core.expressions;bundle-version="0.0.0",
  org.eclipse.core.net;bundle-version="0.0.0",
