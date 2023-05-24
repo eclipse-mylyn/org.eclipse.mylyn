@@ -46,8 +46,8 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 		//We need to schedule initialization otherwise TasksUiPlugin hasn't finished initialization.
 		UIJob job = new UIJob(Messages.ReviewsUiPlugin_Updating_task_review_mapping) {
 			@Override
-			reviewManager = new ActiveReviewManager();
 			public IStatus runInUIThread(IProgressMonitor monitor) {
+				reviewManager = new ActiveReviewManager();
 				taskReviewsMappingStore = new TaskReviewsMappingsStore(TasksUiPlugin.getTaskList(),
 						TasksUiPlugin.getRepositoryManager());
 				TaskReviewsMappingsStore.setInstance(taskReviewsMappingStore);
