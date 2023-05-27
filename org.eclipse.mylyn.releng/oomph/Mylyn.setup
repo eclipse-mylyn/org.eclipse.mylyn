@@ -249,16 +249,6 @@
         </predicate>
       </workingSet>
       <workingSet
-          name="Task Connectors">
-        <predicate
-            xsi:type="predicates:AndPredicate">
-          <operand
-              xsi:type="predicates:RepositoryPredicate"
-              project="org.eclipse.mylyn-aggregator"
-              relativePathPattern="mylyn.tasks/connectors"/>
-        </predicate>
-      </workingSet>
-      <workingSet
           name="Trac Connector">
         <predicate
             xsi:type="predicates:RepositoryPredicate"
