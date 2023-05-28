@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
+<plugin>
+   <extension
+         point="org.eclipse.egit.ui.commitMessageProvider">
+      <commitMessageProvider
+            class="org.eclipse.mylyn.egit.internal.ui.commit.MylynCommitMessageProvider">
+      </commitMessageProvider>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.adapters">
+    <factory adaptableType="org.eclipse.egit.ui.internal.history.SWTCommit"
+             class="org.eclipse.mylyn.egit.internal.ui.commit.TaskReferenceFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+    </factory>
+	<factory adaptableType="org.eclipse.egit.ui.internal.synchronize.model.GitModelCommit"
+             class="org.eclipse.mylyn.egit.internal.ui.commit.TaskReferenceFactory">
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
+    </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector
+            activate="true"
+            class="org.eclipse.mylyn.egit.internal.ui.CommitHyperlinkDetector"
+            id="org.eclipse.mylyn.egit.ui.commitHyperlinkDetector"
+            name="%hyperlinkDetector.name"
+            targetId="org.eclipse.mylyn.tasks.ui.TaskEditor">
+      </hyperlinkDetector>
+   </extension>
+   <extension
+         point="org.eclipse.egit.ui.branchNameProvider">
+      <branchNameProvider
+            class="org.eclipse.mylyn.egit.internal.ui.commit.ActiveTaskBranchNameProvider">
+      </branchNameProvider>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.taskActivationListeners">
+      <listener
+            id="org.eclipse.mylyn.egit.ui.commit.CommitTextTaskActivationListener"
+            class="org.eclipse.egit.internal.mylyn.ui.commit.CommitTextTaskActivationListener">
+      </listener>
+   </extension>
+</plugin>

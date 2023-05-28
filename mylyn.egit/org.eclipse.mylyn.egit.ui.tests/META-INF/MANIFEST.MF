@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Git Team Provider UI Test Fragment
+Automatic-Module-Name: org.eclipse.egit.mylyn.ui.test
+Bundle-SymbolicName: org.eclipse.mylyn.egit.ui.tests
+Bundle-Version: 3.26.1.qualifier
+Fragment-Host: org.eclipse.mylyn.egit.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Vendor: Eclipse Mylyn
+Import-Package: org.junit;version="[4.13.0,5.0.0)",
+ org.junit.runner;version="[4.13.0,5.0.0)",
+ org.junit.runners;version="[4.13.0,5.0.0)"
