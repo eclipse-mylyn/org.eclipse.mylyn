@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * The main wizard page that allows users to select connectors that they wish to install.
- * 
+ *
  * @author David Green
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShellProvider {
@@ -62,7 +62,9 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShe
 
 		String url = DiscoveryCore.getDiscoveryUrl();
 		if (url.length() > 0) {
-			viewer.setDirectoryUrl(url);
+			//FIXME: AF: repair or remove
+			//disable old/broken versions https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/169
+//			viewer.setDirectoryUrl(url);
 		}
 		viewer.setEnvironment(getWizard().getEnvironment());
 		setControl(viewer.getControl());
