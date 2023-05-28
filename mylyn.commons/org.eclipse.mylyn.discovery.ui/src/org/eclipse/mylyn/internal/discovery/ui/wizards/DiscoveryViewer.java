@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2009, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - dispose SWT resources
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui.wizards;
 
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -129,7 +132,7 @@ import org.osgi.framework.Version;
 
 /**
  * The main wizard page that allows users to select connectors that they wish to install.
- * 
+ *
  * @author David Green
  * @author Steffen Pingel
  */
@@ -167,10 +170,6 @@ public class DiscoveryViewer {
 		private final Composite connectorContainer;
 
 		private final Display display;
-
-		private Image iconImage;
-
-//		private Image warningIconImage;
 
 		public ConnectorDescriptorItemUi(final DiscoveryConnector connector, Composite categoryChildrenContainer,
 				Color background) {
@@ -216,13 +215,9 @@ public class DiscoveryViewer {
 			iconLabel = new Label(checkboxAndIconContainer, SWT.NULL);
 			configureLook(iconLabel, background);
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(iconLabel);
-
-			if (connector.getIcon() != null) {
-				iconImage = computeIconImage(connector.getSource(), connector.getIcon(), 32, false);
-				if (iconImage != null) {
-					iconLabel.setImage(iconImage);
-				}
-			}
+			Optional.ofNullable(connector.getIcon())//
+					.map(ci -> computeIconImage(connector.getSource(), ci, 32, false))
+					.ifPresent(iconLabel::setImage);
 
 			nameLabel = new Label(connectorContainer, SWT.NULL);
 			configureLook(nameLabel, background);
@@ -372,20 +367,6 @@ public class DiscoveryViewer {
 			}
 			nameLabel.setForeground(foreground);
 			description.setForeground(foreground);
-
-			if (iconImage != null) {
-//				boolean unavailable = !enabled && connector.getAvailable() != null;
-//				if (unavailable) {
-//					if (warningIconImage == null) {
-//						warningIconImage = new DecorationOverlayIcon(iconImage, DiscoveryImages.OVERLAY_WARNING_32,
-//								IDecoration.BOTTOM_RIGHT).createImage();
-//						disposables.add(warningIconImage);
-//					}
-//					iconLabel.setImage(warningIconImage);
-//				} else if (warningIconImage != null) {
-				iconLabel.setImage(iconImage);
-//				}
-			}
 		}
 	}
 
@@ -446,6 +427,8 @@ public class DiscoveryViewer {
 
 	private Image infoImage;
 
+	private final ImageRegistry images;
+
 	private Cursor handCursor;
 
 	private Color colorCategoryGradientStart;
@@ -496,6 +479,7 @@ public class DiscoveryViewer {
 		this.selectionProvider = new SelectionProviderAdapter();
 		this.allConnectors = Collections.emptyList();
 		this.disposables = new ArrayList<Resource>();
+		this.images = new ImageRegistry();
 		setShowConnectorDescriptorKindFilter(true);
 		setShowConnectorDescriptorTextFilter(true);
 		setMinimumHeight(MINIMUM_HEIGHT);
@@ -508,7 +492,9 @@ public class DiscoveryViewer {
 	}
 
 	private void clearDisposables() {
+		disposables.forEach(Resource::dispose);
 		disposables.clear();
+		images.dispose();
 		h1Font = null;
 		h2Font = null;
 		infoImage = null;
@@ -542,18 +528,27 @@ public class DiscoveryViewer {
 		default:
 			throw new IllegalArgumentException();
 		}
-		if (imagePath != null && imagePath.length() > 0) {
-			URL resource = discoverySource.getResource(imagePath);
-			if (resource != null) {
-				ImageDescriptor descriptor = ImageDescriptor.createFromURL(resource);
-				Image image = descriptor.createImage();
-				if (image != null) {
-					disposables.add(image);
-					return image;
-				}
-			}
-		}
-		return null;
+		return Optional.ofNullable(imagePath)//
+				.filter(ip -> ip.length() > 0)//
+				.map(discoverySource::getResource)//
+				.map(this::imageFromRegistry)//
+				.orElse(null);
+	}
+
+	private Image imageFromRegistry(URL resource) {
+		return Optional.of(resource)//
+				.map(this::imageKey)//
+				.map(images::get)//
+				.orElseGet(() -> registerImage(resource));
+	}
+
+	private String imageKey(URL resource) {
+		return resource.toString();
+	}
+
+	private Image registerImage(URL resource) {
+		images.put(imageKey(resource), ImageDescriptor.createFromURL(resource));
+		return images.get(imageKey(resource));
 	}
 
 	private IStatus computeStatus(InvocationTargetException e, String message) {
@@ -578,7 +573,7 @@ public class DiscoveryViewer {
 
 	/**
 	 * cause the UI to respond to a change in visibility filters
-	 * 
+	 *
 	 * @see #setVisibility(ConnectorDescriptorKind, boolean)
 	 */
 	public void connectorDescriptorKindVisibilityUpdated() {
@@ -728,12 +723,7 @@ public class DiscoveryViewer {
 		container.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				refreshJob.cancel();
-				if (disposables != null) {
-					for (Resource resource : disposables) {
-						resource.dispose();
-					}
-					clearDisposables();
-				}
+				clearDisposables();
 				if (discovery != null) {
 					discovery.dispose();
 				}
@@ -743,7 +733,7 @@ public class DiscoveryViewer {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		container.setLayout(layout);
-		//		
+		//
 		{ // header
 			Composite header = new Composite(container, SWT.NULL);
 			GridLayoutFactory.fillDefaults().applyTo(header);
@@ -929,12 +919,9 @@ public class DiscoveryViewer {
 							.applyTo(categoryHeaderContainer);
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
-					if (category.getIcon() != null) {
-						Image image = computeIconImage(category.getSource(), category.getIcon(), 48, true);
-						if (image != null) {
-							iconLabel.setImage(image);
-						}
-					}
+					Optional.ofNullable(category.getIcon())//
+							.map(ci -> computeIconImage(category.getSource(), ci, 48, true))
+							.ifPresent(iconLabel::setImage);
 					iconLabel.setBackground(null);
 					GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(iconLabel);
 
@@ -1092,7 +1079,7 @@ public class DiscoveryViewer {
 
 	/**
 	 * the environment in which discovery should be performed.
-	 * 
+	 *
 	 * @see ConnectorDiscovery#getEnvironment()
 	 */
 	public Dictionary<Object, Object> getEnvironment() {
@@ -1368,7 +1355,7 @@ public class DiscoveryViewer {
 
 	/**
 	 * indicate if the given kind of connector is currently visible in the wizard
-	 * 
+	 *
 	 * @see #setVisibility(ConnectorDescriptorKind, boolean)
 	 */
 	public boolean isVisible(ConnectorDescriptorKind kind) {
@@ -1410,7 +1397,7 @@ public class DiscoveryViewer {
 
 	/**
 	 * the environment in which discovery should be performed.
-	 * 
+	 *
 	 * @see ConnectorDiscovery#getEnvironment()
 	 */
 	public void setEnvironment(Dictionary<Object, Object> environment) {
@@ -1469,7 +1456,7 @@ public class DiscoveryViewer {
 
 	/**
 	 * configure the page to show or hide connector descriptors of the given kind
-	 * 
+	 *
 	 * @see #connectorDescriptorKindVisibilityUpdated()
 	 */
 	public void setVisibility(ConnectorDescriptorKind kind, boolean visible) {
