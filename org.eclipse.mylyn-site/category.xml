@@ -107,7 +107,7 @@
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="github_connector"/>
    </feature>
-   <feature id="org.eclipse.egit.mylyn">
+   <feature id="org.eclipse.mylyn.egit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <bundle id="com.sun.xml.bind"/>
