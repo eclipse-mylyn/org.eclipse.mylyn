@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -231,20 +231,27 @@ public class ContextEditorFormPage extends FormPage {
 		}
 	}
 
+	private int setNewMaxWith(int oldValue, Control imageControl, Control linkControl) {
+		Point imageSize = imageControl.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		Point hyperlinkSize = linkControl.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		return imageSize.x + hyperlinkSize.x > oldValue ? imageSize.x + hyperlinkSize.x : oldValue;
+	}
+
 	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite,
 				ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Actions);
 
+		int with = 0;
 		section.setLayout(new GridLayout());
 		GridData sectionGridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		sectionGridData.widthHint = 80;
 		section.setLayoutData(sectionGridData);
 
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		sectionClient.setLayout(new GridLayout(2, false));
-		sectionClient.setLayoutData(new GridData());
+		GridData sectionClientGridData = new GridData();
+		sectionClient.setLayoutData(sectionClientGridData);
 
 		ImageHyperlink filterImage = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
 		filterImage.setImage(CommonImages.getImage(CommonImages.FILTER));
@@ -258,7 +265,7 @@ public class ContextEditorFormPage extends FormPage {
 			}
 
 			public void linkEntered(HyperlinkEvent e) {
-				// ignore	
+				// ignore
 			}
 
 			public void linkExited(HyperlinkEvent e) {
@@ -299,6 +306,7 @@ public class ContextEditorFormPage extends FormPage {
 					AttachContextHandler.run(task);
 				}
 			});
+			with = setNewMaxWith(with, attachImage, attachHyperlink);
 		}
 
 		if (AttachmentUtil.canDownloadAttachment(task)) {
@@ -309,6 +317,7 @@ public class ContextEditorFormPage extends FormPage {
 					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
 			//bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
 			//		Messages.ContextEditorFormPage_No_context_attachments_Error);
+			with = setNewMaxWith(with, retrieveImage, retrieveHyperlink);
 			retrieveHyperlink.setEnabled(task != null);
 			retrieveHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
@@ -330,6 +339,7 @@ public class ContextEditorFormPage extends FormPage {
 				CopyContextHandler.run(task);
 			}
 		});
+		with = setNewMaxWith(with, copyImage, copyHyperlink);
 
 		Label clearImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
@@ -343,7 +353,9 @@ public class ContextEditorFormPage extends FormPage {
 				ClearContextHandler.run(task);
 			}
 		});
+		with = setNewMaxWith(with, clearImage, clearHyperlink);
 
+		sectionClientGridData.widthHint = with;
 		section.setExpanded(true);
 	}
 
