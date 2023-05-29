@@ -52,6 +52,7 @@
           </execution>
         </executions>
         <configuration>
+          <skip>${skipTests}</skip>
           <transformationSets>
             <!-- append @x.y.z to repository test cases to differentiate test fixtures -->
             <transformationSet>
