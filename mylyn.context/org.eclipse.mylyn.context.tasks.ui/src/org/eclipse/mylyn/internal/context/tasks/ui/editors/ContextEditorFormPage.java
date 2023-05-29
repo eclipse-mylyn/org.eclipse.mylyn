@@ -231,13 +231,6 @@ public class ContextEditorFormPage extends FormPage {
 		}
 	}
 
-	private int calculateMaxWidth(int existing, Control image, Control link) {
-		Point imageSize = image.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point hyperlinkSize = link.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		int required = imageSize.x + hyperlinkSize.x;
-		return required > existing ? required : existing;
-	}
-
 	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite,
 				ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
@@ -292,14 +285,12 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		Label attachImage = null;
-		Hyperlink attachHyperlink = null;
 		if (AttachmentUtil.canUploadAttachment(task)) {
-			attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 			attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 			attachImage.setEnabled(task != null);
-			attachHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Attach_context_,
-					SWT.NONE);
+			Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
+					Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
 			//bindCommand(attachHyperlink, IContextUiConstants.ID_COMMAND_ATTACH_CONTEXT, null);
 			attachHyperlink.setEnabled(task != null);
 			attachHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -310,14 +301,12 @@ public class ContextEditorFormPage extends FormPage {
 			});
 		}
 
-		Label retrieveImage = null;
-		Hyperlink retrieveHyperlink = null;
 		if (AttachmentUtil.canDownloadAttachment(task)) {
-			retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 			retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
 			retrieveImage.setEnabled(task != null);
-			retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Retrieve_Context_,
-					SWT.NONE);
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
+					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
 			//bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
 			//		Messages.ContextEditorFormPage_No_context_attachments_Error);
 			retrieveHyperlink.setEnabled(task != null);
@@ -355,17 +344,8 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		int with = 0;
-		if (AttachmentUtil.canUploadAttachment(task)) {
-			with = calculateMaxWidth(with, attachImage, attachHyperlink);
-		}
-		if (AttachmentUtil.canDownloadAttachment(task)) {
-			with = calculateMaxWidth(with, retrieveImage, retrieveHyperlink);
-		}
-		with = calculateMaxWidth(with, copyImage, copyHyperlink);
-		with = calculateMaxWidth(with, clearImage, clearHyperlink);
+		sectionGridData.widthHint = section.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
-		sectionClientGridData.widthHint = with;
 		section.setExpanded(true);
 	}
 
