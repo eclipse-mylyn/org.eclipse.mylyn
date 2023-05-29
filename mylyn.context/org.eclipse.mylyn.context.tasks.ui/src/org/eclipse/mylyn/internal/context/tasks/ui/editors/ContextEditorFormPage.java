@@ -231,10 +231,11 @@ public class ContextEditorFormPage extends FormPage {
 		}
 	}
 
-	private int setNewMaxWith(int oldValue, Control imageControl, Control linkControl) {
-		Point imageSize = imageControl.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point hyperlinkSize = linkControl.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		return imageSize.x + hyperlinkSize.x > oldValue ? imageSize.x + hyperlinkSize.x : oldValue;
+	private int calculateMaxWidth(int existing, Control image, Control link) {
+		Point imageSize = image.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		Point hyperlinkSize = link.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		int required = imageSize.x + hyperlinkSize.x;
+		return required > existing ? required : existing;
 	}
 
 	private void createActionsSection(Composite composite) {
@@ -242,7 +243,6 @@ public class ContextEditorFormPage extends FormPage {
 				ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText(Messages.ContextEditorFormPage_Actions);
 
-		int with = 0;
 		section.setLayout(new GridLayout());
 		GridData sectionGridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		section.setLayoutData(sectionGridData);
@@ -292,12 +292,14 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
+		Label attachImage = null;
+		Hyperlink attachHyperlink = null;
 		if (AttachmentUtil.canUploadAttachment(task)) {
-			Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 			attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 			attachImage.setEnabled(task != null);
-			Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
-					Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
+			attachHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Attach_context_,
+					SWT.NONE);
 			//bindCommand(attachHyperlink, IContextUiConstants.ID_COMMAND_ATTACH_CONTEXT, null);
 			attachHyperlink.setEnabled(task != null);
 			attachHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -306,18 +308,18 @@ public class ContextEditorFormPage extends FormPage {
 					AttachContextHandler.run(task);
 				}
 			});
-			with = setNewMaxWith(with, attachImage, attachHyperlink);
 		}
 
+		Label retrieveImage = null;
+		Hyperlink retrieveHyperlink = null;
 		if (AttachmentUtil.canDownloadAttachment(task)) {
-			Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
+			retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 			retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
 			retrieveImage.setEnabled(task != null);
-			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
-					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
+			retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Retrieve_Context_,
+					SWT.NONE);
 			//bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
 			//		Messages.ContextEditorFormPage_No_context_attachments_Error);
-			with = setNewMaxWith(with, retrieveImage, retrieveHyperlink);
 			retrieveHyperlink.setEnabled(task != null);
 			retrieveHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
@@ -339,7 +341,6 @@ public class ContextEditorFormPage extends FormPage {
 				CopyContextHandler.run(task);
 			}
 		});
-		with = setNewMaxWith(with, copyImage, copyHyperlink);
 
 		Label clearImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
@@ -353,7 +354,16 @@ public class ContextEditorFormPage extends FormPage {
 				ClearContextHandler.run(task);
 			}
 		});
-		with = setNewMaxWith(with, clearImage, clearHyperlink);
+
+		int with = 0;
+		if (AttachmentUtil.canUploadAttachment(task)) {
+			with = calculateMaxWidth(with, attachImage, attachHyperlink);
+		}
+		if (AttachmentUtil.canDownloadAttachment(task)) {
+			with = calculateMaxWidth(with, retrieveImage, retrieveHyperlink);
+		}
+		with = calculateMaxWidth(with, copyImage, copyHyperlink);
+		with = calculateMaxWidth(with, clearImage, clearHyperlink);
 
 		sectionClientGridData.widthHint = with;
 		section.setExpanded(true);
