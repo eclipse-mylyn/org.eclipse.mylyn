@@ -39,10 +39,6 @@
           <testClass>${test.suite}</testClass>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-      </plugin>
     </plugins>
   </build>
 </project>
