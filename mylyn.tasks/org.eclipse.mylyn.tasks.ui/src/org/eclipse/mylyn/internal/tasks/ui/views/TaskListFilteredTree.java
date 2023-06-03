@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - fix for bug 280172
+ *     Alexander Fedorov - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -615,7 +616,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		GridLayoutFactory.fillDefaults().applyTo(container);
 
 		ImageHyperlink showUILegend = new ImageHyperlink(container, SWT.NONE);
-		showUILegend.setImage(CommonImages.QUESTION.createImage());
+		showUILegend.setImage(CommonImages.getImage(CommonImages.QUESTION));
 		showUILegend.setToolTipText(Messages.TaskListFilteredTree_Show_Tasks_UI_Legend);
 		showUILegend.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
