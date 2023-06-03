@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
  *     Yatta Solutions -  WorkingSet tests (bug 334024)
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -18,11 +19,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkingSet;
@@ -39,7 +40,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		// make sure some part is active
-		UiTestUtil.openResourceNavigator();
+		IdeUiUtil.getNavigatorFromActivePage();
 	}
 
 	@Override
