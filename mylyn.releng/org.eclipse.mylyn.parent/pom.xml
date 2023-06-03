@@ -272,8 +272,8 @@
       </activation>
       <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
-        <target-version>4.26</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/2022-12/</platform-repository-url>
+        <target-version>4.28</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/2023-06/</platform-repository-url>
       </properties>
     </profile>
     <profile>
