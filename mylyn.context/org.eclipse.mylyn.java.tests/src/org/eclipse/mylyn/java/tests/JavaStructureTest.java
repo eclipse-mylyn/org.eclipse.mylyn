@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -22,7 +23,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -71,7 +72,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		taskscape = new InteractionContext("12312", scaling);
 		manager.internalActivateContext(taskscape);
 
-		part = UiTestUtil.openResourceNavigator();
+		part = IdeUiUtil.getNavigatorFromActivePage();
 	}
 
 	@Override

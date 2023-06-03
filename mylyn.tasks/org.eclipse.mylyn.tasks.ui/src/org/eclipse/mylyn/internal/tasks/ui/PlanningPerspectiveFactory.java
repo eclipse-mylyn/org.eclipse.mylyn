@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -32,7 +33,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 	}
 
 	public void defineActions(IPageLayout layout) {
-		layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
+		layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
 		layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
 		layout.addShowViewShortcut(ITasksUiConstants.ID_VIEW_TASKS);
 		// layout.addShowViewShortcut(TaskActivityView.ID);
@@ -51,12 +52,12 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		// "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
 		// "topLeft");//$NON-NLS-1$
 		// bottomLeft.addView(TaskActivityView.ID);
-		topRight.addPlaceholder(IPageLayout.ID_RES_NAV);
+		topRight.addPlaceholder(IPageLayout.ID_PROJECT_EXPLORER);
 
 		// IFolderLayout bottomRight = layout.createFolder(
 		// "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
 		// editorArea);
-		//		
+		//
 		// bottomRight.addView(IPageLayout.ID_TASK_LIST);
 
 	}

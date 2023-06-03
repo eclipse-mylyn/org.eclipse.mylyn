@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
@@ -28,16 +29,11 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.views.navigator.FilterSelectionAction;
-import org.eclipse.ui.views.navigator.IResourceNavigator;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
-import org.eclipse.ui.views.navigator.ToggleLinkingAction;
+import org.eclipse.ui.navigator.resources.ProjectExplorer;
 
 /**
  * @author Mik Kersten
  */
-// TODO e3.5
-@SuppressWarnings("deprecation")
 public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 
 	public FocusResourceNavigatorAction() {
@@ -48,8 +44,9 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IViewPart part = super.getPartForAction();
-		if (part instanceof ResourceNavigator) {
-			viewers.add(((ResourceNavigator) part).getTreeViewer());
+		if (part instanceof ProjectExplorer) {
+			ProjectExplorer explorer = (ProjectExplorer) part;
+			viewers.add(explorer.getCommonViewer());
 		}
 		return viewers;
 	}
@@ -67,29 +64,31 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	}
 
 	// TODO: should have better way of doing this
+	@SuppressWarnings("restriction")
 	@Override
 	protected void setManualFilteringAndLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof IResourceNavigator) {
-			for (IContributionItem item : ((IResourceNavigator) part).getViewSite()
+		if (part instanceof ProjectExplorer) {
+			for (IContributionItem item : ((ProjectExplorer) part).getViewSite()
 					.getActionBars()
 					.getToolBarManager()
 					.getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
-					if (actionItem.getAction() instanceof ToggleLinkingAction) {
+					if (actionItem.getAction() instanceof org.eclipse.ui.internal.navigator.actions.LinkEditorAction) {
 						actionItem.getAction().setEnabled(on);
 					}
 				}
 			}
-			for (IContributionItem item : ((IResourceNavigator) part).getViewSite()
+			for (IContributionItem item : ((ProjectExplorer) part).getViewSite()
 					.getActionBars()
 					.getMenuManager()
 					.getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
 					// TODO: consider filing bug asking for extensibility
-					if (actionItem.getAction() instanceof FilterSelectionAction) {
+					if (actionItem
+							.getAction() instanceof org.eclipse.ui.internal.navigator.filters.SelectFiltersAction) {
 						actionItem.getAction().setEnabled(on);
 					}
 				}
@@ -100,16 +99,16 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof IResourceNavigator) {
-			((IResourceNavigator) part).setLinkingEnabled(on);
+		if (part instanceof ProjectExplorer) {
+			((ProjectExplorer) part).setLinkingEnabled(on);
 		}
 	}
 
 	@Override
 	protected boolean isDefaultLinkingEnabled() {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof IResourceNavigator) {
-			return ((IResourceNavigator) part).isLinkingEnabled();
+		if (part instanceof ProjectExplorer) {
+			return ((ProjectExplorer) part).isLinkingEnabled();
 		}
 		return false;
 	}
