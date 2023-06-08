@@ -24,7 +24,7 @@
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.bugzilla_feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
+      <category name="task_connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.discovery">
       <category name="org.eclipse.mylyn.integrations.category"/>
@@ -48,7 +48,7 @@
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.trac_feature">
-      <category name="trac.connector"/>
+      <category name="task_connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.builds">
       <category name="org.eclipse.mylyn.sdk.category"/>
@@ -105,10 +105,13 @@
       <category name="org.eclipse.mylyn.sdk.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.github.feature">
-      <category name="github_connector"/>
+      <category name="task_connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.egit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gitlab.feature">
+      <category name="task_connector"/>
    </feature>
    <bundle id="com.sun.xml.bind"/>
    <bundle id="jakarta.xml.bind"/>
@@ -145,10 +148,7 @@
          Source code and documentation for integrators building on Mylyn.
       </description>
    </category-def>
-   <category-def name="trac.connector" label="Trac Connector">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </category-def>
-   <category-def name="github_connector" label="GitHub Connector">
+   <category-def name="task_connector" label="Task Connector">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </category-def>
 </site>
