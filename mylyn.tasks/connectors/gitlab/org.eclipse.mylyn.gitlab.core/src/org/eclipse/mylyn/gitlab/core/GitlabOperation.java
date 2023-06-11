@@ -93,7 +93,7 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 	protected void validate(CommonHttpResponse response, int expected, IOperationMonitor monitor)
 			throws GitlabException {
 		int statusCode = response.getStatusCode();
-		if (statusCode != expected && statusCode != HttpStatus.SC_BAD_REQUEST) {
+		if (statusCode != expected /*&& statusCode != HttpStatus.SC_BAD_REQUEST*/) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new GitlabException(
 						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -98,6 +99,7 @@ public class GitlabConfiguration implements Serializable {
 			return false;
 		}
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+
 		if (attributeProduct == null) {
 			return false;
 		}
@@ -112,6 +114,21 @@ public class GitlabConfiguration implements Serializable {
 		Set<String> groups = getGroupNames();
 		for (String string : groups) {
 			attributeGroups.putOption(string, string);
+		}
+		TaskAttribute priorityAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.PRIORITY.getKey());
+		if (priorityAttrib!=null) {
+			priorityAttrib.putOption("CRITICAL", "critical");			
+			priorityAttrib.putOption("HIGH", "high");			
+			priorityAttrib.putOption("MEDIUM", "Medium");			
+			priorityAttrib.putOption("LOW", "low");			
+			priorityAttrib.putOption("UNKNOWN", "unknown");
+		}
+
+		
+		TaskAttribute typeAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.ISSUE_TYPE.getKey());
+		if (typeAttrib!=null) {
+			typeAttrib.putOption("issue", "Issue");
+			typeAttrib.putOption("incident", "Incident");			
 		}
 		TaskAttribute stateAttrib = taskData.getRoot().getMappedAttribute("STATE");
 		if (stateAttrib!=null) {
@@ -129,5 +146,27 @@ public class GitlabConfiguration implements Serializable {
 			return (String) groupId.get();
 		}
 		return "";
+	}
+	
+	public void addValidOperations(TaskData bugReport) {
+		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		String attributeStatusValue = attributeStatus.getValue();
+		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
+		if (operationAttribute == null) {
+			operationAttribute = bugReport.getRoot().createAttribute(TaskAttribute.OPERATION);
+		}
+		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
+
+		TaskAttribute attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "opened");
+		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
+
+		 attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "closed");
+		if (attributeStatusValue.equals("closed")) {
+			 TaskOperation.applyTo(attribute, "reopen", "Reopen");
+		} else {
+		 TaskOperation.applyTo(attribute, "close", "Close");
+		}
+		int i=9;
+		i++;
 	}
 }

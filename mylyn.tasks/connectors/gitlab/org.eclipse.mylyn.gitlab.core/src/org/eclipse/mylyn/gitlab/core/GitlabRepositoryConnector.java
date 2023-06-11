@@ -325,10 +325,8 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateRepositoryConfiguration(@NonNull TaskRepository taskRepository, @NonNull IProgressMonitor monitor)
 			throws CoreException {
 		context.set(monitor != null ? OperationUtil.convert(monitor) : new NullOperationMonitor());
-		GitlabRestClient client;
-		client = getClient(taskRepository);
-		IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3); //$NON-NLS-1$
-		client.getConfiguration(taskRepository, progress);
+		configurationCache.invalidate(new RepositoryKey(taskRepository));
+		getRepositoryConfiguration(taskRepository);
 		context.remove();
 	}
 

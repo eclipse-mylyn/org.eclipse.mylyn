@@ -14,12 +14,15 @@
 package org.eclipse.mylyn.gitlab.core;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.core.runtime.CoreException;
@@ -41,8 +45,12 @@ import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -50,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -95,22 +104,17 @@ public class GitlabRestClient {
 	public IStatus getIssues(IRepositoryQuery query, TaskDataCollector collector, final IOperationMonitor monitor)
 			throws GitlabException, CoreException {
 		getAccessTokenIfNotPresent(monitor);
-//		GitlabConfiguration conf = connector.getRepositoryConfiguration(taskRepository);
 		String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(",");
 		String[] gueryGroups = query.getAttribute(GitlabTaskSchema.getDefault().GROUP.getKey()).split(",");
 
 		if (!queryProjects[0].isEmpty()) {
 			for (String string : queryProjects) {
-//				String path = "/projects/" + ((JsonObject) conf.getProjcetDetail(string)).get("path_with_namespace")
-//						.getAsString().replaceAll("/", "%2F");
 				String path = "/projects/" + string.replaceAll("/", "%2F");
 				getIssuesInternal(query, collector, path, monitor);
 			}
 		}
 		if (!gueryGroups[0].isEmpty()) {
 			for (String string : gueryGroups) {
-//				String path = "/groups/" + ((JsonObject) conf.getGroupDetail(string)).get("full_path").getAsString()
-//						.replaceAll("/", "%2F");
 				String path = "/groups/" + string.replaceAll("/", "%2F");
 				getIssuesInternal(query, collector, path, monitor);
 			}
@@ -144,13 +148,11 @@ public class GitlabRestClient {
 			@Override
 			protected List<TaskData> parseFromJson(InputStreamReader in) throws GitlabException {
 
-				String text = new BufferedReader(in).lines().collect(Collectors.joining("\n"));
-				JsonArray convertedObject = new Gson().fromJson(text, JsonArray.class);
 				TypeToken<List<TaskData>> type = new TypeToken<List<TaskData>>() {
 				};
 
 				return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataListDeserializer())
-						.create().fromJson(text, type.getType());
+						.create().fromJson(in, type.getType());
 			}
 		}.run(monitor);
 		for (final TaskData taskData : taskDataArray) {
@@ -254,7 +256,7 @@ public class GitlabRestClient {
 		public ArrayList<TaskData> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
 			ArrayList<TaskData> response = new ArrayList<TaskData>();
-			GitlabConfiguration config =getConfiguration();
+			GitlabConfiguration config = getConfiguration();
 			JsonArray ja = json.getAsJsonArray();
 			for (JsonElement jsonElement : ja) {
 				JsonObject jo = jsonElement.getAsJsonObject();
@@ -285,21 +287,19 @@ public class GitlabRestClient {
 		for (Entry<String, JsonElement> entry : jo.entrySet()) {
 			String attributeId = GitlabTaskSchema.getAttributeNameFromJsonName(entry.getKey());
 			TaskAttribute attribute = taskData.getRoot().getAttribute(attributeId);
+			Field field = GitlabTaskSchema.getDefault().getFieldByKey(attributeId);
 			if (attribute == null) {
 				PrintStream ps = attribute == null ? System.err : System.out;
 				ps.println(entry.getKey() + " -> " + entry.getValue() //
 						+ " -> " + attributeId + " -> " + attribute + "\n" //
 						+ entry.getValue().isJsonPrimitive() + entry.getValue().isJsonObject()
 						+ entry.getValue().isJsonArray());
-				ps.close();
+				ps.flush();
 			}
 			if (attribute != null && entry.getValue() != null && entry.getValue().isJsonPrimitive()) {
 				attribute.setValue(entry.getValue().getAsString());
 			}
-			if (entry.getKey().equals("severity")) {
-				attribute.putOption(entry.getValue().getAsString(), entry.getValue().getAsString());
-			}
-			if (entry.getKey().equals("author") && entry.getValue().isJsonObject()) {
+			if (field != null && TaskAttribute.TYPE_PERSON.equals(field.getType()) && entry.getValue().isJsonObject()) {
 				attribute.setValue(entry.getValue().getAsJsonObject().get("name").getAsString());
 			}
 		}
@@ -314,8 +314,10 @@ public class GitlabRestClient {
 			GitlabConfiguration config = getConfiguration();
 			JsonObject jo = json.getAsJsonObject();
 			TaskData taskData = getFromJson(jo);
-			if (config != null)
+			if (config != null) {
 				config.updateProductOptions(taskData);
+				config.addValidOperations(taskData);
+			}
 			return taskData;
 		}
 
@@ -399,18 +401,31 @@ public class GitlabRestClient {
 
 			JsonArray notes = getIssueNotes(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 			if (notes != null) {
-				for (int i = 0; i < notes.size(); i++) {
-					JsonObject note = notes.get(i).getAsJsonObject();
-					TaskCommentMapper cmapper = new TaskCommentMapper();
-					cmapper.setAuthor(
-							repository.createPerson(note.get("author").getAsJsonObject().get("name").getAsString()));
-					cmapper.setCreationDate(GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString()));
-					cmapper.setText(note.get("body").getAsString());
-					cmapper.setNumber(i + 1);
-					TaskAttribute attribute = result.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + (i + 1));
-					cmapper.applyTo(attribute);
+				int i = 0;
+				for (JsonElement jsonElement : notes) {
+					JsonObject note = jsonElement.getAsJsonObject();
+					i = createNoteTaskAttribute(repository, result, i, note);
 				}
 			}
+//			JsonArray discussions = getIssueDiscussions(matcher.group(1), matcher.group(2),
+//					OperationUtil.convert(monitor));
+//			if (discussions != null) {
+//				int i = 0;
+//				for (JsonElement jsonElement : discussions) {
+//					JsonObject discussion = (JsonObject) jsonElement;
+//					JsonArray notesArray = discussion.get("notes").getAsJsonArray();
+//					if (discussion.get("individual_note").getAsBoolean()) {
+//						JsonObject note = notesArray.get(0).getAsJsonObject();
+//						i = createNoteTaskAttribute(repository, result, i, note);
+//					} else {
+//						for ( JsonElement jsonElement2 : notesArray) {
+//							JsonObject note = jsonElement2.getAsJsonObject();
+//							i = createNoteTaskAttribute(repository, result, i, note);
+//						}
+//					}
+//				}
+//			}
+
 			config.updateProductOptions(result);
 
 			return result;
@@ -418,13 +433,24 @@ public class GitlabRestClient {
 		return null;
 	}
 
+	private int createNoteTaskAttribute(TaskRepository repository, TaskData result, int i, JsonObject note) {
+		TaskCommentMapper cmapper = new TaskCommentMapper();
+		cmapper.setAuthor(repository.createPerson(note.get("author").getAsJsonObject().get("name").getAsString()));
+		cmapper.setCreationDate(GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString()));
+		cmapper.setText(note.get("body").getAsString());
+		cmapper.setNumber(++i);
+		TaskAttribute attribute = result.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + (i + 1));
+		cmapper.applyTo(attribute);
+		return i;
+	}
+
 	public void getTaskData(Set<String> taskIds, TaskRepository taskRepository, TaskDataCollector collector,
 			IOperationMonitor monitor) throws GitlabException {
 
 		for (String taskId : taskIds) {
 			TaskData data;
-				data = getTaskData(taskRepository, taskId, monitor);
-				collector.accept(data);
+			data = getTaskData(taskRepository, taskId, monitor);
+			collector.accept(data);
 		}
 	}
 
@@ -651,6 +677,75 @@ public class GitlabRestClient {
 		return jsonArray;
 	}
 
+	public JsonArray getIssueDiscussions(String path, String id, IOperationMonitor monitor) throws GitlabException {
+		getAccessTokenIfNotPresent(monitor);
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/discussions") {
+			@Override
+			protected HttpRequestBase createHttpRequestBase(String url) {
+				HttpRequestBase request = new HttpGet(url);
+				return request;
+			}
+
+			@Override
+			protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+				return new Gson().fromJson(in, JsonArray.class);
+			}
+		}.run(monitor);
+		return jsonArray;
+	}
+
+	public JsonElement createIssueNote(String path, String id, String body, IOperationMonitor monitor)
+			throws GitlabException {
+		getAccessTokenIfNotPresent(monitor);
+		JsonObject jsonElement;
+		jsonElement = new GitlabPostOperation<JsonObject>(client, path + "/issues/" + id + "/notes", body) {
+
+			@Override
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, GitlabException {
+				validate(response, HttpStatus.SC_CREATED, monitor);
+			}
+
+			@Override
+			protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
+				return new Gson().fromJson(in, JsonObject.class);
+			}
+		}.run(monitor);
+		return jsonElement;
+	}
+
+	public JsonElement updateIssue(String path, String id, String body, IOperationMonitor monitor)
+			throws GitlabException {
+		getAccessTokenIfNotPresent(monitor);
+		JsonObject jsonElement;
+		jsonElement = new GitlabPutOperation<JsonObject>(client, path + "/issues/" + id, body) {
+			@Override
+
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, GitlabException {
+				validate(response, HttpStatus.SC_OK, monitor);
+			}
+
+			@Override
+			protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
+				StringBuilder result = new StringBuilder();
+//				String rr = "";
+//				try {
+//					// Read each byte and convert into a char, adding to the StringBuilder
+//					for (int data = in.read(); data != -1; data = in.read()) {
+//						result.append((char) data);
+//						rr = result.toString();
+//					}
+//				} catch (IOException e) {
+//					// TODO: handle exception
+//				}
+//				return null;
+				return new Gson().fromJson(in, JsonObject.class);
+			}
+		}.run(monitor);
+		return jsonElement;
+	}
+
 	public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor) {
 		GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 		try {
@@ -659,20 +754,15 @@ public class GitlabRestClient {
 			config.setUserDetails(user);
 			JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
 			for (JsonElement project : (JsonArray) projects) {
-//				System.out.println(project.getAsJsonObject().get("name_with_namespace").getAsString());
 				config.addProject(project);
 			}
 			String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 			String[] groupList = groupsValue.split(",");
 			for (String group : groupList) {
 				JsonObject groupDetail = getGroup("/" + group, monitor);
-//				System.out.println(groupDetail.getAsJsonObject().get("full_path").getAsString());
 				config.addGroup(groupDetail);
 				projects = getGroupProjects(group, monitor);
 				for (JsonElement project : (JsonArray) projects) {
-//					System.out.print(project.getAsJsonObject().get("id").getAsString());
-//					System.out.print(" ");
-//					System.out.println(project.getAsJsonObject().get("name_with_namespace").getAsString());
 					config.addProject(project);
 				}
 			}
@@ -683,32 +773,57 @@ public class GitlabRestClient {
 		return config;
 	}
 
-//	public String getProjects(IOperationMonitor monitor) throws GitlabException {
-//		getAccessTokenIfNotPresent(monitor);
-//		Version versionInfo = new GitlabOperation<Version>(client, "/namespaces") {
-////			Version versionInfo = new GitlabOperation<Version>(client, "/projects?membership=true") {
-////			Version versionInfo = new GitlabOperation<Version>(client, "/projects?owned=true") {
-//
-//			@Override
-//			protected HttpRequestBase createHttpRequestBase(String url) {
-//				HttpRequestBase request = new HttpGet(url);
-//				return request;
-//			}
-//
-//			@Override
-//			protected Version parseFromJson(InputStreamReader in) throws GitlabException {
-//				String result = new BufferedReader(in)
-//						   .lines().collect(Collectors.joining("\n"));
-////				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//				JsonArray convertedObject = new Gson().fromJson(result, JsonArray.class);
-//				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//			      String prettyJson = gson.toJson(convertedObject);
-//				TypeToken<Version> type = new TypeToken<Version>() {
-//				};
-//				return new Gson().fromJson(result, type.getType());
-//			}
-//		}.run(monitor);
-//		return versionInfo.getVersion();
-//	}
+	ImmutableMap<String, String> updatable = new ImmutableMap.Builder()
+			.put(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title")
+			.put(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description")
+			.put(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
+					GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey())
+			.put(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
+					GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey())
+			.put(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(), GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey())
+			.put(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event")
+			.put(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey())
+			.build();
 
+	private static SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
+			IOperationMonitor monitor) throws GitlabException {
+		ArrayList<String> changedAtributes = new ArrayList<>();
+		String newComentValue = "";
+		for (TaskAttribute taskAttribute : oldAttributes) {
+			String attributeID = taskAttribute.getId();
+			if (updatable.containsKey(attributeID)) {
+				TaskAttribute newAttrib = taskData.getRoot().getAttribute(attributeID);
+				String newValue = newAttrib.getValue();
+				if (attributeID.equals("due_date")) {
+					if (newValue.length() > 0) {
+						newValue = dmyFormat.format(new Date(Long.parseLong(newValue)));
+					}
+				}
+//				changedAtributes.add("\"" + updatable.get(attributeID) + "\":\"" + newValue + "\"");
+				changedAtributes.add(NLS.bind("\"{0}\":\"{1}\"", updatable.get(attributeID), newValue));
+			}
+
+			if (GitlabTaskSchema.getDefault().NEW_COMMENT.getKey().equals(taskAttribute.getId())) {
+				TaskAttribute newAttrib = taskData.getRoot().getAttribute(attributeID);
+				newComentValue = "{\"body\":\"" + newAttrib.getValue() + "\"}";
+			}
+		}
+
+		TaskAttribute productAttribute = taskData.getRoot()
+				.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
+		if (productAttribute != null && !productAttribute.getValue().isEmpty()) {
+			TaskAttribute iidAttribute = taskData.getRoot().getAttribute(GitlabTaskSchema.getDefault().IID.getKey());
+			if (!changedAtributes.isEmpty()) {
+				updateIssue("/projects/" + productAttribute.getValue(), iidAttribute.getValue(),
+						"{" + String.join(",", changedAtributes) + "}", monitor);
+			}
+			if (!newComentValue.isEmpty()) {
+				createIssueNote("/projects/" + productAttribute.getValue(), iidAttribute.getValue(), newComentValue,
+						monitor);
+			}
+		}
+		return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
+	}
 }

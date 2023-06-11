@@ -43,8 +43,20 @@ public class GitlabTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("Submitting_task", IProgressMonitor.UNKNOWN);
+			GitlabRestClient client = connector.getClient(repository);
+			IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+			try {
+				return client.postTaskData(taskData, oldAttributes, progress);
+			} catch (GitlabException e) {
+				throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, 2,
+						"Error post taskdata.\n\n" + e.getMessage(), e));	
+				}
+		} finally {
+			monitor.done();
+		}
 	}
 
 	@Override

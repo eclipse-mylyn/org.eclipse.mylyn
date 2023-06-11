@@ -17,6 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Flag;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -54,7 +55,7 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 
 	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
 
-	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SHORT_TEXT,
+	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SINGLE_SELECT,
 			Flag.ATTRIBUTE);
 
 	public final Field USER_NOTES_COUNT = createField("user_notes_count", "User Notes Count",
@@ -84,12 +85,18 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 	public final Field CONFIDENTIAL = createField("confidential", "confidential", TaskAttribute.TYPE_BOOLEAN,
 			Flag.ATTRIBUTE);
 
+	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 
 	public final Field DISCUSSION_LOCKED = createField("discussion_locked", "Discussion locked",
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
 	public final Field GROUP = createField("group", "Group", TaskAttribute.TYPE_SHORT_TEXT);
-
+	public final Field IID = createField("iid", "interne ID", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
+	public final Field CLOSED_BY = createField("closed_by", "closed by", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, //$NON-NLS-1$
+			Flag.READ_ONLY);
+	
+	public final Field DUE_DATE = createField("due_date", "Due date", TaskAttribute.TYPE_DATE, Flag.ATTRIBUTE);
 	private static ImmutableMap<String, String> json2AttributeMapper = new ImmutableMap.Builder<String, String>()
 			.put("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
 			.put("description", getDefault().DESCRIPTION.getKey()) //$NON-NLS-1$
