@@ -547,7 +547,10 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public int hashCode() {
-		return getConnectorKind().hashCode() + 31 * getRepositoryUrl().hashCode();
+		// do not add the URL to the hash
+		// equals use ConnectorKind and URL
+		// org.eclipse.mylyn.tasks.tests.TaskRepositoryManagerTest.testDeletion() fails with the URL
+		return getConnectorKind().hashCode();
 	}
 
 	public boolean hasProperty(String name) {
