@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Flag;
 
 import com.google.common.collect.ImmutableMap;
 
-public class GitlabTaskSchema extends AbstractTaskSchema {
+public class GitlabTaskSchema extends GitlabNewTaskSchema {
 
 	private final DefaultTaskSchema parent = DefaultTaskSchema.getInstance();
 
@@ -30,16 +30,6 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 	public static GitlabTaskSchema getDefault() {
 		return instance;
 	}
-
-	public final Field PRODUCT = inheritFrom(parent.PRODUCT).addFlags(Flag.REQUIRED).create();
-
-	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED).create();
-
-	public final Field SUMMARY = inheritFrom(parent.SUMMARY).addFlags(Flag.REQUIRED).create();
-
-	public final Field STATUS = inheritFrom(parent.STATUS).create();
-
-	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to").create();
 
 	public final Field CREATED = inheritFrom(parent.DATE_CREATION).create();
 
@@ -52,11 +42,6 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 	public final Field TASK_KEY = inheritFrom(parent.TASK_KEY).create();
 
 	public final Field URL = inheritFrom(parent.TASK_URL).addFlags(Flag.ATTRIBUTE).create();
-
-	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
-
-	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SINGLE_SELECT,
-			Flag.ATTRIBUTE);
 
 	public final Field USER_NOTES_COUNT = createField("user_notes_count", "User Notes Count",
 			TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
@@ -71,12 +56,7 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 
 	public final Field DOWNVOTES = createField("downvotes", "Down Notes", TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
 
-	public final Field TYPE = createField("type", "Type", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
-
 //	public final Field WEB_URL = createField("web_url", "WEB URL", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
-
-	public final Field TASK_STATUS = createField("task_status", "Task Status", TaskAttribute.TYPE_SHORT_TEXT,
-			Flag.ATTRIBUTE);
 
 	public final Field HAS_TASKS = createField("has_tasks", "has Tasks", TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
@@ -90,12 +70,18 @@ public class GitlabTaskSchema extends AbstractTaskSchema {
 	public final Field DISCUSSION_LOCKED = createField("discussion_locked", "Discussion locked",
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
-	public final Field GROUP = createField("group", "Group", TaskAttribute.TYPE_SHORT_TEXT);
 	public final Field IID = createField("iid", "interne ID", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
 	public final Field CLOSED_BY = createField("closed_by", "closed by", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, //$NON-NLS-1$
 			Flag.READ_ONLY);
-	
+
+	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to").create();
+
+	public final Field TYPE = createField("type", "Type", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+
+	public final Field TASK_STATUS = createField("task_status", "Task Status", TaskAttribute.TYPE_SHORT_TEXT,
+			Flag.ATTRIBUTE);
+
 	public final Field DUE_DATE = createField("due_date", "Due date", TaskAttribute.TYPE_DATE, Flag.ATTRIBUTE);
 	private static ImmutableMap<String, String> json2AttributeMapper = new ImmutableMap.Builder<String, String>()
 			.put("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$

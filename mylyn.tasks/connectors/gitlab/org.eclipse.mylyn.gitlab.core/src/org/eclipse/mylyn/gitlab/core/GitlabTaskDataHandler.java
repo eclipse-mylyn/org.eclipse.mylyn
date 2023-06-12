@@ -67,14 +67,17 @@ public class GitlabTaskDataHandler extends AbstractTaskDataHandler {
 		// fresh from the repository (not locally stored data that may not have
 		// been migrated).
 		data.setVersion("0"); //$NON-NLS-1$
-//		if (data.isNew()) {
-//			BugzillaRestCreateTaskSchema.getDefault().initialize(data);
-//		} else {
-//			BugzillaRestTaskSchema.getDefault().initialize(data);
-//		}
-		GitlabTaskSchema.getDefault().initialize(data);
+		if (data.isNew()) {
+			GitlabNewTaskSchema.getDefault().initialize(data);
+		} else {
+			GitlabTaskSchema.getDefault().initialize(data);
+		}
 		if (initializationData != null) {
 			connector.getTaskMapping(data).merge(initializationData);
+		}
+		GitlabConfiguration config = connector.getRepositoryConfiguration(repository);
+		if (config != null) {
+			config.updateProductOptions(data);
 		}
 		return true;
 	}

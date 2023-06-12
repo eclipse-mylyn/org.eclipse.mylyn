@@ -19,7 +19,7 @@ import com.google.gson.JsonObject;
 public class GitlabConfiguration implements Serializable {
 
 	private static final long serialVersionUID = -6859757478504901423L;
-	
+
 	private static final GitlabTaskSchema SCHEMA = GitlabTaskSchema.getDefault();
 	private final String repositoryURL;
 	private BigInteger userID;
@@ -105,38 +105,46 @@ public class GitlabConfiguration implements Serializable {
 		}
 		for (JsonElement product : projects) {
 			JsonObject productObject = (JsonObject) product;
-			attributeProduct.putOption(productObject.get("id").getAsString(), productObject.get("name_with_namespace").getAsString());
-		}
-		TaskAttribute attributeGroups = taskData.getRoot().getMappedAttribute(SCHEMA.GROUP.getKey());
-		if (attributeGroups == null) {
-			return false;
-		}
-		Set<String> groups = getGroupNames();
-		for (String string : groups) {
-			attributeGroups.putOption(string, string);
+			attributeProduct.putOption(productObject.get("id").getAsString(),
+					productObject.get("name_with_namespace").getAsString());
 		}
 		TaskAttribute priorityAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.PRIORITY.getKey());
-		if (priorityAttrib!=null) {
-			priorityAttrib.putOption("CRITICAL", "critical");			
-			priorityAttrib.putOption("HIGH", "high");			
-			priorityAttrib.putOption("MEDIUM", "Medium");			
-			priorityAttrib.putOption("LOW", "low");			
+		if (priorityAttrib != null) {
+			priorityAttrib.putOption("CRITICAL", "critical");
+			priorityAttrib.putOption("HIGH", "high");
+			priorityAttrib.putOption("MEDIUM", "Medium");
+			priorityAttrib.putOption("LOW", "low");
 			priorityAttrib.putOption("UNKNOWN", "unknown");
 		}
 
-		
 		TaskAttribute typeAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.ISSUE_TYPE.getKey());
-		if (typeAttrib!=null) {
+		if (typeAttrib != null) {
 			typeAttrib.putOption("issue", "Issue");
-			typeAttrib.putOption("incident", "Incident");			
+			typeAttrib.putOption("incident", "Incident");
+		}
+
+		return true;
+	}
+
+	public boolean updateQueryOptions(@NonNull TaskData taskData) {
+		if (taskData == null) {
+			return false;
+		}
+		
+		TaskAttribute attributeGroups = taskData.getRoot().getMappedAttribute("GROUP");
+		if (attributeGroups != null) {
+			Set<String> groups = getGroupNames();
+			for (String string : groups) {
+				attributeGroups.putOption(string, string);
+			}
 		}
 		TaskAttribute stateAttrib = taskData.getRoot().getMappedAttribute("STATE");
-		if (stateAttrib!=null) {
+		if (stateAttrib != null) {
 			stateAttrib.putOption("opened", "Opened");
 			stateAttrib.putOption("closed", "Closed");
 			stateAttrib.putOption("", "All");
 		}
-		return true;
+		return updateProductOptions(taskData);
 	}
 
 	public String getGroupID(String path) {
@@ -147,7 +155,7 @@ public class GitlabConfiguration implements Serializable {
 		}
 		return "";
 	}
-	
+
 	public void addValidOperations(TaskData bugReport) {
 		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		String attributeStatusValue = attributeStatus.getValue();
@@ -160,13 +168,11 @@ public class GitlabConfiguration implements Serializable {
 		TaskAttribute attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "opened");
 		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
 
-		 attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "closed");
+		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "closed");
 		if (attributeStatusValue.equals("closed")) {
-			 TaskOperation.applyTo(attribute, "reopen", "Reopen");
+			TaskOperation.applyTo(attribute, "reopen", "Reopen");
 		} else {
-		 TaskOperation.applyTo(attribute, "close", "Close");
+			TaskOperation.applyTo(attribute, "close", "Close");
 		}
-		int i=9;
-		i++;
 	}
 }

@@ -16,6 +16,7 @@ package org.eclipse.mylyn.gitlab.ui;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -26,7 +27,8 @@ public class GitlabTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		if (input.getTask().getConnectorKind().equals(GitlabCoreActivator.CONNECTOR_KIND)) {
+		if (input.getTask().getConnectorKind().equals(GitlabCoreActivator.CONNECTOR_KIND)
+				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), GitlabCoreActivator.CONNECTOR_KIND)) {
 			return true;
 		}
 		return false;

@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -32,7 +33,9 @@ import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -67,7 +70,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 public class GitlabRestClient {
 
@@ -105,7 +111,7 @@ public class GitlabRestClient {
 			throws GitlabException, CoreException {
 		getAccessTokenIfNotPresent(monitor);
 		String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(",");
-		String[] gueryGroups = query.getAttribute(GitlabTaskSchema.getDefault().GROUP.getKey()).split(",");
+		String groupAttribute = query.getAttribute("group");
 
 		if (!queryProjects[0].isEmpty()) {
 			for (String string : queryProjects) {
@@ -113,13 +119,15 @@ public class GitlabRestClient {
 				getIssuesInternal(query, collector, path, monitor);
 			}
 		}
-		if (!gueryGroups[0].isEmpty()) {
-			for (String string : gueryGroups) {
-				String path = "/groups/" + string.replaceAll("/", "%2F");
-				getIssuesInternal(query, collector, path, monitor);
+		if (groupAttribute != null) {
+			String[] gueryGroups = groupAttribute.split(",");
+			if (!gueryGroups[0].isEmpty()) {
+				for (String string : gueryGroups) {
+					String path = "/groups/" + string.replaceAll("/", "%2F");
+					getIssuesInternal(query, collector, path, monitor);
+				}
 			}
 		}
-
 		return Status.OK_STATUS;
 	}
 
@@ -272,21 +280,16 @@ public class GitlabRestClient {
 	private TaskData getFromJson(JsonObject jo) {
 		GitlabTaskDataHandler dataHandler = (GitlabTaskDataHandler) connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = dataHandler.getAttributeMapper(taskRepository);
-
-		TaskData response = null;
 		String selfString = jo.get("_links").getAsJsonObject().get("self").getAsString();
-
-		TaskData taskData = null;
-		taskData = new TaskData(mapper, connector.getConnectorKind(), taskRepository.getRepositoryUrl(), selfString);
-		response = taskData;
+		TaskData response = new TaskData(mapper, connector.getConnectorKind(), taskRepository.getRepositoryUrl(), selfString.replace(taskRepository.getUrl() + GitlabCoreActivator.API_VERSION, ""));
 		try {
-			dataHandler.initializeTaskData(taskRepository, taskData, null, null);
+			dataHandler.initializeTaskData(taskRepository, response, null, null);
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}
 		for (Entry<String, JsonElement> entry : jo.entrySet()) {
 			String attributeId = GitlabTaskSchema.getAttributeNameFromJsonName(entry.getKey());
-			TaskAttribute attribute = taskData.getRoot().getAttribute(attributeId);
+			TaskAttribute attribute = response.getRoot().getAttribute(attributeId);
 			Field field = GitlabTaskSchema.getDefault().getFieldByKey(attributeId);
 			if (attribute == null) {
 				PrintStream ps = attribute == null ? System.err : System.out;
@@ -320,7 +323,6 @@ public class GitlabRestClient {
 			}
 			return taskData;
 		}
-
 	}
 
 	private GitlabConfiguration getConfiguration() {
@@ -384,14 +386,11 @@ public class GitlabRestClient {
 
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws GitlabException {
-		String searchString = ".+(/projects/\\d+)/issues/(\\d+)";
+		TaskData result = null;
+		String searchString = ".*(/projects/\\d+)/issues/(\\d+)";
 		Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(taskId);
 		if (matcher.find()) {
-			TaskData result;
-//			System.out.println("found: " + matcher.group(0));
-//			System.out.println("       " + matcher.group(1));
-//			System.out.println("       " + matcher.group(2));
 			GitlabConfiguration config = getConfiguration();
 			JsonObject iss = getIssue(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 			TypeToken<TaskData> type = new TypeToken<TaskData>() {
@@ -427,10 +426,8 @@ public class GitlabRestClient {
 //			}
 
 			config.updateProductOptions(result);
-
-			return result;
 		}
-		return null;
+		return result;
 	}
 
 	private int createNoteTaskAttribute(TaskRepository repository, TaskData result, int i, JsonObject note) {
@@ -698,7 +695,18 @@ public class GitlabRestClient {
 			throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonObject jsonElement;
-		jsonElement = new GitlabPostOperation<JsonObject>(client, path + "/issues/" + id + "/notes", body) {
+		jsonElement = new GitlabPostOperation<JsonObject>(client, path + "/issues/" + id + "/notes") {
+
+			@Override
+			protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
+				super.addHttpRequestEntities(request);
+				request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
+				try {
+					((HttpPost) request).setEntity(new StringEntity(body));
+				} catch (UnsupportedEncodingException e) {
+					throw new GitlabException(e);
+				}
+			};
 
 			@Override
 			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
@@ -789,6 +797,19 @@ public class GitlabRestClient {
 
 	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IOperationMonitor monitor) throws GitlabException {
+		if (taskData.isNew()) {
+			JsonElement result = createNewIssue(taskData, monitor);
+			JsonObject resObj = (JsonObject) result;
+			String newID = resObj.get("iid").getAsString();
+			String projectID = resObj.get("project_id").getAsString();
+			return new RepositoryResponse(ResponseKind.TASK_CREATED, "/projects/" + projectID + "/issues/" + newID);
+		} else {
+			return updateExistingIssue(taskData, oldAttributes, monitor);
+		}
+	}
+
+	private RepositoryResponse updateExistingIssue(TaskData taskData, Set<TaskAttribute> oldAttributes,
+			IOperationMonitor monitor) throws GitlabException {
 		ArrayList<String> changedAtributes = new ArrayList<>();
 		String newComentValue = "";
 		for (TaskAttribute taskAttribute : oldAttributes) {
@@ -826,4 +847,85 @@ public class GitlabRestClient {
 		}
 		return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 	}
+
+	public JsonElement createNewIssue(TaskData taskData, IOperationMonitor monitor) throws GitlabException {
+		getAccessTokenIfNotPresent(monitor);
+		TaskAttribute productAttribute = taskData.getRoot()
+				.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
+		if (productAttribute == null || productAttribute.getValue().isEmpty()) {
+			throw new GitlabException("productAttribute should not be null");
+		}
+		JsonObject jsonElement;
+		jsonElement = new GitlabPostOperation<JsonObject>(client,
+				"/projects/" + productAttribute.getValue() + "/issues") {
+
+			protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
+				super.addHttpRequestEntities(request);
+				request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
+				Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter())
+						.create();
+				String jsondata = gson.toJson(taskData);
+				try {
+					((HttpPost) request).setEntity(new StringEntity(jsondata));
+				} catch (UnsupportedEncodingException e) {
+					throw new GitlabException(e);
+				}
+			};
+
+			@Override
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, GitlabException {
+				validate(response, HttpStatus.SC_CREATED, monitor);
+			}
+
+			@Override
+			protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
+				return new Gson().fromJson(in, JsonObject.class);
+			}
+		}.run(monitor);
+		return jsonElement;
+	}
+
+	class TaskAttributeTypeAdapter extends TypeAdapter<TaskData> {
+
+		@Override
+		public void write(JsonWriter out, TaskData taskData) throws IOException {
+			out.beginObject();
+			for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
+				String id = taskAttribute.getId();
+				String attributValue = convertString2GSonString(taskAttribute.getValue());
+				id = GitlabNewTaskSchema.getJsonNameFromAttributeName(id);
+				if ("project_id".equals(id) || "state".equals(id)) {
+					continue;
+				}
+				out.name(id).value(attributValue);
+			}
+			out.endObject();
+		}
+
+		@Override
+		public TaskData read(JsonReader in) throws IOException {
+			throw new UnsupportedOperationException("TaskAttributeTypeAdapter in GitlabRestClient only supports write"); //$NON-NLS-1$
+		}
+	}
+
+	public static String convertString2GSonString(String str) {
+		str = str.replace("\"", "\\\"").replace("\n", "\\\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+		StringBuffer ostr = new StringBuffer();
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if ((ch >= 0x0020) && (ch <= 0x007e)) {
+				ostr.append(ch);
+			} else {
+				ostr.append("\\u"); //$NON-NLS-1$
+				String hex = Integer.toHexString(str.charAt(i) & 0xFFFF);
+				for (int j = 0; j < 4 - hex.length(); j++) {
+					ostr.append("0"); //$NON-NLS-1$
+				}
+				ostr.append(hex.toLowerCase());
+			}
+		}
+		return (new String(ostr));
+	}
+
 }

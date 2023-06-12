@@ -24,9 +24,10 @@ public class GitlabCoreActivator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.gitlab.core"; //$NON-NLS-1$
 
-	public static final String CONNECTOR_KIND = "gitlab";
+	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gitlab";
 	public static final String GROUPS = "gitlab.groups";
 	public static final String PROJECTS = "gitlab.projects";
+	public static final String API_VERSION = "/api/v4";
 
 	// The shared instance
 	private static GitlabCoreActivator plugin;

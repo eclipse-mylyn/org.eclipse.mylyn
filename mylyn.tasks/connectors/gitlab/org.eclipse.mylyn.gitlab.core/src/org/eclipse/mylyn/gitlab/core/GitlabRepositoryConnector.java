@@ -285,8 +285,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateNewTask(@NonNull TaskRepository repository) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

@@ -105,8 +105,8 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 
 	protected String baseUrl() {
 		String url = getClient().getLocation().getUrl();
-		if (!url.endsWith("/api/v4")) {
-			url += "/api/v4";
+		if (!url.endsWith(GitlabCoreActivator.API_VERSION)) {
+			url += GitlabCoreActivator.API_VERSION;
 		}
 		return url;
 	}

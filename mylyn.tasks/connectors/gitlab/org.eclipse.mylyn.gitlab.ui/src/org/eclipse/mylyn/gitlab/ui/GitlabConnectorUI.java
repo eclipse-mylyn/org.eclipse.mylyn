@@ -52,7 +52,7 @@ public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
 		GitlabSearchQueryPageSchema.getInstance().initialize(taskData);
 		try {
 			GitlabConfiguration config = connector.getRepositoryConfiguration(repository);
-			config.updateProductOptions(taskData);
+			config.updateQueryOptions(taskData);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
