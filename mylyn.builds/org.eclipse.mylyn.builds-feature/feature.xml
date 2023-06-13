@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.mylyn.builds"
       label="%featureName"
-      version="3.26.1.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.builds.core"
       license-feature="org.eclipse.license"
@@ -34,9 +34,9 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.26.1" match="compatible"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="3.26.1" match="compatible"/>
-      <import feature="org.eclipse.mylyn.versions" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.team_feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions" version="4.0.0" match="compatible"/>
    </requires>
 
    <plugin
