@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks Activity Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.activity.tests
-Bundle-Version: 3.26.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jface;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.26.1",
- org.eclipse.mylyn.commons.sdk.util;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.activity.core;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.activity.ui;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.core;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.index.core;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.index.ui;bundle-version="3.26.1",
+ org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.activity.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.activity.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.index.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.index.ui;bundle-version="4.0.0",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.tasks.activity.tests;x-internal:=true
