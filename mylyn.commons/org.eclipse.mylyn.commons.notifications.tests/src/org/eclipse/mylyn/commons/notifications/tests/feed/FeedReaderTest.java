@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -16,14 +16,14 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedReader;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -53,7 +53,7 @@ public class FeedReaderTest extends TestCase {
 
 		FeedEntry entry = reader.getEntries().get(0);
 		assertEquals("New Connectors", entry.getTitle());
-		assertEquals("[0.0.0,4.0.0)", entry.getFilter("frameworkVersion"));
+		assertEquals("[0.0.0,5.0.0)", entry.getFilter("frameworkVersion"));
 		assertEquals("New connectors are now available. <a href=\"#discovery\">Show connectors</a>.",
 				entry.getDescription());
 
