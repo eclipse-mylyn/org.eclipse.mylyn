@@ -160,7 +160,7 @@
     <setupTask
         xsi:type="pde:TargetPlatformTask"
         predecessor="mylyn.workingsets"
-        name="mylyn-e4.26">
+        name="mylyn-e4.28">
       <description>Active Mylyn Target Platform</description>
     </setupTask>
     <setupTask
