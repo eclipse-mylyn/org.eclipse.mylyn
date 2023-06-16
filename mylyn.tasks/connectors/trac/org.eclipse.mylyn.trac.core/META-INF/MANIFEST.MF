@@ -21,5 +21,5 @@ Import-Package: org.apache.xmlrpc,
  org.apache.xmlrpc.serializer,
  org.apache.xmlrpc.util
 Bundle-Activator: org.eclipse.mylyn.internal.trac.core.TracCorePlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin

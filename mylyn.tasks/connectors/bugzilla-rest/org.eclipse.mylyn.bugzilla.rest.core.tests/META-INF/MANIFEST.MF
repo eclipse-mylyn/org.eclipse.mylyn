@@ -4,7 +4,7 @@ Bundle-Name: Mylyn Bugzilla Rest Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: com.google.gson;bundle-version="0.0.0",
  com.google.guava;bundle-version="0.0.0",
  org.apache.commons.io;bundle-version="0.0.0",

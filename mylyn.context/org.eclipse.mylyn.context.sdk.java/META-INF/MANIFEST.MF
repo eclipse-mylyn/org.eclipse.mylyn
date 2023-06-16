@@ -25,4 +25,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.context.sdk.java;x-internal:=true,
  org.eclipse.mylyn.context.sdk.java.search;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17

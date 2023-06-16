@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.ui.forms;bundle-version="0.0.0",
  org.tigris.subversion.subclipse.core;bundle-version="1.6.17"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Export-Package: org.eclipse.mylyn.internal.subclipse.ui;x-internal:=true,
  org.eclipse.mylyn.internal.subclipse.ui.connector;x-internal:=true

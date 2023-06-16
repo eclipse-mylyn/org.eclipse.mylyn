@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.notifications.feed;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.notifications.feed;x-internal:=true,
  org.eclipse.mylyn.internal.commons.notifications.feed;x-internal:=true
 Import-Package: com.sun.xml.bind;version="2.3.3",
