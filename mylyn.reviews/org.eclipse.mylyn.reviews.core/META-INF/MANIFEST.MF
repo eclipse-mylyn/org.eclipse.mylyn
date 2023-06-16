@@ -12,7 +12,7 @@ Require-Bundle: com.google.guava;bundle-version="0.0.0",
  org.eclipse.mylyn.tasks.core;bundle-version="4.0.0",
  org.eclipse.team.core;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.mylyn.reviews.edit,org.eclipse.mylyn.reviews.ui",
  org.eclipse.mylyn.reviews.core.spi;x-friends:="org.eclipse.mylyn.reviews.ui",
  org.eclipse.mylyn.reviews.core.spi.remote;x-friends:="org.eclipse.mylyn.reviews.ui,org.eclipse.mylyn.reviews.edit",

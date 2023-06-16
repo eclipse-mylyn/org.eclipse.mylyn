@@ -20,5 +20,5 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
  org.eclipse.mylyn.internal.trac.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.trac.ui.wizard;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin

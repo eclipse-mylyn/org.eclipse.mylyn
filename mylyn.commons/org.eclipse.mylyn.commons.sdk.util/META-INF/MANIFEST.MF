@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Commons SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.commons.sdk.util;singleton:=true
 Bundle-Version: 4.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: com.google.gson;bundle-version="2.9.1",
  com.google.guava;bundle-version="0.0.0",
  org.apache.commons.lang;bundle-version="[2.6.0,3.0.0)",

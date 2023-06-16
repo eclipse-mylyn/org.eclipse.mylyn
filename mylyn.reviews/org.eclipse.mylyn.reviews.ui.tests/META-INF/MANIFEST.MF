@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui.tests;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.reviews.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
  org.eclipse.mylyn.reviews.ui.tests
 Require-Bundle: org.eclipse.mylyn.gerrit.ui;bundle-version="4.0.0",

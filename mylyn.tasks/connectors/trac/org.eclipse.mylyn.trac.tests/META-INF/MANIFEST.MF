@@ -28,5 +28,5 @@ Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
 Import-Package: org.apache.xmlrpc;version="0.0.0",
  org.apache.xmlrpc.client,
  org.apache.xmlrpc.common
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Eclipse Mylyn

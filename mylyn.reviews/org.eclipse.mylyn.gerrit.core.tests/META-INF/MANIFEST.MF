@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: com.google.gson;bundle-version="2.9.1",
  net.bytebuddy.byte-buddy;bundle-version="1.12.16",
  net.bytebuddy.byte-buddy-agent;bundle-version="1.12.16",

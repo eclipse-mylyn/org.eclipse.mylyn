@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.junit;bundle-version="4.5.0"
 Export-Package: org.eclipse.mylyn.versions.core;x-internal:=true,
  org.eclipse.mylyn.versions.tests.support;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
