@@ -56,14 +56,14 @@
         <category name="%newWizards.category.name" id="org.eclipse.mylyn.ui.wizards.new"/>
     </extension>
 
-    <extension
+<!--    <extension
          name="Task List Startup (required)"
          point="org.eclipse.ui.startup">
        <startup
              class="org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin$TasksUiStartup">
        </startup>
     </extension>
-
+-->
    <!--
 	<extension
          id="org.eclipse.mylyn.helpDocs"

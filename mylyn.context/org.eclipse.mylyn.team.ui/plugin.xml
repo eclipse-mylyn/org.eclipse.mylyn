@@ -17,6 +17,7 @@
    <extension-point id="commitTemplates" name="Commit Template Handlers" schema="schema/commitTemplates.exsd"/>
     
     <!-- needed to update change sets -->
+<!--
     <extension
          name="Task Change Set Management"
          point="org.eclipse.ui.startup">
@@ -24,7 +25,7 @@
              class="org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin$FocusedTeamUiStartup">
        </startup>
     </extension>
-
+-->
   <extension
          point="org.eclipse.mylyn.team.ui.changeSets">
       <contextChangeSetManager
