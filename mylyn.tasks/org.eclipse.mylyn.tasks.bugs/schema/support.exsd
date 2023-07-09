@@ -392,7 +392,7 @@
   &lt;!-- supported product --&gt;
   &lt;product 
     id=&quot;org.eclipse.mylyn&quot;
-    featureId=&quot;org.eclipse.mylyn_feature&quot; 
+    featureId=&quot;org.eclipse.mylyn.tasks.feature&quot; 
     pluginId=&quot;org.eclipse.mylyn&quot; 
     providerId=&quot;org.eclipse&quot; 
     url=&quot;http://eclipse.org/mylyn/support/&quot; /&gt;

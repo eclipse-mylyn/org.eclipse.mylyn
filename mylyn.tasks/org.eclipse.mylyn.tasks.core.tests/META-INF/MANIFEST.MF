@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks Framework Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.core.tests;singleton:=true
-Bundle-Version: 3.26.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.tasks.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",
  org.junit;bundle-version="4.8.2",
  org.mockito.mockito-core;bundle-version="4.8.1",

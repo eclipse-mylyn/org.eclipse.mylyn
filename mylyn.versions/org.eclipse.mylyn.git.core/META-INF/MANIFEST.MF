@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.git.core;singleton:=true
-Bundle-Version: 3.26.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 4.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: com.google.guava;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.core.filesystem;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.jgit;bundle-version="0.0.0",
- org.eclipse.mylyn.versions.core;bundle-version="3.26.1",
+ org.eclipse.mylyn.versions.core;bundle-version="4.0.0",
  org.eclipse.team.core;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.internal.git.core;x-friends:="org.eclipse.mylyn.git.ui"
 Bundle-Vendor: %Bundle-Vendor

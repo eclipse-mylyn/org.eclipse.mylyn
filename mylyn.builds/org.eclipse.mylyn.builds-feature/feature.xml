@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2010, 2022 Tasktop Technologies and others.
+    Copyright (c) 2010, 2023 Tasktop Technologies and others.
  
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,12 +10,12 @@
 
     Contributors:
          Tasktop Technologies - initial API and implementation
-         ArSysOp - adapt to SimRel 2022-12
+         ArSysOp - ongoing support
  -->
 <feature
       id="org.eclipse.mylyn.builds"
       label="%featureName"
-      version="3.26.1.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.builds.core"
       license-feature="org.eclipse.license"
@@ -34,9 +34,9 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.26.1" match="compatible"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="3.26.1" match="compatible"/>
-      <import feature="org.eclipse.mylyn.versions" version="3.26.1" match="compatible"/>
+      <import feature="org.eclipse.mylyn.tasks.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.team_feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions" version="4.0.0" match="compatible"/>
    </requires>
 
    <plugin

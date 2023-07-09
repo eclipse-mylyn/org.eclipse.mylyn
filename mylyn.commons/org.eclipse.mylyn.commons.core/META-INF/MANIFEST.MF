@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.core;singleton:=true
-Bundle-Version: 3.26.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.core.io,
  org.eclipse.mylyn.commons.core.net,

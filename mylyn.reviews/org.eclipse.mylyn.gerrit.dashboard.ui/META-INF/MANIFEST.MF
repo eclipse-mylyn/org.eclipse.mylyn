@@ -2,24 +2,24 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.dashboard.ui;singleton:=true
-Bundle-Version: 3.26.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi
 Bundle-Localization: OSGI-INF/l10n/bundle
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.jgit;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.26.1",
- org.eclipse.mylyn.commons.ui;bundle-version="3.26.1",
- org.eclipse.mylyn.commons.workbench;bundle-version="3.26.1",
- org.eclipse.mylyn.gerrit.core;bundle-version="3.26.1",
- org.eclipse.mylyn.gerrit.dashboard.core;bundle-version="3.26.1",
- org.eclipse.mylyn.reviews.core;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.core;bundle-version="3.26.1",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.26.1",
+ org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="4.0.0",
+ org.eclipse.mylyn.gerrit.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.gerrit.dashboard.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.reviews.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.forms;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: %providerName
 Export-Package: org.eclipse.mylyn.gerrit.dashboard.internal.utils;x-internal:=true;uses:="org.eclipse.mylyn.tasks.core",
  org.eclipse.mylyn.gerrit.dashboard.ui;x-internal:=true;

@@ -12,9 +12,9 @@
 <feature
       id="org.eclipse.mylyn.commons.activity"
       label="%featureName"
-      version="3.26.1.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.commons.core"
+      plugin="org.eclipse.mylyn.tasks.activity.ui"
       license-feature="org.eclipse.license"
       license-feature-version="2.0.2">
 
@@ -31,7 +31,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.commons" version="3.26.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.commons" version="4.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

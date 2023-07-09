@@ -363,11 +363,6 @@
     </handler>
  </extension>
  <extension
-       point="org.eclipse.ui.startup">
-    <startup
-          class="org.eclipse.mylyn.internal.builds.ui.BuildsStartup"></startup>
- </extension>
- <extension
        point="org.eclipse.mylyn.commons.repositories.ui.newWizards">
     <category
           id="org.eclipse.mylyn.builds.ui.category.Builds"
