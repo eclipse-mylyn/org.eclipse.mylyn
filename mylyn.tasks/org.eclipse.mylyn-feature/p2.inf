@@ -3,3 +3,10 @@ instructions.configure=\
  org.eclipse.equinox.p2.touchpoint.eclipse.removeRepository(type:1,location:http${#58}//download.eclipse.org/tools/mylyn/update/extras);\
  org.eclipse.equinox.p2.touchpoint.eclipse.removeRepository(type:0,location:http${#58}//download.eclipse.org/tools/mylyn/update/weekly/extras);\
  org.eclipse.equinox.p2.touchpoint.eclipse.removeRepository(type:1,location:http${#58}//download.eclipse.org/tools/mylyn/update/weekly/extras);
+update.id=org.eclipse.mylyn_feature.feature.group
+update.range=[0,4)
+update.matchExp = providedCapabilities.exists(pc | \
+   pc.namespace == 'org.eclipse.equinox.p2.iu' && \
+     (pc.name == 'org.eclipse.mylyn_feature.feature.group' || \
+       (pc.name == 'org.eclipse.mylyn_feature.feature.group' && pc.version ~= range('[0.0.0,$version$)'))))
+ 
