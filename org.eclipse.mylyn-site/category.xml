@@ -20,7 +20,7 @@
    <feature id="org.eclipse.mylyn.context_feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
-   <feature id="org.eclipse.cdt.mylyn">
+   <feature id="org.eclipse.mylyn.cdt.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.discovery">
