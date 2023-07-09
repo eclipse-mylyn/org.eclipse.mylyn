@@ -47,7 +47,7 @@
    <feature id="org.eclipse.mylyn.egit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.bugzilla_feature">
+   <feature id="org.eclipse.mylyn.bugzilla.feature">
       <category name="a.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.trac_feature">
