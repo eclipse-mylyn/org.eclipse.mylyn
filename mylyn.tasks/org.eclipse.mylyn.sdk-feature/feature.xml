@@ -42,7 +42,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.bugzilla_feature"
+         id="org.eclipse.mylyn.bugzilla.feature"
          version="0.0.0"/>
 
    <plugin
