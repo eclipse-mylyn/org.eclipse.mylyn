@@ -1,7 +1,5 @@
 package org.eclipse.mylyn.hudson.tests.integration;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +23,9 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.w3c.dom.Document;
 
-public class DockerIntegrationTest {
+import junit.framework.TestCase;
+
+public class DockerIntegrationTest extends TestCase {
 
 	private static final String baseDir = "../../org.eclipse.mylyn.releng/multipass/roles/jenkins/files/";
 

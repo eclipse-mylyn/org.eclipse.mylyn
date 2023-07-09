@@ -26,6 +26,7 @@ import org.eclipse.mylyn.hudson.tests.client.HudsonUrlTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
+import org.eclipse.mylyn.hudson.tests.integration.DockerIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
@@ -79,6 +80,7 @@ public class AllHudsonTests {
 				fixture.add(HudsonClientTest.class);
 				if (!fixture.isUseCertificateAuthentication()) {
 					fixture.add(HudsonIntegrationTest.class);
+					fixture.add(DockerIntegrationTest.class);
 				}
 				fixture.done();
 			}
