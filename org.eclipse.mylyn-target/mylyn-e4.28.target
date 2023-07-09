@@ -43,7 +43,7 @@
 			<unit id="org.hamcrest.integration" version="0.0.0"/>
 			<unit id="org.hamcrest.library" version="0.0.0"/>
 			<unit id="org.hamcrest.text" version="0.0.0"/>
-			<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>>
+			<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>&gt;
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository/"/>
@@ -58,11 +58,11 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/"/>
-			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659" />
-			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659" />
-			<unit id="javax.activation" version="1.2.2.v20221203-1659" />
-			<unit id="javax.activation" version="2.0.0.v20221203-1659" />
-			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916" />
+			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659"/>
+			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659"/>
+			<unit id="javax.activation" version="1.2.2.v20221203-1659"/>
+			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>
+			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
 			<unit id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -88,5 +88,110 @@
 			<unit id="com.google.gson" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
 		</location>
+    	<location includeDependencyDepth="direct" includeDependencyScopes="compile,runtime,test" includeSource="true" missingManifest="generate" type="Maven">
+        	<dependencies>
+            	<dependency>
+                	<groupId>com.github.docker-java</groupId>
+                	<artifactId>docker-java-api</artifactId>
+                	<version>3.3.2</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>com.github.docker-java</groupId>
+                	<artifactId>docker-java-transport-zerodep</artifactId>
+                	<version>3.3.2</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>com.github.docker-java</groupId>
+                	<artifactId>docker-java-transport</artifactId>
+                	<version>3.3.2</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>dev.failsafe</groupId>
+                	<artifactId>failsafe</artifactId>
+                	<version>3.3.2</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.appform.testcontainer</groupId>
+                	<artifactId>junit-testcontainer-commons</artifactId>
+                	<version>1.0.14</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.opentelemetry</groupId>
+                	<artifactId>opentelemetry-api</artifactId>
+                	<version>1.28.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.opentelemetry</groupId>
+                	<artifactId>opentelemetry-sdk-extension-autoconfigure-spi</artifactId>
+                	<version>1.28.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.opentelemetry</groupId>
+                	<artifactId>opentelemetry-sdk-extension-autoconfigure</artifactId>
+                	<version>1.28.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.opentelemetry</groupId>
+                	<artifactId>opentelemetry-sdk-trace</artifactId>
+                	<version>1.28.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>io.opentelemetry</groupId>
+                	<artifactId>opentelemetry-sdk</artifactId>
+                	<version>1.28.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.seleniumhq.selenium</groupId>
+                	<artifactId>selenium-api</artifactId>
+                	<version>4.10.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.seleniumhq.selenium</groupId>
+                	<artifactId>selenium-chrome-driver</artifactId>
+                	<version>4.10.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.seleniumhq.selenium</groupId>
+                	<artifactId>selenium-http-jdk-client</artifactId>
+                	<version>4.10.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.seleniumhq.selenium</groupId>
+                	<artifactId>selenium-remote-driver</artifactId>
+                	<version>4.10.0</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.testcontainers</groupId>
+                	<artifactId>selenium</artifactId>
+                	<version>1.18.3</version>
+                	<type>jar</type>
+            	</dependency>
+            	<dependency>
+                	<groupId>org.testcontainers</groupId>
+                	<artifactId>testcontainers</artifactId>
+                	<version>1.18.3</version>
+                	<type>jar</type>
+            	</dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>1.6.0</version>
+</dependency>
+        	</dependencies>
+    	</location>
 	</locations>
 </target>

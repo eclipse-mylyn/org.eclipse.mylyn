@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1
+ARG JENKINS_IMAGE_VERSION=jenkins/jenkins:latest-jdk17
+FROM $JENKINS_IMAGE_VERSION
+
+RUN echo 'Firing up the Jenkins Docker Image'
+
+#ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true"
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
+ENV JENKINS_ADMIN_ID=admin
+ENV JENKINS_ADMIN_PASSWORD=admin
+ENV JENKINS_USER=admin
+ENV JENKINS_PASS=admin
+ENV JENKINS_ADMIN_ADRESS=nobody@nowhere
+ENV CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml
+
+USER root
+COPY --chown=jenkins:jenkins $DATA_DIR/setAdminMail.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY --chown=jenkins:jenkins $DATA_DIR/jenkinsci/jenkins_home/ /var/jenkins_home/
+COPY --chown=jenkins:jenkins $DATA_DIR/plugins.txt /usr/share/jenkins/ref/
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+# COPY security.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY --chown=jenkins:jenkins $DATA_DIR/default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
+
+# RUN cp /usr/local/bin/jenkins.sh /usr/local/bin/jenkins_org.sh
+#COPY --chown=jenkins:jenkins mylynJenkins.sh /usr/local/bin/mylynJenkins.sh
+USER jenkins
+#ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/mylynJenkins.sh"]

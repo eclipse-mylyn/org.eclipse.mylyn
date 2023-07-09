@@ -1,3 +1,5 @@
+configuration-as-code
+role-strategy
 credentials
 plain-credentials
 workflow-support

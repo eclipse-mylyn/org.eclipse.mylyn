@@ -1,0 +1,19 @@
+jenkins:
+  systemMessage: "Mylyn instance" 
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: "admin"
+              username: "admin"
+              password: "admin"
+              description: "Username/Password Credentials for admin"
+          - usernamePassword:
+              scope: SYSTEM              
+              id: "gnl"
+              username: "gnl"
+              password: "{Z25sCg==}"
+              description: "Username/Password Credentials for gnl"
