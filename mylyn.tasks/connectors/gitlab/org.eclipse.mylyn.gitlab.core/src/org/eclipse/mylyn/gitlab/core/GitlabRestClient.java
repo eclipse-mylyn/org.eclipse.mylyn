@@ -398,47 +398,53 @@ public class GitlabRestClient {
 			result = new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer()).create()
 					.fromJson(iss, type.getType());
 
-			JsonArray notes = getIssueNotes(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
-			if (notes != null) {
-				int i = 0;
-				for (JsonElement jsonElement : notes) {
-					JsonObject note = jsonElement.getAsJsonObject();
-					i = createNoteTaskAttribute(repository, result, i, note);
-				}
-			}
-//			JsonArray discussions = getIssueDiscussions(matcher.group(1), matcher.group(2),
-//					OperationUtil.convert(monitor));
-//			if (discussions != null) {
+//			JsonArray notes = getIssueNotes(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+//			if (notes != null) {
 //				int i = 0;
-//				for (JsonElement jsonElement : discussions) {
-//					JsonObject discussion = (JsonObject) jsonElement;
-//					JsonArray notesArray = discussion.get("notes").getAsJsonArray();
-//					if (discussion.get("individual_note").getAsBoolean()) {
-//						JsonObject note = notesArray.get(0).getAsJsonObject();
-//						i = createNoteTaskAttribute(repository, result, i, note);
-//					} else {
-//						for ( JsonElement jsonElement2 : notesArray) {
-//							JsonObject note = jsonElement2.getAsJsonObject();
-//							i = createNoteTaskAttribute(repository, result, i, note);
-//						}
-//					}
+//				for (JsonElement jsonElement : notes) {
+//					JsonObject note = jsonElement.getAsJsonObject();
+//					i = createNoteTaskAttribute(repository, result, i, note);
 //				}
 //			}
+			JsonArray discussions = getIssueDiscussions(matcher.group(1), matcher.group(2),
+					OperationUtil.convert(monitor));
+			if (discussions != null) {
+				int i = 0;
+				TaskAttribute  attrib = null;
+				for (JsonElement jsonElement : discussions) {
+					JsonObject discussion = (JsonObject) jsonElement;
+					JsonArray notesArray = discussion.get("notes").getAsJsonArray();
+					if (discussion.get("individual_note").getAsBoolean()) {
+						JsonObject note = notesArray.get(0).getAsJsonObject();
+						attrib = createNoteTaskAttribute(repository, result.getRoot(), i++, note);
+					} else {
+					    TaskAttribute  reply = null;
+						for ( JsonElement jsonElement2 : notesArray) {
+							JsonObject note = jsonElement2.getAsJsonObject();
+							attrib  = createNoteTaskAttribute(repository, reply==null?result.getRoot():reply, i++, note);
+							if (reply == null) {
+							    reply = attrib.createAttribute("reply");
+							}
+						}
+					}
+				}
+			}
 
 			config.updateProductOptions(result);
 		}
 		return result;
 	}
 
-	private int createNoteTaskAttribute(TaskRepository repository, TaskData result, int i, JsonObject note) {
+	private TaskAttribute createNoteTaskAttribute(TaskRepository repository, TaskAttribute result, int i, JsonObject note) {
 		TaskCommentMapper cmapper = new TaskCommentMapper();
 		cmapper.setAuthor(repository.createPerson(note.get("author").getAsJsonObject().get("name").getAsString()));
 		cmapper.setCreationDate(GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString()));
 		cmapper.setText(note.get("body").getAsString());
 		cmapper.setNumber(++i);
-		TaskAttribute attribute = result.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + (i + 1));
+		TaskAttribute attribute = result.createAttribute(TaskAttribute.PREFIX_COMMENT + i);
 		cmapper.applyTo(attribute);
-		return i;
+		attribute.createAttribute("system").setValue(note.get("system").getAsString());
+		return attribute;
 	}
 
 	public void getTaskData(Set<String> taskIds, TaskRepository taskRepository, TaskDataCollector collector,

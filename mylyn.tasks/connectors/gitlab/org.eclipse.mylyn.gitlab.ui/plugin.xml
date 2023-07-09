@@ -18,9 +18,9 @@
          name="Gitlab Respository"
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorUi
-            brandingIcon="icons/eview16/gitlab-icon.gif"
+            brandingIcon="icons/eview16/gitlab-icon.png"
             class="org.eclipse.mylyn.gitlab.ui.GitlabConnectorUI"
-            overlayIcon="icons/eview16/gitlab-overlay.gif">
+            overlayIcon="icons/eview16/gitlab-overlay.png">
       </connectorUi>
    </extension>
 

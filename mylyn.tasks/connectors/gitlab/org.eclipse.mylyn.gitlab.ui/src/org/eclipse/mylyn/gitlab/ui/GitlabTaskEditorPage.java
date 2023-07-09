@@ -13,10 +13,13 @@
 
 package org.eclipse.mylyn.gitlab.ui;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
@@ -43,6 +46,26 @@ public class GitlabTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		// TODO Auto-generated method stub
-		return super.createPartDescriptors();
+		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		// remove unnecessary default editor parts
+		ArrayList<TaskEditorPartDescriptor> descriptorsToRemove = new ArrayList<TaskEditorPartDescriptor>(2);
+		boolean hasCommentPart = false;
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_COMMENTS)) {
+				hasCommentPart = hasCommentPart || taskEditorPartDescriptor.getId().equals(ID_PART_COMMENTS);
+				descriptorsToRemove.add(taskEditorPartDescriptor);
+				continue;
+			}
+		}
+		descriptors.removeAll(descriptorsToRemove);
+		if (hasCommentPart) {
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_COMMENTS) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new GitlabTaskEditorCommentPart();
+				}
+			}.setPath(PATH_COMMENTS));
+		}
+		return descriptors;
 	}
 }

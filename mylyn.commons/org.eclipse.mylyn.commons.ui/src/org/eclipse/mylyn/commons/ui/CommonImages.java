@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -320,6 +320,8 @@ public class CommonImages {
 	public static final ImageDescriptor CHECKBOX_DISABLED = create(T_ELCL, "checkboxgreyed.gif"); //$NON-NLS-1$;
 
 	public static final ImageDescriptor PERSON_LARGE = create(T_OBJ48, "person.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor GITLAB = create(T_OBJ, "gitlab.png"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {

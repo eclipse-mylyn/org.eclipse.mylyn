@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -155,7 +155,7 @@ public class EditorUtil {
 
 	/**
 	 * Scroll to a specified piece of text
-	 * 
+	 *
 	 * @param control
 	 *            The StyledText to scroll to
 	 */
@@ -183,7 +183,7 @@ public class EditorUtil {
 		return getDateFormat().format(date);
 	}
 
-	static String formatDateTime(Date date) {
+	public static String formatDateTime(Date date) {
 		return getDateTimeFormat().format(date);
 	}
 
@@ -243,7 +243,7 @@ public class EditorUtil {
 
 	/**
 	 * Selects the given object in the editor.
-	 * 
+	 *
 	 * @param o
 	 *            The object to be selected.
 	 * @param highlight
@@ -311,7 +311,7 @@ public class EditorUtil {
 	/**
 	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
 	 * bug#70358)
-	 * 
+	 *
 	 * @param comp
 	 * @deprecated Use {@link CommonFormUtil#setExpanded(ExpandableComposite,boolean)} instead
 	 */
@@ -376,7 +376,7 @@ public class EditorUtil {
 
 	/**
 	 * Recursively sets the menu of all children of <code>composite</code>.
-	 * 
+	 *
 	 * @deprecated Use {@link CommonUiUtil#setMenu(Composite,Menu)} instead
 	 */
 	@Deprecated
@@ -455,14 +455,14 @@ public class EditorUtil {
 		final GridData gd = new GridData();
 		// wrap text at this margin, see comment below
 		int width = getEditorWidth(page);
-		// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
+		// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn
 		// on screen
 		Point size = control.computeSize(width, SWT.DEFAULT, true);
 		gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
 		gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.grabExcessHorizontalSpace = true;
-		// limit height to be avoid dynamic resizing of the text widget: 
+		// limit height to be avoid dynamic resizing of the text widget:
 		// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
 		//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
 		gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
@@ -471,8 +471,8 @@ public class EditorUtil {
 			gd.grabExcessVerticalSpace = true;
 		}
 		return gd;
-		// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original 
-		// width and will cause the editor to have a horizonal scroll bar 
+		// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original
+		// width and will cause the editor to have a horizonal scroll bar
 //			composite.addControlListener(new ControlAdapter() {
 //				@Override
 //				public void controlResized(ControlEvent e) {
