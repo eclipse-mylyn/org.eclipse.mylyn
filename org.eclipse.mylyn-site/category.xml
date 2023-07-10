@@ -56,7 +56,7 @@
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="a.tasks.connector"/>
    </feature>
-   <feature id="org.eclipse.mylyn.builds">
+   <feature id="org.eclipse.mylyn.builds.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons">
