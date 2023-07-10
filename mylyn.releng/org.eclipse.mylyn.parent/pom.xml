@@ -134,6 +134,15 @@
               <testSuite>${project.artifactId}</testSuite>
               <testClass>${test.suite}</testClass>
               <argLine> ${tycho-surefire-argLine}</argLine>
+              <providerHint>junit4</providerHint>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>4.13.2</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
             </configuration>
           </plugin>
           <plugin>
