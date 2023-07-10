@@ -59,7 +59,7 @@
    <feature id="org.eclipse.mylyn.builds.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.commons">
+   <feature id="org.eclipse.mylyn.commons.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons.activity">
