@@ -13,7 +13,7 @@
          ArSysOp - ongoing support
  -->
 <feature
-      id="org.eclipse.mylyn.versions"
+      id="org.eclipse.mylyn.versions.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
