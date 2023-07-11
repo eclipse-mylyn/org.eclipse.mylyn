@@ -11,7 +11,7 @@
          ArSysOp - ongoing support
  -->
 <feature
-      id="org.eclipse.mylyn.commons.activity"
+      id="org.eclipse.mylyn.commons.activity.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
