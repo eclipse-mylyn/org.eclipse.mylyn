@@ -65,7 +65,7 @@
    <feature id="org.eclipse.mylyn.commons.activity.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.commons.identity">
+   <feature id="org.eclipse.mylyn.commons.identity.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons.notifications">
