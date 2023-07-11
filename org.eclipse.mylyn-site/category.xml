@@ -41,7 +41,7 @@
    <feature id="org.eclipse.mylyn.pde_feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.team_feature">
+   <feature id="org.eclipse.mylyn.team.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.egit.feature">
