@@ -44,7 +44,7 @@
       <import plugin="org.apache.lucene.queryparser" version="9.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="4.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.feature" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.identity" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.identity.feature" version="4.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.notifications" version="4.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.repositories" version="4.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.discovery" version="4.0.0" match="compatible"/>
