@@ -86,7 +86,7 @@
    <feature id="org.eclipse.mylyn.tasks.ide.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.tasks.index">
+   <feature id="org.eclipse.mylyn.tasks.index.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.versions.feature">
