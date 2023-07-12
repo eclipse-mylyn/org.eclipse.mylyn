@@ -13,7 +13,7 @@
  -->
 
 <feature
-      id="org.eclipse.mylyn.java_feature"
+      id="org.eclipse.mylyn.jdt.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"

@@ -54,7 +54,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.java_feature"
+         id="org.eclipse.mylyn.jdt.feature"
          version="0.0.0"/>
 
    <plugin
