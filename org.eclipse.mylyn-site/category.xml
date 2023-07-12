@@ -122,7 +122,7 @@
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.versions.sdk">
+   <feature id="org.eclipse.mylyn.versions.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <bundle id="com.sun.xml.bind"/>
