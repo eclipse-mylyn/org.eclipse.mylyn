@@ -83,7 +83,7 @@
    <feature id="org.eclipse.mylyn.reviews.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.tasks.ide">
+   <feature id="org.eclipse.mylyn.tasks.ide.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.tasks.index">
