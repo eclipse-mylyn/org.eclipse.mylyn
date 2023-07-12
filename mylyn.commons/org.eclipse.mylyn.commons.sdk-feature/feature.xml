@@ -38,7 +38,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.discovery"
+         id="org.eclipse.mylyn.discovery.feature"
          version="0.0.0"/>
 
    <includes
