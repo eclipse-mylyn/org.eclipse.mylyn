@@ -20,54 +20,105 @@
    <feature id="org.eclipse.mylyn.context.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <feature id="org.eclipse.mylyn.tasks.feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.tasks.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <feature id="org.eclipse.mylyn.cdt.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.cdt.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.discovery.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.discovery.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.git.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.git.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.jenkins.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.jenkins.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.ide.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.ide.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.jdt.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.jdt.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.pde.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.pde.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.team.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.team.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.egit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.egit.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.bugzilla.feature">
       <category name="a.tasks.connector"/>
    </feature>
+   <feature id="org.eclipse.mylyn.bugzilla.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.trac.feature">
       <category name="a.tasks.connector"/>
    </feature>
+   <feature id="org.eclipse.mylyn.trac.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="a.tasks.connector"/>
    </feature>
+   <feature id="org.eclipse.mylyn.github.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.builds.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.builds.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <feature id="org.eclipse.mylyn.commons.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
@@ -104,27 +155,41 @@
    <feature id="org.eclipse.mylyn.commons.repositories.http.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <feature id="org.eclipse.mylyn.monitor.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.monitor.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.reviews.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.reviews.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <feature id="org.eclipse.mylyn.tasks.ide.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.tasks.ide.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.tasks.index.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.tasks.index.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.versions.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+
    <bundle id="com.sun.xml.bind"/>
    <bundle id="jakarta.xml.bind"/>
    <bundle id="javax.activation" version="1.2.2.v20221203-1659"/>
