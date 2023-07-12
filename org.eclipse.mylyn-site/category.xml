@@ -23,6 +23,9 @@
    <feature id="org.eclipse.mylyn.tasks.feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.tasks.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.cdt.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
@@ -118,9 +121,6 @@
    </feature>
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.sdk_feature">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.versions.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
