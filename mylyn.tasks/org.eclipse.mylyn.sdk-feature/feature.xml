@@ -38,7 +38,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.trac_feature"
+         id="org.eclipse.mylyn.trac.feature"
          version="0.0.0"/>
 
    <includes

@@ -50,7 +50,7 @@
    <feature id="org.eclipse.mylyn.bugzilla.feature">
       <category name="a.tasks.connector"/>
    </feature>
-   <feature id="org.eclipse.mylyn.trac_feature">
+   <feature id="org.eclipse.mylyn.trac.feature">
       <category name="a.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.github.feature">
