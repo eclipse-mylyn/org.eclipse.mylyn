@@ -54,7 +54,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.commons.repositories"
+         id="org.eclipse.mylyn.commons.repositories.feature"
          version="0.0.0"/>
 
    <includes
