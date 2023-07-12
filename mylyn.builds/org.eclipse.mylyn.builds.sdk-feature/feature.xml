@@ -34,7 +34,7 @@
    </license>
 
    <includes
-         id="org.eclipse.mylyn.hudson"
+         id="org.eclipse.mylyn.jenkins.feature"
          version="0.0.0"/>
 
    <includes
