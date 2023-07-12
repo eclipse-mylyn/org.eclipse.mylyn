@@ -58,7 +58,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.commons.repositories.http"
+         id="org.eclipse.mylyn.commons.repositories.http.feature"
          version="0.0.0"/>
 
    <plugin

@@ -35,7 +35,7 @@
 
    <requires>
       <import feature="org.eclipse.mylyn.builds.feature" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories.http" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.http.feature" version="4.0.0" match="compatible"/>
    </requires>
 
    <plugin
