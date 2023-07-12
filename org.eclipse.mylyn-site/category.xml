@@ -107,6 +107,9 @@
    <feature id="org.eclipse.mylyn.reviews.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.reviews.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.tasks.ide.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
@@ -115,9 +118,6 @@
    </feature>
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.reviews.sdk.feature">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.sdk_feature">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
