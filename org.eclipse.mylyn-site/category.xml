@@ -29,7 +29,7 @@
    <feature id="org.eclipse.mylyn.git.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.hudson">
+   <feature id="org.eclipse.mylyn.jenkins.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.ide.feature">
