@@ -236,7 +236,7 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	    TaskAttribute systemAttribute = taskComment.getTaskAttribute().getAttribute("system");
 	    String systemAttributeValue = systemAttribute != null ? systemAttribute.getValue() : "false";
 	    if ("true".equals(systemAttributeValue)) {
-		expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.GITLAB));
+		expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB));
 	    }
 
 	    ToolBarManager toolBarManagerTitle = new ToolBarManager(SWT.FLAT);

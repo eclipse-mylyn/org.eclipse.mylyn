@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Gitlab Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.gitlab.ui;singleton:=true
-Bundle-Version: 3.26.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Export-Package: org.eclipse.mylyn.gitlab.ui
 Bundle-Activator: org.eclipse.mylyn.gitlab.ui.GitlabUiActivator
 Require-Bundle: org.eclipse.ui,
@@ -12,9 +12,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms;bundle-version="3.11.500",
  org.eclipse.mylyn.gitlab.core;bundle-version="1.0.0",
  com.google.guava,
- org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.26.1",
+ org.eclipse.mylyn.commons.workbench;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
  org.eclipse.jdt.annotation
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.mylyn.gitlab.ui

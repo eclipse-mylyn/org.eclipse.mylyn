@@ -321,8 +321,6 @@ public class CommonImages {
 
 	public static final ImageDescriptor PERSON_LARGE = create(T_OBJ48, "person.gif"); //$NON-NLS-1$;
 
-	public static final ImageDescriptor GITLAB = create(T_OBJ, "gitlab.png"); //$NON-NLS-1$
-
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
