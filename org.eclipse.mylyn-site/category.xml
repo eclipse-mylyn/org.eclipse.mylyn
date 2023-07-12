@@ -14,10 +14,10 @@
  *******************************************************************************
 -->
 <site>
-   <feature id="org.eclipse.mylyn.tasks.feature">
+   <feature id="org.eclipse.mylyn.context.feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.context.feature">
+   <feature id="org.eclipse.mylyn.tasks.feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.cdt.feature">
@@ -59,23 +59,44 @@
    <feature id="org.eclipse.mylyn.builds.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.builds.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.commons.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.commons.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons.activity.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.commons.activity.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.commons.identity.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.commons.identity.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons.notifications.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.commons.notifications.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.commons.repositories.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.commons.repositories.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.commons.repositories.http.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.commons.repositories.http.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.monitor.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
@@ -91,12 +112,6 @@
    </feature>
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.builds.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.commons.sdk">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.context.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
