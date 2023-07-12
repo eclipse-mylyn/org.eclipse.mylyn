@@ -42,7 +42,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.monitor"
+         id="org.eclipse.mylyn.monitor.feature"
          version="0.0.0"/>
 
    <includes

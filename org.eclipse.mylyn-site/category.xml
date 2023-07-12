@@ -77,7 +77,7 @@
    <feature id="org.eclipse.mylyn.commons.repositories.http.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.monitor">
+   <feature id="org.eclipse.mylyn.monitor.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.reviews.feature">
