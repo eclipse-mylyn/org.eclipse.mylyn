@@ -92,7 +92,7 @@
    <feature id="org.eclipse.mylyn.versions.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.builds.sdk">
+   <feature id="org.eclipse.mylyn.builds.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.commons.sdk">
@@ -150,7 +150,7 @@
          Source code and documentation for integrators building on Mylyn.
       </description>
    </category-def>
-   <category-def name="org.eclipse.mylyn.sdk.source.category" label="Mylyn Source SDK">
+   <category-def name="org.eclipse.mylyn.sdk.source.category" label="Mylyn Developer Resources">
       <description>
          Source code for integrators building on Mylyn.
       </description>
