@@ -5,7 +5,7 @@
   <parent>
     <artifactId>org.eclipse.mylyn-aggregator</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
-    <version>3.26.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -52,6 +52,7 @@
           </execution>
         </executions>
         <configuration>
+          <skip>${skipTests}</skip>
           <transformationSets>
             <!-- append @x.y.z to repository test cases to differentiate test fixtures -->
             <transformationSet>
@@ -93,10 +94,6 @@
             </transformationSet>
           </transformationSets>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

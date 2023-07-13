@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -22,12 +23,12 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.AbstractInterestManipulationAction;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -65,7 +66,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		javaType = (IType) javaMethod.getParent();
 		javaCu = (ICompilationUnit) javaType.getParent();
 		javaPackage = (IPackageFragment) javaCu.getParent();
-		part = UiTestUtil.openResourceNavigator();
+		part = IdeUiUtil.getNavigatorFromActivePage();
 		resourceMonitor = new ResourceInteractionMonitor();
 	}
 

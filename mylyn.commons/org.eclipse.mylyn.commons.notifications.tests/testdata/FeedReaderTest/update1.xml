@@ -24,7 +24,7 @@
 <link>http://eclipse.org/mylyn/new/</link>
 <pubDate>Thu, 24 Mar 2011 14:00:07 +0000</pubDate>
 <dc:creator>Steffen Pingel</dc:creator>
-<dc:subject>frameworkVersion=[0.0.0,4.0.0)</dc:subject>
+<dc:subject>frameworkVersion=[0.0.0,5.0.0)</dc:subject>
 <guid isPermaLink="false">20110527-0001</guid>
 <description>New connectors are now available. &lt;a href="#discovery"&gt;Show connectors&lt;/a&gt;.</description>
 </item>

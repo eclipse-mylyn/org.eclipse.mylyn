@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.discovery.ui;singleton:=true
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.equinox.p2.core;bundle-version="0.0.0",
  org.eclipse.equinox.p2.engine;bundle-version="0.0.0",
@@ -12,9 +12,9 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.equinox.p2.operations;bundle-version="0.0.0",
  org.eclipse.equinox.p2.repository;bundle-version="0.0.0",
  org.eclipse.equinox.p2.ui;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
- org.eclipse.mylyn.discovery.core;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="4.0.0",
+ org.eclipse.mylyn.discovery.core;bundle-version="4.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.forms;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.internal.discovery.ui;x-internal:=true,

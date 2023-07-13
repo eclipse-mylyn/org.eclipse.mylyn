@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2009, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt site verification resources
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
@@ -412,8 +413,10 @@ public class ConnectorDiscovery {
 		public VerifyUpdateSiteJob call() throws MalformedURLException, URISyntaxException {
 			URL baseUrl = new URL(url);
 			List<URI> locations = new ArrayList<URI>();
-			for (String location : new String[] { "content.jar", "content.xml", "compositeContent.jar", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-					"compositeContent.xml", "site.xml" }) { //$NON-NLS-1$ //$NON-NLS-2$
+			for (String location : new String[] { //
+					"compositeArtifacts.xml", //$NON-NLS-1$
+					"compositeContent.xml", //$NON-NLS-1$
+			}) {
 				locations.add(new URL(baseUrl, location).toURI());
 			}
 			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());

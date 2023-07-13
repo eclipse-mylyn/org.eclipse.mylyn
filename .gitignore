@@ -7,3 +7,4 @@
 **/.DS_Store
 **/org.eclipse*/bin
 **/org.eclipse*/target
+**/.polyglot.*

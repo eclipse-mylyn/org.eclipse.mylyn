@@ -1,0 +1,30 @@
+###############################################################################
+# Copyright (c) 2023 ArSysOp.
+# 
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0 which is available at
+# https://www.eclipse.org/legal/epl-2.0
+# 
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#      ArSysOp - initial API and implementation
+###############################################################################
+# This file is required to not consider "tbr" subfolder during tycho pomless build
+org.eclipse.mylyn.gerrit.core
+org.eclipse.mylyn.gerrit.core.tests
+org.eclipse.mylyn.gerrit.dashboard.core
+org.eclipse.mylyn.gerrit.dashboard.feature
+org.eclipse.mylyn.gerrit.dashboard.ui
+org.eclipse.mylyn.gerrit.feature
+org.eclipse.mylyn.gerrit.tests
+org.eclipse.mylyn.gerrit.ui
+org.eclipse.mylyn.gerrit.ui.tests
+org.eclipse.mylyn.reviews.core
+org.eclipse.mylyn.reviews.core.tests
+org.eclipse.mylyn.reviews.edit
+org.eclipse.mylyn.reviews.feature
+org.eclipse.mylyn.reviews.sdk.feature
+org.eclipse.mylyn.reviews.tests
+org.eclipse.mylyn.reviews.ui
+org.eclipse.mylyn.reviews.ui.tests

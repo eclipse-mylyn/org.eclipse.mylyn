@@ -85,7 +85,7 @@
          <overview
                screenshot="images/bugzilla-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.bugzilla"
-               url="http://eclipse.org/mylyn/">
+               url="https://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
 
@@ -107,7 +107,7 @@
          <overview
                screenshot="images/trac-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.trac"
-               url="http://eclipse.org/mylyn/">
+               url="https://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
 
@@ -149,7 +149,7 @@
          <overview
                screenshot="images/foglyn-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.foglyn"
-               url="http://www.foglyn.com/">
+               url="https://www.foglyn.com/">
          </overview>
       </connectorDescriptor>
 
@@ -171,7 +171,7 @@
          <overview
                screenshot="images/tuleap-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.tuleap"
-               url="http://www.tuleap.org">
+               url="https://www.tuleap.org">
          </overview>
       </connectorDescriptor>
       <connectorDescriptor
@@ -191,7 +191,7 @@
          <overview
                screenshot="images/gerrit-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.gerrit"
-               url="http://eclipse.org/mylyn/">
+               url="https://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
       <connectorDescriptor
@@ -212,7 +212,7 @@
          <overview
                screenshot="images/jenkins-screenshot-320x240.png"
                summary="%overview.summary.jenkins"
-               url="http://eclipse.org/mylyn">
+               url="https://eclipse.org/mylyn">
          </overview>
       </connectorDescriptor>
 	</extension>

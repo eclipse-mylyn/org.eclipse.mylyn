@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,14 +26,14 @@ import org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin;
 public class NewJenkinsServerWizard extends BuildServerWizard {
 
 	/**
-	 * Creates a new instance using the supplied build server model. It is assumed that this describes a Hudson server.
+	 * Creates a new instance using the supplied build server model. It is assumed that this describes a Jenkins server.
 	 */
 	public NewJenkinsServerWizard(IBuildServer model) {
 		super(model);
 	}
 
 	/**
-	 * Creates a new instance using the Hudson server connector.
+	 * Creates a new instance using the Jenkins server connector.
 	 */
 	public NewJenkinsServerWizard() {
 		super(BuildsUi.createServer(JenkinsCorePlugin.CONNECTOR_KIND));

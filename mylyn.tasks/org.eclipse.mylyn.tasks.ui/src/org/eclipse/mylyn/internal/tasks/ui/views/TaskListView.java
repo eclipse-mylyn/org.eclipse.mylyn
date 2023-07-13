@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2016 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -12,6 +12,7 @@
  *     Ken Sueda - improvements
  *     Eugene Kuleshov - improvements
  *     Frank Becker - improvements
+ *     Alexander Fedorov - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -964,7 +965,10 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			public void run() {
 				ITask task = TasksUi.getTaskActivityManager().getActiveTask();
 				if (task != null) {
-					getViewer().expandToLevel(task, 0);
+					TreeViewer viewer = getViewer();
+					if (!viewer.getControl().isDisposed()) {
+						viewer.expandToLevel(task, 0);
+					}
 				}
 			}
 		});
@@ -1054,8 +1058,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	public List<IRepositoryElement> getSelectedTaskContainers() {
 		List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
-		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
-			Object object = i.next();
+		for (Object object : ((IStructuredSelection) getViewer().getSelection())) {
 			if (object instanceof ITaskContainer) {
 				selectedElements.add((IRepositoryElement) object);
 			}

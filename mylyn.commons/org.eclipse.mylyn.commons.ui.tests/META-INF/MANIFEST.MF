@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Commons UI
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui.tests;singleton:=true
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Fragment-Host: org.eclipse.mylyn.commons.ui;bundle-version="3.26.0"
+Fragment-Host: org.eclipse.mylyn.commons.ui;bundle-version="4.0.0"
 Require-Bundle: org.junit;bundle-version="4.13.2",
  org.mockito.mockito-core;bundle-version="4.8.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.ui

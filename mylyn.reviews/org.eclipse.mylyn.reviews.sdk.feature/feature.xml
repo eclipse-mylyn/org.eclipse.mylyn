@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.mylyn.reviews.sdk.feature"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.reviews.core"
       license-feature="org.eclipse.license"
@@ -96,13 +96,6 @@
 
    <plugin
          id="com.google.gerrit.prettify"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.gson"
          download-size="0"
          install-size="0"
          version="0.0.0"

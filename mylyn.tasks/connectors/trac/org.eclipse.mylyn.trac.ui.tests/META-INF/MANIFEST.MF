@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Tests
 Bundle-SymbolicName: org.eclipse.mylyn.trac.ui.tests;singleton:=true
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.trac.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.equinox.security;bundle-version="0.0.0",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)",
  org.junit;bundle-version="4.8.2",
- org.mockito;bundle-version="[1.8.4,2.0.0)",
- org.objenesis;bundle-version="[1.0.0,2.0.0)"
+ org.mockito.mockito-core;bundle-version="5.3.1"
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true

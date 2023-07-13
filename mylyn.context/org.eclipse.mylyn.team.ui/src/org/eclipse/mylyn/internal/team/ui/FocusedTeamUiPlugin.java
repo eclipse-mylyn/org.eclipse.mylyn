@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -52,13 +51,6 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template"; //$NON-NLS-1$
 
 	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.key}: ${task.description}\n\nTask-Url: ${task.url}"; //$NON-NLS-1$
-
-	public static class FocusedTeamUiStartup implements IStartup {
-
-		public void earlyStartup() {
-			// ignore
-		}
-	}
 
 	public FocusedTeamUiPlugin() {
 		INSTANCE = this;

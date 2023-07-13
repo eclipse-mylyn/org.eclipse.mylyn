@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - adapt to SimRel 2023-06
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -23,7 +24,7 @@ import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
+import org.eclipse.ui.navigator.resources.ProjectExplorer;
 
 /**
  * @author Mik Kersten
@@ -46,7 +47,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected String taskId = this.getClass().getName();
 
-	protected ResourceNavigator navigator;
+	protected ProjectExplorer navigator;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -58,7 +59,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		context.reset();
 		manager.internalActivateContext(context);
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
-		navigator = (ResourceNavigator) UiTestUtil.openView(IdeUiUtil.ID_NAVIGATOR);
+		navigator = (ProjectExplorer) UiTestUtil.openView(IdeUiUtil.ID_NAVIGATOR);
 		assertNotNull(navigator);
 	}
 

@@ -17,9 +17,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
-    <groupId>org.eclipse.mylyn.tasks</groupId>
-    <version>3.26.0-SNAPSHOT</version>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn.parent</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.tasks.activity.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -29,10 +30,6 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

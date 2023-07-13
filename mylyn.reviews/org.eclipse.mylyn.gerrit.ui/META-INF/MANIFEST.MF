@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
-Bundle-Version: 3.26.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin
-Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
+Require-Bundle: com.google.guava;bundle-version="0.0.0",
  org.eclipse.compare;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
@@ -14,17 +14,17 @@ Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
  org.eclipse.jgit;bundle-version="0.0.0",
  org.eclipse.jface;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.net;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.ui;bundle-version="3.26.0",
- org.eclipse.mylyn.commons.workbench;bundle-version="3.26.0",
- org.eclipse.mylyn.gerrit.core;bundle-version="3.26.0",
- org.eclipse.mylyn.reviews.core;bundle-version="3.26.0",
- org.eclipse.mylyn.reviews.edit;bundle-version="3.26.0",
- org.eclipse.mylyn.reviews.ui;bundle-version="3.26.0",
- org.eclipse.mylyn.tasks.core;bundle-version="3.26.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.26.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.26.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.net;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.workbench;bundle-version="4.0.0",
+ org.eclipse.mylyn.gerrit.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.reviews.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.reviews.edit;bundle-version="4.0.0",
+ org.eclipse.mylyn.reviews.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.0.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.0.0",
  org.eclipse.team.core;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.editors;bundle-version="0.0.0",
@@ -32,7 +32,7 @@ Require-Bundle: com.google.guava;bundle-version="[21.0.0,22.0.0)",
  org.eclipse.ui.navigator;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,

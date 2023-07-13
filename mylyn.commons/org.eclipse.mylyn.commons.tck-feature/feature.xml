@@ -13,7 +13,7 @@
 <feature
       id="org.eclipse.mylyn.commons.tck"
       label="%featureName"
-      version="3.26.0.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.commons.core"
       license-feature="org.eclipse.license"
@@ -92,13 +92,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.mockito"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.objenesis"
          download-size="0"
          install-size="0"
@@ -107,6 +100,13 @@
 
    <plugin
          id="org.eclipse.jdt.annotation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.mockito.mockito-core"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -238,13 +238,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		section.setLayout(new GridLayout());
 		GridData sectionGridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		sectionGridData.widthHint = 80;
 		section.setLayoutData(sectionGridData);
 
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		sectionClient.setLayout(new GridLayout(2, false));
-		sectionClient.setLayoutData(new GridData());
+		GridData sectionClientGridData = new GridData();
+		sectionClient.setLayoutData(sectionClientGridData);
 
 		ImageHyperlink filterImage = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
 		filterImage.setImage(CommonImages.getImage(CommonImages.FILTER));
@@ -258,7 +258,7 @@ public class ContextEditorFormPage extends FormPage {
 			}
 
 			public void linkEntered(HyperlinkEvent e) {
-				// ignore	
+				// ignore
 			}
 
 			public void linkExited(HyperlinkEvent e) {
@@ -343,6 +343,8 @@ public class ContextEditorFormPage extends FormPage {
 				ClearContextHandler.run(task);
 			}
 		});
+
+		sectionGridData.widthHint = section.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
 		section.setExpanded(true);
 	}

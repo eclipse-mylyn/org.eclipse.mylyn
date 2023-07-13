@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.bugzilla.ide" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter comment="IHyperlinkPresenter change from 2023/12/02" id="930086955">
+            <message_arguments>
+                <message_argument value="3.26.1"/>
+                <message_argument value="3.26.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

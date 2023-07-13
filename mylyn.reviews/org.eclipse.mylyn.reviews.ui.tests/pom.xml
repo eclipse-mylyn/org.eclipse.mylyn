@@ -18,9 +18,10 @@
     xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn.reviews.parent</artifactId>
-    <groupId>org.eclipse.mylyn.reviews</groupId>
-    <version>3.26.0-SNAPSHOT</version>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn.parent</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.reviews.ui.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -37,10 +38,6 @@
           <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.suite}</testClass>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
