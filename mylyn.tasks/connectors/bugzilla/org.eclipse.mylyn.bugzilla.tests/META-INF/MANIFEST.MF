@@ -32,5 +32,6 @@ Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.core;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.support;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.ui;x-internal:=true
-Import-Package: org.apache.xmlrpc;version="0.0.0"
+Import-Package: org.apache.commons.httpclient;version="3.1.0",
+ org.apache.xmlrpc;version="0.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
