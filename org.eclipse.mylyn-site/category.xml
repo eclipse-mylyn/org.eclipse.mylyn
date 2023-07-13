@@ -170,6 +170,9 @@
    <bundle id="javax.activation" version="2.0.0.v20221203-1659"/>
    <bundle id="javax.xml.stream"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <bundle id="org.apache.commons.codec"/>
+   <bundle id="org.apache.commons.httpclient"/>
+   <bundle id="org.apache.commons.lang"/>
    <bundle id="org.apache.commons.logging"/>
    <bundle id="org.apache.lucene.analysis-common"/>
    <bundle id="org.apache.lucene.core"/>

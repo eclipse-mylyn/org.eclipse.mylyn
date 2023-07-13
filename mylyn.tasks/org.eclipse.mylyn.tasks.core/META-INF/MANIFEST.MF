@@ -28,4 +28,5 @@ Export-Package: org.eclipse.mylyn.internal.tasks.core;x-friends:="org.eclipse.my
  org.eclipse.mylyn.tasks.core.data,
  org.eclipse.mylyn.tasks.core.spi,
  org.eclipse.mylyn.tasks.core.sync
+Import-Package: org.apache.commons.httpclient.methods.multipart;version="3.1.0"
 Bundle-Localization: plugin

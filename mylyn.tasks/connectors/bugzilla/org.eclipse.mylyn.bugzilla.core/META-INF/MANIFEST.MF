@@ -15,6 +15,12 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.bugzilla.core;x-friends:="org.eclipse.mylyn.bugzilla.ide,org.eclipse.mylyn.bugzilla.ui",
  org.eclipse.mylyn.internal.bugzilla.core.service;x-internal:=true
-Import-Package: org.apache.xmlrpc
+Import-Package: org.apache.commons.httpclient;version="3.1.0",
+ org.apache.commons.httpclient.methods;version="3.1.0",
+ org.apache.commons.httpclient.methods.multipart;version="3.1.0",
+ org.apache.commons.httpclient.params;version="3.1.0",
+ org.apache.commons.httpclient.util;version="3.1.0",
+ org.apache.commons.lang;version="2.6.0",
+ org.apache.xmlrpc
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
