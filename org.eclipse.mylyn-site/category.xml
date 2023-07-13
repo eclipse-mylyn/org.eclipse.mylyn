@@ -149,12 +149,6 @@
    <feature id="org.eclipse.mylyn.commons.repositories.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.commons.repositories.http.feature">
-      <category name="org.eclipse.mylyn.framework.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.commons.repositories.http.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
 
    <feature id="org.eclipse.mylyn.monitor.feature">
       <category name="org.eclipse.mylyn.framework.category"/>
