@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Steffen Pingel
+ * @author Steffen Pingel Need to migrate old Hudson repository to Jenkins
+ * @author George Lindholm
  */
 @Deprecated
 public class HudsonConfiguration implements Serializable {
