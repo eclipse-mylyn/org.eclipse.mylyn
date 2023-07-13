@@ -36,20 +36,41 @@
    </url>
 
    <requires>
-      <import plugin="org.apache.commons.codec" version="1.3.0" match="compatible"/>
-      <import plugin="org.apache.commons.lang" version="2.3.0" match="compatible"/>
-      <import plugin="org.apache.commons.httpclient" version="3.1.0" match="compatible"/>
-      <import plugin="org.apache.lucene.analysis-common" version="9.5.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.lucene.core" version="9.5.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.lucene.queryparser" version="9.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.net" version="4.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons.feature" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.identity" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.notifications" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.discovery" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.monitor" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.identity.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.notifications.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.discovery.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.monitor.feature" version="4.0.0" match="compatible"/>
    </requires>
+
+   <plugin
+         id="org.eclipse.mylyn.help.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.activity.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.activity.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.bugs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.core"

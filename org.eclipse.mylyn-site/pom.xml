@@ -92,7 +92,7 @@
                     -build-url ${org.eclipse.justj.p2.manager.build.url}
                     -root ${project.build.directory}/mylyn-sync
                     -relative ${org.eclipse.justj.p2.manager.relative}
-                    -version-iu org.eclipse.mylyn.sdk_feature.
+                    -version-iu org.eclipse.mylyn.tasks.feature.
                     -iu-filter-pattern org.eclipse.mylyn.*|org.eclipse.egit.mylyn.*|org.eclipse.egit.github.*|org.eclipse.cdt.mylyn|org.eclipse.cdt.mylyn.*
                     -excluded-categories-pattern .*\.Default
                     -commit https://github.com/eclipse-mylyn/org.eclipse.mylyn/commit/${git.commit}

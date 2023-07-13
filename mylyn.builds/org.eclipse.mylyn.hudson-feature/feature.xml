@@ -13,13 +13,13 @@
          ArSysOp - ongoing support
  -->
 <feature
-      id="org.eclipse.mylyn.discovery.feature"
+      id="org.eclipse.mylyn.jenkins.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.commons.core"
+      plugin="org.eclipse.mylyn.builds.core"
       license-feature="org.eclipse.license"
-      license-feature-version="2.0.2">
+      license-feature-version="0.0.0">
 
    <description url="https://eclipse.org/mylyn">
       %description
@@ -33,15 +33,20 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.mylyn.builds.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.0.0" match="compatible"/>
+   </requires>
+
    <plugin
-         id="org.eclipse.mylyn.discovery.core"
+         id="org.eclipse.mylyn.hudson.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.discovery.ui"
+         id="org.eclipse.mylyn.hudson.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

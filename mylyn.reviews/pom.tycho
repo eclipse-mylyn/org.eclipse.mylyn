@@ -24,7 +24,6 @@ org.eclipse.mylyn.reviews.core
 org.eclipse.mylyn.reviews.core.tests
 org.eclipse.mylyn.reviews.edit
 org.eclipse.mylyn.reviews.feature
-org.eclipse.mylyn.reviews.sdk.feature
 org.eclipse.mylyn.reviews.tests
 org.eclipse.mylyn.reviews.ui
 org.eclipse.mylyn.reviews.ui.tests
