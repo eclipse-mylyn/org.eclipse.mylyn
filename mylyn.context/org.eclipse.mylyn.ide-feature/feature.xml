@@ -36,7 +36,7 @@
    <requires>
       <import feature="org.eclipse.mylyn.context.feature" version="4.0.0" match="equivalent"/>
       <import feature="org.eclipse.mylyn.team.feature" version="4.0.0" match="equivalent"/>
-      <import feature="org.eclipse.mylyn.tasks.ide.feature" version="4.0.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.tasks.feature" version="4.0.0" match="equivalent"/>
    </requires>
 
    <plugin
