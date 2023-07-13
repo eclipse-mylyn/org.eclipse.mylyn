@@ -42,6 +42,19 @@
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
 
+   <feature id="org.eclipse.mylyn.gerrit.feature">
+      <category name="org.eclipse.mylyn.integrations.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gerrit.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gerrit.dashboard.feature">
+      <category name="org.eclipse.mylyn.integrations.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gerrit.dashboard.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+
    <feature id="org.eclipse.mylyn.git.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
