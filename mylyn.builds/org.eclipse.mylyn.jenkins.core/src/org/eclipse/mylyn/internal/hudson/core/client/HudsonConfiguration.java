@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Steffen Pingel Need to migrate old Hudson repository to Jenkins
- * @author George Lindholm
+ * @author Steffen Pingel
  */
 /**
  * Needed to accept existing Hudson repositories so they can be converted to Jenkins repositories. Can probably be
