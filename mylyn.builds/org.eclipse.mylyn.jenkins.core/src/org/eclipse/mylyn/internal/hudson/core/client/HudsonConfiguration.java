@@ -19,7 +19,13 @@ import java.util.Map;
 /**
  * @author Steffen Pingel
  */
-@Deprecated
+/**
+ * Needed to accept existing Hudson repositories so they can be converted to Jenkins repositories. Can probably be
+ * deleted around 2024-09 once the 4.0.0 release has been adopted "globally"
+ *
+ * @author George Lindholm
+ */
+@Deprecated(forRemoval = true)
 public class HudsonConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 1L;
