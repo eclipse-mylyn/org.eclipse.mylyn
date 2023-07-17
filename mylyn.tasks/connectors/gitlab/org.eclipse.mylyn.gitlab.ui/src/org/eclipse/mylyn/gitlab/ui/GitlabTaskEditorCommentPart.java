@@ -2,22 +2,32 @@ package org.eclipse.mylyn.gitlab.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
+import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
+import org.eclipse.mylyn.gitlab.core.GitlabRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractReplyToCommentAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CommentGroupStrategy.CommentGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.UserAttributeEditor;
-import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -26,7 +36,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -38,6 +47,92 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
+    private class ReplyToCommentAction extends AbstractReplyToCommentAction {
+	private final AbstractTaskEditorPage editor;
+
+	private final CommentViewer commentViewerGitlab;
+
+	public ReplyToCommentAction(CommentViewer commentViewer) {
+	    super(GitlabTaskEditorCommentPart.this.getTaskEditorPage(), commentViewer.getTaskComment());
+	    this.editor = GitlabTaskEditorCommentPart.this.getTaskEditorPage();
+	    this.commentViewerGitlab = commentViewer;
+	}
+
+	@Override
+	protected String getReplyText() {
+	    return commentViewerGitlab.getReplyToText();
+	}
+
+	protected CommentViewer getCommentViewer() {
+	    return commentViewerGitlab;
+	}
+
+	@Override
+	public void run() {
+	    reply(editor, getCommentViewer().getTaskComment(), getReplyText());
+	}
+
+	public void dispose() {
+	}
+
+	public static void reply(AbstractTaskEditorPage editor, ITaskComment taskComment, String text) {
+	    AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(editor.getConnectorKind());
+	    String reference = connectorUi.getReplyText(editor.getTaskRepository(), editor.getTask(), taskComment,
+		    false);
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(reference);
+	    sb.append("\n"); //$NON-NLS-1$
+	    if (text != null) {
+		CommentQuoter quoter = new CommentQuoter();
+		sb.append(quoter.quote(text));
+	    }
+	    AbstractTaskEditorPart newCommentPart = editor
+		    .getPart(org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage.ID_PART_NEW_COMMENT);
+	    if (newCommentPart instanceof TaskEditorRichTextPart) {
+		TaskAttribute newCommentAttrib = ((TaskEditorRichTextPart) newCommentPart).getAttribute();
+		TaskAttribute newCommentDiscussion = newCommentAttrib.getAttribute("discussions");
+		TaskAttribute newCommentNoteable = newCommentAttrib.getAttribute("noteable_id");
+		TaskAttribute newCommentNoteID = newCommentAttrib.getAttribute("note_id");
+		TaskAttribute commentDiscussion = taskComment.getTaskAttribute().getAttribute("discussions");
+		TaskAttribute commentNoteable = taskComment.getTaskAttribute().getAttribute("noteable_id");
+		TaskAttribute commentNoteID = taskComment.getTaskAttribute().getAttribute("note_id");
+		if (newCommentDiscussion == null) {
+		    newCommentDiscussion = newCommentAttrib.createAttribute("discussions");
+		}
+		if (newCommentNoteable == null) {
+		    newCommentNoteable = newCommentAttrib.createAttribute("noteable_id");
+		}
+		if (newCommentNoteID == null) {
+		    newCommentNoteID = newCommentAttrib.createAttribute("note_id");
+		}
+		newCommentDiscussion.setValue(commentDiscussion.getValue());
+		newCommentNoteable.setValue(commentNoteable.getValue());
+		newCommentNoteID.setValue(commentNoteID.getValue());
+	    }
+	    editor.appendTextToNewComment(sb.toString());
+	}
+
+    }
+
+    private class ReplyToCommentActionWithMenu extends ReplyToCommentAction implements IMenuCreator {
+
+	public ReplyToCommentActionWithMenu(CommentViewer commentViewer) {
+	    super(commentViewer);
+	    setMenuCreator(this);
+	}
+
+	public Menu getMenu(Control parent) {
+	    setCurrentViewer(getCommentViewer());
+	    getSelectionProvider().setSelection(new StructuredSelection(getCurrentViewer().getTaskComment()));
+	    return getCommentMenu();
+	}
+
+	public Menu getMenu(Menu parent) {
+	    getSelectionProvider().setSelection(new StructuredSelection(getCommentViewer().getTaskComment()));
+	    return getCommentMenu();
+	}
+
+    }
 
     public class GitlabCommentGroupViewer extends CommentGroupViewer {
 
@@ -118,12 +213,12 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	    if (expanded && composite.getData(KEY_EDITOR) == null) {
 		Menu mm0 = composite.getMenu();
 		commentViewer = toolkit.createComposite(composite);
-		commentViewer.setLayout(new GridLayout(1, false));
+		commentViewer.setLayout(new GridLayout(2, false));
 		commentViewer.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
 		// Create user image viewer
-		boolean showAvatar = Boolean.parseBoolean(getModel().getTaskRepository()
-			.getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT));
+		boolean showAvatar = Boolean
+			.parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.AVANTAR));
 		if (showAvatar) {
 		    String commentAuthor = getTaskData().getAttributeMapper().mapToRepositoryKey(commentAttribute,
 			    TaskAttribute.COMMENT_AUTHOR);
@@ -137,8 +232,15 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 
 			UserAttributeEditor userImage = new UserAttributeEditor(getModel(), userImageAttribute, 30);
 			userImage.createControl(userImageComposite, toolkit);
+			TaskAttribute avatar_url = userImageAttribute.getAttribute("avatar_url");
 
-			userImage.refresh();
+			if (avatar_url != null) {
+			    GitlabRepositoryConnector gitlabConnector = (GitlabRepositoryConnector) TasksUi
+				    .getRepositoryManager()
+				    .getRepositoryConnector(userImageAttribute.getTaskData().getConnectorKind());
+			    byte[] avatarBytes = gitlabConnector.getAvatarData(avatar_url.getValue());
+			    userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, ""));
+			}
 		    }
 		}
 
@@ -170,6 +272,9 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 			    GitlabCommentViewer replyCommentViewer = new GitlabCommentViewer(taskAttributeReply);
 			    subViewer.add(replyCommentViewer);
 			    replyCommentViewer.createControl(commentViewer, toolkit);
+			    GridData subViewerGridData = new GridData(GridData.BEGINNING);
+			    subViewerGridData.horizontalSpan = 2;
+			    replyCommentViewer.getControl().setLayoutData(subViewerGridData);
 			}
 		    }
 		    getTaskEditorPage().getAttributeEditorToolkit().adapt(commentTextEditor);
@@ -285,6 +390,13 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	    }
 	}
 	return commentGroupViewers;
+    }
+
+    protected void addActionsToToolbarButton(ToolBarManager toolBarManager, TaskComment taskComment,
+	    CommentViewer commentViewer) {
+	ReplyToCommentAction replyAction = new ReplyToCommentActionWithMenu(commentViewer);
+	replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
+	toolBarManager.add(replyAction);
     }
 
 }

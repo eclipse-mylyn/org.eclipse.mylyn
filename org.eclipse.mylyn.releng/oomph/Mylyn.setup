@@ -270,6 +270,13 @@
             relativePathPattern="mylyn.tasks/connectors/bugzilla-rest/.*"/>
       </workingSet>
       <workingSet
+          name="Gitlab Connector">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.tasks/connectors/gitlab/.*"/>
+      </workingSet>
+      <workingSet
           name="Context">
         <predicate
             xsi:type="predicates:AndPredicate">

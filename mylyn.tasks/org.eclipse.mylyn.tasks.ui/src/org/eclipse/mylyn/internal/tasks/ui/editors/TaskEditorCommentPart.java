@@ -586,14 +586,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		public Menu getMenu(Control parent) {
-			currentViewer = getCommentViewer();
-			selectionProvider.setSelection(new StructuredSelection(currentViewer.getTaskComment()));
-			return commentMenu;
+			setCurrentViewer(getCommentViewer());
+			selectionProvider.setSelection(new StructuredSelection(getCurrentViewer().getTaskComment()));
+			return getCommentMenu();
 		}
 
 		public Menu getMenu(Menu parent) {
 			selectionProvider.setSelection(new StructuredSelection(getCommentViewer().getTaskComment()));
-			return commentMenu;
+			return getCommentMenu();
 		}
 
 	}
@@ -640,6 +640,22 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		};
 		setPartName(Messages.TaskEditorCommentPart_Comments);
+	}
+
+	public SelectionProviderAdapter getSelectionProvider() {
+		return selectionProvider;
+	}
+
+	public Menu getCommentMenu() {
+		return commentMenu;
+	}
+
+	public CommentViewer getCurrentViewer() {
+		return currentViewer;
+	}
+
+	public void setCurrentViewer(CommentViewer currentViewer) {
+		this.currentViewer = currentViewer;
 	}
 
 	protected void addActionsToToolbarButton(ToolBarManager toolBarManager, TaskComment taskComment,
@@ -696,14 +712,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// get comment and add reply action as first item in the menu
 				ISelection selection = selectionProvider.getSelection();
 				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					ReplyToCommentAction replyAction = new ReplyToCommentAction(currentViewer);
+					ReplyToCommentAction replyAction = new ReplyToCommentAction(getCurrentViewer());
 					manager.add(replyAction);
 				}
 				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
 				actionGroup.fillContextMenu(manager);
 
-				if (currentViewer != null && currentViewer.getEditor() instanceof RichTextAttributeEditor) {
-					RichTextAttributeEditor editor = (RichTextAttributeEditor) currentViewer.getEditor();
+				if (getCurrentViewer() != null && getCurrentViewer().getEditor() instanceof RichTextAttributeEditor) {
+					RichTextAttributeEditor editor = (RichTextAttributeEditor) getCurrentViewer().getEditor();
 					if (editor.getViewSourceAction().isEnabled()) {
 						manager.add(new Separator("planning")); //$NON-NLS-1$
 						manager.add(editor.getViewSourceAction());

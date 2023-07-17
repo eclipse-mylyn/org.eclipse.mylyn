@@ -27,6 +27,7 @@ public class GitlabCoreActivator extends AbstractUIPlugin {
 	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gitlab";
 	public static final String GROUPS = "gitlab.groups";
 	public static final String PROJECTS = "gitlab.projects";
+	public static final String AVANTAR = "gitlab.avantar";
 	public static final String API_VERSION = "/api/v4";
 
 	// The shared instance

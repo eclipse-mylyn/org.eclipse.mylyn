@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.commons.workbench;bundle-version="4.0.0",
  org.eclipse.mylyn.commons.ui;bundle-version="4.0.0",
  org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.identity.core;bundle-version="4.0.0",
  org.eclipse.jdt.annotation
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.mylyn.gitlab.ui
