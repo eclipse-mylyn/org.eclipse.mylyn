@@ -169,26 +169,32 @@
    <bundle id="javax.activation" version="1.2.2.v20221203-1659"/>
    <bundle id="javax.activation" version="2.0.0.v20221203-1659"/>
    <bundle id="javax.xml.stream"/>
-   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
-   <bundle id="org.apache.commons.logging"/>
+   <bundle id="org.apache.ant"/>
+   <bundle id="org.apache.commons.codec"/>
+   <bundle id="org.apache.commons.httpclient"/>
+   <bundle id="org.apache.commons.io"/>
+   <bundle id="org.apache.commons.lang"/>
+   <bundle id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+   <bundle id="org.apache.httpcomponents.httpclient"/>
+   <bundle id="org.apache.httpcomponents.httpcore"/>
    <bundle id="org.apache.lucene.analysis-common"/>
    <bundle id="org.apache.lucene.core"/>
    <bundle id="org.apache.lucene.queries"/>
    <bundle id="org.apache.lucene.queryparser"/>
    <bundle id="org.apache.lucene.sandbox"/>
+   <bundle id="org.apache.xerces"/>
    <bundle id="org.apache.xml.resolver"/>
    <bundle id="org.apache.xmlrpc.client"/>
    <bundle id="org.apache.xmlrpc.common"/>
    <bundle id="org.apache.xmlrpc.server"/>
-   <bundle id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-   <bundle id="com.google.guava"/>
-   <bundle id="com.google.guava.failureaccess"/>
-   <bundle id="com.google.gson"/>
-   <bundle id="org.apache.commons.httpclient"/>
    <bundle id="org.apache.ws.commons.util"/>
+   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="com.google.gerrit.common"/>
    <bundle id="com.google.gerrit.prettify"/>
    <bundle id="com.google.gerrit.reviewdb"/>
+   <bundle id="com.google.gson"/>
+   <bundle id="com.google.guava"/>
+   <bundle id="com.google.guava.failureaccess"/>
    <bundle id="com.google.gwt.servlet"/>
    <bundle id="com.google.gwtjsonrpc"/>
    <bundle id="com.google.gwtorm"/>
