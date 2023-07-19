@@ -12,15 +12,13 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -49,6 +47,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import junit.framework.TestCase;
 
 @SuppressWarnings("restriction")
 public class GerritTaskEditorPageTest extends TestCase {

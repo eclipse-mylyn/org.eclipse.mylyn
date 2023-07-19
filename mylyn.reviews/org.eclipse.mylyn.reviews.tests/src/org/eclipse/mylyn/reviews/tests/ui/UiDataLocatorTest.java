@@ -12,18 +12,18 @@
 
 package org.eclipse.mylyn.reviews.tests.ui;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
 import org.eclipse.mylyn.reviews.ui.spi.factories.ReviewsUiDataLocator;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Miles Parker

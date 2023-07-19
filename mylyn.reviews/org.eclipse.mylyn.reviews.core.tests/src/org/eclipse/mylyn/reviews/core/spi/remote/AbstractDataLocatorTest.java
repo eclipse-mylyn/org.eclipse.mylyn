@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 GitHub Inc. and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     GitHub Inc. - initial API and implementation
@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
 

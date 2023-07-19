@@ -13,13 +13,11 @@
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
@@ -38,6 +36,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
+
+import junit.framework.TestCase;
 
 public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
