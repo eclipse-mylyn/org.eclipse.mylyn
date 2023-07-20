@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2014 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -509,7 +509,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
 							if (updateConfig[0] == null) {
-								updateConfig[0] = new Boolean(true);
+								updateConfig[0] = Boolean.valueOf(true);
 							}
 						} else if (collectionException[0] == null) {
 							collectionException[0] = e;
