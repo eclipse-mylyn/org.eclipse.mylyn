@@ -63,5 +63,8 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-intern
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Import-Package: com.ibm.icu.text,
+ org.apache.commons.httpclient;version="3.1.0",
+ org.apache.commons.lang;version="2.6.0",
+ org.apache.commons.lang.reflect;version="2.6.0",
  org.apache.commons.logging;version="[1.0.4,2.0.0)"
 Service-Component: OSGI-INF/org.eclipse.mylyn.internal.tasks.ui.TaskUiStartup.xml

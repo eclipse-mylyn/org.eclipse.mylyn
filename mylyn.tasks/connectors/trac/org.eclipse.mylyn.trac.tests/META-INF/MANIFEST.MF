@@ -3,9 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.trac.tests;singleton:=true
 Bundle-Version: 4.0.0.qualifier
-Require-Bundle: org.apache.commons.lang;bundle-version="2.4.0",
- org.apache.ws.commons.util;bundle-version="1.0.0",
- org.eclipse.core.runtime;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
  org.eclipse.mylyn.commons.net;bundle-version="4.0.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="4.0.0",
@@ -25,7 +23,9 @@ Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.core;x-internal:=true,
  org.eclipse.mylyn.trac.tests.support;x-internal:=true,
  org.eclipse.mylyn.trac.tests.ui;x-internal:=true
-Import-Package: org.apache.xmlrpc;version="0.0.0",
+Import-Package: org.apache.commons.httpclient;version="3.1.0",
+ org.apache.commons.lang;version="2.6.0",
+ org.apache.xmlrpc;version="0.0.0",
  org.apache.xmlrpc.client,
  org.apache.xmlrpc.common
 Bundle-RequiredExecutionEnvironment: JavaSE-17

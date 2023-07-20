@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.reviews.spi.edit.remote;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,8 +26,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +44,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Miles Parker

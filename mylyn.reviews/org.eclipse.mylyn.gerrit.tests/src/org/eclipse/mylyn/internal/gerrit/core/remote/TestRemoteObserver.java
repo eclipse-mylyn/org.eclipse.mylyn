@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;

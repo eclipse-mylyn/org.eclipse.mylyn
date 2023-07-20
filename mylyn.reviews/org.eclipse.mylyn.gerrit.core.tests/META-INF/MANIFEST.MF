@@ -16,4 +16,6 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.egit;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.remote;x-internal:=true
-Import-Package: com.google.gerrit.reviewdb;version="2.1.5"
+Import-Package: com.google.gerrit.reviewdb;version="2.1.5",
+ org.apache.commons.httpclient;version="3.1.0",
+ org.apache.commons.httpclient.methods;version="3.1.0"
