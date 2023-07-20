@@ -42,7 +42,7 @@ public class AllLocalTests {
 		//FIXME: AF: remove? we already did these tests during component build
 //		suite.addTest(AllBugzillaTests.suite(configuration));
 //		suite.addTest(AllTracTests.suite(configuration));
-//		suite.addTest(AllHudsonTests.suite(configuration));
+//		suite.addTest(AllJenkinsTests.suite(configuration));
 //		suite.addTest(AllGerritTests.suite(configuration));
 		//FIXME: AF: enable tests back
 		//https://github.com/eclipse-mylyn/.github/issues/3

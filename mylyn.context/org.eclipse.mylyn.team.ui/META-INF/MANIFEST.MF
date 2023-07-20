@@ -27,7 +27,6 @@ Require-Bundle: org.eclipse.compare;bundle-version="0.0.0",
  org.eclipse.e4.core.contexts;bundle-version="[1.12.0,2.0.0)",
  org.eclipse.e4.ui.workbench;bundle-version="[1.15.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/org.eclipse.mylyn.internal.team.ui.FocusedTeamUiStartup.xml
 Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.history;x-internal:=true,
@@ -38,3 +37,4 @@ Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
+Service-Component: OSGI-INF/org.eclipse.mylyn.internal.team.ui.FocusedTeamUiStartup.xml
