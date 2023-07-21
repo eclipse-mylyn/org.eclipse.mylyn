@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -271,7 +271,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		}
 		Long daysActivity = noTaskActiveMap.get(hourOfDay);
 		if (daysActivity == null) {
-			daysActivity = Long.valueOf(0);
+			daysActivity = 0L;
 		}
 
 		daysActivity = daysActivity.longValue() + attentionSpan;

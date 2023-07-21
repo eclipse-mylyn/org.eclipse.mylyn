@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,14 +35,14 @@ import org.eclipse.mylyn.reviews.core.model.IApprovalType;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ApprovalValueMap#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IApprovalType, Integer> {
 	/**
 	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedKey()
 	 * @generated
 	 * @ordered
@@ -52,17 +52,17 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	/**
 	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Integer VALUE_EDEFAULT = Integer.valueOf(0);
+	protected static final Integer VALUE_EDEFAULT = 0;
 
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
@@ -71,7 +71,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ApprovalValueMap() {
@@ -80,7 +80,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IApprovalType getTypedKey() {
@@ -109,7 +109,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IApprovalType basicGetTypedKey() {
@@ -118,7 +118,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedKey(IApprovalType newKey) {
@@ -131,7 +131,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Integer getTypedValue() {
@@ -140,7 +140,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedValue(Integer newValue) {
@@ -154,7 +154,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -173,7 +173,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -191,7 +191,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -209,7 +209,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -243,14 +243,14 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected int hash = -1;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public int getHash() {
@@ -263,7 +263,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setHash(int hash) {
@@ -272,7 +272,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IApprovalType getKey() {
@@ -281,7 +281,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setKey(IApprovalType key) {
@@ -290,7 +290,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Integer getValue() {
@@ -299,7 +299,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Integer setValue(Integer value) {
@@ -310,7 +310,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")

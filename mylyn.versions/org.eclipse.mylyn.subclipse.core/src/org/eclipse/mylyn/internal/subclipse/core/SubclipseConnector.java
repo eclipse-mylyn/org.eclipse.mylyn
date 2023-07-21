@@ -4,7 +4,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Contributors:
  *   Alvaro Sanchez-Leon (Ericsson AB) - Initial API and Implementation
  *   Sebastien Dubois (Ericsson AB) - Improved getArtifact method to resolve remote resources versions
@@ -72,7 +72,7 @@ public class SubclipseConnector extends ScmConnector {
 
 	private final Map<IProject, SubclipseRepository> mapProjToRepo = new HashMap<IProject, SubclipseRepository>();
 
-	private Integer threadBookNum = Integer.valueOf(0);
+	private Integer threadBookNum = 0;
 
 	/**
 	 * allow mapping from local url project folders to works space project
@@ -234,7 +234,7 @@ public class SubclipseConnector extends ScmConnector {
 
 		SVNRevision firstRevision = new SVNRevision.Number(1L);
 
-		//TODO: retrieving all revisions per project repository can take really long time, 
+		//TODO: retrieving all revisions per project repository can take really long time,
 		//need to discuss API to narrow down the list e.g. return an iterator
 		//For the time being we limit the possibility to review commits within the last 20
 		ISVNLogMessage[] messages = resolveChangeSets(repo, repo.getProjectSVNFolder(), SVNRevision.HEAD, firstRevision,
@@ -279,7 +279,7 @@ public class SubclipseConnector extends ScmConnector {
 				niterator.setRunnableThread(thread);
 
 				try {
-					//monitor cancellation to make sure we unblock 
+					//monitor cancellation to make sure we unblock
 					//thread to be able to process the cancellation flag
 					while (thread.isAlive()) {
 						if (monitor.isCanceled()) {
@@ -289,7 +289,7 @@ public class SubclipseConnector extends ScmConnector {
 
 						//Ugly. periodic poll for user cancellation
 						//TODO: Discuss the definition of mylyn versions implementation of an IProgressMonitor
-						//with an instance variable thread 
+						//with an instance variable thread
 						//and Interrupt upon cancellation. Other options?
 						Thread.sleep(100);
 					}
@@ -334,7 +334,7 @@ public class SubclipseConnector extends ScmConnector {
 
 	@Override
 	public List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException {
-		//We consider one repository per project in the workspace in order to limit the resolution of 
+		//We consider one repository per project in the workspace in order to limit the resolution of
 		//changesets to the ones associated to the selected project
 		if (mapSvnFolderToProject.size() == 0) {
 			resolveSubclipseProjects();
@@ -379,7 +379,7 @@ public class SubclipseConnector extends ScmConnector {
 				IFile ifile = ScmResourceUtils.getWorkSpaceFile(absURI, project);
 				if (ifile != null) {
 					//Artifact found in the work space
-					//Assign the eclipse project name and project relative path to the Artifact 
+					//Assign the eclipse project name and project relative path to the Artifact
 					artifact.setProjectName(project.getName());
 					artifact.setProjectRelativePath(ifile.getProjectRelativePath().toPortableString());
 					break;
@@ -405,7 +405,7 @@ public class SubclipseConnector extends ScmConnector {
 		try {
 			eRevision = SVNRevision.getRevision("1"); //$NON-NLS-1$
 		} catch (ParseException e) {
-			//Should not happen for a constant value 
+			//Should not happen for a constant value
 			e.printStackTrace();
 		}
 
@@ -569,7 +569,7 @@ public class SubclipseConnector extends ScmConnector {
 				}
 
 				try {
-					//Resolve the changes for the max chunk size 
+					//Resolve the changes for the max chunk size
 					msgList = resolveChangeSets(repo, repo.getProjectSVNFolder(), startRevision, earliestRevision, true,
 							CHUNKSIZE);
 
