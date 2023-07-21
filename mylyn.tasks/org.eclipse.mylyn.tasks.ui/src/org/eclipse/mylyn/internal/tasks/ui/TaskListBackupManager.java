@@ -210,7 +210,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					continue;
 				}
 				if (date != null && date.getTime() > 0) {
-					filesMap.put(new Long(date.getTime()), file);
+					filesMap.put(Long.valueOf(date.getTime()), file);
 				}
 			}
 		}

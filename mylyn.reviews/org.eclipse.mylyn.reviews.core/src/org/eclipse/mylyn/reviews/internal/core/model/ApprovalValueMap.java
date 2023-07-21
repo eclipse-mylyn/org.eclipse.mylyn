@@ -57,7 +57,7 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Integer VALUE_EDEFAULT = new Integer(0);
+	protected static final Integer VALUE_EDEFAULT = Integer.valueOf(0);
 
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--

@@ -99,8 +99,8 @@ public class ReviewTableSorter extends ViewerSorter {
 				val1 = task1.getAttribute(GerritTask.REVIEW_STATE);
 				val2 = task2.getAttribute(GerritTask.REVIEW_STATE);
 				if (val1 != null && val2 != null) {
-					Integer v1 = new Integer(val1);
-					Integer v2 = new Integer(val2);
+					Integer v1 = Integer.valueOf(val1);
+					Integer v2 = Integer.valueOf(val2);
 					result = v2 - v1;
 				}
 				break;
@@ -108,8 +108,8 @@ public class ReviewTableSorter extends ViewerSorter {
 				val1 = task1.getAttribute(GerritTask.VERIFY_STATE);
 				val2 = task2.getAttribute(GerritTask.VERIFY_STATE);
 				if (val1 != null && val2 != null) {
-					Integer v1 = new Integer(val1);
-					Integer v2 = new Integer(val2);
+					Integer v1 = Integer.valueOf(val1);
+					Integer v2 = Integer.valueOf(val2);
 					result = v2 - v1;
 				}
 				break;

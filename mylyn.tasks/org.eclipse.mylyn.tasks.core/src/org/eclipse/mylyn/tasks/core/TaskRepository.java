@@ -222,7 +222,7 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
 		// use platform proxy by default (headless will need to set this to false)
-		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
+		this.setProperty(TaskRepository.PROXY_USEDEFAULT, Boolean.valueOf(true).toString());
 	}
 
 	/**

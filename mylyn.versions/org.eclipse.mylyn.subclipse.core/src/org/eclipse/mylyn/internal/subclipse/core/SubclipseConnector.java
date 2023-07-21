@@ -72,7 +72,7 @@ public class SubclipseConnector extends ScmConnector {
 
 	private final Map<IProject, SubclipseRepository> mapProjToRepo = new HashMap<IProject, SubclipseRepository>();
 
-	private Integer threadBookNum = new Integer(0);
+	private Integer threadBookNum = Integer.valueOf(0);
 
 	/**
 	 * allow mapping from local url project folders to works space project

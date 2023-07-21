@@ -300,7 +300,7 @@ public class InteractionEvent {
 			hashCode += delta.hashCode();
 		}
 		// TODO: could this lose precision?
-		hashCode += new Float(interestContribution).hashCode();
+		hashCode += Float.valueOf(interestContribution).hashCode();
 		return hashCode;
 	}
 

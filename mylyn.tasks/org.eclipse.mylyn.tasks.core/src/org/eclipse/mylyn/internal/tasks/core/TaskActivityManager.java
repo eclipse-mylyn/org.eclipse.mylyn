@@ -271,7 +271,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		}
 		Long daysActivity = noTaskActiveMap.get(hourOfDay);
 		if (daysActivity == null) {
-			daysActivity = new Long(0);
+			daysActivity = Long.valueOf(0);
 		}
 
 		daysActivity = daysActivity.longValue() + attentionSpan;
@@ -328,7 +328,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		snapToStartOfHour(hourOfDay);
 		Long daysActivity = activityMap.get(hourOfDay);
 		if (daysActivity == null) {
-			daysActivity = new Long(0);
+			daysActivity = Long.valueOf(0);
 		}
 
 		daysActivity = daysActivity.longValue() + attentionSpan;

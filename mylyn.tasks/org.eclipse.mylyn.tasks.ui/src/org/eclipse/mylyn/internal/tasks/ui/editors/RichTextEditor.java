@@ -224,7 +224,7 @@ public class RichTextEditor {
 
 	/** Configures annotation model for spell checking. */
 	private void updateDocument(SourceViewer viewer, Document document, boolean readOnly) {
-		if (new Integer(this.textVersion).equals(viewer.getData(KEY_TEXT_VERSION))) {
+		if (Integer.valueOf(this.textVersion).equals(viewer.getData(KEY_TEXT_VERSION))) {
 			// already up-to-date, skip re-loading of the document
 			return;
 		}
