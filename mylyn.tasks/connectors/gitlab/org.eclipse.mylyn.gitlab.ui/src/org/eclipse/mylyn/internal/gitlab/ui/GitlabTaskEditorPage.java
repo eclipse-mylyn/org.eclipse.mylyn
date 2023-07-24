@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.ui;
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import java.util.ArrayList;
 import java.util.Set;

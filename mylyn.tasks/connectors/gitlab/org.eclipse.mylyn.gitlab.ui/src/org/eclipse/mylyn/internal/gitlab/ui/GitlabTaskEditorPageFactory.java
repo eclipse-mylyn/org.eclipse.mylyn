@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.ui;
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;

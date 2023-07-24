@@ -1,85 +1,42 @@
+/*******************************************************************************
+ * Copyright (c) 2023 Frank Becker and others.
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.gitlab.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiConstants;
 import org.eclipse.swt.graphics.Image;
-import org.osgi.framework.Bundle;
 
 public class GitlabImages {
 
-    private static final URL baseUrl;
+    // For the images
+    private static ImageRegistry fImageRegistry = new ImageRegistry();
+
+    public static String GITLAB_PICTURE_FILE = "icons/obj16/gitlab.png"; //$NON-NLS-1$
+
+    public static String GITLAB_OVERLAY_PICTURE_FILE = "icons/eview16/gitlab-overlay.png"; //$NON-NLS-1$
+
     static {
-	Bundle bundle = Platform.getBundle(GitlabUiActivator.PLUGIN_ID);
-	if (bundle != null) {
-	    baseUrl = bundle.getEntry("/icons/"); //$NON-NLS-1$
-	} else {
-	    URL iconsUrl = null;
-	    try {
-		// lookup location of CommonImages class on disk
-		iconsUrl = new URL(GitlabImages.class.getResource("GitlabImages.class"), "../../../../../../icons/"); //$NON-NLS-1$ //$NON-NLS-2$
-	    } catch (MalformedURLException e) {
-		// ignore
-	    }
-	    baseUrl = iconsUrl;
-	}
+	fImageRegistry.put(GITLAB_PICTURE_FILE, GitlabUiActivator.getImageDescriptor(GITLAB_PICTURE_FILE));
+	fImageRegistry.put(GITLAB_OVERLAY_PICTURE_FILE,
+		GitlabUiActivator.getImageDescriptor(GITLAB_OVERLAY_PICTURE_FILE));
     }
 
-    private static ImageRegistry imageRegistry;
-
-    private static final String T_EVIEW = "eview16"; //$NON-NLS-1$
-    private static final String T_OBJ = "obj16"; //$NON-NLS-1$
-
-    public static final ImageDescriptor GITLAB_ICON = create(T_EVIEW, "gitlab-icon.png"); //$NON-NLS-1$
-
-    public static final ImageDescriptor GITLAB_OVERLAY = create(T_EVIEW, "gitlab-overlay.png"); //$NON-NLS-1$
-    public static final ImageDescriptor GITLAB = create(T_OBJ, "gitlab.png"); //$NON-NLS-1$
-
-    private static ImageDescriptor create(String prefix, String name) {
-	try {
-	    return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
-	} catch (MalformedURLException e) {
-	    return ImageDescriptor.getMissingImageDescriptor();
-	}
+    public static ImageDescriptor getDescriptor(String key) {
+	return fImageRegistry.getDescriptor(key);
     }
 
-    private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-	if (baseUrl == null) {
-	    throw new MalformedURLException();
-	}
-
-	StringBuffer buffer = new StringBuffer(prefix);
-	buffer.append('/');
-	buffer.append(name);
-	return new URL(baseUrl, buffer.toString());
+    public static Image getImage(String key) {
+	return fImageRegistry.get(key);
     }
 
-    private static ImageRegistry getImageRegistry() {
-	if (imageRegistry == null) {
-	    imageRegistry = new ImageRegistry();
-	}
-
-	return imageRegistry;
-    }
-
-    /**
-     * Lazily initializes image map.
-     *
-     * @param imageDescriptor
-     * @return Image
-     */
-    public static Image getImage(ImageDescriptor imageDescriptor) {
-	ImageRegistry imageRegistry = getImageRegistry();
-	Image image = imageRegistry.get("" + imageDescriptor.hashCode()); //$NON-NLS-1$
-	if (image == null) {
-	    image = imageDescriptor.createImage(true);
-	    imageRegistry.put("" + imageDescriptor.hashCode(), image); //$NON-NLS-1$
-	}
-	return image;
-    }
 }

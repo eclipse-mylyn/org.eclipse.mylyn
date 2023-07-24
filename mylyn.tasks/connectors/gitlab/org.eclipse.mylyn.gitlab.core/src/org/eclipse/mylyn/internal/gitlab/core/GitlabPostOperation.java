@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.core;
+package org.eclipse.mylyn.internal.gitlab.core;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;

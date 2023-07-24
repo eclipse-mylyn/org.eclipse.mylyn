@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.core;
+package org.eclipse.mylyn.internal.gitlab.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -49,7 +50,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
-import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
+import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
+import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
+import org.eclipse.mylyn.gitlab.core.GitlabException;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -63,7 +66,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -752,7 +754,7 @@ public class GitlabRestClient {
 		try {
 		    ((HttpPost) request).setEntity(new StringEntity(body));
 		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(e);
+		    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
 		}
 	    };
 
@@ -829,17 +831,16 @@ public class GitlabRestClient {
 	return config;
     }
 
-    ImmutableMap<String, String> updatable = new ImmutableMap.Builder()
-	    .put(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title")
-	    .put(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description")
-	    .put(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
+    Map<String, String> updatable=  Map.ofEntries(Map.entry(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title")
+	    ,Map.entry(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description")
+	    ,Map.entry(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
 		    GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey())
-	    .put(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
+	    ,Map.entry(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
 		    GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey())
-	    .put(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(), GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey())
-	    .put(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event")
-	    .put(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey())
-	    .build();
+	    ,Map.entry(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(), GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey())
+	    ,Map.entry(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event")
+	    ,Map.entry(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey())
+	);
 
     private static SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -911,7 +912,7 @@ public class GitlabRestClient {
 	TaskAttribute productAttribute = taskData.getRoot()
 		.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
 	if (productAttribute == null || productAttribute.getValue().isEmpty()) {
-	    throw new GitlabException("productAttribute should not be null");
+	    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"productAttribute should not be null"));
 	}
 	JsonObject jsonElement;
 	jsonElement = new GitlabPostOperation<JsonObject>(client,
@@ -926,7 +927,7 @@ public class GitlabRestClient {
 		try {
 		    ((HttpPost) request).setEntity(new StringEntity(jsondata));
 		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(e);
+		    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
 		}
 	    };
 

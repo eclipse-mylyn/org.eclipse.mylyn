@@ -1,7 +1,19 @@
-package org.eclipse.mylyn.gitlab.ui;
+/*******************************************************************************
+ * Copyright (c) 2023 Frank Becker and others.
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.mylyn.internal.gitlab.ui;
 
-import org.eclipse.mylyn.gitlab.core.GitlabNewTaskSchema;
-import org.eclipse.mylyn.gitlab.core.GitlabTaskSchema;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabNewTaskSchema;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabTaskSchema;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractQueryPageSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 

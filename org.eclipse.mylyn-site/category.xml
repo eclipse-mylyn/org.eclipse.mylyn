@@ -48,13 +48,13 @@
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.bugzilla_feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.trac_feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.github.feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.builds">
       <category name="org.eclipse.mylyn.framework.category"/>
@@ -111,7 +111,10 @@
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.gitlab.feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gitlab.source.feature">
+      <category name="org.eclipse.mylyn.tasks.connector.sdk"/>
    </feature>
    <bundle id="com.sun.xml.bind"/>
    <bundle id="jakarta.xml.bind"/>
@@ -143,7 +146,7 @@
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="a.tasks.connector" label="Mylyn Tasks Connector">
+   <category-def name="org.eclipse.mylyn.tasks.connector" label="Mylyn Tasks Connector">
       <description>
          The Connectors for Task Repositories like Bugzilla and GitHub
       </description>
@@ -158,4 +161,5 @@
          Source code for integrators building on Mylyn.
       </description>
    </category-def>
+   <category-def name="org.eclipse.mylyn.tasks.connector.sdk" label="Mylyn Tasks Connector SDK"/>
 </site>

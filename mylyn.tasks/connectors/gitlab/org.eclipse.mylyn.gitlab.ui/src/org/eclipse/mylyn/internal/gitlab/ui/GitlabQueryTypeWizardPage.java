@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.ui;
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.IWizardPage;

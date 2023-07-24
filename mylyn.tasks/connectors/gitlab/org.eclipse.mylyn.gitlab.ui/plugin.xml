@@ -18,8 +18,8 @@
          name="Gitlab Respository"
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorUi
-            brandingIcon="icons/eview16/gitlab-icon.png"
-            class="org.eclipse.mylyn.gitlab.ui.GitlabConnectorUI"
+            brandingIcon="icons/obj16/gitlab.png"
+            class="org.eclipse.mylyn.internal.gitlab.ui.GitlabConnectorUI"
             overlayIcon="icons/eview16/gitlab-overlay.png">
       </connectorUi>
    </extension>
@@ -27,7 +27,7 @@
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
-            class="org.eclipse.mylyn.gitlab.ui.GitlabTaskEditorPageFactory"
+            class="org.eclipse.mylyn.internal.gitlab.ui.GitlabTaskEditorPageFactory"
             id="org.eclipse.mylyn.gitlab.ui.pageFactory">
       </pageFactory>
    </extension>

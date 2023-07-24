@@ -12,7 +12,7 @@
          Frank Becker - initial API and implementation
  -->
 <feature
-      id="org.eclipse.mylyn.gitlab.feature"
+      id="org.eclipse.mylyn.gitlab.source.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
@@ -30,15 +30,19 @@
       %license
    </license>
 
+   <includes
+         id="org.eclipse.mylyn.gitlab.feature"
+         version="0.0.0"/>
+
    <plugin
-         id="org.eclipse.mylyn.gitlab.core"
+         id="org.eclipse.mylyn.gitlab.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.gitlab.ui"
+         id="org.eclipse.mylyn.gitlab.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

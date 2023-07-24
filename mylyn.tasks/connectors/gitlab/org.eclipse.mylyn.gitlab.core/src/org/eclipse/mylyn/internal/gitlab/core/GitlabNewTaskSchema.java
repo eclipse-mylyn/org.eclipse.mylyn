@@ -11,15 +11,13 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.core;
+package org.eclipse.mylyn.internal.gitlab.core;
+
+import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Flag;
-
-import com.google.common.collect.ImmutableMap;
 
 public class GitlabNewTaskSchema extends AbstractTaskSchema {
 
@@ -44,22 +42,21 @@ public class GitlabNewTaskSchema extends AbstractTaskSchema {
 	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SINGLE_SELECT,
 			Flag.ATTRIBUTE);
 
-	private static ImmutableMap<String, String> json2AttributeMapper = new ImmutableMap.Builder<String, String>()
-			.put("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
-			.put("description", getDefault().DESCRIPTION.getKey()) //$NON-NLS-1$
-			.put("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$
-			.put("state", getDefault().STATUS.getKey()) //$NON-NLS-1$
-			.put("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
-
-			.build();
-
-	private static ImmutableMap<String, String> attribute2jsonMapper = new ImmutableMap.Builder<String, String>()
-			.put(getDefault().PRODUCT.getKey(), "project_id") //$NON-NLS-1$
-			.put(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
-			.put(getDefault().SUMMARY.getKey(), "title") //$NON-NLS-1$
-			.put(getDefault().STATUS.getKey(), "state") //$NON-NLS-1$
-			.put(getDefault().PRIORITY.getKey(), "severity") //$NON-NLS-1$
-			.build();
+	private static Map<String, String> json2AttributeMapper = Map.ofEntries(
+		Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1
+		,Map.entry("description", getDefault().DESCRIPTION.getKey()) //$NON-
+		,Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$    
+		,Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$     
+		,Map.entry("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
+		);
+	
+	private static Map<String, String> attribute2jsonMapper = Map.ofEntries(
+		Map.entry(getDefault().PRODUCT.getKey(), "project_id") //$NON-NLS-1$
+		,Map.entry(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
+		,Map.entry(getDefault().SUMMARY.getKey(), "title") //$NON-NLS-1$
+		,Map.entry(getDefault().STATUS.getKey(), "state") //$NON-NLS-1$
+		,Map.entry(getDefault().PRIORITY.getKey(), "severity") //$NON-NLS-1$
+			);
 
 	public static String getAttributeNameFromJsonName(String fieldName) {
 		String result = json2AttributeMapper.get(fieldName);

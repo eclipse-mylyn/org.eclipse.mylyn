@@ -1,14 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2023 Frank Becker and others.
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.gitlab.core;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
@@ -16,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class GitlabConfiguration implements Serializable {
+public final class GitlabConfiguration implements Serializable {
 
 	private static final long serialVersionUID = -6859757478504901423L;
 
@@ -28,7 +42,7 @@ public class GitlabConfiguration implements Serializable {
 	private Map<Integer, JsonElement> projectIDsMap = new HashMap<>();
 	private ArrayList<JsonElement> projects = new ArrayList<>();
 	private Map<String, JsonElement> groupsDetailsMap = new HashMap<>();
-	private ArrayList<JsonElement> groups = new ArrayList<>();
+	private List<JsonElement> groups = new ArrayList<JsonElement>();
 
 	public GitlabConfiguration(String repositoryURL) {
 		this.repositoryURL = repositoryURL;
@@ -84,7 +98,7 @@ public class GitlabConfiguration implements Serializable {
 		return groupsDetailsMap.keySet();
 	}
 
-	public ArrayList<JsonElement> getGroups() {
+	public List<JsonElement> getGroups() {
 		return groups;
 	}
 

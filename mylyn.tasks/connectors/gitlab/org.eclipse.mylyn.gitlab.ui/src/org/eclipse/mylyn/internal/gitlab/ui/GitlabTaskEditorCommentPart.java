@@ -1,4 +1,16 @@
-package org.eclipse.mylyn.gitlab.ui;
+/*******************************************************************************
+ * Copyright (c) 2023 Frank Becker and others.
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +23,8 @@ import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
-import org.eclipse.mylyn.gitlab.core.GitlabRepositoryConnector;
+import org.eclipse.mylyn.gitlab.ui.GitlabImages;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -341,7 +354,7 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	    TaskAttribute systemAttribute = taskComment.getTaskAttribute().getAttribute("system");
 	    String systemAttributeValue = systemAttribute != null ? systemAttribute.getValue() : "false";
 	    if ("true".equals(systemAttributeValue)) {
-		expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB));
+		expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB_PICTURE_FILE));
 	    }
 
 	    ToolBarManager toolBarManagerTitle = new ToolBarManager(SWT.FLAT);

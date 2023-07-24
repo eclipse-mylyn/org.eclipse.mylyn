@@ -11,15 +11,19 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.core;
+package org.eclipse.mylyn.internal.gitlab.core;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
+import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
+import org.eclipse.mylyn.gitlab.core.GitlabException;
+
 
 public abstract class GitlabPutOperation<T> extends GitlabOperation<T> {
 
@@ -41,7 +45,7 @@ public abstract class GitlabPutOperation<T> extends GitlabOperation<T> {
 		try {
 			((HttpPut) request).setEntity(new StringEntity(body));
 		} catch (UnsupportedEncodingException e) {
-			throw new GitlabException(e);
+			throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
 		}
 	};
 

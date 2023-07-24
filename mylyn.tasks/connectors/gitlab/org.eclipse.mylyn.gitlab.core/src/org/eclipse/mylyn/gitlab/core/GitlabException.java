@@ -13,23 +13,20 @@
 
 package org.eclipse.mylyn.gitlab.core;
 
-public class GitlabException extends Exception {
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 
-	private static final long serialVersionUID = 4915767534271733762L;
+public class GitlabException extends CoreException {
 
-	public GitlabException() {
+	private static final long serialVersionUID = -5584532559872640080L;
+
+	public GitlabException(IStatus status) {
+		super(status);
 	}
 
-	public GitlabException(String message) {
-		super(message);
-	}
 
-	public GitlabException(Throwable cause) {
-		super(cause.getMessage(), cause);
-	}
-
-	public GitlabException(String message, Throwable cause) {
-		super(message, cause);
+	public GitlabException(CoreException exception) {
+		super(exception.getStatus());
 	}
 
 }

@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.ui;
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,15 +60,10 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 
     public GitlabRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
 	super(title, description, taskRepository);
-	setNeedsRepositoryCredentials(true); // setNeedsRepositoryCredentials(true);
-	setNeedsAnonymousLogin(false); // setNeedsAnonymousLogin(false);
-	setNeedsEncoding(false); // setNeedsEncoding(true);
-	setNeedsTimeZone(false); // setNeedsTimeZone(true);
-	setNeedsProxy(false); // setNeedsProxy(true);
-	setNeedsValidation(true); // setNeedsValidation(true);
-	setNeedsAdvanced(true); // setNeedsAdvanced(true);
-	setNeedsValidateOnFinish(false); // setNeedsValidateOnFinish(false);
-    }
+	setNeedsEncoding(false);            
+	setNeedsTimeZone(false);            
+	setNeedsProxy(false);               
+    }                                                                                                                            
 
     @Override
     public String getConnectorKind() {
@@ -81,7 +76,6 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	Composite aditionalContainer = new Composite(parent, SWT.NONE);
 	GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(3).applyTo(aditionalContainer);
 	GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(aditionalContainer);
-//		aditionalContainer.setBackground(new Color(aditionalContainer.getDisplay(), 0, 255, 0));
 
 	Label groupsLabel = new Label(aditionalContainer, SWT.NONE);
 	groupsLabel.setText("include Groups");

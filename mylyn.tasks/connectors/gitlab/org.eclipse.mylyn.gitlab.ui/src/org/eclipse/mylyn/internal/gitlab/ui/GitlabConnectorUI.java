@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.ui;
+package org.eclipse.mylyn.internal.gitlab.ui;
 
 import java.text.MessageFormat;
 
@@ -21,10 +21,9 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
-import org.eclipse.mylyn.gitlab.core.GitlabRepositoryConnector;
-import org.eclipse.mylyn.gitlab.core.GitlabTaskAttributeMapper;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabTaskAttributeMapper;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.QueryPageDetails;
-import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -54,7 +53,7 @@ public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
     public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 	RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
 	GitlabRepositoryConnector connector = (GitlabRepositoryConnector) getConnector();
-	TaskData taskData = new TaskData(new GitlabTaskAttributeMapper(repository, connector),
+	TaskData taskData = new TaskData(new GitlabTaskAttributeMapper(repository),
 		repository.getConnectorKind(), "Query", "Query"); //$NON-NLS-1$ //$NON-NLS-2$
 	GitlabSearchQueryPageSchema.getInstance().initialize(taskData);
 	try {

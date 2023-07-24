@@ -15,6 +15,7 @@ package org.eclipse.mylyn.gitlab.ui;
 
 import java.io.File;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -56,6 +57,17 @@ public class GitlabUiActivator extends AbstractUIPlugin {
 	 */
 	public static GitlabUiActivator getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Returns an image descriptor for the image file at the given plug-in relative path
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the image descriptor
+	 */
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
 }

@@ -11,7 +11,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gitlab.core;
+package org.eclipse.mylyn.internal.gitlab.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,6 +47,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.gitlab.core.Duration;
+import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
+import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -68,6 +71,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
@@ -285,6 +289,8 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} catch (ExecutionException e) {
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+	} catch (ExecutionError e) {
+	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	}
     }
 
@@ -384,9 +390,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	} catch (CoreException e) {
 	    return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, IStatus.INFO,
 		    "CoreException from performQuery", e);
-	} catch (GitlabException e) {
-	    return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, IStatus.INFO,
-		    "GitlabException from performQuery", e);
 	}
 	return Status.OK_STATUS;
     }
@@ -419,9 +422,12 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
 	try {
 	    return clientCache.get(new RepositoryKey(repository));
+	} catch (UncheckedExecutionException e) {
+	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} catch (ExecutionException e) {
-	    throw new CoreException(
-		    new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "TaskRepositoryManager is null"));
+	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+	} catch (ExecutionError e) {
+	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	}
     }
 

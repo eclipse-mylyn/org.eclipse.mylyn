@@ -13,13 +13,13 @@
 
 package org.eclipse.mylyn.gitlab.core;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class GitlabCoreActivator extends AbstractUIPlugin {
+public final class GitlabCoreActivator extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.gitlab.core"; //$NON-NLS-1$
