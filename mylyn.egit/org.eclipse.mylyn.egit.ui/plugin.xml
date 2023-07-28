@@ -52,7 +52,7 @@
          point="org.eclipse.mylyn.tasks.core.taskActivationListeners">
       <listener
             id="org.eclipse.mylyn.egit.ui.commit.CommitTextTaskActivationListener"
-            class="org.eclipse.egit.internal.mylyn.ui.commit.CommitTextTaskActivationListener">
+            class="org.eclipse.mylyn.egit.internal.ui.commit.CommitTextTaskActivationListener">
       </listener>
    </extension>
 </plugin>
