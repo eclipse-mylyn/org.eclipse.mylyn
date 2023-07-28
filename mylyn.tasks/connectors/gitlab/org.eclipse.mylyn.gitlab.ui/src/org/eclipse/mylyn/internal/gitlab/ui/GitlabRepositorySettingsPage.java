@@ -57,6 +57,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
     private Button projectRemoveButton;
     private Button projectAddButton;
     private Button avatarSupportButton;
+    private Button showCommentIconsButton;
 
     public GitlabRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
 	super(title, description, taskRepository);
@@ -246,6 +247,18 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	gd.grabExcessHorizontalSpace = true;
 	avatarSupportButton.setLayoutData(gd);
 
+	showCommentIconsButton = new Button(aditionalContainer, SWT.CHECK);
+	showCommentIconsButton.setText("Show Comment Icons images");
+	showCommentIconsButton.setSelection(getRepository() != null
+		&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS)));
+
+	gd = new GridData(GridData.FILL_BOTH);
+	gd.horizontalSpan = 2;
+	gd.verticalSpan = 1;
+	gd.grabExcessHorizontalSpace = true;
+	showCommentIconsButton.setLayoutData(gd);
+	
+	
 	updateUIEnablement();
     }
 
@@ -264,6 +277,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	repository.setProperty(GitlabCoreActivator.GROUPS, String.join(",", groupList));
 	repository.setProperty(GitlabCoreActivator.PROJECTS, String.join(",", projectList));
 	repository.setProperty(GitlabCoreActivator.AVANTAR, Boolean.toString(avatarSupportButton.getSelection()));
+	repository.setProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS, Boolean.toString(showCommentIconsButton.getSelection()));
 	super.applyTo(repository);
     }
 

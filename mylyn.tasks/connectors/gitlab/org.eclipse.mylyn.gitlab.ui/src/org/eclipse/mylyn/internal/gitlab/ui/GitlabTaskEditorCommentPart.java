@@ -20,6 +20,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
@@ -34,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.UserAttributeEditor;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -44,6 +46,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -353,8 +356,22 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	    });
 	    TaskAttribute systemAttribute = taskComment.getTaskAttribute().getAttribute("system");
 	    String systemAttributeValue = systemAttribute != null ? systemAttribute.getValue() : "false";
-	    if ("true".equals(systemAttributeValue)) {
-		expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB_PICTURE_FILE));
+	    boolean showCommentIcons = Boolean
+		    .parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS));
+	    if (showCommentIcons) {
+		if ("true".equals(systemAttributeValue)) {
+		    expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB_PICTURE_FILE));
+		} else {
+		    IRepositoryPerson author = taskComment.getAuthor();
+		    if (author != null
+			    && author.matchesUsername(getTaskEditorPage().getTaskRepository().getUserName())) {
+			expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME));
+		    } else {
+			expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON));
+		    }
+		}
+	    } else {
+		expandCommentHyperlink.setImage(null);
 	    }
 
 	    ToolBarManager toolBarManagerTitle = new ToolBarManager(SWT.FLAT);

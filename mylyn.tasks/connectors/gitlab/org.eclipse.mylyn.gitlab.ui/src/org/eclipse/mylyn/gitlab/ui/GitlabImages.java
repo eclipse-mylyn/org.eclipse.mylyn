@@ -21,14 +21,10 @@ public class GitlabImages {
     // For the images
     private static ImageRegistry fImageRegistry = new ImageRegistry();
 
-    public static String GITLAB_PICTURE_FILE = "icons/obj16/gitlab.png"; //$NON-NLS-1$
-
-    public static String GITLAB_OVERLAY_PICTURE_FILE = "icons/eview16/gitlab-overlay.png"; //$NON-NLS-1$
+    public static String GITLAB_PICTURE_FILE = "icons/obj20/gitlab.png"; //$NON-NLS-1$
 
     static {
 	fImageRegistry.put(GITLAB_PICTURE_FILE, GitlabUiActivator.getImageDescriptor(GITLAB_PICTURE_FILE));
-	fImageRegistry.put(GITLAB_OVERLAY_PICTURE_FILE,
-		GitlabUiActivator.getImageDescriptor(GITLAB_OVERLAY_PICTURE_FILE));
     }
 
     public static ImageDescriptor getDescriptor(String key) {
