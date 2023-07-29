@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2016 Frank Becker and others.
- * 
+ * Copyright (c) 2016, 2023 Frank Becker and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
+ *     Alexander Fedorov - remove guava
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui;
@@ -39,8 +40,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-
-import com.google.common.base.Strings;
 
 /**
  * @since 3.22
@@ -151,7 +150,7 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 			public void modifyText(ModifyEvent e) {
 				try {
 					String widthString = widthTxt.getText();
-					if (Strings.isNullOrEmpty(widthString)) {
+					if (widthString.isEmpty()) {
 						setErrorMessage(Messages.TableColumnDescriptorDialog_please_enter_value_for_Width);
 					} else {
 						int newWidth = Integer.parseInt(widthTxt.getText());

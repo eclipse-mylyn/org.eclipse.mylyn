@@ -5,6 +5,8 @@ Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui.tests;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.reviews.ui
+Import-Package: com.google.common.base;version="31.1.0",
+ com.google.common.collect;version="31.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
  org.eclipse.mylyn.reviews.ui.tests

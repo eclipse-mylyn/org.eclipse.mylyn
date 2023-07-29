@@ -4,8 +4,7 @@ Bundle-Name: Mylyn Gerrit Connector Core
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin
-Require-Bundle: com.google.guava;bundle-version="0.0.0",
- org.eclipse.core.runtime;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.emf.common;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
@@ -29,7 +28,9 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.gerrit.core.remote;x-friends:="org.eclipse.mylyn.gerrit.ui"
 Bundle-Vendor: Eclipse Mylyn
 Import-Package: com.google.common.base;version="15.0.0",
+ com.google.common.cache;version="31.1.0",
  com.google.common.collect;version="15.0.0",
+ com.google.common.reflect;version="31.1.0",
  com.google.gerrit.common.auth;version="2.1.5",
  com.google.gerrit.common.auth.openid;version="2.1.5",
  com.google.gerrit.common.auth.userpass;version="2.1.5",
