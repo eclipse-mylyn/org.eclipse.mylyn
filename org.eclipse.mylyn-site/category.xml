@@ -164,6 +164,15 @@
    <feature id="org.eclipse.mylyn.versions.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+   <bundle id="com.google.gerrit.common"/>
+   <bundle id="com.google.gerrit.prettify"/>
+   <bundle id="com.google.gerrit.reviewdb"/>
+   <bundle id="com.google.gson"/>
+   <bundle id="com.google.guava"/>
+   <bundle id="com.google.guava.failureaccess"/>
+   <bundle id="com.google.gwt.servlet"/>
+   <bundle id="com.google.gwtjsonrpc"/>
+   <bundle id="com.google.gwtorm"/>
    <bundle id="com.sun.xml.bind"/>
    <bundle id="jakarta.xml.bind"/>
    <bundle id="javax.activation" version="1.2.2.v20221203-1659"/>
@@ -189,15 +198,6 @@
    <bundle id="org.apache.xmlrpc.server"/>
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
-   <bundle id="com.google.gerrit.common"/>
-   <bundle id="com.google.gerrit.prettify"/>
-   <bundle id="com.google.gerrit.reviewdb"/>
-   <bundle id="com.google.gson"/>
-   <bundle id="com.google.guava"/>
-   <bundle id="com.google.guava.failureaccess"/>
-   <bundle id="com.google.gwt.servlet"/>
-   <bundle id="com.google.gwtjsonrpc"/>
-   <bundle id="com.google.gwtorm"/>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.

@@ -18,3 +18,4 @@ Require-Bundle: org.eclipse.equinox.common;bundle-version="0.0.0",
 Export-Package: org.eclipse.mylyn.bugzilla.rest.tests,
  org.eclipse.mylyn.bugzilla.rest.tests.tck,
  org.eclipse.mylyn.bugzilla.rest.tests.tck.ui
+Import-Package: com.google.common.cache;version="31.1.0"
