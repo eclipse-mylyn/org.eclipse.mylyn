@@ -404,7 +404,7 @@ public class HtmlStreamTokenizer {
 					// Decimal reference
 					value = Integer.parseInt(s.substring(1));
 				}
-				return new Character((char) value);
+				return Character.valueOf((char) value);
 			} catch (NumberFormatException e) {
 				return null;
 			}

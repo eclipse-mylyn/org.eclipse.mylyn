@@ -318,7 +318,7 @@ public final class XmlMemento {
 		}
 		String strValue = attr.getValue();
 		try {
-			return new Float(strValue);
+			return Float.valueOf(strValue);
 		} catch (NumberFormatException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN,
 					"Memento problem - Invalid float for key: " //$NON-NLS-1$

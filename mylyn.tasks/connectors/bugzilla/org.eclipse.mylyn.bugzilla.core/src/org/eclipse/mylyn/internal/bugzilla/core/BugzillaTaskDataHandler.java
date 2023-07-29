@@ -355,7 +355,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
 							if (updateConfig[0] == null) {
-								updateConfig[0] = new Boolean(true);
+								updateConfig[0] = Boolean.valueOf(true);
 							}
 						} else if (collectionException[0] == null) {
 							collectionException[0] = e;
@@ -508,7 +508,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Only new, unsubmitted task data or freshly received task data from the repository can be passed in here.
-	 * 
+	 *
 	 * @param component
 	 */
 	private boolean initializeNewTaskDataAttributes(RepositoryConfiguration repositoryConfiguration, TaskData taskData,
@@ -754,7 +754,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(""); //$NON-NLS-1$
 			TaskAttribute keywords = subTaskData.getRoot().getMappedAttribute(TaskAttribute.KEYWORDS);
 			if (keywords != null) {
-				// only if the repository has keywords this attribut exists		
+				// only if the repository has keywords this attribut exists
 				keywords.setValue(""); //$NON-NLS-1$
 			}
 			subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
