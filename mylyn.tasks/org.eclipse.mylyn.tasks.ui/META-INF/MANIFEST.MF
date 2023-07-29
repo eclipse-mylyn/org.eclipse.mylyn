@@ -4,8 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.ui;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin
-Require-Bundle: com.google.guava;bundle-version="0.0.0",
- org.eclipse.compare;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.compare;bundle-version="0.0.0",
  org.eclipse.core.expressions;bundle-version="0.0.0",
  org.eclipse.core.net;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
@@ -62,7 +61,10 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-intern
  org.eclipse.mylyn.tasks.ui.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
-Import-Package: com.ibm.icu.text,
+Import-Package: com.google.common.base;version="31.1.0",
+ com.google.common.collect;version="31.1.0",
+ com.google.common.net;version="31.1.0",
+ com.ibm.icu.text,
  org.apache.commons.httpclient;version="3.1.0",
  org.apache.commons.lang;version="2.6.0",
  org.apache.commons.lang.reflect;version="2.6.0",
