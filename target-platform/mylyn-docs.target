@@ -16,26 +16,31 @@
 			<unit id="org.junit.source" version="0.0.0"/>
 			<unit id="org.apache.commons.commons-io" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/releases/2022-12"/>
+			<unit id="javax.annotation" version="0.0.0"/>
+			<unit id="org.apache.felix.scr" version="0.0.0"/>
+			<unit id="javax.inject" version="0.0.0"/>
+			<unit id="org.apache.commons.jxpath" version="0.0.0"/>
+			<unit id="com.sun.jna.platform" version="0.0.0"/>
+			<repository location="https://download.eclipse.org/releases/2023-06"/>
 		</location>
 		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
 				<dependency>
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
-					<version>31.1-jre</version>
+					<version>32.1.2-jre</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy-agent</artifactId>
-					<version>1.14.4</version>
+					<version>1.14.5</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy</artifactId>
-					<version>1.14.4</version>
+					<version>1.14.5</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
@@ -47,7 +52,7 @@
 				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-core</artifactId>
-					<version>5.3.1</version>
+					<version>5.4.0</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
