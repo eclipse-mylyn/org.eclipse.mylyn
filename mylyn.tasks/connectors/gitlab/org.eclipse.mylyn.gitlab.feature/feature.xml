@@ -16,7 +16,9 @@
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.gitlab.core">
+      plugin="org.eclipse.mylyn.gitlab.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="0.0.0">
 
    <description url="https://eclipse.org/mylyn">
       %description

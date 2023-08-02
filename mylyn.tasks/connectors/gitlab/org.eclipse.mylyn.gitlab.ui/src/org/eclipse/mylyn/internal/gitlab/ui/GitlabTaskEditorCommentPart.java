@@ -24,7 +24,7 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
-import org.eclipse.mylyn.gitlab.ui.GitlabImages;
+import org.eclipse.mylyn.gitlab.ui.GitlabUiActivator;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -46,7 +46,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -180,47 +179,6 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 
 	public GitlabCommentViewer(TaskAttribute commentAttribute) {
 	    super(commentAttribute);
-	}
-
-	public Control createControl(Composite composite, FormToolkit toolkit) {
-	    boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
-	    getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
-	    int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
-		    | ExpandableComposite.COMPACT;
-	    if (hasIncomingChanges || (expandAllInProgress && !suppressExpandViewers)) {
-		style |= ExpandableComposite.EXPANDED;
-	    }
-	    composite.setMenu(null);
-	    commentComposite = toolkit.createExpandableComposite(composite, style);
-	    commentComposite.clientVerticalSpacing = 0;
-	    commentComposite.setLayout(new GridLayout());
-	    commentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    commentComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-	    buttonComposite = createTitle(commentComposite, toolkit);
-
-	    Composite commentViewerComposite = toolkit.createComposite(commentComposite);
-	    commentComposite.setClient(commentViewerComposite);
-	    commentViewerComposite
-		    .setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0, 0, 3));
-
-	    commentComposite.addExpansionListener(new ExpansionAdapter() {
-		@Override
-		public void expansionStateChanged(ExpansionEvent event) {
-		    if (commentViewerComposite != null && !commentViewerComposite.isDisposed())
-			expandComment(toolkit, commentViewerComposite, event.getState());
-		}
-	    });
-	    if (hasIncomingChanges) {
-		commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
-	    }
-	    if (commentComposite.isExpanded()) {
-		if (commentViewerComposite != null && !commentViewerComposite.isDisposed())
-		    expandComment(toolkit, commentViewerComposite, true);
-	    }
-	    // for outline
-	    EditorUtil.setMarker(commentComposite, commentAttribute.getId());
-	    return commentComposite;
 	}
 
 	@Override
@@ -360,7 +318,7 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 		    .parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS));
 	    if (showCommentIcons) {
 		if ("true".equals(systemAttributeValue)) {
-		    expandCommentHyperlink.setImage(GitlabImages.getImage(GitlabImages.GITLAB_PICTURE_FILE));
+		    expandCommentHyperlink.setImage(GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PICTURE_FILE));
 		} else {
 		    IRepositoryPerson author = taskComment.getAuthor();
 		    if (author != null

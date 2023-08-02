@@ -15,12 +15,12 @@
  <plugin>
    <extension
          id="org.eclipse.mylyn.gitlab.repository"
-         name="Gitlab Repository"
+         name="%gitlab.repository.name"
          point="org.eclipse.mylyn.tasks.core.repositories">
       <connectorCore
             class="org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector"
             id="org.eclipse.mylyn.gitlab"
-            name="Gitlab Repository Connector">
+            name="%GitlabRepositoryConnector.name">
       </connectorCore>
    </extension>
 </plugin>

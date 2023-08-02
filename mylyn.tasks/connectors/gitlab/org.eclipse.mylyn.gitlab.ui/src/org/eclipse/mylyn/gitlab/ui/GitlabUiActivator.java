@@ -13,11 +13,8 @@
 
 package org.eclipse.mylyn.gitlab.ui;
 
-import java.io.File;
-
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -26,48 +23,58 @@ import org.osgi.framework.BundleContext;
  */
 public class GitlabUiActivator extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.gitlab.ui"; //$NON-NLS-1$
+    // The plug-in ID
+    public static final String PLUGIN_ID = "org.eclipse.mylyn.gitlab.ui"; //$NON-NLS-1$
 
-	// The shared instance
-	private static GitlabUiActivator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public GitlabUiActivator() {
-	}
+    // The shared instance
+    private static GitlabUiActivator plugin;
 
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+    public static String GITLAB_PICTURE_FILE = "icons/obj20/gitlab.png"; //$NON-NLS-1$
 
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
+    /**
+     * The constructor
+     */
+    public GitlabUiActivator() {
+    }
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static GitlabUiActivator getDefault() {
-		return plugin;
-	}
+    @Override
+    public void start(BundleContext context) throws Exception {
+	super.start(context);
+	plugin = this;
+    }
 
-	/**
-	 * Returns an image descriptor for the image file at the given plug-in relative path
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
+    @Override
+    public void stop(BundleContext context) throws Exception {
+	plugin = null;
+	super.stop(context);
+    }
+
+    /**
+     * Returns the shared instance
+     *
+     * @return the shared instance
+     */
+    public static GitlabUiActivator getDefault() {
+	return plugin;
+    }
+
+    /**
+     * @see AbstractUIPlugin#initializeImageRegistry(ImageRegistry)
+     */
+    @Override
+    protected void initializeImageRegistry(ImageRegistry reg) {
+	reg.put(GITLAB_PICTURE_FILE, getImageDescriptor(GITLAB_PICTURE_FILE));
+    }
+
+    /**
+     * Returns an image descriptor for the image file at the given plug-in relative
+     * path
+     * 
+     * @param path the path
+     * @return the image descriptor
+     */
+    public static ImageDescriptor getImageDescriptor(String path) {
+	return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
 
 }

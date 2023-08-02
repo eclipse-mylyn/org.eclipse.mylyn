@@ -21,24 +21,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -70,9 +63,7 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ExecutionError;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
@@ -129,89 +120,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	return false;
     }
 
-    abstract class ListenableFutureJob<V> extends Job implements ListenableFuture<V> {
-
-	private class Listener {
-
-	    Runnable runnable;
-
-	    Executor executor;
-
-	    public Listener(Runnable runnable, Executor executor) {
-		this.runnable = runnable;
-		this.executor = executor;
-	    }
-
-	    public void run() {
-		executor.execute(runnable);
-	    }
-	}
-
-	List<Listener> listeners = Collections.synchronizedList(Lists.<Listener>newArrayList());
-
-	private volatile boolean done;
-
-	private V resultObject;
-
-	public ListenableFutureJob(String name) {
-	    super(name);
-	    resultObject = null;
-	    this.addJobChangeListener(new JobChangeAdapter() {
-
-		@Override
-		public void done(IJobChangeEvent event) {
-		    done = true;
-		    synchronized (listeners) {
-			for (Listener listener : listeners) {
-			    listener.run();
-			}
-		    }
-		}
-	    });
-	}
-
-	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-	    return this.cancel();
-	}
-
-	@Override
-	public V get() throws InterruptedException, ExecutionException {
-	    this.join();
-	    return resultObject;
-	}
-
-	@Override
-	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-	    long start = System.currentTimeMillis();
-	    while (!done && System.currentTimeMillis() - start < unit.toMillis(timeout)) {
-		Thread.sleep(250);
-	    }
-	    if (!done) {
-		throw new TimeoutException("ListenableFutureJob.get() could not get the result!");
-	    }
-	    return resultObject;
-	}
-
-	protected void set(V future) {
-	    this.resultObject = future;
-	}
-
-	@Override
-	public boolean isCancelled() {
-	    return this.getResult().getSeverity() == IStatus.CANCEL;
-	}
-
-	@Override
-	public boolean isDone() {
-	    return done;
-	}
-
-	@Override
-	public void addListener(Runnable listener, Executor executor) {
-	    listeners.add(new Listener(listener, executor));
-	}
-    }
 
     private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
 
@@ -250,31 +158,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			return Optional.fromNullable(client.getConfiguration(key.getRepository(), context.get()));
 		    }
 
-		    @Override
-		    public ListenableFuture<Optional<GitlabConfiguration>> reload(final RepositoryKey key,
-			    Optional<GitlabConfiguration> oldValue) throws Exception {
-			// asynchronous!
-			ListenableFutureJob<Optional<GitlabConfiguration>> job = new ListenableFutureJob<Optional<GitlabConfiguration>>(
-				"") {
-
-			    @Override
-			    protected IStatus run(IProgressMonitor monitor) {
-				GitlabRestClient client;
-				try {
-				    client = clientCache.get(key);
-				    set(Optional
-					    .fromNullable(client.getConfiguration(key.getRepository(), context.get())));
-				} catch (ExecutionException e) {
-				    e.printStackTrace();
-				    return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-					    "GitlabConnector reload Configuration", e);
-				}
-				return Status.OK_STATUS;
-			    }
-			};
-			job.schedule();
-			return job;
-		    }
 		});
     }
 

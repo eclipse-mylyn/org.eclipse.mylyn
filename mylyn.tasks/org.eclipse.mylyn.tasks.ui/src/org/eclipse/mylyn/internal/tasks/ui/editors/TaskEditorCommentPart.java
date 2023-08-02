@@ -84,9 +84,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		protected final CommentGroup commentGroup;
 
-		protected ArrayList<CommentViewer> commentViewers;
+		private ArrayList<CommentViewer> commentViewers;
 
-		protected Section groupSection;
+		private Section groupSection;
 
 		private boolean renderedInSubSection;
 
@@ -94,7 +94,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			this.commentGroup = commentGroup;
 		}
 
-		protected Composite createCommentViewers(Composite parent, FormToolkit toolkit) {
+		private Composite createCommentViewers(Composite parent, FormToolkit toolkit) {
 			List<CommentViewer> viewers = getCommentViewers();
 			Composite composite = toolkit.createComposite(parent);
 
@@ -283,7 +283,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		protected final TaskAttribute commentAttribute;
 
-		protected ExpandableComposite commentComposite;
+		private ExpandableComposite commentComposite;
 
 		protected final TaskComment taskComment;
 
