@@ -226,13 +226,8 @@
               </environments>
               <target>
                 <artifact>
-                  <!-- FIXME:AF: make target specifocation relative after cleaning parent-->
-                  <!--
                   <groupId>${project.parent.groupId}</groupId>
-                  <artifactId>${project.parent.groupId}-target</artifactId> 
-                -->
-                  <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId>
+                  <artifactId>${project.parent.groupId}.target</artifactId>
                   <version>${project.parent.version}</version>
                 </artifact>
               </target>
