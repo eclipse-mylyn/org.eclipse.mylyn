@@ -13,7 +13,7 @@
          ArSysOp - ongoing support
  -->
 <feature
-      id="org.eclipse.mylyn.builds"
+      id="org.eclipse.mylyn.builds.feature"
       label="%featureName"
       version="4.0.0.qualifier"
       provider-name="%providerName"
@@ -35,8 +35,8 @@
 
    <requires>
       <import feature="org.eclipse.mylyn.tasks.feature" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="4.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.versions" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.team.feature" version="4.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions.feature" version="4.0.0" match="compatible"/>
    </requires>
 
    <plugin

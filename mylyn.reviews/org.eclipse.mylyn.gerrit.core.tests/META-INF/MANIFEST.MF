@@ -6,8 +6,7 @@ Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.core
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: com.google.gson;bundle-version="2.9.1",
- net.bytebuddy.byte-buddy;bundle-version="1.12.16",
+Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.16",
  net.bytebuddy.byte-buddy-agent;bundle-version="1.12.16",
  org.junit;bundle-version="4.5.0",
  org.mockito.mockito-core;bundle-version="4.8.1",
@@ -16,4 +15,6 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.egit;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.remote;x-internal:=true
-Import-Package: com.google.gerrit.reviewdb;version="2.1.5"
+Import-Package: com.google.gerrit.reviewdb;version="2.1.5",
+ org.apache.commons.httpclient;version="3.1.0",
+ org.apache.commons.httpclient.methods;version="3.1.0"

@@ -16,6 +16,5 @@ org.eclipse.mylyn.git.core
 org.eclipse.mylyn.git.ui
 org.eclipse.mylyn.versions-feature
 org.eclipse.mylyn.versions.core
-org.eclipse.mylyn.versions.sdk-feature
 org.eclipse.mylyn.versions.tests
 org.eclipse.mylyn.versions.ui

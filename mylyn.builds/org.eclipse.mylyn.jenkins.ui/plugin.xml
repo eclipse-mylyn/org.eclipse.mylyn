@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2010 Tasktop Technologies and others. 
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Tasktop Technologies - initial API and implementation
+ -->
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.builds.ui.connectors">
+         <!-- Need a reference to the Hudson connector so old  repositories can be loaded and converted -->
+      <connector
+            core="org.eclipse.mylyn.internal.jenkins.core.JenkinsConnector"
+            kind="org.eclipse.mylyn.hudson"
+            label="Hudson"
+            ui="org.eclipse.mylyn.internal.jenkins.ui.JenkinsConnectorUi">
+      </connector>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.builds.ui.connectors">
+      <connector
+            core="org.eclipse.mylyn.internal.jenkins.core.JenkinsConnector"
+            icon="icons/obj16/jenkins.png"
+            kind="org.eclipse.mylyn.jenkins"
+            label="Jenkins"
+            ui="org.eclipse.mylyn.internal.jenkins.ui.JenkinsConnectorUi">
+      </connector>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.repositories.ui.newWizards">
+      <wizard
+            category="org.eclipse.mylyn.builds.ui.category.Builds"
+            class="org.eclipse.mylyn.internal.jenkins.ui.NewJenkinsServerWizard"
+            icon="icons/obj16/jenkins.png"
+            id="org.eclipse.mylyn.jenkins"
+            name="Jenkins">
+         <description>
+            Connects to continuous integration servers. Supports Jenkins.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.builds.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.jenkins.ui.JenkinsStartup">
+      </startup>
+   </extension>
+
+</plugin>

@@ -750,7 +750,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			int x = 0;
 			for (; itr.hasNext(); x++) {
 				String taskId = itr.next();
-				formData[x] = new Integer(taskId);
+				formData[x] = Integer.valueOf(taskId);
 
 				TaskData taskData = new TaskData(mapper, getConnectorKind(), getLocation().getUrl(), taskId);
 				bugzillaClient.setupExistingBugAttributes(getLocation().getUrl(), taskData);

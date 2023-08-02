@@ -44,7 +44,6 @@ Require-Bundle: org.eclipse.compare;bundle-version="0.0.0",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
-Service-Component: OSGI-INF/org.eclipse.mylyn.internal.builds.ui.BuildsStartup.xml
 Bundle-Activator: org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin
 Export-Package: org.eclipse.mylyn.builds.ui;x-internal:=true,
  org.eclipse.mylyn.builds.ui.spi;x-internal:=true,
@@ -58,3 +57,4 @@ Export-Package: org.eclipse.mylyn.builds.ui;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.notifications;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.util;x-internal:=true,
  org.eclipse.mylyn.internal.builds.ui.view;x-internal:=true
+Service-Component: OSGI-INF/org.eclipse.mylyn.internal.builds.ui.BuildsStartup.xml

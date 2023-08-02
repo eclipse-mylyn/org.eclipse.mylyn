@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,16 +12,14 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactory
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class GerritDataLocatorTest extends TestCase {
 

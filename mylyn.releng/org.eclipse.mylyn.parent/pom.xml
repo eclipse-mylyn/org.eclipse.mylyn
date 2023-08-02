@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -58,7 +58,7 @@
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
-    <target-platform>mylyn-e${target-version}</target-platform>
+    <timestampProvider>jgit</timestampProvider>
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
   </properties>
   <mailingLists>
@@ -114,168 +114,6 @@
     <url>https://www.eclipse.org/</url>
   </organization>
   <profiles>
-    <!-- Target definition profiles -->
-    <!-- Needs to be specified first to allow target profiles to override settings -->
-    <profile>
-      <id>explicit-target</id>
-      <activation>
-        <property>
-          <name>explicit-target</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-surefire-plugin</artifactId>
-            <version>${tycho-version}</version>
-            <configuration>
-              <skip>${test.component.skip}</skip>
-              <testSuite>${project.artifactId}</testSuite>
-              <testClass>${test.suite}</testClass>
-              <argLine> ${tycho-surefire-argLine}</argLine>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <version>${tycho-version}</version>
-            <configuration>
-              <resolver>p2</resolver>
-              <environments>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>aarch64</arch>
-                </environment>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>ppc64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>aarch64</arch>
-                </environment>
-              </environments>
-              <target>
-                <artifact>
-                  <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-                  <!--
-                  <groupId>${project.parent.groupId}</groupId>
-                  <artifactId>${project.parent.groupId}-target</artifactId> 
-                -->
-                  <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId>
-                  <version>${project.parent.version}</version>
-                  <classifier>${target-platform}</classifier>
-                </artifact>
-              </target>
-              <pomDependencies>consider</pomDependencies>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>implicit-target</id>
-      <activation>
-        <property>
-          <name>!explicit-target</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <version>${tycho-version}</version>
-            <configuration>
-              <resolver>p2</resolver>
-              <dependency-resolution>
-                <optionalDependencies>ignore</optionalDependencies>
-              </dependency-resolution>
-              <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
-              <environments>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>aarch64</arch>
-                </environment>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>ppc64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>aarch64</arch>
-                </environment>
-              </environments>
-              <target>
-                <artifact>
-                  <!-- FIXME:AF: make target specofocation relative after cleaning parent-->
-                  <!--
-                  <groupId>${project.parent.groupId}</groupId>
-                  <artifactId>${project.parent.groupId}-target</artifactId> 
-                -->
-                  <groupId>org.eclipse.mylyn</groupId>
-                  <artifactId>org.eclipse.mylyn-target</artifactId>
-                  <version>${project.parent.version}</version>
-                  <classifier>${target-platform}</classifier>
-                </artifact>
-              </target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <!-- Target profiles -->
-    <profile>
-      <id>default-target</id>
-      <activation>
-        <property>
-          <name>!target-profile</name>
-        </property>
-      </activation>
-      <!-- Properties get overridden if a specific target profile is activated. -->
-      <properties>
-        <target-version>4.28</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/2023-06/</platform-repository-url>
-      </properties>
-    </profile>
     <profile>
       <id>sign</id>
       <build>
@@ -344,6 +182,71 @@
     </plugins>
     <pluginManagement>
       <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <resolver>p2</resolver>
+              <dependency-resolution>
+                <optionalDependencies>ignore</optionalDependencies>
+              </dependency-resolution>
+              <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
+              <environments>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>aarch64</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>ppc64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>aarch64</arch>
+                </environment>
+              </environments>
+              <target>
+                <artifact>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.groupId}.target</artifactId>
+                  <version>${project.parent.version}</version>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-p2-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <executions>
+                <execution>
+                    <id>attach-p2-metadata</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>p2-metadata</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-source-plugin</artifactId>
@@ -353,6 +256,12 @@
               <id>plugin-source</id>
               <goals>
                 <goal>plugin-source</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>feature-source</id>
+              <goals>
+                <goal>feature-source</goal>
               </goals>
             </execution>
           </executions>
@@ -398,7 +307,7 @@
             <sourceReferences>
               <generate>true</generate>
             </sourceReferences>
-            <timestampProvider>jgit</timestampProvider>
+            <timestampProvider>${timestampProvider}</timestampProvider>
             <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
           </configuration>
         </plugin>

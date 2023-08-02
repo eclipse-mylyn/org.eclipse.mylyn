@@ -4,9 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui;singleton:=true
 Automatic-Module-Name: org.eclipse.mylyn.commons.ui
 Bundle-Version: 4.0.0.qualifier
-Require-Bundle: com.google.guava;bundle-version="0.0.0",
- org.apache.commons.lang;bundle-version="[2.6.0,3.0.0)",
- org.eclipse.core.runtime;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional,
  org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
  org.eclipse.mylyn.commons.screenshots;bundle-version="4.0.0",
@@ -21,6 +19,7 @@ Export-Package: org.eclipse.mylyn.commons.ui,
  org.eclipse.mylyn.commons.ui.dialogs,
  org.eclipse.mylyn.commons.ui.wizard,
  org.eclipse.mylyn.internal.commons.ui;x-internal:=true
-Import-Package: org.w3c.dom.css
+Import-Package: org.apache.commons.lang.reflect;version="2.6.0",
+ org.w3c.dom.css
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin

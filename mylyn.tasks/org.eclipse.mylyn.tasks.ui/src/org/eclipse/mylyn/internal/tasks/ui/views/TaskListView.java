@@ -697,7 +697,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					filteredTree.getFilterControl().setFocus();
 				} else if (e.stateMask == 0) {
 					if (Character.isLetter((char) e.keyCode) || Character.isDigit((char) e.keyCode)) {
-						String string = new Character((char) e.keyCode).toString();
+						String string = Character.valueOf((char) e.keyCode).toString();
 						filteredTree.getFilterControl().setFocus();
 						filteredTree.getFilterControl().setText(string);
 						filteredTree.getFilterControl().setSelection(1, 1);

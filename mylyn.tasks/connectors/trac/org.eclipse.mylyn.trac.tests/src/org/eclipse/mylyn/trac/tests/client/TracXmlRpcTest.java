@@ -204,8 +204,8 @@ public class TracXmlRpcTest extends TestCase {
 		call("ticket.milestone.create", "foo", attributes);
 
 		Map<?, ?> values = (Map<?, ?>) call("ticket.milestone.get", "foo");
-		assertEquals(new Integer(due), values.get("due"));
-		assertEquals(new Integer(completed), values.get("completed"));
+		assertEquals(Integer.valueOf(due), values.get("due"));
+		assertEquals(Integer.valueOf(completed), values.get("completed"));
 
 		call("ticket.milestone.delete", "foo");
 	}

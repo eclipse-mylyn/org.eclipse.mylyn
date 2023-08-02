@@ -19,8 +19,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "puppet" do |puppet_hudson|
-    puppet_hudson.module_path = "../../../org.eclipse.mylyn.builds/org.eclipse.mylyn.hudson.releng/modules"
-    puppet_hudson.manifests_path = "../../../org.eclipse.mylyn.builds/org.eclipse.mylyn.hudson.releng/manifests"
+    puppet_hudson.module_path = "../../../org.eclipse.mylyn.builds/org.eclipse.mylyn.jackson.releng/modules"
+    puppet_hudson.manifests_path = "../../../org.eclipse.mylyn.builds/org.eclipse.mylyn.jackson.releng/manifests"
     puppet_hudson.manifest_file = "default.pp"
   end
 

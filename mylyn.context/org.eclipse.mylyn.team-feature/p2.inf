@@ -1,0 +1,4 @@
+update.matchExp = providedCapabilities.exists(pc | \
+   pc.namespace == 'org.eclipse.equinox.p2.iu' && \
+     (pc.name == 'org.eclipse.mylyn.team_feature.feature.group' || \
+       (pc.name == 'org.eclipse.mylyn.team.feature.feature.group' && pc.version ~= range('[0.0.0,4.0.0)'))))
