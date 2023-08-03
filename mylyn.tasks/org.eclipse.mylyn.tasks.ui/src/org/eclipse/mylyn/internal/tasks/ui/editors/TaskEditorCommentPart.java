@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -82,7 +82,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	public class CommentGroupViewer {
 
-		private final CommentGroup commentGroup;
+		protected final CommentGroup commentGroup;
 
 		private ArrayList<CommentViewer> commentViewers;
 
@@ -279,21 +279,21 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	public class CommentViewer {
 
-		private Composite buttonComposite;
+		protected Composite buttonComposite;
 
-		private final TaskAttribute commentAttribute;
+		protected final TaskAttribute commentAttribute;
 
 		private ExpandableComposite commentComposite;
 
-		private final TaskComment taskComment;
+		protected final TaskComment taskComment;
 
-		private Composite commentViewer;
+		protected Composite commentViewer;
 
-		private Composite userImageComposite;
+		protected Composite userImageComposite;
 
-		private AbstractAttributeEditor commentTextEditor;
+		protected AbstractAttributeEditor commentTextEditor;
 
-		private boolean suppressSelectionChanged;
+		protected boolean suppressSelectionChanged;
 
 		public CommentViewer(TaskAttribute commentAttribute) {
 			this.commentAttribute = commentAttribute;
@@ -339,7 +339,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return commentComposite;
 		}
 
-		private Composite createTitle(ExpandableComposite commentComposite, FormToolkit toolkit) {
+		protected Composite createTitle(ExpandableComposite commentComposite, FormToolkit toolkit) {
 			// always visible
 			Composite titleComposite = toolkit.createComposite(commentComposite);
 			commentComposite.setTextClient(titleComposite);
@@ -380,7 +380,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return buttonComposite;
 		}
 
-		private ImageHyperlink createTitleHyperLink(FormToolkit toolkit, Composite toolbarComp,
+		protected ImageHyperlink createTitleHyperLink(FormToolkit toolkit, Composite toolbarComp,
 				ITaskComment taskComment) {
 			ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 			formHyperlink.setBackground(null);
@@ -417,7 +417,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return formHyperlink;
 		}
 
-		private void expandComment(FormToolkit toolkit, Composite composite, boolean expanded) {
+		protected void expandComment(FormToolkit toolkit, Composite composite, boolean expanded) {
 			buttonComposite.setVisible(expanded);
 			if (expanded && composite.getData(KEY_EDITOR) == null) {
 				commentViewer = toolkit.createComposite(composite);
@@ -586,14 +586,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		public Menu getMenu(Control parent) {
-			currentViewer = getCommentViewer();
-			selectionProvider.setSelection(new StructuredSelection(currentViewer.getTaskComment()));
-			return commentMenu;
+			setCurrentViewer(getCommentViewer());
+			selectionProvider.setSelection(new StructuredSelection(getCurrentViewer().getTaskComment()));
+			return getCommentMenu();
 		}
 
 		public Menu getMenu(Menu parent) {
 			selectionProvider.setSelection(new StructuredSelection(getCommentViewer().getTaskComment()));
-			return commentMenu;
+			return getCommentMenu();
 		}
 
 	}
@@ -601,15 +601,15 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	/** Expandable composites are indented by 6 pixels by default. */
 	private static final int INDENT = -6;
 
-	private static final String KEY_EDITOR = "viewer"; //$NON-NLS-1$
+	protected static final String KEY_EDITOR = "viewer"; //$NON-NLS-1$
 
-	private List<TaskAttribute> commentAttributes;
+	protected List<TaskAttribute> commentAttributes;
 
 	private CommentGroupStrategy commentGroupStrategy;
 
-	private List<CommentGroupViewer> commentGroupViewers;
+	protected List<CommentGroupViewer> commentGroupViewers;
 
-	private boolean expandAllInProgress;
+	protected boolean expandAllInProgress;
 
 	private boolean hasIncoming;
 
@@ -630,7 +630,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private CommentActionGroup actionGroup;
 
-	private boolean suppressExpandViewers;
+	protected boolean suppressExpandViewers;
 
 	public TaskEditorCommentPart() {
 		this.commentGroupStrategy = new CommentGroupStrategy() {
@@ -640,6 +640,22 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		};
 		setPartName(Messages.TaskEditorCommentPart_Comments);
+	}
+
+	public SelectionProviderAdapter getSelectionProvider() {
+		return selectionProvider;
+	}
+
+	public Menu getCommentMenu() {
+		return commentMenu;
+	}
+
+	public CommentViewer getCurrentViewer() {
+		return currentViewer;
+	}
+
+	public void setCurrentViewer(CommentViewer currentViewer) {
+		this.currentViewer = currentViewer;
 	}
 
 	protected void addActionsToToolbarButton(ToolBarManager toolBarManager, TaskComment taskComment,
@@ -660,10 +676,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			@SuppressWarnings("unused")
 			boolean collapsed = false;
 			List<CommentGroupViewer> viewers = getCommentGroupViewers();
-			for (int i = 0; i < viewers.size(); i++) {
-				if (viewers.get(i).isExpanded()) {
-					viewers.get(i).setFullyExpanded(false);
-					collapsed = viewers.get(i).isRenderedInSubSection();
+			for (CommentGroupViewer viewer : viewers) {
+				if (viewer.isExpanded()) {
+					viewer.setFullyExpanded(false);
+					collapsed = viewer.isRenderedInSubSection();
 					// bug 280152: collapse all groups
 					//break;
 				}
@@ -675,7 +691,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		reflow();
 	}
 
-	private TaskComment convertToTaskComment(TaskDataModel taskDataModel, TaskAttribute commentAttribute) {
+	protected TaskComment convertToTaskComment(TaskDataModel taskDataModel, TaskAttribute commentAttribute) {
 		TaskComment taskComment = new TaskComment(taskDataModel.getTaskRepository(), taskDataModel.getTask(),
 				commentAttribute);
 		taskDataModel.getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
@@ -696,14 +712,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// get comment and add reply action as first item in the menu
 				ISelection selection = selectionProvider.getSelection();
 				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					ReplyToCommentAction replyAction = new ReplyToCommentAction(currentViewer);
+					ReplyToCommentAction replyAction = new ReplyToCommentAction(getCurrentViewer());
 					manager.add(replyAction);
 				}
 				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
 				actionGroup.fillContextMenu(manager);
 
-				if (currentViewer != null && currentViewer.getEditor() instanceof RichTextAttributeEditor) {
-					RichTextAttributeEditor editor = (RichTextAttributeEditor) currentViewer.getEditor();
+				if (getCurrentViewer() != null && getCurrentViewer().getEditor() instanceof RichTextAttributeEditor) {
+					RichTextAttributeEditor editor = (RichTextAttributeEditor) getCurrentViewer().getEditor();
 					if (editor.getViewSourceAction().isEnabled()) {
 						manager.add(new Separator("planning")); //$NON-NLS-1$
 						manager.add(editor.getViewSourceAction());
