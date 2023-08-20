@@ -34,7 +34,6 @@
     <module>mylyn.versions</module>
     <module>mylyn.builds</module>
     <module>mylyn.reviews</module>
-    <module>org.eclipse.mylyn.discovery-directory</module>
     <module>mylyn.egit</module>
     <module>mylyn.github</module>
     <module>org.eclipse.mylyn.tests</module>

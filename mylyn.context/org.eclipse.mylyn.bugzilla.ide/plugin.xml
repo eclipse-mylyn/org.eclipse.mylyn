@@ -74,10 +74,6 @@
 		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Commons"/>
 		</mapping>
-		<mapping namespace="org.eclipse.mylyn.discovery" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Commons"/>
-			<property name="component" value="Discovery"/>
-		</mapping>
 		<mapping namespace="org.eclipse.mylyn.monitor" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Commons"/>
 			<property name="component" value="Monitor"/>

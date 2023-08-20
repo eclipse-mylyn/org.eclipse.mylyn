@@ -36,7 +36,7 @@
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>${coverage.destFile}</sonar.jacoco.reportPath>
-    <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
+    <sonar.skippedModules>org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
     <test.skip>${maven.test.skip}</test.skip>
     <test.linux.skip>true</test.linux.skip>
     <test.osx.skip>true</test.osx.skip>
