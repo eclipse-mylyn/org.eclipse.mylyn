@@ -32,12 +32,6 @@
    <feature id="org.eclipse.mylyn.cdt.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.discovery.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.discovery.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.gerrit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
