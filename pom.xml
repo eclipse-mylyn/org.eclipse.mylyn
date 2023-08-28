@@ -15,7 +15,7 @@
     <properties>
         <releaseVersion>3.0.48</releaseVersion>
         <qualifier>-SNAPSHOT</qualifier>
-        <tycho-version>3.0.4</tycho-version>
+        <tycho-version>3.0.5</tycho-version>
         <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs</tycho.scmUrl>
         <nexus.autoReleaseAfterClose>false</nexus.autoReleaseAfterClose>
     </properties>
