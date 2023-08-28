@@ -21,7 +21,9 @@
 			<unit id="javax.inject" version="0.0.0"/>
 			<unit id="org.apache.commons.jxpath" version="0.0.0"/>
 			<unit id="com.sun.jna.platform" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/releases/2023-06"/>
+			<unit id="bcpg" version="0.0.0"/>
+			<unit id="org.hamcrest" version="0.0.0"/>
+			<repository location="https://download.eclipse.org/releases/2023-09"/>
 		</location>
 		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
