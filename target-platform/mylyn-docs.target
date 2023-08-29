@@ -36,13 +36,13 @@
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy-agent</artifactId>
-					<version>1.14.5</version>
+					<version>1.14.7</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>net.bytebuddy</groupId>
 					<artifactId>byte-buddy</artifactId>
-					<version>1.14.5</version>
+					<version>1.14.7</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
@@ -54,7 +54,7 @@
 				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-core</artifactId>
-					<version>5.4.0</version>
+					<version>5.5.0</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
