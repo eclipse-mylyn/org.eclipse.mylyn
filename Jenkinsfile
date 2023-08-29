@@ -31,6 +31,7 @@ pipeline {
 				always {
 					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
 					junit '**/target/surefire-reports/TEST-*.xml'
+					recordIssues publishAllIssues: true, tools: [java(), mavenConsole(), javaDoc()]
 				}
 			}
 		}
