@@ -199,7 +199,7 @@ public class HtmlComposer {
 	 * @see HtmlComposer#initialize()
 	 */
 	private final List<Command> pendingCommands = Collections
-			.synchronizedList(new ArrayList<Command>());
+			.synchronizedList(new ArrayList<>());
 
 	/**
 	 * A map of commands that were executed before the widget was initialized

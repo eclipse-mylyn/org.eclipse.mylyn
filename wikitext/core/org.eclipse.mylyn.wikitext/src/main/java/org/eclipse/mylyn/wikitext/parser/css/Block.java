@@ -29,7 +29,7 @@ public class Block {
 	private final List<CssRule> rules;
 
 	Block(Selector selector) {
-		this(selector, new ArrayList<CssRule>());
+		this(selector, new ArrayList<>());
 	}
 
 	Block(Selector selector, List<CssRule> rules) {
