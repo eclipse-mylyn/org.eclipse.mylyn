@@ -16,11 +16,12 @@ package org.eclipse.mylyn.internal.gitlab.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -142,20 +144,74 @@ public class GitlabRestClient {
 	    @Override
 	    protected HttpRequestBase createHttpRequestBase(String url) {
 		String state = query.getAttribute("STATE");
-		String suffix;
+		ArrayList<String> suffix = new ArrayList<String>();
 		switch (state != null ? state : "") {
 		case "opened":
-		    suffix = "?state=opened";
+		    suffix.add("state=opened");
 		    break;
 		case "closed":
-		    suffix = "?state=closed";
+		    suffix.add("state=closed");
 		    break;
 		default:
-		    suffix = "";
 		}
-		HttpRequestBase request = new HttpGet(url + suffix);
+		String search = query.getAttribute("SEARCH");
+		if (search != null && !search.isBlank()) {
+		    try {
+			suffix.add("search=" + URLEncoder.encode(search, StandardCharsets.UTF_8.toString()));
+			String searchIn = query.getAttribute("SEARCH_IN");
+			if (searchIn != null && !searchIn.isBlank()) {
+			    suffix.add("in=" + searchIn);
+			}
+		    } catch (UnsupportedEncodingException e) {
+			// ignore if we not can encode the search value
+			e.printStackTrace();
+		    }
+		}
+		if (Boolean.valueOf(query.getAttribute("CONFIDENTIAL"))) {
+		    suffix.add("confidential=true");
+		}
+		if (Boolean.valueOf(query.getAttribute("ASSIGNED_TO_ME"))) {
+		    suffix.add("scope=assigned_to_me");
+		}
+
+		String suffixStr = suffix.size() > 0 ? "?" + String.join("&", suffix) : "";
+		HttpRequestBase request = new HttpGet(url + suffixStr);
 		return request;
 	    }
+
+	    private String nextPage(Header[] linkHeader) {
+		if (linkHeader.length > 0) {
+		    Header firstLinkHeader = linkHeader[0];
+		    for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) {
+			String[] linkHeaderElements = linkHeaderEntry.split("; ");
+			if ("rel=\"next\"".equals(linkHeaderElements[1])) {
+			    return linkHeaderElements[0].substring(1, linkHeaderElements[0].length() - 1);
+			}
+		    }
+		}
+
+		return null;
+	    }
+
+	    protected java.util.List<TaskData> execute(IOperationMonitor monitor) throws IOException, GitlabException {
+		List<TaskData> result = null;
+		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
+		CommonHttpResponse response = execute(request, monitor);
+		result = processAndRelease(response, monitor);
+		Header[] linkHeader = response.getResponse().getHeaders("Link");
+		String nextPageValue = nextPage(linkHeader);
+		while (nextPageValue != null) {
+		    HttpRequestBase looprequest = new HttpGet(nextPageValue);
+		    addHttpRequestEntities(looprequest);
+		    CommonHttpResponse loopresponse = execute(looprequest, monitor);
+		    List<TaskData> loopresult = processAndRelease(loopresponse, monitor);
+		    result.addAll(loopresult);
+		    linkHeader = loopresponse.getResponse().getHeaders("Link");
+		    nextPageValue = nextPage(linkHeader);
+		}
+		return result;
+	    };
 
 	    @Override
 	    protected List<TaskData> parseFromJson(InputStreamReader in) throws GitlabException {
@@ -296,27 +352,34 @@ public class GitlabRestClient {
 	    String attributeId = GitlabTaskSchema.getAttributeNameFromJsonName(entry.getKey());
 	    TaskAttribute attribute = response.getRoot().getAttribute(attributeId);
 	    Field field = GitlabTaskSchema.getDefault().getFieldByKey(attributeId);
-	    if (attribute == null) {
-		PrintStream ps = attribute == null ? System.err : System.out;
-		ps.println(entry.getKey() + " -> " + entry.getValue() //
-			+ " -> " + attributeId + " -> " + attribute + "\n" //
-			+ entry.getValue().isJsonPrimitive() + entry.getValue().isJsonObject()
-			+ entry.getValue().isJsonArray());
-		ps.flush();
-	    }
+//	    if (attribute == null) {
+//		PrintStream ps = attribute == null ? System.err : System.out;
+//		ps.println(entry.getKey() + " -> " + entry.getValue() //
+//			+ " -> " + attributeId + " -> " + attribute + "\n" //
+//			+ entry.getValue().isJsonPrimitive() + entry.getValue().isJsonObject()
+//			+ entry.getValue().isJsonArray());
+//		ps.flush();
+//	    }
 	    if (attribute != null && entry.getValue() != null && entry.getValue().isJsonPrimitive()) {
 		attribute.setValue(entry.getValue().getAsString());
 	    }
+	    if (attribute != null && entry.getValue() != null && entry.getValue().isJsonArray()) {
+		for (JsonElement arrayElement : entry.getValue().getAsJsonArray()) {
+		    attribute.addValue(arrayElement.getAsString());
+		}
+	    }
 	    if (field != null && TaskAttribute.TYPE_PERSON.equals(field.getType()) && entry.getValue().isJsonObject()) {
-
-		attribute.setValue(entry.getValue().getAsJsonObject().get("name").getAsString());
-		IRepositoryPerson author = taskRepository
-			.createPerson(entry.getValue().getAsJsonObject().get("username").getAsString());
-		author.setName(
-			entry.getValue().getAsJsonObject().get("name").getAsString());
-		author.setAttribute("avatar_url", entry.getValue().getAsJsonObject()
-			.get("avatar_url").getAsString());
+		JsonObject personObject = entry.getValue().getAsJsonObject();
+		attribute.setValue(personObject.get("name").getAsString());
+		IRepositoryPerson author = taskRepository.createPerson(personObject.get("username").getAsString());
+		author.setName(personObject.get("name").getAsString());
+		author.setAttribute("avatar_url", personObject.get("avatar_url").getAsString());
 		mapper.setRepositoryPerson(attribute, author);
+	    }
+	    if (GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey().equals(attributeId) && attribute != null
+		    && entry.getValue() != null && entry.getValue().isJsonObject()) {
+		JsonObject obj = (JsonObject) entry.getValue();
+		attribute.setValue(obj.get("id").getAsString());
 	    }
 	}
 	return response;
@@ -350,13 +413,12 @@ public class GitlabRestClient {
 	return config;
     }
 
-    private void getAccessTokenIfNotPresent(IOperationMonitor monitor) {
+    private void getAccessTokenIfNotPresent(IOperationMonitor monitor) throws GitlabException {
 	if (getClientAttribute(AUTHORIZATION_HEADER) == null) {
 	    try {
 		obtainAccessToken(monitor);
 	    } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "Exception", e));
 	    }
 	}
     }
@@ -372,27 +434,33 @@ public class GitlabRestClient {
     }
 
     public String obtainAccessToken(IOperationMonitor monitor) throws Exception {
-	AuthenticationCredentials credentials1 = taskRepository
-		.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
-	String username = credentials1.getUserName();
-	String password = credentials1.getPassword();
-	String repositoryUrl = taskRepository.getRepositoryUrl();
+	String accessToken;
+	if (Boolean.parseBoolean(taskRepository.getProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN))) {
+	    accessToken = taskRepository.getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN);
+	} else {
+	    AuthenticationCredentials credentials1 = taskRepository
+		    .getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
+	    String username = credentials1.getUserName();
+	    String password = credentials1.getPassword();
+	    String repositoryUrl = taskRepository.getRepositoryUrl();
 
-	URL url = new URL(repositoryUrl + "/oauth/token");
-	HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	connection.setRequestMethod("POST");
-	connection.setDoOutput(true);
-	connection.getOutputStream()
-		.write(("grant_type=password&username=" + username + "&password=" + password).getBytes());
-	connection.connect();
+	    URL url = new URL(repositoryUrl + "/oauth/token");
+	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	    connection.setRequestMethod("POST");
+	    connection.setDoOutput(true);
+	    connection.getOutputStream()
+		    .write(("grant_type=password&username=" + username + "&password=" + password).getBytes());
+	    connection.connect();
 
-	int responseCode = connection.getResponseCode();
-	if (responseCode != 200) {
-	    throw new Exception("Failed to obtain access token");
+	    int responseCode = connection.getResponseCode();
+	    if (responseCode != 200) {
+		throw new Exception("Failed to obtain access token");
+	    }
+
+	    String response = new String(connection.getInputStream().readAllBytes());
+	    accessToken = response.split("\"access_token\":\"")[1].split("\"")[0];
 	}
 
-	String response = new String(connection.getInputStream().readAllBytes());
-	String accessToken = response.split("\"access_token\":\"")[1].split("\"")[0];
 	setClientAttribute(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 	return accessToken;
     }
@@ -754,7 +822,8 @@ public class GitlabRestClient {
 		try {
 		    ((HttpPost) request).setEntity(new StringEntity(body));
 		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
+		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+			    "UnsupportedEncodingException", e));
 		}
 	    };
 
@@ -804,43 +873,67 @@ public class GitlabRestClient {
 	return jsonElement;
     }
 
-    public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor) {
+    public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor)
+	    throws GitlabException {
 	GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
-	try {
-	    JsonObject user = getUser(monitor);
-	    config.setUserID(user.get("id").getAsBigInteger());
-	    config.setUserDetails(user);
-	    JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
-	    for (JsonElement project : (JsonArray) projects) {
-		config.addProject(project);
+	JsonObject user = getUser(monitor);
+	config.setUserID(user.get("id").getAsBigInteger());
+	config.setUserDetails(user);
+	JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
+	for (JsonElement project : (JsonArray) projects) {
+	    JsonObject projectObject = (JsonObject) project;
+	    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
+	    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+	    config.addProject(projectObject, labels, milestones);
+	}
+	String projectValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
+	if (projectValue != null && !projectValue.isBlank()) {
+	    String[] projectList = projectValue.split(",");
+	    for (String project : projectList) {
+		try {
+		    JsonObject projectDetail = getProject(URLEncoder.encode(project, StandardCharsets.UTF_8.toString()),
+			    monitor);
+		    JsonObject projectObject = (JsonObject) projectDetail;
+		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
+		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+		    config.addProject(projectObject, labels, milestones);
+		} catch (UnsupportedEncodingException e) {
+		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+			    "UnsupportedEncodingException", e));
+		}
 	    }
-	    String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
+	}
+	String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
+	if (groupsValue != null && !groupsValue.isBlank()) {
 	    String[] groupList = groupsValue.split(",");
 	    for (String group : groupList) {
 		JsonObject groupDetail = getGroup("/" + group, monitor);
 		config.addGroup(groupDetail);
 		projects = getGroupProjects(group, monitor);
 		for (JsonElement project : (JsonArray) projects) {
-		    config.addProject(project);
+		    JsonObject projectObject = (JsonObject) project;
+		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
+		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+		    config.addProject(projectObject, labels, milestones);
 		}
 	    }
-	} catch (GitlabException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	}
 	return config;
     }
 
-    Map<String, String> updatable=  Map.ofEntries(Map.entry(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title")
-	    ,Map.entry(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description")
-	    ,Map.entry(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
-		    GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey())
-	    ,Map.entry(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
-		    GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey())
-	    ,Map.entry(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(), GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey())
-	    ,Map.entry(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event")
-	    ,Map.entry(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey())
-	);
+    Map<String, String> updatable = Map.ofEntries(Map.entry(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title"),
+	    Map.entry(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description"),
+	    Map.entry(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
+		    GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey()),
+	    Map.entry(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
+		    GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey()),
+	    Map.entry(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(),
+		    GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey()),
+	    Map.entry(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event"),
+	    Map.entry(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey()),
+	    Map.entry(GitlabTaskSchema.getDefault().TASK_LABELS.getKey(),
+		    GitlabTaskSchema.getDefault().TASK_LABELS.getKey()),
+	    Map.entry(GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey(), "milestone_id"));
 
     private static SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -867,6 +960,10 @@ public class GitlabRestClient {
 	    if (updatable.containsKey(attributeID)) {
 		TaskAttribute newAttrib = taskData.getRoot().getAttribute(attributeID);
 		String newValue = newAttrib.getValue();
+		if (attributeID.equals(GitlabTaskSchema.getDefault().TASK_LABELS.getKey())) {
+		    newValue = newAttrib.getValues().toString().substring(1,
+			    newAttrib.getValues().toString().length() - 1);
+		}
 		if (attributeID.equals("due_date")) {
 		    if (newValue.length() > 0) {
 			newValue = dmyFormat.format(new Date(Long.parseLong(newValue)));
@@ -912,7 +1009,8 @@ public class GitlabRestClient {
 	TaskAttribute productAttribute = taskData.getRoot()
 		.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
 	if (productAttribute == null || productAttribute.getValue().isEmpty()) {
-	    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"productAttribute should not be null"));
+	    throw new GitlabException(
+		    new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "productAttribute should not be null"));
 	}
 	JsonObject jsonElement;
 	jsonElement = new GitlabPostOperation<JsonObject>(client,
@@ -927,7 +1025,8 @@ public class GitlabRestClient {
 		try {
 		    ((HttpPost) request).setEntity(new StringEntity(jsondata));
 		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
+		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+			    "UnsupportedEncodingException", e));
 		}
 	    };
 
@@ -985,6 +1084,41 @@ public class GitlabRestClient {
 	    }
 	}
 	return (new String(ostr));
+    }
+
+    public JsonArray getProjectLabels(String projectid, IOperationMonitor monitor) throws GitlabException {
+	getAccessTokenIfNotPresent(monitor);
+	JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/projects/" + projectid + "/labels") {
+	    @Override
+	    protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
+		return request;
+	    }
+
+	    @Override
+	    protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+		return new Gson().fromJson(in, JsonArray.class);
+	    }
+	}.run(monitor);
+	return jsonArray;
+    }
+
+    public JsonArray getProjectMilestones(String projectid, IOperationMonitor monitor) throws GitlabException {
+	getAccessTokenIfNotPresent(monitor);
+	JsonArray jsonArray = new GitlabJSonArrayOperation(client,
+		"/projects/" + projectid + "/milestones?include_parent_milestones=true") {
+	    @Override
+	    protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
+		return request;
+	    }
+
+	    @Override
+	    protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+		return new Gson().fromJson(in, JsonArray.class);
+	    }
+	}.run(monitor);
+	return jsonArray;
     }
 
 }
