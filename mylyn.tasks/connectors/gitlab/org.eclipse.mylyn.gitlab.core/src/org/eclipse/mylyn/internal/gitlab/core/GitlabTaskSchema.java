@@ -79,6 +79,12 @@ public class GitlabTaskSchema extends GitlabNewTaskSchema {
     public final Field TASK_STATUS = createField("task_status", "Task Status", TaskAttribute.TYPE_SHORT_TEXT,
 	    Flag.ATTRIBUTE);
 
+    public final Field TASK_LABELS = createField("labels", "Labels", TaskAttribute.TYPE_MULTI_SELECT,
+	    Flag.ATTRIBUTE);
+    public final Field TASK_MILESTONE = createField("milestone", "Milestone", TaskAttribute.TYPE_SINGLE_SELECT,
+	    Flag.ATTRIBUTE);
+
+
     public final Field DUE_DATE = createField("due_date", "Due date", TaskAttribute.TYPE_DATE, Flag.ATTRIBUTE);
     private static Map<String, String> json2AttributeMapper = Map
 	    .ofEntries(Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
