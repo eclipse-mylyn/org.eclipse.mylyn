@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews UI Framework
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui.tests;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.1.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.reviews.ui
 Import-Package: com.google.common.base;version="31.1.0",
@@ -10,7 +10,7 @@ Import-Package: com.google.common.base;version="31.1.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
  org.eclipse.mylyn.reviews.ui.tests
-Require-Bundle: org.eclipse.mylyn.gerrit.ui;bundle-version="4.0.0",
+Require-Bundle: org.eclipse.mylyn.gerrit.ui;bundle-version="4.1.0",
  org.junit;bundle-version="4.13.2",
  org.mockito.mockito-core;bundle-version="4.8.1"
 

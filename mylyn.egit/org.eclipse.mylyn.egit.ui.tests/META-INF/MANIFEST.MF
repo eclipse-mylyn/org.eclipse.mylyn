@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Git Team Provider UI Test Fragment
 Automatic-Module-Name: org.eclipse.egit.mylyn.ui.test
 Bundle-SymbolicName: org.eclipse.mylyn.egit.ui.tests
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.1.0.qualifier
 Fragment-Host: org.eclipse.mylyn.egit.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Eclipse Mylyn
