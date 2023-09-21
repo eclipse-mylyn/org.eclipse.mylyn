@@ -22,6 +22,7 @@ import org.eclipse.mylyn.gitlab.ui.GitlabUiActivator;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CommentGroupStrategy.CommentGroup;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart.CommentGroupViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.UserAttributeEditor;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -35,7 +36,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
- 
+
     public class GitlabCommentGroupViewer extends CommentGroupViewer {
 
 	public GitlabCommentGroupViewer(CommentGroup commentGroup) {
@@ -58,7 +59,8 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	}
 
 	@Override
-	protected void createUserImageControl(FormToolkit toolkit, Composite commentViewer,TaskAttribute commentAttribute) {
+	protected void createUserImageControl(FormToolkit toolkit, Composite commentViewer,
+		TaskAttribute commentAttribute) {
 	    boolean showAvatar = Boolean
 		    .parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.AVANTAR));
 	    if (showAvatar) {
@@ -85,7 +87,8 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	}
 
 	@Override
-	protected void createAdditionalControls(FormToolkit toolkit, Composite commentViewer,TaskAttribute commentAttribute) {
+	protected void createAdditionalControls(FormToolkit toolkit, Composite commentViewer,
+		TaskAttribute commentAttribute) {
 	    TaskAttribute reply = commentAttribute.getAttribute("reply");
 	    if (reply != null) {
 		Composite replayComposite = new Composite(commentViewer, SWT.NONE);
@@ -113,24 +116,14 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 
 	@Override
 	protected void closeAdditionalControls() {
-	    if (subViewer.size() > 0) {
-		for (GitlabCommentViewer subView : subViewer) {
-		    subView.dispose();
-		}
-		subViewer.clear();
-	    }
+	    subViewer.forEach(subView -> subView.dispose());
+	    subViewer.clear();
 	}
     }
 
-//    public GitlabTaskEditorCommentPart() {
-//	super();
-//	setPartName("Activities");
-//    }
-
-    
     @Override
-    protected CommentGroupViewer createCommentGroupViewer(List<CommentGroup> commentGroups, int i) {
-        return new GitlabCommentGroupViewer(commentGroups.get(i));
+    protected CommentGroupViewer createCommentGroupViewer(CommentGroup commentGroup) {
+	return new GitlabCommentGroupViewer(commentGroup);
     }
 
     protected void setTitleImage(ImageHyperlink expandCommentHyperlink, TaskComment taskComment,
@@ -162,12 +155,12 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 		TaskAttribute.COMMENT_AUTHOR);
 
 	TaskAttribute userImageAttribute = commentAttribute.getAttribute(commentAuthor);
-	TaskAttribute avatar_url = userImageAttribute.getAttribute("avatar_url");
+	TaskAttribute avatarUrl = userImageAttribute.getAttribute("avatar_url");
 
-	if (avatar_url != null) {
+	if (avatarUrl != null) {
 	    GitlabRepositoryConnector gitlabConnector = (GitlabRepositoryConnector) TasksUi.getRepositoryManager()
 		    .getRepositoryConnector(userImageAttribute.getTaskData().getConnectorKind());
-	    byte[] avatarBytes = gitlabConnector.getAvatarData(avatar_url.getValue());
+	    byte[] avatarBytes = gitlabConnector.getAvatarData(avatarUrl.getValue());
 	    userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, ""));
 	}
     }

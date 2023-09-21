@@ -715,7 +715,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	protected void setTitleImage(ImageHyperlink expandCommentHyperlink, TaskComment taskComment,
 			CommentViewer commentViewer) {
-
+		// empty Method to allow subclasses to overwrite the default Image
 	}
 
 	protected void setUserImage(UserAttributeEditor userImage, TaskAttribute commentAttribute,
@@ -921,7 +921,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		commentGroupViewers = new ArrayList<CommentGroupViewer>(commentGroups.size());
 		if (commentGroups.size() > 0) {
 			for (int i = 0; i < commentGroups.size(); i++) {
-				CommentGroupViewer viewer = createCommentGroupViewer(commentGroups, i);
+				CommentGroupViewer viewer = createCommentGroupViewer(commentGroups.get(i));
 				boolean isLastGroup = i == commentGroups.size() - 1;
 				viewer.setRenderedInSubSection(!isLastGroup);
 				commentGroupViewers.add(viewer);
@@ -930,8 +930,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return commentGroupViewers;
 	}
 
-	protected CommentGroupViewer createCommentGroupViewer(List<CommentGroup> commentGroups, int i) {
-		return new CommentGroupViewer(commentGroups.get(i));
+	protected CommentGroupViewer createCommentGroupViewer(CommentGroup commentGroup) {
+		return new CommentGroupViewer(commentGroup);
 	}
 
 	private void initialize() {
