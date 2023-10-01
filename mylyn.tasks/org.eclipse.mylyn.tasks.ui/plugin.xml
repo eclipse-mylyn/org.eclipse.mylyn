@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <!--
-    Copyright (c) 2009, 2013 Tasktop Technologies and others.
+    Copyright (c) 2009, 2023 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v2.0
     which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
 
     Contributors:
          Tasktop Technologies - initial API and implementation
+         ArSysOp - ongoing support
  -->
 <plugin>
     <extension-point id="actions" name="Tasklist Actions" schema="schema/actions.exsd"/>
@@ -213,17 +214,6 @@
         <viewShortcut
               id="org.eclipse.mylyn.tasks.ui.views.repositories">
         </viewShortcut>
-     </perspectiveExtension>
-
-       <perspectiveExtension targetID="org.eclipse.team.cvs.ui.cvsPerspective">
-        <view
-              id="org.eclipse.mylyn.tasks.ui.views.repositories"
-              minimized="false"
-              ratio="0.7"
-              relationship="bottom"
-              relative="org.eclipse.team.ccvs.ui.RepositoriesView"
-              visible="true"/>
-        <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.repositories"/>
      </perspectiveExtension>
 
      <perspectiveExtension targetID="org.eclipse.team.ui.TeamSynchronizingPerspective">
