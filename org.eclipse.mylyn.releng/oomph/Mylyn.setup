@@ -259,13 +259,6 @@
         </predicate>
       </workingSet>
       <workingSet
-          name="Trac Connector">
-        <predicate
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.mylyn-aggregator"
-            relativePathPattern="mylyn.tasks/connectors/trac/.*"/>
-      </workingSet>
-      <workingSet
           name="Bugzilla Connector">
         <predicate
             xsi:type="predicates:RepositoryPredicate"

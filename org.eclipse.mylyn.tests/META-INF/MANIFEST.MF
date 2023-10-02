@@ -32,7 +32,6 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="4.1.0",
  org.eclipse.mylyn.team.tests;bundle-version="4.1.0",
  org.eclipse.mylyn.tests.util;bundle-version="4.1.0",
- org.eclipse.mylyn.trac.tests;bundle-version="4.1.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.junit;bundle-version="4.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
