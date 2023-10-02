@@ -92,15 +92,6 @@
    <feature id="org.eclipse.mylyn.bugzilla.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.trac.feature">
-      <category name="org.eclipse.mylyn.tasks.connector"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.trac.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.trac.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.github.feature">
       <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>

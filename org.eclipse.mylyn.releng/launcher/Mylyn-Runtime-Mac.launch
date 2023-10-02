@@ -304,8 +304,6 @@
 <mapEntry key="org.eclipse.mylyn.tasks.core/debug/synchronization" value="true"/>
 <mapEntry key="org.eclipse.mylyn.tasks.ui/debug/httpclient" value="false"/>
 <mapEntry key="org.eclipse.mylyn.tasks.ui/debug/synchronization" value="true"/>
-<mapEntry key="org.eclipse.mylyn.trac.core/debug/authentication" value="false"/>
-<mapEntry key="org.eclipse.mylyn.trac.core/debug/xmlrpc" value="false"/>
 <mapEntry key="org.eclipse.osgi/debug" value="false"/>
 <mapEntry key="org.eclipse.osgi/debug/bundleTime" value="false"/>
 <mapEntry key="org.eclipse.osgi/debug/events" value="false"/>

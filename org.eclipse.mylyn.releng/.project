@@ -6,7 +6,6 @@
 		<project>org.eclipse.mylyn.bugzilla.releng</project>
 		<project>org.eclipse.mylyn.gerrit.releng</project>
 		<project>org.eclipse.mylyn.jackson.releng</project>
-		<project>org.eclipse.mylyn.trac.releng</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
