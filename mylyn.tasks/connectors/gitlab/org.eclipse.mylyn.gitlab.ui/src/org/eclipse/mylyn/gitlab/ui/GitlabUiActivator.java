@@ -30,6 +30,11 @@ public class GitlabUiActivator extends AbstractUIPlugin {
     private static GitlabUiActivator plugin;
 
     public static String GITLAB_PICTURE_FILE = "icons/obj20/gitlab.png"; //$NON-NLS-1$
+    public static String GITLAB_PENCIL_FILE = "icons/obj12/pencil.png"; //$NON-NLS-1$
+    public static String GITLAB_LOCK_FILE = "icons/obj12/lock.png"; //$NON-NLS-1$
+    public static String GITLAB_UNLOCK_FILE = "icons/obj12/lock-open.png"; //$NON-NLS-1$
+    public static String GITLAB_CALENDAR_FILE = "icons/obj12/calendar.png"; //$NON-NLS-1$
+    public static String GITLAB_PERSON_FILE = "icons/obj12/person.png"; //$NON-NLS-1$
 
     /**
      * The constructor
@@ -64,6 +69,11 @@ public class GitlabUiActivator extends AbstractUIPlugin {
     @Override
     protected void initializeImageRegistry(ImageRegistry reg) {
 	reg.put(GITLAB_PICTURE_FILE, getImageDescriptor(GITLAB_PICTURE_FILE));
+	reg.put(GITLAB_PENCIL_FILE, getImageDescriptor(GITLAB_PENCIL_FILE));
+	reg.put(GITLAB_UNLOCK_FILE, getImageDescriptor(GITLAB_UNLOCK_FILE));
+	reg.put(GITLAB_LOCK_FILE, getImageDescriptor(GITLAB_LOCK_FILE));
+	reg.put(GITLAB_CALENDAR_FILE, getImageDescriptor(GITLAB_CALENDAR_FILE));
+	reg.put(GITLAB_PERSON_FILE, getImageDescriptor(GITLAB_PERSON_FILE));
     }
 
     /**

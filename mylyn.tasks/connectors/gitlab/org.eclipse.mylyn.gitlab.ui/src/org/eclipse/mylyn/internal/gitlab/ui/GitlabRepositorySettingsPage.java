@@ -55,7 +55,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
     private Button projectRemoveButton;
     private Button projectAddButton;
     private Button avatarSupportButton;
-    private Button showCommentIconsButton;
+    private Button showActivityIconsButton;
     private Button usePersonalAccessTokenButton;
     private Text personalAccessTokenText;
 
@@ -235,7 +235,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	});
 
 	avatarSupportButton = new Button(aditionalContainer, SWT.CHECK);
-	avatarSupportButton.setText("Show Avantar images");
+	avatarSupportButton.setText("Show Avantars");
 	avatarSupportButton.setSelection(getRepository() != null
 		&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.AVANTAR)));
 
@@ -245,16 +245,18 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	gd.grabExcessHorizontalSpace = true;
 	avatarSupportButton.setLayoutData(gd);
 
-	showCommentIconsButton = new Button(aditionalContainer, SWT.CHECK);
-	showCommentIconsButton.setText("Show Comment Icons images");
-	showCommentIconsButton.setSelection(getRepository() != null
-		&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS)));
+	showActivityIconsButton = new Button(aditionalContainer, SWT.CHECK);
+	showActivityIconsButton.setText("Show Activity Icons");
+	if (getRepository() != null) {
+	    String value = getRepository().getProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS);
+	    showActivityIconsButton.setSelection(value == null ? true : Boolean.parseBoolean(value));
+	}
 
 	gd = new GridData(GridData.FILL_BOTH);
 	gd.horizontalSpan = 3;
 	gd.verticalSpan = 1;
 	gd.grabExcessHorizontalSpace = true;
-	showCommentIconsButton.setLayoutData(gd);
+	showActivityIconsButton.setLayoutData(gd);
 
 	usePersonalAccessTokenButton = new Button(aditionalContainer, SWT.CHECK);
 	usePersonalAccessTokenButton.setText("use personal access token");
@@ -307,8 +309,8 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 	repository.setProperty(GitlabCoreActivator.PROJECTS,
 		projectList.size() == 0 ? null : String.join(",", projectList));
 	repository.setProperty(GitlabCoreActivator.AVANTAR, Boolean.toString(avatarSupportButton.getSelection()));
-	repository.setProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS,
-		Boolean.toString(showCommentIconsButton.getSelection()));
+	repository.setProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS,
+		Boolean.toString(showActivityIconsButton.getSelection()));
 	repository.setProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN,
 		Boolean.toString(usePersonalAccessTokenButton.getSelection()));
 	repository.setProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN, personalAccessTokenText.getText());

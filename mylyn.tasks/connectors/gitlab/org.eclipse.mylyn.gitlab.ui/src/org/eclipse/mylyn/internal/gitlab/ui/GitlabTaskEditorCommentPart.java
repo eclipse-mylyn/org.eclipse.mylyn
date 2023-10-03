@@ -28,7 +28,10 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.UserAttributeEditor;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -121,6 +124,12 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 	}
     }
 
+    
+    public GitlabTaskEditorCommentPart() {
+	super();
+	setPartName("Activities");
+    }
+
     @Override
     protected CommentGroupViewer createCommentGroupViewer(CommentGroup commentGroup) {
 	return new GitlabCommentGroupViewer(commentGroup);
@@ -129,17 +138,35 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
     protected void setTitleImage(ImageHyperlink expandCommentHyperlink, TaskComment taskComment,
 	    CommentViewer commentViewer) {
 	TaskAttribute systemAttribute = taskComment.getTaskAttribute().getAttribute("system");
+	TaskAttribute textAttribute = taskComment.getTaskAttribute().getAttribute(TaskAttribute.COMMENT_TEXT);
 	String systemAttributeValue = systemAttribute != null ? systemAttribute.getValue() : "false";
 	boolean showCommentIcons = Boolean
-		.parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.SHOW_COMMENT_ICONS));
+		.parseBoolean(getModel().getTaskRepository().getProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS));
 	if (showCommentIcons) {
-	    if ("true".equals(systemAttributeValue)) {
+	    if (textAttribute != null && (textAttribute.getValue().startsWith("changed due date ")
+		    || textAttribute.getValue().startsWith("removed due date "))) {
+		expandCommentHyperlink.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_CALENDAR_FILE));
+	    } else if (textAttribute != null && (textAttribute.getValue().startsWith("assigned to ")
+		    || textAttribute.getValue().startsWith("unassigned "))) {
+		expandCommentHyperlink.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PERSON_FILE));
+	    } else if (textAttribute != null && textAttribute.getValue().startsWith("changed ")) {
+		expandCommentHyperlink.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PENCIL_FILE));
+	    } else if (textAttribute != null && textAttribute.getValue().startsWith("unlocked ")) {
+		expandCommentHyperlink.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_UNLOCK_FILE));
+	    } else if (textAttribute != null && textAttribute.getValue().startsWith("locked ")) {
+		expandCommentHyperlink.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_LOCK_FILE));
+	    } else if ("true".equals(systemAttributeValue)) {
 		expandCommentHyperlink.setImage(
 			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PICTURE_FILE));
 	    } else {
 		IRepositoryPerson author = taskComment.getAuthor();
 		if (author != null && author.matchesUsername(getTaskEditorPage().getTaskRepository().getUserName())) {
-		    expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME));
+		    expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 		} else {
 		    expandCommentHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON));
 		}
