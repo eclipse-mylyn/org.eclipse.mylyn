@@ -78,6 +78,14 @@ public class GitlabTaskEditorPage extends AbstractTaskEditorPage {
 	    }.setPath(PATH_COMMENTS));
 	}
 	if (hasCommentPart) {
+	    descriptors.add(new TaskEditorPartDescriptor(GitlabCoreActivator.ID_PART_ACTIVITY) {
+		@Override
+		public AbstractTaskEditorPart createPart() {
+		    return new TaskEditorActivityPart();
+		}
+	    }.setPath(PATH_COMMENTS));
+	}
+	if (hasCommentPart) {
 	    descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
 		@Override
 		public AbstractTaskEditorPart createPart() {
