@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -34,8 +35,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Raphael Ackermann
@@ -187,7 +186,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				getModel().getTaskRepository().getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT))) {
 			TaskAttribute userAssignedAttribute = getTaskData().getRoot()
 					.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-			if (userAssignedAttribute != null && !Strings.isNullOrEmpty(userAssignedAttribute.getValue())) {
+			if (userAssignedAttribute != null && StringUtils.isNotEmpty(userAssignedAttribute.getValue())) {
 				UserAttributeEditor editor = new UserAttributeEditor(getModel(), userAssignedAttribute);
 				editor.createControl(composite, toolkit);
 				GridDataFactory.fillDefaults()

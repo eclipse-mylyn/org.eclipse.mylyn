@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -12,19 +15,11 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
 final class ReviewSetContentProvider implements ITreeContentProvider {
 
-	private final Multimap<ILocation, IComment> threads = LinkedHashMultimap.create();
+	private final MultiValuedMap<ILocation, IComment> threads = new ArrayListValuedHashMap();
 
-	private final Multimap<String, ILocation> threadLocationsByFile = LinkedHashMultimap.create();
+	private final MultiValuedMap<String, ILocation> threadLocationsByFile = new ArrayListValuedHashMap();
 
 	public Object[] getElements(Object inputElement) {
 		return getReviewItems(inputElement).toArray();
@@ -56,12 +51,16 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IFileItem) {
 			IFileItem file = (IFileItem) parentElement;
-			Multimap<Long, IComment> commentsByLocation = Multimaps.index(getFileComments(file), commentLineNumber());
+//			Multimap<Long, IComment> commentsByLocation = Multimaps.index(getFileComments(file), commentLineNumber());
+			MultiValuedMap<Long, IComment> commentsByLocation = new ArrayListValuedHashMap<>();
+			for (IComment comment : getFileComments(file)) {
+				commentsByLocation.put(comment.getLocations().iterator().next().getIndex(), comment);
+			}
 
 			for (ILocation location : threadLocationsByFile.get(file.getId())) {
-				threads.removeAll(location);
+				threads.remove(location);
 			}
-			threadLocationsByFile.removeAll(file.getId());
+			threadLocationsByFile.remove(file.getId());
 
 			for (Long line : commentsByLocation.keySet()) {
 				ILocation location = null;
@@ -95,37 +94,42 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 		};
 	}
 
-	private Function<? super IComment, Long> commentLineNumber() {
-		return new Function<IComment, Long>() {
-
-			@Override
-			public Long apply(IComment comment) {
-				return comment.getLocations().iterator().next().getIndex();
-			}
-		};
-	}
-
-	private Predicate<IComment> hasLocation() {
-		return new Predicate<IComment>() {
-
-			@Override
-			public boolean apply(IComment input) {
-				return input.getLocations().iterator().hasNext();
-			}
-		};
-	}
+//	private Function<? super IComment, Long> commentLineNumber() {
+//		return new Function<IComment, Long>() {
+//
+//			@Override
+//			public Long apply(IComment comment) {
+//				return comment.getLocations().iterator().next().getIndex();
+//			}
+//		};
+//	}
+//
+////	private Predicate<IComment> hasLocation() {
+//		return new Predicate<IComment>() {
+//
+//			@Override
+//			public boolean apply(IComment input) {
+//				return input.getLocations().iterator().hasNext();
+//			}
+//		};
+//	}
 
 	private List<IFileItem> getReviewItems(Object inputElement) {
 		if (inputElement instanceof IReviewItemSet) {
 			return ((IReviewItemSet) inputElement).getItems();
 		}
-		return ImmutableList.of();
+		return List.of();
 	}
 
 	private List<IComment> getFileComments(Object inputElement) {
 		if (inputElement instanceof IFileItem) {
-			return FluentIterable.from(((IFileItem) inputElement).getAllComments()).filter(hasLocation()).toList();
+//			return FluentIterable.from(((IFileItem) inputElement).getAllComments()).filter(hasLocation()).toList();
+
+			return ((IFileItem) inputElement).getAllComments()
+					.stream()
+					.filter(input -> input.getLocations().iterator().hasNext())
+					.collect(Collectors.toUnmodifiableList());
 		}
-		return ImmutableList.of();
+		return List.of();
 	}
 }

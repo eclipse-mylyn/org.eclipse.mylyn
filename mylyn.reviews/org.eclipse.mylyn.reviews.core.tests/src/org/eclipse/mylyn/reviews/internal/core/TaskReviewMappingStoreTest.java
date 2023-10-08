@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
@@ -38,8 +39,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
-
-import com.google.common.collect.ImmutableSet;
 
 @SuppressWarnings("restriction")
 public class TaskReviewMappingStoreTest {
@@ -142,7 +141,7 @@ public class TaskReviewMappingStoreTest {
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
@@ -156,10 +155,10 @@ public class TaskReviewMappingStoreTest {
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		Collection<String> reviewUrls = taskReviewsMappingStore.getReviewUrls(taskUrl1);
 
@@ -180,7 +179,7 @@ public class TaskReviewMappingStoreTest {
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.addTaskAssocation(review2, reviewData2);
 
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta1, delta2));
+		taskReviewsMappingStore.containersChanged(Set.of(delta1, delta2));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
@@ -196,7 +195,7 @@ public class TaskReviewMappingStoreTest {
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertFalse(taskReviewsMappingStore.getReviewUrls(reviewUrl2).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
@@ -212,13 +211,13 @@ public class TaskReviewMappingStoreTest {
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
 		delta = new TaskContainerDelta(review1, Kind.DELETED);
 
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
@@ -232,7 +231,7 @@ public class TaskReviewMappingStoreTest {
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
@@ -241,7 +240,7 @@ public class TaskReviewMappingStoreTest {
 		delta = new TaskContainerDelta(review1, Kind.CONTENT);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl2).contains(reviewUrl1));
@@ -256,7 +255,7 @@ public class TaskReviewMappingStoreTest {
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
@@ -264,7 +263,7 @@ public class TaskReviewMappingStoreTest {
 		delta = new TaskContainerDelta(review1, Kind.CONTENT);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
@@ -278,7 +277,7 @@ public class TaskReviewMappingStoreTest {
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
 	}
@@ -290,7 +289,7 @@ public class TaskReviewMappingStoreTest {
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
 		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
-		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+		taskReviewsMappingStore.containersChanged(Set.of(delta));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
 	}
 

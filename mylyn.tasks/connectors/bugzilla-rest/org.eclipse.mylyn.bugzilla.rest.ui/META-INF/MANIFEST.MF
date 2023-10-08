@@ -17,4 +17,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse Mylyn
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.rest.ui.BugzillaRestUiPlugin
 Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.ui
-Import-Package: com.google.common.base;version="31.1.0"
+Import-Package: org.apache.commons.lang3;version="3.12.0"

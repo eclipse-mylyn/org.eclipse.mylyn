@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -29,8 +29,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class LabelsAttributeEditorTest {
 
@@ -83,24 +81,24 @@ public class LabelsAttributeEditorTest {
 
 	@Test
 	public void testMultiSelectEmpty() {
-		createMultiSelect(ImmutableList.<String> of());
-		assertMultiSelectValue("", ImmutableList.<String> of());
+		createMultiSelect(List.<String> of());
+		assertMultiSelectValue("", List.<String> of());
 		editor.setValue("one,two");
-		assertMultiSelectValue("one, two", ImmutableList.of("one", "two"));
+		assertMultiSelectValue("one, two", List.of("one", "two"));
 		editor.setValue("");
-		assertMultiSelectValue("", ImmutableList.<String> of());
+		assertMultiSelectValue("", List.<String> of());
 	}
 
 	@Test
 	public void testMultiSelect() {
-		createMultiSelect(ImmutableList.of("one", "two"));
-		assertMultiSelectValue("one, two", ImmutableList.of("one", "two"));
+		createMultiSelect(List.of("one", "two"));
+		assertMultiSelectValue("one, two", List.of("one", "two"));
 		editor.setValue("one,two,three,four");
-		assertMultiSelectValue("one, two, three, four", ImmutableList.of("one", "two", "three", "four"));
+		assertMultiSelectValue("one, two, three, four", List.of("one", "two", "three", "four"));
 		editor.setValue("one");
-		assertMultiSelectValue("one", ImmutableList.of("one"));
+		assertMultiSelectValue("one", List.of("one"));
 		editor.setValue("one,two ,      three,  four  ,five     ,,        ,");
-		assertMultiSelectValue("one, two, three, four, five", ImmutableList.of("one", "two", "three", "four", "five"));
+		assertMultiSelectValue("one, two, three, four, five", List.of("one", "two", "three", "four", "five"));
 	}
 
 	private void createSingleSelect(String value) {
@@ -114,7 +112,7 @@ public class LabelsAttributeEditorTest {
 	private void createMultiSelect(List<String> values) {
 		multiSelectAttribute = taskData.getRoot().createAttribute("multiSelect");
 		multiSelectAttribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
-		multiSelectAttribute.setValues(ImmutableList.copyOf(values));
+		multiSelectAttribute.setValues(List.copyOf(values));
 		editor = new LabelsAttributeEditor(model, multiSelectAttribute);
 		assertLayoutHint(true);
 	}

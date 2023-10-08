@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -21,8 +22,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.xml.sax.Attributes;
-
-import com.google.common.base.Strings;
 
 public class SaxCategoryBuilder extends SaxTaskListElementBuilder<AbstractTaskCategory> {
 
@@ -38,9 +37,9 @@ public class SaxCategoryBuilder extends SaxTaskListElementBuilder<AbstractTaskCa
 	public void beginItem(Attributes elementAttributes) {
 		try {
 			String name = elementAttributes.getValue(TaskListExternalizationConstants.KEY_NAME);
-			if (!Strings.isNullOrEmpty(name)) {
+			if (StringUtils.isNotEmpty(name)) {
 				String handle = elementAttributes.getValue(TaskListExternalizationConstants.KEY_HANDLE);
-				if (Strings.isNullOrEmpty(handle)) {
+				if (StringUtils.isEmpty(handle)) {
 					handle = name;
 				}
 				category = taskList.getContainerForHandle(handle);

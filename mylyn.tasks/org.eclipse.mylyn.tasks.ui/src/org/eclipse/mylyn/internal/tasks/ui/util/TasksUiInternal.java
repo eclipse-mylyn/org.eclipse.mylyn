@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
@@ -149,8 +150,6 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -891,11 +890,11 @@ public class TasksUiInternal {
 				.getRepositoryConnector(taskData.getConnectorKind());
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
 		String summary = mapping.getSummary();
-		if (!Strings.isNullOrEmpty(summary)) {
+		if (StringUtils.isNotEmpty(summary)) {
 			task.setSummary(summary);
 		}
 		String taskKind = mapping.getTaskKind();
-		if (!Strings.isNullOrEmpty(taskKind)) {
+		if (StringUtils.isNotEmpty(taskKind)) {
 			task.setTaskKind(taskKind);
 		}
 		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList()

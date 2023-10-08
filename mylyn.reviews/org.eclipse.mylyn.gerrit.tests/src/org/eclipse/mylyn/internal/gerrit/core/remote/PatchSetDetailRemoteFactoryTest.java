@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,7 +32,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -64,7 +63,7 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	@Test
 	public void testUserHasNoAccessToAdminDraft() throws Exception {
-		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, ImmutableList.of("testFile2.txt", "testFile3.txt"));
+		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, List.of("testFile2.txt", "testFile3.txt"));
 
 		reviewHarness.retrieve();
 		assertThat(reviewHarness.getReview().getSets().size(), is(1));
@@ -77,10 +76,10 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	@Test
 	public void testUserHasAccessToAdminDraft() throws Exception {
-		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, ImmutableList.of("testFile2.txt", "testFile3.txt"));
+		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, List.of("testFile2.txt", "testFile3.txt"));
 		reviewHarness.getClient()
 				.addReviewers(reviewHarness.getShortId(),
-						ImmutableList.of(GerritFixture.current().getCredentials(PrivilegeLevel.USER).getUserName()),
+						List.of(GerritFixture.current().getCredentials(PrivilegeLevel.USER).getUserName()),
 						new NullProgressMonitor());
 
 		reviewHarness.retrieve();

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -16,8 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
-
-import junit.framework.TestCase;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -32,17 +32,13 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
 import org.junit.Before;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
+import junit.framework.TestCase;
 
 @SuppressWarnings("restriction")
 public class TaskEditorRestoreTest extends TestCase {
@@ -109,7 +105,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		taskActivityManager.activateTask(task1);
 
 		assertOnlyTask1IsOpen();
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.<TextEditor> identity()));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, v -> v));
 	}
 
 	public void testDeactivateRestoresActiveTaskEditorAndFiles() throws Exception {
@@ -135,8 +131,8 @@ public class TaskEditorRestoreTest extends TestCase {
 	}
 
 	private void assertNoTaskOrTextEditorsOpen() {
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.<TextEditor> identity()));
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TaskEditor.class, Functions.<TaskEditor> identity()));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, v -> v));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TaskEditor.class, v -> v));
 	}
 
 	private void assertOnlyTask1IsOpen() {
@@ -146,7 +142,7 @@ public class TaskEditorRestoreTest extends TestCase {
 				return editor.getTaskEditorInput().getTask().getSummary();
 			}
 		});
-		assertEquals(ImmutableSet.of(task1.getSummary()), editorSummaries);
+		assertEquals(Set.of(task1.getSummary()), editorSummaries);
 	}
 
 	private void assertFilesAreOpen() {
@@ -156,19 +152,27 @@ public class TaskEditorRestoreTest extends TestCase {
 				return editor.getTitle();
 			}
 		});
-		assertEquals(ImmutableSet.of(fileA.getName(), fileB.getName()), editorTitles);
+		assertEquals(Set.of(fileA.getName(), fileB.getName()), editorTitles);
 	}
 
 	private <T extends IEditorPart, S> Set<S> getOpenEditorsByType(Class<T> clazz, Function<T, S> propertyFunction) {
-		return FluentIterable.from(Arrays.asList(page.getEditorReferences()))
-				.transform(new Function<IEditorReference, IEditorPart>() {
-					@Override
-					public IEditorPart apply(IEditorReference ref) {
-						return ref.getEditor(true);
-					}
-				})
-				.filter(clazz)
-				.transform(propertyFunction)
-				.toSet();
+//		return FluentIterable.from(Arrays.asList(page.getEditorReferences()))
+//				.transform(new Function<IEditorReference, IEditorPart>() {
+//					@Override
+//					public IEditorPart apply(IEditorReference ref) {
+//						return ref.getEditor(true);
+//					}
+//				})
+//				.filter(clazz)
+//				.transform(propertyFunction)
+//				.toSet();
+
+		return Arrays.asList(page.getEditorReferences())
+				.stream()
+				.map(ref -> ref.getEditor(true))
+				.filter(clazz::isInstance)
+				.map(clazz::cast)
+				.map(propertyFunction)
+				.collect(Collectors.toUnmodifiableSet());
 	}
 }

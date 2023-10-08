@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -23,16 +23,14 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
-import com.google.common.collect.ImmutableList;
-
 class TaskListScheduledSynchronizationManager {
 
 	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 20 * 1000;
 
-	private static final List<String> FULL_REFRESH_ENABLEMENT_KEYS = ImmutableList
+	private static final List<String> FULL_REFRESH_ENABLEMENT_KEYS = List
 			.of(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 
-	private static final List<String> RELEVANT_TASKS_REFRESH_ENABLEMENT_KEYS = ImmutableList.of(
+	private static final List<String> RELEVANT_TASKS_REFRESH_ENABLEMENT_KEYS = List.of(
 			ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 			ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED);
 

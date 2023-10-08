@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,11 +56,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 
 public class ConnectorMigrationUi {
 
@@ -191,8 +188,12 @@ public class ConnectorMigrationUi {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				String repositoryList = Joiner.on("\n") //$NON-NLS-1$
-						.join(Iterables.transform(failedValidation, repositoryToLabel()));
+//				String repositoryList = Joiner.on("\n") //$NON-NLS-1$
+//						.join(Iterables.transform(failedValidation, repositoryToLabel()));
+				String repositoryList = failedValidation.stream()
+						.map(repositoryToLabel())
+						.collect(Collectors.joining("\n")); //$NON-NLS-1$
+
 				MessageDialog.openWarning(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Validation_Failed,
 						NLS.bind(Messages.ConnectorMigrationWizard_validation_failed, repositoryList));
 			}
@@ -242,8 +243,14 @@ public class ConnectorMigrationUi {
 	 */
 	protected void delete(final Set<ITask> tasks, final TaskRepository repository, final TaskRepository newRepository,
 			IProgressMonitor monitor) {
-		final Set<RepositoryQuery> queries = Sets.filter(tasksState.getTaskList().getQueries(),
-				isQueryForRepository(repository));
+//		final Set<RepositoryQuery> queries = Sets.filter(tasksState.getTaskList().getQueries(),
+//				isQueryForRepository(repository));
+
+		final Set<RepositoryQuery> queries = tasksState.getTaskList()
+				.getQueries()
+				.stream()
+				.filter(isQueryForRepository(newRepository))
+				.collect(Collectors.toUnmodifiableSet());
 		final UnsubmittedTaskContainer unsubmitted = tasksState.getTaskList()
 				.getUnsubmittedContainer(repository.getRepositoryUrl());
 		try {

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2016 Vaughan Hilts and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Vaughan Hilts - 	   Initial implementation
@@ -18,16 +18,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 
 public class TaskBuildStatusMapper {
 	public static final String BUILD_RESULT_TYPE = "BuildResult"; //$NON-NLS-1$
@@ -59,14 +58,18 @@ public class TaskBuildStatusMapper {
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		taskAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE).setKind(TaskBuildStatusMapper.KIND_PATCH_SET);
 
-		Function<BuildResult, String> groupFunction = new Function<BuildResult, String>() {
-			@Override
-			public String apply(BuildResult source) {
-				return source.getJobName();
-			}
+//		Function<BuildResult, String> groupFunction = new Function<BuildResult, String>() {
+//			@Override
+//			public String apply(BuildResult source) {
+//				return source.getJobName();
+//			}
+//
+//		};
+//		final Multimap<String, BuildResult> buildsByJobName_old = Multimaps.index(this.buildResults, groupFunction);
 
-		};
-		final Multimap<String, BuildResult> buildsByJobName = Multimaps.index(this.buildResults, groupFunction);
+		final MultiValuedMap<String, BuildResult> buildsByJobName = new ArrayListValuedHashMap<>();
+		StreamSupport.stream(buildResults.spliterator(), false)
+				.forEach(result -> buildsByJobName.put(result.getJobName(), result));
 
 		int i = 0;
 		for (Entry<String, Collection<BuildResult>> jobEntry : buildsByJobName.asMap().entrySet()) {
@@ -112,9 +115,12 @@ public class TaskBuildStatusMapper {
 	}
 
 	private String hashChildAttributeValues(TaskAttribute attribute) {
-		Object[] childValues = FluentIterable.from(attribute.getAttributes().values())
-				.transform(toValue())
-				.toArray(Object.class);
+//		Object[] childValues = FluentIterable.from(attribute.getAttributes().values())
+//				.transform(toValue())
+//				.toArray(Object.class);
+
+		Object[] childValues = attribute.getAttributes().values().stream().map(toValue()).toArray(Object[]::new);
+
 		return Integer.toString(Objects.hash(childValues));
 	}
 

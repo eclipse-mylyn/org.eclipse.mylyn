@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,6 +19,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -33,9 +35,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.ui.IMemento;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-
 /**
  * @author Mik Kersten
  * @author Frank Becker
@@ -44,7 +43,7 @@ public class TaskComparator implements Comparator<ITask> {
 
 	private static final String MEMENTO_KEY_SORT = "sort"; //$NON-NLS-1$
 
-	private final ListMultimap<String, SortCriterion> sortCriteria;
+	private final MultiValuedMap<String, SortCriterion> sortCriteria;
 
 	private String currentPresentation;
 
@@ -71,7 +70,7 @@ public class TaskComparator implements Comparator<ITask> {
 	public static final int CRITERIA_COUNT = SortKey.values().length - 1;
 
 	public TaskComparator() {
-		sortCriteria = ArrayListMultimap.create();
+		sortCriteria = new ArrayListValuedHashMap<>();
 
 		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
 			String presentationId = presentation.getId();
@@ -81,7 +80,7 @@ public class TaskComparator implements Comparator<ITask> {
 		}
 
 		for (String id : sortCriteria.keySet()) {
-			List<SortCriterion> presentationCriteria = sortCriteria.get(id);
+			List<SortCriterion> presentationCriteria = (List<SortCriterion>) sortCriteria.get(id);
 			if (id.equals(ScheduledPresentation.ID)) {
 				// scheduled presentation has specific defaults
 				presentationCriteria.get(0).setKey(SortKey.DUE_DATE);
@@ -151,7 +150,7 @@ public class TaskComparator implements Comparator<ITask> {
 	public void restoreState(IMemento memento) {
 		if (memento != null) {
 			for (String presentationId : sortCriteria.keySet()) {
-				List<SortCriterion> criteria = sortCriteria.get(presentationId);
+				List<SortCriterion> criteria = (List<SortCriterion>) sortCriteria.get(presentationId);
 				for (int i = 0; i < criteria.size(); i++) {
 					IMemento child = memento.getChild(MEMENTO_KEY_SORT + presentationId + i);
 					if (child != null) {
@@ -171,7 +170,7 @@ public class TaskComparator implements Comparator<ITask> {
 	public void saveState(IMemento memento) {
 		if (memento != null) {
 			for (String presentationId : sortCriteria.keySet()) {
-				List<SortCriterion> criteria = sortCriteria.get(presentationId);
+				List<SortCriterion> criteria = (List<SortCriterion>) sortCriteria.get(presentationId);
 				for (int i = 0; i < criteria.size(); i++) {
 					IMemento child = memento.createChild(MEMENTO_KEY_SORT + presentationId + i);
 					if (child != null) {
@@ -187,7 +186,7 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	private List<SortCriterion> getCurrentCriteria() {
-		return sortCriteria.get(currentPresentation);
+		return (List<SortCriterion>) sortCriteria.get(currentPresentation);
 	}
 
 	private int sortByCreationDate(ITask task1, ITask task2, int sortDirection) {

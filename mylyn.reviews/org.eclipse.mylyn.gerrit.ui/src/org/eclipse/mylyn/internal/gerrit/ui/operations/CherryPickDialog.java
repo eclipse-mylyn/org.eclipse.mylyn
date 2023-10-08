@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -15,7 +15,9 @@ package org.eclipse.mylyn.internal.gerrit.ui.operations;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -47,8 +49,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -160,8 +160,8 @@ public class CherryPickDialog extends GerritOperationDialog {
 	}
 
 	private void updateButtons() {
-		boolean isSubmittable = !Strings.isNullOrEmpty(destination.getText())
-				&& !Strings.isNullOrEmpty(commitMessage.getText());
+		boolean isSubmittable = StringUtils.isNotEmpty(destination.getText())
+				&& StringUtils.isNotEmpty(commitMessage.getText());
 		setOKButtonEnabled(isSubmittable);
 	}
 
@@ -173,9 +173,7 @@ public class CherryPickDialog extends GerritOperationDialog {
 		GerritClient client = ((GerritConnector) TasksUi.getRepositoryConnector(task.getConnectorKind()))
 				.getClient(getRepository());
 		Set<String> allProjectBranches = client.getCachedBranches(change.getChangeDetail().getChange().getProject());
-		SortedSet<String> proposals = allProjectBranches != null
-				? Sets.newTreeSet(allProjectBranches)
-				: Sets.<String> newTreeSet();
+		SortedSet<String> proposals = allProjectBranches != null ? new TreeSet<>(allProjectBranches) : new TreeSet<>();
 		return new BranchProposalProvider(proposals);
 	}
 

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -31,10 +31,6 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class SaxRepositoriesTest {
 
@@ -120,67 +116,69 @@ public class SaxRepositoriesTest {
 
 	@Test
 	public void readVersion1() throws SAXException, IOException {
-		assertRead(version1RepositoryXml, Sets.newHashSet(createTestRepository(firstUrl)));
+		assertRead(version1RepositoryXml, Set.of(createTestRepository(firstUrl)));
 	}
 
 	@Test
 	public void readVersion1Multiple() throws SAXException, IOException {
 		assertRead(version1RepositoryXmlMultiple,
-				Sets.newHashSet(createTestRepository(firstUrl), createTestRepository(secondUrl)));
+				Set.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
 	}
 
 	@Test
 	public void readVersion1Characters() throws SAXException, IOException {
 		assertRead(version1RepositoryXmlSpecialCharacters,
-				Sets.newHashSet(
-						createTestRepository(kindCharacters, urlCharacters, labelPropertyKey, labelPropertyCharacters)),
+				Set.of(createTestRepository(kindCharacters, urlCharacters, labelPropertyKey, labelPropertyCharacters)),
 				labelPropertyKey, labelPropertyCharacters);
 	}
 
 	@Test
 	public void readVersion2() throws SAXException, IOException {
-		assertRead(version2RepositoryXml, Sets.newHashSet(createTestRepository(firstUrl)));
+		assertRead(version2RepositoryXml, Set.of(createTestRepository(firstUrl)));
 	}
 
 	@Test
 	public void readVersion2Multiple() throws SAXException, IOException {
 		assertRead(version2RepositoryXmlMultiple,
-				Sets.newHashSet(createTestRepository(firstUrl), createTestRepository(secondUrl)));
+				Set.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
 	}
 
 	@Test
 	public void readVersion2Characters() throws SAXException, IOException {
 		assertRead(
-				version2RepositoryXmlSpecialCharacters, Sets.newHashSet(createTestRepository(kindCharacters,
-						urlCharacters, labelPropertyKeyCharacters, labelPropertyCharacters)),
+				version2RepositoryXmlSpecialCharacters, Set.of(createTestRepository(kindCharacters, urlCharacters,
+						labelPropertyKeyCharacters, labelPropertyCharacters)),
 				labelPropertyKeyCharacters, labelPropertyCharacters);
 	}
 
 	@Test
 	public void write() throws SAXException, IOException {
 		OutputStream output = new ByteArrayOutputStream();
-		write(output, ImmutableList.of(createTestRepository(firstUrl)));
-		assertRead(output.toString(), Sets.newHashSet(createTestRepository(firstUrl)));
+		write(output, List.of(createTestRepository(firstUrl)));
+		assertRead(output.toString(), Set.of(createTestRepository(firstUrl)));
 	}
 
 	@Test
 	public void writeMultiple() throws SAXException, IOException {
 		OutputStream output = new ByteArrayOutputStream();
-		write(output, ImmutableList.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
-		assertRead(output.toString(), Sets.newHashSet(createTestRepository(firstUrl), createTestRepository(secondUrl)));
+		write(output, List.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
+		assertRead(output.toString(), Set.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
 	}
 
 	@Test
 	public void readMixed() throws Exception {
 		assertRead(version1AndVersion2RepositoryXmlMultiple,
-				Sets.newHashSet(createTestRepository(firstUrl), createTestRepository(secondUrl)));
+				Set.of(createTestRepository(firstUrl), createTestRepository(secondUrl)));
 	}
 
 	@Test
 	public void writeMixedBadCharacters() throws Exception {
 		OutputStream output = new ByteArrayOutputStream();
-		write(output, Lists
-				.newArrayList(createTestRepository(kind, firstUrl, labelPropertyKeyCharacters, labelPropertyValue)));
+//		final ArrayList<TaskRepository> repositories = Lists
+//				.newArrayList(createTestRepository(kind, firstUrl, labelPropertyKeyCharacters, labelPropertyValue));
+		List<TaskRepository> repositories = List
+				.of(createTestRepository(kind, firstUrl, labelPropertyKeyCharacters, labelPropertyValue));
+		write(output, repositories);
 		String serialized = output.toString();
 		// the Mylyn escaping utility turns ' into apos, but this is not done during the actual serialization
 		assertTrue(

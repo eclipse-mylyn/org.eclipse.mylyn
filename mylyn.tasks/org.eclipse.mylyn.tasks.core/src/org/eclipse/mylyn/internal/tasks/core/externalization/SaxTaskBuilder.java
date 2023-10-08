@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -35,8 +36,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
-
-import com.google.common.base.Strings;
 
 public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 
@@ -57,12 +56,12 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 			String handle = elementAttributes.getValue(TaskListExternalizationConstants.KEY_HANDLE);
 			String taskId = elementAttributes.getValue(TaskListExternalizationConstants.KEY_TASK_ID);
 			String repositoryUrl = elementAttributes.getValue(TaskListExternalizationConstants.KEY_REPOSITORY_URL);
-			String summary = Strings
-					.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_LABEL));
+			String summary = StringUtils
+					.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_LABEL));
 
 			// local tasks may not have a connector kind
-			String connectorKind = Strings
-					.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_CONNECTOR_KIND));
+			String connectorKind = StringUtils
+					.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_CONNECTOR_KIND));
 
 			if (handle != null) {
 				if (taskId == null) {
@@ -122,10 +121,10 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 		task.setActive(Boolean.valueOf(active));
 
 		String url = elementAttributes.getValue(TaskListExternalizationConstants.KEY_ISSUEURL);
-		task.setUrl(Strings.nullToEmpty(url));
+		task.setUrl(StringUtils.defaultString(url));
 
 		String notes = elementAttributes.getValue(TaskListExternalizationConstants.KEY_NOTES);
-		task.setNotes(Strings.nullToEmpty(notes));
+		task.setNotes(StringUtils.defaultString(notes));
 
 		String estimationString = elementAttributes.getValue(TaskListExternalizationConstants.KEY_TIME_ESTIMATED);
 		if (estimationString != null) {
@@ -226,7 +225,7 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 
 	private Date getDateFromString(String dateString) {
 		Date date = null;
-		if (Strings.isNullOrEmpty(dateString)) {
+		if (StringUtils.isEmpty(dateString)) {
 			return null;
 		}
 		SimpleDateFormat format = new SimpleDateFormat(TaskListExternalizationConstants.IN_DATE_FORMAT, Locale.ENGLISH);

@@ -1,10 +1,10 @@
 /*********************************************************************
  * Copyright (c) 2010, 2015 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
@@ -22,15 +22,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -67,8 +70,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -358,19 +359,22 @@ public class GerritConnector extends ReviewsConnector {
 		String verifiedValue = task.getAttribute(ReviewsCoreConstants.VERIFIED);
 
 		String projectTooltip = null;
-		if (!Strings.isNullOrEmpty(projectValue)) {
+		if (StringUtils.isNotEmpty(projectValue)) {
 			projectTooltip = NLS.bind(Messages.GerritConnector_ProjectTooltip, projectValue);
 		}
 		String branchTooltip = null;
-		if (!Strings.isNullOrEmpty(branchValue)) {
+		if (StringUtils.isNotEmpty(branchValue)) {
 			branchTooltip = NLS.bind(Messages.GerritConnector_BranchTooltip, branchValue);
 		}
 		String reviewTooltip = createVoteTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
 		String verifiedTooltip = createVoteTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
 
-		String tooltip = Joiner.on("\n") //$NON-NLS-1$
-				.skipNulls()
-				.join(projectTooltip, branchTooltip, reviewTooltip, verifiedTooltip);
+//		String tooltip = Joiner.on("\n") //$NON-NLS-1$
+//				.skipNulls()
+//				.join(projectTooltip, branchTooltip, reviewTooltip, verifiedTooltip);
+		String tooltip = Stream.of(projectTooltip, branchTooltip, reviewTooltip, verifiedTooltip)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining("\n")); //$NON-NLS-1$
 		if (!tooltip.isEmpty()) {
 			task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP, tooltip);
 		}

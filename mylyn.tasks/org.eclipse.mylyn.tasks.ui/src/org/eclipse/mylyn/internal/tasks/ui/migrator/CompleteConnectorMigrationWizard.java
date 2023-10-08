@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static com.google.common.collect.Iterables.any;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -21,8 +20,11 @@ import static org.eclipse.mylyn.internal.tasks.ui.migrator.TaskPredicates.isQuer
 import static org.eclipse.mylyn.internal.tasks.ui.migrator.TaskPredicates.isSynchronizing;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,11 +58,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 
 public class CompleteConnectorMigrationWizard extends Wizard {
 	final class MapContentProvider implements ITreeContentProvider {
@@ -239,9 +236,14 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 
 	protected void waitForQueriesToSynchronize(Collection<String> newConnectors, IProgressMonitor monitor) {
 		monitor.subTask(Messages.CompleteConnectorMigrationWizard_Waiting_for_queries_to_synchronize);
-		Iterable<RepositoryQuery> queries = Iterables.concat(createRepositoryQueryMap(newConnectors).values());
 		long start = System.currentTimeMillis();
-		while (any(queries, isSynchronizing())
+//		Iterable<RepositoryQuery> queries = Iterables.concat(createRepositoryQueryMap(newConnectors).values());
+//		while (any(queries, isSynchronizing()) {};
+		Set<RepositoryQuery> queries = createRepositoryQueryMap(newConnectors).values()
+				.stream()
+				.flatMap(Set::stream)
+				.collect(Collectors.toSet());
+		while (queries.stream().anyMatch(isSynchronizing())
 				&& System.currentTimeMillis() - start < MILLISECONDS.convert(20, MINUTES)) {
 			try {
 				Thread.sleep(MILLISECONDS.convert(3, SECONDS));
@@ -251,17 +253,21 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 	}
 
 	protected Map<TaskRepository, Set<RepositoryQuery>> createRepositoryQueryMap(Collection<String> kinds) {
-		Builder<TaskRepository, Set<RepositoryQuery>> repositories = ImmutableMap.builder();
+		Map<TaskRepository, Set<RepositoryQuery>> repositories = new HashMap<>();
 		for (final String kind : kinds) {
 			for (TaskRepository repository : migrator.getRepositoryManager().getRepositories(kind)) {
 				Set<RepositoryQuery> queriesForUrl = TasksUiPlugin.getTaskList()
 						.getRepositoryQueries(repository.getRepositoryUrl());
-				Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(kind));
+//				Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(kind));
+
+				Set<RepositoryQuery> queries = queriesForUrl.stream()
+						.filter(isQueryForConnector(kind))
+						.collect(Collectors.toUnmodifiableSet());
 				if (!queries.isEmpty()) {
 					repositories.put(repository, queries);
 				}
 			}
 		}
-		return repositories.build();
+		return Collections.unmodifiableMap(repositories);
 	}
 }

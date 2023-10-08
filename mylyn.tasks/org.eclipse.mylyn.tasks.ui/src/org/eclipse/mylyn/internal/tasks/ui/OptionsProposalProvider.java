@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -18,16 +18,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LabelsAttributeEditor;
-
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Ordering;
 
 public class OptionsProposalProvider implements IContentProposalProvider {
 
@@ -71,13 +67,19 @@ public class OptionsProposalProvider implements IContentProposalProvider {
 		}
 		// Since the contents of the editor is replaced, we need to include the existing values in the replacement
 		final String existingValues = contents.substring(0, contents.length() - lastValue.length());
-		ImmutableList<String> sortedProposals = FluentIterable.from(filteredProposals)
-				.toSortedList(Ordering.from(String.CASE_INSENSITIVE_ORDER));
-		return FluentIterable.from(sortedProposals).transform(new Function<String, IContentProposal>() {
-			public IContentProposal apply(String proposal) {
-				return new ContentProposal(existingValues + proposal, proposal, null);
-			}
-		}).toArray(IContentProposal.class);
+//		ImmutableList<String> sortedProposals = FluentIterable.from(filteredProposals)
+//				.toSortedList(Ordering.from(String.CASE_INSENSITIVE_ORDER));
+//		return FluentIterable.from(sortedProposals).transform(new Function<String, IContentProposal>() {
+//			public IContentProposal apply(String proposal) {
+//				return new ContentProposal(existingValues + proposal, proposal, null);
+//			}
+//		}).toArray(IContentProposal.class);
+
+		return filteredProposals.stream()
+				.sorted(String.CASE_INSENSITIVE_ORDER)
+				.map(p -> new ContentProposal(existingValues + p, p, null))
+				.collect(Collectors.toList())
+				.toArray(IContentProposal[]::new);
 	}
 
 	public boolean isMultiSelect() {

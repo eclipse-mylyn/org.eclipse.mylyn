@@ -16,12 +16,12 @@
 package org.eclipse.mylyn.gerrit.dashboard.ui.views;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -95,8 +95,6 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.Version;
-
-import com.google.common.base.Strings;
 
 /**
  * This class initiate a new workbench view. The view shows data obtained from Gerrit Dashboard model. The view is
@@ -234,9 +232,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	}
 
 	private void cleanJobs() {
-		Iterator<Job> iter = fJobs.iterator();
-		while (iter.hasNext()) {
-			Job job = iter.next();
+		for (Job job : fJobs) {
 			job.sleep();
 			job.cancel();
 		}
@@ -961,7 +957,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 */
 	private synchronized void updateReview(TaskTask task) {
 		boolean ourQuery = task.getParentContainers().contains(fCurrentQuery);
-		if (ourQuery && !Strings.isNullOrEmpty(task.getSummary())) {
+		if (ourQuery && StringUtils.isNotEmpty(task.getSummary())) {
 			try {
 				TaskData taskData = fConnector.getTaskData(getTaskRepository(), task.getTaskId(),
 						new NullProgressMonitor());

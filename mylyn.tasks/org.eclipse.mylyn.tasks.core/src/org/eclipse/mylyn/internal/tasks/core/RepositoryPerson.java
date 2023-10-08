@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,8 +19,6 @@ import java.util.Map;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Steffen Pingel
@@ -65,7 +63,7 @@ public class RepositoryPerson implements IRepositoryPerson {
 	}
 
 	public Map<String, String> getAttributes() {
-		return ImmutableMap.copyOf(attributes);
+		return Map.copyOf(attributes);
 	}
 
 	public void setName(String name) {

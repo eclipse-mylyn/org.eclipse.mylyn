@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker, Tasktop Technologies - initial API and implementation
@@ -50,9 +50,6 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewRemoteFactory;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
@@ -250,20 +247,22 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 
 	private IReviewItemSet getReviewItemSet(List<IReviewItemSet> sets, Integer parentKey) {
 		final String patchSetNumber = parentKey.toString();
-		return Iterables.tryFind(sets, new Predicate<IReviewItemSet>() {
-			public boolean apply(IReviewItemSet set) {
-				return set.getId().equals(patchSetNumber);
-			}
-		}).orNull();
+//		return Iterables.tryFind(sets, new Predicate<IReviewItemSet>() {
+//			public boolean apply(IReviewItemSet set) {
+//				return set.getId().equals(patchSetNumber);
+//			}
+//		}).orNull();
+		return sets.stream().filter(set -> set.getId().equals(patchSetNumber)).findAny().orElse(null);
 	}
 
 	private boolean hasCommit(List<ICommit> parentCommits, final ICommit commit) {
-		Optional<ICommit> optional = Iterables.tryFind(parentCommits, new Predicate<ICommit>() {
-			public boolean apply(ICommit candidateCommit) {
-				return commit.getId().equals(candidateCommit.getId());
-			}
-		});
-		return optional.isPresent();
+//		Optional<ICommit> optional = Iterables.tryFind(parentCommits, new Predicate<ICommit>() {
+//			public boolean apply(ICommit candidateCommit) {
+//				return commit.getId().equals(candidateCommit.getId());
+//			}
+//		});
+//		return optional.isPresent();
+		return parentCommits.stream().anyMatch(candidateCommit -> commit.getId().equals(candidateCommit.getId()));
 	}
 
 	public void updateComments(IRepository parent, IReview review, ChangeDetailX detail) {

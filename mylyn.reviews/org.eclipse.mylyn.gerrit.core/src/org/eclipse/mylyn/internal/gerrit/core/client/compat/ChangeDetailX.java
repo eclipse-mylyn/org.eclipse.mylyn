@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,8 +26,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
 import org.eclipse.mylyn.reviews.internal.core.BuildResult;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ApprovalTypes;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -37,7 +35,7 @@ import com.google.gerrit.reviewdb.ChangeMessage;
 
 /**
  * Provides additional fields used by Gerrit 2.2.
- * 
+ *
  * @author Steffen Pingel
  */
 public class ChangeDetailX extends ChangeDetail {
@@ -122,7 +120,7 @@ public class ChangeDetailX extends ChangeDetail {
 	}
 
 	public Iterable<BuildResult> getPatchSetBuildStatuses() {
-		return ImmutableSet.copyOf(this.patchSetBuildStatuses.values());
+		return Set.copyOf(this.patchSetBuildStatuses.values());
 	}
 
 	public void convertSubmitRecordsToApprovalTypes(ApprovalTypes knownApprovalTypes) {
@@ -155,7 +153,7 @@ public class ChangeDetailX extends ChangeDetail {
 		// Builds up a map of the results
 		LinkedHashMap<String, BuildResult> patchSetBuildResults = new LinkedHashMap<String, BuildResult>();
 		for (ChangeMessage message : allMessages) {
-			ImmutableList<BuildResult> results = commentParser.getBuildResult(message.getMessage());
+			List<BuildResult> results = commentParser.getBuildResult(message.getMessage());
 			if (results.size() == 0) {
 				filteredMessages.add(message);
 			} else {

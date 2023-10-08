@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,8 +37,6 @@ import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsS
 import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
-
-import com.google.common.base.Objects;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -268,13 +267,13 @@ public final class TaskRepository extends PlatformObject {
 		} else {
 			String oldUserValue = credentialsStore.get(userProperty, ""); //$NON-NLS-1$
 			credentialsStore.put(userProperty, username, false);
-			if (!Objects.equal(oldUserValue, username)) {
+			if (!Objects.equals(oldUserValue, username)) {
 				notifyChangeListeners(userProperty, oldUserValue, username);
 			}
 		}
 		String oldPasswordValue = credentialsStore.get(passwordProperty, ""); //$NON-NLS-1$
 		credentialsStore.put(passwordProperty, password, true);
-		if (!Objects.equal(oldPasswordValue, password)) {
+		if (!Objects.equals(oldPasswordValue, password)) {
 			notifyChangeListeners(passwordProperty, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
