@@ -46,8 +46,6 @@ import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  * @author Steffen Pingel
  */
@@ -162,7 +160,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		final IInteractionContext result = copyContextInternal(sourceTask, targetTask);
 
 		// move task activity
-		moveTaskActivity(ImmutableMap.of(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier()));
+		moveTaskActivity(Map.of(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier()));
 
 		moveContextInStore(sourceTask, targetTask);
 

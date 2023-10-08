@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,8 +40,6 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -69,7 +68,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			return notification;
 		} else if (task.getSynchronizationState().isIncoming()) {
 			String notificationText = task.getAttribute(KEY_INCOMING_NOTIFICATION_TEXT);
-			if (!Strings.isNullOrEmpty(notificationText)) {
+			if (StringUtils.isNotEmpty(notificationText)) {
 				TaskListNotification notification = new TaskListNotification(task, token);
 				notification.setDescription(notificationText);
 				return notification;

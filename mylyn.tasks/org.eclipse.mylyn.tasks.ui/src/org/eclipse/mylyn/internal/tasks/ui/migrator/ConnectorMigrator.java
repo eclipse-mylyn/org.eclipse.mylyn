@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,9 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.in;
-import static com.google.common.collect.Iterables.any;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -31,8 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,14 +57,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
 /**
@@ -85,7 +77,7 @@ import com.google.common.collect.Table;
  */
 public class ConnectorMigrator {
 
-	private static final ImmutableSet<String> EXCLUDED_REPOSITORY_PROPERTIES = ImmutableSet.of(
+	private static final Set<String> EXCLUDED_REPOSITORY_PROPERTIES = Set.of(
 			IRepositoryConstants.PROPERTY_CONNECTOR_KIND, IRepositoryConstants.PROPERTY_SYNCTIMESTAMP,
 			IRepositoryConstants.PROPERTY_URL);
 
@@ -115,7 +107,7 @@ public class ConnectorMigrator {
 
 	private final TasksState tasksState;
 
-	private List<String> connectorsToMigrate = ImmutableList.of();
+	private List<String> connectorsToMigrate = List.of();
 
 	private final ConnectorMigrationUi migrationUi;
 
@@ -139,7 +131,9 @@ public class ConnectorMigrator {
 
 	public ConnectorMigrator(Map<String, String> connectorKinds, String explanatoryText, TasksState tasksState,
 			ConnectorMigrationUi migrationUi) {
-		checkArgument(!connectorKinds.isEmpty());
+//		checkArgument(!connectorKinds.isEmpty());
+		Validate.isTrue(!connectorKinds.isEmpty());
+
 		this.connectorKinds = connectorKinds;
 		this.explanatoryText = explanatoryText;
 		this.migrationUi = migrationUi;
@@ -147,7 +141,7 @@ public class ConnectorMigrator {
 	}
 
 	public Map<String, String> getConnectorKinds() {
-		return ImmutableMap.copyOf(connectorKinds);
+		return Map.copyOf(connectorKinds);
 	}
 
 	public String getExplanatoryText() {
@@ -168,8 +162,9 @@ public class ConnectorMigrator {
 	}
 
 	public void setConnectorsToMigrate(List<String> connectors) {
-		checkArgument(connectorKinds.keySet().containsAll(connectors));
-		this.connectorsToMigrate = ImmutableList.copyOf(connectors);
+//		checkArgument(connectorKinds.keySet().containsAll(connectors));
+		Validate.isTrue(connectorKinds.keySet().containsAll(connectors));
+		this.connectorsToMigrate = List.copyOf(connectors);
 	}
 
 	protected void migrateConnectors(IProgressMonitor monitor) throws IOException {
@@ -188,8 +183,12 @@ public class ConnectorMigrator {
 			TaskRepository newRepository = getMigratedRepository(newKind, repository);
 			getRepositoryManager().addRepository(newRepository);
 			repositories.put(repository, newRepository);
-			Set<ITask> tasksToMigrate = Sets.filter(getTaskList().getTasks(repository.getRepositoryUrl()),
-					isTaskForConnector(repository.getConnectorKind()));
+//			Set<ITask> tasksToMigrate = Sets.filter(getTaskList().getTasks(repository.getRepositoryUrl()),
+//					isTaskForConnector(repository.getConnectorKind()));
+			Set<ITask> tasksToMigrate = getTaskList().getTasks(repository.getRepositoryUrl())
+					.stream()
+					.filter(isTaskForConnector(repository.getConnectorKind()))
+					.collect(Collectors.toUnmodifiableSet());
 			for (ITask task : tasksToMigrate) {
 				oldTasksStates.put(newRepository, task.getTaskKey(), new OldTaskState(task));
 			}
@@ -198,7 +197,7 @@ public class ConnectorMigrator {
 			monitor.worked(1);
 		}
 
-		Set<TaskRepository> newRepositories = ImmutableSet.copyOf(repositories.values());
+		Set<TaskRepository> newRepositories = Set.copyOf(repositories.values());
 		monitor.beginTask(Messages.ConnectorMigrator_Validating_repository_connections, newRepositories.size());
 		for (TaskRepository newRepository : newRepositories) {
 			if (monitor.isCanceled()) {
@@ -225,7 +224,10 @@ public class ConnectorMigrator {
 
 	protected void migrateQueries(TaskRepository repository, TaskRepository newRepository, IProgressMonitor monitor) {
 		Set<RepositoryQuery> queriesForUrl = getTaskList().getRepositoryQueries(repository.getRepositoryUrl());
-		Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()));
+//		Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()));
+		Set<RepositoryQuery> queries = queriesForUrl.stream()
+				.filter(isQueryForConnector(repository.getConnectorKind()))
+				.collect(Collectors.toUnmodifiableSet());
 		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.ConnectorMigrator_Migrating_Queries,
 				queries.size());
 		for (RepositoryQuery query : queries) {
@@ -269,7 +271,10 @@ public class ConnectorMigrator {
 		repository.setRepositoryLabel(
 				NLS.bind(Messages.ConnectorMigrator_X_Unsupported_do_not_delete, repository.getRepositoryLabel()));
 		Set<RepositoryQuery> queriesForUrl = getTaskList().getRepositoryQueries(repository.getRepositoryUrl());
-		for (RepositoryQuery query : Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()))) {
+//		for (RepositoryQuery query : Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()))) {
+		for (RepositoryQuery query : queriesForUrl.stream()
+				.filter(isQueryForConnector(repository.getConnectorKind()))
+				.collect(Collectors.toList())) {
 			query.setAutoUpdate(false);// prevent error logged when Mylyn asks new connector to sync query for old connector
 		}
 	}
@@ -320,8 +325,13 @@ public class ConnectorMigrator {
 			monitor.subTask(NLS.bind(Messages.ConnectorMigrator_Migrating_tasks_for_X, newRepository));
 			AbstractRepositoryConnector newConnector = getRepositoryManager()
 					.getRepositoryConnector(newRepository.getConnectorKind());
-			Set<ITask> tasksToMigrate = Sets.filter(getTaskList().getTasks(oldRepository.getRepositoryUrl()),
-					isTaskForConnector(oldRepository.getConnectorKind()));
+//			Set<ITask> tasksToMigrate = Sets.filter(getTaskList().getTasks(oldRepository.getRepositoryUrl()),
+//					isTaskForConnector(oldRepository.getConnectorKind()));
+			Set<ITask> tasksToMigrate = getTaskList().getTasks(oldRepository.getRepositoryUrl())
+					.stream()
+					.filter(isTaskForConnector(oldRepository.getConnectorKind()))
+					.collect(Collectors.toUnmodifiableSet());
+
 			migrateTasks(tasksToMigrate, oldRepository, newRepository, newConnector, monitor);
 		}
 		monitor.subTask(Messages.ConnectorMigrator_Waiting_for_tasks_to_synchronize);
@@ -338,15 +348,21 @@ public class ConnectorMigrator {
 	protected void migrateTasks(final Set<ITask> tasksToMigrate, final TaskRepository oldRepository,
 			final TaskRepository newRepository, final AbstractRepositoryConnector newConnector,
 			final IProgressMonitor monitor) {
-		ImmutableMap<String, ITask> tasksByKey = FluentIterable
-				.from(getTaskList().getTasks(newRepository.getRepositoryUrl()))
+//		ImmutableMap<String, ITask> tasksByKey = FluentIterable
+//				.from(getTaskList().getTasks(newRepository.getRepositoryUrl()))
+//				.filter(isTaskForConnector(newConnector.getConnectorKind()))
+//				.uniqueIndex(new Function<ITask, String>() {
+//					@Override
+//					public String apply(ITask task) {
+//						return task.getTaskKey();
+//					}
+//				});
+
+		Map<String, ITask> tasksByKey = getTaskList().getTasks(newRepository.getRepositoryUrl())
+				.stream()
 				.filter(isTaskForConnector(newConnector.getConnectorKind()))
-				.uniqueIndex(new Function<ITask, String>() {
-					@Override
-					public String apply(ITask task) {
-						return task.getTaskKey();
-					}
-				});
+				.collect(Collectors.toUnmodifiableMap(ITask::getTaskKey, Function.identity()));
+
 		final Map<AbstractTask, OldTaskState> migratedTasks = new HashMap<>();
 		Set<ITask> tasksToSynchronize = new HashSet<ITask>();
 		for (ITask oldTask : tasksToMigrate) {
@@ -382,7 +398,9 @@ public class ConnectorMigrator {
 			@Override
 			public void run() {
 				long start = System.currentTimeMillis();
-				while (any(migratedTasks.keySet(), isTaskSynchronizing())
+//				while (any(migratedTasks.keySet(), isTaskSynchronizing())
+//						&& System.currentTimeMillis() - start < MILLISECONDS.convert(4, HOURS)) {
+				while (migratedTasks.keySet().stream().anyMatch(isTaskSynchronizing())
 						&& System.currentTimeMillis() - start < MILLISECONDS.convert(4, HOURS)) {
 					try {
 						Thread.sleep(MILLISECONDS.convert(3, SECONDS));
@@ -449,7 +467,11 @@ public class ConnectorMigrator {
 	}
 
 	public Map<String, String> getSelectedConnectors() {
-		return Maps.filterKeys(getConnectorKinds(), in(connectorsToMigrate));
+//		return Maps.filterKeys(getConnectorKinds(), in(connectorsToMigrate));
+		return getConnectorKinds().entrySet()
+				.stream()
+				.filter(k -> connectorsToMigrate.stream().anyMatch(c -> k.getKey().equals(c)))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	protected TaskList getTaskList() {

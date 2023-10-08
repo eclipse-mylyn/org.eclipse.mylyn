@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -114,7 +114,7 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 				try {
 					dataHandler.initializeTaskData(taskRepository, taskData, null, null);
 				} catch (CoreException e) {
-					com.google.common.base.Throwables.propagate(e);
+					throw new RuntimeException(e);
 				}
 				TaskAttribute idAttribute = taskData.getRoot().getAttribute(taskSchema.BUG_ID.getKey());
 				idAttribute.setValue(taskId.toString());
@@ -148,7 +148,7 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 								attribute.setValue(Long.toString(tempDate.getTime()));
 								continue;
 							} catch (ParseException e) {
-								com.google.common.base.Throwables.propagate(
+								throw new RuntimeException(
 										new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
 												"Can not parse Date (" + value.getAsString() + ")"))); //$NON-NLS-1$ //$NON-NLS-2$
 							}
@@ -189,7 +189,7 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 						config.addValidOperations(taskData);
 					}
 				} catch (CoreException e) {
-					com.google.common.base.Throwables.propagate(e);
+					throw new RuntimeException(e);
 				}
 			}
 			return response;

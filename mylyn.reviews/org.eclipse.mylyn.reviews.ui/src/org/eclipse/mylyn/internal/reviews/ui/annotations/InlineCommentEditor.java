@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,10 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
+import java.util.Collection;
+
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -30,9 +34,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 public class InlineCommentEditor {
 
 	public enum CommentEditorState {
@@ -41,7 +42,7 @@ public class InlineCommentEditor {
 
 	private static final int MIN_COMMENT_EDITOR_HEIGHT = 100;
 
-	private static Multimap<String, Integer> editMap = HashMultimap.create();
+	private static MultiValuedMap<String, Integer> editMap = new HashSetValuedHashMap<>();
 
 	private final CommentPopupDialog dialog;
 
@@ -68,7 +69,7 @@ public class InlineCommentEditor {
 	/**
 	 * Creates a comment editor for the provided dialog and sets its reviewItemId and startLine. Also initializes the
 	 * state of the editor to VIEW.
-	 * 
+	 *
 	 * @param dialog
 	 *            the {@link CommentPopupDialog} that the editor is adding to
 	 */
@@ -81,7 +82,7 @@ public class InlineCommentEditor {
 
 	/**
 	 * Creates the UI for the comment editor
-	 * 
+	 *
 	 * @param parent
 	 *            the parent {@link Composite} of the comment editor
 	 * @param clickedComment
@@ -207,7 +208,7 @@ public class InlineCommentEditor {
 
 	/**
 	 * Checks if the text in the comment editor has changed from the original comment
-	 * 
+	 *
 	 * @return true if the text in the editor is different than the original comment text, false otherwise
 	 */
 	protected boolean hasEdits() {
@@ -249,7 +250,7 @@ public class InlineCommentEditor {
 
 	/**
 	 * Adds an entry to the static edit map for a particular review item and start line
-	 * 
+	 *
 	 * @param reviewItemId
 	 *            the id of a {@link IReviewItem}
 	 * @param startLine
@@ -261,19 +262,21 @@ public class InlineCommentEditor {
 
 	/**
 	 * Removes an entry from the static edit map for a particular review item and start line
-	 * 
+	 *
 	 * @param reviewItemId
 	 *            the id of a {@link IReviewItem}
 	 * @param startLine
 	 *            the start line number of a {@link LineRange}
 	 */
 	protected static void removeFromEditMap(String reviewItemId, int startLine) {
-		editMap.remove(reviewItemId, startLine);
+//		editMap.remove(reviewItemId, startLine);
+		Collection<Integer> lines = editMap.get(reviewItemId);
+		lines.remove(startLine);
 	}
 
 	/**
 	 * Checks the edit map for an entry for a particular review item and start line
-	 * 
+	 *
 	 * @param reviewItemId
 	 *            the id of a {@link IReviewItem}
 	 * @param startLine
@@ -281,12 +284,17 @@ public class InlineCommentEditor {
 	 * @return true if there is an entry in the edit map, false otherwise
 	 */
 	protected static boolean canAddCommentEditor(String reviewItemId, int startLine) {
-		return !editMap.containsEntry(reviewItemId, startLine);
+//		return !editMap.containsEntry(reviewItemId, startLine);
+		Collection<Integer> comments = editMap.get(reviewItemId);
+		if (comments != null) {
+			return !comments.contains(startLine);
+		}
+		return true;
 	}
 
 	/**
 	 * Helper method to add a {@link Button} to the UI
-	 * 
+	 *
 	 * @param parent
 	 *            the parent {@link Composite} that we want to add the button to
 	 * @param text
@@ -309,7 +317,7 @@ public class InlineCommentEditor {
 
 	/**
 	 * Add a key listener for Ctrl/Cmd+Enter/Return to save the comment
-	 * 
+	 *
 	 * @return the {@link KeyAdapater} that will save the comment on Ctrl/Cmd+Enter/Return
 	 */
 	private KeyAdapter createAddSaveKeyListener() {

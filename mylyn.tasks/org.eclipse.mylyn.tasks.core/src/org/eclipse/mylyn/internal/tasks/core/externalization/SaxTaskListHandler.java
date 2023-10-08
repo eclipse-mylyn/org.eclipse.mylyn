@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,6 +15,9 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.util.Collection;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -30,10 +33,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 public class SaxTaskListHandler extends DefaultHandler {
 
 	private final LazyTransferList taskList;
@@ -42,11 +41,11 @@ public class SaxTaskListHandler extends DefaultHandler {
 
 	private final IRepositoryManager repositoryManager;
 
-	private final Multimap<AbstractTask, String> subTasks;
+	private final MultiValuedMap<AbstractTask, String> subTasks;
 
-	private final Multimap<RepositoryQuery, String> queryResults;
+	private final MultiValuedMap<RepositoryQuery, String> queryResults;
 
-	private final Multimap<AbstractTaskCategory, String> categorizedTasks;
+	private final MultiValuedMap<AbstractTaskCategory, String> categorizedTasks;
 
 	private SaxTaskListElementBuilder<? extends IRepositoryElement> currentBuilder;
 
@@ -58,9 +57,9 @@ public class SaxTaskListHandler extends DefaultHandler {
 		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
 
-		this.subTasks = HashMultimap.create();
-		this.queryResults = HashMultimap.create();
-		this.categorizedTasks = HashMultimap.create();
+		this.subTasks = new HashSetValuedHashMap<>();
+		this.queryResults = new HashSetValuedHashMap<>();
+		this.categorizedTasks = new HashSetValuedHashMap<>();
 
 		this.orphanBuilder = new SaxOrphanBuilder();
 	}
@@ -167,10 +166,10 @@ public class SaxTaskListHandler extends DefaultHandler {
 		taskList.commit();
 	}
 
-	private <T extends IRepositoryElement> void recordHit(Attributes attributes, Multimap<T, String> hitMap,
+	private <T extends IRepositoryElement> void recordHit(Attributes attributes, MultiValuedMap<T, String> hitMap,
 			SaxTaskListElementBuilder<T> builder) {
 		String handle = attributes.getValue(TaskListExternalizationConstants.KEY_HANDLE);
-		if (!Strings.isNullOrEmpty(handle) && isOK(builder)) {
+		if (StringUtils.isNotEmpty(handle) && isOK(builder)) {
 			hitMap.put(builder.getItem(), handle);
 		}
 	}
@@ -189,7 +188,7 @@ public class SaxTaskListHandler extends DefaultHandler {
 		}
 	}
 
-	private <T extends AbstractTaskContainer> void applyContainmentToTaskList(Multimap<T, String> containment) {
+	private <T extends AbstractTaskContainer> void applyContainmentToTaskList(MultiValuedMap<T, String> containment) {
 		for (T container : containment.keySet()) {
 			Collection<String> handles = containment.get(container);
 			for (String handle : handles) {

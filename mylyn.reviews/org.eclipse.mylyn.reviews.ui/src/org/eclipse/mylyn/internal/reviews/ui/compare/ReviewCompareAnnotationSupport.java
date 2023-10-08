@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.MergeSourceViewer;
@@ -55,10 +59,6 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
 
 /**
  * Manages annotation models for compare viewers.
@@ -237,13 +237,21 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	private CommentAnnotation findComment(ReviewAnnotationModel annotationModel, final IComment comment) {
-		Optional<Annotation> annotation = Iterators.tryFind(annotationModel.getAnnotationIterator(),
-				new Predicate<Annotation>() {
-					public boolean apply(Annotation annotation) {
-						return annotation instanceof CommentAnnotation
-								&& ((CommentAnnotation) annotation).getComment().getId().equals(comment.getId());
-					}
-				});
+//		Optional<Annotation> annotation = Iterators.tryFind(annotationModel.getAnnotationIterator(),
+//				new Predicate<Annotation>() {
+//					public boolean apply(Annotation annotation) {
+//						return annotation instanceof CommentAnnotation
+//								&& ((CommentAnnotation) annotation).getComment().getId().equals(comment.getId());
+//					}
+//				});
+
+		Optional<Annotation> annotation = StreamSupport
+				.stream(Spliterators.spliteratorUnknownSize(annotationModel.getAnnotationIterator(),
+						Spliterator.ORDERED), false)
+				.filter(CommentAnnotation.class::isInstance)
+				.filter(c -> ((CommentAnnotation) c).getComment().getId().equals(comment.getId()))
+				.findFirst();
+
 		if (annotation.isPresent()) {
 			return (CommentAnnotation) annotation.get();
 		}

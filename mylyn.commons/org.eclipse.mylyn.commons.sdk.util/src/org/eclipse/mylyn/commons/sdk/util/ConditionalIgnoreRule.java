@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker and others - initial API and implementation
@@ -20,8 +20,6 @@ import java.lang.reflect.Modifier;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
-import com.google.common.base.Throwables;
 
 /**
  * Cobbled together from: https://www.codeaffine.com/2013/11/18/a-junit-rule-to-conditionally-ignore-tests/
@@ -85,7 +83,7 @@ public class ConditionalIgnoreRule implements TestRule {
 			try {
 				return createCondition();
 			} catch (Exception re) {
-				throw Throwables.propagate(re);
+				throw new RuntimeException(re);
 			}
 		}
 

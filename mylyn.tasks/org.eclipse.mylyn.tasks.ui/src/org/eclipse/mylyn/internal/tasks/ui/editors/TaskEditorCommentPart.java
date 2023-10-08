@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
@@ -68,8 +69,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Robert Elves
@@ -554,7 +553,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (hasTextControl()) {
 				Control textControl = commentTextEditor.getControl();
 				String selectedText = getSelectedText(textControl);
-				if (!Strings.isNullOrEmpty(selectedText)) {
+				if (StringUtils.isNotEmpty(selectedText)) {
 					replyText = selectedText;
 				}
 			}
@@ -567,7 +566,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			} else if (control instanceof Composite) {
 				for (Control child : ((Composite) control).getChildren()) {
 					String selectedText = getSelectedText(child);
-					if (!Strings.isNullOrEmpty(selectedText)) {
+					if (StringUtils.isNotEmpty(selectedText)) {
 						return selectedText;
 					}
 				}

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandl
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -183,7 +182,7 @@ public class GerritRestClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -193,13 +192,13 @@ public class GerritRestClient {
 	 */
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
-		return executeQuery(monitor, queryString, ImmutableList.of(GET_LABELS_OPTION, GET_DETAILED_ACCOUNTS_OPTION));
+		return executeQuery(monitor, queryString, List.of(GET_LABELS_OPTION, GET_DETAILED_ACCOUNTS_OPTION));
 	}
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,12 +12,12 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.operations;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 
-import com.google.common.base.Strings;
 import com.google.gerrit.common.data.ChangeDetail;
 
 public class CherryPickRequest extends AbstractRequest<ChangeDetail> {
@@ -30,7 +30,7 @@ public class CherryPickRequest extends AbstractRequest<ChangeDetail> {
 
 	public CherryPickRequest(String reviewId, int patchSetId, String destination) {
 		Assert.isNotNull(reviewId);
-		Assert.isLegal(!Strings.isNullOrEmpty(destination));
+		Assert.isLegal(StringUtils.isNotEmpty(destination));
 		this.reviewId = reviewId;
 		this.patchSetId = patchSetId;
 		this.destination = destination;

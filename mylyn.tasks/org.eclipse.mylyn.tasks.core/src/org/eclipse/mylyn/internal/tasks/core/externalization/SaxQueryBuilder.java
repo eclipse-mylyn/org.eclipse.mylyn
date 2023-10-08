@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -22,8 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
-
-import com.google.common.base.Strings;
 
 public class SaxQueryBuilder extends SaxTaskListElementBuilder<RepositoryQuery> {
 
@@ -41,10 +40,10 @@ public class SaxQueryBuilder extends SaxTaskListElementBuilder<RepositoryQuery> 
 	@Override
 	public void beginItem(Attributes elementAttributes) {
 		try {
-			String repositoryUrl = Strings
-					.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_REPOSITORY_URL));
-			String connectorKind = Strings
-					.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_CONNECTOR_KIND));
+			String repositoryUrl = StringUtils
+					.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_REPOSITORY_URL));
+			String connectorKind = StringUtils
+					.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_CONNECTOR_KIND));
 
 			if (repositoryManager.getRepositoryConnector(connectorKind) == null) {
 				addError(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
@@ -69,25 +68,26 @@ public class SaxQueryBuilder extends SaxTaskListElementBuilder<RepositoryQuery> 
 
 	private void readQueryAttributes(Attributes elementAttributes) {
 		String handle = elementAttributes.getValue(TaskListExternalizationConstants.KEY_HANDLE);
-		if (!Strings.isNullOrEmpty(handle)) {
+		if (StringUtils.isNotEmpty(handle)) {
 			query.setHandleIdentifier(handle);
 		}
 
 		String label = elementAttributes.getValue(TaskListExternalizationConstants.KEY_NAME);
-		if (Strings.isNullOrEmpty(label)) { // fall back for legacy
-			label = Strings.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_LABEL));
+		if (StringUtils.isEmpty(label)) { // fall back for legacy
+			label = StringUtils.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_LABEL));
 		}
 		query.setSummary(label);
 
-		String queryString = Strings
-				.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_QUERY_STRING));
-		if (Strings.isNullOrEmpty(queryString)) { // fall back for legacy
-			queryString = Strings.nullToEmpty(elementAttributes.getValue(TaskListExternalizationConstants.KEY_QUERY));
+		String queryString = StringUtils
+				.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_QUERY_STRING));
+		if (StringUtils.isEmpty(queryString)) { // fall back for legacy
+			queryString = StringUtils
+					.defaultString(elementAttributes.getValue(TaskListExternalizationConstants.KEY_QUERY));
 		}
 		query.setUrl(queryString);
 
 		String lastRefresh = elementAttributes.getValue(TaskListExternalizationConstants.KEY_LAST_REFRESH);
-		if (!Strings.isNullOrEmpty(lastRefresh)) {
+		if (StringUtils.isNotEmpty(lastRefresh)) {
 			query.setLastSynchronizedStamp(lastRefresh);
 		}
 	}

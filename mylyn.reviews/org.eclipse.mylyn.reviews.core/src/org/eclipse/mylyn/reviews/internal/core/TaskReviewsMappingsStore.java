@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
@@ -30,11 +32,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.SetMultimap;
-
 /**
  * This class is used by review connectors to provide a mapping from tasks to reviews. These mappings are used by
  * TaskEditorReviewPart to give a table of the reviews pertaining to a task. The class is limited as it maps one task to
@@ -48,7 +45,7 @@ import com.google.common.collect.SetMultimap;
 public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 	static final String ATTR_ASSOCIATED_TASK = "org.eclipse.mylyn.associated.task"; //$NON-NLS-1$
 
-	private final SetMultimap<String, String> taskReviewsMap;
+	private final SetValuedMap<String, String> taskReviewsMap;
 
 	private final TaskRepositoryManager repositoryManager;
 
@@ -59,14 +56,16 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 	public TaskReviewsMappingsStore(TaskList taskList, TaskRepositoryManager repositoryManager) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
-		taskReviewsMap = Multimaps.synchronizedSetMultimap(LinkedHashMultimap.<String, String> create());
+		taskReviewsMap = new HashSetValuedHashMap<>();
 	}
 
 	public void readFromTaskList() {
 		for (AbstractTask review : taskList.getAllTasks()) {
 			String task = getTaskUrl(review);
 			if (task != null) {
-				taskReviewsMap.put(task, review.getUrl());
+				synchronized (taskReviewsMap) {
+					taskReviewsMap.put(task, review.getUrl());
+				}
 			}
 		}
 	}
@@ -75,10 +74,16 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 		String reviewUrl = review.getUrl();
 		String oldTaskUrl = getTaskUrl(review);
 
-		if (oldTaskUrl != null && !oldTaskUrl.equals(newTaskUrl)) {
-			taskReviewsMap.remove(oldTaskUrl, reviewUrl);
+		synchronized (taskReviewsMap) {
+			if (oldTaskUrl != null && !oldTaskUrl.equals(newTaskUrl)) {
+//				taskReviewsMap.remove(oldTaskUrl, reviewUrl);
+				Set<String> urls = taskReviewsMap.get(oldTaskUrl);
+				if (urls != null) {
+					urls.remove(reviewUrl);
+				}
+			}
+			taskReviewsMap.put(newTaskUrl, reviewUrl);
 		}
-		taskReviewsMap.put(newTaskUrl, reviewUrl);
 		review.setAttribute(ATTR_ASSOCIATED_TASK, newTaskUrl);
 	}
 
@@ -126,7 +131,7 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 
 	public Collection<String> getReviewUrls(String taskUrl) {
 		synchronized (taskReviewsMap) {
-			return ImmutableSet.copyOf(taskReviewsMap.get(taskUrl));
+			return Set.copyOf(taskReviewsMap.get(taskUrl));
 		}
 	}
 
@@ -160,7 +165,13 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 	private void deleteMappingsTo(ITask review) {
 		String taskUrl = getTaskUrl(review);
 		if (taskUrl != null) {
-			taskReviewsMap.remove(taskUrl, review.getUrl());
+			synchronized (taskReviewsMap) {
+//				taskReviewsMap.remove(taskUrl, review.getUrl());
+				Set<String> urls = taskReviewsMap.get(taskUrl);
+				if (urls != null) {
+					urls.remove(review.getUrl());
+				}
+			}
 			review.setAttribute(ATTR_ASSOCIATED_TASK, null);
 		}
 	}

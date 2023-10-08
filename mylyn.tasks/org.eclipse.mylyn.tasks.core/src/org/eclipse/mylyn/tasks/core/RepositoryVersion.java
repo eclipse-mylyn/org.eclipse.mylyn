@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -29,7 +29,7 @@ public class RepositoryVersion {
 	private final String version;
 
 	public RepositoryVersion(@NonNull String version) {
-		this.version = checkNotNull(version);
+		this.version = Objects.requireNonNull(version);
 	}
 
 	@Override

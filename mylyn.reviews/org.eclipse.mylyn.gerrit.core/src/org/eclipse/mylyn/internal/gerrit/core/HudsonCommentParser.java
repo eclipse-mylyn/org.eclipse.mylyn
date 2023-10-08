@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Vaughan Hilts and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Vaughan Hilts - Initial implementation
@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,22 +20,19 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.reviews.internal.core.BuildResult;
 import org.eclipse.mylyn.reviews.internal.core.BuildResult.BuildStatus;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 public class HudsonCommentParser {
 	private static final Pattern URL_PATTERN = Pattern
 			.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	private static final Pattern PatcherSetNumber_Pattern = Pattern.compile("(\\d+)"); //$NON-NLS-1$
 
-	public ImmutableList<BuildResult> getBuildResult(String commentDescription) {
+	public List<BuildResult> getBuildResult(String commentDescription) {
 		int patchSetNumber = extractPatchSetNumberFromText(commentDescription);
 		if (patchSetNumber == -1) {
-			return ImmutableList.of();
+			return List.of();
 		}
 		String[] lines = commentDescription.split("[\\r\\n]+"); //$NON-NLS-1$
-		List<BuildResult> results = Lists.newArrayList();
+		List<BuildResult> results = new ArrayList<>();
 
 		for (String line : lines) {
 			BuildResult result = createBuildResultFromLine(patchSetNumber, line);
@@ -42,7 +40,7 @@ public class HudsonCommentParser {
 				results.add(result);
 			}
 		}
-		return ImmutableList.copyOf(results);
+		return List.copyOf(results);
 	}
 
 	private BuildResult createBuildResultFromLine(int patchSetNumber, String line) {

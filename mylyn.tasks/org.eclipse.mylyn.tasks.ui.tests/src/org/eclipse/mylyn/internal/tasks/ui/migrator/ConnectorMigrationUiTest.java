@@ -57,9 +57,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 public class ConnectorMigrationUiTest {
 
 	private ConnectorMigrator migrator;
@@ -175,9 +172,9 @@ public class ConnectorMigrationUiTest {
 
 	@Test
 	public void backupTaskList() throws Exception {
-		ImmutableMap<String, String> kinds = ImmutableMap.of("mock", "mock.new");
+		Map<String, String> kinds = Map.of("mock", "mock.new");
 		TaskRepository repository = new TaskRepository("mock", "http://mock");
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository)));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository)));
 		IProgressMonitor monitor = mock(IProgressMonitor.class);
 		migrationUi.backupTaskList(monitor);
 		InOrder inOrder = inOrder(backupManager, migrationUi, migrator, monitor);
@@ -211,8 +208,7 @@ public class ConnectorMigrationUiTest {
 	 */
 	private ServiceMessage openMigrationPrompt(int returnCode) {
 		TaskListServiceMessageControl messageControl = createMessageControl();
-		migrator = spy(
-				new ConnectorMigrator(ImmutableMap.of("mock", "mock.new"), "", new DefaultTasksState(), migrationUi));
+		migrator = spy(new ConnectorMigrator(Map.of("mock", "mock.new"), "", new DefaultTasksState(), migrationUi));
 		WizardDialog wizard = mock(WizardDialog.class);
 		when(wizard.open()).thenReturn(returnCode);
 		doReturn(wizard).when(migrationUi).createMigrationWizard(any(ConnectorMigrator.class));
@@ -226,8 +222,7 @@ public class ConnectorMigrationUiTest {
 	 */
 	private ServiceMessage openCompleteMigrationPrompt(int returnCode) throws InterruptedException {
 		TaskListServiceMessageControl messageControl = createMessageControl();
-		migrator = spy(
-				new ConnectorMigrator(ImmutableMap.of("mock", "mock.new"), "", new DefaultTasksState(), migrationUi));
+		migrator = spy(new ConnectorMigrator(Map.of("mock", "mock.new"), "", new DefaultTasksState(), migrationUi));
 		when(migrationUi.getCompletionPromptFrequency()).thenReturn(2);
 		WizardDialog wizard = mock(WizardDialog.class);
 		when(wizard.open()).thenReturn(returnCode);

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,6 +17,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -27,9 +30,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class ReviewFileCommentsMapperTest {
 
@@ -50,24 +50,24 @@ public class ReviewFileCommentsMapperTest {
 
 	@Test
 	public void emptyReview() {
-		doReturn(ImmutableList.of()).when(review).getSets();
+		doReturn(List.of()).when(review).getSets();
 		mapper.applyTo(taskData);
 		TaskAttribute comments = taskData.getRoot().getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS);
 		assertNotNull(comments);
-		assertEquals(ImmutableMap.of(), comments.getAttributes());
+		assertEquals(Map.of(), comments.getAttributes());
 	}
 
 	@Test
 	public void reviewWithoutComments() {
 		IReviewItemSet set = mock(IReviewItemSet.class);
 		IFileItem file = mock(IFileItem.class);
-		doReturn(ImmutableList.of(set)).when(review).getSets();
-		doReturn(ImmutableList.of(file)).when(set).getItems();
-		doReturn(ImmutableList.of()).when(file).getAllComments();
+		doReturn(List.of(set)).when(review).getSets();
+		doReturn(List.of(file)).when(set).getItems();
+		doReturn(List.of()).when(file).getAllComments();
 		mapper.applyTo(taskData);
 		TaskAttribute comments = taskData.getRoot().getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS);
 		assertNotNull(comments);
-		assertEquals(ImmutableMap.of(), comments.getAttributes());
+		assertEquals(Map.of(), comments.getAttributes());
 	}
 
 	@Test
@@ -80,12 +80,12 @@ public class ReviewFileCommentsMapperTest {
 		IComment comment1 = mock(IComment.class);
 		IComment comment2 = mock(IComment.class);
 		IComment comment3 = mock(IComment.class);
-		doReturn(ImmutableList.of(set1, set2)).when(review).getSets();
-		doReturn(ImmutableList.of(file1)).when(set1).getItems();
-		doReturn(ImmutableList.of(file2, file3)).when(set2).getItems();
-		doReturn(ImmutableList.of(comment1)).when(file1).getAllComments();
-		doReturn(ImmutableList.of()).when(file2).getAllComments();
-		doReturn(ImmutableList.of(comment2, comment3)).when(file2).getAllComments();
+		doReturn(List.of(set1, set2)).when(review).getSets();
+		doReturn(List.of(file1)).when(set1).getItems();
+		doReturn(List.of(file2, file3)).when(set2).getItems();
+		doReturn(List.of(comment1)).when(file1).getAllComments();
+		doReturn(List.of()).when(file2).getAllComments();
+		doReturn(List.of(comment2, comment3)).when(file2).getAllComments();
 		doReturn("id1").when(comment1).getId();
 		doReturn("id2").when(comment2).getId();
 		doReturn("id3").when(comment3).getId();
@@ -95,10 +95,10 @@ public class ReviewFileCommentsMapperTest {
 		mapper.applyTo(taskData);
 		TaskAttribute comments = taskData.getRoot().getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS);
 		assertNotNull(comments);
-		assertComments(ImmutableMap.of("id1", "comment 1", "id2", "comment 2", "id3", "comment 3"), comments);
+		assertComments(Map.of("id1", "comment 1", "id2", "comment 2", "id3", "comment 3"), comments);
 	}
 
-	private void assertComments(ImmutableMap<String, String> children, TaskAttribute attribute) {
+	private void assertComments(Map<String, String> children, TaskAttribute attribute) {
 		for (String attributeId : children.keySet()) {
 			assertNotNull(attribute.getAttribute(attributeId));
 			assertEquals(children.get(attributeId), attribute.getAttribute(attributeId).getValue());

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -46,9 +47,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * Popup to show the information about the annotation in
@@ -456,9 +454,14 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		List<Section> sections = new ArrayList<Section>();
 		if (scrolledComposite.getChildren().length != 0 && scrolledComposite.getChildren()[0] instanceof Composite) {
 			Composite sectionContainer = (Composite) scrolledComposite.getChildren()[0];
-			sections = FluentIterable.from(Arrays.asList(sectionContainer.getChildren()))
-					.filter(Section.class)
-					.toList();
+//			sections = FluentIterable.from(Arrays.asList(sectionContainer.getChildren()))
+//					.filter(Section.class)
+//					.toList();
+			sections = Arrays.asList(sectionContainer.getChildren())
+					.stream()
+					.filter(Section.class::isInstance)
+					.map(Section.class::cast)
+					.collect(Collectors.toUnmodifiableList());
 		}
 		return sections;
 	}
@@ -555,12 +558,15 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 *         otherwise
 	 */
 	protected IComment getLastCommentDraft() {
-		return FluentIterable.from(commentList).filter(new Predicate<IComment>() {
-			@Override
-			public boolean apply(IComment input) {
-				return input.isDraft();
-			}
-		}).last().orNull();
+//		return FluentIterable.from(commentList).filter(new Predicate<IComment>() {
+//			@Override
+//			public boolean apply(IComment input) {
+//				return input.isDraft();
+//			}
+//		}).last().orNull();
+
+		return commentList.stream().filter(input -> input.isDraft()).reduce((first, second) -> second).orElse(null);
+
 	}
 
 	protected void hideHelpText() {

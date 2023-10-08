@@ -1,16 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
+
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
@@ -29,11 +34,6 @@ import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 
 public class GerritCompareUi {
 
@@ -81,27 +81,47 @@ public class GerritCompareUi {
 
 	static CompareEditorInput getComparisonEditorInput(IEditorReference[] editorReferences,
 			CompareEditorInput editorInput, Predicate<CompareEditorInput> predicate) {
-		return FluentIterable.from(Lists.newArrayList(editorReferences)).filter(new Predicate<IEditorReference>() {
-			public boolean apply(IEditorReference ref) {
-				return ref.getId().equals("org.eclipse.compare.CompareEditor"); //$NON-NLS-1$
-			}
-		}).transform(new Function<IEditorReference, CompareEditorInput>() {
-			public CompareEditorInput apply(IEditorReference reference) {
-				try {
-					return (CompareEditorInput) reference.getEditorInput();
-				} catch (PartInitException e) {
-					handleError(e);
-				}
-				return null;
-			}
-		}).firstMatch(predicate).or(editorInput);
+//		return FluentIterable.from(Lists.newArrayList(editorReferences)).filter(new Predicate<IEditorReference>() {
+//			public boolean apply(IEditorReference ref) {
+//				return ref.getId().equals("org.eclipse.compare.CompareEditor"); //$NON-NLS-1$
+//			}
+//		}).transform(new Function<IEditorReference, CompareEditorInput>() {
+//			public CompareEditorInput apply(IEditorReference reference) {
+//				try {
+//					return (CompareEditorInput) reference.getEditorInput();
+//				} catch (PartInitException e) {
+//					handleError(e);
+//				}
+//				return null;
+//			}
+//		}).firstMatch(predicate).or(editorInput);
+
+		Optional<CompareEditorInput> input = Stream.of(editorReferences)
+				.filter(ref -> ref.getId().equals("org.eclipse.compare.CompareEditor")) //$NON-NLS-1$
+				.map(new Function<IEditorReference, CompareEditorInput>() {
+					public CompareEditorInput apply(IEditorReference reference) {
+						try {
+							return (CompareEditorInput) reference.getEditorInput();
+						} catch (PartInitException e) {
+							handleError(e);
+						}
+						return null;
+					}
+				})
+				.filter(predicate)
+				.findFirst();
+		if (input.isPresent()) {
+			return input.get();
+		} else {
+			return editorInput;
+		}
 	}
 
 	static Predicate<CompareEditorInput> getFileComparePredicate(final IFileItem item) {
 		return new Predicate<CompareEditorInput>() {
 
 			@Override
-			public boolean apply(CompareEditorInput existingEditorInput) {
+			public boolean test(CompareEditorInput existingEditorInput) {
 				if (existingEditorInput instanceof FileItemCompareEditorInput) {
 					return (((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId()));
 				}
@@ -115,7 +135,7 @@ public class GerritCompareUi {
 		return new Predicate<CompareEditorInput>() {
 
 			@Override
-			public boolean apply(CompareEditorInput existingEditorInput) {
+			public boolean test(CompareEditorInput existingEditorInput) {
 				if (existingEditorInput instanceof ReviewItemSetCompareEditorInput) {
 					return (((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
 							&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId()));

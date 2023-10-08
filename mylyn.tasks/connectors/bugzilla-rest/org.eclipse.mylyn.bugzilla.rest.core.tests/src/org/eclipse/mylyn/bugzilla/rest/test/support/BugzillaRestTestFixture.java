@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,6 +12,8 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.test.support;
+
+import java.util.Map;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -25,8 +27,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-import com.google.common.collect.ImmutableMap;
-
 public class BugzillaRestTestFixture extends RepositoryTestFixture {
 
 	private static final String API_KEY_ENABLED_PROPERTY = "api_key_enabled";
@@ -39,10 +39,9 @@ public class BugzillaRestTestFixture extends RepositoryTestFixture {
 
 	public static final BugzillaRestTestFixture DEFAULT = discoverDefault();
 
-	private static final ImmutableMap<String, String> userAPIKeyMap = new ImmutableMap.Builder<String, String>()
-			.put("admin@mylyn.eclipse.org", "XkjcuGGfDcoNx0U6uyMM8ZaNuBlEdjrmXd8In3no") //$NON-NLS-1$
-			.put("tests@mylyn.eclipse.org", "wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc6") //$NON-NLS-1$
-			.build();
+	private static final Map<String, String> userAPIKeyMap = Map.of( //
+			"admin@mylyn.eclipse.org", "XkjcuGGfDcoNx0U6uyMM8ZaNuBlEdjrmXd8In3no", //$NON-NLS-1$
+			"tests@mylyn.eclipse.org", "wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc6"); //$NON-NLS-1$
 
 	private static BugzillaRestTestFixture discoverDefault() {
 		return TestConfiguration.getDefault().discoverDefault(BugzillaRestTestFixture.class, "bugzillaREST");

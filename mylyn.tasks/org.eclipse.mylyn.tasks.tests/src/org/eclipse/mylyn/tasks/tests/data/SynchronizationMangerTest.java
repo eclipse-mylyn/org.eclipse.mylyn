@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.tasks.tests.data;
 
 import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
@@ -30,8 +31,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
@@ -177,8 +176,9 @@ public class SynchronizationMangerTest extends TestCase {
 		TaskAttribute attributeSummary = newData.getRoot().createAttribute(TaskAttribute.SUMMARY);
 		attributeSummary.setValue("1");
 		TaskDataDiff diff = manager.createDiff(newData, oldData, new NullProgressMonitor());
-		assertEquals(ImmutableSet.of(new TaskAttributeDiff(null, attributeSummary),
-				new TaskAttributeDiff(null, attributeCustom)), diff.getChangedAttributes());
+		assertEquals(
+				Set.of(new TaskAttributeDiff(null, attributeSummary), new TaskAttributeDiff(null, attributeCustom)),
+				diff.getChangedAttributes());
 		assertTrue(diff.hasChanged());
 	}
 

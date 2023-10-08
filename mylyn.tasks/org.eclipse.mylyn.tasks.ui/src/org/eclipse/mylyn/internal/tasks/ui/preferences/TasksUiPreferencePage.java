@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,7 +15,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.preferences;
 
 import java.io.File;
+import java.util.Map;
 
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.TreeBidiMap;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -64,10 +67,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableMap;
-
 /**
  * @author Mik Kersten
  * @author Rob Elves
@@ -83,10 +82,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private static final int MS_MINUTES = 60 * 1000;
 
-	private static BiMap<String, Integer> SCHEDULE_TIME_MAP = HashBiMap
-			.create(ImmutableMap.of(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK, 0,
-					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW, 1,
-					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY, 2,
+//	private static BiMap<String, Integer> SCHEDULE_TIME_MAP = HashBiMap
+//			.create(Map.of(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK, 0, //
+//					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW, 1, //
+//					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY, 2, //
+//					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED, 3));
+
+	private static BidiMap<String, Integer> SCHEDULE_TIME_MAP = new TreeBidiMap<>(
+			Map.of(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK, 0, //
+					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW, 1, //
+					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY, 2, //
 					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED, 3));
 
 	private Button useRichEditor;
@@ -302,7 +307,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private String getScheduleNewTasksValue() {
 		int index = scheduleNewTasksCombo.getSelectionIndex();
-		return SCHEDULE_TIME_MAP.inverse().get(index);
+//		return SCHEDULE_TIME_MAP.inverse().get(index);
+		return SCHEDULE_TIME_MAP.inverseBidiMap().get(index);
 	}
 
 	@Override

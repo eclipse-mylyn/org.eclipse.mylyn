@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,10 +15,13 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -37,11 +40,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.StatusTransit
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
-
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.Ordering;
 
 public class BugzillaRestConfiguration implements Serializable {
 
@@ -66,14 +64,22 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setFields(Map<String, Field> fields) {
-		Function<Field, String> getName = new Function<Field, String>() {
-			public String apply(Field item) {
-				return item.getName();
-			}
-		};
-		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(fields));
-		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
-		this.fields = ImmutableSortedMap.copyOf(fields, comparator);
+//		Function<Field, String> getName = new Function<Field, String>() {
+//			public String apply(Field item) {
+//				return item.getName();
+//			}
+//		};
+//		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(fields));
+//		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
+//		this.fields = ImmutableSortedMap.copyOf(fields, comparator);
+
+		this.fields = fields.entrySet()
+				.stream()
+				.sorted((e1, e2) -> e1.getValue().getName().compareTo(e2.getValue().getName()))
+				.collect(Collectors.collectingAndThen(
+						Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new),
+						Collections::unmodifiableMap));
+
 	}
 
 	public Map<String, Field> getFields() {
@@ -85,14 +91,21 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setProducts(Map<String, Product> products) {
-		Function<Product, String> getName = new Function<Product, String>() {
-			public String apply(Product item) {
-				return item.getName();
-			}
-		};
-		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(products));
-		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
-		this.products = ImmutableSortedMap.copyOf(products, comparator);
+//		Function<Product, String> getName = new Function<Product, String>() {
+//			public String apply(Product item) {
+//				return item.getName();
+//			}
+//		};
+//		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(products));
+//		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
+//		this.products = ImmutableSortedMap.copyOf(products, comparator);
+
+		this.products = products.entrySet()
+				.stream()
+				.sorted((e1, e2) -> e1.getValue().getName().compareTo(e2.getValue().getName()))
+				.collect(Collectors.collectingAndThen(
+						Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new),
+						Collections::unmodifiableMap));
 	}
 
 	public Map<String, Product> getProducts() {

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,7 +14,9 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -51,9 +53,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -156,7 +155,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	/**
 	 * Allows connectors to suggest a query title. As long as the title field does not contain edits made by the user,
 	 * the field will be updated with the suggestion whenever the button enablement is updated.
-	 * 
+	 *
 	 * @return a query title suggested based on the query parameters, or the empty string
 	 * @since 3.18
 	 */
@@ -171,8 +170,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	void updateTitleFromSuggestion() {
 		if (editQueryTitleInProgress) {
 			titleWasSuggested = false;
-		} else if (titleWasSuggested || Strings.isNullOrEmpty(getQueryTitle())
-				|| (getQuery() != null && Objects.equal(getQuery().getSummary(), getQueryTitle())
+		} else if (titleWasSuggested || StringUtils.isEmpty(getQueryTitle())
+				|| (getQuery() != null && Objects.equals(getQuery().getSummary(), getQueryTitle())
 						&& suggestQueryTitle().equals(getQueryTitle()))) {
 			setQueryTitle(suggestQueryTitle());
 			titleWasSuggested = true;
@@ -493,7 +492,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	/**
 	 * Reflows the page and resizes the shell as necessary. Clients should invoke this if the content of the page is
 	 * changed dynamically.
-	 * 
+	 *
 	 * @see SectionComposite#resizeAndReflow()
 	 * @since 3.10
 	 */

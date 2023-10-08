@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -14,6 +14,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jgit.lib.Repository;
@@ -34,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.team.core.history.IFileRevision;
 
-import com.google.common.base.Strings;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gwtjsonrpc.client.VoidResult;
 
@@ -79,11 +79,12 @@ public class GerritReviewBehavior extends ReviewBehavior {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
 				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side, null,
-						Strings.emptyToNull(comment.getId()));
+						StringUtils.defaultIfEmpty(comment.getId(), null));
 				request.setMessage(comment.getDescription());
 
 				GerritOperation<CommentInput> operation = getOperationFactory().createOperation(getTask(), request);
 				IStatus status = operation.run(monitor);
+
 				CommentInput commentInput = operation.getOperationResult();
 				// save the value of uuid, and keep it with the comment
 				if (commentInput != null) {

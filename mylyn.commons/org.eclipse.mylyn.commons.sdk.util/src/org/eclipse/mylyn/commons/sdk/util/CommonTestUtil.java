@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +32,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -266,9 +265,9 @@ public class CommonTestUtil {
 			ClassLoader classLoader = clazz.getClassLoader();
 			try {
 				if (isOsgiVersion310orNewer(classLoader)) {
-					return checkNotNull(getFileFromClassLoader4Luna(filename, classLoader));
+					return Objects.requireNonNull(getFileFromClassLoader4Luna(filename, classLoader));
 				} else {
-					return checkNotNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
+					return Objects.requireNonNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
 				}
 			} catch (Exception e) {
 				AssertionFailedError exception = new AssertionFailedError(

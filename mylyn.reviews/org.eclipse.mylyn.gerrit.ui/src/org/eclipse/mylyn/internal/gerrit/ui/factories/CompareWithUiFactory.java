@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson, Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -50,9 +51,6 @@ import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Sets;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
@@ -80,7 +78,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		public void updated(boolean modified) {
 			IStatus status = getConsumer().getStatus();
 			if (status.isOK()) {
-				Set<String> fileNames = Sets.newHashSet();
+				Set<String> fileNames = new HashSet<>();
 				addItems(baseSet, fileNames);
 				addItems(targetSet, fileNames);
 				if (!fileNames.isEmpty()) {
@@ -103,11 +101,13 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
 		private void addItems(IReviewItemSet itemSet, Set<String> fileNames) {
 			if (itemSet != null) {
-				fileNames.addAll(Collections2.transform(itemSet.getItems(), new Function<IFileItem, String>() {
-					public String apply(IFileItem f) {
-						return f.getName();
-					}
-				}));
+//				fileNames.addAll(Collections2.transform(itemSet.getItems(), new Function<IFileItem, String>() {
+//					public String apply(IFileItem f) {
+//						return f.getName();
+//					}
+//				}));
+
+				itemSet.getItems().stream().map(f -> f.getName()).forEachOrdered(fileNames::add);
 			}
 		}
 	}

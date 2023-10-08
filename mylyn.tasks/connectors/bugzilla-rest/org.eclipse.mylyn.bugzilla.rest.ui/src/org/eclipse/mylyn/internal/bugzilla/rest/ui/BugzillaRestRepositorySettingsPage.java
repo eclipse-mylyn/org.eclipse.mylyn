@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
 import java.text.MessageFormat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
@@ -41,8 +42,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-
-import com.google.common.base.Strings;
 
 public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	private static final String LABEL_VERSION_NUMBER = "5.0"; //$NON-NLS-1$
@@ -95,12 +94,12 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 				apiKey.setEnabled(selectedValue);
 				if (!selectedValue) {
 					String apiKeyText = apiKey.getText();
-					if (!Strings.isNullOrEmpty(apiKeyText)) {
+					if (StringUtils.isNotEmpty(apiKeyText)) {
 						oldApiKeyValue = apiKeyText;
 					}
 					apiKey.setText(""); //$NON-NLS-1$
 				} else {
-					if (!Strings.isNullOrEmpty(oldApiKeyValue)) {
+					if (StringUtils.isNotEmpty(oldApiKeyValue)) {
 						apiKey.setText(oldApiKeyValue);
 					}
 				}
@@ -135,7 +134,7 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 					.parseBoolean(repository.getProperty(IBugzillaRestConstants.REPOSITORY_USE_API_KEY));
 			useApiKey.setSelection(useApiKeyValue);
 			String apiKeyValue = repository.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY);
-			apiKey.setText(Strings.nullToEmpty(apiKeyValue));
+			apiKey.setText(StringUtils.defaultString(apiKeyValue));
 			apiKey.setEnabled(useApiKeyValue);
 		}
 

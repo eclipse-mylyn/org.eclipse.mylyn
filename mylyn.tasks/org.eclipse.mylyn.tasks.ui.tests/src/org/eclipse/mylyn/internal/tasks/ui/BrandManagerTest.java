@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -17,6 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Set;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -26,8 +28,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 @SuppressWarnings("restriction")
 public class BrandManagerTest {
@@ -120,9 +120,9 @@ public class BrandManagerTest {
 	}
 
 	private void assertBrands() {
-		assertEquals(ImmutableSet.of("org.mylyn", "org.eclipse"), brandManager.getBrands("mock1"));
-		assertEquals(ImmutableSet.of("org.mylyn", "com.acme"), brandManager.getBrands("mock2"));
-		assertEquals(ImmutableSet.of(), brandManager.getBrands("unknown"));
+		assertEquals(Set.of("org.mylyn", "org.eclipse"), brandManager.getBrands("mock1"));
+		assertEquals(Set.of("org.mylyn", "com.acme"), brandManager.getBrands("mock2"));
+		assertEquals(Set.of(), brandManager.getBrands("unknown"));
 	}
 
 	private Image image(int size) {

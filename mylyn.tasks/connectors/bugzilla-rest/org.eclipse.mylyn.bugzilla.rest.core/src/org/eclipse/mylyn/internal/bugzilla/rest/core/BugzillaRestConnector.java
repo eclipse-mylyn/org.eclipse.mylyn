@@ -18,7 +18,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -55,13 +56,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 
 public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
@@ -115,7 +112,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		}
 	};
 
-	private final LoadingCache<RepositoryKey, BugzillaRestClient> clientCache = CacheBuilder.newBuilder()
+	private final LoadingCache<RepositoryKey, BugzillaRestClient> clientCache = Caffeine.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
 			.build(new CacheLoader<RepositoryKey, BugzillaRestClient>() {
 
@@ -144,40 +141,32 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 						BugzillaRestClient client = clientCache.get(key);
 						TaskRepository repository = key.getRepository();
 						repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
-						return Optional.fromNullable(client.getConfiguration(key.getRepository(), context.get()));
+						return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
 					}
 
 					@Override
-					public ListenableFuture<Optional<BugzillaRestConfiguration>> reload(final RepositoryKey key,
+					public Optional<BugzillaRestConfiguration> reload(RepositoryKey key,
 							Optional<BugzillaRestConfiguration> oldValue) throws Exception {
-						// asynchronous!
 						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob<Optional<BugzillaRestConfiguration>>(
 								"") {
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
-								BugzillaRestClient client;
-								try {
-									client = clientCache.get(key);
-									set(Optional
-											.fromNullable(client.getConfiguration(key.getRepository(), context.get())));
-								} catch (ExecutionException e) {
-									e.printStackTrace();
-									return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
-											"BugzillaRestConnector reload Configuration", e);
-								}
+								BugzillaRestClient client = clientCache.get(key);
+								set(Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get())));
 								return Status.OK_STATUS;
 							}
 						};
 						job.schedule();
-						return job;
+						return job.get();
 					}
 				});
+
 	}
 
-	protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
+	protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 			Duration refreshAfterWriteDuration) {
-		return CacheBuilder.newBuilder()
+		return Caffeine.newBuilder()
 				.expireAfterWrite(expireAfterWriteDuration.getValue(), expireAfterWriteDuration.getUnit())
 				.refreshAfterWrite(refreshAfterWriteDuration.getValue(), refreshAfterWriteDuration.getUnit());
 	}
@@ -235,7 +224,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 				.getAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey());
 		TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
-		return !Objects.equal(latestRemoteModValue, lastKnownLocalModValue);
+		return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
 	}
 
 	@Override
@@ -398,12 +387,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	 * @throws CoreException
 	 */
 	public BugzillaRestClient getClient(TaskRepository repository) throws CoreException {
-		try {
-			return clientCache.get(new RepositoryKey(repository));
-		} catch (ExecutionException e) {
-			throw new CoreException(
-					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "TaskRepositoryManager is null"));
-		}
+		return clientCache.get(new RepositoryKey(repository));
 	}
 
 	@Override
@@ -429,9 +413,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 			Optional<BugzillaRestConfiguration> configurationOptional = configurationCache
 					.get(new RepositoryKey(repository));
 			return configurationOptional.isPresent() ? configurationOptional.get() : null;
-		} catch (UncheckedExecutionException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
 		}
 	}

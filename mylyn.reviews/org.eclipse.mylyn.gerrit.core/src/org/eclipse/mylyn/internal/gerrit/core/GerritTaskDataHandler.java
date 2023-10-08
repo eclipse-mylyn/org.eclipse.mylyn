@@ -1,10 +1,10 @@
 /*********************************************************************
  * Copyright (c) 2010, 2016 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
@@ -51,8 +53,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -297,10 +297,19 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			i++;
 		}
 
-		ListMultimap<Integer, BuildResult> resultsByPatchNumber = ArrayListMultimap.create();
+//		ListMultimap<Integer, BuildResult> resultsByPatchNumber = ArrayListMultimap.create();
+//		for (BuildResult buildResult : ((ChangeDetailX) changeDetail).getPatchSetBuildStatuses()) {
+//			resultsByPatchNumber.put(buildResult.getPatchSetNumber(), buildResult);
+//		}
+//
+//
+//		for (Entry<Integer, Collection<BuildResult>> buildResult : resultsByPatchNumber.asMap().entrySet()) {
+
+		MultiValuedMap<Integer, BuildResult> resultsByPatchNumber = new ArrayListValuedHashMap<>();
 		for (BuildResult buildResult : ((ChangeDetailX) changeDetail).getPatchSetBuildStatuses()) {
 			resultsByPatchNumber.put(buildResult.getPatchSetNumber(), buildResult);
 		}
+
 		for (Entry<Integer, Collection<BuildResult>> buildResult : resultsByPatchNumber.asMap().entrySet()) {
 			int patchNumber = buildResult.getKey();
 			TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(buildResult.getValue());

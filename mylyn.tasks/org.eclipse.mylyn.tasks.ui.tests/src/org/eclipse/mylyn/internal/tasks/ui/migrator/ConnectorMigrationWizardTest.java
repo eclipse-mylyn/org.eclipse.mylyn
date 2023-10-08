@@ -53,9 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 public class ConnectorMigrationWizardTest {
 	public class TestConnectorMigrationWizard extends ConnectorMigrationWizard {
 		private TestConnectorMigrationWizard(ConnectorMigrator migrator) {
@@ -94,7 +91,7 @@ public class ConnectorMigrationWizardTest {
 	public void setUp() {
 		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
-		createMigrator(ImmutableMap.of("mock", "mock.new"));
+		createMigrator(Map.of("mock", "mock.new"));
 	}
 
 	@Test
@@ -139,12 +136,12 @@ public class ConnectorMigrationWizardTest {
 	@Test
 	public void performFinishAfterConnectorsSelected()
 			throws InvocationTargetException, InterruptedException, IOException {
-		createMigrator(ImmutableMap.of("foo", "foo.new", "bar", "bar.new", "baz", "baz.new"));
+		createMigrator(Map.of("foo", "foo.new", "bar", "bar.new", "baz", "baz.new"));
 		IWizardContainer container = createWizard(new TestConnectorMigrationWizard(migrator));
 		spinEventLoop();
 		wizard.performFinish();
 		verify(container).run(eq(true), eq(true), any(IRunnableWithProgress.class));
-		verify(migrator).setConnectorsToMigrate(eq(ImmutableList.of("foo", "bar")));
+		verify(migrator).setConnectorsToMigrate(eq(List.of("foo", "bar")));
 		verify(migrator).migrateConnectors(any(IProgressMonitor.class));
 	}
 
@@ -162,11 +159,11 @@ public class ConnectorMigrationWizardTest {
 	@Test
 	public void performFinishNoConnectorsSelectedByDefault()
 			throws InvocationTargetException, InterruptedException, IOException {
-		createMigrator(ImmutableMap.of("foo", "foo.new", "bar", "bar.new", "baz", "baz.new"));
+		createMigrator(Map.of("foo", "foo.new", "bar", "bar.new", "baz", "baz.new"));
 		IWizardContainer container = createWizard(new ConnectorMigrationWizard(migrator));
 		wizard.performFinish();
 		verify(container).run(eq(true), eq(true), any(IRunnableWithProgress.class));
-		verify(migrator).setConnectorsToMigrate(eq(ImmutableList.<String> of()));
+		verify(migrator).setConnectorsToMigrate(eq(List.<String> of()));
 		verify(migrator).migrateConnectors(any(IProgressMonitor.class));
 	}
 
@@ -182,12 +179,12 @@ public class ConnectorMigrationWizardTest {
 		manager.addRepository(new TaskRepository("mock", "http://mock"));
 		manager.addRepository(new TaskRepository("bar", "http://bar"));
 
-		createMigrator(ImmutableMap.of("foo", "foo.new", "bar", "bar.new", "mock", "mock.new"), manager);
+		createMigrator(Map.of("foo", "foo.new", "bar", "bar.new", "mock", "mock.new"), manager);
 
 		IWizardContainer container = createWizard(new ConnectorMigrationWizard(migrator));
 		wizard.performFinish();
 		verify(container).run(eq(true), eq(true), any(IRunnableWithProgress.class));
-		verify(migrator).setConnectorsToMigrate(eq(ImmutableList.of("bar", "mock")));
+		verify(migrator).setConnectorsToMigrate(eq(List.of("bar", "mock")));
 		verify(migrator).migrateConnectors(any(IProgressMonitor.class));
 	}
 
@@ -222,9 +219,9 @@ public class ConnectorMigrationWizardTest {
 	@Test
 	public void createConnectorList() throws Exception {
 		CheckboxTreeViewer viewer = new ConnectorMigrationWizard(migrator).createConnectorList(WorkbenchUtil.getShell(),
-				ImmutableList.of("mock"));
+				List.of("mock"));
 		IRepositoryManager manager = migrator.getRepositoryManager();
-		assertEquals(ImmutableList.of("mock"), viewer.getInput());
+		assertEquals(List.of("mock"), viewer.getInput());
 		assertTrue(viewer.getLabelProvider() instanceof LabelProvider);
 		assertEquals("mock", ((LabelProvider) viewer.getLabelProvider()).getText("mock"));
 

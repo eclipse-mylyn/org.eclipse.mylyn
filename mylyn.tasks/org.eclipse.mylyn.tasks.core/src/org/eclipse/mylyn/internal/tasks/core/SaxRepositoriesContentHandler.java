@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -18,6 +18,7 @@ import static org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convert
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -25,8 +26,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.google.common.base.Strings;
 
 /**
  * Adapted from SaxContextContentHandler
@@ -68,7 +67,7 @@ public class SaxRepositoriesContentHandler extends DefaultHandler {
 	private void handleRepositoryElement(Attributes attributes) throws SAXException {
 		String kind = convertXmlToString(attributes.getValue(IRepositoryConstants.PROPERTY_CONNECTOR_KIND));
 		String url = convertXmlToString(attributes.getValue(IRepositoryConstants.PROPERTY_URL));
-		if (!Strings.isNullOrEmpty(kind) && !Strings.isNullOrEmpty(url)) {
+		if (StringUtils.isNotEmpty(kind) && StringUtils.isNotEmpty(url)) {
 			currentRepository = new TaskRepository(kind, url);
 			// properties are stored as attributes on the repository node as well as children property nodes
 			for (int index = 0; index < attributes.getLength(); index++) {

@@ -45,5 +45,5 @@ Export-Package: org.eclipse.mylyn.gerrit.dashboard.internal.utils;x-internal:=tr
    org.eclipse.swt.widgets,
    org.eclipse.mylyn.internal.gerrit.core,
    org.eclipse.mylyn.gerrit.dashboard.ui.internal.model"
-Import-Package: com.google.common.base;version="15.0.0",
- com.google.gerrit.reviewdb;version="2.1.5"
+Import-Package: com.google.gerrit.reviewdb;version="2.1.5",
+ org.apache.commons.lang3;version="3.12.0"
