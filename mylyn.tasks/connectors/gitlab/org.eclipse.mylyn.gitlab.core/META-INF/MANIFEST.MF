@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Gitlab Connector Core
 Bundle-SymbolicName: org.eclipse.mylyn.gitlab.core;singleton:=true
 Bundle-Vendor: %Bundle-Vendor
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.1.0.qualifier
 Export-Package: org.eclipse.mylyn.gitlab.core,
  org.eclipse.mylyn.internal.gitlab.core;x-friends:="org.eclipse.mylyn.gitlab.ui"
 Import-Package: com.google.common.base;version="31.1.0",
