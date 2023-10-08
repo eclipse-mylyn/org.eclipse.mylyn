@@ -38,6 +38,7 @@ public class GitlabUiActivator extends AbstractUIPlugin {
     public static final String GITLAB_CLOSED_FILE = "icons/obj12/closed.png"; //$NON-NLS-1$
     public static final String GITLAB_REOPEN_FILE = "icons/obj12/reopen.png"; //$NON-NLS-1$
     public static final String GITLAB_LABEL_FILE = "icons/obj12/label.png"; //$NON-NLS-1$
+    public static final String GITLAB_DESIGN_FILE = "icons/obj12/design.png"; //$NON-NLS-1$
 
     /**
      * The constructor
@@ -80,6 +81,7 @@ public class GitlabUiActivator extends AbstractUIPlugin {
 	reg.put(GITLAB_REOPEN_FILE, getImageDescriptor(GITLAB_REOPEN_FILE));
 	reg.put(GITLAB_CLOSED_FILE, getImageDescriptor(GITLAB_CLOSED_FILE));
 	reg.put(GITLAB_LABEL_FILE, getImageDescriptor(GITLAB_LABEL_FILE));
+	reg.put(GITLAB_DESIGN_FILE, getImageDescriptor(GITLAB_DESIGN_FILE));
     }
 
     /**

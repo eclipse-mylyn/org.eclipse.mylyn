@@ -76,7 +76,6 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 
 	    @Override
 	    public int compare(TaskAttribute o1, TaskAttribute o2) {
-		// TODO Auto-generated method stub
 		return o1.getId().compareTo(o2.getId());
 	    }
 	});
@@ -113,8 +112,6 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	    String activityText = taskAttribute.getAttribute(TaskAttribute.COMMENT_TEXT).getValue();
 	    String activityType = taskAttribute.getAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY).getValue();
 
-	    GitlabCoreActivator.ActivityType xx = GitlabCoreActivator.ActivityType.valueOf(activityType);
-
 	    Label labelIcon = toolkit.createLabel(activityComposite, "");
 
 	    switch (GitlabCoreActivator.ActivityType.valueOf(activityType)) {
@@ -149,6 +146,10 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	    case LABEL:
 		labelIcon.setImage(
 			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_LABEL_FILE));
+		break;
+	    case DESIGN:
+		labelIcon.setImage(
+			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_DESIGN_FILE));
 		break;
 
 	    default:
