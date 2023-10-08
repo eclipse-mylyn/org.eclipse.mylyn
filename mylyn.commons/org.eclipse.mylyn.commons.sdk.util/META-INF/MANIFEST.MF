@@ -2,16 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Commons SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.commons.sdk.util;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: com.google.gson;bundle-version="2.9.1",
- org.eclipse.core.net;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.core.net;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.equinox.event;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.net;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.repositories.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.net;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="4.1.0",
  org.eclipse.osgi;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.browser;bundle-version="0.0.0",
@@ -19,5 +18,7 @@ Require-Bundle: com.google.gson;bundle-version="2.9.1",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.commons.sdk.util;x-internal:=true
 Import-Package: com.google.common.base;version="31.1.0",
+ com.google.gson;version="2.10.1",
+ com.google.gson.reflect;version="2.10.1",
  org.apache.commons.lang.reflect;version="2.6.0"
 Bundle-Vendor: Eclipse Mylyn

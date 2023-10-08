@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2023 Frank Becker and others.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0
+ 
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+         Frank Becker - initial API and implementation
+ -->
+ <plugin>
+   <extension
+         id="org.eclipse.mylyn.gitlab.repository"
+         name="Gitlab Respository"
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorUi
+            brandingIcon="icons/obj20/gitlab.png"
+            class="org.eclipse.mylyn.internal.gitlab.ui.GitlabConnectorUI">
+      </connectorUi>
+   </extension>
+
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.internal.gitlab.ui.GitlabTaskEditorPageFactory"
+            id="org.eclipse.mylyn.gitlab.ui.pageFactory">
+      </pageFactory>
+   </extension>
+</plugin>

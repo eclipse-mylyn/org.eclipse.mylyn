@@ -50,7 +50,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * Adds support for finding text to the task editor.
- * 
+ *
  * @author Jingwen Ou
  * @author Lily Guo
  * @author Sam Davis
@@ -220,7 +220,8 @@ public class TaskEditorFindSupport {
 		boolean expandMatchingGroup = true;
 		for (int i = commentGroupViewers.size() - 1; i >= 0; i--) {
 			final CommentGroupViewer group = commentGroupViewers.get(i);
-			List<CommentViewer> commentViewers = group.getCommentViewers();
+			List<CommentViewer> commentViewers = group
+					.getCommentViewers(group.getCommentGroup().getCommentAttributes());
 			int start = end - commentViewers.size();
 			List<TaskAttribute> groupAttributes = commentAttributes.subList(start, end);
 			if (expandMatchingGroup && anyCommentContains(groupAttributes, searchString)) {

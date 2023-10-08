@@ -1,6 +1,0 @@
-
-# TracXmlRpcClient
-org.eclipse.mylyn.trac.core/debug/xmlrpc=false
-
-# AbstractTracClient
-org.eclipse.mylyn.trac.core/debug/authentication=false

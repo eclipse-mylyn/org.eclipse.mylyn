@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - migrate to Equinox p2
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -47,6 +48,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.equinox.internal.p2.ui.ProvUI;
+import org.eclipse.equinox.p2.engine.IProfile;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.query.QueryUtil;
+import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -64,7 +70,6 @@ import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.workbench.TaskBarManager;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
-import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -610,9 +615,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						@Override
 						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
 							if (installedFeatures == null) {
-								installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
+								installedFeatures = fetchInstalledFeatures(monitor);
 							}
 							return installedFeatures;
+						}
+
+						private Set<String> fetchInstalledFeatures(IProgressMonitor monitor) {
+							Set<String> features = new HashSet<>();
+							IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
+									.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
+							if (profile != null) {
+								for (IInstallableUnit unit : profile.available(QueryUtil.createIUGroupQuery(),
+										monitor)) {
+									features.add(unit.getId());
+								}
+							}
+							return features;
 						}
 					});
 

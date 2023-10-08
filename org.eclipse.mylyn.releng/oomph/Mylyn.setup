@@ -10,7 +10,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -29,6 +29,40 @@
     <reference
         href="MylynConfiguration.setup#/"/>
   </annotation>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      name="User Preferences">
+    <annotation
+        source="http://www.eclipse.org/oomph/setup/UserPreferences"/>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.mylyn.team.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.mylyn.team.ui/org.eclipse.mylyn.team.commit.template"
+          value="$${task.description} #$${task.key}&#xA;&#xA;Task-Url: $${task.url}"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.pde.api.tools">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.pde.api.tools/missing_default_api_profile"
+          value="Error"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.pde.api.tools/MISSING_EE_DESCRIPTIONS"
+          value="Warning"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.ui.ide">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
+          value="Mylyn"/>
+    </setupTask>
+  </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
       name="Global Variables">
@@ -51,30 +85,6 @@
         defaultValue="eclipse-mylyn"
         label="GitHub Orga for Repositories">
       <description>Enter the Github Orga for the Repositories</description>
-    </setupTask>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:CompoundTask"
-      name="Preferences">
-    <setupTask
-        xsi:type="setup:CompoundTask"
-        name="org.eclipse.ui.ide">
-      <setupTask
-          xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
-          value="Mylyn"/>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:CompoundTask"
-        name="org.eclipse.pde.api.tools">
-      <setupTask
-          xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.pde.api.tools/missing_default_api_profile"
-          value="Error"/>
-      <setupTask
-          xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.pde.api.tools/MISSING_EE_DESCRIPTIONS"
-          value="Warning"/>
     </setupTask>
   </setupTask>
   <setupTask
@@ -160,7 +170,7 @@
     <setupTask
         xsi:type="pde:TargetPlatformTask"
         predecessor="mylyn.workingsets"
-        name="mylyn-e4.28">
+        name="org.eclipse.mylyn.target">
       <description>Active Mylyn Target Platform</description>
     </setupTask>
     <setupTask
@@ -249,13 +259,6 @@
         </predicate>
       </workingSet>
       <workingSet
-          name="Trac Connector">
-        <predicate
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.mylyn-aggregator"
-            relativePathPattern="mylyn.tasks/connectors/trac/.*"/>
-      </workingSet>
-      <workingSet
           name="Bugzilla Connector">
         <predicate
             xsi:type="predicates:RepositoryPredicate"
@@ -268,6 +271,13 @@
             xsi:type="predicates:RepositoryPredicate"
             project="org.eclipse.mylyn-aggregator"
             relativePathPattern="mylyn.tasks/connectors/bugzilla-rest/.*"/>
+      </workingSet>
+      <workingSet
+          name="Gitlab Connector">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.tasks/connectors/gitlab/.*"/>
       </workingSet>
       <workingSet
           name="Context">

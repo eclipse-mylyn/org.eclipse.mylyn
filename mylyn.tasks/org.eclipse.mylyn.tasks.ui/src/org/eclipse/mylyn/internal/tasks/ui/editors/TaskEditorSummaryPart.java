@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -35,6 +35,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Raphael Ackermann
  * @author Steffen Pingel
@@ -42,7 +44,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
-	private AbstractAttributeEditor summaryEditor;
+	protected AbstractAttributeEditor summaryEditor;
 
 	public TaskEditorSummaryPart() {
 		setPartName(Messages.TaskEditorSummaryPart_Summary);
@@ -118,7 +120,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 						.mapToRepositoryKey(attribute.getParentAttribute(), id));
 	}
 
-	private void addSummaryText(Composite composite, final FormToolkit toolkit) {
+	protected void addSummaryText(Composite composite, final FormToolkit toolkit) {
 		TaskAttribute summaryAttrib = getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		summaryEditor = createAttributeEditor(summaryAttrib);
 		if (summaryEditor != null) {
@@ -165,7 +167,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		final Control priorityEditor = addPriorityAttributeWithIcon(composite, toolkit, priorityAttribute, false);
 		if (priorityEditor != null) {
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(priorityEditor);
-			// forward focus to the summary editor		
+			// forward focus to the summary editor
 			priorityEditor.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusGained(FocusEvent e) {
@@ -185,7 +187,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				getModel().getTaskRepository().getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT))) {
 			TaskAttribute userAssignedAttribute = getTaskData().getRoot()
 					.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-			if (userAssignedAttribute != null) {
+			if (userAssignedAttribute != null && !Strings.isNullOrEmpty(userAssignedAttribute.getValue())) {
 				UserAttributeEditor editor = new UserAttributeEditor(getModel(), userAssignedAttribute);
 				editor.createControl(composite, toolkit);
 				GridDataFactory.fillDefaults()

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
 /**
@@ -41,12 +40,10 @@ public class IsEmpty<T> extends BaseMatcher<T> {
 		buffer.appendText("is empty");
 	}
 
-	@Factory
 	public static <T> Matcher<T> isEmpty() {
 		return new IsEmpty<T>();
 	}
 
-	@Factory
 	public static <T> Matcher<T> empty() {
 		return isEmpty();
 	}

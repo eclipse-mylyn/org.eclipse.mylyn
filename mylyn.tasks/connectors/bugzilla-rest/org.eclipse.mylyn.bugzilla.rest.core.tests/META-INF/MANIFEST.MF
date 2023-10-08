@@ -2,25 +2,27 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Rest Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.1.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: com.google.gson;bundle-version="0.0.0",
- org.hamcrest;bundle-version="0.0.0",
+Require-Bundle: org.hamcrest;bundle-version="0.0.0",
  org.hamcrest.library;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional,
- org.eclipse.mylyn.bugzilla.rest.core;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.net;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.repositories.core;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.repositories.http.core;bundle-version="4.0.0",
- org.eclipse.mylyn.commons.sdk.util;bundle-version="4.0.0",
- org.eclipse.mylyn.tasks.core;bundle-version="4.0.0",
+ org.eclipse.mylyn.bugzilla.rest.core;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.net;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.repositories.http.core;bundle-version="4.1.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="4.1.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.1.0",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.bugzilla.rest.core.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.rest.test.support;x-internal:=true
 Import-Package: com.google.common.base;version="31.1.0",
  com.google.common.cache;version="31.1.0",
  com.google.common.collect;version="31.1.0",
+ com.google.gson;version="2.10.1",
+ com.google.gson.reflect;version="2.10.1",
+ com.google.gson.stream;version="2.10.1",
  org.apache.commons.io;version="2.8.0"

@@ -32,12 +32,6 @@
    <feature id="org.eclipse.mylyn.cdt.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.discovery.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.discovery.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.gerrit.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
@@ -93,19 +87,13 @@
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.bugzilla.feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.bugzilla.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.trac.feature">
-      <category name="a.tasks.connector"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.trac.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.github.feature">
-      <category name="a.tasks.connector"/>
+      <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
    <feature id="org.eclipse.mylyn.github.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
@@ -164,6 +152,12 @@
    <feature id="org.eclipse.mylyn.versions.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.gitlab.feature">
+      <category name="org.eclipse.mylyn.tasks.connector"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.gitlab.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <bundle id="com.google.gerrit.common"/>
    <bundle id="com.google.gerrit.prettify"/>
    <bundle id="com.google.gerrit.reviewdb"/>
@@ -208,7 +202,7 @@
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="a.tasks.connector" label="Mylyn Tasks Connector">
+   <category-def name="org.eclipse.mylyn.tasks.connector" label="Mylyn Tasks Connector">
       <description>
          The Connectors for Task Repositories like Bugzilla and GitHub
       </description>

@@ -74,10 +74,6 @@
 		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Commons"/>
 		</mapping>
-		<mapping namespace="org.eclipse.mylyn.discovery" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Commons"/>
-			<property name="component" value="Discovery"/>
-		</mapping>
 		<mapping namespace="org.eclipse.mylyn.monitor" productId="org.eclipse.mylyn">
 			<property name="product" value="Mylyn Commons"/>
 			<property name="component" value="Monitor"/>
@@ -157,17 +153,6 @@
 		<mapping namespace="org.eclipse.platform" productId="org.eclipse.platform">
 			<property name="product" value="Platform">
 			</property>
-		</mapping>
-		<product featureId="org.eclipse.cvs" id="org.eclipse.cvs"
-			providerId="org.eclipse">
-		</product>
-		<mapping namespace="org.eclipse.cvs" productId="org.eclipse.cvs">
-			<property name="product" value="Platform"/>
-			<property name="component" value="CVS"/>
-		</mapping>
-		<mapping namespace="org.eclipse.team.cvs" productId="org.eclipse.cvs">
-			<property name="product" value="Platform"/>
-			<property name="component" value="CVS"/>
 		</mapping>
 		<!-- JDT -->
 		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"

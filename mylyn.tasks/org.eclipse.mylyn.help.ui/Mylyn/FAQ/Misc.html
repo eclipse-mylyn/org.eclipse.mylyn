@@ -174,14 +174,6 @@
 org.eclipse.mylyn.jira.core/debug/dataHandler=true
 org.eclipse.mylyn.jira.core/debug/repository=true
 </pre>
-		<p>
-			<b>Trac</b>
-		</p>
-		<pre># trace authentication requests
-org.eclipse.mylyn.trac.core/debug/authentication=true
-# trace XML-RPC calls
-org.eclipse.mylyn.trac.core/debug/xmlrpc=true
-</pre>
 		<p>Then start eclipse with 
 			<b><code>-debug</code></b>. You can also optionally pass a filename to <code>-debug</code> if your <code>.options</code> file is not located in the eclipse directory.
 		</p>
@@ -191,9 +183,6 @@ org.eclipse.mylyn.trac.core/debug/xmlrpc=true
 		<h2 id="Which_usage_monitoring_framework_should_I_use.3F">Which usage monitoring framework should I use?</h2>
 		<p>Three usage data collection frameworks have been created for Eclipse:</p>
 		<ol>
-			<li>
-				<a href="http://dev.eclipse.org/viewcvs/index.cgi/platform-ui-home/instrumentation/index.html?revision=1.12" target="mylyn_external">Eclipse Instrumentation Framework</a>: created as part of Platform UI, not released, not currently maintained
-			</li>
 			<li>
 				<a href="http://wiki.eclipse.org/Mylyn_Integrator_Reference#Monitor_API" title="Mylyn_Integrator_Reference#Monitor_API" target="mylyn_external">Mylyn Monitor UI Usage Reporting</a>: created in 2004, maintained as part of the Mylyn project, first released in 2005
 			</li>

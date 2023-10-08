@@ -30,12 +30,6 @@ Vagrant.configure("2") do |config|
 #    puppet_gerrit.manifest_file = "default.pp"
 #  end
 
-#  config.vm.provision "puppet" do |puppet_trac|
-#    puppet_trac.module_path = "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.trac.releng/modules"
-#    puppet_trac.manifests_path = "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.trac.releng/manifests"
-#    puppet_trac.manifest_file = "default.pp"
-#  end
-
   config.vm.provision "puppet" do |puppet|
     puppet.module_path = "modules"
     puppet.manifests_path = "manifests"
