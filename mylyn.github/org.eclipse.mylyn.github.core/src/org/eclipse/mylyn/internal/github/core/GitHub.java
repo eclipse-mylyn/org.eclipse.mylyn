@@ -26,6 +26,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -56,7 +57,11 @@ public class GitHub {
 	 * Key for a repository property storing a stringified boolean ("true" or
 	 * "false") telling whether to use token authentication for a Mylyn task
 	 * repository.
+	 *
+	 * Kept to not break existing repository definitions. Replace by
+	 * IRepositoryConstants.PROPERTY_USE_TOKEN
 	 */
+	@Deprecated(since = "4.1")
 	public static final String PROPERTY_USE_TOKEN = GitHub.class.getPackage()
 			.getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
 
@@ -82,8 +87,8 @@ public class GitHub {
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
-			if (Boolean
-					.parseBoolean(repository.getProperty(PROPERTY_USE_TOKEN))) {
+			if (Boolean.parseBoolean(repository
+					.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
 				client.setOAuth2Token(credentials.getPassword());
 			} else {
 				client.setCredentials(credentials.getUserName(),

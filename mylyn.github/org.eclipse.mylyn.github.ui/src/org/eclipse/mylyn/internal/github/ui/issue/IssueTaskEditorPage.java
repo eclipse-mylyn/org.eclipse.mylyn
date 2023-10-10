@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -104,8 +105,8 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 	private boolean checkCanSubmit(final int type) {
 		final TaskRepository taskRepository = getModel().getTaskRepository();
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
-		boolean isToken = Boolean.parseBoolean(
-				taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
+		boolean isToken = Boolean.parseBoolean(taskRepository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))
+				|| Boolean.parseBoolean(taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
 		boolean noUser = !isToken && cred != null
 				&& StringUtils.isEmpty(cred.getUserName());
 		if (cred == null || noUser) {

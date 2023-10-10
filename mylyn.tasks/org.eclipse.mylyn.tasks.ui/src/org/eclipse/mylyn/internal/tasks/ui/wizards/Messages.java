@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -314,5 +314,21 @@ public class Messages extends NLS {
 	public static String AbstractRepositoryQueryPage2_Refresh_Configuration_Button_Label;
 
 	public static String AbstractRepositoryQueryPage2_Update_Attributes_Failed;
+
+	/**
+	 * @since 4.1
+	 */
+
+	public static String AbstractRepositorySettingsPage_EnterToken;
+
+	public static String AbstractRepositorySettingsPage_EnterUserAndToken;
+
+	public static String AbstractRepositorySettingsPage_LabelUseToken;
+
+	public static String AbstractRepositorySettingsPage_TooltipUseToken;
+
+	public static String AbstractRepositorySettingsPage_LabelToken;
+
+	public static String AbstractRepositorySettingsPage_LabelSaveToken;
 
 }

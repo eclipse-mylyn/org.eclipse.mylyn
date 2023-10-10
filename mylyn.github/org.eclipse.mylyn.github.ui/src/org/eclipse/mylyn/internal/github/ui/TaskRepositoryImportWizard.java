@@ -18,12 +18,12 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.gist.GistRepositorySettingsPage;
 import org.eclipse.mylyn.internal.github.ui.gist.Messages;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -113,7 +113,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					credentials, true);
 			repository.setCategory(TaskRepository.CATEGORY_REVIEW);
-			repository.setProperty(GitHub.PROPERTY_USE_TOKEN,
+			repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
 					Boolean.toString(isToken));
 			manager.addRepository(repository);
 		}
