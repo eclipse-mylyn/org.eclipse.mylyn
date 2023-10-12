@@ -47,7 +47,7 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 		super(Messages.IssueRepositorySettingsPage_Title,
 				Messages.IssueRepositorySettingsPage_Description,
 				taskRepository);
-		setUseToken(true, true);
+		setUseTokenForAuthentication(true);
 
 	}
 
