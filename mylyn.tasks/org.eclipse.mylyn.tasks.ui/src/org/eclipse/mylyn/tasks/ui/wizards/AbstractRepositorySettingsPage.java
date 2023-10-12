@@ -281,7 +281,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 4.1
 	 */
-	private boolean useTokenForAuthentication;
+	private boolean useTokenForAuthentication = false;
 
 	private boolean userOptional = true;
 
@@ -2489,8 +2489,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @param userOptional
 	 *            Allow username as well as token
 	 */
-	public void setUseToken(final boolean useTokenForAuthentication, final boolean userOptional) {
-		this.useTokenForAuthentication = useTokenForAuthentication;
+	public void setUseTokenForAuthentication(final boolean userOptional) {
+		this.useTokenForAuthentication = true;
 		this.userOptional = userOptional;
 	}
 

@@ -45,7 +45,7 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 		super(Messages.GistRepositorySettingsPage_Title,
 				Messages.GistRepositorySettingsPage_Description, taskRepository);
 		setNeedsAnonymousLogin(false);
-		setUseToken(true, false);
+		setUseTokenForAuthentication(false);
 	}
 
 	@Override

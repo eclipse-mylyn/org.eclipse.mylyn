@@ -47,7 +47,7 @@ public class PullRequestRepositorySettingsPage extends
 		super(Messages.PullRequestRepositorySettingsPage_Title,
 				Messages.PullRequestRepositorySettingsPage_Description,
 				taskRepository);
-		setUseToken(true, true);
+		setUseTokenForAuthentication(true);
 
 	}
 
