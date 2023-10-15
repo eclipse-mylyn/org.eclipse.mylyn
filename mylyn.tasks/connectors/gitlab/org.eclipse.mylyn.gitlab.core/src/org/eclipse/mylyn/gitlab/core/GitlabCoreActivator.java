@@ -33,12 +33,13 @@ public final class GitlabCoreActivator extends Plugin {
     public static final String PERSONAL_ACCESS_TOKEN = "gitlab.personal.access.token";
     public static final String API_VERSION = "/api/v4";
     public static final String ATTRIBUTE_TYPE_ACTIVITY = "activity"; //$NON-NLS-1$
+    public static final String ATTRIBUTE_TYPE_ACTIVITY_STYLE = "activity.style"; //$NON-NLS-1$
     public static final String ID_PART_ACTIVITY = "org.eclipse.mylyn.tasks.ui.editors.parts.activity"; //$NON-NLS-1$
     public static final String PREFIX_ACTIVITY = "task.gitlab.activity-"; //$NON-NLS-1$
     public static final String GITLAB_ACTIVITY_TYPE = "org.eclipse.mylyn.gitlab.activity.type";
 
     public static enum ActivityType {
-	PERSON, PENCIL, UNLOCK, LOCK, CLOSED, REOPEN, LABEL, CALENDAR;
+	UNKNOWN, PERSON, PENCIL, UNLOCK, LOCK, CLOSED, REOPEN, LABEL, CALENDAR, DESIGN;
     };
 
     // The shared instance

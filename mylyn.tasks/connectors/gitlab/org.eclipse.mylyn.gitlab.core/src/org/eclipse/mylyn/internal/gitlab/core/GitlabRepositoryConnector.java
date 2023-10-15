@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -67,6 +68,7 @@ import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
+    private static final boolean TRACE = false;
 
     public class RepositoryKey {
 	private final TaskRepository repository;
@@ -120,7 +122,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	return false;
     }
 
-
     private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
 
 	@Override
@@ -162,12 +163,28 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
+	long startTime, endTime = 0;
+	Thread thread;
 	if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
 	    getClient(repository);
 	}
 	try {
+	    if (TRACE) {
+		thread = Thread.currentThread();
+		startTime = Calendar.getInstance().getTimeInMillis();
+		System.out.println(thread.getName() + " start getRepositoryConfiguration " + repository.getUrl() + " "
+			+ Thread.currentThread().getStackTrace()[2].getMethodName() /*+ " " +startTime + " "+ Calendar.getInstance().getTime().toLocaleString()*/);
+	    }
+
 	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
-	    return configurationOptional.isPresent() ? configurationOptional.get() : null;
+	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
+	    if (TRACE) {
+		thread = Thread.currentThread();
+		endTime = Calendar.getInstance().getTimeInMillis();
+		System.out.println(thread.getName() + " end getRepositoryConfiguration " + repository.getUrl() + " "
+			+ Thread.currentThread().getStackTrace()[2].getMethodName() + " " + (endTime - startTime) + " ms " /*+endTime +" " + Calendar.getInstance().getTime().toLocaleString()*/);
+	    }
+	    return result;
 	} catch (UncheckedExecutionException e) {
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} catch (ExecutionException e) {

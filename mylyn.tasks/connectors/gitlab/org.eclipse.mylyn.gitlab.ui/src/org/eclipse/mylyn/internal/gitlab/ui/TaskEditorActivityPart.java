@@ -12,29 +12,40 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.gitlab.ui.GitlabUiActivator;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabActivityStyle;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 
@@ -42,6 +53,10 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
     private boolean hasIncoming = false;
     private Section section;
     private Composite activityComposite;
+
+    private final Type listOfMyClassObject = new TypeToken<ArrayList<GitlabActivityStyle>>() {
+    }.getType();
+    private final Gson gson = new Gson();
 
     public TaskEditorActivityPart() {
 	setPartName("Activity Events");
@@ -98,7 +113,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	getTaskEditorPage().registerDefaultDropListener(section);
 
 	if (activityAttributes.size() > 0) {
-	    createActivityList(toolkit, activityComposite);
+	    createActivityList(toolkit);
 	} else {
 	    toolkit.createLabel(activityComposite, "No Activity Events");
 	}
@@ -107,7 +122,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	section.setClient(activityComposite);
     }
 
-    private void createActivityList(FormToolkit toolkit, Composite attachmentsComposite2) {
+    private void createActivityList(FormToolkit toolkit) {
 	for (TaskAttribute taskAttribute : activityAttributes) {
 	    String activityText = taskAttribute.getAttribute(TaskAttribute.COMMENT_TEXT).getValue();
 	    String activityType = taskAttribute.getAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY).getValue();
@@ -165,76 +180,87 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 
 	    TaskAttribute commentDate = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_DATE);
 	    if (commentDate != null) {
-		toolkit.createLabel(attachmentsComposite2, commentDate.getValue());
+		toolkit.createLabel(activityComposite, commentDate.getValue());
 	    }
-	    StyledText text = new StyledText(attachmentsComposite2,
+	    StyledText text = new StyledText(activityComposite,
 		    toolkit.getBorderStyle() | toolkit.getOrientation());
 	    text.setText(activityText);
+
 	    text.setForeground(toolkit.getColors().getForeground());
 	    text.setBackground(toolkit.getColors().getBackground());
-	    buildStyledText(text, activityText, toolkit);
+	    TaskAttribute styleAttribute = taskAttribute
+		    .getMappedAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY_STYLE);
+	    text.setText(activityText);
+	    if (styleAttribute != null && styleAttribute.getValue() != null && !styleAttribute.getValue().isEmpty()) {
+		ArrayList<GitlabActivityStyle> stylesFromJson = gson.fromJson(styleAttribute.getValue(),
+			listOfMyClassObject);
+		setStyles(text, stylesFromJson);
+		text.addListener(SWT.MouseDown, event -> {
+		    if ((event.stateMask & SWT.MOD1) != 0) {
+			int offset = text.getOffsetAtPoint(new Point(event.x, event.y));
+			if (offset != -1) {
+			    StyleRange style1 = null;
+			    try {
+				style1 = text.getStyleRangeAtOffset(offset);
+			    } catch (IllegalArgumentException e) {
+				// no character under event.x, event.y
+			    }
+			    if (style1 != null && style1.underline && style1.underlineStyle == SWT.UNDERLINE_LINK) {
+				System.out.println("Click on a Link " + style1.data);
+				BrowserUtil.openUrl((String) style1.data, BrowserUtil.NO_RICH_EDITOR);
+			    }
+			}
+		    }
+		});
+		text.addListener(SWT.MouseHover, event -> {
+		    int offset = text.getOffsetAtPoint(new Point(event.x, event.y));
+		    if (offset != -1) {
+			StyleRange style1 = null;
+			try {
+			    style1 = text.getStyleRangeAtOffset(offset);
+			} catch (IllegalArgumentException e) {
+			    // no character under event.x, event.y
+			}
+			if (style1 != null && style1.underline && style1.underlineStyle == SWT.UNDERLINE_LINK) {
+			    String oldTooltip = text.getToolTipText();
+			    text.setToolTipText("" + style1.data);
+			    Job job = new Job("Deactivate Tooltip") {
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+				    Display.getDefault().asyncExec(() -> text.setToolTipText(oldTooltip));
+				    return Status.OK_STATUS;
+				}
+			    };
+			    job.schedule(8000);
+			}
+		    }
+		});
+	    }
 	}
     }
 
-    private void buildStyledText(StyledText textControl, String theText, FormToolkit toolkit) {
-	String resultText = "";
+    private void setStyles(StyledText textControl, ArrayList<GitlabActivityStyle> stylesFromJson) {
+	StyleRange[] ranges = new StyleRange[stylesFromJson.size()];
 
-	String[] parts = theText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}");
-	ArrayList<StyleRange> styles = new ArrayList<StyleRange>(parts.length);
-	int textIdx = 0;
-	StyleRange styleRange = new StyleRange();
-	styleRange.start = 0;
-	styleRange.fontStyle = SWT.NORMAL;
-
-	int textLen = theText.length();
-	for (int i = 0; i < parts.length; i++) {
-	    int actPartLen = parts[i].length();
-	    textIdx += actPartLen;
-	    String marker = textIdx + 2 <= textLen ? theText.substring(textIdx, textIdx + 2) : "  ";
-	    if (actPartLen > 0) {
-		resultText += parts[i];
-		styleRange.length += actPartLen;
+	for (int i = 0; i < stylesFromJson.size(); i++) {
+	    GitlabActivityStyle gitlabActivityStyle = stylesFromJson.get(i);
+	    StyleRange styleRange = new StyleRange();
+	    ranges[i] = styleRange;
+	    styleRange.start = gitlabActivityStyle.getStart();
+	    styleRange.length = gitlabActivityStyle.getLength();
+	    if (gitlabActivityStyle.getColor() != GitlabActivityStyle.COLOR_INHERIT_DEFAULT)
+		styleRange.background = textControl.getDisplay().getSystemColor(gitlabActivityStyle.getColor());
+	    if (gitlabActivityStyle.getFontStyle() == GitlabActivityStyle.UNDERLINE_LINK) {
+		styleRange.fontStyle = SWT.NORMAL;
+		styleRange.underline = true;
+		styleRange.underlineStyle = SWT.UNDERLINE_LINK;
+		styleRange.data = gitlabActivityStyle.getUrl();
+	    } else {
+		styleRange.fontStyle = gitlabActivityStyle.getFontStyle();
 	    }
-	    if ("**".equals(marker)) {
-		styleRange = createNewRangeIfNeeded(resultText, styles, styleRange, actPartLen);
-		if (styleRange.fontStyle == SWT.BOLD) {
-		    styleRange.fontStyle = SWT.NORMAL;
-		} else {
-		    styleRange.fontStyle = SWT.BOLD;
-		}
-	    }
-	    if ("{-".equals(marker)) {
-		styleRange = createNewRangeIfNeeded(resultText, styles, styleRange, actPartLen);
-		styleRange.background = textControl.getDisplay().getSystemColor(SWT.COLOR_RED);
-	    }
-	    if ("{+".equals(marker)) {
-		styleRange = createNewRangeIfNeeded(resultText, styles, styleRange, actPartLen);
-		styleRange.background = textControl.getDisplay().getSystemColor(SWT.COLOR_GREEN);
-	    }
-	    if ("-}".equals(marker) || "+}".equals(marker)) {
-		styleRange = createNewRangeIfNeeded(resultText, styles, styleRange, actPartLen);
-		styleRange.background = toolkit.getColors().getBackground();
-	    }
-	    textIdx += 2;
 	}
-	textControl.setText(resultText);
-	if (!styles.isEmpty()) {
-	    StyleRange[] ranges = new StyleRange[styles.size()];
-	    styles.toArray(ranges);
-	    textControl.setStyleRanges((StyleRange[]) ranges);
-	}
-    }
-
-    private StyleRange createNewRangeIfNeeded(String resultText, ArrayList<StyleRange> styles, StyleRange styleRange,
-	    int actPartLen) {
-	if (actPartLen > 0) {
-	    styles.add(styleRange);
-	    StyleRange styleRangeNew = (StyleRange) styleRange.clone();
-	    styleRange = styleRangeNew;
-	    styleRange.start = resultText.length();
-	    styleRange.length = 0;
-	}
-	return styleRange;
+	textControl.setStyleRanges((StyleRange[]) ranges);
     }
 
 }
