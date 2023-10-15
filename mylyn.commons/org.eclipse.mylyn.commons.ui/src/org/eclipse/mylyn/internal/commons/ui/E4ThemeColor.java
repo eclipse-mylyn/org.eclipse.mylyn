@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -48,6 +48,15 @@ public class E4ThemeColor {
 							Integer.parseInt(rgbValues[2].trim()));
 				}
 			} else if (cssValue.startsWith("#")) { //$NON-NLS-1$
+				// because of Bug 566549 - Avoid hard code dark colors in the dark theme and find
+				// (https://git.eclipse.org/c/platform/eclipse.platform.ui.git/commit/?id=c6ce5643aa4a95e49f5d4029bbe5502312ce8160)
+				// we need do change our code to work with the new values
+				if (cssValue.equals("#org-eclipse-ui-workbench-DARK_BACKGROUND")) { //$NON-NLS-1$
+					cssValue = "#515658"; //$NON-NLS-1$
+				}
+				if (cssValue.equals("#org-eclipse-ui-workbench-DARK_FOREGROUND")) { //$NON-NLS-1$
+					cssValue = "#eeeeee"; //$NON-NLS-1$
+				}
 				String rest = cssValue.substring(1, cssValue.length());
 				int idx = rest.indexOf("#"); //$NON-NLS-1$
 				if (idx != -1) {
