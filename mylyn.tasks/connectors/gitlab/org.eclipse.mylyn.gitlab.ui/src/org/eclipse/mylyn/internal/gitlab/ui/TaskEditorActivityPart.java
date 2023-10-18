@@ -128,50 +128,29 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	    String activityType = taskAttribute.getAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY).getValue();
 
 	    Label labelIcon = toolkit.createLabel(activityComposite, "");
-
-	    switch (GitlabCoreActivator.ActivityType.valueOf(activityType)) {
-	    case CALENDAR:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_CALENDAR_FILE));
-		break;
-	    case PERSON:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PERSON_FILE));
-		break;
-	    case PENCIL:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PENCIL_FILE));
-		break;
-	    case UNLOCK:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_UNLOCK_FILE));
-		break;
-	    case LOCK:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_LOCK_FILE));
-		break;
-	    case CLOSED:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_CLOSED_FILE));
-		break;
-	    case REOPEN:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_REOPEN_FILE));
-		break;
-	    case LABEL:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_LABEL_FILE));
-		break;
-	    case DESIGN:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_DESIGN_FILE));
-		break;
-
-	    default:
-		labelIcon.setImage(
-			GitlabUiActivator.getDefault().getImageRegistry().get(GitlabUiActivator.GITLAB_PICTURE_FILE));
-		break;
-	    }
+	    labelIcon.setImage(GitlabUiActivator.getDefault().getImageRegistry()
+		    .get(switch (GitlabCoreActivator.ActivityType.valueOf(activityType)) {
+		    case CALENDAR:
+			yield GitlabUiActivator.GITLAB_CALENDAR_FILE;
+		    case PERSON:
+			yield GitlabUiActivator.GITLAB_PERSON_FILE;
+		    case PENCIL:
+			yield GitlabUiActivator.GITLAB_PENCIL_FILE;
+		    case UNLOCK:
+			yield GitlabUiActivator.GITLAB_UNLOCK_FILE;
+		    case LOCK:
+			yield GitlabUiActivator.GITLAB_LOCK_FILE;
+		    case CLOSED:
+			yield GitlabUiActivator.GITLAB_CLOSED_FILE;
+		    case REOPEN:
+			yield GitlabUiActivator.GITLAB_REOPEN_FILE;
+		    case LABEL:
+			yield GitlabUiActivator.GITLAB_LABEL_FILE;
+		    case DESIGN:
+			yield GitlabUiActivator.GITLAB_DESIGN_FILE;
+		    default:
+			yield GitlabUiActivator.GITLAB_PICTURE_FILE;
+		    }));
 
 	    TaskAttribute author = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
 	    if (author != null) {
@@ -182,8 +161,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	    if (commentDate != null) {
 		toolkit.createLabel(activityComposite, commentDate.getValue());
 	    }
-	    StyledText text = new StyledText(activityComposite,
-		    toolkit.getBorderStyle() | toolkit.getOrientation());
+	    StyledText text = new StyledText(activityComposite, toolkit.getBorderStyle() | toolkit.getOrientation());
 	    text.setText(activityText);
 
 	    text.setForeground(toolkit.getColors().getForeground());

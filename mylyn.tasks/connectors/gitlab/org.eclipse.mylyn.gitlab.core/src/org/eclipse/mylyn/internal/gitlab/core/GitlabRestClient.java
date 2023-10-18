@@ -24,13 +24,17 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -91,6 +95,7 @@ public class GitlabRestClient {
     private final CommonHttpClient client;
     private final GitlabRepositoryConnector connector;
     private final TaskRepository taskRepository;
+    private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");;
 
     public static String AUTHORIZATION_HEADER = "authorization_header";
     private static final boolean TRACE = false;
@@ -473,13 +478,13 @@ public class GitlabRestClient {
     public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 	    throws GitlabException {
 	TaskData result = null;
-	long startTime, endTime = 0;
+	long startTime = 0, endTime = 0;
 	Thread thread;
 	if (TRACE) {
 	    thread = Thread.currentThread();
 	    System.out.println(
 		    thread.getName() + " getTaskData start: " + repository.getRepositoryUrl() + " id " + taskId);
-	    startTime = Calendar.getInstance().getTimeInMillis();
+	    startTime = System.currentTimeMillis();
 	}
 	String searchString = ".*(/projects/\\d+)/issues/(\\d+)";
 	Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
@@ -550,9 +555,12 @@ public class GitlabRestClient {
 	    if (states != null) {
 		for (JsonElement stateElem : states) {
 		    JsonObject state = (JsonObject) stateElem;
-		    Date date = GitlabTaskAttributeMapper.parseDate(state.get("created_at").getAsString());
+		    Instant instant = Instant
+			    .from(DateTimeFormatter.ISO_INSTANT.parse(state.get("created_at").getAsString()));
+		    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+
 		    TaskAttribute taskAttribute = result.getRoot()
-			    .createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + date.getTime());
+			    .createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
 		    taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 
 		    String stateText = state.get("state").getAsString();
@@ -563,7 +571,7 @@ public class GitlabRestClient {
 		    taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
 
 		    child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE).createAttribute(taskAttribute);
-		    child.setValue(DateFormat.getDateTimeInstance().format(date));
+		    child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 		    child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
 		    child.setValue(state.get("user").getAsJsonObject().get("name").getAsString());
@@ -582,15 +590,18 @@ public class GitlabRestClient {
 	    JsonArray labels = getIssueLabelEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 	    if (labels != null) {
 		long lastLabelAt = 0;
+		Instant instantAt = null;
 		TaskAttribute labelText = null;
 		ArrayList<String> added = new ArrayList<String>();
 		ArrayList<String> removed = new ArrayList<String>();
 		for (JsonElement stateElem : labels) {
 		    JsonObject label = (JsonObject) stateElem;
-		    Date date = GitlabTaskAttributeMapper.parseDate(label.get("created_at").getAsString());
+		    Instant instant = Instant
+			    .from(DateTimeFormatter.ISO_INSTANT.parse(label.get("created_at").getAsString()));
+		    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
 
-		    if (lastLabelAt != date.getTime()) {
-			lastLabelAt = date.getTime();
+		    if (!instant.equals(instantAt)) {
+			instantAt = instant;
 
 			buildLableText(labelText, added, removed);
 
@@ -598,11 +609,11 @@ public class GitlabRestClient {
 			removed.clear();
 
 			TaskAttribute taskAttribute = result.getRoot()
-				.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + date.getTime());
+				.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
 			taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE)
 				.createAttribute(taskAttribute);
-			child.setValue(DateFormat.getDateTimeInstance().format(date));
+			child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 			child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
 			child.setValue(label.get("user").getAsJsonObject().get("name").getAsString());
@@ -630,7 +641,7 @@ public class GitlabRestClient {
 	    config.updateProductOptions(result);
 	}
 	if (TRACE) {
-	    endTime = Calendar.getInstance().getTimeInMillis();
+	    endTime = System.currentTimeMillis();
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getTaskData taken: " + (endTime - startTime) + " ms "
 		    + repository.getRepositoryUrl() + " id " + taskId);
@@ -644,24 +655,12 @@ public class GitlabRestClient {
 	    if (added.size() > 0) {
 		text += "added ";
 		text += String.join(", ", added);
-		if (added.size() > 1) {
-		    text += " labels";
-		} else {
-		    text += " label";
-		}
+		text += added.size() > 1 ? " labels" : " label";
 	    }
 	    if (removed.size() > 0) {
-		if (text.length() == 0) {
-		    text += "removed ";
-		} else {
-		    text += " and removed ";
-		}
+		text += text.length() == 0 ? "removed " : " and removed ";
 		text += String.join(", ", removed);
-		if (removed.size() > 1) {
-		    text += " labels";
-		} else {
-		    text += " label";
-		}
+		text += removed.size() > 1 ? " labels" : " label";
 	    }
 	    labelText.setValue(text);
 	}
@@ -669,12 +668,13 @@ public class GitlabRestClient {
 
     private TaskAttribute createActivityEventTaskAttribute(TaskRepository repository, TaskAttribute result,
 	    JsonObject note) {
-	Date date = GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString());
-	TaskAttribute taskAttribute = result.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + date.getTime());
+	Instant instant = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(note.get("created_at").getAsString()));
+	LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+	TaskAttribute taskAttribute = result.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
 	taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 
 	TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE).createAttribute(taskAttribute);
-	child.setValue(DateFormat.getDateTimeInstance().format(date));
+	child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 	child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
 	child.setValue(note.get("author").getAsJsonObject().get("name").getAsString());
@@ -708,7 +708,6 @@ public class GitlabRestClient {
 
 	TaskAttribute styleAttribute = taskAttribute.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY_STYLE);
 	String resultText = "";
-	Pattern r = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
 
 	String[] parts = bodyText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}");
 	ArrayList<GitlabActivityStyle> styles = new ArrayList<GitlabActivityStyle>(parts.length);
@@ -722,21 +721,21 @@ public class GitlabRestClient {
 	    String marker = textIdx + 2 <= textLen ? bodyText.substring(textIdx, textIdx + 2) : "  ";
 
 	    String matchText = parts[idx];
-	    Matcher m = r.matcher(matchText);
+	    Matcher linkMatcher = linkPattern.matcher(matchText);
 
-	    if (m.find()) {
-		if (m.start(1) > 0) {
-		    resultText += matchText.substring(0, m.start(1) - 1);
-		    styleRange.add2Length(m.start(1) - 1);
+	    if (linkMatcher.find()) {
+		if (linkMatcher.start(1) > 0) {
+		    resultText += matchText.substring(0, linkMatcher.start(1) - 1);
+		    styleRange.add2Length(linkMatcher.start(1) - 1);
 		    styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
 		    styleRange.setFontStyle(GitlabActivityStyle.UNDERLINE_LINK);
-		    styleRange.add2Length(m.group(1).length());
-		    styleRange.setUrl(getTaskRepository().getUrl() + m.group(2));
-		    resultText += m.group(1);
+		    styleRange.add2Length(linkMatcher.group(1).length());
+		    styleRange.setUrl(getTaskRepository().getUrl() + linkMatcher.group(2));
+		    resultText += linkMatcher.group(1);
 		    styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange,
-			    matchText.length() - m.end(2));
+			    matchText.length() - linkMatcher.end(2));
 		    styleRange.setFontStyle(GitlabActivityStyle.NORMAL);
-		    actPartLen = matchText.length() - m.end(2) - 1;
+		    actPartLen = matchText.length() - linkMatcher.end(2) - 1;
 		}
 	    }
 
@@ -1197,19 +1196,19 @@ public class GitlabRestClient {
 
     public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor)
 	    throws GitlabException {
-	long startTime, endTime = 0;
+	long startTime = 0, endTime = 0;
 	Thread thread;
 	if (TRACE) {
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getConfiguration start: " + repository.getRepositoryUrl());
-	    startTime = Calendar.getInstance().getTimeInMillis();
+	    startTime = System.currentTimeMillis();
 	}
 	GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 	JsonObject user = getUser(monitor);
 	config.setUserID(user.get("id").getAsBigInteger());
 	config.setUserDetails(user);
 	if (TRACE) {
-	    endTime = Calendar.getInstance().getTimeInMillis();
+	    endTime = System.currentTimeMillis();
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getConfiguration getUser: " + (endTime - startTime) + " ms "
 		    + repository.getRepositoryUrl());
@@ -1222,7 +1221,7 @@ public class GitlabRestClient {
 	    config.addProject(projectObject, labels, milestones);
 	}
 	if (TRACE) {
-	    endTime = Calendar.getInstance().getTimeInMillis();
+	    endTime = System.currentTimeMillis();
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getConfiguration get Projects: " + (endTime - startTime) + " ms "
 		    + repository.getRepositoryUrl());
@@ -1235,7 +1234,7 @@ public class GitlabRestClient {
 		    JsonObject projectDetail = getProject(URLEncoder.encode(project, StandardCharsets.UTF_8.toString()),
 			    monitor);
 		    if (TRACE) {
-			endTime = Calendar.getInstance().getTimeInMillis();
+			endTime = System.currentTimeMillis();
 			thread = Thread.currentThread();
 			System.out.println(thread.getName() + " getConfiguration get Project: " + (endTime - startTime)
 				+ " ms " + project + " " + repository.getRepositoryUrl());
@@ -1244,7 +1243,7 @@ public class GitlabRestClient {
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
 		    if (TRACE) {
-			endTime = Calendar.getInstance().getTimeInMillis();
+			endTime = System.currentTimeMillis();
 			thread = Thread.currentThread();
 			System.out.println(thread.getName() + " getConfiguration get Projects Labels/Milestone: "
 				+ (endTime - startTime) + " ms " + project + " " + repository.getRepositoryUrl());
@@ -1257,7 +1256,7 @@ public class GitlabRestClient {
 	    }
 	}
 	if (TRACE) {
-	    endTime = Calendar.getInstance().getTimeInMillis();
+	    endTime = System.currentTimeMillis();
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getConfiguration get Groups: " + (endTime - startTime) + " ms "
 		    + repository.getRepositoryUrl());
@@ -1269,14 +1268,14 @@ public class GitlabRestClient {
 		JsonObject groupDetail = getGroup("/" + group, monitor);
 		config.addGroup(groupDetail);
 		if (TRACE) {
-		    endTime = Calendar.getInstance().getTimeInMillis();
+		    endTime = System.currentTimeMillis();
 		    thread = Thread.currentThread();
 		    System.out.println(thread.getName() + " getConfiguration get Group: " + (endTime - startTime)
 			    + " ms " + group + " " + repository.getRepositoryUrl());
 		}
 		projects = getGroupProjects(group, monitor);
 		if (TRACE) {
-		    endTime = Calendar.getInstance().getTimeInMillis();
+		    endTime = System.currentTimeMillis();
 		    thread = Thread.currentThread();
 		    System.out.println(thread.getName() + " getConfiguration get Group projects: "
 			    + (endTime - startTime) + " ms " + group + " " + repository.getRepositoryUrl());
@@ -1286,7 +1285,7 @@ public class GitlabRestClient {
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
 		    if (TRACE) {
-			endTime = Calendar.getInstance().getTimeInMillis();
+			endTime = System.currentTimeMillis();
 			thread = Thread.currentThread();
 			System.out.println(thread.getName() + " getConfiguration get Group Projects Labels/Milestone: "
 				+ (endTime - startTime) + " ms " + group + " " + projectObject.get("id").getAsString()
@@ -1295,7 +1294,7 @@ public class GitlabRestClient {
 		    config.addProject(projectObject, labels, milestones);
 		}
 		if (TRACE) {
-		    endTime = Calendar.getInstance().getTimeInMillis();
+		    endTime = System.currentTimeMillis();
 		    thread = Thread.currentThread();
 		    System.out.println(thread.getName() + " getConfiguration get Group projects: "
 			    + (endTime - startTime) + " ms " + group + " " + repository.getRepositoryUrl());
@@ -1303,7 +1302,7 @@ public class GitlabRestClient {
 	    }
 	}
 	if (TRACE) {
-	    endTime = Calendar.getInstance().getTimeInMillis();
+	    endTime = System.currentTimeMillis();
 	    thread = Thread.currentThread();
 	    System.out.println(thread.getName() + " getConfiguration taken: " + (endTime - startTime) + " ms "
 		    + repository.getRepositoryUrl());

@@ -85,4 +85,10 @@ public class GitlabActivityStyle implements Cloneable {
 	return (GitlabActivityStyle) super.clone();
     }
 
+    @Override
+    public String toString() {
+	return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color="
+		+ color + ", url=" + url + "]";
+    }
+
 }

@@ -163,7 +163,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
-	long startTime, endTime = 0;
+	long startTime = 0, endTime = 0;
 	Thread thread;
 	if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
 	    getClient(repository);
@@ -171,7 +171,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	try {
 	    if (TRACE) {
 		thread = Thread.currentThread();
-		startTime = Calendar.getInstance().getTimeInMillis();
+		startTime = System.currentTimeMillis();
 		System.out.println(thread.getName() + " start getRepositoryConfiguration " + repository.getUrl() + " "
 			+ Thread.currentThread().getStackTrace()[2].getMethodName() /*+ " " +startTime + " "+ Calendar.getInstance().getTime().toLocaleString()*/);
 	    }
@@ -180,7 +180,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
 	    if (TRACE) {
 		thread = Thread.currentThread();
-		endTime = Calendar.getInstance().getTimeInMillis();
+		endTime = System.currentTimeMillis();
 		System.out.println(thread.getName() + " end getRepositoryConfiguration " + repository.getUrl() + " "
 			+ Thread.currentThread().getStackTrace()[2].getMethodName() + " " + (endTime - startTime) + " ms " /*+endTime +" " + Calendar.getInstance().getTime().toLocaleString()*/);
 	    }
