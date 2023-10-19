@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -95,7 +96,7 @@ public class PullRequestConnector extends RepositoryConnector {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials(loginName, password), true);
 		repository.setCategory(TaskRepository.CATEGORY_REVIEW);
-		repository.setProperty(GitHub.PROPERTY_USE_TOKEN,
+		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
 				Boolean.toString(isToken));
 		return repository;
 	}

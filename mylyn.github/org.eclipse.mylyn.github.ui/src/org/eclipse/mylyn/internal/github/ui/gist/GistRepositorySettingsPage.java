@@ -45,6 +45,7 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 		super(Messages.GistRepositorySettingsPage_Title,
 				Messages.GistRepositorySettingsPage_Description, taskRepository);
 		setNeedsAnonymousLogin(false);
+		setUseTokenForAuthentication(false);
 	}
 
 	@Override
@@ -60,7 +61,6 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 					.setStringValue(Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
 		}
 		// For gists we still need a user name.
-		addTokenCheckbox(false);
 	}
 
 	@Override

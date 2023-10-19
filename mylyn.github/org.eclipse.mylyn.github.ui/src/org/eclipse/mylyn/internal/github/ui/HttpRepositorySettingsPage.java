@@ -18,15 +18,10 @@ import java.util.function.Function;
 
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * Base HTTP-based task repository settings page
@@ -37,10 +32,6 @@ public abstract class HttpRepositorySettingsPage extends
 	private boolean syncLabel = true;
 
 	private boolean editingUrl = false;
-
-	private boolean needsUser = true;
-
-	private Button useToken;
 
 	/**
 	 * Create repository settings page
@@ -128,118 +119,65 @@ public abstract class HttpRepositorySettingsPage extends
 	}
 
 	/**
-	 * Inserts a checkbox into the page where the user can specify that token
-	 * authentication shall be used for the task repository.
+	 * Should the 'Use Token' check box be "checked"
 	 *
-	 * @param userOptional
-	 *            whether or not a user name is optional
+	 * Here to not break existing repository definitions
+	 *
+	 * @param taskRepository
 	 */
-	protected void addTokenCheckbox(boolean userOptional) {
-		needsUser = !userOptional;
-		useToken = new Button(compositeContainer, SWT.CHECK);
-		useToken.setText(Messages.HttpRepositorySettingsPage_LabelUseToken);
-		useToken.setToolTipText(
-				Messages.HttpRepositorySettingsPage_TooltipUseToken);
-		useToken.moveBelow(savePasswordButton);
-		GridDataFactory.defaultsFor(useToken).span(3, 1).applyTo(useToken);
-		String savePasswordText = savePasswordButton.getText();
-		boolean[] allowAnon = { isAnonymousAccess() };
-		SelectionAdapter listener = new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				boolean isChecked = useToken.getSelection();
-				if (isChecked) {
-					repositoryPasswordEditor.setLabelText(
-							Messages.HttpRepositorySettingsPage_LabelToken);
-					savePasswordButton.setText(
-							Messages.HttpRepositorySettingsPage_LabelSaveToken);
-					if (anonymousButton != null) {
-						allowAnon[0] = isAnonymousAccess();
-						setAnonymous(false);
-						anonymousButton.setEnabled(false);
-					}
-				} else {
-					repositoryPasswordEditor.setLabelText(LABEL_PASSWORD);
-					savePasswordButton.setText(savePasswordText);
-					if (anonymousButton != null) {
-						anonymousButton.setEnabled(true);
-						setAnonymous(allowAnon[0]);
-					}
-				}
-				if (userOptional) {
-					repositoryUserNameEditor.getTextControl(compositeContainer)
-							.setEnabled(!isChecked);
-					repositoryUserNameEditor.setEmptyStringAllowed(isChecked);
-				}
-				repositoryPasswordEditor.getLabelControl(compositeContainer)
-						.requestLayout();
-				// Trigger page validation if needed
-				if (userOptional && getWizard() != null) {
-					getWizard().getContainer().updateButtons();
-				}
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		};
-		useToken.addSelectionListener(listener);
-		TaskRepository taskRepository = getRepository();
-		if (taskRepository != null) {
-			useToken.setSelection(Boolean.parseBoolean(
-					taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN)));
-			// setSelection does not fire a selection event
-			listener.widgetSelected(null);
-		}
+	@Override
+	protected boolean useTokenChecked(TaskRepository taskRepository) {
+		return super.useTokenChecked(taskRepository) || //
+				Boolean.parseBoolean(
+						taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
 	}
 
 	/**
-	 * Tells whether the task repository uses token authentication.
-	 *
-	 * @return {@code true} if token authentication shall be used; {@code false}
-	 *         otherwise
+	 * @since 4.1
 	 */
-	protected boolean useTokenAuth() {
-		return useToken != null && useToken.getSelection();
+	@Override
+	protected String getSettingsPageEnterTokenText() {
+		return Messages.HttpRepositorySettingsPage_EnterToken;
 	}
 
+	/**
+	 * @since 4.1
+	 */
 	@Override
-	protected boolean isMissingCredentials() {
-		if (!needsUser && useTokenAuth()) {
-			return repositoryPasswordEditor.getStringValue().trim().isEmpty();
-		} else {
-			return super.isMissingCredentials();
-		}
+	protected String getSettingsPageEnterUserAndTokenText() {
+		return Messages.HttpRepositorySettingsPage_EnterUserAndToken;
 	}
 
-	@SuppressWarnings("restriction")
+	/**
+	 * @since 4.1
+	 */
 	@Override
-	public void setMessage(String newMessage, int newType) {
-		// This is a bit hacky since it relies on an internal message and the
-		// way it is used in the super class. But it beats re-implementing
-		// isPageComplete().
-		if (useTokenAuth()
-				&& org.eclipse.mylyn.internal.tasks.ui.wizards.Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0
-						.equals(newMessage)) {
-			if (needsUser) {
-				super.setMessage(
-						Messages.HttpRepositorySettingsPage_EnterUserAndToken,
-						newType);
-			} else {
-				super.setMessage(Messages.HttpRepositorySettingsPage_EnterToken,
-						newType);
-			}
-		} else {
-			super.setMessage(newMessage, newType);
-		}
+	protected String getSettingsPageGetUseLabelUseTokenText() {
+		return Messages.HttpRepositorySettingsPage_LabelUseToken;
 	}
 
+	/**
+	 * @since 4.1
+	 */
 	@Override
-	public void applyTo(TaskRepository taskRepository) {
-		taskRepository.setProperty(GitHub.PROPERTY_USE_TOKEN,
-				Boolean.toString(useToken != null && useToken.getSelection()));
-		super.applyTo(taskRepository);
+	protected String getSettingsPageTooltipUseTokenText() {
+		return Messages.HttpRepositorySettingsPage_TooltipUseToken;
 	}
+
+	/**
+	 * @since 4.1
+	 */
+	@Override
+	protected String getSettingsPageLabelTokenText() {
+		return Messages.HttpRepositorySettingsPage_LabelToken;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	@Override
+	protected String getSettingsPageLabelSaveTokenText() {
+		return Messages.HttpRepositorySettingsPage_LabelSaveToken;
+	}
+
 }

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -277,6 +277,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	private final Map<AuthenticationType, AuthenticationCredentials> validatedAuthenticationCredentials = new HashMap<AuthenticationType, AuthenticationCredentials>();
 
 	private String brand;
+
+	/**
+	 * @since 4.1
+	 */
+	private boolean useTokenForAuthentication = false;
+
+	private boolean userOptional = true;
+
+	private Button useToken;
 
 	/**
 	 * @since 3.10
@@ -664,6 +673,65 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
+		if (isUseTokenForAuthentication()) {
+			useToken = new Button(compositeContainer, SWT.CHECK);
+			useToken.setText(getSettingsPageGetUseLabelUseTokenText());
+			useToken.setToolTipText(getSettingsPageTooltipUseTokenText());
+			GridDataFactory.defaultsFor(useToken).span(3, 1).applyTo(useToken);
+			String savePasswordText = savePasswordButton.getText();
+			boolean[] allowAnon = { isAnonymousAccess() };
+			SelectionAdapter listener = new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean isChecked = useToken.getSelection();
+					if (isChecked) {
+						repositoryPasswordEditor.setLabelText(getSettingsPageLabelTokenText());
+						savePasswordButton.setText(getSettingsPageLabelSaveTokenText());
+						if (anonymousButton != null) {
+							allowAnon[0] = isAnonymousAccess();
+							setAnonymous(false);
+							anonymousButton.setEnabled(false);
+						}
+					} else {
+						repositoryPasswordEditor.setLabelText(LABEL_PASSWORD);
+						savePasswordButton.setText(savePasswordText);
+						if (anonymousButton != null) {
+							anonymousButton.setEnabled(true);
+							setAnonymous(allowAnon[0]);
+						}
+					}
+					if (isUserOptional()) {
+						repositoryUserNameEditor.getTextControl(compositeContainer).setEnabled(!isChecked);
+						repositoryUserNameEditor.setEmptyStringAllowed(isChecked);
+					}
+					repositoryPasswordEditor.getLabelControl(compositeContainer).requestLayout();
+					// Trigger page validation if needed
+					if (isUserOptional() && getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
+
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					super.widgetSelected(e);
+					isPageComplete();
+					if (getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
+				}
+			};
+			useToken.addSelectionListener(listener);
+			TaskRepository taskRepository = getRepository();
+			if (taskRepository != null) {
+				useToken.setSelection(useTokenChecked(taskRepository));
+				// setSelection does not fire a selection event
+				listener.widgetSelected(null);
+			}
+
+		}
+
 		if (repository != null) {
 			try {
 				AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
@@ -692,6 +760,18 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			savePasswordButton.setSelection(false);
 		}
 		RepositoryUiUtil.testCredentialsStore(getRepositoryUrl(), this);
+	}
+
+	/**
+	 * Primarily to allow GitHub to migrate from the old property to the new one
+	 *
+	 * @see org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage
+	 * @since 4.1
+	 * @param taskRepository
+	 * @return should enable useToken check box
+	 */
+	protected boolean useTokenChecked(TaskRepository taskRepository) {
+		return Boolean.parseBoolean(taskRepository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN));
 	}
 
 	private void updateLabel() {
@@ -1631,6 +1711,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	}
 
+	/**
+	 * Tells whether the task repository uses token authentication.
+	 *
+	 * @return {@code true} if token authentication shall be used; {@code false} otherwise
+	 * @since 4.1
+	 */
+	protected boolean useTokenAuth() {
+		return useToken != null && useToken.getSelection();
+	}
+
 	@Override
 	public boolean isPageComplete() {
 		String errorMessage = null;
@@ -1646,6 +1736,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				}
 			}
 		}
+
 		if (errorMessage == null) {
 			// check for messages
 			if (!isValidUrl(url)) {
@@ -1653,12 +1744,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 			if (errorMessage == null && needsRepositoryCredentials()
 					&& (!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
-				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
+				if (useTokenAuth()) {
+					if (!isUserOptional()) {
+						errorMessage = getSettingsPageEnterUserAndTokenText();
+					} else {
+						errorMessage = getSettingsPageEnterTokenText();
+					}
+				} else {
+					errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
+				}
 			}
 			setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
 		} else {
 			setMessage(errorMessage, IMessageProvider.ERROR);
 		}
+
 		return errorMessage == null && super.isPageComplete();
 	}
 
@@ -1668,8 +1768,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.4
 	 */
 	protected boolean isMissingCredentials() {
-		return needsRepositoryCredentials() && repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
-				|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
+		if (isUserOptional() && useTokenAuth()) {
+			return repositoryPasswordEditor.getStringValue().trim().isEmpty();
+		} else {
+			return needsRepositoryCredentials() && repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
+					|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -1789,6 +1893,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				repository.setCredentials(AuthenticationType.REPOSITORY, credentials, getSavePassword());
 			}
 		}
+
 		repository.setRepositoryLabel(getRepositoryLabel());
 
 		if (needsCertAuth()) {
@@ -1827,6 +1932,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (disconnectedButton != null) {
 			repository.setOffline(disconnectedButton.getSelection());
 		}
+
+		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
+				Boolean.toString(useToken != null && useToken.getSelection()));
 
 		super.applyTo(repository);
 	}
@@ -2356,6 +2464,78 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	protected void updateBanner(String brand) {
 		// do nothing
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	public boolean isUseTokenForAuthentication() {
+		return useTokenForAuthentication;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	public boolean isUserOptional() {
+		return userOptional;
+	}
+
+	/**
+	 * Use token for authentication
+	 *
+	 * @since 4.1
+	 * @param useToken
+	 *            Enable token for authentication
+	 * @param userOptional
+	 *            Allow username as well as token
+	 */
+	public void setUseTokenForAuthentication(final boolean userOptional) {
+		this.useTokenForAuthentication = true;
+		this.userOptional = userOptional;
+	}
+
+	/**
+	 * @since 4.1
+	 * @return
+	 */
+	protected String getSettingsPageEnterTokenText() {
+		return Messages.AbstractRepositorySettingsPage_EnterToken;
+	}
+
+	/**
+	 * @since 4.1
+	 * @return
+	 */
+	protected String getSettingsPageEnterUserAndTokenText() {
+		return Messages.AbstractRepositorySettingsPage_EnterUserAndToken;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	protected String getSettingsPageGetUseLabelUseTokenText() {
+		return Messages.AbstractRepositorySettingsPage_LabelUseToken;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	protected String getSettingsPageTooltipUseTokenText() {
+		return Messages.AbstractRepositorySettingsPage_TooltipUseToken;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	protected String getSettingsPageLabelTokenText() {
+		return Messages.AbstractRepositorySettingsPage_LabelToken;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	protected String getSettingsPageLabelSaveTokenText() {
+		return Messages.AbstractRepositorySettingsPage_LabelSaveToken;
 	}
 
 }
