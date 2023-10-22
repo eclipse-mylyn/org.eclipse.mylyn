@@ -249,7 +249,7 @@ public class ConnectorMigrationUi {
 		final Set<RepositoryQuery> queries = tasksState.getTaskList()
 				.getQueries()
 				.stream()
-				.filter(isQueryForRepository(newRepository))
+				.filter(isQueryForRepository(repository))
 				.collect(Collectors.toUnmodifiableSet());
 		final UnsubmittedTaskContainer unsubmitted = tasksState.getTaskList()
 				.getUnsubmittedContainer(repository.getRepositoryUrl());
