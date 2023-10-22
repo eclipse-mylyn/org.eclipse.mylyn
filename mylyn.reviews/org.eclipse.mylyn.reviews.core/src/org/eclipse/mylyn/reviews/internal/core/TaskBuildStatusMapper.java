@@ -19,14 +19,14 @@ import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.StreamSupport;
 
-import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 public class TaskBuildStatusMapper {
 	public static final String BUILD_RESULT_TYPE = "BuildResult"; //$NON-NLS-1$
@@ -45,7 +45,7 @@ public class TaskBuildStatusMapper {
 
 	public static final String KIND_PATCH_SET = "review.patch.set"; //$NON-NLS-1$
 
-	private final Iterable<BuildResult> buildResults;
+	private final Collection<BuildResult> buildResults;
 
 	public TaskBuildStatusMapper(Collection<BuildResult> buildResults) {
 		this.buildResults = buildResults;
@@ -58,18 +58,18 @@ public class TaskBuildStatusMapper {
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		taskAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE).setKind(TaskBuildStatusMapper.KIND_PATCH_SET);
 
-//		Function<BuildResult, String> groupFunction = new Function<BuildResult, String>() {
-//			@Override
-//			public String apply(BuildResult source) {
-//				return source.getJobName();
-//			}
-//
-//		};
-//		final Multimap<String, BuildResult> buildsByJobName_old = Multimaps.index(this.buildResults, groupFunction);
+		com.google.common.base.Function<BuildResult, String> groupFunction = new com.google.common.base.Function<BuildResult, String>() {
+			@Override
+			public String apply(BuildResult source) {
+				return source.getJobName();
+			}
 
-		final MultiValuedMap<String, BuildResult> buildsByJobName = new ArrayListValuedHashMap<>();
-		StreamSupport.stream(buildResults.spliterator(), false)
-				.forEach(result -> buildsByJobName.put(result.getJobName(), result));
+		};
+		final Multimap<String, BuildResult> buildsByJobName = Multimaps.index(this.buildResults, groupFunction);
+
+		// FIXME TaskBuildStatusMapperTest.collectionWithDifferentJobNamesProducesUnqiueEntries() expects insert order of keys
+		// final MultiValuedMap<String, BuildResult> buildsByJobName = new ArrayListValuedHashMap<>();
+		// buildResults.forEach(result -> buildsByJobName.put(result.getJobName(), result));
 
 		int i = 0;
 		for (Entry<String, Collection<BuildResult>> jobEntry : buildsByJobName.asMap().entrySet()) {
