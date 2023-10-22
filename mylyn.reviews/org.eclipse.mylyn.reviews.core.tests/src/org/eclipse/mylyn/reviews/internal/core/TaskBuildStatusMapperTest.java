@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2016 Vaughan Hilts and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Vaughan Hilts - initial API and implementation
@@ -84,6 +84,7 @@ public class TaskBuildStatusMapperTest {
 	}
 
 	@Test
+	// FIXME Assumes a specific order returned by mapper.applyTo()
 	public void collectionWithDifferentJobNamesProducesUnqiueEntries() {
 		List<BuildResult> results = new ArrayList<BuildResult>();
 
