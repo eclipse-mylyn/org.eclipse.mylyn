@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore.xmi;bundle-version="0.0.0",
  org.eclipse.mylyn.commons.core;bundle-version="4.1.0",
  org.eclipse.mylyn.tasks.core;bundle-version="4.1.0",
- org.eclipse.team.core;bundle-version="0.0.0"
+ org.eclipse.team.core;bundle-version="0.0.0",
+ com.google.guava
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.mylyn.reviews.edit,org.eclipse.mylyn.reviews.ui",
@@ -22,5 +23,6 @@ Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.myl
 Bundle-Vendor: Eclipse Mylyn
 Import-Package: org.apache.commons.collections4;version="4.4.0",
  org.apache.commons.collections4.multimap;version="4.4.0",
+ com.google.common.collect;version="15.0.0",
  org.apache.commons.io,
  org.apache.commons.lang;version="[2.6.0,3.0.0)"
