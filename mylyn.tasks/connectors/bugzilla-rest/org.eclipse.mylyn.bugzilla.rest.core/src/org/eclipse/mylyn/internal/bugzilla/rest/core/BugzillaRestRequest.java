@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
-import java.util.Objects;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -189,7 +188,9 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected UserCredentials getCredentials() {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
-		Objects.requireNonNull(credentials, "Authentication requested without valid credentials"); //$NON-NLS-1$
+		if (credentials == null) {
+			throw new IllegalStateException("Authentication requested without valid credentials"); //$NON-NLS-1$
+		}
 		return credentials;
 	}
 
