@@ -118,31 +118,17 @@ public class GerritCompareUi {
 	}
 
 	static Predicate<CompareEditorInput> getFileComparePredicate(final IFileItem item) {
-		return new Predicate<CompareEditorInput>() {
-
-			@Override
-			public boolean test(CompareEditorInput existingEditorInput) {
-				if (existingEditorInput instanceof FileItemCompareEditorInput) {
-					return (((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId()));
-				}
-				return false;
-			}
-		};
+		return existingEditorInput -> existingEditorInput instanceof FileItemCompareEditorInput
+				? (((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId()))
+				: false;
 	}
 
 	static Predicate<CompareEditorInput> getReviewItemSetComparePredicate(final IReviewItemSet itemSet,
 			final String taskId) {
-		return new Predicate<CompareEditorInput>() {
-
-			@Override
-			public boolean test(CompareEditorInput existingEditorInput) {
-				if (existingEditorInput instanceof ReviewItemSetCompareEditorInput) {
-					return (((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
-							&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId()));
-				}
-				return false;
-			}
-		};
+		return existingEditorInput -> existingEditorInput instanceof ReviewItemSetCompareEditorInput
+				? (((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
+						&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId()))
+				: false;
 	}
 
 	protected static void handleError(PartInitException error) {
