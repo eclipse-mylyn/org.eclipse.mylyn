@@ -176,6 +176,7 @@ public class WikiTextExtensionPointReader {
 		}
 		int lastIndexOfDot = name.lastIndexOf('.');
 		String extension = lastIndexOfDot == -1 ? name : name.substring(lastIndexOfDot + 1);
+		extension = extension.toLowerCase();
 		Class<? extends MarkupLanguage> languageClass = languageByFileExtension.get(extension);
 		if (languageClass != null) {
 			String languageName = null;
