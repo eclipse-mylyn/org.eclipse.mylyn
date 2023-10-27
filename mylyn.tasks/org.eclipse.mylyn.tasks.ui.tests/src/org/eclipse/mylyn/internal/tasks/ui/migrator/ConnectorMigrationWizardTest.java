@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -184,7 +186,8 @@ public class ConnectorMigrationWizardTest {
 		IWizardContainer container = createWizard(new ConnectorMigrationWizard(migrator));
 		wizard.performFinish();
 		verify(container).run(eq(true), eq(true), any(IRunnableWithProgress.class));
-		verify(migrator).setConnectorsToMigrate(eq(List.of("bar", "mock")));
+		verify(migrator).setConnectorsToMigrate(
+				argThat(list -> new HashSet<>(List.of("bar", "mock")).equals(new HashSet<>(list))));
 		verify(migrator).migrateConnectors(any(IProgressMonitor.class));
 	}
 
