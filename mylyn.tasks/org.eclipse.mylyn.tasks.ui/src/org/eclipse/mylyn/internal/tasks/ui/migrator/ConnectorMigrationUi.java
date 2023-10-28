@@ -188,8 +188,6 @@ public class ConnectorMigrationUi {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-//				String repositoryList = Joiner.on("\n") //$NON-NLS-1$
-//						.join(Iterables.transform(failedValidation, repositoryToLabel()));
 				String repositoryList = failedValidation.stream()
 						.map(repositoryToLabel())
 						.collect(Collectors.joining("\n")); //$NON-NLS-1$
@@ -243,9 +241,6 @@ public class ConnectorMigrationUi {
 	 */
 	protected void delete(final Set<ITask> tasks, final TaskRepository repository, final TaskRepository newRepository,
 			IProgressMonitor monitor) {
-//		final Set<RepositoryQuery> queries = Sets.filter(tasksState.getTaskList().getQueries(),
-//				isQueryForRepository(repository));
-
 		final Set<RepositoryQuery> queries = tasksState.getTaskList()
 				.getQueries()
 				.stream()

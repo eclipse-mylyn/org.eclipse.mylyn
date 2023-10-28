@@ -67,14 +67,6 @@ public class OptionsProposalProvider implements IContentProposalProvider {
 		}
 		// Since the contents of the editor is replaced, we need to include the existing values in the replacement
 		final String existingValues = contents.substring(0, contents.length() - lastValue.length());
-//		ImmutableList<String> sortedProposals = FluentIterable.from(filteredProposals)
-//				.toSortedList(Ordering.from(String.CASE_INSENSITIVE_ORDER));
-//		return FluentIterable.from(sortedProposals).transform(new Function<String, IContentProposal>() {
-//			public IContentProposal apply(String proposal) {
-//				return new ContentProposal(existingValues + proposal, proposal, null);
-//			}
-//		}).toArray(IContentProposal.class);
-
 		return filteredProposals.stream()
 				.sorted(String.CASE_INSENSITIVE_ORDER)
 				.map(p -> new ContentProposal(existingValues + p, p, null))

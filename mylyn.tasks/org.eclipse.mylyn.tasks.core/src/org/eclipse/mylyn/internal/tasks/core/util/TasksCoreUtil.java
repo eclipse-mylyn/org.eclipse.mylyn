@@ -82,21 +82,6 @@ public class TasksCoreUtil {
 	private static final RepositoryComparator REPOSITORY_COMPARATOR = new RepositoryComparator();
 
 	private static List<AbstractTask> sortTasksByRepositoryUrl(Collection<AbstractTask> tasks) {
-//		List<AbstractTask> sortedTasks = new Ordering<AbstractTask>() {
-//
-//			@Override
-//			public int compare(AbstractTask left, AbstractTask right) {
-//				if (left.getRepositoryUrl() == null) {
-//					return 1;
-//				}
-//				if (right.getRepositoryUrl() == null) {
-//					return -1;
-//				}
-//				return left.getRepositoryUrl().compareTo(right.getRepositoryUrl());
-//			}
-//
-//		}.nullsLast().sortedCopy(tasks);
-
 		List<AbstractTask> sortedTasks = tasks.stream()
 				.sorted(Comparator.nullsLast(REPOSITORY_COMPARATOR))
 				.collect(Collectors.toList());

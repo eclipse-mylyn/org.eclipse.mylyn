@@ -692,11 +692,6 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	}
 
 	private IUser findUser(final String displayName) {
-//		return Iterables.find(reviewHarness.getRepository().getUsers(), new Predicate<IUser>() {
-//			public boolean apply(IUser user) {
-//				return user.getDisplayName().equals(displayName);
-//			}
-//		});
 		return reviewHarness.getRepository()
 				.getUsers()
 				.stream()

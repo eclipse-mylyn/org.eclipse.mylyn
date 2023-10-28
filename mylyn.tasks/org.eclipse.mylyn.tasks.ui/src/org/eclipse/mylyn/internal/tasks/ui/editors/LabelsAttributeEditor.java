@@ -56,7 +56,6 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 	public String getValue() {
 		if (isMultiSelect) {
 			List<String> values = getAttributeMapper().getValues(getTaskAttribute());
-//			return Joiner.on(VALUE_SEPARATOR + " ").skipNulls().join(values); //$NON-NLS-1$
 			return values.stream().filter(Objects::nonNull).collect(Collectors.joining(VALUE_SEPARATOR + " ")); //$NON-NLS-1$
 		} else {
 			return getAttributeMapper().getValue(getTaskAttribute());
@@ -75,18 +74,6 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 	}
 
 	public static List<String> getTrimmedValues(String[] values) {
-//		return FluentIterable.from(Arrays.asList(values)).transform(new Function<String, String>() {
-//			@Override
-//			public String apply(String input) {
-//				return StringUtils.defaultString(input).trim();
-//			}
-//		}).filter(new Predicate<String>() {
-//			@Override
-//			public boolean apply(String input) {
-//				return StringUtils.isNotEmpty(input);
-//			}
-//		}).toList();
-
 		return Arrays.asList(values)
 				.stream()
 				.map(s -> StringUtils.defaultString(s).trim())

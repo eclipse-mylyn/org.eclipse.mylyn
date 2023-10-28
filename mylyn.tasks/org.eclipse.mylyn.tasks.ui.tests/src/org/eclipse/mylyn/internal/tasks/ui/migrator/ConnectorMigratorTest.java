@@ -647,7 +647,6 @@ public class ConnectorMigratorTest {
 
 	private AbstractTaskCategory getCategory(AbstractTask newTask) {
 		for (AbstractTaskCategory category : tasksState.getTaskList().getCategories()) {
-//			Optional<ITask> task = Iterables.tryFind(category.getChildren(), Predicates.<ITask> equalTo(newTask));
 			Optional<ITask> task = category.getChildren().stream().filter(t -> t.equals(newTask)).findFirst();
 			if (task.isPresent()) {
 				return category;

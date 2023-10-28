@@ -127,10 +127,6 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateR
 			}
 			if (taskAttribute.getMetaData().getType() != null
 					&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
-//				Iterable<String> taskIdsTemp = Iterables.transform(taskAttribute.getValues(), function);
-//				Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
-//				value = joiner.join(taskIdsTemp);
-
 				value = taskAttribute.getValues()
 						.stream()
 						.filter(Objects::nonNull)

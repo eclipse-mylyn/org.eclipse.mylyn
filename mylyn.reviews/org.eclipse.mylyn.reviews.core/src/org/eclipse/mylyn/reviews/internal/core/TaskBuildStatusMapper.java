@@ -13,19 +13,16 @@
 
 package org.eclipse.mylyn.reviews.internal.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 
 import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.AbstractListValuedMap;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.commons.core.LinkedHashMappArrayListValuedHashMap;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -53,19 +50,6 @@ public class TaskBuildStatusMapper {
 		this.buildResults = buildResults;
 	}
 
-	// FIXME TaskBuildStatusMapperTest.collectionWithDifferentJobNamesProducesUnqiueEntries() expects insert order of keys
-	private class MapArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V> {
-		public MapArrayListValuedHashMap() {
-			super(new LinkedHashMap<K, ArrayList<V>>());
-		}
-
-		@Override
-		protected List<V> createCollection() {
-			return new ArrayList<>();
-		}
-
-	}
-
 	public void applyTo(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 
@@ -73,16 +57,7 @@ public class TaskBuildStatusMapper {
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		taskAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE).setKind(TaskBuildStatusMapper.KIND_PATCH_SET);
 
-//		com.google.common.base.Function<BuildResult, String> groupFunction = new com.google.common.base.Function<BuildResult, String>() {
-//			@Override
-//			public String apply(BuildResult source) {
-//				return source.getJobName();
-//			}
-//
-//		};
-//		final Multimap<String, BuildResult> buildsByJobName = Multimaps.index(this.buildResults, groupFunction);
-
-		MultiValuedMap<String, BuildResult> buildsByJobName = new MapArrayListValuedHashMap<String, BuildResult>();
+		MultiValuedMap<String, BuildResult> buildsByJobName = new LinkedHashMappArrayListValuedHashMap<>();
 		buildResults.forEach(result -> buildsByJobName.put(result.getJobName(), result));
 
 		int i = 0;
@@ -129,10 +104,6 @@ public class TaskBuildStatusMapper {
 	}
 
 	private String hashChildAttributeValues(TaskAttribute attribute) {
-//		Object[] childValues = FluentIterable.from(attribute.getAttributes().values())
-//				.transform(toValue())
-//				.toArray(Object.class);
-
 		Object[] childValues = attribute.getAttributes().values().stream().map(toValue()).toArray(Object[]::new);
 
 		return Integer.toString(Objects.hash(childValues));

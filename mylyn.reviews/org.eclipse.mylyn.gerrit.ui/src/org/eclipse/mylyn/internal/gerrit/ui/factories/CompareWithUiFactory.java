@@ -101,12 +101,6 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
 		private void addItems(IReviewItemSet itemSet, Set<String> fileNames) {
 			if (itemSet != null) {
-//				fileNames.addAll(Collections2.transform(itemSet.getItems(), new Function<IFileItem, String>() {
-//					public String apply(IFileItem f) {
-//						return f.getName();
-//					}
-//				}));
-
 				itemSet.getItems().stream().map(f -> f.getName()).forEachOrdered(fileNames::add);
 			}
 		}

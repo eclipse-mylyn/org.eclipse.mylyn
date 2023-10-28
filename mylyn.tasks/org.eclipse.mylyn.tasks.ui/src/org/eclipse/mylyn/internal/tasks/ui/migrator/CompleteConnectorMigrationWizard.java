@@ -237,8 +237,6 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 	protected void waitForQueriesToSynchronize(Collection<String> newConnectors, IProgressMonitor monitor) {
 		monitor.subTask(Messages.CompleteConnectorMigrationWizard_Waiting_for_queries_to_synchronize);
 		long start = System.currentTimeMillis();
-//		Iterable<RepositoryQuery> queries = Iterables.concat(createRepositoryQueryMap(newConnectors).values());
-//		while (any(queries, isSynchronizing()) {};
 		Set<RepositoryQuery> queries = createRepositoryQueryMap(newConnectors).values()
 				.stream()
 				.flatMap(Set::stream)
@@ -258,8 +256,6 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 			for (TaskRepository repository : migrator.getRepositoryManager().getRepositories(kind)) {
 				Set<RepositoryQuery> queriesForUrl = TasksUiPlugin.getTaskList()
 						.getRepositoryQueries(repository.getRepositoryUrl());
-//				Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(kind));
-
 				Set<RepositoryQuery> queries = queriesForUrl.stream()
 						.filter(isQueryForConnector(kind))
 						.collect(Collectors.toUnmodifiableSet());

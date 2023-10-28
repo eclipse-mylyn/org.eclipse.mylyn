@@ -156,17 +156,6 @@ public class TaskEditorRestoreTest extends TestCase {
 	}
 
 	private <T extends IEditorPart, S> Set<S> getOpenEditorsByType(Class<T> clazz, Function<T, S> propertyFunction) {
-//		return FluentIterable.from(Arrays.asList(page.getEditorReferences()))
-//				.transform(new Function<IEditorReference, IEditorPart>() {
-//					@Override
-//					public IEditorPart apply(IEditorReference ref) {
-//						return ref.getEditor(true);
-//					}
-//				})
-//				.filter(clazz)
-//				.transform(propertyFunction)
-//				.toSet();
-
 		return Arrays.asList(page.getEditorReferences())
 				.stream()
 				.map(ref -> ref.getEditor(true))

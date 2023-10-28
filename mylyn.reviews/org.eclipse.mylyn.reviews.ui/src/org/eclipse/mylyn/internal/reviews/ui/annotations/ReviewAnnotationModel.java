@@ -166,7 +166,6 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 */
 	public List<CommentAnnotation> getAnnotationsForOffset(int offset) {
 		List<CommentAnnotation> result = new ArrayList<CommentAnnotation>();
-//		for (CommentAnnotation annotation : Iterables.filter(this.annotations, CommentAnnotation.class)) {
 		for (CommentAnnotation annotation : this.annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.map(CommentAnnotation.class::cast)
@@ -192,7 +191,6 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
 	public Annotation getFirstAnnotationForOffset(int offset) {
-//		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
 		for (CommentAnnotation annotation : this.annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.map(CommentAnnotation.class::cast)
