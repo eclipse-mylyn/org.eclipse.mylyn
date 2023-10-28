@@ -108,13 +108,6 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		}
 
 		public int openTaskDeactivationDialog(List<IEditorReference> dirtyRefs) {
-//			String editors = Joiner.on('\n')
-//			.join(Iterables.transform(dirtyRefs, new Function<IEditorReference, String>() {
-//				@Override
-//				public String apply(IEditorReference ref) {
-//					return ref.getTitle();
-//				}
-//			}));
 			String editors = dirtyRefs.stream()
 					.map(IEditorReference::getTitle) //
 					.collect(Collectors.joining("\n")); //$NON-NLS-1$

@@ -95,24 +95,12 @@ public class GerritTaskEditorPageTest extends TestCase {
 	}
 
 	public void testCreatePartDescriptorsCustomOrder() {
-//		Iterable<Class<?>> partClasses = ImmutableList
-//				.copyOf(Iterables.transform(descriptors.subList(descriptors.size() - 4, descriptors.size()),
-//						new Function<TaskEditorPartDescriptor, Class<?>>() {
-//							public Class<?> apply(TaskEditorPartDescriptor o) {
-//								return o.createPart().getClass();
-//							}
-//						}));
 		List<Class<?>> partClasses = List.copyOf(descriptors.subList(descriptors.size() - 4, descriptors.size())
 				.stream()
 				.map(o -> o.createPart().getClass())
 				.collect(Collectors.toList()));
 		assertEquals(List.of(GerritReviewDetailSection.class, PatchSetSection.class, TaskEditorCommentPart.class,
 				TaskEditorNewCommentPart.class), partClasses);
-//		List<String> ids = Lists.transform(descriptors, new Function<TaskEditorPartDescriptor, String>() {
-//			public String apply(TaskEditorPartDescriptor o) {
-//				return o.getId();
-//			}
-//		});
 		List<String> ids = descriptors.stream().map(o -> o.getId()).collect(Collectors.toList());
 		assertTrue("Missing descriptors. Found " + ids, descriptors.size() >= 7);
 	}
@@ -138,21 +126,11 @@ public class GerritTaskEditorPageTest extends TestCase {
 
 	private Optional<TaskEditorPartDescriptor> findByPath(ArrayList<TaskEditorPartDescriptor> descriptors,
 			final String path) {
-//		return Iterables.tryFind(descriptors, new Predicate<TaskEditorPartDescriptor>() {
-//			public boolean apply(TaskEditorPartDescriptor descriptor) {
-//				return descriptor.getPath().equals(path);
-//			}
-//		});
 		return descriptors.stream().filter(descriptor -> descriptor.getPath().equals(path)).findFirst();
 	}
 
 	private Optional<TaskEditorPartDescriptor> findById(ArrayList<TaskEditorPartDescriptor> descriptors,
 			final String id) {
-//		return Iterables.tryFind(descriptors, new Predicate<TaskEditorPartDescriptor>() {
-//			public boolean apply(TaskEditorPartDescriptor descriptor) {
-//				return descriptor.getId().equals(id);
-//			}
-//		});
 		return descriptors.stream().filter(descriptor -> descriptor.getId().equals(id)).findFirst();
 	}
 

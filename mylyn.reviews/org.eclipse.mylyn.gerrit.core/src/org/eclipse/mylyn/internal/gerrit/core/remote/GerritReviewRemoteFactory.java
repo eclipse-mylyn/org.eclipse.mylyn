@@ -247,21 +247,10 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 
 	private IReviewItemSet getReviewItemSet(List<IReviewItemSet> sets, Integer parentKey) {
 		final String patchSetNumber = parentKey.toString();
-//		return Iterables.tryFind(sets, new Predicate<IReviewItemSet>() {
-//			public boolean apply(IReviewItemSet set) {
-//				return set.getId().equals(patchSetNumber);
-//			}
-//		}).orNull();
 		return sets.stream().filter(set -> set.getId().equals(patchSetNumber)).findAny().orElse(null);
 	}
 
 	private boolean hasCommit(List<ICommit> parentCommits, final ICommit commit) {
-//		Optional<ICommit> optional = Iterables.tryFind(parentCommits, new Predicate<ICommit>() {
-//			public boolean apply(ICommit candidateCommit) {
-//				return commit.getId().equals(candidateCommit.getId());
-//			}
-//		});
-//		return optional.isPresent();
 		return parentCommits.stream().anyMatch(candidateCommit -> commit.getId().equals(candidateCommit.getId()));
 	}
 

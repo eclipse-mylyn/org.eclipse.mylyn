@@ -87,7 +87,6 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 		}
 
 		Set<IComment> comments = new HashSet<IComment>();
-//		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
 		for (CommentAnnotation annotation : annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.collect(Collectors.toList())) {

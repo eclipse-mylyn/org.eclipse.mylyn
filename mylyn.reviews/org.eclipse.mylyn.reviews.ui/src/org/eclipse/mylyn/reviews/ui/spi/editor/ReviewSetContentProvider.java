@@ -17,9 +17,9 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
 final class ReviewSetContentProvider implements ITreeContentProvider {
 
-	private final MultiValuedMap<ILocation, IComment> threads = new ArrayListValuedHashMap();
+	private final MultiValuedMap<ILocation, IComment> threads = new ArrayListValuedHashMap<>();
 
-	private final MultiValuedMap<String, ILocation> threadLocationsByFile = new ArrayListValuedHashMap();
+	private final MultiValuedMap<String, ILocation> threadLocationsByFile = new ArrayListValuedHashMap<>();
 
 	public Object[] getElements(Object inputElement) {
 		return getReviewItems(inputElement).toArray();
@@ -51,7 +51,6 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IFileItem) {
 			IFileItem file = (IFileItem) parentElement;
-//			Multimap<Long, IComment> commentsByLocation = Multimaps.index(getFileComments(file), commentLineNumber());
 			MultiValuedMap<Long, IComment> commentsByLocation = new ArrayListValuedHashMap<>();
 			for (IComment comment : getFileComments(file)) {
 				commentsByLocation.put(comment.getLocations().iterator().next().getIndex(), comment);
@@ -123,8 +122,6 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 
 	private List<IComment> getFileComments(Object inputElement) {
 		if (inputElement instanceof IFileItem) {
-//			return FluentIterable.from(((IFileItem) inputElement).getAllComments()).filter(hasLocation()).toList();
-
 			return ((IFileItem) inputElement).getAllComments()
 					.stream()
 					.filter(input -> input.getLocations().iterator().hasNext())

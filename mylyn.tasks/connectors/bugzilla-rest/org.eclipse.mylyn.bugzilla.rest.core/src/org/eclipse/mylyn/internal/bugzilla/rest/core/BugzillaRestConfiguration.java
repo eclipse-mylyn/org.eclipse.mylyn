@@ -64,15 +64,6 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setFields(Map<String, Field> fields) {
-//		Function<Field, String> getName = new Function<Field, String>() {
-//			public String apply(Field item) {
-//				return item.getName();
-//			}
-//		};
-//		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(fields));
-//		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
-//		this.fields = ImmutableSortedMap.copyOf(fields, comparator);
-
 		this.fields = fields.entrySet()
 				.stream()
 				.sorted((e1, e2) -> e1.getValue().getName().compareTo(e2.getValue().getName()))
@@ -91,15 +82,6 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setProducts(Map<String, Product> products) {
-//		Function<Product, String> getName = new Function<Product, String>() {
-//			public String apply(Product item) {
-//				return item.getName();
-//			}
-//		};
-//		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(products));
-//		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
-//		this.products = ImmutableSortedMap.copyOf(products, comparator);
-
 		this.products = products.entrySet()
 				.stream()
 				.sorted((e1, e2) -> e1.getValue().getName().compareTo(e2.getValue().getName()))

@@ -779,13 +779,6 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	private Set<String> getBranchNames(Project.NameKey project, IProgressMonitor monitor) throws GerritException {
-//		return FluentIterable.from(Arrays.asList(getRemoteProjectBranches(project.get(), monitor)))
-//				.transform(new Function<BranchInfo, String>() {
-//					public String apply(BranchInfo input) {
-//						return input.getRef();
-//					}
-//				})
-//				.toSet();
 		return Arrays.asList(getRemoteProjectBranches(project.get(), monitor))
 				.stream()
 				.map(b -> b.getRef())

@@ -133,11 +133,6 @@ public class BugzillaRestClient {
 		R response = new BugzillaRestGetRequest<R>(client, path, typeToken).run(monitor);
 		E[] members = response.getArray();
 
-//		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
-//			public String apply(E input) {
-//				return input.getName();
-//			};
-//		});
 		return Arrays.stream(members).collect(Collectors.toUnmodifiableMap(E::getName, Function.identity()));
 	}
 
@@ -187,15 +182,10 @@ public class BugzillaRestClient {
 		} catch (CoreException e1) {
 			throw new BugzillaRestException(e1);
 		}
-//		Iterable<String> taskIdsTemp = Iterables.transform(taskIds, removeLeadingZero);
-//		Iterable<List<String>> partitions = Iterables.partition(taskIdsTemp, MAX_RETRIEVED_PER_QUERY);
 		List<List<String>> partitions = ListUtils.partition(
 				taskIds.stream().map(removeLeadingZero).collect(Collectors.toList()), MAX_RETRIEVED_PER_QUERY);
 
 		for (List<String> list : partitions) {
-//			Joiner joiner = Joiner.on(",id=").skipNulls(); //$NON-NLS-1$
-//			String urlIDList = "id=" + joiner.join(list); //$NON-NLS-1$
-
 			String urlIDList = "id=" + list.stream().filter(Objects::nonNull).collect(Collectors.joining("id="));
 			try {
 

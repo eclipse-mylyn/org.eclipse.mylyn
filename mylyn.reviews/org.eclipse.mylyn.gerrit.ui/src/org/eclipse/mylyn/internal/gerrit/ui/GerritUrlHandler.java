@@ -125,7 +125,6 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 		if (patchSetNumber > 0) {
 			String[] fragments = StringUtils.split(extractUrlQualifiers(repository, url, taskId), "/"); //$NON-NLS-1$
 			if (fragments.length > 1) {
-//				return Joiner.on("/").join(Arrays.copyOfRange(fragments, 1, fragments.length)); //$NON-NLS-1$
 				return String.join("/", Arrays.copyOfRange(fragments, 1, fragments.length)); //$NON-NLS-1$
 			}
 		}

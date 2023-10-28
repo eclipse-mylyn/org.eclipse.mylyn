@@ -81,21 +81,6 @@ public class GerritCompareUi {
 
 	static CompareEditorInput getComparisonEditorInput(IEditorReference[] editorReferences,
 			CompareEditorInput editorInput, Predicate<CompareEditorInput> predicate) {
-//		return FluentIterable.from(Lists.newArrayList(editorReferences)).filter(new Predicate<IEditorReference>() {
-//			public boolean apply(IEditorReference ref) {
-//				return ref.getId().equals("org.eclipse.compare.CompareEditor"); //$NON-NLS-1$
-//			}
-//		}).transform(new Function<IEditorReference, CompareEditorInput>() {
-//			public CompareEditorInput apply(IEditorReference reference) {
-//				try {
-//					return (CompareEditorInput) reference.getEditorInput();
-//				} catch (PartInitException e) {
-//					handleError(e);
-//				}
-//				return null;
-//			}
-//		}).firstMatch(predicate).or(editorInput);
-
 		Optional<CompareEditorInput> input = Stream.of(editorReferences)
 				.filter(ref -> ref.getId().equals("org.eclipse.compare.CompareEditor")) //$NON-NLS-1$
 				.map(new Function<IEditorReference, CompareEditorInput>() {

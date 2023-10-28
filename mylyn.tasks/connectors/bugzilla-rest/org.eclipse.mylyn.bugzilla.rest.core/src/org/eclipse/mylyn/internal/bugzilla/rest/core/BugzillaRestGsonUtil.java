@@ -40,7 +40,6 @@ public class BugzillaRestGsonUtil {
 			if (add.contains("")) { //$NON-NLS-1$
 				add.remove(""); //$NON-NLS-1$
 			}
-//					Sets.intersection(addSet, removeSet);
 			Set<String> intersection = addSet.stream().filter(removeSet::contains).collect(Collectors.toSet());
 			remove.removeAll(intersection);
 			add.removeAll(intersection);
@@ -68,7 +67,6 @@ public class BugzillaRestGsonUtil {
 				add.remove(null);
 			}
 			Set<Integer> intersection = addSet.stream().filter(removeSet::contains).collect(Collectors.toSet());
-			// Sets.intersection(addSet, removeSet);
 			remove.removeAll(intersection);
 			add.removeAll(intersection);
 			if (remove.isEmpty()) {
@@ -150,8 +148,6 @@ public class BugzillaRestGsonUtil {
 		RemoveAddIntegerHelper test = new RemoveAddIntegerHelper(
 				setOld.stream().map(convert2Integer).collect(Collectors.toSet()),
 				setNew.stream().map(convert2Integer).collect(Collectors.toSet()));
-//				newHashSet(Iterables.transform(setOld, convert2Integer)),
-//				newHashSet(Iterables.transform(setNew, convert2Integer)));
 		out.name(id);
 		gson.toJson(test, RemoveAddIntegerHelper.class, out);
 	}

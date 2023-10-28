@@ -454,9 +454,6 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		List<Section> sections = new ArrayList<Section>();
 		if (scrolledComposite.getChildren().length != 0 && scrolledComposite.getChildren()[0] instanceof Composite) {
 			Composite sectionContainer = (Composite) scrolledComposite.getChildren()[0];
-//			sections = FluentIterable.from(Arrays.asList(sectionContainer.getChildren()))
-//					.filter(Section.class)
-//					.toList();
 			sections = Arrays.asList(sectionContainer.getChildren())
 					.stream()
 					.filter(Section.class::isInstance)
@@ -558,13 +555,6 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 *         otherwise
 	 */
 	protected IComment getLastCommentDraft() {
-//		return FluentIterable.from(commentList).filter(new Predicate<IComment>() {
-//			@Override
-//			public boolean apply(IComment input) {
-//				return input.isDraft();
-//			}
-//		}).last().orNull();
-
 		return commentList.stream().filter(input -> input.isDraft()).reduce((first, second) -> second).orElse(null);
 
 	}

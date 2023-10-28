@@ -369,9 +369,6 @@ public class GerritConnector extends ReviewsConnector {
 		String reviewTooltip = createVoteTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
 		String verifiedTooltip = createVoteTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
 
-//		String tooltip = Joiner.on("\n") //$NON-NLS-1$
-//				.skipNulls()
-//				.join(projectTooltip, branchTooltip, reviewTooltip, verifiedTooltip);
 		String tooltip = Stream.of(projectTooltip, branchTooltip, reviewTooltip, verifiedTooltip)
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining("\n")); //$NON-NLS-1$

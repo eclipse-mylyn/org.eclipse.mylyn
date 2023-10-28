@@ -193,9 +193,6 @@ public class ConnectorMigrationWizard extends Wizard {
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//					ImmutableList<String> connectors = FluentIterable.from(ImmutableList.copyOf(selectedConnectors))
-//							.filter(String.class)
-//							.toList();
 					List<String> connectors = Arrays.asList(selectedConnectors)
 							.stream()
 							.filter(String.class::isInstance)

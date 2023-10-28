@@ -237,14 +237,6 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	private CommentAnnotation findComment(ReviewAnnotationModel annotationModel, final IComment comment) {
-//		Optional<Annotation> annotation = Iterators.tryFind(annotationModel.getAnnotationIterator(),
-//				new Predicate<Annotation>() {
-//					public boolean apply(Annotation annotation) {
-//						return annotation instanceof CommentAnnotation
-//								&& ((CommentAnnotation) annotation).getComment().getId().equals(comment.getId());
-//					}
-//				});
-
 		Optional<Annotation> annotation = StreamSupport
 				.stream(Spliterators.spliteratorUnknownSize(annotationModel.getAnnotationIterator(),
 						Spliterator.ORDERED), false)

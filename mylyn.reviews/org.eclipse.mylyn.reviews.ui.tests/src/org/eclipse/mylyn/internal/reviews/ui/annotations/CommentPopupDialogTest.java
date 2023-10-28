@@ -135,11 +135,6 @@ public class CommentPopupDialogTest extends TestCase {
 	public void testMovable() {
 		commentPopupDialog = createPopupWithXComments(1, false);
 		Listener[] listeners = commentPopupDialog.getComposite().getListeners(SWT.MouseMove);
-//		Iterables.find(Arrays.asList(listeners), new Predicate<Listener>() {
-//			public boolean apply(Listener listener) {
-//				return listener instanceof ShellDragSupport;
-//			}
-//		});
 		Arrays.asList(listeners)
 				.stream()
 				.filter(Listener.class::isInstance)

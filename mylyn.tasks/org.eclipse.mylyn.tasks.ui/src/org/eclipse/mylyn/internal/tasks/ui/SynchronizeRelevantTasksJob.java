@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.LinkedHashMappArrayListValuedHashMap;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -143,7 +143,7 @@ public class SynchronizeRelevantTasksJob extends Job {
 	}
 
 	private MultiValuedMap<TaskRepository, ITask> mapTasksToRepository(HashSet<ITask> relevantTasks) {
-		MultiValuedMap<TaskRepository, ITask> repositoryMap = new ArrayListValuedHashMap<>();
+		MultiValuedMap<TaskRepository, ITask> repositoryMap = new LinkedHashMappArrayListValuedHashMap<>();
 		for (ITask task : relevantTasks) {
 			if (!(task instanceof LocalTask)) {
 				String connectorKind = task.getConnectorKind();

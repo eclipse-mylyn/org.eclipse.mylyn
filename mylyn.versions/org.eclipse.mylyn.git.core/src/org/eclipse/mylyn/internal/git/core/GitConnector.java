@@ -260,7 +260,6 @@ public class GitConnector extends ScmConnector {
 	@Override
 	public List<ChangeSet> getChangeSets(final ScmRepository repository, final IProgressMonitor monitor)
 			throws CoreException {
-//		return Lists.newArrayList(getChangeSetsIterator(repository, monitor));
 		return IteratorUtils.toList(getChangeSetsIterator(repository, monitor));
 	}
 
@@ -277,11 +276,6 @@ public class GitConnector extends ScmConnector {
 			throw new RuntimeException(e);
 		}
 
-//		return Iterators.transform(revs.iterator(), new Function<RevCommit, ChangeSet>() {
-//			public ChangeSet apply(RevCommit input) {
-//				return changeSet(input, gitRepository);
-//			}
-//		});
 		return StreamSupport.stream(revs.spliterator(), false)
 				.map(input -> changeSet(input, gitRepository))
 				.collect(Collectors.toList())
