@@ -93,26 +93,6 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 		};
 	}
 
-//	private Function<? super IComment, Long> commentLineNumber() {
-//		return new Function<IComment, Long>() {
-//
-//			@Override
-//			public Long apply(IComment comment) {
-//				return comment.getLocations().iterator().next().getIndex();
-//			}
-//		};
-//	}
-//
-////	private Predicate<IComment> hasLocation() {
-//		return new Predicate<IComment>() {
-//
-//			@Override
-//			public boolean apply(IComment input) {
-//				return input.getLocations().iterator().hasNext();
-//			}
-//		};
-//	}
-
 	private List<IFileItem> getReviewItems(Object inputElement) {
 		if (inputElement instanceof IReviewItemSet) {
 			return ((IReviewItemSet) inputElement).getItems();

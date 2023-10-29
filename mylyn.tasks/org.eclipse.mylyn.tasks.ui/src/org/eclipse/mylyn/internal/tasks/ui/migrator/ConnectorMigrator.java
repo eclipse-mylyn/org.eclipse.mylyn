@@ -131,7 +131,6 @@ public class ConnectorMigrator {
 
 	public ConnectorMigrator(Map<String, String> connectorKinds, String explanatoryText, TasksState tasksState,
 			ConnectorMigrationUi migrationUi) {
-//		checkArgument(!connectorKinds.isEmpty());
 		Validate.isTrue(!connectorKinds.isEmpty());
 
 		this.connectorKinds = connectorKinds;
@@ -162,7 +161,6 @@ public class ConnectorMigrator {
 	}
 
 	public void setConnectorsToMigrate(List<String> connectors) {
-//		checkArgument(connectorKinds.keySet().containsAll(connectors));
 		Validate.isTrue(connectorKinds.keySet().containsAll(connectors));
 		this.connectorsToMigrate = List.copyOf(connectors);
 	}
