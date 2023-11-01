@@ -6,6 +6,7 @@ Bundle-Version: 4.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.commons.core.collections;x-friends:="org.eclipse.mylyn.reviews.core,org.eclipse.mylyn.tasks.ui",
  org.eclipse.mylyn.commons.core.io,
  org.eclipse.mylyn.commons.core.net,
  org.eclipse.mylyn.commons.core.operations,

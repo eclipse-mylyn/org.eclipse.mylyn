@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Vaughan Hilts and others.
+ * Copyright (c) 2015, 2023 Vaughan Hilts and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -7,8 +7,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- *     Vaughan Hilts - 	   Initial implementation
- *     Kyle Ross 	 - 	   Initial implementation
+ * Contributors:
+ *   See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.internal.core;
@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.commons.core.LinkedHashMappArrayListValuedHashMap;
+import org.eclipse.mylyn.commons.core.collections.LinkedHashMappArrayListValuedHashMap;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;

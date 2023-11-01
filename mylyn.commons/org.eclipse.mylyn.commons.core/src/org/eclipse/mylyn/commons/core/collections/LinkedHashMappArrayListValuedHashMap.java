@@ -1,15 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2023 Tasktop Technologies and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2023 George Lindholm and others.
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *   See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.core;
+package org.eclipse.mylyn.commons.core.collections;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,7 +27,8 @@ import org.apache.commons.collections4.multimap.AbstractListValuedMap;
  * @author George Lindholm
  * @since 4.1
  */
-public class LinkedHashMappArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V> {
+public final class LinkedHashMappArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V> {
+
 	public LinkedHashMappArrayListValuedHashMap() {
 		super(new LinkedHashMap<>());
 	}
