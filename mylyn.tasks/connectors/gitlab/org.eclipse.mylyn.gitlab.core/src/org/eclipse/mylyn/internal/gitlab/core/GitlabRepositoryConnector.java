@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -64,7 +63,6 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
@@ -176,20 +174,10 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
 	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
 	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
-            endTime = System.currentTimeMillis();
-            traceExitResult = result.toString() +" " +								  
-		        (endTime -  startTime) + " ms";
+		endTime = System.currentTimeMillis();
+		traceExitResult = result.toString() + " " + (endTime - startTime) + " ms";
 	    }
 	    return result;
-	} catch (UncheckedExecutionException e) {
-	    traceExitResult = e.getMessage();
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	} catch (ExecutionException e) {
-	    traceExitResult = e.getMessage();
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	} catch (ExecutionError e) {
-	    traceExitResult = e.getMessage();
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} finally {
 	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
 		GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
@@ -322,7 +310,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
-	    return clientCache.get(new RepositoryKey(repository));
+	return clientCache.get(new RepositoryKey(repository));
     }
 
     private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
@@ -432,7 +420,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public byte[] getAvatarData(String url) {
-	    return avatarCache.get(url);
+	return avatarCache.get(url);
     }
 
 }
