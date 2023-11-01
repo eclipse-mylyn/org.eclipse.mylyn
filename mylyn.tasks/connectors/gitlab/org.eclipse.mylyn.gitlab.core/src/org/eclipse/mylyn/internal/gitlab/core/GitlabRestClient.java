@@ -22,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -98,7 +97,6 @@ public class GitlabRestClient {
     private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");;
 
     public static String AUTHORIZATION_HEADER = "authorization_header";
-    private static final boolean TRACE = false;
 
     @SuppressWarnings("restriction")
     public GitlabRestClient(RepositoryLocation location, GitlabRepositoryConnector connector,
@@ -125,6 +123,9 @@ public class GitlabRestClient {
 
     public IStatus getIssues(IRepositoryQuery query, TaskDataCollector collector, final IOperationMonitor monitor)
 	    throws GitlabException, CoreException {
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT, query.toString()+ " " + query.getSummary());
+	}
 	getAccessTokenIfNotPresent(monitor);
 	String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(",");
 	String groupAttribute = query.getAttribute("group");
@@ -143,6 +144,9 @@ public class GitlabRestClient {
 		    getIssuesInternal(query, collector, path, monitor);
 		}
 	    }
+	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
 	}
 	return Status.OK_STATUS;
     }
@@ -478,20 +482,23 @@ public class GitlabRestClient {
     public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 	    throws GitlabException {
 	TaskData result = null;
-	long startTime = 0, endTime = 0;
-	Thread thread;
-	if (TRACE) {
-	    thread = Thread.currentThread();
-	    System.out.println(
-		    thread.getName() + " getTaskData start: " + repository.getRepositoryUrl() + " id " + taskId);
-	    startTime = System.currentTimeMillis();
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    repository.getUrl() + " id " + taskId);
 	}
 	String searchString = ".*(/projects/\\d+)/issues/(\\d+)";
 	Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 	Matcher matcher = pattern.matcher(taskId);
 	if (matcher.find()) {
 	    GitlabConfiguration config = getConfiguration();
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE, "get Configuration ");
+	    }
 	    JsonObject issue = getIssue(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get Issue with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    TypeToken<TaskData> type = new TypeToken<TaskData>() {
 	    };
 	    result = new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer()).create()
@@ -507,6 +514,10 @@ public class GitlabRestClient {
 //			}
 	    JsonArray discussions = getIssueDiscussions(matcher.group(1), matcher.group(2),
 		    OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get IssueDiscussions with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    if (discussions != null) {
 		int commentIdx = 0;
 		TaskAttribute attrib = null;
@@ -552,6 +563,10 @@ public class GitlabRestClient {
 	    }
 
 	    JsonArray states = getIssueStateEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get IssueStateEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    if (states != null) {
 		for (JsonElement stateElem : states) {
 		    JsonObject state = (JsonObject) stateElem;
@@ -588,6 +603,10 @@ public class GitlabRestClient {
 		}
 	    }
 	    JsonArray labels = getIssueLabelEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get getIssueLabelEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    if (labels != null) {
 		long lastLabelAt = 0;
 		Instant instantAt = null;
@@ -640,11 +659,8 @@ public class GitlabRestClient {
 
 	    config.updateProductOptions(result);
 	}
-	if (TRACE) {
-	    endTime = System.currentTimeMillis();
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getTaskData taken: " + (endTime - startTime) + " ms "
-		    + repository.getRepositoryUrl() + " id " + taskId);
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, result.toString());
 	}
 	return result;
     }
@@ -1196,22 +1212,16 @@ public class GitlabRestClient {
 
     public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor)
 	    throws GitlabException {
-	long startTime = 0, endTime = 0;
-	Thread thread;
-	if (TRACE) {
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getConfiguration start: " + repository.getRepositoryUrl());
-	    startTime = System.currentTimeMillis();
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT, repository.getUrl());
 	}
 	GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 	JsonObject user = getUser(monitor);
 	config.setUserID(user.get("id").getAsBigInteger());
 	config.setUserDetails(user);
-	if (TRACE) {
-	    endTime = System.currentTimeMillis();
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getConfiguration getUser: " + (endTime - startTime) + " ms "
-		    + repository.getRepositoryUrl());
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+	    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+		    /* repository.getRepositoryUrl() + */ "get User");
 	}
 	JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
 	for (JsonElement project : (JsonArray) projects) {
@@ -1220,33 +1230,30 @@ public class GitlabRestClient {
 	    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
 	    config.addProject(projectObject, labels, milestones);
 	}
-	if (TRACE) {
-	    endTime = System.currentTimeMillis();
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getConfiguration get Projects: " + (endTime - startTime) + " ms "
-		    + repository.getRepositoryUrl());
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+	    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+		    /* repository.getRepositoryUrl() + */ "get User Projects");
 	}
 	String projectValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
 	if (projectValue != null && !projectValue.isBlank()) {
 	    String[] projectList = projectValue.split(",");
-	    for (String project : projectList) {
+	    for (int i = 0; i < projectList.length; i++) {
 		try {
+		    String project = projectList[i];
 		    JsonObject projectDetail = getProject(URLEncoder.encode(project, StandardCharsets.UTF_8.toString()),
 			    monitor);
-		    if (TRACE) {
-			endTime = System.currentTimeMillis();
-			thread = Thread.currentThread();
-			System.out.println(thread.getName() + " getConfiguration get Project: " + (endTime - startTime)
-				+ " ms " + project + " " + repository.getRepositoryUrl());
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
+					+ projectList.length + "): " + project + " ");
 		    }
 		    JsonObject projectObject = (JsonObject) projectDetail;
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
-		    if (TRACE) {
-			endTime = System.currentTimeMillis();
-			thread = Thread.currentThread();
-			System.out.println(thread.getName() + " getConfiguration get Projects Labels/Milestone: "
-				+ (endTime - startTime) + " ms " + project + " " + repository.getRepositoryUrl());
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
+					+ projectList.length + "): " + project + " Labels/Milestone ");
 		    }
 		    config.addProject(projectObject, labels, milestones);
 		} catch (UnsupportedEncodingException e) {
@@ -1255,57 +1262,42 @@ public class GitlabRestClient {
 		}
 	    }
 	}
-	if (TRACE) {
-	    endTime = System.currentTimeMillis();
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getConfiguration get Groups: " + (endTime - startTime) + " ms "
-		    + repository.getRepositoryUrl());
-	}
 	String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 	if (groupsValue != null && !groupsValue.isBlank()) {
 	    String[] groupList = groupsValue.split(",");
-	    for (String group : groupList) {
+	    for (int i = 0; i < groupList.length; i++) {
+		String group = groupList[i];
 		JsonObject groupDetail = getGroup("/" + group, monitor);
 		config.addGroup(groupDetail);
-		if (TRACE) {
-		    endTime = System.currentTimeMillis();
-		    thread = Thread.currentThread();
-		    System.out.println(thread.getName() + " getConfiguration get Group: " + (endTime - startTime)
-			    + " ms " + group + " " + repository.getRepositoryUrl());
+		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			    /* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+				    + "): " + group);
 		}
 		projects = getGroupProjects(group, monitor);
-		if (TRACE) {
-		    endTime = System.currentTimeMillis();
-		    thread = Thread.currentThread();
-		    System.out.println(thread.getName() + " getConfiguration get Group projects: "
-			    + (endTime - startTime) + " ms " + group + " " + repository.getRepositoryUrl());
+		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			    /* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+				    + "): " + group + " projects");
 		}
-		for (JsonElement project : (JsonArray) projects) {
+		JsonArray projectsArray = (JsonArray) projects;
+		for (int j = 0; j < projectsArray.size(); j++) {
+		    JsonElement project = projectsArray.get(j);
 		    JsonObject projectObject = (JsonObject) project;
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
-		    if (TRACE) {
-			endTime = System.currentTimeMillis();
-			thread = Thread.currentThread();
-			System.out.println(thread.getName() + " getConfiguration get Group Projects Labels/Milestone: "
-				+ (endTime - startTime) + " ms " + group + " " + projectObject.get("id").getAsString()
-				+ " " + repository.getRepositoryUrl());
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+					+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): "
+					+ projectObject.get("id").getAsString() + " Labels/Milestone: ");
 		    }
 		    config.addProject(projectObject, labels, milestones);
 		}
-		if (TRACE) {
-		    endTime = System.currentTimeMillis();
-		    thread = Thread.currentThread();
-		    System.out.println(thread.getName() + " getConfiguration get Group projects: "
-			    + (endTime - startTime) + " ms " + group + " " + repository.getRepositoryUrl());
-		}
 	    }
 	}
-	if (TRACE) {
-	    endTime = System.currentTimeMillis();
-	    thread = Thread.currentThread();
-	    System.out.println(thread.getName() + " getConfiguration taken: " + (endTime - startTime) + " ms "
-		    + repository.getRepositoryUrl());
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, config.toString());
 	}
 	return config;
     }
@@ -1341,6 +1333,10 @@ public class GitlabRestClient {
 
     private RepositoryResponse updateExistingIssue(TaskData taskData, Set<TaskAttribute> oldAttributes,
 	    IOperationMonitor monitor) throws GitlabException {
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
+	}
 	ArrayList<String> changedAtributes = new ArrayList<>();
 	String newComentValue = "";
 	String discussionsId = "";
@@ -1390,47 +1386,60 @@ public class GitlabRestClient {
 		createIssueNote("/projects/" + productAttribute.getValue(), discussionsId, newComentValue, monitor);
 	    }
 	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
+	}
 	return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
     }
 
     public JsonElement createNewIssue(TaskData taskData, IOperationMonitor monitor) throws GitlabException {
-	getAccessTokenIfNotPresent(monitor);
-	TaskAttribute productAttribute = taskData.getRoot()
-		.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
-	if (productAttribute == null || productAttribute.getValue().isEmpty()) {
-	    throw new GitlabException(
-		    new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "productAttribute should not be null"));
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
 	}
-	JsonObject jsonElement;
-	jsonElement = new GitlabPostOperation<JsonObject>(client,
-		"/projects/" + productAttribute.getValue() + "/issues") {
+	try {
+	    getAccessTokenIfNotPresent(monitor);
+	    TaskAttribute productAttribute = taskData.getRoot()
+		    .getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
+	    if (productAttribute == null || productAttribute.getValue().isEmpty()) {
+		throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+			"productAttribute should not be null"));
+	    }
+	    JsonObject jsonElement;
+	    jsonElement = new GitlabPostOperation<JsonObject>(client,
+		    "/projects/" + productAttribute.getValue() + "/issues") {
 
-	    protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
-		super.addHttpRequestEntities(request);
-		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter())
-			.create();
-		String jsondata = gson.toJson(taskData);
-		try {
-		    ((HttpPost) request).setEntity(new StringEntity(jsondata));
-		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-			    "UnsupportedEncodingException", e));
+		protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
+		    super.addHttpRequestEntities(request);
+		    request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
+		    Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter())
+			    .create();
+		    String jsondata = gson.toJson(taskData);
+		    try {
+			((HttpPost) request).setEntity(new StringEntity(jsondata));
+		    } catch (UnsupportedEncodingException e) {
+			throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+				"UnsupportedEncodingException", e));
+		    }
+		};
+
+		@Override
+		protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, GitlabException {
+		    validate(response, HttpStatus.SC_CREATED, monitor);
 		}
-	    };
 
-	    @Override
-	    protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
-		    throws IOException, GitlabException {
-		validate(response, HttpStatus.SC_CREATED, monitor);
+		@Override
+		protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
+		    return new Gson().fromJson(in, JsonObject.class);
+		}
+	    }.run(monitor);
+	    return jsonElement;
+	} finally {
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+		GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
 	    }
-
-	    @Override
-	    protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
-		return new Gson().fromJson(in, JsonObject.class);
-	    }
-	}.run(monitor);
-	return jsonElement;
+	}
     }
 
     class TaskAttributeTypeAdapter extends TypeAdapter<TaskData> {

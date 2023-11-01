@@ -13,8 +13,14 @@
 
 package org.eclipse.mylyn.gitlab.core;
 
+import java.util.Hashtable;
+
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
+import org.eclipse.osgi.service.debug.DebugTrace;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -45,21 +51,52 @@ public final class GitlabCoreActivator extends Plugin {
     // The shared instance
     private static GitlabCoreActivator plugin;
 
+    private ServiceRegistration<DebugOptionsListener> DEBUG_REGISTRATION;
+
     /**
      * The constructor
      */
     public GitlabCoreActivator() {
     }
 
+    public static final String DEBUG = "/debug"; //$NON-NLS-1$
+    public static final String REPOSITORY_CONNECTOR = "/debug/repository/connector"; //$NON-NLS-1$
+    public static final String REST_CLIENT = "/debug/rest/client"; //$NON-NLS-1$
+    public static final String REST_CLIENT_TRACE = "/debug/rest/client/trace"; //$NON-NLS-1$
+
+    public static boolean DEBUG_REPOSITORY_CONNECTOR = false;
+    public static boolean DEBUG_REST_CLIENT = false;
+    public static boolean DEBUG_REST_CLIENT_TRACE = false;
+    public static DebugTrace DEBUG_TRACE;
+
     @Override
     public void start(BundleContext context) throws Exception {
 	super.start(context);
 	plugin = this;
+
+	Hashtable<String, String> properties = new Hashtable<>(2);
+	properties.put(DebugOptions.LISTENER_SYMBOLICNAME, PLUGIN_ID);
+	DEBUG_REGISTRATION = context.registerService(DebugOptionsListener.class, new DebugOptionsListener() {
+
+	    @Override
+	    public void optionsChanged(DebugOptions options) {
+		boolean debugCore = options.getBooleanOption(PLUGIN_ID + DEBUG, false);
+		DEBUG_TRACE = options.newDebugTrace(PLUGIN_ID);
+		DEBUG_REPOSITORY_CONNECTOR = debugCore
+			&& options.getBooleanOption(PLUGIN_ID + REPOSITORY_CONNECTOR, false);
+		DEBUG_REST_CLIENT = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT, false);
+		DEBUG_REST_CLIENT_TRACE = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT_TRACE, false);
+	    }
+	}, properties);
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
 	plugin = null;
+	if (DEBUG_REGISTRATION != null) {
+	    DEBUG_REGISTRATION.unregister();
+	    DEBUG_REGISTRATION = null;
+	}
 	super.stop(context);
     }
 

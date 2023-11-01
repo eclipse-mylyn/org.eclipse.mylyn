@@ -68,7 +68,6 @@ import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
-    private static final boolean TRACE = false;
 
     public class RepositoryKey {
 	private final TaskRepository repository;
@@ -164,34 +163,39 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
     public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
 	long startTime = 0, endTime = 0;
-	Thread thread;
+	String traceExitResult = "";
+	if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
 	if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
 	    getClient(repository);
 	}
 	try {
-	    if (TRACE) {
-		thread = Thread.currentThread();
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 		startTime = System.currentTimeMillis();
-		System.out.println(thread.getName() + " start getRepositoryConfiguration " + repository.getUrl() + " "
-			+ Thread.currentThread().getStackTrace()[2].getMethodName() /*+ " " +startTime + " "+ Calendar.getInstance().getTime().toLocaleString()*/);
 	    }
 
 	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
 	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
-	    if (TRACE) {
-		thread = Thread.currentThread();
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 		endTime = System.currentTimeMillis();
-		System.out.println(thread.getName() + " end getRepositoryConfiguration " + repository.getUrl() + " "
-			+ Thread.currentThread().getStackTrace()[2].getMethodName() + " " + (endTime - startTime) + " ms " /*+endTime +" " + Calendar.getInstance().getTime().toLocaleString()*/);
+		traceExitResult = result.toString() +" " +								  
+			     (endTime -  startTime) + " ms";
 	    }
 	    return result;
 	} catch (UncheckedExecutionException e) {
+	    traceExitResult = e.getMessage();
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} catch (ExecutionException e) {
+	    traceExitResult = e.getMessage();
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 	} catch (ExecutionError e) {
+	    traceExitResult = e.getMessage();
 	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+	} finally {
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+		GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
 	}
+
     }
 
     @Override
