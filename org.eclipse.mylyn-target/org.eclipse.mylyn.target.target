@@ -48,7 +48,7 @@
 			<unit id="org.hamcrest.integration" version="0.0.0"/>
 			<unit id="org.hamcrest.library" version="0.0.0"/>
 			<unit id="org.hamcrest.text" version="0.0.0"/>
-			<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>>
+			<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>&gt;
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository/"/>
@@ -63,11 +63,13 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/"/>
-			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659" />
-			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659" />
-			<unit id="javax.activation" version="1.2.2.v20221203-1659" />
-			<unit id="javax.activation" version="2.0.0.v20221203-1659" />
-			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916" />
+			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659"/>
+			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659"/>
+			<unit id="javax.activation" version="1.2.2.v20221203-1659"/>
+			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>
+			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
+			<unit id="org.apache.commons.collections4" version="4.4.0.v20221112-0806"/>
+			<unit id="org.apache.commons.lang3" version="3.12.0.v20221221-1931"/>
 			<unit id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -83,6 +85,10 @@
 			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="com.google.gson" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2023-12/"/>
+			<unit id="com.github.ben-manes.caffeine" version="0.0.0"/>
 		</location>
 	</locations>
 </target>

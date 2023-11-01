@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -26,15 +27,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.IFormPage;
 
-import com.google.common.collect.Lists;
-
 public class ActiveReviewManager {
 
 	private IReview review = null;
 
 	private TaskEditor currentPart;
 
-	private final List<IActiveReviewListener> reviewListeners = Lists.newArrayList();
+	private final List<IActiveReviewListener> reviewListeners = new ArrayList<>();
 
 	private final IPartListener editorPartListener = new IPartListener() {
 		public void partOpened(IWorkbenchPart part) {

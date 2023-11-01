@@ -12,6 +12,7 @@ Export-Package: org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.core.storage;x-internal:=true,
  org.eclipse.mylyn.internal.commons.core;x-internal:=true,
  org.eclipse.mylyn.internal.commons.core.operations;x-internal:=true
+Import-Package: org.apache.commons.collections4.multimap;version="4.4.0"
 Require-Bundle: org.eclipse.core.net;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0"
 Bundle-ClassPath: .

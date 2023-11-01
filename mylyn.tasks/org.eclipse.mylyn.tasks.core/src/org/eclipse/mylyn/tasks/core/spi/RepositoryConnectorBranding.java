@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -22,8 +22,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Specifies branding for a connector. The branding extension is obtained by adapting an
  * {@link AbstractRepositoryConnector} instance to {@link RepositoryConnectorBranding}.
@@ -33,7 +31,7 @@ import com.google.common.collect.ImmutableList;
  * </p>
  * Example <code>plugin.xml</code>:
  * <p>
- * 
+ *
  * <pre>
  *  &lt;extension
  *        point="org.eclipse.core.runtime.adapters"&gt;
@@ -50,10 +48,10 @@ import com.google.common.collect.ImmutableList;
  * <p>
  * <code>MyRepositoryConnector</code> needs to return an instance of {@link RepositoryConnectorBranding} for the
  * appropriate connector instance:
- * 
+ *
  * <pre>
  * public class MyRepositoryConnectorAdapter implements IAdapterFactory {
- * 
+ *
  * 	&#064;Override
  * 	public Object getAdapter(Object adaptableObject, Class adapterType) {
  * 		if (adaptableObject instanceof MyRepositoryConnector) {
@@ -63,7 +61,7 @@ import com.google.common.collect.ImmutableList;
  * 					public InputStream getOverlayImageData() throws IOException {
  * 						return getResource(this, &quot;repository-overlay.gif&quot;);
  * 					}
- * 
+ *
  * 					&#064;Override
  * 					public InputStream getBrandingImageData() throws IOException {
  * 						return CommonTestUtil.getResource(this, &quot;repository.gif&quot;);
@@ -76,7 +74,7 @@ import com.google.common.collect.ImmutableList;
  * }
  * </pre>
  * </p>
- * 
+ *
  * @since 3.10
  * @see RepositoryConnectorContributor
  * @see RepositoryConnectorDescriptor
@@ -90,7 +88,7 @@ public abstract class RepositoryConnectorBranding {
 	 * <p>
 	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension
 	 * point, the branding image specified in the extension takes precedence; this method is never called.
-	 * 
+	 *
 	 * @return input stream for image data
 	 * @throws IOException
 	 *             thrown if opening of the stream fails
@@ -105,7 +103,7 @@ public abstract class RepositoryConnectorBranding {
 	 * <p>
 	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension
 	 * point, the overlay image specified in the extension takes precedence; this method is never called.
-	 * 
+	 *
 	 * @return input stream for image data
 	 * @throws IOException
 	 *             thrown if opening of the stream fails
@@ -119,19 +117,19 @@ public abstract class RepositoryConnectorBranding {
 	 * different labels and icons.
 	 * <p>
 	 * Each brand may be presented in the UI as though it were a separate connector.
-	 * 
+	 *
 	 * @since 3.16
 	 */
 	@NonNull
 	public List<String> getBrands() {
-		return ImmutableList.of();
+		return List.of();
 	}
 
 	/**
 	 * Returns branding image data for a specific brand of the target system. Returns <code>null</code> if the given
 	 * brand is unknown to the connector or uses the {@link #getBrandingImageData() default branding image}. The default
 	 * implementation always returns <code>null</code>.
-	 * 
+	 *
 	 * @return input stream for image data, or <code>null</code>
 	 * @throws IOException
 	 *             thrown if opening of the stream fails
@@ -148,7 +146,7 @@ public abstract class RepositoryConnectorBranding {
 	 * Returns overlay image data for a specific brand of the target system. Returns <code>null</code> if the given
 	 * brand is unknown to the connector or uses the {@link #getOverlayImageData() default overlay image}. The default
 	 * implementation always returns <code>null</code>.
-	 * 
+	 *
 	 * @param brand
 	 * @throws IOException
 	 *             thrown if opening of the stream fails
@@ -166,7 +164,7 @@ public abstract class RepositoryConnectorBranding {
 	 * Returns the connector label to use for a specific brand of the target system. Returns <code>null</code> if the
 	 * given brand is unknown to the connector or uses the {@link AbstractRepositoryConnector#getLabel() default
 	 * connector label}. The default implementation always returns <code>null</code>.
-	 * 
+	 *
 	 * @param brand
 	 * @return
 	 * @see AbstractRepositoryConnector#getLabel()

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -37,7 +37,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -170,26 +169,23 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 
 	}
 
-	ImmutableList<String> legalCreateAttributes = new ImmutableList.Builder<String>()
-			.add(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().SUMMARY.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().OS.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().PLATFORM.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().PRIORITY.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().SEVERITY.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().ALIAS.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().ASSIGNED_TO.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().QA_CONTACT.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-			.add(TaskAttribute.OPERATION)
-			.add(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())
-			.add(BugzillaRestCreateTaskSchema.getDefault().KEYWORDS.getKey())
-			.build();
+	List<String> legalCreateAttributes = List.of(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().SUMMARY.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().OS.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().PLATFORM.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().PRIORITY.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().SEVERITY.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().ALIAS.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().ASSIGNED_TO.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().QA_CONTACT.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey(), TaskAttribute.OPERATION,
+			BugzillaRestCreateTaskSchema.getDefault().CC.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey(),
+			BugzillaRestCreateTaskSchema.getDefault().KEYWORDS.getKey());
 
 	@Override
 	protected BugzillaRestIdResult doProcess(CommonHttpResponse response, IOperationMonitor monitor)

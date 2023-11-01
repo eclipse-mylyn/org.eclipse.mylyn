@@ -47,6 +47,8 @@ public class PullRequestRepositorySettingsPage extends
 		super(Messages.PullRequestRepositorySettingsPage_Title,
 				Messages.PullRequestRepositorySettingsPage_Description,
 				taskRepository);
+		setUseTokenForAuthentication(true);
+
 	}
 
 	@Override
@@ -66,7 +68,6 @@ public class PullRequestRepositorySettingsPage extends
 		if (getRepository() == null) {
 			setAnonymous(false);
 		}
-		addTokenCheckbox(true);
 	}
 
 	@Override

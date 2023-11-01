@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,6 +14,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -37,8 +38,6 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Mik Kersten
@@ -154,7 +153,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			lastConnectorKind = connector.getConnectorKind();
 		}
 		if (settingsPage instanceof AbstractRepositorySettingsPage) {
-			((AbstractRepositorySettingsPage) settingsPage).setBrand(Strings.nullToEmpty(brand));
+			((AbstractRepositorySettingsPage) settingsPage).setBrand(StringUtils.defaultString(brand));
 		}
 	}
 

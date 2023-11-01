@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -49,9 +51,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.xml.sax.SAXException;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteStreams;
 
 public class TaskDataStoreTest {
 
@@ -180,7 +179,7 @@ public class TaskDataStoreTest {
 			@Override
 			public TaskDataState readState(InputStream in) throws IOException, SAXException {
 				// read the input stream fully but do not return the result, not relevant for the purpose of the test
-				assertEquals(DATA_XML_CONTENT, new String(ByteStreams.toByteArray(in), Charsets.UTF_8));
+				assertEquals(DATA_XML_CONTENT, new String(IOUtils.toByteArray(in), StandardCharsets.UTF_8));
 				in.close();
 				// pretend that reading state takes more than the blink of an eye
 				sleep();
@@ -189,7 +188,7 @@ public class TaskDataStoreTest {
 
 			@Override
 			public void writeState(OutputStream out, ITaskDataWorkingCopy state) throws IOException {
-				out.write(DATA_XML_CONTENT.getBytes(Charsets.UTF_8));
+				out.write(DATA_XML_CONTENT.getBytes(StandardCharsets.UTF_8));
 				// pretend that writing state takes more than the blink of an eye
 				sleep();
 			}

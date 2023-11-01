@@ -1,10 +1,10 @@
 /*********************************************************************
  * Copyright (c) 2010, 2015 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
@@ -39,6 +39,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.httpclient.Cookie;
@@ -95,11 +96,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
 
-import com.google.common.base.Function;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.ApprovalDetail;
@@ -140,7 +138,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  */
 public abstract class GerritClient extends ReviewsClient {
 
-	private final Cache<Project.NameKey, Set<String>> projectBranchMap = CacheBuilder.newBuilder().build();
+	private final Cache<Project.NameKey, Set<String>> projectBranchMap = Caffeine.newBuilder().build();
 
 	final String NOT_SIGNED_IN = "Not Signed In"; //$NON-NLS-1$
 
@@ -780,15 +778,11 @@ public abstract class GerritClient extends ReviewsClient {
 		projectBranchMap.put(project, branchNames);
 	}
 
-	private ImmutableSet<String> getBranchNames(Project.NameKey project, IProgressMonitor monitor)
-			throws GerritException {
-		return FluentIterable.from(Arrays.asList(getRemoteProjectBranches(project.get(), monitor)))
-				.transform(new Function<BranchInfo, String>() {
-					public String apply(BranchInfo input) {
-						return input.getRef();
-					}
-				})
-				.toSet();
+	private Set<String> getBranchNames(Project.NameKey project, IProgressMonitor monitor) throws GerritException {
+		return Arrays.asList(getRemoteProjectBranches(project.get(), monitor))
+				.stream()
+				.map(b -> b.getRef())
+				.collect(Collectors.toUnmodifiableSet());
 	}
 
 	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {

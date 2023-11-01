@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,10 +15,16 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -54,13 +60,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 
 public class BugzillaRestClient {
@@ -92,7 +91,7 @@ public class BugzillaRestClient {
 		RepositoryLocation location = getClient().getLocation();
 		if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
 			UserCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			Preconditions.checkState(credentials != null, "Authentication requested without valid credentials");
+			Objects.requireNonNull(credentials, "Authentication requested without valid credentials");
 			String url = MessageFormat.format("/valid_login?login={0}&api_key={1}", //$NON-NLS-1$
 					credentials.getUserName(), location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
 
@@ -102,7 +101,7 @@ public class BugzillaRestClient {
 			return response.getResult();
 		} else {
 			LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
-			if (validateResponse != null && !Strings.isNullOrEmpty(validateResponse.getId())) {
+			if (validateResponse != null && StringUtils.isNotEmpty(validateResponse.getId())) {
 				// invalide the token
 				String url = MessageFormat.format("/logout?token={0}", //$NON-NLS-1$
 						validateResponse.getToken());
@@ -133,11 +132,8 @@ public class BugzillaRestClient {
 			String path, TypeToken<?> typeToken) throws BugzillaRestException {
 		R response = new BugzillaRestGetRequest<R>(client, path, typeToken).run(monitor);
 		E[] members = response.getArray();
-		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
-			public String apply(E input) {
-				return input.getName();
-			};
-		});
+
+		return Arrays.stream(members).collect(Collectors.toUnmodifiableMap(E::getName, Function.identity()));
 	}
 
 	private Map<String, Field> getFields(IOperationMonitor monitor) throws BugzillaRestException {
@@ -186,12 +182,11 @@ public class BugzillaRestClient {
 		} catch (CoreException e1) {
 			throw new BugzillaRestException(e1);
 		}
+		List<List<String>> partitions = ListUtils.partition(
+				taskIds.stream().map(removeLeadingZero).collect(Collectors.toList()), MAX_RETRIEVED_PER_QUERY);
 
-		Iterable<String> taskIdsTemp = Iterables.transform(taskIds, removeLeadingZero);
-		Iterable<List<String>> partitions = Iterables.partition(taskIdsTemp, MAX_RETRIEVED_PER_QUERY);
 		for (List<String> list : partitions) {
-			Joiner joiner = Joiner.on(",id=").skipNulls(); //$NON-NLS-1$
-			String urlIDList = "id=" + joiner.join(list); //$NON-NLS-1$
+			String urlIDList = "id=" + list.stream().filter(Objects::nonNull).collect(Collectors.joining("id="));
 			try {
 
 				List<TaskData> taskDataArray = new BugzillaRestGetTaskData(client, connector, urlIDList, taskRepository)

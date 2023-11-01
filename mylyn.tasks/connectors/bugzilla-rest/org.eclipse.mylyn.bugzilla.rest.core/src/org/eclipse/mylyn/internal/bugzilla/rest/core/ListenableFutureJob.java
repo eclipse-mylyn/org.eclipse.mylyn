@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Sam Davis and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -25,10 +26,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 
-import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.ListenableFuture;
-
-public abstract class ListenableFutureJob<V> extends Job implements ListenableFuture<V> {
+public abstract class ListenableFutureJob<V> extends Job /* implements ListenableFuture<V> */ {
 
 	private class Listener {
 
@@ -46,7 +44,7 @@ public abstract class ListenableFutureJob<V> extends Job implements ListenableFu
 		}
 	}
 
-	List<Listener> listeners = Collections.synchronizedList(Lists.<Listener> newArrayList());
+	List<Listener> listeners = Collections.synchronizedList(new ArrayList<Listener>());
 
 	private volatile boolean done;
 
@@ -69,18 +67,15 @@ public abstract class ListenableFutureJob<V> extends Job implements ListenableFu
 		});
 	}
 
-	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return this.cancel();
 	}
 
-	@Override
 	public V get() throws InterruptedException, ExecutionException {
 		this.join();
 		return resultObject;
 	}
 
-	@Override
 	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		long start = System.currentTimeMillis();
 		while (!done && System.currentTimeMillis() - start < unit.toMillis(timeout)) {
@@ -96,17 +91,14 @@ public abstract class ListenableFutureJob<V> extends Job implements ListenableFu
 		this.resultObject = future;
 	}
 
-	@Override
 	public boolean isCancelled() {
 		return this.getResult().getSeverity() == IStatus.CANCEL;
 	}
 
-	@Override
 	public boolean isDone() {
 		return done;
 	}
 
-	@Override
 	public void addListener(Runnable listener, Executor executor) {
 		listeners.add(new Listener(listener, executor));
 	}

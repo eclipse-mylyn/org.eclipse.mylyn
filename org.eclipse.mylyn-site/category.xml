@@ -2,13 +2,13 @@
 <!--
  *******************************************************************************
  * Copyright (c) 2022, 2023 ArSysOp and others
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0/.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *   See git history
  *******************************************************************************
@@ -158,12 +158,12 @@
    <feature id="org.eclipse.mylyn.gitlab.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+   <bundle id="com.github.ben-manes.caffeine"/>
    <bundle id="com.google.gerrit.common"/>
    <bundle id="com.google.gerrit.prettify"/>
    <bundle id="com.google.gerrit.reviewdb"/>
    <bundle id="com.google.gson"/>
    <bundle id="com.google.guava"/>
-   <bundle id="com.google.guava.failureaccess"/>
    <bundle id="com.google.gwt.servlet"/>
    <bundle id="com.google.gwtjsonrpc"/>
    <bundle id="com.google.gwtorm"/>
@@ -176,7 +176,9 @@
    <bundle id="org.apache.commons.codec"/>
    <bundle id="org.apache.commons.httpclient"/>
    <bundle id="org.apache.commons.io"/>
+   <bundle id="org.apache.commons.collections4"/>
    <bundle id="org.apache.commons.lang"/>
+   <bundle id="org.apache.commons.lang3"/>
    <bundle id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
    <bundle id="org.apache.httpcomponents.httpclient"/>
    <bundle id="org.apache.httpcomponents.httpcore"/>

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -29,8 +29,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.google.common.collect.ImmutableSet;
 
 public class LegacySaxRepositoriesTest {
 
@@ -93,7 +91,7 @@ public class LegacySaxRepositoriesTest {
 
 	@Test
 	public void version1ReaderCanReadVersion2Xml() throws Exception {
-		Set<TaskRepository> expectedRepositories = ImmutableSet.of(
+		Set<TaskRepository> expectedRepositories = Set.of(
 				createTestRepository(kind, firstUrl, labelPropertyKey, labelPropertyValue),
 				createTestRepository(kind, secondUrl, labelPropertyKey, labelPropertyValue));
 		Set<TaskRepository> repositories = parseRepositoriesWithVersion1Parser(repositoryXmlVersion2);
@@ -106,7 +104,7 @@ public class LegacySaxRepositoriesTest {
 	@Test
 	public void version1CanReadLatestOutput() throws Exception {
 		TaskRepository initialRepository = createTestRepository(kind, firstUrl, labelPropertyKey, labelPropertyValue);
-		String xml = writeToXmlWithCurrentVersion(ImmutableSet.of(initialRepository));
+		String xml = writeToXmlWithCurrentVersion(Set.of(initialRepository));
 		Set<TaskRepository> parsed = parseRepositoriesWithVersion1Parser(xml);
 		assertEquals(1, parsed.size());
 		TaskRepository parsedRepository = parsed.iterator().next();

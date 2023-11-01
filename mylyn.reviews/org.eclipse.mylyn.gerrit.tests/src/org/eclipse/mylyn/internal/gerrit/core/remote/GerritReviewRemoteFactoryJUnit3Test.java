@@ -65,8 +65,6 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -694,11 +692,12 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 	}
 
 	private IUser findUser(final String displayName) {
-		return Iterables.find(reviewHarness.getRepository().getUsers(), new Predicate<IUser>() {
-			public boolean apply(IUser user) {
-				return user.getDisplayName().equals(displayName);
-			}
-		});
+		return reviewHarness.getRepository()
+				.getUsers()
+				.stream()
+				.filter(user -> user.getDisplayName().equals(displayName))
+				.findAny()
+				.orElseThrow();
 	}
 
 	@Test

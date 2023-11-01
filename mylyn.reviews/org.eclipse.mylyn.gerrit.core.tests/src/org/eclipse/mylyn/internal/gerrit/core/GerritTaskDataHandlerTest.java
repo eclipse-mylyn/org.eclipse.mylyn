@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
@@ -38,7 +39,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
@@ -141,7 +141,7 @@ public class GerritTaskDataHandlerTest {
 
 	private IReview createMockReview() {
 		IReview review = mock(IReview.class);
-		doReturn(ImmutableList.of()).when(review).getSets();
+		doReturn(List.of()).when(review).getSets();
 		return review;
 	}
 

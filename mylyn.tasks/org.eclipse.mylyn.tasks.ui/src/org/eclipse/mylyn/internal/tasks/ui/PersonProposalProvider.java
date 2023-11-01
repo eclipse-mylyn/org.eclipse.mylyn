@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -40,8 +41,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Shawn Minto
@@ -274,11 +273,11 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(ITask task, Set<String> addressSet) {
-		if (Strings.isNullOrEmpty(task.getOwnerId())) {
+		if (StringUtils.isEmpty(task.getOwnerId())) {
 			addAddress(addressSet, task.getOwner());
 		} else {
 			addAddress(addressSet, task.getOwnerId());
-			if (!Strings.isNullOrEmpty(task.getOwner())) {
+			if (StringUtils.isNotEmpty(task.getOwner())) {
 				proposals.put(task.getOwnerId(), task.getOwner());
 			}
 		}

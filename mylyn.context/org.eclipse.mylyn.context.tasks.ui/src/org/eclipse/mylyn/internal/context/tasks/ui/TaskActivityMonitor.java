@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.context.tasks.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -49,13 +50,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-
 /**
  * Monitors task activity and maintains task activation history
- * 
+ *
  * @author Robert Elves
  * @author Steffen Pingel
  * @since 3.0
@@ -111,13 +108,9 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		}
 
 		public int openTaskDeactivationDialog(List<IEditorReference> dirtyRefs) {
-			String editors = Joiner.on('\n')
-					.join(Iterables.transform(dirtyRefs, new Function<IEditorReference, String>() {
-						@Override
-						public String apply(IEditorReference ref) {
-							return ref.getTitle();
-						}
-					}));
+			String editors = dirtyRefs.stream()
+					.map(IEditorReference::getTitle) //
+					.collect(Collectors.joining("\n")); //$NON-NLS-1$
 
 			return new MessageDialog(WorkbenchUtil.getShell(), Messages.TaskActivityMonitor_Task_Deactivation, null,
 					NLS.bind(Messages.TaskActivityMonitor_Task_Deactivation_Message, editors), MessageDialog.QUESTION,

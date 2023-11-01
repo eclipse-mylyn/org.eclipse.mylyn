@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,15 +14,18 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.MultiValuedMap;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.LinkedHashMappArrayListValuedHashMap;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -40,9 +43,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 
 public class SynchronizeRelevantTasksJob extends Job {
 
@@ -70,16 +70,16 @@ public class SynchronizeRelevantTasksJob extends Job {
 		addActiveTask(relevantTasks);
 		addTodaysTasks(relevantTasks);
 
-		ListMultimap<TaskRepository, ITask> repositoryMap = mapTasksToRepository(relevantTasks);
+		MultiValuedMap<TaskRepository, ITask> repositoryMap = mapTasksToRepository(relevantTasks);
 		scheduleSynchronizationJobs(repositoryMap);
 
 		return Status.OK_STATUS;
 	}
 
-	private void scheduleSynchronizationJobs(ListMultimap<TaskRepository, ITask> repositoryMap) {
+	private void scheduleSynchronizationJobs(MultiValuedMap<TaskRepository, ITask> repositoryMap) {
 		List<Job> jobs = new ArrayList<>();
 		for (TaskRepository taskRepository : repositoryMap.keySet()) {
-			List<ITask> repositoryTasks = repositoryMap.get(taskRepository);
+			Collection<ITask> repositoryTasks = repositoryMap.get(taskRepository);
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskRepository.getConnectorKind());
 			SynchronizationJob synchronizationJob = taskJobFactory.createSynchronizeTasksJob(connector, taskRepository,
 					new HashSet<>(repositoryTasks));
@@ -142,8 +142,8 @@ public class SynchronizeRelevantTasksJob extends Job {
 		}
 	}
 
-	private ListMultimap<TaskRepository, ITask> mapTasksToRepository(HashSet<ITask> relevantTasks) {
-		ListMultimap<TaskRepository, ITask> repositoryMap = ArrayListMultimap.create();
+	private MultiValuedMap<TaskRepository, ITask> mapTasksToRepository(HashSet<ITask> relevantTasks) {
+		MultiValuedMap<TaskRepository, ITask> repositoryMap = new LinkedHashMappArrayListValuedHashMap<>();
 		for (ITask task : relevantTasks) {
 			if (!(task instanceof LocalTask)) {
 				String connectorKind = task.getConnectorKind();

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,17 +13,14 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
@@ -43,7 +40,7 @@ public class BugzillaRestGsonUtil {
 			if (add.contains("")) { //$NON-NLS-1$
 				add.remove(""); //$NON-NLS-1$
 			}
-			Set<String> intersection = Sets.intersection(addSet, removeSet);
+			Set<String> intersection = addSet.stream().filter(removeSet::contains).collect(Collectors.toSet());
 			remove.removeAll(intersection);
 			add.removeAll(intersection);
 			if (remove.isEmpty()) {
@@ -69,7 +66,7 @@ public class BugzillaRestGsonUtil {
 			if (add.contains(null)) {
 				add.remove(null);
 			}
-			Set<Integer> intersection = Sets.intersection(addSet, removeSet);
+			Set<Integer> intersection = addSet.stream().filter(removeSet::contains).collect(Collectors.toSet());
 			remove.removeAll(intersection);
 			add.removeAll(intersection);
 			if (remove.isEmpty()) {
@@ -149,8 +146,8 @@ public class BugzillaRestGsonUtil {
 	public void buildAddRemoveIntegerHash(JsonWriter out, String id, Set<String> setOld, Set<String> setNew)
 			throws IOException {
 		RemoveAddIntegerHelper test = new RemoveAddIntegerHelper(
-				newHashSet(Iterables.transform(setOld, convert2Integer)),
-				newHashSet(Iterables.transform(setNew, convert2Integer)));
+				setOld.stream().map(convert2Integer).collect(Collectors.toSet()),
+				setNew.stream().map(convert2Integer).collect(Collectors.toSet()));
 		out.name(id);
 		gson.toJson(test, RemoveAddIntegerHelper.class, out);
 	}

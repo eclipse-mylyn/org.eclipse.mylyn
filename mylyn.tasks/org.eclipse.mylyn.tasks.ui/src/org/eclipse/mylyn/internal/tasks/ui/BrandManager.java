@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -28,13 +30,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Table;
 
 public class BrandManager implements IBrandManager {
 
-	private final Multimap<String, String> brands = LinkedHashMultimap.create();
+	private final MultiValuedMap<String, String> brands = new HashSetValuedHashMap<>();
 
 	private final Table<String, String, Image> brandingIcons = HashBasedTable.create();
 

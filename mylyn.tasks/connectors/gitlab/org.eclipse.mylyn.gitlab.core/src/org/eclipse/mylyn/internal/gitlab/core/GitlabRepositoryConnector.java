@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -59,13 +61,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.util.concurrent.ExecutionError;
-import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
@@ -134,9 +133,9 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	}
     };
 
-    protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
+    protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 	    Duration refreshAfterWriteDuration) {
-	return CacheBuilder.newBuilder()
+	return Caffeine.newBuilder()
 		.expireAfterWrite(expireAfterWriteDuration.getValue(), expireAfterWriteDuration.getUnit())
 		.refreshAfterWrite(refreshAfterWriteDuration.getValue(), refreshAfterWriteDuration.getUnit());
     }
@@ -155,7 +154,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			GitlabRestClient client = clientCache.get(key);
 			TaskRepository repository = key.getRepository();
 			repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
-			return Optional.fromNullable(client.getConfiguration(key.getRepository(), context.get()));
+			return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
 		    }
 
 		});
@@ -177,9 +176,9 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
 	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
 	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
-		endTime = System.currentTimeMillis();
-		traceExitResult = result.toString() +" " +								  
-			     (endTime -  startTime) + " ms";
+            endTime = System.currentTimeMillis();
+            traceExitResult = result.toString() +" " +								  
+		        (endTime -  startTime) + " ms";
 	    }
 	    return result;
 	} catch (UncheckedExecutionException e) {
@@ -195,7 +194,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
 		GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
 	}
-
     }
 
     @Override
@@ -231,7 +229,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		: "";
 	TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 	String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
-	return !Objects.equal(latestRemoteModValue, lastKnownLocalModValue);
+	return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
     }
 
     @Override
@@ -324,15 +322,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
-	try {
 	    return clientCache.get(new RepositoryKey(repository));
-	} catch (UncheckedExecutionException e) {
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	} catch (ExecutionException e) {
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	} catch (ExecutionError e) {
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	}
     }
 
     private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
@@ -344,7 +334,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	}
     };
 
-    private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = CacheBuilder.newBuilder()
+    private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = Caffeine.newBuilder()
 	    .expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
 	    .build(new CacheLoader<RepositoryKey, GitlabRestClient>() {
 
@@ -356,7 +346,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	    });
 
-    private final LoadingCache<String, byte[]> avatarCache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, byte[]> avatarCache = Caffeine.newBuilder()
 	    .expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
 	    .build(new CacheLoader<String, byte[]>() {
 
@@ -442,13 +432,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public byte[] getAvatarData(String url) {
-	try {
 	    return avatarCache.get(url);
-	} catch (ExecutionException e) {
-//	    throw new CoreException(
-//		    new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "TaskRepositoryManager is null"));
-	}
-	return null;
     }
 
 }

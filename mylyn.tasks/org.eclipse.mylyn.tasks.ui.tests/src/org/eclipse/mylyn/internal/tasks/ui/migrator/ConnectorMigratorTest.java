@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -73,13 +74,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 public class ConnectorMigratorTest {
 	public class SpyTasksState extends DefaultTasksState {
@@ -135,11 +129,11 @@ public class ConnectorMigratorTest {
 
 	}
 
-	private final ImmutableMap<String, String> kinds = ImmutableMap.of("mock", "mock.new");
+	private final Map<String, String> kinds = Map.of("mock", "mock.new");
 
 	private final TaskRepository repository = new TaskRepository("mock", "http://mock");
 
-	private final ImmutableSet<TaskRepository> singleRepository = ImmutableSet.of(repository);
+	private final Set<TaskRepository> singleRepository = Set.of(repository);
 
 	private TaskRepository migratedRepository = new TaskRepository("mock.new", "http://mock");
 
@@ -180,15 +174,15 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void setConnectorsToMigrate() throws Exception {
-		ConnectorMigrator migrator = createMigrator(true, true, ImmutableMap.of("mock", "mock.new", "kind", "kind.new"),
-				ImmutableSet.of(repository, new TaskRepository("kind", "http://mock")), true);
+		ConnectorMigrator migrator = createMigrator(true, true, Map.of("mock", "mock.new", "kind", "kind.new"),
+				Set.of(repository, new TaskRepository("kind", "http://mock")), true);
 		try {
-			migrator.setConnectorsToMigrate(ImmutableList.of("foo"));
+			migrator.setConnectorsToMigrate(List.of("foo"));
 			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {// NOSONAR
 		}
-		migrator.setConnectorsToMigrate(ImmutableList.of("kind"));
-		assertEquals(ImmutableMap.of("kind", "kind.new"), migrator.getSelectedConnectors());
+		migrator.setConnectorsToMigrate(List.of("kind"));
+		assertEquals(Map.of("kind", "kind.new"), migrator.getSelectedConnectors());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -203,7 +197,7 @@ public class ConnectorMigratorTest {
 		when(newConnector.validateRepository(any(TaskRepository.class), any(IProgressMonitor.class))).thenThrow(
 				new CoreException(new Status(0, "org.eclipse.mylyn.tasks.ui.tests", 0, "Error", new Exception())));
 		assertMigrateConnectors();
-		verify(migrationUi).warnOfValidationFailure(ImmutableList.of(migratedRepository));
+		verify(migrationUi).warnOfValidationFailure(List.of(migratedRepository));
 	}
 
 	@Test
@@ -213,7 +207,7 @@ public class ConnectorMigratorTest {
 		monitor.setCanceled(true);
 		IProgressMonitor spyMonitor = spy(monitor);
 		try {
-			migrator.setConnectorsToMigrate(ImmutableList.of("mock"));
+			migrator.setConnectorsToMigrate(List.of("mock"));
 			migrator.migrateConnectors(spyMonitor);
 			fail("Expected OperationCanceledException");
 		} catch (OperationCanceledException e) {// NOSONAR
@@ -253,7 +247,7 @@ public class ConnectorMigratorTest {
 
 	private IProgressMonitor migrateConnectors(ConnectorMigrator migrator) throws IOException {
 		IProgressMonitor monitor = mock(IProgressMonitor.class);
-		migrator.setConnectorsToMigrate(ImmutableList.of("mock"));
+		migrator.setConnectorsToMigrate(List.of("mock"));
 		migrator.migrateConnectors(monitor);
 		return monitor;
 	}
@@ -317,7 +311,7 @@ public class ConnectorMigratorTest {
 	@Test
 	public void needsMigrationEmptyKinds() {
 		try {
-			createMigrator(true, true, ImmutableMap.<String, String> of(), singleRepository, true);
+			createMigrator(true, true, Map.<String, String> of(), singleRepository, true);
 			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {// NOSONAR
 		}
@@ -325,7 +319,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void needsMigrationNoRepositories() {
-		ConnectorMigrator migrator = createMigrator(true, true, kinds, ImmutableSet.<TaskRepository> of(), true);
+		ConnectorMigrator migrator = createMigrator(true, true, kinds, Set.<TaskRepository> of(), true);
 		assertFalse(migrator.needsMigration());
 	}
 
@@ -356,31 +350,30 @@ public class ConnectorMigratorTest {
 	@Test
 	public void needsMigrationMultipleRepositories() {
 		ConnectorMigrator migrator = createMigrator(true, true, kinds,
-				ImmutableSet.of(repository, new TaskRepository("mock", "http://mock2")), true);
+				Set.of(repository, new TaskRepository("mock", "http://mock2")), true);
 		assertTrue(migrator.needsMigration());
 	}
 
 	@Test
 	public void needsMigrationMultiKindsOneRepository() {
-		ImmutableMap<String, String> multiKinds = ImmutableMap.of("mock", "mock.new", "kind", "kind.new");
+		Map<String, String> multiKinds = Map.of("mock", "mock.new", "kind", "kind.new");
 		ConnectorMigrator migrator = createMigrator(true, true, multiKinds, singleRepository, true);
 		assertTrue(migrator.needsMigration());
 
-		migrator = createMigrator(true, true, multiKinds, ImmutableSet.of(new TaskRepository("kind", "http://mock")),
-				true);
+		migrator = createMigrator(true, true, multiKinds, Set.of(new TaskRepository("kind", "http://mock")), true);
 		assertTrue(migrator.needsMigration());
 	}
 
 	@Test
 	public void needsMigrationMultiKindsMultiRepositories() {
-		ConnectorMigrator migrator = createMigrator(true, true, ImmutableMap.of("mock", "mock.new", "kind", "kind.new"),
-				ImmutableSet.of(repository, new TaskRepository("kind", "http://mock")), true);
+		ConnectorMigrator migrator = createMigrator(true, true, Map.of("mock", "mock.new", "kind", "kind.new"),
+				Set.of(repository, new TaskRepository("kind", "http://mock")), true);
 		assertTrue(migrator.needsMigration());
 	}
 
 	@Test
 	public void migrateTasksWaitsForSyncJobs() throws Exception {
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		JobListener listener = mock(JobListener.class);
 		when(listener.isComplete()).thenReturn(false, false, true);
 		when(migrator.getSyncTaskJobListener()).thenReturn(listener);
@@ -391,7 +384,7 @@ public class ConnectorMigratorTest {
 	@Test
 	public void migrateTasks() throws Exception {
 		when(newConnector.getConnectorKind()).thenReturn("mock.new");
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		TaskData taskData2 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"2.migrated");
 		doReturn(taskData2).when(migrator).getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class),
@@ -418,7 +411,7 @@ public class ConnectorMigratorTest {
 		migrator.migrateTasks(monitor);
 		verify(tasksState.getTaskActivityManager()).deactivateActiveTask();
 		TaskRepository newRepository = manager.getRepository("mock.new", "http://mock");
-		verify(migrator).migrateTasks(ImmutableSet.of(task1, task2), repository, newRepository,
+		verify(migrator).migrateTasks(Set.of(task1, task2), repository, newRepository,
 				manager.getRepositoryConnector("mock.new"), monitor);
 
 		verify(migrator, never()).getTaskData("key1", newConnector, newRepository, monitor);
@@ -432,7 +425,7 @@ public class ConnectorMigratorTest {
 		task2Migrated.setTaskKey("key2");
 		verify(migrator).migratePrivateData((AbstractTask) task2, (AbstractTask) task2Migrated, monitor);
 
-		verify(migrationUi).delete(ImmutableSet.of(task1, task2), repository, newRepository, monitor);
+		verify(migrationUi).delete(Set.of(task1, task2), repository, newRepository, monitor);
 		assertEquals(SynchronizationState.INCOMING_NEW, tasksState.getTaskList()
 				.getTask(repository.getRepositoryUrl(), "1.migrated")
 				.getSynchronizationState());
@@ -440,17 +433,17 @@ public class ConnectorMigratorTest {
 				.getTask(repository.getRepositoryUrl(), "2.migrated")
 				.getSynchronizationState());
 
-		assertEquals(ImmutableSet.of(taskOtherRepo, task1Migrated, task2Migrated),
-				ImmutableSet.copyOf(tasksState.getTaskList().getAllTasks()));
+		assertEquals(Set.of(taskOtherRepo, task1Migrated, task2Migrated),
+				Set.copyOf(tasksState.getTaskList().getAllTasks()));
 		verify(tasksState.getRepositoryManager()).removeRepository(repository);
 		assertTrue(tasksState.getTaskList().getQueries().isEmpty());
-		assertEquals(ImmutableSet.of(newRepository), tasksState.getRepositoryManager().getRepositories("mock.new"));
+		assertEquals(Set.of(newRepository), tasksState.getRepositoryManager().getRepositories("mock.new"));
 	}
 
 	@Test
 	public void migrateTasksSameId() throws Exception {
 		when(newConnector.getConnectorKind()).thenReturn("mock.new");
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		TaskData taskData1 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"1");
 		doReturn(taskData1).when(migrator).getTaskData(eq("key1"), eq(newConnector), any(TaskRepository.class),
@@ -481,7 +474,7 @@ public class ConnectorMigratorTest {
 		migrator.migrateTasks(monitor);
 		verify(tasksState.getTaskActivityManager()).deactivateActiveTask();
 		TaskRepository newRepository = manager.getRepository("mock.new", "http://mock");
-		verify(migrator).migrateTasks(ImmutableSet.of(task1, task2), repository, newRepository,
+		verify(migrator).migrateTasks(Set.of(task1, task2), repository, newRepository,
 				manager.getRepositoryConnector("mock.new"), monitor);
 
 		verify(migrator).getTaskData("key1", newConnector, newRepository, monitor);
@@ -492,22 +485,22 @@ public class ConnectorMigratorTest {
 		verify(migrator).migratePrivateData((AbstractTask) task2, (AbstractTask) task2Migrated, monitor);
 		verify(migrator).migratePrivateData((AbstractTask) task1, (AbstractTask) task1Migrated, monitor);
 
-		verify(migrationUi).delete(ImmutableSet.of(task1, task2), repository, newRepository, monitor);
+		verify(migrationUi).delete(Set.of(task1, task2), repository, newRepository, monitor);
 		assertEquals(SynchronizationState.INCOMING_NEW,
 				tasksState.getTaskList().getTask(repository.getRepositoryUrl(), "1").getSynchronizationState());
 		assertEquals(SynchronizationState.INCOMING,
 				tasksState.getTaskList().getTask(repository.getRepositoryUrl(), "2").getSynchronizationState());
 
-		assertEquals(ImmutableSet.of(taskOtherRepo, task1Migrated, task2Migrated),
-				ImmutableSet.copyOf(tasksState.getTaskList().getAllTasks()));
+		assertEquals(Set.of(taskOtherRepo, task1Migrated, task2Migrated),
+				Set.copyOf(tasksState.getTaskList().getAllTasks()));
 		verify(tasksState.getRepositoryManager()).removeRepository(repository);
 		assertTrue(tasksState.getTaskList().getQueries().isEmpty());
-		assertEquals(ImmutableSet.of(newRepository), tasksState.getRepositoryManager().getRepositories("mock.new"));
+		assertEquals(Set.of(newRepository), tasksState.getRepositoryManager().getRepositories("mock.new"));
 	}
 
 	@Test
 	public void migratePrivateData() throws Exception {
-		ConnectorMigrator migrator = createMigrator(true, true, kinds, ImmutableSet.of(repository), false);
+		ConnectorMigrator migrator = createMigrator(true, true, kinds, Set.of(repository), false);
 		AbstractTask oldTask = new TaskTask("mock", "http://mock", "1");
 		AbstractTask newTask = new TaskTask("mock.new", "http://mock", "1.migrated");
 
@@ -527,7 +520,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void migrateCategories() throws Exception {
-		ConnectorMigrator migrator = createMigrator(true, true, kinds, ImmutableSet.of(repository), false);
+		ConnectorMigrator migrator = createMigrator(true, true, kinds, Set.of(repository), false);
 		AbstractTask oldTask1 = new TaskTask("mock", "http://mock", "1");
 		AbstractTask oldTask2 = new TaskTask("mock", "http://mock", "2");
 		AbstractTask newTask1 = new TaskTask("mock.new", "http://mock", "1.migrated");
@@ -548,7 +541,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void getCategories() throws Exception {
-		ConnectorMigrator migrator = createMigrator(true, true, kinds, ImmutableSet.of(repository), false);
+		ConnectorMigrator migrator = createMigrator(true, true, kinds, Set.of(repository), false);
 		AbstractTask oldTask1 = new TaskTask("mock", "http://mock", "1");
 		AbstractTask oldTask2 = new TaskTask("mock", "http://mock", "2");
 		AbstractTask newTask1 = new TaskTask("mock.new", "http://mock", "1.migrated");
@@ -564,8 +557,8 @@ public class ConnectorMigratorTest {
 		tasksState.getTaskList().addTask(newTask2, category2);
 		tasksState.getTaskList().addTask(new TaskTask("mock.new", "http://mock", "not categorized"));
 
-		ImmutableMap<AbstractTask, TaskCategory> expected = ImmutableMap.of(oldTask1, category1, oldTask2, category2,
-				newTask1, category1, newTask2, category2);
+		Map<AbstractTask, TaskCategory> expected = Map.of(oldTask1, category1, oldTask2, category2, newTask1, category1,
+				newTask2, category2);
 		assertEquals(expected, migrator.getCategories());
 
 		tasksState.getTaskList().addTask(new TaskTask("mock.new", "http://mock", "3"), category1);
@@ -574,7 +567,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void migrateNoQueries() {
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		RepositoryQuery q1 = createQuery("q1", repository, migrator, false);
 		RepositoryQuery q2 = createQuery("q2", repository, migrator, false);
 
@@ -585,7 +578,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void migrateSomeQueries() {
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
 		RepositoryQuery q2 = createQuery("q2", repository, migrator, false);
 
@@ -599,7 +592,7 @@ public class ConnectorMigratorTest {
 
 	@Test
 	public void migrateAllQueries() {
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
 		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
 
@@ -611,8 +604,7 @@ public class ConnectorMigratorTest {
 	@Test
 	public void migrateSomeQueriesMultipleRepositories() {
 		TaskRepository otherRepository = new TaskRepository("mock", "http://other-mock");
-		ConnectorMigrator migrator = spy(
-				createMigrator(true, true, kinds, ImmutableSet.of(repository, otherRepository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository, otherRepository), false));
 		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
 		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
 		RepositoryQuery q3 = createQuery("q3", otherRepository, migrator, false);
@@ -627,7 +619,7 @@ public class ConnectorMigratorTest {
 	@Test
 	public void migrateAllQueriesMultipleRepositories() {
 		TaskRepository otherRepository = new TaskRepository("mock", "http://other-mock");
-		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, Set.of(repository), false));
 		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
 		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
 		RepositoryQuery q3 = createQuery("q3", otherRepository, migrator, true);
@@ -655,11 +647,12 @@ public class ConnectorMigratorTest {
 
 	private AbstractTaskCategory getCategory(AbstractTask newTask) {
 		for (AbstractTaskCategory category : tasksState.getTaskList().getCategories()) {
-			Optional<ITask> task = Iterables.tryFind(category.getChildren(), Predicates.<ITask> equalTo(newTask));
+			Optional<ITask> task = category.getChildren().stream().filter(t -> t.equals(newTask)).findFirst();
 			if (task.isPresent()) {
 				return category;
 			}
 		}
+
 		return null;
 	}
 

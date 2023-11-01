@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -29,8 +30,6 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
-import com.google.common.base.Function;
-import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -118,7 +117,7 @@ public abstract class BugzillaRestPutRequest<T> extends BugzillaRestRequest<T> {
 			StringEntity requestEntity = new StringEntity(gson.toJson(taskAttributes));
 			((HttpPut) request).setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
-			Throwables.propagate(new CoreException(
+			throw new RuntimeException(new CoreException(
 					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Can not build HttpRequest", e))); //$NON-NLS-1$
 		}
 	}

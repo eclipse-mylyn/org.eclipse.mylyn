@@ -27,6 +27,5 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.ui.ide;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.context.tasks.tests;x-internal:=true
-Import-Package: com.google.common.base;version="31.1.0",
- com.google.common.collect;version="31.1.0"
+Import-Package: org.apache.commons.collections4;version="4.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17

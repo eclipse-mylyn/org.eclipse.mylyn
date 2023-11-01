@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.ui.ShellDragSupport;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -60,9 +60,6 @@ import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.forms.widgets.Section;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 import junit.framework.TestCase;
 
@@ -138,11 +135,11 @@ public class CommentPopupDialogTest extends TestCase {
 	public void testMovable() {
 		commentPopupDialog = createPopupWithXComments(1, false);
 		Listener[] listeners = commentPopupDialog.getComposite().getListeners(SWT.MouseMove);
-		Iterables.find(Arrays.asList(listeners), new Predicate<Listener>() {
-			public boolean apply(Listener listener) {
-				return listener instanceof ShellDragSupport;
-			}
-		});
+		Arrays.asList(listeners)
+				.stream()
+				.filter(Listener.class::isInstance)
+				.findFirst()
+				.orElseThrow(() -> new NoSuchElementException());
 	}
 
 	/**

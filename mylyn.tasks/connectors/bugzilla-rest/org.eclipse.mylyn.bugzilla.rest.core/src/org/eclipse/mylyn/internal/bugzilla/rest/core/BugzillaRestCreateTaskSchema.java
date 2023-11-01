@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,11 +13,12 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.util.AbstractMap;
+import java.util.Map;
+
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-
-import com.google.common.collect.ImmutableMap;
 
 public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
@@ -27,19 +28,19 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 		return instance;
 	}
 
-	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder<String, String>()
-			.put(getDefault().SUMMARY.getKey(), "summary") //$NON-NLS-1$
-			.put(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
-			.put(getDefault().OPERATION.getKey(), "status") //$NON-NLS-1$
-			.put(getDefault().PRODUCT.getKey(), "product") //$NON-NLS-1$
-			.put(getDefault().COMPONENT.getKey(), "component") //$NON-NLS-1$
-			.put(getDefault().CC.getKey(), "cc") //$NON-NLS-1$
-			.put(getDefault().SEVERITY.getKey(), "severity") //$NON-NLS-1$
-			.put(getDefault().PRIORITY.getKey(), "priority") //$NON-NLS-1$
-			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to") //$NON-NLS-1$
-			.put(getDefault().OS.getKey(), "op_sys") //$NON-NLS-1$
-			.put(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
-			.build();
+	private static Map<String, String> attribute2FieldMapper = Map.ofEntries(
+			new AbstractMap.SimpleEntry<String, String>(getDefault().SUMMARY.getKey(), "summary"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().OPERATION.getKey(), "status"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().PRODUCT.getKey(), "product"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().COMPONENT.getKey(), "component"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().CC.getKey(), "cc"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().SEVERITY.getKey(), "severity"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().PRIORITY.getKey(), "priority"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<String, String>(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
+	);
 
 	public static String getFieldNameFromAttributeName(String attributeName) {
 		String result = attribute2FieldMapper.get(attributeName);

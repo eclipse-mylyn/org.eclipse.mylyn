@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Willian Mitsuda and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -85,8 +86,6 @@ import org.eclipse.ui.dialogs.SearchPattern;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Willian Mitsuda
@@ -458,7 +457,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (selection instanceof ITextSelection) {
 			// Get only get first line
 			String text = ((ITextSelection) selection).getText();
-			text = Strings.nullToEmpty(text);
+			text = StringUtils.defaultString(text);
 			int n = text.indexOf('\n');
 			if (n > -1) {
 				text = text.substring(0, n);

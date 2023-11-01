@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -84,7 +84,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.IFormColors;
 
-import com.google.common.base.Strings;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -230,7 +229,7 @@ public class TaskListToolTip extends GradientToolTip {
 			}
 			sb.append(", "); //$NON-NLS-1$
 			String priorityLabel = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_PRIORITY_LABEL);
-			if (Strings.isNullOrEmpty(priorityLabel)) {
+			if (StringUtils.isEmpty(priorityLabel)) {
 				priorityLabel = task.getPriority();
 			}
 			sb.append(priorityLabel);
@@ -267,7 +266,7 @@ public class TaskListToolTip extends GradientToolTip {
 	private String getOwnerText(IRepositoryElement element) {
 		if (element instanceof ITask && !(element instanceof LocalTask)) {
 			String owner = ((ITask) element).getOwner();
-			if (!Strings.isNullOrEmpty(owner)) {
+			if (StringUtils.isNotEmpty(owner)) {
 				return NLS.bind(Messages.TaskListToolTip_Assigned_to_X, owner);
 			}
 			return NLS.bind(Messages.TaskListToolTip_Assigned_to_X, Messages.TaskListToolTip_Unassigned);
@@ -281,7 +280,7 @@ public class TaskListToolTip extends GradientToolTip {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
 			TaskRepository repository = TasksUi.getRepositoryManager()
 					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-			if (Strings.isNullOrEmpty(task.getOwner())) {
+			if (StringUtils.isEmpty(task.getOwner())) {
 				return null;
 			} else if (connector.isOwnedByUser(repository, task)) {
 				return CommonImages.getImage(CommonImages.PERSON_ME);
@@ -336,7 +335,7 @@ public class TaskListToolTip extends GradientToolTip {
 			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
 				text = task.getAttribute(TaskListNotifier.KEY_INCOMING_NOTIFICATION_TEXT);
-				if (Strings.isNullOrEmpty(text)) {
+				if (StringUtils.isEmpty(text)) {
 					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getTaskDataManager(),
 							TasksUiPlugin.getDefault().getSynchronizationManger());
 					text = notifier.computeNotificationText(task);

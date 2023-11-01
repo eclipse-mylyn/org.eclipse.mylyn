@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -33,8 +33,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.forms.editor.IFormPage;
-
-import com.google.common.base.Joiner;
 
 /**
  * @author Steffen Pingel
@@ -127,7 +125,7 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 		if (patchSetNumber > 0) {
 			String[] fragments = StringUtils.split(extractUrlQualifiers(repository, url, taskId), "/"); //$NON-NLS-1$
 			if (fragments.length > 1) {
-				return Joiner.on("/").join(Arrays.copyOfRange(fragments, 1, fragments.length)); //$NON-NLS-1$
+				return String.join("/", Arrays.copyOfRange(fragments, 1, fragments.length)); //$NON-NLS-1$
 			}
 		}
 		return null;

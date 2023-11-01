@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -18,13 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.OptionsProposalProvider;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
+import junit.framework.TestCase;
 
 public class OptionsProposalProviderTest extends TestCase {
 
@@ -48,7 +46,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testSingleProposal() {
-		final Map<String, String> proposalMap = ImmutableMap.of("aTest", "1");
+		final Map<String, String> proposalMap = Map.of("aTest", "1");
 		OptionsProposalProvider provider = new OptionsProposalProvider(proposalMap, true);
 
 		List<IContentProposal> proposals = Arrays.asList(provider.getProposals("", 0));
@@ -58,7 +56,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testMultipleProposals() {
-		final Map<String, String> proposalMap = ImmutableMap.of("aTest", "1", "bTest", "2", "cTest", "3");
+		final Map<String, String> proposalMap = Map.of("aTest", "1", "bTest", "2", "cTest", "3");
 		OptionsProposalProvider provider = new OptionsProposalProvider(proposalMap, true);
 
 		List<IContentProposal> proposals = Arrays.asList(provider.getProposals("", 0));
@@ -70,7 +68,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testMultipleProposalsSorted() {
-		final Map<String, String> proposalMap = ImmutableMap.of("oneTest", "1", "twoTest", "2", "threeTest", "3");
+		final Map<String, String> proposalMap = Map.of("oneTest", "1", "twoTest", "2", "threeTest", "3");
 		OptionsProposalProvider provider = new OptionsProposalProvider(proposalMap, true);
 
 		List<IContentProposal> proposals = Arrays.asList(provider.getProposals("", 0));
@@ -83,7 +81,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testProposalFilterMultiSelect() {
-		final Map<String, String> proposalMap = ImmutableMap.of("OneTest", "1", "TwoTest", "2", "ThreeTest", "3");
+		final Map<String, String> proposalMap = Map.of("OneTest", "1", "TwoTest", "2", "ThreeTest", "3");
 		OptionsProposalProvider provider = new OptionsProposalProvider(proposalMap, true);
 
 		assertEquals(0, provider.getProposals("ThreeTest", 0).length);
@@ -139,7 +137,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testProposalFilterSingleSelect() {
-		final Map<String, String> proposalMap = ImmutableMap.of("OneTest", "1", "TwoTest", "2", "ThreeTest", "3");
+		final Map<String, String> proposalMap = Map.of("OneTest", "1", "TwoTest", "2", "ThreeTest", "3");
 		OptionsProposalProvider provider = new OptionsProposalProvider(proposalMap, false);
 
 		List<IContentProposal> proposals = Arrays.asList(provider.getProposals("ThreeTest", 0));

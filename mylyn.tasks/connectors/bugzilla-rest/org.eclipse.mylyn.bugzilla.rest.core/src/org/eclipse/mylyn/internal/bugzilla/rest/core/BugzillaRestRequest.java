@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,8 +12,6 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -190,7 +188,9 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected UserCredentials getCredentials() {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
-		checkState(credentials != null, "Authentication requested without valid credentials");
+		if (credentials == null) {
+			throw new IllegalStateException("Authentication requested without valid credentials"); //$NON-NLS-1$
+		}
 		return credentials;
 	}
 

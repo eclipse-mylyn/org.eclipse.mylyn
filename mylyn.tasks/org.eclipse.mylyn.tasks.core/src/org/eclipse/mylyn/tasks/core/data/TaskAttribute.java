@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -678,7 +678,15 @@ public final class TaskAttribute {
 
 	public void setValues(List<String> values) {
 		Assert.isNotNull(values);
-		Assert.isTrue(!values.contains(null));
+
+		/**
+		 * ImmutableCollections (List.of(...)) doesn't allow null values so 'Assert.isTrue(!values.contains(null));'
+		 * throws a NPE
+		 */
+		for (String value : values) {
+			Assert.isNotNull(value);
+		}
+
 		this.values.clear();
 		this.values.addAll(values);
 	}

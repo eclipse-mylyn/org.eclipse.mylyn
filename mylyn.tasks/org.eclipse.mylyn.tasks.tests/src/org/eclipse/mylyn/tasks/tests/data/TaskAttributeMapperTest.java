@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,9 +13,8 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import java.util.List;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -23,8 +22,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -109,53 +107,53 @@ public class TaskAttributeMapperTest extends TestCase {
 		TaskAttributeMapper mapper = mapperWith2Options();
 		TaskAttribute attribute = data.getRoot().createAttribute("id");
 
-		assertEquals(ImmutableList.of(), mapper.getValueLabels(attribute));
+		assertEquals(List.of(), mapper.getValueLabels(attribute));
 
 		attribute.setValue("1");
-		assertEquals(ImmutableList.of("a"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("a"), mapper.getValueLabels(attribute));
 
 		attribute.setValue("2");
-		assertEquals(ImmutableList.of("b"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("b"), mapper.getValueLabels(attribute));
 
 		attribute = data.getRoot().createAttribute("id");
 		attribute.addValue("1");
 		attribute.addValue("2");
-		assertEquals(ImmutableList.of("a", "b"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("a", "b"), mapper.getValueLabels(attribute));
 
 		attribute = data.getRoot().createAttribute("id");
 		attribute.addValue("2");
 		attribute.addValue("1");
-		assertEquals(ImmutableList.of("b", "a"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("b", "a"), mapper.getValueLabels(attribute));
 	}
 
 	public void testGetValueLabelsUnmappedOption() throws Exception {
 		TaskAttributeMapper mapper = mapperWith2Options();
 		TaskAttribute attribute = attributeWithUnmappedOption();
 
-		assertEquals(ImmutableList.of(), mapper.getValueLabels(attribute));
+		assertEquals(List.of(), mapper.getValueLabels(attribute));
 
 		attribute.setValue("1");
-		assertEquals(ImmutableList.of("a"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("a"), mapper.getValueLabels(attribute));
 
 		attribute.setValue("unMappedOption");
-		assertEquals(ImmutableList.of("unMappedOptionLabel"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("unMappedOptionLabel"), mapper.getValueLabels(attribute));
 
 		attribute = attributeWithUnmappedOption();
 		attribute.addValue("unMappedOption");
 		attribute.addValue("2");
-		assertEquals(ImmutableList.of("unMappedOptionLabel", "b"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("unMappedOptionLabel", "b"), mapper.getValueLabels(attribute));
 
 		attribute = attributeWithUnmappedOption();
 		attribute.addValue("2");
 		attribute.addValue("unMappedOption");
-		assertEquals(ImmutableList.of("b", "unMappedOptionLabel"), mapper.getValueLabels(attribute));
+		assertEquals(List.of("b", "unMappedOptionLabel"), mapper.getValueLabels(attribute));
 	}
 
 	private TaskAttributeMapper mapperWith2Options() {
 		TaskAttributeMapper mapper = new TaskAttributeMapper(taskRepository) {
 			@Override
 			public Map<String, String> getOptions(TaskAttribute attribute) {
-				return ImmutableMap.of("1", "a", "2", "b");
+				return Map.of("1", "a", "2", "b");
 			}
 		};
 		return mapper;

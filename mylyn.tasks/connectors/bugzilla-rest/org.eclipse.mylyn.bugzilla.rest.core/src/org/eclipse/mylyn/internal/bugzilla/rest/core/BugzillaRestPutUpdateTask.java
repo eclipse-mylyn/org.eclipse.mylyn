@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,9 +16,13 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
@@ -27,9 +31,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResu
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
@@ -37,31 +38,33 @@ import com.google.gson.stream.JsonWriter;
 public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateResult> {
 	private final TaskData taskData;
 
-	ImmutableList<String> legalUpdateAttributes = new ImmutableList.Builder<String>()
-			.add(BugzillaRestTaskSchema.getDefault().PRODUCT.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().COMPONENT.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().SUMMARY.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().VERSION.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().DESCRIPTION.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().OS.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().PLATFORM.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().PRIORITY.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().SEVERITY.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().ALIAS.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().ASSIGNED_TO.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().QA_CONTACT.getKey())
-			.add(TaskAttribute.OPERATION)
-			.add(BugzillaRestTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())
-			.add("resolutionInput") //$NON-NLS-1$
-			.add(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().RESET_QA_CONTACT.getKey())
-			.add(BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey())
-			.build();
+	private static final List<String> legalUpdateAttributes = Stream.of( //
+			BugzillaRestTaskSchema.getDefault().PRODUCT.getKey(), //
+			BugzillaRestTaskSchema.getDefault().COMPONENT.getKey(), //
+			BugzillaRestTaskSchema.getDefault().SUMMARY.getKey(), //
+			BugzillaRestTaskSchema.getDefault().VERSION.getKey(), //
+			BugzillaRestTaskSchema.getDefault().DESCRIPTION.getKey(), //
+			BugzillaRestTaskSchema.getDefault().OS.getKey(), //
+			BugzillaRestTaskSchema.getDefault().PLATFORM.getKey(), //
+			BugzillaRestTaskSchema.getDefault().PRIORITY.getKey(), //
+			BugzillaRestTaskSchema.getDefault().SEVERITY.getKey(), //
+			BugzillaRestTaskSchema.getDefault().ALIAS.getKey(), //
+			BugzillaRestTaskSchema.getDefault().ASSIGNED_TO.getKey(), //
+			BugzillaRestTaskSchema.getDefault().QA_CONTACT.getKey(), //
+			TaskAttribute.OPERATION, //
+			BugzillaRestTaskSchema.getDefault().TARGET_MILESTONE.getKey(), //
+			BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey(), //
+			"resolutionInput", //$NON-NLS-1$
+			BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey(), //
+			BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey(), //
+			BugzillaRestTaskSchema.getDefault().BLOCKS.getKey(), //
+			BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey(), //
+			BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey(), //
+			BugzillaRestTaskSchema.getDefault().RESET_QA_CONTACT.getKey(), //
+			BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey()) //
+			.collect( //
+					Collectors.collectingAndThen( //
+							Collectors.toList(), Collections::unmodifiableList));
 
 	public BugzillaRestPutUpdateTask(CommonHttpClient client, @NonNull TaskData taskData,
 			@NonNull Set<TaskAttribute> oldAttributes) {
@@ -124,9 +127,11 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateR
 			}
 			if (taskAttribute.getMetaData().getType() != null
 					&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
-				Iterable<String> taskIdsTemp = Iterables.transform(taskAttribute.getValues(), function);
-				Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
-				value = joiner.join(taskIdsTemp);
+				value = taskAttribute.getValues()
+						.stream()
+						.filter(Objects::nonNull)
+						.map(function)
+						.collect(Collectors.joining(",")); //$NON-NLS-1$
 			}
 			if (id.equals(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())) {
 				out.name("comment").beginObject(); //$NON-NLS-1$

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
@@ -31,8 +32,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
-
-import com.google.common.collect.Iterables;
 
 /**
  * A custom control to display on hover, or delegates to the default control to display if we aren't dealing with a
@@ -88,7 +87,9 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 		}
 
 		Set<IComment> comments = new HashSet<IComment>();
-		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
+		for (CommentAnnotation annotation : annotations.stream()
+				.filter(CommentAnnotation.class::isInstance)
+				.collect(Collectors.toList())) {
 			comments.addAll(getUnreadComments(annotation.getComment()));
 		}
 

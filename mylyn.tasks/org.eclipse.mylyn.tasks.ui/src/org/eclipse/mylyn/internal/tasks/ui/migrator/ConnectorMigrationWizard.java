@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,10 +15,12 @@ package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,9 +50,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 
 public class ConnectorMigrationWizard extends Wizard {
 	private static class CollectionContentProvider implements ITreeContentProvider {
@@ -194,9 +193,11 @@ public class ConnectorMigrationWizard extends Wizard {
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					ImmutableList<String> connectors = FluentIterable.from(ImmutableList.copyOf(selectedConnectors))
-							.filter(String.class)
-							.toList();
+					List<String> connectors = Arrays.asList(selectedConnectors)
+							.stream()
+							.filter(String.class::isInstance)
+							.map(String.class::cast)
+							.collect(Collectors.toUnmodifiableList());
 					try {
 						migrator.setConnectorsToMigrate(connectors);
 						migrator.migrateConnectors(monitor);

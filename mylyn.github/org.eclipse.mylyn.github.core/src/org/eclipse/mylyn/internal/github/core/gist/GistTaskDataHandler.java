@@ -31,6 +31,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -239,8 +240,8 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
-			if (Boolean.parseBoolean(
-					repository.getProperty(GitHub.PROPERTY_USE_TOKEN))) {
+			if (Boolean.parseBoolean(repository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))
+					|| Boolean.parseBoolean(repository.getProperty(GitHub.PROPERTY_USE_TOKEN))) {
 				client.setOAuth2Token(credentials.getPassword());
 			} else {
 				client.setCredentials(credentials.getUserName(),

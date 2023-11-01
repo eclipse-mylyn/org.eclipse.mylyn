@@ -49,8 +49,6 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.common.base.Throwables;
-
 public class AbstractRepositorySettingsPageTest {
 
 	public static class TestRepositorySettingsPage extends AbstractRepositorySettingsPage {
@@ -368,7 +366,7 @@ public class AbstractRepositorySettingsPageTest {
 				}
 			}).when(container).run(anyBoolean(), anyBoolean(), any());
 		} catch (InvocationTargetException | InterruptedException e) {
-			Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		when(wizard.getContainer()).thenReturn(container);
 		page.setWizard(wizard);

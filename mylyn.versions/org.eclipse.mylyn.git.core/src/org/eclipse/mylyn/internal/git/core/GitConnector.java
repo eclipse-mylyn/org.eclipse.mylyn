@@ -20,7 +20,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -57,10 +60,6 @@ import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.core.spi.ScmResourceArtifact;
 import org.eclipse.mylyn.versions.core.spi.ScmResourceUtils;
 import org.eclipse.team.core.history.IFileRevision;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 
 /**
  * @author Kilian Matt
@@ -261,7 +260,7 @@ public class GitConnector extends ScmConnector {
 	@Override
 	public List<ChangeSet> getChangeSets(final ScmRepository repository, final IProgressMonitor monitor)
 			throws CoreException {
-		return Lists.newArrayList(getChangeSetsIterator(repository, monitor));
+		return IteratorUtils.toList(getChangeSetsIterator(repository, monitor));
 	}
 
 	@Override
@@ -277,11 +276,10 @@ public class GitConnector extends ScmConnector {
 			throw new RuntimeException(e);
 		}
 
-		return Iterators.transform(revs.iterator(), new Function<RevCommit, ChangeSet>() {
-			public ChangeSet apply(RevCommit input) {
-				return changeSet(input, gitRepository);
-			}
-		});
+		return StreamSupport.stream(revs.spliterator(), false)
+				.map(input -> changeSet(input, gitRepository))
+				.collect(Collectors.toList())
+				.iterator();
 	}
 
 	private ChangeSet changeSet(RevCommit r, GitRepository repository) {

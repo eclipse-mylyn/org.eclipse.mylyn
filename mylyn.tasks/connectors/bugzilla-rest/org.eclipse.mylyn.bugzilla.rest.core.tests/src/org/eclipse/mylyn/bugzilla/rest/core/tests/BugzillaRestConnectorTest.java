@@ -32,9 +32,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
+import com.github.benmanes.caffeine.cache.RemovalListener;
 
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
@@ -200,12 +200,13 @@ public class BugzillaRestConnectorTest {
 		}
 
 		@Override
-		protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
+		protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 				Duration refreshAfterWriteDuration) {
 			return super.createCacheBuilder(expireAfterWriteDuration, refreshAfterWriteDuration)
 					.removalListener(new RemovalListener<Object, Object>() {
+
 						@Override
-						public void onRemoval(RemovalNotification<Object, Object> notification) {
+						public void onRemoval(Object key, Object value, RemovalCause cause) {
 							if (mySync != null) {
 								synchronized (mySync) {
 									mySync.notify();

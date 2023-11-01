@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -37,8 +37,6 @@ import org.junit.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.google.common.collect.ImmutableMap;
-
 public class SaxTaskBuilderTest {
 
 	private SaxTaskBuilder builder;
@@ -55,9 +53,9 @@ public class SaxTaskBuilderTest {
 
 	@Test
 	public void minimalTask() throws Exception {
-		Attributes elementAttributes = createAttributes(ImmutableMap.of(TaskListExternalizationConstants.KEY_HANDLE,
-				"1", TaskListExternalizationConstants.KEY_TASK_ID, "100",
-				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com",
+		Attributes elementAttributes = createAttributes(Map.of(TaskListExternalizationConstants.KEY_HANDLE, //
+				"1", TaskListExternalizationConstants.KEY_TASK_ID, "100", //
+				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com", //
 				TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "connector.kind"));
 
 		builder.beginItem(elementAttributes);
@@ -77,16 +75,16 @@ public class SaxTaskBuilderTest {
 
 	@Test
 	public void simpleTask() throws Exception {
-		ImmutableMap.Builder<String, String> attributesBuilder = ImmutableMap.builder();
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_HANDLE, "1");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_TASK_ID, "100");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_LABEL, "Simple Task");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_KEY, "EX-100");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_PRIORITY, PriorityLevel.P1.toString());
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "connector.kind");
+		Map<String, String> attributes = Map.of( //
+				TaskListExternalizationConstants.KEY_HANDLE, "1", //
+				TaskListExternalizationConstants.KEY_TASK_ID, "100", //
+				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com", //
+				TaskListExternalizationConstants.KEY_LABEL, "Simple Task", //
+				TaskListExternalizationConstants.KEY_KEY, "EX-100", //
+				TaskListExternalizationConstants.KEY_PRIORITY, PriorityLevel.P1.toString(), //
+				TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "connector.kind");
 
-		builder.beginItem(createAttributes(attributesBuilder.build()));
+		builder.beginItem(createAttributes(attributes));
 
 		assertTrue(builder.getErrors().isOK());
 		AbstractTask task = builder.getItem();
@@ -103,9 +101,10 @@ public class SaxTaskBuilderTest {
 
 	@Test
 	public void taskWithAttributes() throws Exception {
-		Attributes elementAttributes = createAttributes(ImmutableMap.of(TaskListExternalizationConstants.KEY_HANDLE,
-				"1", TaskListExternalizationConstants.KEY_TASK_ID, "100",
-				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com",
+		Attributes elementAttributes = createAttributes(Map.of(//
+				TaskListExternalizationConstants.KEY_HANDLE, "1", //
+				TaskListExternalizationConstants.KEY_TASK_ID, "100", //
+				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com", //
 				TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "connector.kind"));
 
 		builder.beginItem(elementAttributes);
@@ -124,9 +123,9 @@ public class SaxTaskBuilderTest {
 
 	@Test
 	public void invalidConnectorKind() throws Exception {
-		Attributes elementAttributes = createAttributes(ImmutableMap.of(TaskListExternalizationConstants.KEY_HANDLE,
-				"1", TaskListExternalizationConstants.KEY_TASK_ID, "100",
-				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com",
+		Attributes elementAttributes = createAttributes(Map.of(TaskListExternalizationConstants.KEY_HANDLE, "1", //
+				TaskListExternalizationConstants.KEY_TASK_ID, "100", //
+				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "http://example.com", //
 				TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "invalid"));
 
 		builder.beginItem(elementAttributes);
@@ -135,16 +134,15 @@ public class SaxTaskBuilderTest {
 
 	@Test
 	public void localTask() throws Exception {
-		ImmutableMap.Builder<String, String> attributesBuilder = ImmutableMap.builder();
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_HANDLE, "1");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_TASK_ID, "100");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_REPOSITORY_URL, "local");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_LABEL, "Simple Task");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_KEY, "EX-100");
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_PRIORITY, PriorityLevel.P1.toString());
-		attributesBuilder.put(TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "local");
+		Map<String, String> attributesBuilder = Map.of(TaskListExternalizationConstants.KEY_HANDLE, "1",
+				TaskListExternalizationConstants.KEY_TASK_ID, "100", //
+				TaskListExternalizationConstants.KEY_REPOSITORY_URL, "local", //
+				TaskListExternalizationConstants.KEY_LABEL, "Simple Task", //
+				TaskListExternalizationConstants.KEY_KEY, "EX-100", //
+				TaskListExternalizationConstants.KEY_PRIORITY, PriorityLevel.P1.toString(), //
+				TaskListExternalizationConstants.KEY_CONNECTOR_KIND, "local");
 
-		builder.beginItem(createAttributes(attributesBuilder.build()));
+		builder.beginItem(createAttributes(attributesBuilder));
 
 		assertTrue(builder.getErrors().isOK());
 		AbstractTask task = builder.getItem();
@@ -160,7 +158,7 @@ public class SaxTaskBuilderTest {
 	}
 
 	private void putAttribute(String key, String value) {
-		builder.startAttribute(createAttributes(ImmutableMap.of(TaskListExternalizationConstants.KEY_KEY, key)));
+		builder.startAttribute(createAttributes(Map.of(TaskListExternalizationConstants.KEY_KEY, key)));
 		builder.acceptAttributeValueContent(value.toCharArray(), 0, value.length());
 		builder.endAttribute();
 	}

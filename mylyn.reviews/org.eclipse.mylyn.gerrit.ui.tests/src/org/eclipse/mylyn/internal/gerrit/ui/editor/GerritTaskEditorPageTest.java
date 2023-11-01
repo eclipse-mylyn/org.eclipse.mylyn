@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -40,13 +42,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.handlers.IHandlerService;
-
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import junit.framework.TestCase;
 
@@ -100,20 +95,13 @@ public class GerritTaskEditorPageTest extends TestCase {
 	}
 
 	public void testCreatePartDescriptorsCustomOrder() {
-		Iterable<Class<?>> partClasses = ImmutableList
-				.copyOf(Iterables.transform(descriptors.subList(descriptors.size() - 4, descriptors.size()),
-						new Function<TaskEditorPartDescriptor, Class<?>>() {
-							public Class<?> apply(TaskEditorPartDescriptor o) {
-								return o.createPart().getClass();
-							}
-						}));
-		assertEquals(ImmutableList.of(GerritReviewDetailSection.class, PatchSetSection.class,
-				TaskEditorCommentPart.class, TaskEditorNewCommentPart.class), partClasses);
-		List<String> ids = Lists.transform(descriptors, new Function<TaskEditorPartDescriptor, String>() {
-			public String apply(TaskEditorPartDescriptor o) {
-				return o.getId();
-			}
-		});
+		List<Class<?>> partClasses = List.copyOf(descriptors.subList(descriptors.size() - 4, descriptors.size())
+				.stream()
+				.map(o -> o.createPart().getClass())
+				.collect(Collectors.toList()));
+		assertEquals(List.of(GerritReviewDetailSection.class, PatchSetSection.class, TaskEditorCommentPart.class,
+				TaskEditorNewCommentPart.class), partClasses);
+		List<String> ids = descriptors.stream().map(o -> o.getId()).collect(Collectors.toList());
 		assertTrue("Missing descriptors. Found " + ids, descriptors.size() >= 7);
 	}
 
@@ -138,20 +126,12 @@ public class GerritTaskEditorPageTest extends TestCase {
 
 	private Optional<TaskEditorPartDescriptor> findByPath(ArrayList<TaskEditorPartDescriptor> descriptors,
 			final String path) {
-		return Iterables.tryFind(descriptors, new Predicate<TaskEditorPartDescriptor>() {
-			public boolean apply(TaskEditorPartDescriptor descriptor) {
-				return descriptor.getPath().equals(path);
-			}
-		});
+		return descriptors.stream().filter(descriptor -> descriptor.getPath().equals(path)).findFirst();
 	}
 
 	private Optional<TaskEditorPartDescriptor> findById(ArrayList<TaskEditorPartDescriptor> descriptors,
 			final String id) {
-		return Iterables.tryFind(descriptors, new Predicate<TaskEditorPartDescriptor>() {
-			public boolean apply(TaskEditorPartDescriptor descriptor) {
-				return descriptor.getId().equals(id);
-			}
-		});
+		return descriptors.stream().filter(descriptor -> descriptor.getId().equals(id)).findFirst();
 	}
 
 	public void testCreatePersonAttribute() throws Exception {

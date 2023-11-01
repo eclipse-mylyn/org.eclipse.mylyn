@@ -54,10 +54,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 public class CompleteConnectorMigrationWizardTest {
 
 	private CompleteConnectorMigrationWizard wizard;
@@ -76,10 +72,10 @@ public class CompleteConnectorMigrationWizardTest {
 				TasksUiPlugin.getBackupManager(), tasksState));
 		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
-		migrator = createMigrator(ImmutableMap.of("mock", "mock.new"));
+		migrator = createMigrator(Map.of("mock", "mock.new"));
 	}
 
-	private ConnectorMigrator createMigrator(ImmutableMap<String, String> kinds) {
+	private ConnectorMigrator createMigrator(Map<String, String> kinds) {
 		ConnectorMigrator migrator = spy(new ConnectorMigrator(kinds, "", tasksState, migrationUi));
 		when(migrator.allQueriesMigrated()).thenReturn(false);
 		return migrator;
@@ -146,21 +142,21 @@ public class CompleteConnectorMigrationWizardTest {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void queryTreeShowsOnlySelectedConnectors() {
-		migrator = createMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"));
-		migrator.setConnectorsToMigrate(ImmutableList.of("kind"));
+		migrator = createMigrator(Map.of("mock", "mock.new", "kind", "kind.new"));
+		migrator.setConnectorsToMigrate(List.of("kind"));
 		createWizard(new CompleteConnectorMigrationWizard(migrator));
 		ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
 		verify(wizard, times(2)).createRepositoryQueryMap(captor.capture());
-		assertEquals(ImmutableSet.of("kind"), ImmutableSet.copyOf(captor.getAllValues().get(0)));
-		assertEquals(ImmutableSet.of("kind.new"), ImmutableSet.copyOf(captor.getAllValues().get(1)));
+		assertEquals(Set.of("kind"), Set.copyOf(captor.getAllValues().get(0)));
+		assertEquals(Set.of("kind.new"), Set.copyOf(captor.getAllValues().get(1)));
 
-		migrator = createMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"));
-		migrator.setConnectorsToMigrate(ImmutableList.of("mock", "kind"));
+		migrator = createMigrator(Map.of("mock", "mock.new", "kind", "kind.new"));
+		migrator.setConnectorsToMigrate(List.of("mock", "kind"));
 		createWizard(new CompleteConnectorMigrationWizard(migrator));
 		captor = ArgumentCaptor.forClass(Collection.class);
 		verify(wizard, times(2)).createRepositoryQueryMap(captor.capture());
-		assertEquals(ImmutableSet.of("mock", "kind"), ImmutableSet.copyOf(captor.getAllValues().get(0)));
-		assertEquals(ImmutableSet.of("mock.new", "kind.new"), ImmutableSet.copyOf(captor.getAllValues().get(1)));
+		assertEquals(Set.of("mock", "kind"), Set.copyOf(captor.getAllValues().get(0)));
+		assertEquals(Set.of("mock.new", "kind.new"), Set.copyOf(captor.getAllValues().get(1)));
 	}
 
 	@Test
@@ -212,8 +208,8 @@ public class CompleteConnectorMigrationWizardTest {
 	@Test
 	public void createQueryTree() throws Exception {
 		TaskRepository repository = createRepository("mock", "http://mock");
-		Map<TaskRepository, ? extends Set<RepositoryQuery>> queries = ImmutableMap.of(repository,
-				ImmutableSet.of(new RepositoryQuery("mock", "mock")));
+		Map<TaskRepository, ? extends Set<RepositoryQuery>> queries = Map.of(repository,
+				Set.of(new RepositoryQuery("mock", "mock")));
 		TreeViewer viewer = new CompleteConnectorMigrationWizard(migrator).createQueryTree(WorkbenchUtil.getShell(),
 				queries);
 		assertEquals(queries, viewer.getInput());
@@ -231,17 +227,17 @@ public class CompleteConnectorMigrationWizardTest {
 	public void createRepositoryQueryMap() throws Exception {
 		TaskRepository repository1 = createRepository("mock", "http://mock");
 		TaskRepository repository2 = createRepository("mock", "http://mock2");
-		ImmutableSet<TaskRepository> repositories = ImmutableSet.of(repository1, repository2);
+		Set<TaskRepository> repositories = Set.of(repository1, repository2);
 		RepositoryQuery query1 = createQuery(repository1);
 		RepositoryQuery query2 = createQuery(repository1);
 		RepositoryQuery query3 = createQuery(repository2);
 		RepositoryQuery query4 = createQuery(repository2);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(List.of("mock"));
 		assertEquals(repositories, map.keySet());
-		assertEquals(ImmutableSet.of(query1, query2), map.get(repository1));
-		assertEquals(ImmutableSet.of(query3, query4), map.get(repository2));
+		assertEquals(Set.of(query1, query2), map.get(repository1));
+		assertEquals(Set.of(query3, query4), map.get(repository2));
 	}
 
 	@Test
@@ -251,9 +247,9 @@ public class CompleteConnectorMigrationWizardTest {
 		RepositoryQuery query = createQuery(repository);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
-		assertEquals(ImmutableSet.of(repository), map.keySet());
-		assertEquals(ImmutableSet.of(query), map.get(repository));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(List.of("mock"));
+		assertEquals(Set.of(repository), map.keySet());
+		assertEquals(Set.of(query), map.get(repository));
 	}
 
 	@Test
@@ -264,13 +260,13 @@ public class CompleteConnectorMigrationWizardTest {
 		RepositoryQuery migratedQuery = createQuery(migratedRepository);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
-		assertEquals(ImmutableSet.of(repository), map.keySet());
-		assertEquals(ImmutableSet.of(query), map.get(repository));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(List.of("mock"));
+		assertEquals(Set.of(repository), map.keySet());
+		assertEquals(Set.of(query), map.get(repository));
 
-		map = new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock-new"));
-		assertEquals(ImmutableSet.of(migratedRepository), map.keySet());
-		assertEquals(ImmutableSet.of(migratedQuery), map.get(migratedRepository));
+		map = new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(List.of("mock-new"));
+		assertEquals(Set.of(migratedRepository), map.keySet());
+		assertEquals(Set.of(migratedQuery), map.get(migratedRepository));
 	}
 
 	protected TaskRepository createRepository(String kind, String url) {

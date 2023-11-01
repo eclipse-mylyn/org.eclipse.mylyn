@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -26,8 +26,6 @@ import org.eclipse.mylyn.tasks.tests.TestException;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-
-import com.google.common.collect.ImmutableList;
 
 public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 	public final static class DynamicMockRepositoryConnectorUi extends MockRepositoryConnectorUi {
@@ -68,7 +66,7 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 					@Override
 					public List<String> getBrands() {
 						ArrayList<String> brands = new ArrayList<String>(
-								ImmutableList.of("org.mylyn", "org.eclipse", "exceptional"));
+								List.of("org.mylyn", "org.eclipse", "exceptional"));
 						brands.add(1, null);
 						return brands;
 					}

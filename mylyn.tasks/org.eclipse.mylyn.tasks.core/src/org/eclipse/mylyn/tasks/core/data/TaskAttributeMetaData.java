@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,14 +16,13 @@ package org.eclipse.mylyn.tasks.core.data;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.osgi.util.NLS;
-
-import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -144,7 +143,7 @@ public class TaskAttributeMetaData {
 	 * The default option property is not used. Connectors are expected to set default values in
 	 * {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 * .
-	 * 
+	 *
 	 * @deprecated Not used, set default value in
 	 *             {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 *             instead.
@@ -246,14 +245,14 @@ public class TaskAttributeMetaData {
 
 	/**
 	 * Get the precision of a date or time attribute. Returns <code>null</code> if there is no precision specified.
-	 * 
+	 *
 	 * @since 3.18
 	 * @see TaskAttribute#META_ATTRIBUTE_PRECISION
 	 */
 	@Nullable
 	public TimeUnit getPrecision() {
 		String precision = taskAttribute.getMetaDatum(TaskAttribute.META_ATTRIBUTE_PRECISION);
-		if (!Strings.isNullOrEmpty(precision)) {
+		if (StringUtils.isNotEmpty(precision)) {
 			try {
 				return TimeUnit.valueOf(precision);
 			} catch (IllegalArgumentException e) {
@@ -266,7 +265,7 @@ public class TaskAttributeMetaData {
 
 	/**
 	 * Set the precision of a date or time attribute.
-	 * 
+	 *
 	 * @since 3.18
 	 * @see TaskAttribute#META_ATTRIBUTE_PRECISION
 	 */

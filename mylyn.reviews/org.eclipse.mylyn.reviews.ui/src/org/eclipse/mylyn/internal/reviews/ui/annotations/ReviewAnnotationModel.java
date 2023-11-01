@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,8 +44,6 @@ import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
-
-import com.google.common.collect.Iterables;
 
 /**
  * A model for review annotations.
@@ -167,7 +166,11 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 */
 	public List<CommentAnnotation> getAnnotationsForOffset(int offset) {
 		List<CommentAnnotation> result = new ArrayList<CommentAnnotation>();
-		for (CommentAnnotation annotation : Iterables.filter(this.annotations, CommentAnnotation.class)) {
+		for (CommentAnnotation annotation : this.annotations.stream()
+				.filter(CommentAnnotation.class::isInstance)
+				.map(CommentAnnotation.class::cast)
+				.collect(Collectors.toList())) {
+
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				result.add(annotation);
@@ -188,7 +191,11 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
 	public Annotation getFirstAnnotationForOffset(int offset) {
-		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
+		for (CommentAnnotation annotation : this.annotations.stream()
+				.filter(CommentAnnotation.class::isInstance)
+				.map(CommentAnnotation.class::cast)
+				.collect(Collectors.toList())) {
+
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				return annotation;

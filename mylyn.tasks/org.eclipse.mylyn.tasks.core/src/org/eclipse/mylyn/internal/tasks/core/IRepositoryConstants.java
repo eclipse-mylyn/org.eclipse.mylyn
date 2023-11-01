@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -70,5 +70,12 @@ public interface IRepositoryConstants {
 	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 
 	public static final String TEMPLATE_VALUE_PREFIX = "template.value.prefix."; //$NON-NLS-1$
+
+	/**
+	 * Key for a repository property storing a stringified boolean ("true" or "false") telling whether to use token
+	 * authentication for a Mylyn task repository.
+	 */
+	public static final String PROPERTY_USE_TOKEN = IRepositoryConstants.class.getPackage().getName()
+			+ ".REPO_USE_TOKEN"; //$NON-NLS-1$
 
 }

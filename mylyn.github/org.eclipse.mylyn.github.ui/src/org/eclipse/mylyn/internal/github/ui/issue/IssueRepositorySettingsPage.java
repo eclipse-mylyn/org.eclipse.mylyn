@@ -47,6 +47,8 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 		super(Messages.IssueRepositorySettingsPage_Title,
 				Messages.IssueRepositorySettingsPage_Description,
 				taskRepository);
+		setUseTokenForAuthentication(true);
+
 	}
 
 	@Override
@@ -59,7 +61,6 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 		if (getRepository() == null) {
 			setAnonymous(false);
 		}
-		addTokenCheckbox(true);
 		// Set the URL now, because serverURL is definitely instantiated.
 		if (serverUrlCombo.getText().isEmpty()) {
 			setInitialUrl(IssueConnector::getRepositoryLabel);

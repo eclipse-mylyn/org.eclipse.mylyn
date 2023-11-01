@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -91,7 +91,7 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 						tempDate = iso8601Format.parse(attachmentObject.get("last_change_time").getAsString()); //$NON-NLS-1$
 						attachmentMapper.setDeltaDate(tempDate);
 					} catch (ParseException e) {
-						com.google.common.base.Throwables.propagate(new CoreException(new Status(IStatus.ERROR,
+						throw new RuntimeException(new CoreException(new Status(IStatus.ERROR,
 								BugzillaRestCore.ID_PLUGIN,
 								"Can not parse Date (" + attachmentObject.get("creation_time").getAsString() + ")"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
