@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Tasktop Technologies and others.
+ * Copyright (c) 2016, 2023 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *   See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.core.LinkedHashMappArrayListValuedHashMap;
+import org.eclipse.mylyn.commons.core.collections.LinkedHashMappArrayListValuedHashMap;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
