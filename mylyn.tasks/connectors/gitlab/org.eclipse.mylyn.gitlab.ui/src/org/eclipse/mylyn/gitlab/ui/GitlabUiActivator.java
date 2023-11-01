@@ -29,12 +29,16 @@ public class GitlabUiActivator extends AbstractUIPlugin {
     // The shared instance
     private static GitlabUiActivator plugin;
 
-    public static String GITLAB_PICTURE_FILE = "icons/obj20/gitlab.png"; //$NON-NLS-1$
-    public static String GITLAB_PENCIL_FILE = "icons/obj12/pencil.png"; //$NON-NLS-1$
-    public static String GITLAB_LOCK_FILE = "icons/obj12/lock.png"; //$NON-NLS-1$
-    public static String GITLAB_UNLOCK_FILE = "icons/obj12/lock-open.png"; //$NON-NLS-1$
-    public static String GITLAB_CALENDAR_FILE = "icons/obj12/calendar.png"; //$NON-NLS-1$
-    public static String GITLAB_PERSON_FILE = "icons/obj12/person.png"; //$NON-NLS-1$
+    public static final String GITLAB_PICTURE_FILE = "icons/obj20/gitlab.png"; //$NON-NLS-1$
+    public static final String GITLAB_PENCIL_FILE = "icons/obj12/pencil.png"; //$NON-NLS-1$
+    public static final String GITLAB_LOCK_FILE = "icons/obj12/lock.png"; //$NON-NLS-1$
+    public static final String GITLAB_UNLOCK_FILE = "icons/obj12/lock-open.png"; //$NON-NLS-1$
+    public static final String GITLAB_CALENDAR_FILE = "icons/obj12/calendar.png"; //$NON-NLS-1$
+    public static final String GITLAB_PERSON_FILE = "icons/obj12/person.png"; //$NON-NLS-1$
+    public static final String GITLAB_CLOSED_FILE = "icons/obj12/closed.png"; //$NON-NLS-1$
+    public static final String GITLAB_REOPEN_FILE = "icons/obj12/reopen.png"; //$NON-NLS-1$
+    public static final String GITLAB_LABEL_FILE = "icons/obj12/label.png"; //$NON-NLS-1$
+    public static final String GITLAB_DESIGN_FILE = "icons/obj12/design.png"; //$NON-NLS-1$
 
     /**
      * The constructor
@@ -74,6 +78,10 @@ public class GitlabUiActivator extends AbstractUIPlugin {
 	reg.put(GITLAB_LOCK_FILE, getImageDescriptor(GITLAB_LOCK_FILE));
 	reg.put(GITLAB_CALENDAR_FILE, getImageDescriptor(GITLAB_CALENDAR_FILE));
 	reg.put(GITLAB_PERSON_FILE, getImageDescriptor(GITLAB_PERSON_FILE));
+	reg.put(GITLAB_REOPEN_FILE, getImageDescriptor(GITLAB_REOPEN_FILE));
+	reg.put(GITLAB_CLOSED_FILE, getImageDescriptor(GITLAB_CLOSED_FILE));
+	reg.put(GITLAB_LABEL_FILE, getImageDescriptor(GITLAB_LABEL_FILE));
+	reg.put(GITLAB_DESIGN_FILE, getImageDescriptor(GITLAB_DESIGN_FILE));
     }
 
     /**

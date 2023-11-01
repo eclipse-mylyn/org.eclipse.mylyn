@@ -23,12 +23,17 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -54,6 +59,7 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
+import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator.ActivityType;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -61,6 +67,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
+import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -87,6 +94,7 @@ public class GitlabRestClient {
     private final CommonHttpClient client;
     private final GitlabRepositoryConnector connector;
     private final TaskRepository taskRepository;
+    private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");;
 
     public static String AUTHORIZATION_HEADER = "authorization_header";
 
@@ -115,6 +123,9 @@ public class GitlabRestClient {
 
     public IStatus getIssues(IRepositoryQuery query, TaskDataCollector collector, final IOperationMonitor monitor)
 	    throws GitlabException, CoreException {
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT, query.toString()+ " " + query.getSummary());
+	}
 	getAccessTokenIfNotPresent(monitor);
 	String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(",");
 	String groupAttribute = query.getAttribute("group");
@@ -133,6 +144,9 @@ public class GitlabRestClient {
 		    getIssuesInternal(query, collector, path, monitor);
 		}
 	    }
+	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
 	}
 	return Status.OK_STATUS;
     }
@@ -468,12 +482,23 @@ public class GitlabRestClient {
     public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 	    throws GitlabException {
 	TaskData result = null;
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    repository.getUrl() + " id " + taskId);
+	}
 	String searchString = ".*(/projects/\\d+)/issues/(\\d+)";
 	Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 	Matcher matcher = pattern.matcher(taskId);
 	if (matcher.find()) {
 	    GitlabConfiguration config = getConfiguration();
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE, "get Configuration ");
+	    }
 	    JsonObject issue = getIssue(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get Issue with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    TypeToken<TaskData> type = new TypeToken<TaskData>() {
 	    };
 	    result = new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer()).create()
@@ -489,38 +514,298 @@ public class GitlabRestClient {
 //			}
 	    JsonArray discussions = getIssueDiscussions(matcher.group(1), matcher.group(2),
 		    OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get IssueDiscussions with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
 	    if (discussions != null) {
-		int i = 0;
+		int commentIdx = 0;
 		TaskAttribute attrib = null;
 		for (JsonElement jsonElement : discussions) {
 		    JsonObject discussion = (JsonObject) jsonElement;
+
 		    JsonArray notesArray = discussion.get("notes").getAsJsonArray();
 		    if (discussion.get("individual_note").getAsBoolean()) {
 			JsonObject note = notesArray.get(0).getAsJsonObject();
-			attrib = createNoteTaskAttribute(repository, result.getRoot(), i++, note);
-			attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-			attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-			attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+			if (!note.get("system").getAsBoolean()) {
+			    attrib = createNoteTaskAttribute(repository, result.getRoot(), commentIdx++, note);
+			    attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
+			    attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
+			    attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+			} else {
+			    attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
+			    attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
+			    attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
+			    attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+			}
 		    } else {
 			TaskAttribute reply = null;
 			for (JsonElement jsonElement2 : notesArray) {
 			    JsonObject note = jsonElement2.getAsJsonObject();
-			    attrib = createNoteTaskAttribute(repository, reply == null ? result.getRoot() : reply, i++,
-				    note);
-			    if (reply == null) {
-				reply = attrib.createAttribute("reply");
+			    if (!note.get("system").getAsBoolean()) {
+				attrib = createNoteTaskAttribute(repository, reply == null ? result.getRoot() : reply,
+					commentIdx++, note);
+				if (reply == null) {
+				    reply = attrib.createAttribute("reply");
+				}
+				attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
+				attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
+				attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+			    } else {
+				attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
+				attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
+				attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
+				attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
 			    }
-			    attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-			    attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-			    attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
 			}
 		    }
 		}
 	    }
 
+	    JsonArray states = getIssueStateEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get IssueStateEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
+	    if (states != null) {
+		for (JsonElement stateElem : states) {
+		    JsonObject state = (JsonObject) stateElem;
+		    Instant instant = Instant
+			    .from(DateTimeFormatter.ISO_INSTANT.parse(state.get("created_at").getAsString()));
+		    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+
+		    TaskAttribute taskAttribute = result.getRoot()
+			    .createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
+		    taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+
+		    String stateText = state.get("state").getAsString();
+
+		    TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT)
+			    .createAttribute(taskAttribute);
+		    child.setValue(stateText);
+		    taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
+
+		    child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE).createAttribute(taskAttribute);
+		    child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+
+		    child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
+		    child.setValue(state.get("user").getAsJsonObject().get("name").getAsString());
+
+		    TaskAttribute typeAttribute = taskAttribute
+			    .createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+
+		    if (stateText.startsWith("closed")) {
+			typeAttribute.setValue(ActivityType.LOCK.toString());
+		    } else if (stateText.startsWith("reopened")) {
+			typeAttribute.setValue(ActivityType.REOPEN.toString());
+		    }
+
+		}
+	    }
+	    JsonArray labels = getIssueLabelEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			"get getIssueLabelEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+	    }
+	    if (labels != null) {
+		long lastLabelAt = 0;
+		Instant instantAt = null;
+		TaskAttribute labelText = null;
+		ArrayList<String> added = new ArrayList<String>();
+		ArrayList<String> removed = new ArrayList<String>();
+		for (JsonElement stateElem : labels) {
+		    JsonObject label = (JsonObject) stateElem;
+		    Instant instant = Instant
+			    .from(DateTimeFormatter.ISO_INSTANT.parse(label.get("created_at").getAsString()));
+		    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+
+		    if (!instant.equals(instantAt)) {
+			instantAt = instant;
+
+			buildLableText(labelText, added, removed);
+
+			added.clear();
+			removed.clear();
+
+			TaskAttribute taskAttribute = result.getRoot()
+				.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
+			taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE)
+				.createAttribute(taskAttribute);
+			child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+
+			child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
+			child.setValue(label.get("user").getAsJsonObject().get("name").getAsString());
+
+			TaskAttribute typeAttribute = taskAttribute
+				.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+			typeAttribute.setValue(ActivityType.LABEL.toString());
+			labelText = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT)
+				.createAttribute(taskAttribute);
+			taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+				labelText.getId());
+		    }
+		    if (label.getAsJsonObject().get("action").getAsString().equals("add")) {
+			added.add(label.get("label").getAsJsonObject().get("name").getAsString());
+		    }
+		    if (label.getAsJsonObject().get("action").getAsString().equals("remove")) {
+			removed.add(label.get("label").getAsJsonObject().get("name").getAsString());
+		    }
+
+		}
+		buildLableText(labelText, added, removed);
+
+	    }
+
 	    config.updateProductOptions(result);
 	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, result.toString());
+	}
 	return result;
+    }
+
+    private void buildLableText(TaskAttribute labelText, ArrayList<String> added, ArrayList<String> removed) {
+	if (labelText != null) {
+	    String text = "";
+	    if (added.size() > 0) {
+		text += "added ";
+		text += String.join(", ", added);
+		text += added.size() > 1 ? " labels" : " label";
+	    }
+	    if (removed.size() > 0) {
+		text += text.length() == 0 ? "removed " : " and removed ";
+		text += String.join(", ", removed);
+		text += removed.size() > 1 ? " labels" : " label";
+	    }
+	    labelText.setValue(text);
+	}
+    }
+
+    private TaskAttribute createActivityEventTaskAttribute(TaskRepository repository, TaskAttribute result,
+	    JsonObject note) {
+	Instant instant = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(note.get("created_at").getAsString()));
+	LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+	TaskAttribute taskAttribute = result.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
+	taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+
+	TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_DATE).createAttribute(taskAttribute);
+	child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+
+	child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
+	child.setValue(note.get("author").getAsJsonObject().get("name").getAsString());
+
+	buildActivityEventStyleInformation(taskAttribute, note.get("body").getAsString());
+
+	return taskAttribute;
+    }
+
+    private void buildActivityEventStyleInformation(TaskAttribute taskAttribute, String bodyText) {
+	TaskAttribute textAttribute = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT)
+		.createAttribute(taskAttribute);
+	taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, textAttribute.getId());
+	TaskAttribute typeAttribute = taskAttribute.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
+
+	if (bodyText.startsWith("changed due date ") || bodyText.startsWith("removed due date ")) {
+	    typeAttribute.setValue(ActivityType.CALENDAR.toString());
+	} else if (bodyText.startsWith("assigned to ") || bodyText.startsWith("unassigned ")) {
+	    typeAttribute.setValue(ActivityType.PERSON.toString());
+	} else if (bodyText.startsWith("changed ")) {
+	    typeAttribute.setValue(ActivityType.PENCIL.toString());
+	} else if (bodyText.startsWith("unlocked ")) {
+	    typeAttribute.setValue(ActivityType.UNLOCK.toString());
+	} else if (bodyText.startsWith("locked ")) {
+	    typeAttribute.setValue(ActivityType.LOCK.toString());
+	} else if (bodyText.contains("/designs?version=")) {
+	    typeAttribute.setValue(ActivityType.DESIGN.toString());
+	} else {
+	    typeAttribute.setValue(ActivityType.UNKNOWN.toString());
+	}
+
+	TaskAttribute styleAttribute = taskAttribute.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY_STYLE);
+	String resultText = "";
+
+	String[] parts = bodyText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}");
+	ArrayList<GitlabActivityStyle> styles = new ArrayList<GitlabActivityStyle>(parts.length);
+	int textIdx = 0;
+	GitlabActivityStyle styleRange = new GitlabActivityStyle(0);
+
+	int textLen = bodyText.length();
+	for (int idx = 0; idx < parts.length; idx++) {
+	    int actPartLen = parts[idx].length();
+	    textIdx += actPartLen;
+	    String marker = textIdx + 2 <= textLen ? bodyText.substring(textIdx, textIdx + 2) : "  ";
+
+	    String matchText = parts[idx];
+	    Matcher linkMatcher = linkPattern.matcher(matchText);
+
+	    if (linkMatcher.find()) {
+		if (linkMatcher.start(1) > 0) {
+		    resultText += matchText.substring(0, linkMatcher.start(1) - 1);
+		    styleRange.add2Length(linkMatcher.start(1) - 1);
+		    styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
+		    styleRange.setFontStyle(GitlabActivityStyle.UNDERLINE_LINK);
+		    styleRange.add2Length(linkMatcher.group(1).length());
+		    styleRange.setUrl(getTaskRepository().getUrl() + linkMatcher.group(2));
+		    resultText += linkMatcher.group(1);
+		    styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange,
+			    matchText.length() - linkMatcher.end(2));
+		    styleRange.setFontStyle(GitlabActivityStyle.NORMAL);
+		    actPartLen = matchText.length() - linkMatcher.end(2) - 1;
+		}
+	    }
+
+	    if (actPartLen > 0) {
+		resultText += parts[idx];
+		styleRange.add2Length(actPartLen);
+	    }
+	    if ("**".equals(marker)) {
+		styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
+		if (styleRange.getFontStyle() == GitlabActivityStyle.BOLD) {
+		    styleRange.setFontStyle(GitlabActivityStyle.NORMAL);
+		} else {
+		    styleRange.setFontStyle(GitlabActivityStyle.BOLD);
+		}
+	    }
+	    if ("{-".equals(marker)) {
+		styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
+		styleRange.setColor(GitlabActivityStyle.COLOR_RED);
+	    }
+	    if ("{+".equals(marker)) {
+		styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
+		styleRange.setColor(GitlabActivityStyle.COLOR_GREEN);
+	    }
+	    if ("-}".equals(marker) || "+}".equals(marker)) {
+		styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
+		styleRange.setColor(GitlabActivityStyle.COLOR_INHERIT_DEFAULT);
+
+	    }
+	    textIdx += 2;
+	}
+	textAttribute.setValue(resultText);
+	styleAttribute.setValue(gson.toJson(styles, listOfMyClassObject));
+
+    }
+
+    private final Type listOfMyClassObject = new TypeToken<ArrayList<GitlabActivityStyle>>() {
+    }.getType();
+    private final Gson gson = new Gson();
+
+    private GitlabActivityStyle createNewRangeIfNeeded(int resultTextLen, ArrayList<GitlabActivityStyle> styles,
+	    GitlabActivityStyle styleRange, int actPartLen) {
+	if (actPartLen > 0) {
+	    styles.add(styleRange);
+
+	    try {
+		styleRange = styleRange.clone();
+		styleRange.setStart(resultTextLen);
+		styleRange.setLength(0);
+		return styleRange;
+	    } catch (CloneNotSupportedException e) {
+		e.printStackTrace();
+	    }
+	}
+	return styleRange;
     }
 
     private TaskAttribute createNoteTaskAttribute(TaskRepository repository, TaskAttribute result, int i,
@@ -790,6 +1075,58 @@ public class GitlabRestClient {
 	return jsonArray;
     }
 
+    public JsonArray getIssueStateEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
+	getAccessTokenIfNotPresent(monitor);
+	JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_state_events") {
+	    @Override
+	    protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
+		return request;
+	    }
+
+	    @Override
+	    protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+		return new Gson().fromJson(in, JsonArray.class);
+	    }
+	}.run(monitor);
+	return jsonArray;
+    }
+
+    public JsonArray getIssueLabelEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
+	getAccessTokenIfNotPresent(monitor);
+	JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_label_events") {
+	    @Override
+	    protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
+		return request;
+	    }
+
+	    @Override
+	    protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+		return new Gson().fromJson(in, JsonArray.class);
+	    }
+	}.run(monitor);
+	return jsonArray;
+    }
+
+    public JsonArray getIssueMilestoneEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
+	getAccessTokenIfNotPresent(monitor);
+	JsonArray jsonArray = new GitlabJSonArrayOperation(client,
+		path + "/issues/" + id + "/resource_milestone_events") {
+	    @Override
+	    protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
+		return request;
+	    }
+
+	    @Override
+	    protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+		return new Gson().fromJson(in, JsonArray.class);
+	    }
+	}.run(monitor);
+	return jsonArray;
+    }
+
     public JsonObject getIssueDiscussion(String path, String id, String discussion_id, IOperationMonitor monitor)
 	    throws GitlabException {
 	getAccessTokenIfNotPresent(monitor);
@@ -875,10 +1212,17 @@ public class GitlabRestClient {
 
     public GitlabConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor)
 	    throws GitlabException {
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT, repository.getUrl());
+	}
 	GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 	JsonObject user = getUser(monitor);
 	config.setUserID(user.get("id").getAsBigInteger());
 	config.setUserDetails(user);
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+	    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+		    /* repository.getRepositoryUrl() + */ "get User");
+	}
 	JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
 	for (JsonElement project : (JsonArray) projects) {
 	    JsonObject projectObject = (JsonObject) project;
@@ -886,16 +1230,31 @@ public class GitlabRestClient {
 	    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
 	    config.addProject(projectObject, labels, milestones);
 	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+	    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+		    /* repository.getRepositoryUrl() + */ "get User Projects");
+	}
 	String projectValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
 	if (projectValue != null && !projectValue.isBlank()) {
 	    String[] projectList = projectValue.split(",");
-	    for (String project : projectList) {
+	    for (int i = 0; i < projectList.length; i++) {
 		try {
+		    String project = projectList[i];
 		    JsonObject projectDetail = getProject(URLEncoder.encode(project, StandardCharsets.UTF_8.toString()),
 			    monitor);
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
+					+ projectList.length + "): " + project + " ");
+		    }
 		    JsonObject projectObject = (JsonObject) projectDetail;
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
+					+ projectList.length + "): " + project + " Labels/Milestone ");
+		    }
 		    config.addProject(projectObject, labels, milestones);
 		} catch (UnsupportedEncodingException e) {
 		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
@@ -906,17 +1265,39 @@ public class GitlabRestClient {
 	String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 	if (groupsValue != null && !groupsValue.isBlank()) {
 	    String[] groupList = groupsValue.split(",");
-	    for (String group : groupList) {
+	    for (int i = 0; i < groupList.length; i++) {
+		String group = groupList[i];
 		JsonObject groupDetail = getGroup("/" + group, monitor);
 		config.addGroup(groupDetail);
+		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			    /* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+				    + "): " + group);
+		}
 		projects = getGroupProjects(group, monitor);
-		for (JsonElement project : (JsonArray) projects) {
+		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+		    GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+			    /* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+				    + "): " + group + " projects");
+		}
+		JsonArray projectsArray = (JsonArray) projects;
+		for (int j = 0; j < projectsArray.size(); j++) {
+		    JsonElement project = projectsArray.get(j);
 		    JsonObject projectObject = (JsonObject) project;
 		    JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 		    JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+		    if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
+			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
+				/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
+					+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): "
+					+ projectObject.get("id").getAsString() + " Labels/Milestone: ");
+		    }
 		    config.addProject(projectObject, labels, milestones);
 		}
 	    }
+	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, config.toString());
 	}
 	return config;
     }
@@ -952,6 +1333,10 @@ public class GitlabRestClient {
 
     private RepositoryResponse updateExistingIssue(TaskData taskData, Set<TaskAttribute> oldAttributes,
 	    IOperationMonitor monitor) throws GitlabException {
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
+	}
 	ArrayList<String> changedAtributes = new ArrayList<>();
 	String newComentValue = "";
 	String discussionsId = "";
@@ -1001,47 +1386,60 @@ public class GitlabRestClient {
 		createIssueNote("/projects/" + productAttribute.getValue(), discussionsId, newComentValue, monitor);
 	    }
 	}
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
+	}
 	return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
     }
 
     public JsonElement createNewIssue(TaskData taskData, IOperationMonitor monitor) throws GitlabException {
-	getAccessTokenIfNotPresent(monitor);
-	TaskAttribute productAttribute = taskData.getRoot()
-		.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
-	if (productAttribute == null || productAttribute.getValue().isEmpty()) {
-	    throw new GitlabException(
-		    new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "productAttribute should not be null"));
+	if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
+		    taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
 	}
-	JsonObject jsonElement;
-	jsonElement = new GitlabPostOperation<JsonObject>(client,
-		"/projects/" + productAttribute.getValue() + "/issues") {
+	try {
+	    getAccessTokenIfNotPresent(monitor);
+	    TaskAttribute productAttribute = taskData.getRoot()
+		    .getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
+	    if (productAttribute == null || productAttribute.getValue().isEmpty()) {
+		throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+			"productAttribute should not be null"));
+	    }
+	    JsonObject jsonElement;
+	    jsonElement = new GitlabPostOperation<JsonObject>(client,
+		    "/projects/" + productAttribute.getValue() + "/issues") {
 
-	    protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
-		super.addHttpRequestEntities(request);
-		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter())
-			.create();
-		String jsondata = gson.toJson(taskData);
-		try {
-		    ((HttpPost) request).setEntity(new StringEntity(jsondata));
-		} catch (UnsupportedEncodingException e) {
-		    throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-			    "UnsupportedEncodingException", e));
+		protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
+		    super.addHttpRequestEntities(request);
+		    request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
+		    Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter())
+			    .create();
+		    String jsondata = gson.toJson(taskData);
+		    try {
+			((HttpPost) request).setEntity(new StringEntity(jsondata));
+		    } catch (UnsupportedEncodingException e) {
+			throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+				"UnsupportedEncodingException", e));
+		    }
+		};
+
+		@Override
+		protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, GitlabException {
+		    validate(response, HttpStatus.SC_CREATED, monitor);
 		}
-	    };
 
-	    @Override
-	    protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
-		    throws IOException, GitlabException {
-		validate(response, HttpStatus.SC_CREATED, monitor);
+		@Override
+		protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
+		    return new Gson().fromJson(in, JsonObject.class);
+		}
+	    }.run(monitor);
+	    return jsonElement;
+	} finally {
+	    if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
+		GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT);
 	    }
-
-	    @Override
-	    protected JsonObject parseFromJson(InputStreamReader in) throws GitlabException {
-		return new Gson().fromJson(in, JsonObject.class);
-	    }
-	}.run(monitor);
-	return jsonElement;
+	}
     }
 
     class TaskAttributeTypeAdapter extends TypeAdapter<TaskData> {

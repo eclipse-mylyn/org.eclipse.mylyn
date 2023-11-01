@@ -1,0 +1,4 @@
+org.eclipse.mylyn.gitlab.core/debug=false
+org.eclipse.mylyn.gitlab.core/debug/repository/connector=false
+org.eclipse.mylyn.gitlab.core/debug/rest/client=true
+org.eclipse.mylyn.gitlab.core/debug/rest/client/trace=false

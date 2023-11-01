@@ -64,7 +64,6 @@ import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
-
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
     public class RepositoryKey {
@@ -119,7 +118,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	return false;
     }
 
-
     private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
 
 	@Override
@@ -161,11 +159,29 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
+	long startTime = 0, endTime = 0;
+	String traceExitResult = "";
+	if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
 	if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
 	    getClient(repository);
 	}
+	try {
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
+		startTime = System.currentTimeMillis();
+	    }
+
 	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
-	    return configurationOptional.isPresent() ? configurationOptional.get() : null;
+	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
+		endTime = System.currentTimeMillis();
+		traceExitResult = result.toString() + " " + (endTime - startTime) + " ms";
+	    }
+	    return result;
+	} finally {
+	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+		GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
+	}
     }
 
     @Override
@@ -294,7 +310,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
-	    return clientCache.get(new RepositoryKey(repository));
+	return clientCache.get(new RepositoryKey(repository));
     }
 
     private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
@@ -404,7 +420,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
     }
 
     public byte[] getAvatarData(String url) {
-	    return avatarCache.get(url);
+	return avatarCache.get(url);
     }
 
 }

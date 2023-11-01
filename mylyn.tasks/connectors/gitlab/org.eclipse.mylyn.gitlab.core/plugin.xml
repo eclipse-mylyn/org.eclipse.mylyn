@@ -23,4 +23,14 @@
             name="%GitlabRepositoryConnector.name">
       </connectorCore>
    </extension>
+   <extension
+         point="org.eclipse.ui.trace.traceComponents">
+      <component
+            id="org.eclipse.mylyn.gitlab"
+            label="Mylyn Gitlab Core">
+         <bundle
+               name="org.eclipse.mylyn.gitlab.core">
+         </bundle>
+      </component>
+   </extension>
 </plugin>
