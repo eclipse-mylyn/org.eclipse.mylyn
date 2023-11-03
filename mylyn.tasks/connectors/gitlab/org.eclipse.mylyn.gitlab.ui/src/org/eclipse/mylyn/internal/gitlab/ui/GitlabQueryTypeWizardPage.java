@@ -32,8 +32,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-public class GitlabQueryTypeWizardPage extends WizardPage {
 
+public class GitlabQueryTypeWizardPage extends WizardPage {
 
 	private Button buttonCustom;
 
@@ -67,6 +67,5 @@ public class GitlabQueryTypeWizardPage extends WizardPage {
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 	}
-
 
 }

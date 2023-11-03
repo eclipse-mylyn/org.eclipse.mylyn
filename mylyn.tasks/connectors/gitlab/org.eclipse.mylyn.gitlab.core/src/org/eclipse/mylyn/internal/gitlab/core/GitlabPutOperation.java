@@ -24,10 +24,10 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
 
-
 public abstract class GitlabPutOperation<T> extends GitlabOperation<T> {
 
 	private final String body;
+
 	public GitlabPutOperation(CommonHttpClient client, String urlSuffix, String body) {
 		super(client, urlSuffix);
 		this.body = body;
@@ -45,9 +45,9 @@ public abstract class GitlabPutOperation<T> extends GitlabOperation<T> {
 		try {
 			((HttpPut) request).setEntity(new StringEntity(body));
 		} catch (UnsupportedEncodingException e) {
-			throw new GitlabException(new Status(IStatus.ERROR,GitlabCoreActivator.PLUGIN_ID,"UnsupportedEncodingException",e));
+			throw new GitlabException(
+					new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "UnsupportedEncodingException", e));
 		}
 	};
-
 
 }

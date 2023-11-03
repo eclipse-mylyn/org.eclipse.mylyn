@@ -43,20 +43,20 @@ public class GitlabNewTaskSchema extends AbstractTaskSchema {
 			Flag.ATTRIBUTE);
 
 	private static Map<String, String> json2AttributeMapper = Map.ofEntries(
-		Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1
-		,Map.entry("description", getDefault().DESCRIPTION.getKey()) //$NON-
-		,Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$    
-		,Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$     
-		,Map.entry("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
-		);
-	
+			Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1
+			, Map.entry("description", getDefault().DESCRIPTION.getKey()) //$NON-
+			, Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$    
+			, Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$     
+			, Map.entry("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
+	);
+
 	private static Map<String, String> attribute2jsonMapper = Map.ofEntries(
-		Map.entry(getDefault().PRODUCT.getKey(), "project_id") //$NON-NLS-1$
-		,Map.entry(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
-		,Map.entry(getDefault().SUMMARY.getKey(), "title") //$NON-NLS-1$
-		,Map.entry(getDefault().STATUS.getKey(), "state") //$NON-NLS-1$
-		,Map.entry(getDefault().PRIORITY.getKey(), "severity") //$NON-NLS-1$
-			);
+			Map.entry(getDefault().PRODUCT.getKey(), "project_id") //$NON-NLS-1$
+			, Map.entry(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
+			, Map.entry(getDefault().SUMMARY.getKey(), "title") //$NON-NLS-1$
+			, Map.entry(getDefault().STATUS.getKey(), "state") //$NON-NLS-1$
+			, Map.entry(getDefault().PRIORITY.getKey(), "severity") //$NON-NLS-1$
+	);
 
 	public static String getAttributeNameFromJsonName(String fieldName) {
 		String result = json2AttributeMapper.get(fieldName);

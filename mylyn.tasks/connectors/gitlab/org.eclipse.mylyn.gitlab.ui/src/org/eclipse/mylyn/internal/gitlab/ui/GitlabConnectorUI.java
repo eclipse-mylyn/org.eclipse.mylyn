@@ -38,57 +38,56 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
 
-    @Override
-    public String getConnectorKind() {
-	return GitlabCoreActivator.CONNECTOR_KIND;
-    }
-
-    @Override
-    public ITaskRepositoryPage getSettingsPage(TaskRepository repository) {
-	return new GitlabRepositorySettingsPage("New repository", "Enter the HTTPS-URL to your GitLab repository",
-		repository);
-    }
-
-    @Override
-    public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
-	RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
-	GitlabRepositoryConnector connector = (GitlabRepositoryConnector) getConnector();
-	TaskData taskData = new TaskData(new GitlabTaskAttributeMapper(repository),
-		repository.getConnectorKind(), "Query", "Query"); //$NON-NLS-1$ //$NON-NLS-2$
-	GitlabSearchQueryPageSchema.getInstance().initialize(taskData);
-	try {
-	    GitlabConfiguration config = connector.getRepositoryConfiguration(repository);
-	    config.updateQueryOptions(taskData);
-	} catch (CoreException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	@Override
+	public String getConnectorKind() {
+		return GitlabCoreActivator.CONNECTOR_KIND;
 	}
-	GitlabQuerySchemaPage mp = new GitlabQuerySchemaPage(getConnectorKind(), repository, query,
-		GitlabSearchQueryPageSchema.getInstance(), taskData,
-		new QueryPageDetails(true, "", "EnterQueryParameter", //$NON-NLS-1$
-			"EnterTitleAndURL", "([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null));
-	wizard.addPage(mp);
 
-	return wizard;
-    }
+	@Override
+	public ITaskRepositoryPage getSettingsPage(TaskRepository repository) {
+		return new GitlabRepositorySettingsPage("New repository", "Enter the HTTPS-URL to your GitLab repository",
+				repository);
+	}
 
-    @Override
-    public IWizard getNewTaskWizard(TaskRepository repository, ITaskMapping selection) {
-	return new NewTaskWizard(repository, selection);
-    }
+	@Override
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
+		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
+		GitlabRepositoryConnector connector = (GitlabRepositoryConnector) getConnector();
+		TaskData taskData = new TaskData(new GitlabTaskAttributeMapper(repository), repository.getConnectorKind(),
+				"Query", "Query"); //$NON-NLS-1$ //$NON-NLS-2$
+		GitlabSearchQueryPageSchema.getInstance().initialize(taskData);
+		try {
+			GitlabConfiguration config = connector.getRepositoryConfiguration(repository);
+			config.updateQueryOptions(taskData);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		GitlabQuerySchemaPage mp = new GitlabQuerySchemaPage(getConnectorKind(), repository, query,
+				GitlabSearchQueryPageSchema.getInstance(), taskData,
+				new QueryPageDetails(true, "", "EnterQueryParameter", //$NON-NLS-1$
+						"EnterTitleAndURL", "([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null));
+		wizard.addPage(mp);
 
-    @Override
-    public boolean hasSearchPage() {
-	// TODO Auto-generated method stub
-	return false;
-    }
+		return wizard;
+	}
 
-    @Override
-    public @Nullable String getReplyText(@NonNull TaskRepository taskRepository, @NonNull ITask task,
-	    @Nullable ITaskComment taskComment, boolean includeTask) {
-	TaskAttribute note_id = taskComment.getTaskAttribute().getAttribute("note_id");
-	String note_idValue = note_id != null ? note_id.getValue() : "";
-	return MessageFormat.format("( In reply to {0}#note_{1} )\n", taskComment.getTask().getUrl(),
-		 note_idValue);
-    }
+	@Override
+	public IWizard getNewTaskWizard(TaskRepository repository, ITaskMapping selection) {
+		return new NewTaskWizard(repository, selection);
+	}
+
+	@Override
+	public boolean hasSearchPage() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public @Nullable String getReplyText(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@Nullable ITaskComment taskComment, boolean includeTask) {
+		TaskAttribute note_id = taskComment.getTaskAttribute().getAttribute("note_id");
+		String note_idValue = note_id != null ? note_id.getValue() : "";
+		return MessageFormat.format("( In reply to {0}#note_{1} )\n", taskComment.getTask().getUrl(), note_idValue);
+	}
 }

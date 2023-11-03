@@ -24,7 +24,6 @@ public class GitlabException extends CoreException {
 		super(status);
 	}
 
-
 	public GitlabException(CoreException exception) {
 		super(exception.getStatus());
 	}

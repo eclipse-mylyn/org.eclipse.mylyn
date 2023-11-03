@@ -29,5 +29,4 @@ public abstract class GitlabPostOperation<T> extends GitlabOperation<T> {
 		return request;
 	}
 
-
 }

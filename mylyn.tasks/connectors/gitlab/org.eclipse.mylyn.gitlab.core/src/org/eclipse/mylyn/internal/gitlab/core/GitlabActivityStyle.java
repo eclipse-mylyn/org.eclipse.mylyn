@@ -14,81 +14,89 @@ package org.eclipse.mylyn.internal.gitlab.core;
 
 public class GitlabActivityStyle implements Cloneable {
 
-    public static final int NORMAL = 0;
-    public static final int BOLD = 1;
+	public static final int NORMAL = 0;
+
+	public static final int BOLD = 1;
+
 //    public static final int UNDERLINE_ERROR = 2;
 //    public static final int UNDERLINE_SQUIGGLE = 3;
-    public static final int UNDERLINE_LINK = 4;
+	public static final int UNDERLINE_LINK = 4;
 
-    public static final int COLOR_RED = 3;
-    public static final int COLOR_GREEN = 5;
-    public static final int COLOR_INHERIT_DEFAULT = 1;
+	public static final int COLOR_RED = 3;
 
-    private int start;
-    private int length;
-    private int fontStyle;
-    private int color;
-    private String url;
+	public static final int COLOR_GREEN = 5;
 
-    public GitlabActivityStyle(int start) {
-	super();
-	this.start = start;
-	color = COLOR_INHERIT_DEFAULT;
-    }
+	public static final int COLOR_INHERIT_DEFAULT = 1;
 
-    public int getStart() {
-	return start;
-    }
+	private int start;
 
-    public void setStart(int start) {
-	this.start = start;
-    }
+	private int length;
 
-    public int getLength() {
-	return length;
-    }
+	private int fontStyle;
 
-    public void add2Length(int addLength) {
-	length += addLength;
-    }
+	private int color;
 
-    public void setLength(int length) {
-	this.length = length;
-    }
+	private String url;
 
-    public int getFontStyle() {
-	return fontStyle;
-    }
+	public GitlabActivityStyle(int start) {
+		super();
+		this.start = start;
+		color = COLOR_INHERIT_DEFAULT;
+	}
 
-    public void setFontStyle(int fontStyle) {
-	this.fontStyle = fontStyle;
-    }
+	public int getStart() {
+		return start;
+	}
 
-    public int getColor() {
-	return color;
-    }
+	public void setStart(int start) {
+		this.start = start;
+	}
 
-    public void setColor(int color) {
-	this.color = color;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public String getUrl() {
-	return url;
-    }
+	public void add2Length(int addLength) {
+		length += addLength;
+	}
 
-    public void setUrl(String url) {
-	this.url = url;
-    }
+	public void setLength(int length) {
+		this.length = length;
+	}
 
-    @Override
-    public GitlabActivityStyle clone() throws CloneNotSupportedException {
-	return (GitlabActivityStyle) super.clone();
-    }
+	public int getFontStyle() {
+		return fontStyle;
+	}
 
-    @Override
-    public String toString() {
-	return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color="
-		+ color + ", url=" + url + "]";
-    }
+	public void setFontStyle(int fontStyle) {
+		this.fontStyle = fontStyle;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Override
+	public GitlabActivityStyle clone() throws CloneNotSupportedException {
+		return (GitlabActivityStyle) super.clone();
+	}
+
+	@Override
+	public String toString() {
+		return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color="
+				+ color + ", url=" + url + "]";
+	}
 
 }

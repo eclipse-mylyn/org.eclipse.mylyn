@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 public class GitlabSearchQueryPageSchema extends AbstractQueryPageSchema {
 
 	private static final GitlabSearchQueryPageSchema instance = new GitlabSearchQueryPageSchema();
+
 	private final GitlabNewTaskSchema parent = GitlabNewTaskSchema.getDefault();
 
 	public static GitlabSearchQueryPageSchema getInstance() {
@@ -32,16 +33,17 @@ public class GitlabSearchQueryPageSchema extends AbstractQueryPageSchema {
 	public final Field product = copyFrom(parent.PRODUCT).type(TaskAttribute.TYPE_MULTI_SELECT)
 			.layoutPriority(1)
 			.create();
-	public final Field group = createField("GROUP", "Group", TaskAttribute.TYPE_MULTI_SELECT,
-			null, 1);
-	public final Field search = createField("SEARCH", "search", TaskAttribute.TYPE_SHORT_TEXT,
-		null, 2);
-	public final Field search_in = createField("SEARCH_IN", "in", TaskAttribute.TYPE_SINGLE_SELECT,
-		null, 2);
-	public final Field state = createField("STATE", "State", TaskAttribute.TYPE_SINGLE_SELECT,
-		null, 3);
-	public final Field confidential = createField("CONFIDENTIAL", "confidential", TaskAttribute.TYPE_BOOLEAN,
-		null, 4);
+
+	public final Field group = createField("GROUP", "Group", TaskAttribute.TYPE_MULTI_SELECT, null, 1);
+
+	public final Field search = createField("SEARCH", "search", TaskAttribute.TYPE_SHORT_TEXT, null, 2);
+
+	public final Field search_in = createField("SEARCH_IN", "in", TaskAttribute.TYPE_SINGLE_SELECT, null, 2);
+
+	public final Field state = createField("STATE", "State", TaskAttribute.TYPE_SINGLE_SELECT, null, 3);
+
+	public final Field confidential = createField("CONFIDENTIAL", "confidential", TaskAttribute.TYPE_BOOLEAN, null, 4);
+
 	public final Field assigned_to_me = createField("ASSIGNED_TO_ME", "assigned to me", TaskAttribute.TYPE_BOOLEAN,
-		null, 4);
+			null, 4);
 }

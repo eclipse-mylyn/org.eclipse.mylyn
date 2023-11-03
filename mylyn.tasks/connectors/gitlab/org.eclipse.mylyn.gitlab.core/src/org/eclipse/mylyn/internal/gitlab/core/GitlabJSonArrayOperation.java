@@ -28,43 +28,43 @@ import com.google.gson.JsonArray;
 
 public abstract class GitlabJSonArrayOperation extends GitlabOperation<JsonArray> {
 
-    public GitlabJSonArrayOperation(CommonHttpClient client, String urlSuffix) {
-	super(client, urlSuffix);
-    }
+	public GitlabJSonArrayOperation(CommonHttpClient client, String urlSuffix) {
+		super(client, urlSuffix);
+	}
 
-    private String nextPage(Header[] linkHeader) {
-	if (linkHeader.length > 0) {
-	    Header firstLinkHeader = linkHeader[0];
-	    for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) {
-		String[] linkHeaderElements = linkHeaderEntry.split("; ");
-		if ("rel=\"next\"".equals(linkHeaderElements[1])) {
-		    return linkHeaderElements[0].substring(1, linkHeaderElements[0].length() - 1);
+	private String nextPage(Header[] linkHeader) {
+		if (linkHeader.length > 0) {
+			Header firstLinkHeader = linkHeader[0];
+			for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) {
+				String[] linkHeaderElements = linkHeaderEntry.split("; ");
+				if ("rel=\"next\"".equals(linkHeaderElements[1])) {
+					return linkHeaderElements[0].substring(1, linkHeaderElements[0].length() - 1);
+				}
+			}
 		}
-	    }
+
+		return null;
 	}
 
-	return null;
-    }
+	@Override
+	protected JsonArray execute(IOperationMonitor monitor) throws IOException, GitlabException {
+		JsonArray result = null;
+		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
+		CommonHttpResponse response = execute(request, monitor);
+		result = processAndRelease(response, monitor);
+		Header[] linkHeader = response.getResponse().getHeaders("Link");
+		String nextPageValue = nextPage(linkHeader);
+		while (nextPageValue != null) {
+			HttpRequestBase looprequest = new HttpGet(nextPageValue);
+			addHttpRequestEntities(looprequest);
+			CommonHttpResponse loopresponse = execute(looprequest, monitor);
+			JsonArray loopresult = processAndRelease(loopresponse, monitor);
+			result.addAll(loopresult);
+			linkHeader = loopresponse.getResponse().getHeaders("Link");
+			nextPageValue = nextPage(linkHeader);
+		}
 
-    @Override
-    protected JsonArray execute(IOperationMonitor monitor) throws IOException, GitlabException {
-	JsonArray result = null;
-	HttpRequestBase request = createHttpRequestBase();
-	addHttpRequestEntities(request);
-	CommonHttpResponse response = execute(request, monitor);
-	result = processAndRelease(response, monitor);
-	Header[] linkHeader = response.getResponse().getHeaders("Link");
-	String nextPageValue = nextPage(linkHeader);
-	while (nextPageValue != null) {
-	    HttpRequestBase looprequest = new HttpGet(nextPageValue);
-	    addHttpRequestEntities(looprequest);
-	    CommonHttpResponse loopresponse = execute(looprequest, monitor);
-	    JsonArray loopresult = processAndRelease(loopresponse, monitor);
-	    result.addAll(loopresult);
-	    linkHeader = loopresponse.getResponse().getHeaders("Link");
-	    nextPageValue = nextPage(linkHeader);
+		return result;
 	}
-
-	return result;
-    }
 }
