@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -45,8 +45,8 @@ public class GitlabNewTaskSchema extends AbstractTaskSchema {
 	private static Map<String, String> json2AttributeMapper = Map.ofEntries(
 			Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1
 			, Map.entry("description", getDefault().DESCRIPTION.getKey()) //$NON-
-			, Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$    
-			, Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$     
+			, Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$
+			, Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$
 			, Map.entry("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
 	);
 

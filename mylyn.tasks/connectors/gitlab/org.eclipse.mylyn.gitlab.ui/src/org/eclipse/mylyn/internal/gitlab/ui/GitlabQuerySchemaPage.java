@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,12 +13,10 @@
 package org.eclipse.mylyn.internal.gitlab.ui;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.mylyn.internal.gitlab.core.GitlabTaskSchema;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractQueryPageSchema;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.QueryPageDetails;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.RepositoryQuerySchemaPage;

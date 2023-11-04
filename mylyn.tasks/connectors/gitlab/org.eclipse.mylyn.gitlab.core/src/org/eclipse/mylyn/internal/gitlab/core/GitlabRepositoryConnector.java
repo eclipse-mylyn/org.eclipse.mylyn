@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -95,7 +94,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
+	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<>();
 
 	private final LoadingCache<RepositoryKey, Optional<GitlabConfiguration>> configurationCache;
 
@@ -260,7 +259,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskId);
 		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
 		getTaskDataHandler().getMultiTaskData(repository, taskIds, singleTaskDataCollector, monitor);

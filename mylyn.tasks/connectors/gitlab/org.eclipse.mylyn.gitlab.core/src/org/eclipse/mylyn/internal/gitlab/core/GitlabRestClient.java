@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -97,7 +97,7 @@ public class GitlabRestClient {
 
 	private final TaskRepository taskRepository;
 
-	private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");;
+	private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
 
 	public static String AUTHORIZATION_HEADER = "authorization_header";
 
@@ -162,7 +162,7 @@ public class GitlabRestClient {
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				String state = query.getAttribute("STATE");
-				ArrayList<String> suffix = new ArrayList<String>();
+				ArrayList<String> suffix = new ArrayList<>();
 				switch (state != null ? state : "") {
 					case "opened":
 						suffix.add("state=opened");
@@ -211,6 +211,7 @@ public class GitlabRestClient {
 				return null;
 			}
 
+			@Override
 			protected java.util.List<TaskData> execute(IOperationMonitor monitor) throws IOException, GitlabException {
 				List<TaskData> result = null;
 				HttpRequestBase request = createHttpRequestBase();
@@ -229,12 +230,12 @@ public class GitlabRestClient {
 					nextPageValue = nextPage(linkHeader);
 				}
 				return result;
-			};
+			}
 
 			@Override
 			protected List<TaskData> parseFromJson(InputStreamReader in) throws GitlabException {
 
-				TypeToken<List<TaskData>> type = new TypeToken<List<TaskData>>() {
+				TypeToken<List<TaskData>> type = new TypeToken<>() {
 				};
 
 				return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataListDeserializer())
@@ -302,9 +303,10 @@ public class GitlabRestClient {
 		getAccessTokenIfNotPresent(monitor);
 		String validate = new GitlabOperation<String>(client, "/version") {
 
+			@Override
 			protected boolean isRepeatable() {
 				return false;
-			};
+			}
 
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
@@ -342,7 +344,7 @@ public class GitlabRestClient {
 		@Override
 		public ArrayList<TaskData> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
-			ArrayList<TaskData> response = new ArrayList<TaskData>();
+			ArrayList<TaskData> response = new ArrayList<>();
 			GitlabConfiguration config = getConfiguration();
 			JsonArray ja = json.getAsJsonArray();
 			for (JsonElement jsonElement : ja) {
@@ -504,7 +506,7 @@ public class GitlabRestClient {
 				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 						"get Issue with path " + matcher.group(1) + " an ID " + matcher.group(2));
 			}
-			TypeToken<TaskData> type = new TypeToken<TaskData>() {
+			TypeToken<TaskData> type = new TypeToken<>() {
 			};
 			result = new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
 					.create()
@@ -617,8 +619,8 @@ public class GitlabRestClient {
 				long lastLabelAt = 0;
 				Instant instantAt = null;
 				TaskAttribute labelText = null;
-				ArrayList<String> added = new ArrayList<String>();
-				ArrayList<String> removed = new ArrayList<String>();
+				ArrayList<String> added = new ArrayList<>();
+				ArrayList<String> removed = new ArrayList<>();
 				for (JsonElement stateElem : labels) {
 					JsonObject label = (JsonObject) stateElem;
 					Instant instant = Instant
@@ -732,17 +734,16 @@ public class GitlabRestClient {
 		String resultText = "";
 
 		String[] parts = bodyText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}");
-		ArrayList<GitlabActivityStyle> styles = new ArrayList<GitlabActivityStyle>(parts.length);
+		ArrayList<GitlabActivityStyle> styles = new ArrayList<>(parts.length);
 		int textIdx = 0;
 		GitlabActivityStyle styleRange = new GitlabActivityStyle(0);
 
 		int textLen = bodyText.length();
-		for (int idx = 0; idx < parts.length; idx++) {
-			int actPartLen = parts[idx].length();
+		for (String matchText : parts) {
+			int actPartLen = matchText.length();
 			textIdx += actPartLen;
 			String marker = textIdx + 2 <= textLen ? bodyText.substring(textIdx, textIdx + 2) : "  ";
 
-			String matchText = parts[idx];
 			Matcher linkMatcher = linkPattern.matcher(matchText);
 
 			if (linkMatcher.find()) {
@@ -762,7 +763,7 @@ public class GitlabRestClient {
 			}
 
 			if (actPartLen > 0) {
-				resultText += parts[idx];
+				resultText += matchText;
 				styleRange.add2Length(actPartLen);
 			}
 			if ("**".equals(marker)) {
@@ -1169,7 +1170,7 @@ public class GitlabRestClient {
 					throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
 							"UnsupportedEncodingException", e));
 				}
-			};
+			}
 
 			@Override
 			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
@@ -1254,7 +1255,7 @@ public class GitlabRestClient {
 								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
 										+ projectList.length + "): " + project + " ");
 					}
-					JsonObject projectObject = (JsonObject) projectDetail;
+					JsonObject projectObject = projectDetail;
 					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
 					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
@@ -1417,6 +1418,7 @@ public class GitlabRestClient {
 			jsonElement = new GitlabPostOperation<JsonObject>(client,
 					"/projects/" + productAttribute.getValue() + "/issues") {
 
+				@Override
 				protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
 					super.addHttpRequestEntities(request);
 					request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
@@ -1429,7 +1431,7 @@ public class GitlabRestClient {
 						throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
 								"UnsupportedEncodingException", e));
 					}
-				};
+				}
 
 				@Override
 				protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)

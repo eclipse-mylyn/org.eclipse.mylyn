@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
@@ -49,7 +47,7 @@ public class GitlabTaskEditorPage extends AbstractTaskEditorPage {
 		// TODO Auto-generated method stub
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		// remove unnecessary default editor parts
-		ArrayList<TaskEditorPartDescriptor> descriptorsToRemove = new ArrayList<TaskEditorPartDescriptor>(2);
+		ArrayList<TaskEditorPartDescriptor> descriptorsToRemove = new ArrayList<>(2);
 		boolean hasCommentPart = false;
 		boolean hasNewCommentPart = false;
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {

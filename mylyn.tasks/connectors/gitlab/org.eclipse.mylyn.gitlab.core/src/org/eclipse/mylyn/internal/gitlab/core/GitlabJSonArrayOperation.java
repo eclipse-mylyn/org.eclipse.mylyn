@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.gitlab.core;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpGet;
@@ -22,7 +21,6 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import com.google.gson.JsonArray;
 

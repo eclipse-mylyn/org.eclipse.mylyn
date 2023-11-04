@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -107,7 +107,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		if (repository != null) {
 			String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 			if (groupsValue != null)
-				groupList = new ArrayList<String>(Arrays.asList(groupsValue.split(",")));
+				groupList = new ArrayList<>(Arrays.asList(groupsValue.split(",")));
 		}
 		groups.setInput(groupList);
 		groupInput = new Text(aditionalContainer, SWT.NONE);
@@ -185,7 +185,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		if (repository != null) {
 			String projectsValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
 			if (projectsValue != null)
-				projectList = new ArrayList<String>(Arrays.asList(projectsValue.split(",")));
+				projectList = new ArrayList<>(Arrays.asList(projectsValue.split(",")));
 		}
 		projects.setInput(projectList);
 		projectInput = new Text(aditionalContainer, SWT.NONE);
