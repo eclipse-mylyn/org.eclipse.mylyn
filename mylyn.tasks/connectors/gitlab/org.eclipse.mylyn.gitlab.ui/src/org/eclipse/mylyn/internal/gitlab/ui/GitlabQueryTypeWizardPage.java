@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,26 +14,17 @@
 package org.eclipse.mylyn.internal.gitlab.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractQueryPageSchema;
-import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.QueryPageDetails;
-import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.RepositoryQuerySchemaPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-public class GitlabQueryTypeWizardPage extends WizardPage {
 
+public class GitlabQueryTypeWizardPage extends WizardPage {
 
 	private Button buttonCustom;
 
@@ -67,6 +58,5 @@ public class GitlabQueryTypeWizardPage extends WizardPage {
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 	}
-
 
 }

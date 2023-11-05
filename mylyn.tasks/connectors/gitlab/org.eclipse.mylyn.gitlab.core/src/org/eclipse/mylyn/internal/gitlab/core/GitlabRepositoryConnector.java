@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -66,361 +65,367 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 
 public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
-    public class RepositoryKey {
-	private final TaskRepository repository;
+	public class RepositoryKey {
+		private final TaskRepository repository;
 
-	public RepositoryKey(@NonNull TaskRepository repository) {
-	    super();
-	    this.repository = repository;
-	}
-
-	public TaskRepository getRepository() {
-	    return repository;
-	}
-
-	@Override
-	public int hashCode() {
-	    return repository.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-	    if (this == obj) {
-		return true;
-	    }
-	    if (obj == null || getClass() != obj.getClass()) {
-		return false;
-	    }
-	    return this.repository.equals(((RepositoryKey) obj).getRepository());
-	}
-    }
-
-    private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
-
-    private final LoadingCache<RepositoryKey, Optional<GitlabConfiguration>> configurationCache;
-    private SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    public static Duration CONFIGURATION_CACHE_EXPIRE_DURATION = new Duration(7, TimeUnit.DAYS);
-    public static Duration CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION = new Duration(1, TimeUnit.DAYS);
-    public static Duration CLIENT_CACHE_DURATION = new Duration(24, TimeUnit.HOURS);
-
-    private boolean ignoredProperty(String propertyName) {
-	if (propertyName.equals(RepositoryLocation.PROPERTY_LABEL) || propertyName.equals(TaskRepository.OFFLINE)
-		|| propertyName.equals(IRepositoryConstants.PROPERTY_ENCODING)
-		|| propertyName.equals(TaskRepository.PROXY_HOSTNAME) || propertyName.equals(TaskRepository.PROXY_PORT)
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.savePassword") //$NON-NLS-1$
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.usedefault") //$NON-NLS-1$
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.savePassword") //$NON-NLS-1$
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.username") //$NON-NLS-1$
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.password") //$NON-NLS-1$
-		|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.enabled")) { //$NON-NLS-1$
-	    return true;
-	}
-	return false;
-    }
-
-    private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-	    if (ignoredProperty(evt.getPropertyName())
-		    || evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) { //$NON-NLS-1$
-		return;
-	    }
-	    TaskRepository taskRepository = (TaskRepository) evt.getSource();
-	    configurationCache.invalidate(new RepositoryKey(taskRepository));
-	}
-    };
-
-    protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
-	    Duration refreshAfterWriteDuration) {
-	return Caffeine.newBuilder()
-		.expireAfterWrite(expireAfterWriteDuration.getValue(), expireAfterWriteDuration.getUnit())
-		.refreshAfterWrite(refreshAfterWriteDuration.getValue(), refreshAfterWriteDuration.getUnit());
-    }
-
-    public GitlabRepositoryConnector() {
-	this(CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION);
-    }
-
-    public GitlabRepositoryConnector(Duration refreshAfterWriteDuration) {
-	super();
-	configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
-		.build(new CacheLoader<RepositoryKey, Optional<GitlabConfiguration>>() {
-
-		    @Override
-		    public Optional<GitlabConfiguration> load(RepositoryKey key) throws Exception {
-			GitlabRestClient client = clientCache.get(key);
-			TaskRepository repository = key.getRepository();
-			repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
-			return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
-		    }
-
-		});
-    }
-
-    public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
-	long startTime = 0, endTime = 0;
-	String traceExitResult = "";
-	if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
-	    GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
-	if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
-	    getClient(repository);
-	}
-	try {
-	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
-		startTime = System.currentTimeMillis();
-	    }
-
-	    Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
-	    GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
-	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
-		endTime = System.currentTimeMillis();
-		traceExitResult = result.toString() + " " + (endTime - startTime) + " ms";
-	    }
-	    return result;
-	} finally {
-	    if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
-		GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
-	}
-    }
-
-    @Override
-    public boolean canCreateNewTask(@NonNull TaskRepository repository) {
-	return true;
-    }
-
-    @Override
-    public boolean canCreateTaskFromKey(@NonNull TaskRepository repository) {
-	return false;
-    }
-
-    @Override
-    public @Nullable String getRepositoryUrlFromTaskUrl(@NonNull String taskUrl) {
-	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public @Nullable String getTaskIdFromTaskUrl(@NonNull String taskUrl) {
-	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public @Nullable String getTaskUrl(@NonNull String repositoryUrl, @NonNull String taskIdOrKey) {
-	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean hasTaskChanged(@NonNull TaskRepository taskRepository, @NonNull ITask task,
-	    @NonNull TaskData taskData) {
-	String lastKnownLocalModValue = task.getModificationDate() != null
-		? simpleFormatter.format(task.getModificationDate())
-		: "";
-	TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-	String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
-	return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
-    }
-
-    @Override
-    public void updateRepositoryConfiguration(@NonNull TaskRepository taskRepository, @NonNull IProgressMonitor monitor)
-	    throws CoreException {
-	context.set(monitor != null ? OperationUtil.convert(monitor) : new NullOperationMonitor());
-	configurationCache.invalidate(new RepositoryKey(taskRepository));
-	getRepositoryConfiguration(taskRepository);
-	context.remove();
-    }
-
-    @Override
-    public String getConnectorKind() {
-	return GitlabCoreActivator.CONNECTOR_KIND;
-    }
-
-    @Override
-    public String getLabel() {
-	return "Gitlab";
-    }
-
-    public class SingleTaskDataCollector extends TaskDataCollector {
-	final TaskData[] retrievedData = new TaskData[1];
-
-	@Override
-	public void accept(TaskData taskData) {
-	    retrievedData[0] = taskData;
-	}
-
-	public TaskData getTaskData() {
-	    return retrievedData[0];
-	}
-
-    }
-
-    @Override
-    public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-	    throws CoreException {
-	Set<String> taskIds = new HashSet<String>();
-	taskIds.add(taskId);
-	SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
-	getTaskDataHandler().getMultiTaskData(repository, taskIds, singleTaskDataCollector, monitor);
-
-	if (singleTaskDataCollector.getTaskData() == null) {
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-		    "Task data could not be retrieved. Please re-synchronize task")); //$NON-NLS-1$
-	}
-	return singleTaskDataCollector.getTaskData();
-    }
-
-    @Override
-    public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
-	    ISynchronizationSession session, IProgressMonitor monitor) {
-	monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
-	GitlabRestClient client;
-	try {
-	    client = getClient(repository);
-	    IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3); //$NON-NLS-1$
-	    client.getIssues(query, collector, new NullOperationMonitor());
-	} catch (CoreException e) {
-	    return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, IStatus.INFO,
-		    "CoreException from performQuery", e);
-	}
-	return Status.OK_STATUS;
-    }
-
-    @Override
-    public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
-	TaskMapper scheme = getTaskMapping(taskData);
-	scheme.applyTo(task);
-    }
-
-    @Override
-    public AbstractTaskDataHandler getTaskDataHandler() {
-	return new GitlabTaskDataHandler(this);
-    }
-
-    @Override
-    public RepositoryInfo validateRepository(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-	try {
-	    GitlabRestClient client = createClient(repository);
-	    if (!client.validate(OperationUtil.convert(monitor))) {
-		throw new CoreException(
-			new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "repository is invalide"));
-	    }
-	    return new RepositoryInfo(new RepositoryVersion(client.getVersion(OperationUtil.convert(monitor))));
-	} catch (Exception e) {
-	    throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
-	}
-    }
-
-    public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
-	return clientCache.get(new RepositoryKey(repository));
-    }
-
-    private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-	    TaskRepository taskRepository = (TaskRepository) evt.getSource();
-	    clientCache.invalidate(new RepositoryKey(taskRepository));
-	}
-    };
-
-    private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = Caffeine.newBuilder()
-	    .expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
-	    .build(new CacheLoader<RepositoryKey, GitlabRestClient>() {
-
-		@Override
-		public GitlabRestClient load(RepositoryKey key) throws Exception {
-		    TaskRepository repository = key.getRepository();
-		    repository.addChangeListener(repositoryChangeListener4ClientCache);
-		    return createClient(repository);
+		public RepositoryKey(@NonNull TaskRepository repository) {
+			super();
+			this.repository = repository;
 		}
-	    });
 
-    private final LoadingCache<String, byte[]> avatarCache = Caffeine.newBuilder()
-	    .expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
-	    .build(new CacheLoader<String, byte[]>() {
+		public TaskRepository getRepository() {
+			return repository;
+		}
 
 		@Override
-		public byte[] load(String key) throws Exception {
-		    byte[] avatarBytes = null;
-		    HttpURLConnection connection;
+		public int hashCode() {
+			return repository.hashCode();
+		}
 
-		    connection = (HttpURLConnection) new URL(key).openConnection();
-		    connection.setConnectTimeout(30000);
-		    connection.setUseCaches(false);
-		    connection.connect();
-
-		    if (connection.getResponseCode() == 200) {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			InputStream input = connection.getInputStream();
-			try {
-			    byte[] buffer = new byte[8192];
-			    int read = -1;
-			    while ((read = input.read(buffer)) != -1) {
-				output.write(buffer, 0, read);
-			    }
-			} finally {
-			    try {
-				input.close();
-			    } catch (IOException ignore) {
-			    }
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
 			}
-			avatarBytes = output.toByteArray();
-		    }
-		    return avatarBytes;
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+			return this.repository.equals(((RepositoryKey) obj).getRepository());
 		}
-	    });
-
-    public GitlabRestClient createClient(TaskRepository repository) {
-	RepositoryLocation location = new RepositoryLocation(convertProperties(repository));
-	AuthenticationCredentials credentials1 = repository
-		.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
-	UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
-		true);
-	location.setCredentials(AuthenticationType.REPOSITORY, credentials);
-	GitlabRestClient client = new GitlabRestClient(location, this, repository);
-
-	return client;
-    }
-
-    private Map<String, String> convertProperties(TaskRepository repository) {
-	return repository.getProperties().entrySet().stream()
-		.collect(Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
-    }
-
-    @SuppressWarnings("restriction")
-    private String convertProperty(String key) {
-	if (TaskRepository.PROXY_USEDEFAULT.equals(key)) {
-	    return RepositoryLocation.PROPERTY_PROXY_USEDEFAULT;
-	} else if (TaskRepository.PROXY_HOSTNAME.equals(key)) {
-	    return RepositoryLocation.PROPERTY_PROXY_HOST;
-	} else if (TaskRepository.PROXY_PORT.equals(key)) {
-	    return RepositoryLocation.PROPERTY_PROXY_PORT;
 	}
-	return key;
-    }
 
-    @Override
-    public TaskMapper getTaskMapping(final TaskData taskData) {
+	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<>();
 
-	return new TaskMapper(taskData) {
-	    @Override
-	    public String getTaskKey() {
-		TaskAttribute attribute = getTaskData().getRoot()
-			.getAttribute(GitlabTaskSchema.getDefault().TASK_KEY.getKey());
-		if (attribute != null) {
-		    return attribute.getValue();
+	private final LoadingCache<RepositoryKey, Optional<GitlabConfiguration>> configurationCache;
+
+	private SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+	public static Duration CONFIGURATION_CACHE_EXPIRE_DURATION = new Duration(7, TimeUnit.DAYS);
+
+	public static Duration CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION = new Duration(1, TimeUnit.DAYS);
+
+	public static Duration CLIENT_CACHE_DURATION = new Duration(24, TimeUnit.HOURS);
+
+	private boolean ignoredProperty(String propertyName) {
+		if (propertyName.equals(RepositoryLocation.PROPERTY_LABEL) || propertyName.equals(TaskRepository.OFFLINE)
+				|| propertyName.equals(IRepositoryConstants.PROPERTY_ENCODING)
+				|| propertyName.equals(TaskRepository.PROXY_HOSTNAME) || propertyName.equals(TaskRepository.PROXY_PORT)
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.savePassword") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.usedefault") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.savePassword") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.username") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.password") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.enabled")) { //$NON-NLS-1$
+			return true;
 		}
-		return super.getTaskKey();
-	    }
+		return false;
+	}
 
-	    @Override
-	    public String getTaskKind() {
-		return taskData.getConnectorKind();
-	    }
+	private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (ignoredProperty(evt.getPropertyName())
+					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) { //$NON-NLS-1$
+				return;
+			}
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			configurationCache.invalidate(new RepositoryKey(taskRepository));
+		}
 	};
-    }
 
-    public byte[] getAvatarData(String url) {
-	return avatarCache.get(url);
-    }
+	protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
+			Duration refreshAfterWriteDuration) {
+		return Caffeine.newBuilder()
+				.expireAfterWrite(expireAfterWriteDuration.getValue(), expireAfterWriteDuration.getUnit())
+				.refreshAfterWrite(refreshAfterWriteDuration.getValue(), refreshAfterWriteDuration.getUnit());
+	}
+
+	public GitlabRepositoryConnector() {
+		this(CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION);
+	}
+
+	public GitlabRepositoryConnector(Duration refreshAfterWriteDuration) {
+		super();
+		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
+				.build(new CacheLoader<RepositoryKey, Optional<GitlabConfiguration>>() {
+
+					@Override
+					public Optional<GitlabConfiguration> load(RepositoryKey key) throws Exception {
+						GitlabRestClient client = clientCache.get(key);
+						TaskRepository repository = key.getRepository();
+						repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
+						return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
+					}
+
+				});
+	}
+
+	public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
+		long startTime = 0, endTime = 0;
+		String traceExitResult = "";
+		if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+			GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
+		if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
+			getClient(repository);
+		}
+		try {
+			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
+				startTime = System.currentTimeMillis();
+			}
+
+			Optional<GitlabConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(repository));
+			GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
+			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
+				endTime = System.currentTimeMillis();
+				traceExitResult = result.toString() + " " + (endTime - startTime) + " ms";
+			}
+			return result;
+		} finally {
+			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+				GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
+		}
+	}
+
+	@Override
+	public boolean canCreateNewTask(@NonNull TaskRepository repository) {
+		return true;
+	}
+
+	@Override
+	public boolean canCreateTaskFromKey(@NonNull TaskRepository repository) {
+		return false;
+	}
+
+	@Override
+	public @Nullable String getRepositoryUrlFromTaskUrl(@NonNull String taskUrl) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public @Nullable String getTaskIdFromTaskUrl(@NonNull String taskUrl) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public @Nullable String getTaskUrl(@NonNull String repositoryUrl, @NonNull String taskIdOrKey) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean hasTaskChanged(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@NonNull TaskData taskData) {
+		String lastKnownLocalModValue = task.getModificationDate() != null
+				? simpleFormatter.format(task.getModificationDate())
+				: "";
+		TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
+		return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
+	}
+
+	@Override
+	public void updateRepositoryConfiguration(@NonNull TaskRepository taskRepository, @NonNull IProgressMonitor monitor)
+			throws CoreException {
+		context.set(monitor != null ? OperationUtil.convert(monitor) : new NullOperationMonitor());
+		configurationCache.invalidate(new RepositoryKey(taskRepository));
+		getRepositoryConfiguration(taskRepository);
+		context.remove();
+	}
+
+	@Override
+	public String getConnectorKind() {
+		return GitlabCoreActivator.CONNECTOR_KIND;
+	}
+
+	@Override
+	public String getLabel() {
+		return "Gitlab";
+	}
+
+	public class SingleTaskDataCollector extends TaskDataCollector {
+		final TaskData[] retrievedData = new TaskData[1];
+
+		@Override
+		public void accept(TaskData taskData) {
+			retrievedData[0] = taskData;
+		}
+
+		public TaskData getTaskData() {
+			return retrievedData[0];
+		}
+
+	}
+
+	@Override
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		Set<String> taskIds = new HashSet<>();
+		taskIds.add(taskId);
+		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
+		getTaskDataHandler().getMultiTaskData(repository, taskIds, singleTaskDataCollector, monitor);
+
+		if (singleTaskDataCollector.getTaskData() == null) {
+			throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
+					"Task data could not be retrieved. Please re-synchronize task")); //$NON-NLS-1$
+		}
+		return singleTaskDataCollector.getTaskData();
+	}
+
+	@Override
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
+			ISynchronizationSession session, IProgressMonitor monitor) {
+		monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
+		GitlabRestClient client;
+		try {
+			client = getClient(repository);
+			IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3); //$NON-NLS-1$
+			client.getIssues(query, collector, new NullOperationMonitor());
+		} catch (CoreException e) {
+			return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, IStatus.INFO,
+					"CoreException from performQuery", e);
+		}
+		return Status.OK_STATUS;
+	}
+
+	@Override
+	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		TaskMapper scheme = getTaskMapping(taskData);
+		scheme.applyTo(task);
+	}
+
+	@Override
+	public AbstractTaskDataHandler getTaskDataHandler() {
+		return new GitlabTaskDataHandler(this);
+	}
+
+	@Override
+	public RepositoryInfo validateRepository(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		try {
+			GitlabRestClient client = createClient(repository);
+			if (!client.validate(OperationUtil.convert(monitor))) {
+				throw new CoreException(
+						new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "repository is invalide"));
+			}
+			return new RepositoryInfo(new RepositoryVersion(client.getVersion(OperationUtil.convert(monitor))));
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+		}
+	}
+
+	public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
+		return clientCache.get(new RepositoryKey(repository));
+	}
+
+	private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			clientCache.invalidate(new RepositoryKey(taskRepository));
+		}
+	};
+
+	private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = Caffeine.newBuilder()
+			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
+			.build(new CacheLoader<RepositoryKey, GitlabRestClient>() {
+
+				@Override
+				public GitlabRestClient load(RepositoryKey key) throws Exception {
+					TaskRepository repository = key.getRepository();
+					repository.addChangeListener(repositoryChangeListener4ClientCache);
+					return createClient(repository);
+				}
+			});
+
+	private final LoadingCache<String, byte[]> avatarCache = Caffeine.newBuilder()
+			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
+			.build(new CacheLoader<String, byte[]>() {
+
+				@Override
+				public byte[] load(String key) throws Exception {
+					byte[] avatarBytes = null;
+					HttpURLConnection connection;
+
+					connection = (HttpURLConnection) new URL(key).openConnection();
+					connection.setConnectTimeout(30000);
+					connection.setUseCaches(false);
+					connection.connect();
+
+					if (connection.getResponseCode() == 200) {
+						ByteArrayOutputStream output = new ByteArrayOutputStream();
+						InputStream input = connection.getInputStream();
+						try {
+							byte[] buffer = new byte[8192];
+							int read = -1;
+							while ((read = input.read(buffer)) != -1) {
+								output.write(buffer, 0, read);
+							}
+						} finally {
+							try {
+								input.close();
+							} catch (IOException ignore) {
+							}
+						}
+						avatarBytes = output.toByteArray();
+					}
+					return avatarBytes;
+				}
+			});
+
+	public GitlabRestClient createClient(TaskRepository repository) {
+		RepositoryLocation location = new RepositoryLocation(convertProperties(repository));
+		AuthenticationCredentials credentials1 = repository
+				.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
+		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
+				true);
+		location.setCredentials(AuthenticationType.REPOSITORY, credentials);
+		GitlabRestClient client = new GitlabRestClient(location, this, repository);
+
+		return client;
+	}
+
+	private Map<String, String> convertProperties(TaskRepository repository) {
+		return repository.getProperties()
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
+	}
+
+	@SuppressWarnings("restriction")
+	private String convertProperty(String key) {
+		if (TaskRepository.PROXY_USEDEFAULT.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_USEDEFAULT;
+		} else if (TaskRepository.PROXY_HOSTNAME.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_HOST;
+		} else if (TaskRepository.PROXY_PORT.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_PORT;
+		}
+		return key;
+	}
+
+	@Override
+	public TaskMapper getTaskMapping(final TaskData taskData) {
+
+		return new TaskMapper(taskData) {
+			@Override
+			public String getTaskKey() {
+				TaskAttribute attribute = getTaskData().getRoot()
+						.getAttribute(GitlabTaskSchema.getDefault().TASK_KEY.getKey());
+				if (attribute != null) {
+					return attribute.getValue();
+				}
+				return super.getTaskKey();
+			}
+
+			@Override
+			public String getTaskKind() {
+				return taskData.getConnectorKind();
+			}
+		};
+	}
+
+	public byte[] getAvatarData(String url) {
+		return avatarCache.get(url);
+	}
 
 }
