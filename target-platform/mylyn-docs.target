@@ -2,31 +2,22 @@
 <?pde version="3.8"?>
 <target name="mylyn-docs" sequenceNumber="2">
 	<locations>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
 			<repository location="https://download.eclipse.org/cbi/updates/license"/>
 		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.ecore.source.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.common.source.feature.group" version="0.0.0"/>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-			<unit id="org.junit" version="0.0.0"/>
-			<unit id="org.junit.source" version="0.0.0"/>
-			<unit id="org.apache.commons.commons-io" version="0.0.0"/>
-			<unit id="org.apache.commons.logging" version="0.0.0"/>
-			<unit id="javax.annotation" version="0.0.0"/>
-			<unit id="org.apache.felix.scr" version="0.0.0"/>
-			<unit id="javax.inject" version="0.0.0"/>
-			<unit id="org.apache.commons.jxpath" version="0.0.0"/>
-			<unit id="com.sun.jna.platform" version="0.0.0"/>
-			<unit id="bcpg" version="0.0.0"/>
-			<unit id="org.hamcrest" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/releases/2023-09"/>
 		</location>
 		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
 			<dependencies>
+				<dependency>
+					<groupId>com.google.guava</groupId>
+					<artifactId>failureaccess</artifactId>
+					<version>1.0.2</version>
+					<type>jar</type>
+				</dependency>
 				<dependency>
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
