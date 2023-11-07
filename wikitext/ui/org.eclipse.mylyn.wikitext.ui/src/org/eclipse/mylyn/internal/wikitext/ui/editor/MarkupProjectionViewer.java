@@ -63,8 +63,8 @@ public class MarkupProjectionViewer extends ProjectionViewer {
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 		super.configure(configuration);
-		if (configuration instanceof MarkupSourceViewerConfiguration) {
-			outlinePresenter = ((MarkupSourceViewerConfiguration) configuration).getOutlineInformationPresenter(this);
+		if (configuration instanceof MarkupSourceViewerConfiguration msvc) {
+			outlinePresenter = msvc.getOutlineInformationPresenter(this);
 			outlinePresenter.install(this);
 		}
 	}

@@ -75,7 +75,7 @@ public class WikiTextExtensionPointReader {
 	 * Get a markup language by name.
 	 *
 	 * @param name
-	 *            the name of the markup language to retrieve
+	 *                 the name of the markup language to retrieve
 	 * @return the markup language or null if there is no markup language known by the given name
 	 * @see #getMarkupLanguageNames()
 	 */
@@ -132,7 +132,7 @@ public class WikiTextExtensionPointReader {
 	 * expected file extensions.
 	 *
 	 * @param name
-	 *            the name of the file for which a markup language is desired
+	 *                 the name of the file for which a markup language is desired
 	 * @return the markup language name, or null if no markup language is registered for the specified file name
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
@@ -166,7 +166,7 @@ public class WikiTextExtensionPointReader {
 	 * expected file extensions.
 	 *
 	 * @param name
-	 *            the name of the file for which a markup language is desired
+	 *                 the name of the file for which a markup language is desired
 	 * @return the markup language, or null if no markup language is registered for the specified file name
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
@@ -206,7 +206,7 @@ public class WikiTextExtensionPointReader {
 	 * Get a markup validator by language name.
 	 *
 	 * @param name
-	 *            the name of the markup language for which a validator is desired
+	 *                 the name of the markup language for which a validator is desired
 	 * @return the markup validator
 	 * @see #getMarkupLanguageNames()
 	 */
@@ -326,13 +326,12 @@ public class WikiTextExtensionPointReader {
 							getLog().log(e.getStatus());
 							continue;
 						}
-						if (!(markupLanguage instanceof MarkupLanguage)) {
+						if (!(markupLanguage instanceof MarkupLanguage d)) {
 							log(IStatus.ERROR,
 									MessageFormat.format(Messages.getString("WikiTextExtensionPointReader.13"), //$NON-NLS-1$
 											markupLanguage.getClass().getName()));
 							continue;
 						}
-						MarkupLanguage d = (MarkupLanguage) markupLanguage;
 						{
 							Class<? extends MarkupLanguage> previous = markupLanguageByName.put(name, d.getClass());
 							if (previous != null) {

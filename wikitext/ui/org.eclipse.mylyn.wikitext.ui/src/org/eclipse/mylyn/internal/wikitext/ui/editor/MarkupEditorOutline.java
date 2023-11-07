@@ -100,8 +100,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 				comp.setLayout(gl);
 
 				Object tipItem = getToolTipItem(new Point(event.x, event.y));
-				if (tipItem instanceof OutlineItem) {
-					OutlineItem outlineItem = (OutlineItem) tipItem;
+				if (tipItem instanceof OutlineItem outlineItem) {
 					Label label = new Label(comp, SWT.WRAP);
 					label.setBackground(comp.getBackground());
 					label.setText(outlineItem.getTooltip());
@@ -239,8 +238,8 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 	protected final void addAction(IMenuManager menu, String group, String actionId) {
 		IAction action = editor.getAction(actionId);
 		if (action != null) {
-			if (action instanceof IUpdate) {
-				((IUpdate) action).update();
+			if (action instanceof IUpdate updateAction) {
+				updateAction.update();
 			}
 
 			IMenuManager subMenu = menu.findMenuUsingPath(group);
@@ -256,11 +255,9 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		if (disableReveal) {
 			return;
 		}
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			Object firstElement = structuredSelection.getFirstElement();
-			if (firstElement instanceof OutlineItem) {
-				OutlineItem item = (OutlineItem) firstElement;
+			if (firstElement instanceof OutlineItem item) {
 				editor.selectAndReveal(item);
 			}
 		}

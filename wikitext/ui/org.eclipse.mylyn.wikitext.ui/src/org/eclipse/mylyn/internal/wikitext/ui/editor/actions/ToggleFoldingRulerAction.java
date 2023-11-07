@@ -57,8 +57,8 @@ public class ToggleFoldingRulerAction extends AbstractRulerActionDelegate {
 	}
 
 	private void update() {
-		if (editor instanceof MarkupEditor) {
-			callerAction.setChecked(((MarkupEditor) editor).isFoldingEnabled());
+		if (editor instanceof MarkupEditor mEditor) {
+			callerAction.setChecked(mEditor.isFoldingEnabled());
 		}
 	}
 }

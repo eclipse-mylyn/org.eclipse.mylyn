@@ -407,7 +407,7 @@ public class HtmlTextPresentationParser {
 	 * info.
 	 *
 	 * @param annotationModel
-	 *            the annotation model, or null if annotations should not be collected.
+	 *                            the annotation model, or null if annotations should not be collected.
 	 */
 	public void setAnnotationModel(IAnnotationModel annotationModel) {
 		this.annotationModel = annotationModel;
@@ -677,8 +677,7 @@ public class HtmlTextPresentationParser {
 			} else if (localName.equals("img")) { //$NON-NLS-1$
 				if (enableImages) {
 					for (Annotation annotation : elementState.annotations) {
-						if (annotation instanceof ImageAnnotation) {
-							ImageAnnotation imageAnnotation = (ImageAnnotation) annotation;
+						if (annotation instanceof ImageAnnotation imageAnnotation) {
 							// ensure that the image is painted on a new line
 							if (out.length() > 0) {
 								char lastChar = out.charAt(out.length() - 1);
@@ -840,8 +839,8 @@ public class HtmlTextPresentationParser {
 
 						if (imageAnnotationAncestorState.annotations != null) {
 							for (Annotation annotation : imageAnnotationAncestorState.annotations) {
-								if (annotation instanceof AnchorHrefAnnotation) {
-									imageAnnotation.setAnchorHrefAnnotation((AnchorHrefAnnotation) annotation);
+								if (annotation instanceof AnchorHrefAnnotation hrefAnn) {
+									imageAnnotation.setAnchorHrefAnnotation(hrefAnn);
 									break;
 								}
 							}

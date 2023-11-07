@@ -81,8 +81,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		Preferences prefs = new Preferences();
 
 		Layout fieldEditorParentLayout = getFieldEditorParent().getLayout();
-		if (fieldEditorParentLayout instanceof GridLayout) {
-			GridLayout layout = (GridLayout) fieldEditorParentLayout;
+		if (fieldEditorParentLayout instanceof GridLayout layout) {
 			layout.marginRight = 5;
 		}
 
@@ -105,8 +104,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 		// bug 260427
 		Layout layout = blockGroup.getLayout();
-		if (layout instanceof GridLayout) {
-			GridLayout gridLayout = (GridLayout) layout;
+		if (layout instanceof GridLayout gridLayout) {
 			gridLayout.marginWidth = 5;
 			gridLayout.marginHeight = 5;
 		}
@@ -121,8 +119,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 		// bug 260427
 		layout = phraseModifierGroup.getLayout();
-		if (layout instanceof GridLayout) {
-			GridLayout gridLayout = (GridLayout) layout;
+		if (layout instanceof GridLayout gridLayout) {
 			gridLayout.marginWidth = 5;
 			gridLayout.marginHeight = 5;
 		}

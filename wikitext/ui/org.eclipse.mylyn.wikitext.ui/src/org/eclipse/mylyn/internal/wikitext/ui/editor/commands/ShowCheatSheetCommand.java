@@ -55,8 +55,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
-		if (activeFocusControl instanceof Control) {
-			Control control = (Control) activeFocusControl;
+		if (activeFocusControl instanceof Control control) {
 			MarkupLanguage markupLanguage = (MarkupLanguage) control.getData(MarkupLanguage.class.getName());
 			ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
 

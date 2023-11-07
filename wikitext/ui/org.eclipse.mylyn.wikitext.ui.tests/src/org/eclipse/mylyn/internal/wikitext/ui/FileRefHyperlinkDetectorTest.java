@@ -108,8 +108,8 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 				.getActiveEditor();
 
 		IEditorInput editorInput = activeEditor.getEditorInput();
-		if (editorInput instanceof IFileEditorInput) {
-			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
+		if (editorInput instanceof IFileEditorInput fei) {
+			IFile editorFile = fei.getFile();
 
 			assertEquals(file, editorFile);
 		}
@@ -158,8 +158,8 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 				.getActiveEditor();
 
 		IEditorInput editorInput = activeEditor.getEditorInput();
-		if (editorInput instanceof IFileEditorInput) {
-			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
+		if (editorInput instanceof IFileEditorInput fei) {
+			IFile editorFile = fei.getFile();
 
 			assertEquals(articleFile, editorFile);
 		}

@@ -272,9 +272,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 
 				private boolean tryToOpenAsWorkspaceFile(String location) {
-					if (getEditorInput() instanceof IURIEditorInput) {
+					if (getEditorInput() instanceof IURIEditorInput uriInput) {
 						try {
-							IURIEditorInput uriInput = (IURIEditorInput) getEditorInput();
 							URI locationURI = uriInput.getURI().resolve(location);
 							if (locationURI != null && "file".equals(locationURI.getScheme())) { //$NON-NLS-1$
 								IFile[] files = ResourcesPlugin.getWorkspace()
@@ -283,8 +282,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 								if (files.length > 0) {
 									// it is a workspace resource -> open using an editor
 									IEditorPart editor = IDE.openEditor(getEditorSite().getPage(), files[0]);
-									if (editor instanceof MarkupEditor) {
-										MarkupEditor markupEditor = (MarkupEditor) editor;
+									if (editor instanceof MarkupEditor markupEditor) {
 										markupEditor.showPreview(null);
 									}
 									return true;
@@ -341,9 +339,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 		// start special files in "read mode", i.e. preview tab
 		IEditorInput ei = getEditorInput();
-		if (previewTab != null && ei instanceof IURIEditorInput) {
+		if (previewTab != null && ei instanceof IURIEditorInput editorInput) {
 			String previewFileNamePattern = WikiTextUiPlugin.getDefault().getPreferences().getPreviewFileNamePattern();
-			IURIEditorInput editorInput = (IURIEditorInput) ei;
 			File file = new File(editorInput.getURI());
 			if (previewFileNamePattern != null && file.getName().matches(previewFileNamePattern)) {
 				tabFolder.setSelection(previewTab);
@@ -645,7 +642,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * updates the preview and optionally reveal the section that corresponds to the given outline item.
 	 *
 	 * @param outlineItem
-	 *            the outline item, or null
+	 *                        the outline item, or null
 	 */
 	private void updatePreview(final OutlineItem outlineItem) {
 		if (previewDirty && browser != null) {
@@ -708,12 +705,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					MarkupLanguage markupLanguage = getMarkupLanguage();
 					if (markupLanguage != null) {
 						markupLanguage = markupLanguage.clone();
-						if (markupLanguage instanceof AbstractMarkupLanguage) {
-							((AbstractMarkupLanguage) markupLanguage).setEnableMacros(true);
-						}
-
-						if (markupLanguage instanceof AbstractMarkupLanguage) {
-							AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+						if (markupLanguage instanceof AbstractMarkupLanguage language) {
+							language.setEnableMacros(true);
 							language.setFilterGenerativeContents(false);
 							language.setBlocksOnly(false);
 						}
@@ -770,8 +763,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	public IFile getFile() {
 		IEditorInput editorInput = getEditorInput();
-		if (editorInput instanceof IFileEditorInput) {
-			IFileEditorInput fileEditorInput = (IFileEditorInput) editorInput;
+		if (editorInput instanceof IFileEditorInput fileEditorInput) {
 			return fileEditorInput.getFile();
 		}
 		return null;
@@ -1024,8 +1016,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				Iterator<Annotation> annotationIt = projectionAnnotationModel.getAnnotationIterator();
 				while (annotationIt.hasNext()) {
 					Annotation annotation = annotationIt.next();
-					if (annotation instanceof HeadingProjectionAnnotation) {
-						HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
+					if (annotation instanceof HeadingProjectionAnnotation projectionAnnotation) {
 						if (!projectionAnnotationById.containsKey(projectionAnnotation.getHeadingId())
 								&& !toDelete.contains(projectionAnnotation)) {
 							toDelete.add(projectionAnnotation);
@@ -1127,10 +1118,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		MarkupLanguage markupLanguage = loadMarkupLanguagePreference();
 		if (markupLanguage == null) {
 			String name = input.getName();
-			if (input instanceof IFileEditorInput) {
-				name = ((IFileEditorInput) input).getFile().getName();
-			} else if (input instanceof IPathEditorInput) {
-				name = ((IPathEditorInput) input).getPath().lastSegment();
+			if (input instanceof IFileEditorInput fei) {
+				name = fei.getFile().getName();
+			} else if (input instanceof IPathEditorInput pei) {
+				name = pei.getPath().lastSegment();
 			}
 			markupLanguage = WikiText.getMarkupLanguageForFilename(name);
 			if (markupLanguage == null) {
@@ -1141,15 +1132,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage, boolean persistSetting) {
-		if (markupLanguage instanceof AbstractMarkupLanguage) {
-			((AbstractMarkupLanguage) markupLanguage).setEnableMacros(false);
+		if (markupLanguage instanceof AbstractMarkupLanguage language) {
+			language.setEnableMacros(false);
 		}
 		((MarkupDocumentProvider) getDocumentProvider()).setMarkupLanguage(markupLanguage);
 
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
-		if (partitioner instanceof FastMarkupPartitioner) {
-			final FastMarkupPartitioner fastMarkupPartitioner = (FastMarkupPartitioner) partitioner;
+		if (partitioner instanceof FastMarkupPartitioner fastMarkupPartitioner) {
 			fastMarkupPartitioner.setMarkupLanguage(markupLanguage);
 		}
 		sourceViewerConfiguration.setMarkupLanguage(markupLanguage);
@@ -1169,10 +1159,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 		if (persistSetting) {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer instanceof MarkupProjectionViewer) {
-				IReconciler reconciler = ((MarkupProjectionViewer) sourceViewer).getReconciler();
-				if (reconciler instanceof MarkupMonoReconciler) {
-					((MarkupMonoReconciler) reconciler).forceReconciling();
+			if (sourceViewer instanceof MarkupProjectionViewer mpv) {
+				IReconciler reconciler = mpv.getReconciler();
+				if (reconciler instanceof MarkupMonoReconciler monoReconciler) {
+					monoReconciler.forceReconciling();
 				}
 			}
 		}
@@ -1205,7 +1195,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * lookup the markup language preference of a file based on the persisted preference.
 	 *
 	 * @param file
-	 *            the file for which the preference should be looked up
+	 *                 the file for which the preference should be looked up
 	 * @return the markup language preference, or null if it was not set or could not be loaded.
 	 */
 	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
@@ -1220,7 +1210,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * lookup the markup language preference of a file based on the persisted preference.
 	 *
 	 * @param file
-	 *            the file for which the preference should be looked up
+	 *                 the file for which the preference should be looked up
 	 * @return the markup language name, or null if no preference exists
 	 */
 	public static String getMarkupLanguagePreference(IFile file) {
@@ -1261,8 +1251,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
 		MarkupLanguage markupLanguage = null;
-		if (partitioner instanceof FastMarkupPartitioner) {
-			markupLanguage = ((FastMarkupPartitioner) partitioner).getMarkupLanguage();
+		if (partitioner instanceof FastMarkupPartitioner fmp) {
+			markupLanguage = fmp.getMarkupLanguage();
 		}
 		return markupLanguage;
 	}
@@ -1331,10 +1321,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
-		if (selection instanceof IStructuredSelection) {
-			for (Object element : ((IStructuredSelection) selection).toArray()) {
-				if (element instanceof OutlineItem) {
-					OutlineItem item = (OutlineItem) element;
+		if (selection instanceof IStructuredSelection sse) {
+			for (Object element : sse.toArray()) {
+				if (element instanceof OutlineItem item) {
 					selectAndReveal(item);
 					if (isOutlinePageValid()) {
 						outlinePage.setSelection(selection);
@@ -1342,8 +1331,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					return true;
 				}
 			}
-		} else if (selection instanceof ITextSelection) {
-			ITextSelection textSel = (ITextSelection) selection;
+		} else if (selection instanceof ITextSelection textSel) {
 			selectAndReveal(textSel.getOffset(), textSel.getLength());
 			return true;
 		}

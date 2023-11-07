@@ -108,11 +108,11 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public void log(Throwable ce) {
-		if (ce instanceof CoreException) {
-			getLog().log(((CoreException) ce).getStatus());
+	public void log(Throwable e) {
+		if (e instanceof CoreException ce) {
+			getLog().log(ce.getStatus());
 		} else {
-			log(IStatus.ERROR, ce.getMessage(), ce);
+			log(IStatus.ERROR, e.getMessage(), e);
 		}
 	}
 
@@ -122,8 +122,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		}
 		ILog log = getLog();
 		IStatus status = null;
-		if (exception instanceof CoreException) {
-			status = ((CoreException) exception).getStatus();
+		if (exception instanceof CoreException ce) {
+			status = ce.getStatus();
 		}
 		if (status == null) {
 			status = new Status(severity, getPluginId(), severity, message, exception);

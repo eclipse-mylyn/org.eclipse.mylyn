@@ -49,8 +49,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 				Iterator<?> iterator = annotationModel.getAnnotationIterator();
 				while (iterator.hasNext()) {
 					Annotation annotation = (Annotation) iterator.next();
-					if (annotation instanceof AnchorHrefAnnotation) {
-						AnchorHrefAnnotation href = (AnchorHrefAnnotation) annotation;
+					if (annotation instanceof AnchorHrefAnnotation href) {
 						Position position = annotationModel.getPosition(href);
 						if (position.getOffset() <= interestingOffset
 								&& position.getOffset() + position.getLength() >= interestingOffset) {
@@ -165,13 +164,11 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 			Iterator<?> iterator = annotationModel.getAnnotationIterator();
 			while (iterator.hasNext()) {
 				Annotation annotation = (Annotation) iterator.next();
-				if (annotation instanceof IdAnnotation) {
-					IdAnnotation idAnnotation = (IdAnnotation) annotation;
+				if (annotation instanceof IdAnnotation idAnnotation) {
 					if (!idAnnotation.getElementId().equals(lookingFor)) {
 						continue;
 					}
-				} else if (annotation instanceof AnchorNameAnnotation) {
-					AnchorNameAnnotation nameAnnotation = (AnchorNameAnnotation) annotation;
+				} else if (annotation instanceof AnchorNameAnnotation nameAnnotation) {
 					if (!nameAnnotation.getAnchorName().equals(lookingFor)) {
 						continue;
 					}

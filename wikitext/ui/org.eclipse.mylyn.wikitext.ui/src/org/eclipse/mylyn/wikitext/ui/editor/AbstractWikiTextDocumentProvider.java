@@ -58,8 +58,8 @@ public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentPr
 
 	@Override
 	protected IAnnotationModel createAnnotationModel(Object element) {
-		if (element instanceof IAdaptable) {
-			IFile file = ((IAdaptable) element).getAdapter(IFile.class);
+		if (element instanceof IAdaptable adapt) {
+			IFile file = adapt.getAdapter(IFile.class);
 			if (file != null) {
 				return new ResourceMarkerAnnotationModel(file);
 			}

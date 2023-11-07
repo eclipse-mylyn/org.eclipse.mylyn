@@ -109,8 +109,7 @@ public class MarkupSourceViewer extends SourceViewer {
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 		super.configure(configuration);
-		if (configuration instanceof MarkupSourceViewerConfiguration) {
-			MarkupSourceViewerConfiguration markupConfiguration = (MarkupSourceViewerConfiguration) configuration;
+		if (configuration instanceof MarkupSourceViewerConfiguration markupConfiguration) {
 			outlinePresenter = markupConfiguration.getOutlineInformationPresenter(this);
 			outlinePresenter.install(this);
 

@@ -109,8 +109,7 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 			@Override
 			public void beginSpan(SpanType type, Attributes attributes) {
 				if (type == SpanType.LINK) {
-					if (attributes instanceof LinkAttributes) {
-						LinkAttributes linkAttributes = (LinkAttributes) attributes;
+					if (attributes instanceof LinkAttributes linkAttributes) {
 						if (linkAttributes.getHref() != null && !linkAttributes.getHref().startsWith("#")) { //$NON-NLS-1$
 							IRegion region = createRegion();
 							links.add(new HyperlinkDescriptor(linkAttributes.getHref(), region));

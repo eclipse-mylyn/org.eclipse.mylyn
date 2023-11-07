@@ -31,8 +31,7 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 
 	@Override
 	public Object[] getChildren(Object o) {
-		if (o instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) o;
+		if (o instanceof OutlineItem item) {
 			if (!item.getChildren().isEmpty()) {
 				return item.getChildren().toArray();
 			}
@@ -48,8 +47,7 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 
 	@Override
 	public String getLabel(Object o) {
-		if (o instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) o;
+		if (o instanceof OutlineItem item) {
 			// TODO: bug 260447 remove text prefix when icons become available
 			if (item.getKind() == null) {
 				return item.getLabel();
@@ -62,8 +60,7 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 
 	@Override
 	public Object getParent(Object o) {
-		if (o instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) o;
+		if (o instanceof OutlineItem item) {
 			return item.getParent();
 		}
 		return null;

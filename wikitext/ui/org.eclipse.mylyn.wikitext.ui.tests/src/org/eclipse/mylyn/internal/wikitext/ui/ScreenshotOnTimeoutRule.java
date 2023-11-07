@@ -113,25 +113,25 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 		for (Control control : controls) {
 			String indent = "  ".repeat(level);
 			System.out.println(indent + description(control));
-			if (control instanceof Composite) {
-				dumpControlHierarchy(level + 1, Arrays.asList(((Composite) control).getChildren()));
+			if (control instanceof Composite comp) {
+				dumpControlHierarchy(level + 1, Arrays.asList(comp.getChildren()));
 			}
 		}
 	}
 
 	private String description(Control control) {
 		ToStringHelper builder = MoreObjects.toStringHelper(control.getClass());
-		if (control instanceof StyledText) {
-			builder.add("text", ((StyledText) control).getText());
+		if (control instanceof StyledText styled) {
+			builder.add("text", styled.getText());
 		}
-		if (control instanceof Text) {
-			builder.add("text", ((Text) control).getText());
+		if (control instanceof Text text) {
+			builder.add("text", text.getText());
 		}
-		if (control instanceof Button) {
-			builder.add("text", ((Button) control).getText());
+		if (control instanceof Button b) {
+			builder.add("text", b.getText());
 		}
-		if (control instanceof Label) {
-			builder.add("text", ((Label) control).getText());
+		if (control instanceof Label l) {
+			builder.add("text", l.getText());
 		}
 		return builder.add("tooltip", control.getToolTipText()).toString();
 	}

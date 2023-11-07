@@ -50,8 +50,8 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 	@Override
 	public void initialReconcile() {
 		for (IReconcilingStrategy strategy : strategies) {
-			if (strategy instanceof IReconcilingStrategyExtension) {
-				((IReconcilingStrategyExtension) strategy).initialReconcile();
+			if (strategy instanceof IReconcilingStrategyExtension rse) {
+				rse.initialReconcile();
 			}
 		}
 	}
@@ -59,8 +59,8 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		for (IReconcilingStrategy strategy : strategies) {
-			if (strategy instanceof IReconcilingStrategyExtension) {
-				((IReconcilingStrategyExtension) strategy).setProgressMonitor(monitor);
+			if (strategy instanceof IReconcilingStrategyExtension rse) {
+				rse.setProgressMonitor(monitor);
 			}
 		}
 	}

@@ -198,8 +198,7 @@ class FoldingStructure implements IFoldingStructure {
 		Iterator<Annotation> iterator = annotationModel.getAnnotationIterator();
 		while (iterator.hasNext()) {
 			Annotation annotation = iterator.next();
-			if (annotation instanceof HeadingProjectionAnnotation) {
-				HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
+			if (annotation instanceof HeadingProjectionAnnotation projectionAnnotation) {
 				if (operation.operate(projectionAnnotation)) {
 					if (modifications == null) {
 						modifications = new ArrayList<>();
@@ -227,8 +226,7 @@ class FoldingStructure implements IFoldingStructure {
 				iterator = annotationModel.getAnnotationIterator();
 				while (iterator.hasNext()) {
 					Annotation annotation = iterator.next();
-					if (annotation instanceof HeadingProjectionAnnotation) {
-						HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
+					if (annotation instanceof HeadingProjectionAnnotation projectionAnnotation) {
 						if (!projectionAnnotation.isCollapsed()) {
 							Position position = annotationModel.getPosition(projectionAnnotation);
 							if (position != null) {

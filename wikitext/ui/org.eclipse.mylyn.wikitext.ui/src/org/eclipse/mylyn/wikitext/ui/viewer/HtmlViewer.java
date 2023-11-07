@@ -190,8 +190,8 @@ public class HtmlViewer extends SourceViewer {
 
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
-		if (configuration instanceof HtmlViewerConfiguration) {
-			this.configuration = (HtmlViewerConfiguration) configuration;
+		if (configuration instanceof HtmlViewerConfiguration htmlConfig) {
+			this.configuration = htmlConfig;
 			if (textPresentation != null) {
 				this.configuration.setTextPresentation(textPresentation);
 			}

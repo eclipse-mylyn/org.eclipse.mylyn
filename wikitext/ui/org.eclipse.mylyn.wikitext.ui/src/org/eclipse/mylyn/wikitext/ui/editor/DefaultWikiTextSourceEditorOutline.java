@@ -86,8 +86,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 				comp.setLayout(gl);
 
 				Object tipItem = getToolTipItem(new Point(event.x, event.y));
-				if (tipItem instanceof OutlineItem) {
-					OutlineItem outlineItem = (OutlineItem) tipItem;
+				if (tipItem instanceof OutlineItem outlineItem) {
 					Label label = new Label(comp, SWT.WRAP);
 					label.setBackground(comp.getBackground());
 					label.setText(outlineItem.getTooltip());
@@ -140,11 +139,9 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		if (disableReveal) {
 			return;
 		}
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			Object firstElement = structuredSelection.getFirstElement();
-			if (firstElement instanceof OutlineItem) {
-				OutlineItem item = (OutlineItem) firstElement;
+			if (firstElement instanceof OutlineItem item) {
 				if (getEditor() != null) {
 					IShowInTarget target = getEditor().getAdapter(IShowInTarget.class);
 					if (target != null) {
@@ -224,8 +221,8 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		if (source != null) {
 			ShowInContext showInContext = source.getShowInContext();
 			if (showInContext != null) {
-				if (showInContext.getSelection() instanceof IStructuredSelection) {
-					Object firstElement = ((IStructuredSelection) showInContext.getSelection()).getFirstElement();
+				if (showInContext.getSelection() instanceof IStructuredSelection sse) {
+					Object firstElement = sse.getFirstElement();
 					if (firstElement instanceof OutlineItem) {
 						setSelection(new StructuredSelection(firstElement));
 					}

@@ -113,13 +113,12 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 				return false;
 			}
 			IResource resource = delta.getResource();
-			if (resource instanceof IFile) {
+			if (resource instanceof IFile file) {
 				if ((delta.getKind() & (IResourceDelta.ADDED | IResourceDelta.CHANGED)) != 0) {
-					IFile file = (IFile) resource;
 					ValidationProjectBuilder.this.visit(files, file);
 				}
-			} else if (resource instanceof IContainer) {
-				if (filtered((IContainer) resource)) {
+			} else if (resource instanceof IContainer container) {
+				if (filtered(container)) {
 					return false;
 				}
 			}
@@ -137,11 +136,10 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			if (isInterrupted()) {
 				return false;
 			}
-			if (resource instanceof IFile) {
-				IFile file = (IFile) resource;
+			if (resource instanceof IFile file) {
 				ValidationProjectBuilder.this.visit(files, file);
-			} else if (resource instanceof IContainer) {
-				if (filtered((IContainer) resource)) {
+			} else if (resource instanceof IContainer container) {
+				if (filtered(container)) {
 					return false;
 				}
 			}

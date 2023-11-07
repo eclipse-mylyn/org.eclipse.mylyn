@@ -251,8 +251,8 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 				Iterator<Annotation> iterator = viewer.getAnnotationModel().getAnnotationIterator();
 				while (iterator.hasNext()) {
 					Annotation annotation = iterator.next();
-					if (annotation instanceof ImageAnnotation) {
-						annotations.add((ImageAnnotation) annotation);
+					if (annotation instanceof ImageAnnotation imageAnnotation) {
+						annotations.add(imageAnnotation);
 					}
 				}
 			}
@@ -360,8 +360,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 				Iterator<Annotation> iterator = annotationModel.getAnnotationIterator();
 				while (iterator.hasNext()) {
 					Annotation annotation = iterator.next();
-					if (annotation instanceof ImageAnnotation) {
-						ImageAnnotation imageAnnotation = (ImageAnnotation) annotation;
+					if (annotation instanceof ImageAnnotation imageAnnotation) {
 						if (imgSrc.equals(imageAnnotation.getUrl())) {
 							imageAnnotation.setImage(image);
 							modifiedAnnotations.add(imageAnnotation);

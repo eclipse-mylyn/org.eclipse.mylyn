@@ -53,14 +53,13 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 			}
 		}
 
-		if (currentSelection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) currentSelection;
+		if (currentSelection instanceof IStructuredSelection structuredSelection) {
 			Iterator<Object> it = structuredSelection.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
 				IFile file = null;
-				if (o instanceof IAdaptable) {
-					file = ((IAdaptable) o).getAdapter(IFile.class);
+				if (o instanceof IAdaptable adapt) {
+					file = adapt.getAdapter(IFile.class);
 				}
 				if (file != null) {
 					String name = file.getName();
@@ -129,9 +128,9 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	 * Perform the command's function on the given file.
 	 *
 	 * @param file
-	 *            the input file to process
+	 *                 the input file to process
 	 * @param name
-	 *            the name of the output file without file extension
+	 *                 the name of the output file without file extension
 	 * @see #handleFile(ExecutionEvent, IFile, String)
 	 */
 	protected abstract void handleFile(IFile file, String name) throws ExecutionException;

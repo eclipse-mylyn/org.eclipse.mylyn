@@ -99,8 +99,8 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 	public FindAndReplaceTarget(ITextViewer textViewer) {
 		this.textViewer = textViewer;
 		findReplaceTarget = textViewer.getFindReplaceTarget();
-		if (findReplaceTarget instanceof IFindReplaceTargetExtension) {
-			findReplaceTargetExtension = (IFindReplaceTargetExtension) findReplaceTarget;
+		if (findReplaceTarget instanceof IFindReplaceTargetExtension frte) {
+			findReplaceTargetExtension = frte;
 		} else {
 			findReplaceTargetExtension = null;
 		}
@@ -330,8 +330,8 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 			selectionProvider.addSelectionChangedListener(this);
 		}
 
-		if (textViewer instanceof ITextViewerExtension) {
-			((ITextViewerExtension) textViewer).prependVerifyKeyListener(this);
+		if (textViewer instanceof ITextViewerExtension tve) {
+			tve.prependVerifyKeyListener(this);
 		} else {
 			textWidget.addVerifyKeyListener(this);
 		}
@@ -375,8 +375,8 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 			selectionProvider.removeSelectionChangedListener(this);
 		}
 
-		if (textViewer instanceof ITextViewerExtension) {
-			((ITextViewerExtension) textViewer).removeVerifyKeyListener(this);
+		if (textViewer instanceof ITextViewerExtension tve) {
+			tve.removeVerifyKeyListener(this);
 		} else {
 			textWidget.removeVerifyKeyListener(this);
 		}

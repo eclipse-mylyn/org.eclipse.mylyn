@@ -141,8 +141,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 		}
 
 		ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection && !selection.isEmpty()) {
 			List<?> list = structuredSelection.toList();
 			if (!list.isEmpty()) {
 				for (Object i : list) {
@@ -169,8 +168,7 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 	private float computeRelativeLocation(DropTargetEvent event) {
 		if (event.item == null) {
 			return 0.5f;
-		} else if (event.item instanceof TreeItem) {
-			TreeItem treeItem = (TreeItem) event.item;
+		} else if (event.item instanceof TreeItem treeItem) {
 			Control control = treeItem.getParent();
 			Point controlRelativeEventLocation = control.toControl(new Point(event.x, event.y));
 			Rectangle bounds = treeItem.getBounds();

@@ -61,9 +61,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 	 * Reset the fonts used by this token scanner.
 	 *
 	 * @param defaultFont
-	 *            the default font, must not be null.
+	 *                                 the default font, must not be null.
 	 * @param defaultMonospaceFont
-	 *            the default monospace font, or null if a suitable default should be selected
+	 *                                 the default monospace font, or null if a suitable default should be selected
 	 */
 	public void resetFonts(Font defaultFont, Font defaultMonospaceFont) {
 		if (defaultFont == null) {
@@ -108,8 +108,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
 		List<Token> tokens = null;
 
-		if (partitioner instanceof FastMarkupPartitioner) {
-			FastMarkupPartitioner fastMarkupPartitioner = (FastMarkupPartitioner) partitioner;
+		if (partitioner instanceof FastMarkupPartitioner fastMarkupPartitioner) {
 			ITypedRegion[] partitioning = partitioner.computePartitioning(offset, length);
 			if (partitioning != null) {
 				tokens = new ArrayList<>();
@@ -132,9 +131,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 						if ((region.getOffset() + region.getLength()) < offset) {
 							continue;
 						}
-						if (region instanceof MarkupPartition) {
-							MarkupPartition partition = (MarkupPartition) region;
-
+						if (region instanceof MarkupPartition partition) {
 							if (lastEnd < partition.getOffset()) {
 								Token blockBridgeToken = new Token(defaultToken.fontState, defaultToken.getData(),
 										lastEnd, partition.getOffset() - lastEnd);

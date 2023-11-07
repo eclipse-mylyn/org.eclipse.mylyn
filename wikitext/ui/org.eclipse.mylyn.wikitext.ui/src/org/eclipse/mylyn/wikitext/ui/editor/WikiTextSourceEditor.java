@@ -129,8 +129,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 */
 	@Override
 	public void setDocumentProvider(IDocumentProvider provider) {
-		if (provider instanceof WikiTextDocumentProvider) {
-			((WikiTextDocumentProvider) provider).setMarkupLanguage(getMarkupLanguage());
+		if (provider instanceof WikiTextDocumentProvider wikiProvider) {
+			wikiProvider.setMarkupLanguage(getMarkupLanguage());
 		}
 		super.setDocumentProvider(provider);
 	}
@@ -139,7 +139,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Set the source viewer configuration. This method should be called in the constructor of subclasses.
 	 *
 	 * @throws ClassCastException
-	 *             if the configuration does not subclass {@link MarkupSourceViewerConfiguration}
+	 *                                if the configuration does not subclass {@link MarkupSourceViewerConfiguration}
 	 */
 	@Override
 	protected void setSourceViewerConfiguration(SourceViewerConfiguration configuration) {
@@ -208,11 +208,11 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Create a markup source viewer. Subclasses may override.
 	 *
 	 * @param parent
-	 *            the parent of the source viewer
+	 *                   the parent of the source viewer
 	 * @param ruler
-	 *            the vertical ruler
+	 *                   the vertical ruler
 	 * @param styles
-	 *            the styles to pass to the viewer
+	 *                   the styles to pass to the viewer
 	 * @return a new markup source viewer
 	 * @see #createSourceViewer(Composite, IVerticalRuler, int)
 	 */
@@ -237,20 +237,19 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
-		if (this.markupLanguage instanceof AbstractMarkupLanguage) {
-			((AbstractMarkupLanguage) this.markupLanguage).setEnableMacros(false);
+		if (this.markupLanguage instanceof AbstractMarkupLanguage language) {
+			language.setEnableMacros(false);
 		}
 		sourceViewerConfiguration.setMarkupLanguage(markupLanguage);
 
 		IDocumentProvider documentProvider = getDocumentProvider();
-		if (documentProvider instanceof WikiTextDocumentProvider) {
-			((WikiTextDocumentProvider) documentProvider).setMarkupLanguage(markupLanguage);
+		if (documentProvider instanceof WikiTextDocumentProvider wdp) {
+			wdp.setMarkupLanguage(markupLanguage);
 		}
 		if (getEditorInput() != null) {
 			IDocument document = documentProvider.getDocument(getEditorInput());
 			IDocumentPartitioner partitioner = document.getDocumentPartitioner();
-			if (partitioner instanceof FastMarkupPartitioner) {
-				final FastMarkupPartitioner fastMarkupPartitioner = (FastMarkupPartitioner) partitioner;
+			if (partitioner instanceof FastMarkupPartitioner fastMarkupPartitioner) {
 				fastMarkupPartitioner.setMarkupLanguage(markupLanguage);
 			}
 		}
@@ -559,10 +558,9 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
-		if (selection instanceof IStructuredSelection) {
-			for (Object element : ((IStructuredSelection) selection).toArray()) {
-				if (element instanceof OutlineItem) {
-					OutlineItem item = (OutlineItem) element;
+		if (selection instanceof IStructuredSelection sse) {
+			for (Object element : sse.toArray()) {
+				if (element instanceof OutlineItem item) {
 					selectAndReveal(item);
 					if (outlinePage != null && outlinePage.getControl() != null
 							&& !outlinePage.getControl().isDisposed()) {
@@ -571,8 +569,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 					return true;
 				}
 			}
-		} else if (selection instanceof ITextSelection) {
-			ITextSelection textSel = (ITextSelection) selection;
+		} else if (selection instanceof ITextSelection textSel) {
 			selectAndReveal(textSel.getOffset(), textSel.getLength());
 			return true;
 		}
@@ -583,7 +580,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Select and reveal the given outline item, based on its offset and length.
 	 *
 	 * @param item
-	 *            the item, must not be null
+	 *                 the item, must not be null
 	 * @since 3.0
 	 */
 	public void selectAndReveal(OutlineItem item) {

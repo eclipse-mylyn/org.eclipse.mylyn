@@ -39,10 +39,9 @@ public class ShowInTargetBridge implements IShowInTarget {
 	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
-		if (selection instanceof IStructuredSelection) {
-			for (Object element : ((IStructuredSelection) selection).toArray()) {
-				if (element instanceof OutlineItem) {
-					OutlineItem item = (OutlineItem) element;
+		if (selection instanceof IStructuredSelection sse) {
+			for (Object element : sse.toArray()) {
+				if (element instanceof OutlineItem item) {
 					viewer.setSelection(new TextSelection(item.getOffset(), item.getLength()), true);
 					return true;
 				}

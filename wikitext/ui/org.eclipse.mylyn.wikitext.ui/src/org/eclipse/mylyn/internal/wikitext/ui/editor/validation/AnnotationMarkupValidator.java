@@ -44,8 +44,8 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
 			List<ValidationProblem> problems) {
 		Object lockObject;
-		if (annotationModel instanceof ISynchronizable) {
-			lockObject = ((ISynchronizable) annotationModel).getLockObject();
+		if (annotationModel instanceof ISynchronizable synchro) {
+			lockObject = synchro.getLockObject();
 		} else {
 			lockObject = annotationModel;
 		}
@@ -72,9 +72,9 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 						new Position(problem.getOffset(), problem.getLength()));
 			}
 
-			if (toRemove != null && annotationModel instanceof IAnnotationModelExtension) {
+			if (toRemove != null && annotationModel instanceof IAnnotationModelExtension annotationModelExtension) {
 				Annotation[] annotationsToRemove = toRemove.toArray(new Annotation[toRemove.size()]);
-				((IAnnotationModelExtension) annotationModel).replaceAnnotations(annotationsToRemove, annotationsToAdd);
+				annotationModelExtension.replaceAnnotations(annotationsToRemove, annotationsToAdd);
 			} else {
 				if (toRemove != null) {
 					for (Annotation annotation : toRemove) {

@@ -33,8 +33,7 @@ public class ShowQuickOutlineCommand extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
-		if (activeFocusControl instanceof Control) {
-			Control control = (Control) activeFocusControl;
+		if (activeFocusControl instanceof Control control) {
 			if (!control.isDisposed()) {
 				ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
 				if (viewer != null) {

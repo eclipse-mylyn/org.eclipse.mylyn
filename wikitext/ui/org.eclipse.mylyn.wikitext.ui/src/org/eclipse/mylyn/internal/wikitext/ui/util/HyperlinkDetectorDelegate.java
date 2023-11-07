@@ -65,8 +65,8 @@ public class HyperlinkDetectorDelegate
 			} catch (CoreException ex) {
 				createFailed = true;
 			}
-			if (context != null && delegate instanceof AbstractHyperlinkDetector) {
-				((AbstractHyperlinkDetector) delegate).setContext(context);
+			if (context != null && delegate instanceof AbstractHyperlinkDetector ahd) {
+				ahd.setContext(context);
 			}
 		}
 		if (delegate != null) {
@@ -87,8 +87,8 @@ public class HyperlinkDetectorDelegate
 	@Override
 	public void dispose() {
 		if (delegate != null) {
-			if (delegate instanceof IHyperlinkDetectorExtension) {
-				((IHyperlinkDetectorExtension) delegate).dispose();
+			if (delegate instanceof IHyperlinkDetectorExtension hde) {
+				hde.dispose();
 			}
 			delegate = null;
 		}

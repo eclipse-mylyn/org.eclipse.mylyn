@@ -26,8 +26,8 @@ public class SwitchSubTabCommand extends AbstractHandler {
 	public Object execute(ExecutionEvent event) {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 
-		if (editor instanceof MarkupEditor) {
-			((MarkupEditor) editor).switchSubTab();
+		if (editor instanceof MarkupEditor mEditor) {
+			mEditor.switchSubTab();
 		}
 
 		return null;
