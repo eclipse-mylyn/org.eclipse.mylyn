@@ -158,6 +158,12 @@
    <feature id="org.eclipse.mylyn.gitlab.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
+   <feature id="org.eclipse.mylyn.wikitext.editors_feature">
+      <category name="mylyn.tasks.docs.integration"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext_feature">
+      <category name="mylyn.tasks.docs.integration"/>
+   </feature>
    <bundle id="com.github.ben-manes.caffeine"/>
    <bundle id="com.google.gerrit.common"/>
    <bundle id="com.google.gerrit.prettify"/>
@@ -194,6 +200,9 @@
    <bundle id="org.apache.xmlrpc.server"/>
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <bundle id="org.eclipse.mylyn.tasks.wikitext.ui">
+      <category name="mylyn.tasks.docs.integration"/>
+   </bundle>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
@@ -219,4 +228,6 @@
          Source code for integrators building on Mylyn.
       </description>
    </category-def>
+   <category-def name="mylyn.tasks.docs.integration" label="Mylyn Docs Integration for TaskEditors"/>
+   <repository-reference location="https://download.eclipse.org/mylyn/docs/releases/3.0.48" enabled="true" />
 </site>

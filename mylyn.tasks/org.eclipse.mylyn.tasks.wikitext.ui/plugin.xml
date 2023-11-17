@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2007, 2013 David Green and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+    
+    Contributors:
+        David Green - initial API and implementation
+ -->
+
+<plugin>
+
+   
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.TextileMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension"
+            name="%taskEditorExtension.name.1">
+      </taskEditorExtension>
+      <repositoryAssociation
+            connectorKind="bugzilla"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+      <repositoryAssociation
+            connectorKind="org.eclipse.mylyn.bugzilla.rest"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+      <repositoryAssociation
+            connectorKind="local"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+
+	<extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.TracWikiMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.tracWikiTaskEditorExtension"
+            name="%taskEditorExtension.name.3">
+      </taskEditorExtension>
+      <repositoryAssociation
+      		connectorKind="trac"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.tracWikiTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.TWikiMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.twikiTaskEditorExtension"
+            name="%taskEditorExtension.name.0">
+      </taskEditorExtension>
+      <repositoryAssociation
+      		connectorKind="xplanner"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.twikiTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+   
+      <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.MediaWikiMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.mediaWikiTaskEditorExtension"
+            name="%taskEditorExtension.name.4">
+      </taskEditorExtension>
+   </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.ConfluenceMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension"
+            name="%taskEditorExtension.name.5">
+      </taskEditorExtension>
+      <repositoryAssociation
+            connectorKind="jira"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.MarkdownMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.markdownTaskEditorExtension"
+            name="%taskEditorExtension.name.6">
+      </taskEditorExtension>
+   </extension>
+   
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage"
+              class="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage"
+              id="org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences.MarkupViewerPreferencePage"
+              name="%page.name.0">
+        </page>
+     </extension>
+     <extension
+           point="org.eclipse.ui.themes">
+        <fontDefinition
+              categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+              id="org.eclipse.mylyn.wikitext.tasks.ui.monospaceFont"
+              isEditable="true"
+              label="%fontDefinition.monospace.label"
+              value="Courier New-regular-10">
+           <description>
+              %fontDefinition.monospace.description
+           </description>
+           <fontValue
+           		os="linux"
+                value="Monospace-regular-10"/>
+           <fontValue
+           		os="macosx"
+                value="Courier-regular-11"/>
+        </fontDefinition>
+     </extension>
+     
+     <extension
+           point="org.eclipse.ui.contexts">
+        <context
+              id="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"
+              name="Task Markup Editor Source Context"
+              parentId="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext">
+        </context>
+     </extension>
+   
+	<extension point="org.eclipse.ui.bindings">
+         <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
+		<key
+            sequence="M1+M2+O"
+            contextId="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"
+            commandId="org.eclipse.mylyn.wikitext.ui.quickOutlineCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      	</key>
+	</extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineToBeginningHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line.to.beginning">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineToBeginningHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line.to.beginning">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineToEndHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line.to.end">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    
+    <handler
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineToEndHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line.to.end">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    
+    <handler
+          class="org.eclipse.mylyn.internal.wikitext.tasks.ui.commands.IncrementalFindHandler"
+          commandId="org.eclipse.ui.edit.findIncremental">
+         <activeWhen>
+         	<or>
+	         	<with variable="activeContexts">
+		            <iterate operator="or" ifEmpty="false">
+		               <equals
+		                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+		            </iterate>
+	         	</with>
+	         	<with variable="activeFocusControlId">
+       	 			<equals value="org.eclipse.mylyn.wikitext.tasks.ui.markupViewer"/>
+         		</with>
+         	</or>
+		</activeWhen>
+    </handler>
+    
+    
+ </extension>
+</plugin>
