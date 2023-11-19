@@ -125,8 +125,10 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 			previewViewer.setStylesheet(preferences.getStylesheet());
 
 			if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
-				previewViewer.getTextWidget().setFont(
-						JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+				previewViewer.getTextWidget()
+						.setFont(
+								JFaceResources.getFontRegistry()
+										.get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
 			}
 			if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
 				previewViewer.setDefaultMonospaceFont(
@@ -166,9 +168,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 			parser.setGC(gc);
 
 			parser.parse(createPreviewHtml());
-		} catch (SAXException e) {
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
+		} catch (SAXException | IOException e) {
 			throw new IllegalStateException(e);
 		} finally {
 			gc.dispose();

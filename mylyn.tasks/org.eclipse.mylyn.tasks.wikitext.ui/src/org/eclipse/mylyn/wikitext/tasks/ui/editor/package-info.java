@@ -12,11 +12,10 @@
  *******************************************************************************/
 
 /**
- * Classes related to integration with the Mylyn task editor, specifically targeting
- * Mylyn's <code>taskEditorExtension</code> extension point.  {@link MarkupTaskEditorExtension} is available for those
- * that wish to target the extension point with a WikiText-based	 markup language.
+ * Classes related to integration with the Mylyn task editor, specifically targeting Mylyn's <code>taskEditorExtension</code> extension
+ * point. {@link MarkupTaskEditorExtension} is available for those that wish to target the extension point with a WikiText-based markup
+ * language.
  *
  * @author David Green
  */
 package org.eclipse.mylyn.wikitext.tasks.ui.editor;
-

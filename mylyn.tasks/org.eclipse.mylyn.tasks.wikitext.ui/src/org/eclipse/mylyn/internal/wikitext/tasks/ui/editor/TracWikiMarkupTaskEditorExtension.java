@@ -23,8 +23,8 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 /**
  * @author David Green
  */
-public class TracWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension<TracWikiLanguage> implements
-		HyperlinkDetectorDescriptorFilter {
+public class TracWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension<TracWikiLanguage>
+		implements HyperlinkDetectorDescriptorFilter {
 
 	public TracWikiMarkupTaskEditorExtension() {
 		setMarkupLanguage(new TracWikiLanguage());

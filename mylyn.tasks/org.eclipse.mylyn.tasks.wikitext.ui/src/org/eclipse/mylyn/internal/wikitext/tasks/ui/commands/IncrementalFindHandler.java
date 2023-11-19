@@ -36,8 +36,7 @@ public class IncrementalFindHandler extends AbstractTextViewerHandler implements
 		if (viewer != null) {
 			IFindReplaceTarget findReplaceTarget = viewer.getFindReplaceTarget();
 			if (findReplaceTarget.canPerformFind()) {
-				if (findReplaceTarget instanceof IFindReplaceTargetExtension) {
-					IFindReplaceTargetExtension extension = (IFindReplaceTargetExtension) findReplaceTarget;
+				if (findReplaceTarget instanceof IFindReplaceTargetExtension extension) {
 					extension.beginSession();
 				}
 			}
