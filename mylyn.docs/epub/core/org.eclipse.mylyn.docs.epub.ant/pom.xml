@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>epub.core</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>4.0.7${qualifier}</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<name>Eclipse EPUB Tools Ant Task</name>
+	<artifactId>org.eclipse.mylyn.docs.epub.ant</artifactId>
+	<groupId>org.eclipse.mylyn.docs</groupId>
+	<packaging>bundle</packaging>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <manifestLocation>META-INF</manifestLocation>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
+                        <Export-Package>org.eclipse.mylyn.docs.epub.ant.*</Export-Package>
+                        <Import-Package>!java.*, org.apache.tools.ant.*, org.eclipse.mylyn.docs.epub.*, org.eclipse.mylyn.wikitext.*</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.10.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
+			<version>4.0.7${qualifier}</version>
+		</dependency>
+	</dependencies>
+</project>

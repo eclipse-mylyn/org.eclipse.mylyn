@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>epub.core</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>4.0.7${qualifier}</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<name>Eclipse EPUB Tools Core</name>
+	<artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
+	<groupId>org.eclipse.mylyn.docs</groupId>
+	<packaging>bundle</packaging>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src-test</testSourceDirectory>
+		<plugins>
+			<!-- also add source folder for generated code -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
+						<Export-Package>org.eclipse.mylyn.docs.epub.internal*;x-internal:=true,org.eclipse.mylyn.docs.epub.core.*, org.eclipse.mylyn.docs.epub.*</Export-Package>
+						<Import-Package>!java.*, org.apache.tika.*;version="0", org.eclipse.emf.*, org.eclipse.mylyn.wikitext.*</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>2.29.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+			<version>2.17.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.common</artifactId>
+			<version>2.27.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.wikitext</artifactId>
+			<version>${releaseVersion}${qualifier}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>1.24.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>1.28.5</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.spec.javax.rmi</groupId>
+					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jacorb</groupId>
+					<artifactId>jacorb-omgapi</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>edu.ucar</groupId>
+					<artifactId>cdm</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>com.github.junrar</groupId>
+				    <artifactId>junrar</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>org.apache.xmlbeans</groupId>
+				    <artifactId>xmlbeans</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+		</dependency>
+	</dependencies>
+
+</project>

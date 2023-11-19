@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Root Content" link_to="../org.eclipse.mylyn.help.ui/primary-toc.xml#additions">
+	<topic label="Table of contents">
+		<topic href="help/a.html" label="Lorem Ipsum"></topic>
+		<link toc="b.xml"/>
+   </topic>
+   <anchor id="additions"/>
+</toc>

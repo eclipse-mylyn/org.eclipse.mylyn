@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>wikitext.ui</artifactId>
+    <groupId>org.eclipse.mylyn.docs</groupId>
+    <version>${releaseVersion}${qualifier}</version>
+  </parent>
+  <artifactId>org.eclipse.mylyn.wikitext.creole.ui</artifactId>
+  <version>${releaseVersion}${qualifier}</version>
+  <packaging>eclipse-plugin</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>org.eclipse.mylyn.wikitext.creole</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

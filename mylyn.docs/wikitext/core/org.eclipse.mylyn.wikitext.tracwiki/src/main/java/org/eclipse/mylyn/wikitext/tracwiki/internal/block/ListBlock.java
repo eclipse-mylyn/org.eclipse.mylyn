@@ -1,0 +1,197 @@
+/*******************************************************************************
+ * Copyright (c) 2007, 2013 David Green and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     David Green - initial API and implementation
+ *     Jeremie Bresson - bug 389812, 390081
+ *******************************************************************************/
+package org.eclipse.mylyn.wikitext.tracwiki.internal.block;
+
+import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.ListAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+
+/**
+ * List block, matches blocks that follow trac list rules (optional whitespace, then '*' or '1.'. Possibility to add
+ * content on the next line if the indentation is compatible)
+ * 
+ * @author David Green
+ */
+public class ListBlock extends Block {
+
+	private static final int LINE_REMAINDER_GROUP_OFFSET = 4;
+
+	static final Pattern startPattern = Pattern.compile("(?:(\\s*)(?:(\\*|-)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
+
+	static final Pattern nextLinePattern = Pattern.compile("(\\s+)(.*+)"); //$NON-NLS-1$
+
+	private int blockLineCount = 0;
+
+	private Matcher matcher;
+
+	private final Stack<ListState> listState = new Stack<ListState>();
+
+	public ListBlock() {
+	}
+
+	@Override
+	public int processLineContent(String line, int offset) {
+		if (blockLineCount == 0) {
+			ListAttributes attributes = new ListAttributes();
+			String spaces = matcher.group(1);
+			String listSpec = matcher.group(2);
+			String numericListSpec = matcher.group(3);
+
+			if (numericListSpec != null && !"1".equals(numericListSpec)) { //$NON-NLS-1$
+				attributes.setStart(numericListSpec);
+			}
+
+			int level = calculateLevel(spaces);
+
+			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
+
+			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
+
+			listState.push(new ListState(level, spaces.length(), offset, type));
+			builder.beginBlock(type, attributes);
+		} else {
+			ListAttributes attributes = new ListAttributes();
+			Matcher matcher = startPattern.matcher(line);
+			if (!matcher.matches()) {
+				Matcher nextLineMatcher = nextLinePattern.matcher(line);
+				ListState listState = this.listState.peek();
+				if (listState.openItem && nextLineMatcher.matches()) {
+					String spaces = nextLineMatcher.group(1);
+					if (spaces.length() > 0 && spaces.length() >= listState.numSpaces
+							&& spaces.length() <= listState.lineRemainderStart) {
+						++blockLineCount;
+						offset = nextLineMatcher.start(2) - 1;
+						markupLanguage.emitMarkupLine(getParser(), state, line, offset);
+						return -1;
+					}
+				}
+				setClosed(true);
+				return 0;
+			}
+			String spaces = matcher.group(1);
+			String listSpec = matcher.group(2);
+			String numericListSpec = matcher.group(3);
+
+			if (numericListSpec != null && !"1".equals(numericListSpec)) { //$NON-NLS-1$
+				attributes.setStart(numericListSpec);
+			}
+
+			int level = calculateLevel(spaces);
+
+			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
+
+			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
+
+			for (ListState listState = this.listState.peek(); listState.level != level || listState.type != type; listState = this.listState.peek()) {
+				if (listState.level > level || (listState.level == level && listState.type != type)) {
+					closeOne();
+					if (this.listState.isEmpty()) {
+						this.listState.push(new ListState(1, spaces.length(), offset, type));
+						builder.beginBlock(type, attributes);
+					}
+				} else {
+					this.listState.push(new ListState(level, spaces.length(), offset, type));
+					builder.beginBlock(type, attributes);
+				}
+			}
+		}
+		++blockLineCount;
+
+		ListState listState = this.listState.peek();
+		if (listState.openItem) {
+			builder.endBlock();
+		}
+		listState.openItem = true;
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+
+		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
+
+		return -1;
+	}
+
+	private int calculateLevel(String spaces) {
+		int length = spaces.length();
+		int level = 1;
+		for (int x = 1; x < listState.size(); ++x) {
+			ListState state = listState.get(x);
+			if (state.numSpaces <= length) {
+				level = state.level;
+			} else {
+				break;
+			}
+		}
+		if (!listState.isEmpty()) {
+			ListState outerState = listState.peek();
+			if (level == outerState.level && length > outerState.numSpaces) {
+				level = outerState.level + 1;
+			}
+		}
+		return level;
+	}
+
+	@Override
+	public boolean canStart(String line, int lineOffset) {
+		blockLineCount = 0;
+		if (lineOffset == 0) {
+			matcher = startPattern.matcher(line);
+			return matcher.matches();
+		} else {
+			matcher = null;
+			return false;
+		}
+	}
+
+	@Override
+	public void setClosed(boolean closed) {
+		if (closed && !isClosed()) {
+			while (!listState.isEmpty()) {
+				closeOne();
+			}
+		}
+		super.setClosed(closed);
+	}
+
+	private void closeOne() {
+		ListState e = listState.pop();
+		if (e.openItem) {
+			builder.endBlock();
+		}
+		builder.endBlock();
+	}
+
+	private static class ListState {
+		int level;
+
+		int numSpaces;
+
+		int lineRemainderStart;
+
+		BlockType type;
+
+		boolean openItem;
+
+		private ListState(int level, int numSpaces, int lineRemainderStart, BlockType type) {
+			super();
+			this.level = level;
+			this.numSpaces = numSpaces;
+			this.lineRemainderStart = lineRemainderStart;
+			this.type = type;
+		}
+	}
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2014, 2017 Torkild U. Resheim
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+    
+    Contributors:
+        Torkild U. Resheim - initial API and implementation
+ -->
+
+<!-- Will only work when called from Maven — see pom.xml -->
+<project name="Build User Guide EPUB" basedir="." default="build">
+
+	<echo message="${compile_classpath}"/>
+	<path id="epub.ant.classpath">
+		<pathelement path="${compile_classpath}"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.ant/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.ant/bin"/>
+	</path>
+			
+	<taskdef classpathref="epub.ant.classpath" 		
+		resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
+
+	<target name="build">	
+		<delete file="${basedir}/Building EPUBs with Eclipse.epub" failonerror="false"/>
+		<epub identifierId="ba082620-2474-11e4-8c21-0800200c9a66" 
+			file="${basedir}/Building EPUBs with Eclipse.epub" includereferenced="true">			
+			<title>Building EPUBs with Eclipse</title>
+			<subject>How to build EPUBs using Eclipse.</subject>
+			<creator fileAs="Resheim, Torkild U." role="aut" name="Torkild U. Resheim"/>
+			<publisher>Eclipse.org</publisher>
+			<!-- This is a bug, should not have to specify basedir -->
+			<cover image="${basedir}/docs/book/cover.jpg">Cover page</cover>
+			<item file="docs/book/title-page.html" />
+			<import file="toc.xml" format="eclipse-help"/>
+		</epub>
+	</target>
+
+</project>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="CommonMark">
+      
+         <template name="# " description="%template.description.h1" content="\n# ${text}\n\n" block="true"/>
+         <template name="## " description="%template.description.h2" content="\n## ${text}\n\n" block="true"/>
+         <template name="### " description="%template.description.h3" content="\n### ${text}\n\n" block="true"/>
+         <template name="#### " description="%template.description.h4" content="\n#### ${text}\n\n" block="true"/>
+         <template name="##### " description="%template.description.h5" content="\n##### ${text}\n\n" block="true"/>
+         <template name="###### " description="%template.description.h6" content="\n###### ${text}\n\n" block="true"/>
+         
+         <template name="========= " description="%template.description.setext.h1" content="\n${text}\n====================\n\n" block="true"/>
+         <template name="--------- " description="%template.description.setext.h2" content="\n${text}\n--------------------\n\n" block="true"/>
+         
+         <template name="___" description="%template.description.hr" content="\n____________________\n\n" block="true"/>
+         
+         <template name="```" description="%template.description.fencedcode" content="\n```\n${text}\n```\n\n" block="true"/>
+         
+         <template name="* " description="%template.description.list" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
+         <template name="1. " description="%template.description.orderedlist1" content="\n1. ${text}\n2. ${text2}\n\n" block="true"/>
+         <template name="1) " description="%template.description.orderedlist2" content="\n1) ${text}\n2) ${text2}\n\n" block="true"/>
+         
+         
+         <template name="*" description="%template.description.emphasis2" content="*${text}* $"/>
+         <template name="**" description="%template.description.strongemphasis1" content="**${text}** $"/>
+         <template name="_" description="%template.description.emphasis1" content="_${text}_ $"/>
+         <template name="__" description="%template.description.strongemphasis2" content="__${text}__ $"/>
+         
+         <template name="`" description="%template.description.codespan" content="`${text}` $"/>
+         
+         <template name="&lt;http://example.com&gt;" description="%template.description.autoLink" content="&lt;${uri}&gt; $"/>
+         <template name="[link](http://example.com)" description="%template.description.link" content="[${text}](${uri}) $"/>
+         <template name="[link](http://example.com &quot;title&quot;)" description="%template.description.linkWithTitle" content="[${text}](${uri} &quot;${title}&quot;) $"/>
+         
+         <template name="![image](http://example.com/img.png)" description="%template.description.image" content="![${text}](${uri}) $"/>
+         <template name="![image](http://example.com/img.png &quot;title&quot;)" description="%template.description.imageWithTitle" content="![${text}](${uri} &quot;${title}&quot;) $"/>
+         
+      </templates>
+   </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            contentLanguage="CommonMark"
+            markupLanguage="CommonMark"
+            resource="help/cheatSheet/CommonMark.commonmark">
+      </content>
+   </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language
+            class="org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage"
+            fileExtensions="cm, md, markdown"
+            name="CommonMark">
+      </language>
+   </extension>
+
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            default-charset="utf-8"
+            file-extensions="cm,md,markdown"
+            id="org.eclipse.mylyn.wikitext.commonmark"
+            name="%content-type.name"
+            priority="normal">
+      </content-type>
+   </extension>
+   
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="md"
+		      type="text"/>
+	  <fileTypes
+	        extension="markdown"
+	        type="text"/>
+	  <fileTypes
+	        extension="cm"
+	        type="text"/>
+	</extension>
+</plugin>

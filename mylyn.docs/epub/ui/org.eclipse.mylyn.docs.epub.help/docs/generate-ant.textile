@@ -1,0 +1,17 @@
+h1. Generate EPUB using Ant
+
+p. Using the **epub** Ant task one can assemble an EPUB during continuous building or from within Eclipse. The example below shows a complete minimum Ant script.
+
+bc. 
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Build an EPUB" default="build">
+  <target name="build">
+    <epub file="My Book.epub">
+      <title>My Book</title>
+      <subject>My Book's subject</subject>
+      <item file="my_chapter.xhtml" />
+    </epub>
+  </target>
+</project>
+
+p. In this example only some of the required properties have been specified, the rest will be automatically added. See the comprehensive description of the "epub":epub-ant-task.html Ant task for details. A more complete example is found in the "examples":examples.html chapter.

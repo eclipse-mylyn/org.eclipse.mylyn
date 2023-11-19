@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opf:package xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid">
+  <opf:metadata>
+    <dc:title>Testing for Bug380729</dc:title>
+    <dc:format>application/epub+zip</dc:format>
+    <dc:identifier id="uuid" opf:scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</dc:identifier>
+    <dc:language>en</dc:language>
+  </opf:metadata>
+  <opf:manifest>
+    <opf:item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <opf:item id="cover" href="cover-page.xhtml" media-type="application/xhtml+xml"/>
+  </opf:manifest>
+  <opf:spine toc="ncx">
+    <opf:itemref idref="cover" linear="no"/>
+  </opf:spine>
+  <opf:guide>
+    <!-- This shall pass -->
+    <opf:reference type="cover" title="Cover page" href="cover-page.xhtml"/>
+    <!-- This shall also pass -->
+    <opf:reference type="other.ms-coverpage" title="Cover page" href="cover-page.xhtml"/>
+  </opf:guide>
+</opf:package>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>wikitext</artifactId>
+        <version>${releaseVersion}${qualifier}</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>wikitext.ui</artifactId>
+    <name>Mylyn Docs: WikiText UI</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <test.skip>${maven.test.skip}</test.skip>
+        <test.ui.skip>${test.skip}</test.ui.skip>
+        <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
+        <test.uservmargs></test.uservmargs>
+        <test.osvmargs></test.osvmargs>
+
+        <tycho.testArgLine></tycho.testArgLine>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <property>
+                    <name>os.name</name>
+                    <value>Mac OS X</value>
+                </property>
+            </activation>
+            <properties>
+                <test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
+            </properties>
+        </profile>
+    </profiles>
+
+    <modules>
+        <module>org.eclipse.mylyn.wikitext.help.ui</module>
+        <module>org.eclipse.mylyn.wikitext.help.sdk</module>
+        <module>org.eclipse.mylyn.wikitext.asciidoc.tests</module>
+        <module>org.eclipse.mylyn.wikitext.asciidoc.ui</module>
+        <module>org.eclipse.mylyn.wikitext.commonmark.ui</module>
+        <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
+        <module>org.eclipse.mylyn.wikitext.osgi</module>
+        <module>org.eclipse.mylyn.wikitext.osgi.tests</module>
+        <module>org.eclipse.mylyn.wikitext.creole.ui</module>
+        <module>org.eclipse.mylyn.wikitext.markdown.ui</module>
+        <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
+        <module>org.eclipse.mylyn.wikitext.ui.tests</module>
+        <module>org.eclipse.mylyn.wikitext.textile.ui</module>
+        <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
+        <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
+        <module>org.eclipse.mylyn.wikitext.ui</module>
+
+        <module>org.eclipse.mylyn.wikitext.editors-feature</module>
+        <module>org.eclipse.mylyn.wikitext-feature</module>
+        <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
+        <module>org.eclipse.mylyn.wikitext.extras-feature</module>
+        <module>org.eclipse.mylyn.wikitext-site</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-compiler-plugin</artifactId>
+                    <version>${tycho-version}</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <encoding>ISO-8859-1</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-packaging-plugin</artifactId>
+                    <version>${tycho-version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.eclipse.tycho.extras</groupId>
+                            <artifactId>tycho-sourceref-jgit</artifactId>
+                            <version>${tycho-version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <archiveSite>false</archiveSite>
+                        <archive>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
+                        <sourceReferences>
+                            <generate>true</generate>
+                        </sourceReferences>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-surefire-plugin</artifactId>
+                    <version>${tycho-version}</version>
+                    <configuration>
+                        <skip>${test.skip}</skip>
+                        <useUIHarness>false</useUIHarness>
+                        <failIfNoTests>true</failIfNoTests>
+                        <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
+                        <product>org.eclipse.sdk.ide</product>
+                        <application>org.eclipse.ui.ide.workbench</application>
+                        <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+                        <appArgLine>${test.args}</appArgLine>
+
+                        <application>org.eclipse.ui.ide.workbench</application>
+                        <dependency-resolution>
+                            <extraRequirements>
+                                <requirement>
+                                    <type>p2-installable-unit</type>
+                                    <id>org.eclipse.sdk.feature.group</id>
+                                </requirement>
+                            </extraRequirements>
+                        </dependency-resolution>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

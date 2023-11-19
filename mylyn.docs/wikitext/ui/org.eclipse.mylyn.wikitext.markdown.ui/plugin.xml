@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language class="org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage"
+            name="Markdown" fileExtensions="markdown,md,mdtext">
+      </language>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type id="org.eclipse.mylyn.wikitext.markdown" base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="markdown,md,mdtext" name="%content-type.name" priority="normal">
+      </content-type>
+   </extension>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes extension="markdown" type="text"/>
+   </extension>
+
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+      <rule markupLanguage="Markdown"
+            class="org.eclipse.mylyn.wikitext.markdown.internal.validation.MarkdownReferenceValidationRule">
+      </rule>
+      <rule markupLanguage="Markdown"
+            class="org.eclipse.mylyn.wikitext.markdown.internal.validation.LinkDefinitionValidationRule">
+      </rule>
+   </extension>
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="Markdown">
+
+         <template name="# " description="%template.description.h1" content="\n# ${text}\n\n" block="true"/>
+         <template name="## " description="%template.description.h2" content="\n## ${text}\n\n" block="true"/>
+         <template name="### " description="%template.description.h3" content="\n### ${text}\n\n" block="true"/>
+         <template name="#### " description="%template.description.h4" content="\n#### ${text}\n\n" block="true"/>
+         <template name="##### " description="%template.description.h5" content="\n##### ${text}\n\n" block="true"/>
+         <template name="###### " description="%template.description.h6" content="\n###### ${text}\n\n" block="true"/>
+
+         <template name="*" description="%template.description.lb" content="\n*   ${first_item}\n*   ${second_item}\n" block="true"/>
+         <template name="1." description="%template.description.ln" content="\n1.  ${first_item}\n2.  ${second_item}\n" block="true"/>
+         <template name="&gt;" description="%template.description.bq" content="\n&gt; ${text}\n" block="true"/>
+
+		<template name="[]" description="%template.description.li" content="[${text}](${url} &quot;${title}&quot;) $"/>
+		<template name="[id]" description="%template.description.lr" content="[${text}][${id}] ${cursor}\n\n[${id}]: ${url} &quot;${title}&quot;"/>
+		<template name="&lt;&gt;" description="%template.description.ls" content="&lt;http://${url}&gt; $"/>
+		<template name="![]" description="%template.description.ii" content="![${altText}](${image}.png &quot;${title}&quot;) $"/>
+		<template name="![id]" description="%template.description.ir" content="![${altText}][${id}] ${cursor}\n\n[${id}]: ${image}.png &quot;${title}&quot;"/>
+		<template name="\n" description="Line break (end of line)" content="^  \n"/>
+		<template name="\t" description="Code block (indented with tab)" content="\n\t${text}\n"/>
+
+		<template name="`inline code`" description="A span of code inline" content="`${text}` $"/>
+		<template name="**strong**" description="strong" content="**${text}** $"/>
+		<template name="_emphasis_" description="emphasis" content="_${text}_ $"/>
+
+
+		<template name="(c)" description="Copyright symbol" content="&amp;copy; $"/>
+		<template name="(tm)" description="Trademark symbol" content="&amp;trade; $"/>
+		<template name="&lt;hr/&gt;" description="Horizontal rule" content="\n------------------------------------------------------------\n\n"/>
+      </templates>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            markupLanguage="Markdown"
+            contentLanguage="Markdown"
+            resource="help/cheatSheet/Markdown.md">
+      </content>
+   </extension>
+</plugin>

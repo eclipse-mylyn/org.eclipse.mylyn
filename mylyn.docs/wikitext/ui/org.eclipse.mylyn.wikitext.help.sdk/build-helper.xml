@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2010 David Green and others. 
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+        David Green - initial API and implementation
+ -->
+<project name="org.eclipse.mylyn.wikitext.help.sdk" default="all">
+    <description>
+            Generate Eclipse help content for the Mylyn developer guide
+    </description>
+
+	<property environment="env" />
+	<property name="install" value="${basedir}/../../" />
+
+	<target name="plugin-docs" depends="all"/>
+	
+	<target name="all" depends="clean, generateJavadoc, convertSchemaToHtml">
+	</target>
+	
+	<target name="clean">
+		<delete failonerror="false" dir="reference/extension-points"/>
+		<delete failonerror="false" dir="reference/api"/>
+		<delete failonerror="false" file="toc-reference.xml"/>
+	</target>
+
+	<target name="convertSchemaToHtml" if="eclipse.running">
+	        <property name="dest" value="reference/extension-points" />
+
+			<mkdir dir="${dest}"/>
+		
+		<!-- taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML">
+			<classpath>
+				<fileset dir="styles" includes="**/*.jar">
+				</fileset>
+			</classpath>
+		</taskdef -->
+		
+	        <!-- record name="${basedir}/doc.cnv.txt" action="start" / -->
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
+	        <!-- record name="${basedir}/doc.cnv.txt" action="stop" / -->
+		<replaceregexp match="(../)*([^./]+\.css)" replace="../../styles/\2"
+			flags="gs">
+			<fileset dir="${dest}" includes="*.html"/>
+		</replaceregexp>
+	</target>
+
+	<target name="generateJavadoc">
+		<property name="target.platform.path" value="${eclipse.home}" />
+		<mkdir dir="reference/api"/>
+		<javadoc destdir="reference/api"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Mylyn WikiText API Reference">
+		    <fileset dir=".." defaultexcludes="yes">
+		    	<include name="org.eclipse.mylyn.wikitext*/src/org/eclipse/mylyn/**/*.java"/>
+				<exclude name="org.eclipse.mylyn.wikitext*.tests/**"/>
+				<exclude name="**/internal/**"/>
+		    </fileset>
+			<classpath>
+				<dirset dir=".." defaultexcludes="yes">
+					<include name="org.eclipse.mylyn.tasks.core/target/classes"/>
+					<include name="org.eclipse.mylyn.tasks.ui/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.confluence/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.mediawiki/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.textile/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.tracwiki/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.twiki/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.ui/target/classes"/>
+					<include name="org.eclipse.mylyn.wikitext.tasks.ui/target/classes"/>
+				</dirset>
+				<fileset dir="${target.platform.path}">
+					<include name="plugins/org.eclipse.osgi*.jar"/>
+					<include name="plugins/org.eclipse.equinox.common*.jar"/>
+					<include name="plugins/org.eclipse.equinox.registry*.jar"/>
+					<include name="plugins/org.eclipse.core.runtime*.jar"/>
+					<include name="plugins/org.eclipse.core.resources*.jar"/>
+					<include name="plugins/org.eclipse.core.commands*.jar"/>
+					<include name="plugins/org.eclipse.core.jobs*.jar"/>
+					<include name="plugins/org.eclipse.ui*.jar"/>
+					<include name="plugins/org.eclipse.text*.jar"/>
+					<include name="plugins/org.eclipse.jface*.jar"/>
+					<include name="plugins/org.eclipse.swt.${osgi.ws}.${osgi.os}.${osgi.arch}*.jar"/>
+					<include name="plugins/org.apache.ant*/lib/ant.jar"/>
+				</fileset>
+			</classpath>
+			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
+			<header><![CDATA[Mylyn WikiText]]></header>
+			<bottom><![CDATA[<i>Copyright &#169; 2007, 2009 David Green and others.<br/>
+				All rights reserved. This program and the accompanying materials<br/>
+				are made available under the terms of the Eclipse Public License v2.0<br/>
+				which accompanies this distribution, and is available at<br/>
+				<a href="http://www.eclipse.org/legal/epl-v20.html">http://www.eclipse.org/legal/epl-v20.html</a></i>]]></bottom>
+		    <link href="http://java.sun.com/javase/6/docs/api/"/>
+		</javadoc>
+		<echo level="info">javadoc generation complete</echo>
+		<echo level="info">creating package list toc</echo>
+		<!-- convert the package list to xml -->
+		<loadfile property="wikitext.api.packages" srcfile="reference/api/package-list"/>
+		<echo file="reference/api/package-list.xml"><![CDATA[<?xml version="1.0"?>
+<packages>]]>
+		</echo>
+		<echo append="true" file="reference/api/package-list.xml" message="${wikitext.api.packages}"/>
+		<echo file="reference/api/package-list.xml" append="true"><![CDATA[
+</packages>]]>
+		</echo>
+		<replaceregexp file="reference/api/package-list.xml" match="(org\.eclipse\.mylyn\.wikitext\S+)"
+			flags="gs"
+			replace="&lt;package&gt;\1&lt;/package&gt;">
+		</replaceregexp>
+		<!-- convert the package list xml to a toc -->
+		<xslt style="styles/package-list-to-toc.xsl" in="reference/api/package-list.xml" out="toc-reference.xml"/>
+		<echo level="info">package list toc generation complete</echo>
+	</target>
+
+</project>

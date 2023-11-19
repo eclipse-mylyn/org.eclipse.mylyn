@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub.core/src-gen" modelPluginID="org.eclipse.mylyn.docs.epub.core"
+    modelName="OPF" modelPluginClass="" nonNLSMarkers="true" runtimeCompatibility="true"
+    testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="7.0" copyrightFields="false" publicConstructors="true" runtimeVersion="2.9"
+    language="en" interfaceNamePattern="">
+  <foreignModel>opf.ecore</foreignModel>
+  <genPackages prefix="OPF" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
+      disposableProviderFactory="true" dataTypeConverters="true" ecorePackage="opf.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="opf.ecore#//Role">
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Art_copyist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Actor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Adapter"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author_of_afterword_colophon_etc"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Analyst"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Animator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Annotator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Bibliographic_antecedent"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Applicant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author_in_quotations_or_text_abstracts"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Architect"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Artistic_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Arranger"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Artist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Assignee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Associated_name"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Attributed_name"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Auctioneer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author_of_dialog"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author_of_introduction"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author_of_screenplay"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Author"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Binding_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Bookjacket_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Book_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Book_producer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Blurb_writer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Binder"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Bookplate_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Bookseller"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Conceptor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Choreographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Collaborator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Client"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Calligrapher"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Colorist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Collotyper"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Commentator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Composer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Compositor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Cinematographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Conductor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Censor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestant_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Collector"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Compiler"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Conservator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestant_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Cover_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Copyright_claimant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Complainant_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Copyright_holder"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Complainant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Complainant_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Creator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Correspondent"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Corrector"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Consultant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Consultant_to_a_project"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Costume_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contributor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestee_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Cartographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contractor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Contestee_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Curator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Commentator_for_written_text"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Defendant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Defendant_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Defendant_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Degree_grantor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Dissertant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Delineator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Dancer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Donor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Distribution_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Depicted"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Depositor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Draftsman"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Distributor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Data_contributor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Dedicatee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Data_manager"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Dedicator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Dubious_author"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Editor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Engraver"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Electrician"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Electrotyper"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Engineer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Etcher"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Event_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Expert"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Facsimilist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Field_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Film_editor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Former_owner"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/First_party"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Funder"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Forger"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Geographic_information_specialist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Graphic_technician"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Honoree"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Host"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Illustrator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Illuminator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Inscriber"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Inventor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Instrumentalist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Interviewee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Interviewer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Laboratory"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Librettist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Laboratory_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Lead"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelee_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Lender"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelee_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Lighting_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelant_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Libelant_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Landscape_architect"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Licensee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Licensor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Lithographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Lyricist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Music_copyist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Manufacture_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Manufacturer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Metadata_contact"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Moderator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Monitor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Marbler"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Markup_editor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Musical_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Metal_engraver"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Musician"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Narrator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Opponent"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Originator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Organizer_of_meeting"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Other"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Owner"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Patron"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Publishing_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Publisher"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Project_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Proofreader"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Photographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Platemaker"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Permitting_agency"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Production_manager"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Printer_of_plates"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Papermaker"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Puppeteer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Process_contact"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Production_personnel"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Performer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Programmer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Printmaker"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Producer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Production_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Printer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Patent_applicant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Plaintiff_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Plaintiff"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Patent_holder"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Plaintiff_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Publication_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Rubricator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Recording_engineer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Recipient"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Redactor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Renderer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Researcher"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Reviewer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Repository"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Reporter"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Responsible_party"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Respondent_appellee"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Restager"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Respondent"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Respondent_appellant"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Research_team_head"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Research_team_member"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Scientific_advisor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Scenarist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Sculptor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Scribe"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Sound_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Secretary"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Signer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Supporting_host"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Singer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Speaker"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Sponsor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Second_party"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Surveyor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Set_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Storyteller"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Stage_manager"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Standards_body"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Stereotyper"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Technical_director"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Teacher"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Thesis_advisor"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Transcriber"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Translator"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Type_designer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Typographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/University_place"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Videographer"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Vocalist"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Writer_of_accompanying_material"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Woodcutter"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Wood_engraver"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Witness"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="opf.ecore#//Type">
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Cover"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Title"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/TOC"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Index"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Glossary"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Acknowledgements"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Bibliography"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Colophon"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Copyright"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Dedication"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Epigraph"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Foreword"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Illustrations"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Tables"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Notes"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Preface"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Text"/>
+    </genEnums>
+    <genClasses ecoreClass="opf.ecore#//Package">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/metadata"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/manifest"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/spine"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/guide"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference opf.ecore#//Package/tours"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/uniqueIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/generateCoverHTML"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/generateTableOfContents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/includeReferencedResources"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/prefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/lang"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/id"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Metadata">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/titles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/creators"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/subjects"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/descriptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/publishers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/contributors"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/dates"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/types"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/formats"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/identifiers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/sources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/languages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/relations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/coverages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/rights"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/metas"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Manifest">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Manifest/items"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Item">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/href"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/media_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/fallback"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/fallback_style"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_modules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/file"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/noToc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/generated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/sourcePath"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Spine">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Spine/spineItems"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Spine/toc"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Guide">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Guide/guideItems"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Reference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Reference/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Reference/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Reference/href"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Itemref">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Itemref/idref"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Itemref/linear"/>
+    </genClasses>
+    <genClasses ecoreClass="opf.ecore#//Tours"/>
+    <genClasses ecoreClass="opf.ecore#//Meta">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/property"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/refines"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/scheme"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="DC" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
+      disposableProviderFactory="true" ecorePackage="dc.ecore#/">
+    <genClasses ecoreClass="dc.ecore#//Title"/>
+    <genClasses ecoreClass="dc.ecore#//Creator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/fileAs"/>
+    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Subject"/>
+    <genClasses ecoreClass="dc.ecore#//Description"/>
+    <genClasses ecoreClass="dc.ecore#//Publisher"/>
+    <genClasses ecoreClass="dc.ecore#//Contributor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/fileAs"/>
+    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Date">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Date/event"/>
+    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Type"/>
+    <genClasses ecoreClass="dc.ecore#//Format"/>
+    <genClasses ecoreClass="dc.ecore#//Identifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/scheme"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/mixed"/>
+    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Source"/>
+    <genClasses ecoreClass="dc.ecore#//Language">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Language/type"/>
+    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Relation"/>
+    <genClasses ecoreClass="dc.ecore#//Coverage"/>
+    <genClasses ecoreClass="dc.ecore#//Rights"/>
+    <genClasses image="false" ecoreClass="dc.ecore#//DCType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//DCType/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//DCType/mixed"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="dc.ecore#//LocalizedDCType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//LocalizedDCType/lang"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,105 @@
+pipeline {
+	options {
+		buildDiscarder(logRotator(numToKeepStr:'10'))
+		disableConcurrentBuilds(abortPrevious: true)
+		preserveStashes(buildCount: 50)
+		skipStagesAfterUnstable()
+		timeout(time: 40, unit: 'MINUTES')
+		timestamps()
+	}
+	agent {
+		label "centos-latest"
+	}
+	parameters {
+		booleanParam(name: 'PERFORM_RELEASE', defaultValue: false, description: 'True: run all stages of the build, auto release the nexus repository, tag the release, and merge a commit to bump the development version. False: run all stages of the build but do not side-effect nexus or git repository.')
+	}
+	tools {
+		maven 'apache-maven-3.8.6'
+		jdk 'openjdk-jdk17-latest'
+	}
+	stages {
+		stage('Initialize PGP') {
+			steps {
+				withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
+					sh '''
+						gpg --batch --import "${KEYRING}"
+						for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); 
+						do 
+							echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; 
+						done
+					'''
+				}
+			}
+		}
+		stage('Build and Deploy Maven Artifacts') {
+			steps {
+				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
+					wrap([$class: 'Xvnc', useXauthority: true]) {
+						sh 'mvn clean deploy -U -B -V -e -s /home/jenkins/.m2/settings-deploy-ossrh-docs.xml -Psign -Possrh -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dtycho.buildqualifier.format=yyyyMMddHHmm -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}" -Dnexus.autoReleaseAfterClose="${PERFORM_RELEASE}"'
+					}
+				}
+				dir("docs/org.eclipse.mylyn.docs-site/target/repository") {
+					stash includes: '**', name: 'docsSite'
+				}
+			}
+			post {
+				always {
+					archiveArtifacts artifacts: '**/target/*.zip,**/target/work/data/.metadata/.log'
+					junit '**/target/surefire-reports/TEST-*.xml'
+				}
+			}
+		}
+		stage('Deploy Update Site') {
+			steps {
+				dir("docs/org.eclipse.mylyn.docs-site/target/repository") {
+					deleteDir()
+					unstash 'docsSite'
+				}
+				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+					sh '''#!/bin/bash
+						
+						RELEASE_VERSION="$(grep '\\s*<releaseVersion>.*</releaseVersion>' pom.xml | sed -e 's|\\s*<releaseVersion>\\([0-9]\\+\\.[0-9]\\+\\).*</releaseVersion>.*|\\1|')"
+						RELEASE_VERSION_FULL="$(grep '\\s*<releaseVersion>.*</releaseVersion>' pom.xml | sed -e 's|\\s*<releaseVersion>\\(.*\\)</releaseVersion>.*|\\1|')"
+
+						DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/docs/releases/$RELEASE_VERSION
+						echo "DOWNLOAD_AREA=$DOWNLOAD_AREA"
+
+						DOWNLOAD_AREA_FULL=/home/data/httpd/download.eclipse.org/mylyn/docs/releases/$RELEASE_VERSION_FULL
+						echo "DOWNLOAD_AREA_FULL=$DOWNLOAD_AREA_FULL"
+
+						if [ "${PERFORM_RELEASE}" == "true" ]; then
+							echo "Copying Mylyn Docs update site to file share."
+							ssh genie.mylyn@projects-storage.eclipse.org "\
+								rm -rf  ${DOWNLOAD_AREA} && \
+								mkdir -p ${DOWNLOAD_AREA} && \
+								rm -rf  ${DOWNLOAD_AREA_FULL} && \
+								mkdir -p ${DOWNLOAD_AREA_FULL}"
+							scp -r docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
+							scp -r docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA_FULL}
+						fi
+					'''
+				}
+			}
+		}
+		stage('Tag Release') {
+			steps {
+				withCredentials([usernamePassword(credentialsId: 'github-bot', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+					sh '''
+						git config --global user.email docs-bot@eclipse.org
+						mvn -B -V -e -Ptag-release -DpushChanges="${PERFORM_RELEASE}" -Dtycho.mode=maven -Dusername="${USERNAME}" -Dpassword="${PASSWORD}" build-helper:parse-version scm:tag -pl .
+					'''
+				}
+			}
+		}
+		stage('Bump Development Version') {
+			steps {
+				withCredentials([usernamePassword(credentialsId: 'github-bot', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+					sh '''
+						git config --global user.email docs-bot@eclipse.org
+						mvn -B -V -e -Pcommit-version-update -DpushChanges="${PERFORM_RELEASE}" -Dtycho.mode=maven -Dusername="${USERNAME}" -Dpassword="${PASSWORD}" build-helper:parse-version versions:set-property antrun:run scm:checkin -pl .
+					'''
+				}
+			}
+		}
+	}
+}

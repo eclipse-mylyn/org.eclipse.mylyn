@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>docs.main</artifactId>
+        <version>${releaseVersion}${qualifier}</version>
+        <relativePath>..</relativePath>
+    </parent>
+	
+	<groupId>org.eclipse.mylyn.docs</groupId>
+	<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+	<name>Mylyn Docs</name>
+	<version>2.11.0${qualifier}</version>
+	<packaging>pom</packaging>
+	<properties>
+		<sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
+	</properties>
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>mylyn-snapshots</id>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>mylyn-releases</id>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+	<modules>
+		<module>org.eclipse.mylyn.docs.development-feature</module>
+		<module>org.eclipse.mylyn.docs.sdk-feature</module>
+
+		<module>org.eclipse.mylyn.htmltext-feature</module>
+		<module>org.eclipse.mylyn.htmltext.ui</module>
+
+		<module>org.eclipse.mylyn.docs-site</module>
+	</modules>
+
+</project>

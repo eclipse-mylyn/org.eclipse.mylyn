@@ -1,0 +1,26 @@
+<api batchcomplete="">
+<query>
+<pages>
+<page _idx="49673" pageid="49673" ns="6" title="File:pict1.gif" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/pict1.gif" descriptionurl="https://wiki.eclipse.org/File:pict1.gif"/>
+</imageinfo>
+</page>
+<page _idx="49672" pageid="49672" ns="6" title="File:p2.jpeg" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/p2.jpeg" descriptionurl="https://wiki.eclipse.org/File:p2.jpeg"/>
+</imageinfo>
+</page>
+<page _idx="49675" pageid="49675" ns="6" title="File:PICTURE3.JPG" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/PICTURE3.JPG" descriptionurl="https://wiki.eclipse.org/File:PICTURE3.JPG"/>
+</imageinfo>
+</page>
+<page _idx="49682" pageid="49682" ns="6" title="File:Pict4.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/Pict4.png" descriptionurl="https://wiki.eclipse.org/File:Pict4.png"/>
+</imageinfo>
+</page>
+</pages>
+</query>
+</api>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<artifactId>epub</artifactId>
+		<version>4.0.7${qualifier}</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<artifactId>epub.ui</artifactId>
+	<name>Mylyn Docs:EPUB UI</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<test.skip>${maven.test.skip}</test.skip>
+		<test.ui.skip>${test.skip}</test.ui.skip>
+		<test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
+		<test.uservmargs></test.uservmargs>
+		<test.osvmargs></test.osvmargs>
+
+		<tycho.testArgLine></tycho.testArgLine>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>osx</id>
+			<activation>
+				<property>
+					<name>os.name</name>
+					<value>Mac OS X</value>
+				</property>
+			</activation>
+			<properties>
+				<test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
+			</properties>
+		</profile>
+	</profiles>
+
+	<modules>
+		<module>org.eclipse.mylyn.docs.epub.help</module>
+		<module>org.eclipse.mylyn.docs.epub.ui</module>
+		<module>org.eclipse.mylyn.docs.epub-feature</module>
+		<module>org.eclipse.mylyn.docs.epub.sdk-feature</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<useProjectSettings>true</useProjectSettings>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<encoding>ISO-8859-1</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.eclipse.tycho.extras</groupId>
+							<artifactId>tycho-sourceref-jgit</artifactId>
+							<version>${tycho-version}</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<archiveSite>false</archiveSite>
+						<archive>
+							<addMavenDescriptor>false</addMavenDescriptor>
+						</archive>
+						<sourceReferences>
+							<generate>true</generate>
+						</sourceReferences>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<skip>${test.skip}</skip>
+						<useUIHarness>false</useUIHarness>
+						<failIfNoTests>true</failIfNoTests>
+						<forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
+						<product>org.eclipse.sdk.ide</product>
+						<application>org.eclipse.ui.ide.workbench</application>
+						<argLine>${tycho.testArgLine} -Xmx512m
+							-Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+						<appArgLine>${test.args}</appArgLine>
+
+						<application>org.eclipse.ui.ide.workbench</application>
+						<dependency-resolution>
+							<extraRequirements>
+								<requirement>
+									<type>p2-installable-unit</type>
+									<id>org.eclipse.sdk.feature.group</id>
+								</requirement>
+							</extraRequirements>
+						</dependency-resolution>
+					</configuration>
+				</plugin>
+				<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>generate-pde-source-header</id>
+						<goals>
+							<goal>generate-pde-source-header</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attached-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+						<configuration>
+							<supportedProjectTypes>
+								<value>bundle</value>
+								<value>jar</value>
+							</supportedProjectTypes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

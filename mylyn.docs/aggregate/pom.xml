@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>docs.main</artifactId>
+        <version>${releaseVersion}${qualifier}</version>
+    </parent>
+    <artifactId>aggregate</artifactId>
+    <name>Artifacts Aggregate</name>
+    <packaging>pom</packaging>
+
+    <!-- This 'dummy' module is necessary to ensure that only a subset of modules from the mylyn docs reactor are deployed to Nexus. 
+    The docs-site eclipse repository artifact depends on all prior modules, so establishing a dependency on docs-site in this module will ensure that
+    this aggregate module runs last with deployment enabled via the nexus staging deploy plugin.
+    
+    See https://issues.sonatype.org/browse/NEXUS-9138     
+    -->
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.docs-site</artifactId>
+            <version>2.11.0${qualifier}</version>
+        </dependency>
+    </dependencies>
+</project>

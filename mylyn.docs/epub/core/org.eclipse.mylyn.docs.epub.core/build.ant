@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2011 Torkild U. Resheim and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+    
+    Contributors:
+        Torkild U. Resheim - initial API and implementation
+-->
+<project name="Build EPUB Model" default="build">
+
+	<target name="build">
+		<!--
+		<delete failonerror="false">
+			<fileset dir="${basedir}/src-gen/org/eclipse/mylyn/docs/epub/">
+				<include name="*/**" />
+			</fileset>
+		</delete>
+
+		<eclipse.refreshLocal resource="${basedir}/src-gen" depth="infinite" />
+
+		<emf.Ecore2Java copyright="Copyright © 2011 Torkild U. Resheim" 
+			reconcileGenModel="reload" 
+			generateJavaCode="true" 
+			model="${basedir}/model/dc.ecore" 
+			genmodel="${basedir}/model/dc.genmodel" 
+			modelproject="org.eclipse.mylyn.docs.epub.core" 
+			modelprojectfragmentpath="src-gen" />
+		-->
+	</target>
+
+</project>

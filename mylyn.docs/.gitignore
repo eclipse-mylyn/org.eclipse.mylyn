@@ -1,0 +1,8 @@
+bin
+target
+.DS_Store
+*.rej
+*~
+build.log
+.local-repo
+.flattened-pom.xml

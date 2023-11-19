@@ -1,0 +1,55 @@
+h1. Practical examples
+
+h2. Adding a cover
+
+p. Correctly adding a cover to a publication can be a bit awkward as different reading systems expect different input. So there is a shortcut:
+
+bc.. 
+<cover image="cover.jpg" title="My Title"/> 
+
+p. Simply point to the file in question and this EPUB tooling will take care of the rest. There is of course another, more laborious way allowing more control. The procedure is as follows: 
+
+# Add a cover image to the publication
+# Add a HTML file using the image
+# Reference the HTML file
+# Add a meta element pointing to the image
+
+p. Assuming the cover image is at hand we will add it using the **item** element as this:
+
+bc.. 
+<item file="images/cover.jpg" id="cover-image"
+  type="image/jpg" spine="false" />
+
+p. Next we add a XHTML file (named __cover.html__) to the publication. This will be used by some reading systems.
+
+bc.. 
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Cover Page</title>
+    <style type="text/css">
+      img { max-width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="cover-image">
+      <img src="cover.jpg" alt="Building EPUBs"/>
+    </div>
+  </body>
+</html>
+
+p. Then some more Ant code:
+
+bc.. 
+<item file="cover.xhtml"/>
+<reference href="cover.xhtml" 
+  type="cover" title="Cover Page" />
+<meta name="cover" content="cover-image"/>
+
+p. Both methods will produce a cover page that will work with all the tested reading systems; including Syny Reader PRS-T1, Calibre, iBooks, Nook for Mac, Adobe Digital Editions for Mac and Kindle (after converting to MOBI using Calibre).
+
+!nook-cover.png(The cover of this book as it is rendered on Nook for Mac.)!
+
+p. The end result can be something like the illustration above - showing the cover of the example book as it is rendered on Nook for Mac.

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx:ncx xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <ncx:head>
+    <ncx:meta content="70ce7c20-8f9e-11e0-91e4-0800200c9a66" name="dtb:uid"/>
+  </ncx:head>
+  <ncx:docTitle>
+    <ncx:text>Table of contents</ncx:text>
+  </ncx:docTitle>
+  <ncx:navMap>
+    <ncx:navPoint id="navpoint1" playOrder="1">
+      <ncx:navLabel>
+        <ncx:text>Copyrights</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="copyright.html#Copyrights"/>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint2" playOrder="2">
+      <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="introduction.html#Introduction"/>
+      <ncx:navPoint id="navpoint3" playOrder="3">
+        <ncx:navLabel>
+          <ncx:text>Learning more</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="introduction.html#Learningmore"/>
+      </ncx:navPoint>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint4" playOrder="4">
+      <ncx:navLabel>
+        <ncx:text>The EPUB file format</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="epub-format.html#TheEPUBfileformat"/>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint5" playOrder="5">
+      <ncx:navLabel>
+        <ncx:text>Generate EPUB using Ant</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="generate-ant.html#GenerateEPUBusingAnt"/>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint6" playOrder="6">
+      <ncx:navLabel>
+        <ncx:text>Generate EPUB directly from markup</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="generate-epub.html#GenerateEPUBdirectlyfrommarkup"/>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint7" playOrder="7">
+      <ncx:navLabel>
+        <ncx:text>The EPUB ANT task</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="epub-ant-task.html#TheEPUBANTtask"/>
+      <ncx:navPoint id="navpoint8" playOrder="8">
+        <ncx:navLabel>
+          <ncx:text>Adding “header” information</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="epub-ant-task.html#Addingheaderinformation"/>
+        <ncx:navPoint id="navpoint9" playOrder="9">
+          <ncx:navLabel>
+            <ncx:text>Publication title</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Publicationtitle"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint10" playOrder="10">
+          <ncx:navLabel>
+            <ncx:text>Publication identifiers</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Publicationidentifiers"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint11" playOrder="11">
+          <ncx:navLabel>
+            <ncx:text>Language specification</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Languagespecification"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint12" playOrder="12">
+          <ncx:navLabel>
+            <ncx:text>Publisher</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Publisher"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint13" playOrder="13">
+          <ncx:navLabel>
+            <ncx:text>Publication subject</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Publicationsubject"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint14" playOrder="14">
+          <ncx:navLabel>
+            <ncx:text>Contributors and Creators</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#ContributorsandCreators"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint15" playOrder="15">
+          <ncx:navLabel>
+            <ncx:text>Dates</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Dates"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint16" playOrder="16">
+          <ncx:navLabel>
+            <ncx:text>Types</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Types"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint17" playOrder="17">
+          <ncx:navLabel>
+            <ncx:text>Formats</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Formats"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint18" playOrder="18">
+          <ncx:navLabel>
+            <ncx:text>Source</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Source"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint19" playOrder="19">
+          <ncx:navLabel>
+            <ncx:text>Rights</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Rights"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint20" playOrder="20">
+          <ncx:navLabel>
+            <ncx:text>Coverage</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Coverage"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint21" playOrder="21">
+          <ncx:navLabel>
+            <ncx:text>Relation</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Relation"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint22" playOrder="22">
+          <ncx:navLabel>
+            <ncx:text>Meta</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Meta"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint23" playOrder="23">
+          <ncx:navLabel>
+            <ncx:text>Cover</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Cover"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="navpoint24" playOrder="24">
+        <ncx:navLabel>
+          <ncx:text>Adding content</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="epub-ant-task.html#Addingcontent"/>
+        <ncx:navPoint id="navpoint25" playOrder="25">
+          <ncx:navLabel>
+            <ncx:text>Primary content files</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Primarycontentfiles"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint26" playOrder="26">
+          <ncx:navLabel>
+            <ncx:text>Secondary content files</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Secondarycontentfiles"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint27" playOrder="27">
+          <ncx:navLabel>
+            <ncx:text>References</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#References"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="navpoint28" playOrder="28">
+          <ncx:navLabel>
+            <ncx:text>Table of contents</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="epub-ant-task.html#Tableofcontents"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint29" playOrder="29">
+      <ncx:navLabel>
+        <ncx:text>Practical examples</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="examples.html#Practicalexamples"/>
+      <ncx:navPoint id="navpoint30" playOrder="30">
+        <ncx:navLabel>
+          <ncx:text>Building the example book</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="examples.html#Buildingtheexamplebook"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="navpoint31" playOrder="31">
+        <ncx:navLabel>
+          <ncx:text>Adding a cover</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="examples.html#Addingacover"/>
+      </ncx:navPoint>
+    </ncx:navPoint>
+  </ncx:navMap>
+</ncx:ncx>

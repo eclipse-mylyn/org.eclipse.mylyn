@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.wikitext.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="markupLanguage" name="Markup Language"/>
+      </appInfo>
+      <documentation>
+         A means of adding support for parsing lightweight markup languages.  A MarkupLanguage defines the rules and semantics used when parsing lightweight markup (wikitext).  This extension point should be used to add new markup parsers to the WikiText framework.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="language" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="language">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="name"/>
+         </appInfo>
+         <documentation>
+            A language declaration, indicating a MarkupLanguage class and identifiable name.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the class that implements the markup language.  Must extend org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the markup language.  This name should be recognizable to the user.  The name is not translatable as it is a proper name.  For example, &apos;Textile&apos; or &apos;Markdown&apos;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="fileExtensions" type="string">
+            <annotation>
+               <documentation>
+                  A comma-delimited list of file extensions for which this should be the default markup language.  
+Note that a preceding dot is not required on the extension.  For example: &quot;textile, markup&quot;.
+
+Plugins should also use the org.eclipse.core.contenttype.contentTypes extension point to create a new content type that extends org.eclipse.mylyn.wikitext and associates the new content type with the same file extensions.  This will ensure that the markup editor is correctly associated with the right file extensions.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="extends" type="string">
+            <annotation>
+               <documentation>
+                  Optionally specify the name of the markup language that is extended by this language.  Used to provide type hierarchies in language declarations, so that things like cheat sheets and content assist can be inherited.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.wikitext.ui.markupLanguage&quot;&gt;
+    &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.TextileLanguage&quot;
+        name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
+    &lt;/language&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+Generally markup language declarations are also followed by the following:
+&lt;pre&gt;
+   &lt;extension
+         point=&quot;org.eclipse.core.contenttype.contentTypes&quot;&gt;
+      &lt;content-type
+            base-type=&quot;org.eclipse.mylyn.wikitext&quot;
+            file-extensions=&quot;textile&quot;
+            id=&quot;org.eclipse.mylyn.wikitext.textile&quot;
+            name=&quot;Textile markup&quot;
+            priority=&quot;normal&quot;&gt;
+      &lt;/content-type&gt;
+   &lt;/extension&gt;
+   
+ &lt;extension
+    point=&quot;org.eclipse.team.core.fileTypes&quot;&gt;
+  &lt;fileTypes
+        extension=&quot;textile&quot;
+        type=&quot;text&quot;&gt;
+  &lt;/fileTypes&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2007, 2009 David Green and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-2.0/
+      </documentation>
+   </annotation>
+
+</schema>

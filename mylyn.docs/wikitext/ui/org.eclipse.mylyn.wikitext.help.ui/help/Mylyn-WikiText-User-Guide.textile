@@ -1,0 +1,904 @@
+h1. Overview
+
+This guide provides basic instructions on the use of WikiText.
+WikiText provides extensions to the Mylyn task editor supporting "lightweight markup languages":http://en.wikipedia.org/wiki/Lightweight_markup_language such as Textile and MediaWiki.  WikiText also provides a wiki text editor for Eclipse, a Maven plug-ins and Ant tasks for generating from lightweight markup to HTML and other formats.
+
+For information about integrating your application with WikiText please see the *WikiText Developer Guide*.
+
+h2. Table of Contents
+
+{toc}
+
+h1. Getting Started
+
+The WikiText plug-in provides a lightweight markup editor for Eclipse. The editor is registered against all files with the following file extensions: @*.ad@, @*.adoc@, @*.asciidoc@, @*.textile@, @*.tracwiki@, @*.markdown@, @*.md@, @*.mdtext@, @*.mediawiki@, @*.twiki@, @*.confluence@
+
+It's also possible to register the editor with other file extensions by setting the Eclipse preferences under *General -> Other -> File Associations*.
+
+h2. Creating A New File
+
+Using the new file wizard, choose *New -> File*, or *New -> Other... -> General -> File*.  In the
+filename field, enter the name of the file with a @.textile@ or other registered extension.
+
+When the new file is created it should open in the WikiText editor.  Start typing!!
+
+h2. WikiText Editor Overview
+
+The WikiText editor provides a source view, preview and outline.
+
+!images/editor-overview.png!
+
+The editor has tabs on the bottom that facilitate switching to and from 'Source' and 'Preview'.
+
+!images/editor-tabs.png!
+
+h3. Markup Source Tab
+
+'Source' is the default editor pane.  This is the area for editing markup such as Textile.   The source pane provides syntax highlighting that should make it easier to see what the markup means.
+
+Standard text editor actions are available here, such as copy/paste and find/replace.  A "Preview at _[heading]_" context menu is provided to open the preview tab at a specific section of the document.  Explore the context menu and 'Edit' menu to see what actions are available.
+
+h3. Preview Tab
+
+The editor preview provides a preview of the wiki markup as it is rendered by your default browser after converting the markup to HTML.  Though the 'Source' syntax highlighting is pretty good, the preview provides a more accurate view of the rendered result.
+
+h3. Outline
+
+The editor outline provides a structured view of the markup source.  Headings in the markup are used to provide a 'Table of Contents'.
+
+!images/editor-outline.png!
+
+Clicking on an item in the outline will show the corresponding header in the source, and navigating in the source will cause the most relevant item in the outline to be selected.
+Clicking on an item in the outline when the preview is showing causes the corresponding item to be revealed.
+
+Items in the outline view can be moved within the document by using the mouse to drag and drop the item to the desired location.
+
+The Outline view can be displayed by selecting *Window -> Show View -> Outline* from the main menu.
+Also see "Quick Outline":#QuickOutline.
+
+h3. Folding
+
+The WikiText editor supports folding regions of text.  Regions can be folded or expanded by clicking the folding indicators in the gutter.
+
+!images/editor-folding.png!
+
+Folding is enabled using the context menu in the editor gutter.
+
+!images/editor-folding-menu.png!
+
+h4. Active Folding
+
+Folded regions can be managed by your Mylyn task context.  With active folding enabled regions of the document that are not in the task context are folded and regions that are in the task context are expanded.  As the task context changes Mylyn will fold and expand regions as needed.
+
+To enable active folding first activate a Mylyn task then toggle the active folding button in the toolbar.
+
+!images/editor-toggle-active-folding.png!
+
+h2. Switching Markup Languages
+
+The WikiText editor supports multiple markup languages.  The editor makes a best-guess at the markup language from the file extension.  To switch markup languages in the editor invoke the context menu *Markup Languages* and select the language:
+
+!images/editor-switch-language.png!
+
+The editor will remember your selection the next time the same file is opened.
+
+h2. Accessing the Markup Cheat-Sheet
+
+The editor provides a markup 'cheat-sheet'.  The cheat-sheet is a quick-reference for markup syntax.  To access the cheat-sheet press *F1* in the source view of the editor.
+
+Note that the content of the cheat-sheet will vary according to the markup language being displayed.
+
+!images/editor-cheat-sheet.png!
+
+h2. Project Settings
+
+WikiText project settings may be configured from the project properties dialog.
+
+!images/project-settings.png!
+
+Selecting *Enable validation* causes WikiText to validate wiki markup files in your project.  This is done as part of the project build process, so it helps to have automatic building enabled (*Preferences->Workspace->Build Automatically*).  Validation is performed on all resources that match a wiki markup file extension.  In addition validation includes any files for which the "markup language setting":#SwitchingMarkupLanguages was set even if the file doesn't have a registered wiki markup file extension.
+
+h1. Task Editor Integration
+
+WikiText extends Mylyn to provide a markup-aware task editor.  With WikiText installed, Mylyn can render wiki markup as intended, provide markup-specific syntax highlighting, content-assist, validation, and a cheat-sheet for wiki markup syntax.
+
+h2. Repository Configuration
+
+To use the WikiText extension to the Mylyn task editor you may need to configure your Mylyn task repository.  To do so, open the Mylyn *Task Repositories* view (*Window -> Show View -> Other... -> Mylyn -> Task Repositories*).  Select the repository that you wish to configure and then select *Properties* from the context menu.
+
+!images/repository-settings-task-editor-extension.png!
+
+In the *Editor* section select the markup language of choice.  Note that you may need to expand this section to see available choices.  To disable WikiText extensions to the Mylyn task editor select *Plain Text*.
+
+Press the *Finish* button when you've finished to make the changes permanent.  Note that changes to these settings will only be visible for newly opened task editors.  Task editors that were open prior to making the changes will need to be closed and reopened for the settings to take effect.
+
+h2. Task Editor Appearance
+
+The appearance of rendered markup in the task editor can be altered in the Eclipse preferences.  Open *Preferences -> General -> Editors -> Text Editors -> WikiText -> Appearance* and alter the appearance using CSS styles. See "Preferences":#Preferences for more details.
+
+h3. Task Editor Fonts
+
+Default fonts for the task editor when using WikiText can be altered in the Eclipse preferences.  Open *Preferences -> General -> Appearance -> Colors and Fonts*.  Under *Tasks* default fonts may be selected:
+
+* Task Editor - Monospace font
+* Task Editor - Notes and Comments
+
+!images/task-editor-font-preferences.png!
+
+These fonts are used as the baseline before CSS styles are applied.  See "Preferences":#Preferences for more details.
+
+h2. Markup for Task Repositories
+
+Many task repositories have direct support for markup built in, such as Trac and JIRA.  Others do not, however this does not prevent you from using markup with them.
+
+Most markup languages are designed to be compact and readable in their source form.  Early users of the Internet used markup in email and newsgroups without much thought and without the support of tools that alter the apperance of markup by rendering it as HTML.
+
+We recommend using markup with task repositories such as Bugzilla.  Markup makes content more readable and Mylyn can make it look good within Eclipse.
+
+It should be noted that some markup languages such as WikiMedia and Textile were originally designed for wikis, not bug reports or task descriptions.  Some markup language constructs of these languages are not suitable for use with task repositories, and are altered by WikiText when used with the Mylyn task editor.  Below is a list of language features are altered when used with the Mylyn task editor:
+
+*MediaWiki*
+
+* Preformatted text where the line begins with a space character has been disabled to prevent preformatted text where it was not intended.
+* Support for HTML tags has been disabled to allow for pasting HTML source code into bug comments and descriptions.
+
+*Textile*
+
+* Support for HTML tags has been disabled to allow for pasting HTML source code into bug comments and descriptions.
+* Footnote references are preprocessed and only matched if a corresponding footnote exists in the content.
+
+*Other*
+
+The following language constructs are enabled for all markup languages:
+
+* Java stack trace detection
+* Eclipse-specific: content following a line starting with ==-- Error Details --==
+
+
+h3. Markup for Bugzilla
+
+WikiText adds markup language capabilities for common Bugzilla content when used with a Bugzilla repository:
+
+* quoted text where each line begins with a > character:
+!{margin-left:2em;}images/task-editor-bugzilla-quote.png!
+* common phrases generated by Bugzilla:
+!{margin-left:2em;}images/task-editor-bugzilla-text.png!
+
+
+h1. Markup Generation
+
+Lightweight markup (wikitext) is designed to be readily converted to HTML.  WikiText provides a means to generate HTML and these output formats:
+
+* HTML
+* "DocBook":http://www.docbook.org
+* "OASIS DITA":http://dita.xml.org
+* Eclipse help format (HTML and @toc.xml@)
+* "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects
+* Other markup languages (e.g. Textile, Confluence, Markdown, AsciiDoc)
+
+h2. Generation In Eclipse
+
+These conversions can be made by right-clicking any @*.textile@, @*.tracwiki@, @*.mediawiki@, @*.twiki@, or @*.confluence@ resource in the Eclipse UI:
+
+!images/resource-conversion-menu.png!
+
+Performing a conversion from the UI will cause corresponding files (@*.xml@, @*.html@, @*-toc.xml@, @*.textile@) to be created in the same folder as the selected file(s).
+
+More control over the conversion process can be achieved by using Ant build scripts (described below).
+
+h3. Content Generation from Wiki Markup
+
+Mylyn WikiText can convert from one wiki markup language to another.  Currently supported output formats are Textile, Confluence, Markdown, AsciiDoc.  Examples of conversions include MediaWiki to Textile, Confluence to Textile, MediaWiki to Confluence, etc.
+
+Wiki markup conversion is performed in Eclipse, see "Conversion In Eclipse":#GenerationInEclipse for more details.
+
+h2. Content Generation from Wiki Markup using Maven
+
+A Maven plug-in is provided that can generate HTML and Eclipse Help content from wiki markup.  The plug-in scans a source folder and generates HTML and a corresponding Eclipse help table of contents file for each wiki markup source file.  Non-wiki source files (such as CSS and images) are copied as-is to the output folder.
+
+The Mylyn WikiText plug-in can be included by adding the following Maven repository as a plug-in repository to your Maven configuration: @https://repo.eclipse.org/content/repositories/mylyn-snapshots/@. Please note that only the SNAPSHOT versions are published to this repository. For the moment, RELEASE artifacts are not published.
+
+To add the Maven repository via your pom, use the following syntax:
+
+bc. 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>eclipse.org-mylyn</id>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+To include the plug-in as a build step, add the following syntax:
+
+bc. 
+		<plugin>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.wikitext.maven</artifactId>
+			<configuration>
+				<sourceFolder>src</sourceFolder>
+				<copyrightNotice>${help.copyrightNotice}</copyrightNotice>
+				<title>${help.documentTitle}</title>
+				<multipleOutputFiles>true</multipleOutputFiles>
+				<navigationImages>true</navigationImages>
+				<formatOutput>true</formatOutput>
+				<stylesheetUrls>
+					<param>styles/main.css</param>
+				</stylesheetUrls>
+			</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>eclipse-help</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
+Refer to the Maven plug-in help for details on the available configuration parameters.
+
+h2. Content Generation from Wiki Markup using Ant
+
+"Ant":http://www.apache.org build scripts may also be used to drive a markup conversion.  The following is an example of how to drive conversion from Textile markup to Eclipse help format (to HTML and toc.xml):
+
+bc.. 
+	<property name="wikitext.standalone" value=""/><!-- path to wikitext standalone package -->
+
+	<path id="wikitext.classpath">
+		<fileset dir="${wikitext.standalone}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/ant/tasks.properties" />
+
+	<target name="generate-help" depends="init" description="Generate Eclipse help from textile source">
+		<wikitext-to-eclipse-help markupLanguage="Textile"
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="help">
+			<fileset dir="${basedir}">
+    				<include name="help/*.textile"/>
+			</fileset>
+			<stylesheet url="styles/help.css"/>
+			<stylesheet url="styles/main.css"/>
+		</wikitext-to-eclipse-help>
+	</target>
+
+p. Similar Ant scripts can be used to convert to HTML:
+
+bc. 
+	<target name="generate-html" depends="init" description="Generate HTML from textile source">
+		<wikitext-to-html markupLanguage="Textile">
+			<fileset dir="${basedir}">
+    				<include name="help/*.textile"/>
+			</fileset>
+			<stylesheet url="styles/main.css"/>
+		</wikitext-to-html>
+	</target>
+
+Conversion using Ant is used by the WikiText project to create help content.  We find that writing help content in Textile markup is much easier than writing DocBook or HTML.
+
+The @<stylesheet>@ entries in the above examples are optional; these cause an HTML link to one or more stylesheets to be added to the head of the generated HTML document.
+
+The @markupLanguage@ attribute accepts any of the following values (depending on your classpath):
+
+* @Textile@
+* @MediaWiki@
+* @TracWiki@
+* @TWiki@
+* @Confluence@
+* A fully-qualified class name of a class that extends @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@
+
+
+*common task options*
+
+|_. Option |_. Usage |
+| @markupLanguage@ | The markup language to use, for example 'Textile', 'Confluence', 'Markdown', 'MediaWiki', 'TracWiki', 'TWiki'. |
+| @validate@ | Indicate if the input file should be validated.  Default is @true@. |
+| @failOnValidationError@ | Indicate if validation errors should cause a build failure. @true@ or @false@, default is true.  |
+| @failOnValidationWarning@ | Indicate if validation warnings should cause a build failure. @true@ or @false@, default is false.  |
+| @overwrite@ | Indicate if target files should be overwritten even if the target document is newer than the source document. @true@ or @false@, default is false. |
+| @sourceEncoding@ | Indicate source file encoding.  Example: @UTF-8@.  Defaults to the platform default encoding as defined by @java.nio.charset.Charset.defaultCharset()@.  See the "IANA Charset Registry":http://www.iana.org/assignments/character-sets for valid charset names. |
+| @internalLinkPattern@ | The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific, however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal link.  Example: @/wiki/{0}@ would cause internal links to page @Help@ to be rendered as @/wiki/Help@ |
+
+*wikitext-to-html and wikitext-to-eclipse-help task options*
+
+|_. Option |_. Usage |
+| @title@ | Specify the title of the output document.  If unspecified, the title is the filename (without extension). |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @linkRel@ | The 'rel' value for HTML links. If specified the value is applied to all generated links. The default value is null. |
+| @multipleOutputFiles@ | Indicate if output should be generated to multiple output files (true/false).  Default is false. |
+| @formatOutput@ | Indicate if the output should be formatted (true/false). Default is false. |
+| @navigationImages@ | Indicate if navigation links should be images (true/false).  Only applicable for multi-file output.  Default is false. |
+| @prependImagePrefix@ | If specified, the prefix is prepended to relative image urls.  |
+| @overwrite@ | Indicate if output files should be overwritten.  The default is false.  When false output files are only overwritten if the output file timestamp is older than the markup source file. |
+| @helpPrefix@ | The prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
+| @tocAnchorLevel@ |  The heading level at which anchors of the form @<anchor id="additions"/>@ should be emitted. A level of 0 corresponds to the root of the document, and levels 1-6 correspond to heading levels h1, h2...h6.  The default value is 0.  |
+| @defaultAbsoluteLinkTarget@ | Specify that hyperlinks to external resources (@<a href@) should use a @target@ attribute to cause them to be opened in a seperate window or tab.  The value specified becomes the value of the @target@ attribute on anchors where the href is an absolute URL. |
+| @xhtmlStrict@ | Indicate if the builder should attempt to conform to strict XHTML rules. The default is false. |
+| @emitDoctype@ | Indicate if the builder should emit a DTD doctype declaration.  The default is true. |
+| @htmlDoctype@ | The doctype to use.  Defaults to @<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@. |
+| @copyrightNotice@ | The copyright notice to include in generated output files. |
+| @javadocBasePackageName@ | Specifies the javadoc base package name to use with "javadoc links":#JavadocLinks.  Defaults to unspecified. |
+| @javadocRelativePath@ | Specifies the relative path to related javadoc to use with "javadoc links":#JavadocLinks.  Defaults to unspecified. |
+
+*stylesheet*
+
+Nested @<stylesheet>@ elements cause HTML to contain links to CSS stylesheets or CSS stylesheet content.  When used with the @url@ attribute the stylesheet element is linked.  When used with the @file@ attribute the stylesheet content is copied into the HTML document.
+
+Stylesheets may have nested @<attribute>@ elements with @name@ and @value@.  These attributes are copied verbatim to the HTML @<link>@ element.  Attributes named @type@, @rel@ and @href@ are ignored.
+
+h4. Javadoc Links
+
+WikiText provides extensions to supported markup languages for abbreviated links to javadoc.  This feature simplifies linking to javadoc from wiki markup by providing support for abbreviated syntax in link URIs.
+
+The following link URI syntax is supported:
+
+* "@foo.bar"      -> "index.html?foo/bar/package-summary.html"
+* "@foo.Bar"      -> "index.html?foo/Bar.html"
+* "javadoc://Foo" -> "index.html?Foo.html"
+
+If a base package name is provided, it can be referenced by preceding a package name with a dot, for example with a base package name of "com.example":
+
+* "@.foo.Bar"      -> "index.html?com/example/foo/Bar.html"
+
+h3. PDF and XSLFO
+
+WikiText can convert wiki markup to "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects.  PDF is readily obtained from XSL-FO by using an FO processor such as the excellent "Apache FOP":http://xmlgraphics.apache.org/fop project.
+
+bc. 
+	<wikitext-to-xslfo markupLanguage="Textile">
+		<fileset dir="help" includes="**/*.textile"/>
+	</wikitext-to-xslfo>
+
+WikiText conversion to XSL-FO is performed using the @wikitext-to-xslfo@ task.  In addition to common options listed above, the following options are available:
+
+*wikitext-to-xslfo task options*
+
+|_. Option |_. Usage |
+| @targetdir@ | Specify a folder in which output files should be created. |
+| @title@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
+| @subTitle@ | Specify a sub-title to appear under the book title. |
+| @fontSize@ | Specify the default font size. The default is 10.0 |
+| @showExternalLinks@ | Indicate if external link URLs should be emitted in the text. The default is true. |
+| @underlineLinks@ | Indicate if links should be underlined. The default is false. |
+| @pageBreakOnHeading1@ | Indicate if h1 headings should start a new page. The default is true. |
+| @panelText@ | Indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type note, tip and warning respectively. |
+| @version@ | A document version to emit on the title page, for example: 'Version 1.0.23' |
+| @date@ | A date to emit on the title page. |
+| @author@ | An author to emit on the title page. |
+| @copyright@ | A copyright to emit in the document page footer. |
+| @pageNumbering@ | Indicate if pages should be numbered.  The default is true. |
+| @pageMargin@ |  The page margin in cm.  Defaults to 1.5. |
+| @pageHeight@ | The page height in cm. Defaults to A4 sizing (29.7) |
+| @pageWidth@ | The page width in cm. Defaults to A4 sizing (21.0) |
+| @generateBookmarks@ | When true, generates bookmarks in the form of a @<bookmark-tree>@ in the output.  Defaults to true. |
+
+h4. PDF from XSL-FO Quick-Start
+
+To convert the XSL-FO output files to PDF using the "Apache FOP":http://xmlgraphics.apache.org/fop project, add the following to your Ant script:
+
+bc. 
+	<property name="fop.home" value="/full/system/path/to/fop-0.95"/>
+	<exec command="${fop.home}/fop">
+		<arg value="${basedir}/help/MyFile.fo"/>
+		<arg value="${basedir}/help/MyFile.pdf"/>
+	</exec>
+
+Refer to the Apache FOP documentation for more details.
+
+h3. DocBook
+
+WikiText can convert markup to "DocBook":http://www.docbook.org
+
+bc. 
+	<wikitext-to-docbook markupLanguage="Textile">
+		<fileset dir="${textile.root.dir}">
+ 			<include name="**/*.textile"/>
+		</fileset>
+	</wikitext-to-docbook>
+
+You can use WikiText first to convert your Textile markup to "DocBook":http://www.docbook.org then use the "DocBook XSL stylesheets":http://docbook.sourceforge.net/ to convert the DocBook to Eclpse help content, HTML, pdf or other formats.  For more information on using the DocBook XSL stylesheets please refer to the "DocBook XSL project":http://docbook.sourceforge.net/
+
+*wikitext-to-docbook task options*
+
+|_. Option |_. Usage |
+| @bookTitle@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
+| @overwrite@ | @true@ or @false@, default is true.  Indicate if existing target files should be overwritten even if they are newer than the source file. |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @doctype@ | Overrides the DTD doctype to use in the output file. Optional. |
+
+h3. DITA
+
+WikiText can convert markup to "OASIS DITA":http://dita.xml.org.  The conversion can either be used to convert a single input file to a bookmap and multiple topics, or to a single topic.
+
+WikiText conversion to DITA is performed using the @wikitext-to-dita@ task.  In addition to common options listed above, the following options are available:
+
+*wikitext-to-dita task options*
+
+|_. Option |_. Usage |
+| @bookTitle@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
+| @overwrite@ | @true@ or @false@, default is true.  Indicate if existing target files should be overwritten even if they are newer than the source file. |
+| @file@ | the source file.  Optional, not required if a fileset is specified. |
+| @doctype@ | Overrides the DTD doctype to use in the target bookmap. Optional.  |
+| @topicDoctype@ | Overrides the DTD doctype to use in the target topic files. Optional.  |
+| @topicFolder@ | The relative folder name to use for topic files when producing multiple output files. Optional, defaults to 'topics'.  |
+| @topicStrategy@ | Specify how multiple output files are generated.  Optional, defaults to 'FIRST'.  Must be one of 'FIRST', 'LEVEL1' or 'NONE'.  'FIRST' indicates that multiple topic files are to be created, split at the level of the first heading encountered in the file.  'LEVEL1' indicates that multiple topic files are to be created, split one file for each level-1 heading encountered.  'NONE' indicates that multiple topic files are not to be created.  Only a single topic file is created, with no bookmap. |
+| @formatting@ | Indicate if the XML output should be formatted.  Defaults to 'true'. |
+
+h4. wikitext-to-dita - Multiple Files Example
+
+To convert an input file to a bookmap and multiple topics, use the following:
+
+bc. 
+	<wikitext-to-dita markupLanguage="Textile">
+		<fileset dir="help" includes="**/*.textile"/>
+	</wikitext-to-dita>
+
+The output is created as multiple files: a bookmap and multiple topics, one topic for every level-1 heading.
+
+h4. wikitext-to-dita - Single Output File Example
+
+To convert an input file to a single output file, use the following:
+
+bc. 
+	<wikitext-to-dita markupLanguage="Textile"
+		topicStrategy="NONE">
+		<fileset dir="help" includes="**/*.textile"/>
+	</wikitext-to-dita>
+
+h3. MediaWiki To Eclipse Help
+
+Mylyn WikiText provides a means to generate Eclipse Help content from multiple MediaWiki pages, directly from the wiki.  This feature takes into account cross-page hyperlinks, template expansion and downloading images that appear in the page.  To use this feature use the @<mediawiki-to-eclipse-help>@ Ant task as follows:
+
+bc.. 
+    	<taskdef classpathref="wikitext.classpath"
+    	    resource="org/eclipse/mylyn/wikitext/mediawiki/ant/tasks.properties"/>
+
+    	<mediawiki-to-eclipse-help
+    		wikiBaseUrl="http://wiki.eclipse.org"
+			validate="true"
+			failonvalidationerror="true"
+			prependImagePrefix="images"
+			formatoutput="true"
+			defaultAbsoluteLinkTarget="mylyn_external"
+    		dest="${basedir}"
+    		title="Mylyn"
+    		generateUnifiedToc="false">
+    		<path name="Mylyn/User_Guide" title="Mylyn User Guide" generateToc="true"/>
+    		<path name="Mylyn/FAQ" title="Mylyn FAQ" generateToc="true"/>
+			<stylesheet url="book.css"/>
+    		<pageAppendum>
+
+= Updating This Document =
+
+This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit
+{url}</pageAppendum>
+    	</mediawiki-to-eclipse-help>
+
+p. Note the different @<taskdef>@ for the @<mediawiki-to-eclipse-help>@ task.
+
+The following describes the Ant task and its configurable options:
+
+
+|_. Option |_. Usage |
+| @dest@ | The destination folder into which generated files should be placed.  Typically this is the root folder of your bundle (plug-in) project. |
+| @wikiBaseUrl@ | The base URL of the wiki.  Example: @http://wiki.eclipse.org@ |
+| @defaultAbsolutLinkTarget@ | A default target attribute for links that have absolute (not relative) urls. By default this value is null. Setting this value will cause all HTML anchors to have their target attribute set accordingly. |
+| @emitDoctype@ | Indicate if the resulting HTML should include a DTD.  The default value is true. |
+| @fetchImages@ | Indicate if images should be downloaded from the wiki. The default value is true. |
+| @formatOutput@ | Indicate if generated HTML files should be formatted.  The default value is false.  If your generated files are to be stored in a version control system it's recommended to enable this option. |
+| @generateUnifiedToc@ | Indicate if a unified Eclipse help table of contents should be generated.  Defaults to true. |
+| @helpPrefix@ | The prefix to prepend to table of contents references if the help content is not generated into the root of your plug-in bundle.  Defaults to null. |
+| @htmlDoctype@ | The doctype to use when generating HTML.  Defaults to @<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">@ |
+| @htmlFilenameFormat@ | The filename format to use when generating output filenames.  Defaults to @$1.html@ where $1 is the name of the page. |
+| @linkRel@ | The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The default value is null.  Setting this value to "nofollow" is recommended for rendering HTML in areas where users may add links, for example in a blog comment. |
+| @multipleOutputFiles@ | Indicate if wiki pages should result in multiple output files, split at top-level headings.  Defaults to true. |
+| @navigationImages@ | Indicate if navigation (next/previous) links should use images.  Defaults to true. |
+| @prependImagePrefix@ | The folder name to prepend to image references.  Defaults to @"images"@. |
+| @suppressBuiltInCssStyles@ |  Indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted to create the desired visual effect when rendering certain types of elements, such as warnings or infos.  Defaults to false. |
+| @templateExcludes@ | Indicate MediaWiki template names to exclude.  A comma-delimited list of names, may include '*' wildcards.  Defaults to null.  Example: @bug, navigationHeader@ |
+| @title@ | The title of the generated help content. |
+| @tocFile@ | The filename to use for the generated unified table of contents.  Defaults to @toc.xml@ in the @dest@ folder. |
+| @useInlineCssStyles@ | Indicate if built-in styles should be generated inline or in the document head.  Defaults to true, resulting in inline styles. |
+| @xhtmlStrict@ | Indicate if the generated output should attempt to conform to XHTML strict.  Defaults to false. |
+| @titleParameter@ | indicates if the page title should be provided as an HTTP parameter, for example @index.php?title=Main@.  Defaults to false. |
+
+One or more @<path>@ tags must be nested, with attributes as follows:
+
+|_. Option |_. Usage |
+| @name@ | The name of the wiki page, which is typically the URL following the @wikiBaseUrl@. For example, 'Mylyn/FAQ' |
+| @title@ | The title of the page.  If unspecified, defaults to the path @name@. |
+| @generateToc@ | Indicate if an independent Eclipse help table of contents should be generated for this path. Defaults to false. |
+| @includeInUnifiedToc@ | Indicate if this path should be included in the unified table of contents.  Defaults to true. |
+| @tocParentName@ | When specified causes the path to appear nested under another path in the generated unified table of contents.  If unspecified this path will generate table of contents at the top level. Defaults to null. |
+
+A single @<pageAppendum>@ tag can be nested, in which content may be specified that is appended to each wiki page during the generation process.  A token @{url}@ is replaced with the original URL to the wiki page.  In this manner users can be directed to the source location for editing the document.  @<pageAppendum>@ may also be used to append arbitrary content, such as a copyright notice.
+
+*Table Of Contents*
+
+When using @<mediawiki-to-eclipse-help>@ there are two modes of operation:
+
+# either have the Ant task generate a table of contents containing links to headings from all generated files, or
+# generate an independant table of contents for each wiki path and link them together by writing a master table of contents by hand and using @<link>@ tags.
+
+The first option requires less effort, but results in less control over the output.  The second option is more flexible, but requires writing a master table of contents.
+
+h2. Html To WikiText
+
+Mylyn WikiText can generate wiki markup from most simple HTML files using the @<html-to-wikitext>@ Ant task.
+In addition to "common task options":#ContentGenerationfromWikiMarkupusingAnt the following are available:
+
+|_. Option |_. Usage |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @outputFilenameFormat@ | The filename format to use when generating output filenames.  Defaults to @$1.$2@ where $1 is the name of the input file without its file extension, and $2 is the name of the markup language.  For example, given an input file @test.html@, the default output filename is @test.textile@. |
+
+Currently Mylyn WikiText only supports Textile and Confluence as output formats, however 3rd party extensions to Mylyn WikiText can add support for generating other wiki markup.
+
+h2. Ant Examples
+
+See "the examples":examples for example Ant build scripts.
+
+h2. Markup Language Customization
+
+Mylyn WikiText provides a means of customizing wiki markup languages for use with Ant tasks.  This is useful for altering the markup language to include specialized markup rules specific to your needs.
+
+To customize a markup language you may either extend a markup language using subclassing, or you may provide a @MarkupLanguageConfiguration@.  The best option will vary depending on your needs.  @MarkupLanguageConfiguration@ provides a means of altering a markup language without subclassing the language itself, which makes it reusable with different markup languages.
+
+Following is an example of providing a @MarkupLanguageConfiguration@ configuration:
+
+pre.. 
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage" ...>
+	<markupLanguageConfiguration escapingHtmlAndXml="true"/>
+</wikitext-to-eclipse-help>
+
+p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
+
+pre.. 
+<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties"
+	classpathref="wikitext.classpath"
+	loaderref="wikitext.classpath.loader"/>
+<typedef name="languageConfiguration"
+	classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration"
+	classpathref="wikitext.classpath"
+	loaderref="wikitext.classpath.loader"/>
+
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage" ...>
+	<languageConfiguration escapingHtmlAndXml="true"/>
+</wikitext-to-eclipse-help>
+
+p. The @loaderref@ attribute is required for Ant to use the same ClassLoader for both the WikiText Ant tasks and the subclassed @MarkupLanguageConfiguration@.
+
+See the *Mylyn WikiText Developer Guide* for details on extending a markup language via subclassing.
+
+h1. Textile Syntax
+
+The WikiText editor supports most standard Textile markup.  In addition some markup extensions are supported.  See the markup 'cheat-sheet' for details (press *F1* in the editor).
+
+h2. Textile Syntax Tips
+
+h3. Whitespace
+
+Textile markup is sensitive to whitespace.  For example, a line that starts with '@{color:blue;}h1.@' is only a heading if the '@{color:blue;}h1.@' is immediately followed by a space character.  This can bite you if you're not careful!
+
+A less obvious example of the same problem is with '@{color:blue;}bc.@'  Usually content in a 'block code' section is on the line following the '@{color:blue;}bc.@'  If the '@{color:blue;}bc.@' is not immediately followed by a space character _before the end of the line_, then the area is simply considered a normal paragraph.
+
+h3. HTML Literals
+
+Textile markup can handle literal HTML.  For example, the following is valid Textile:
+
+bc. 
+some <b>bold text</b> here
+
+Care must be taken with literal HTML: the start tag must be completed on one line, and the end tag must be completed on one line.  The following is an example of embedded HTML that won't work with Textile:
+
+bc. 
+here is <a
+href="#">a bad example</a>
+
+The above example can be fixed by moving the @href@ up on to the same line as the @<a@ portion:
+
+bc. 
+here is <a href="#">a working example</a>
+
+h3. Images and DocBook
+
+DocBook is quite flexible about how images are handled.  This section discusses how DocBook rendering can be altered with the use of specific markup.
+
+h4. Inline Images v.s. Block Images
+
+When handling images in a conversion of Textile markup to DocBook markup, there are several choices for the resulting DocBook markup.  By default images are converted as follows:
+
+bc. 
+!images/foo.png!
+
+results in:
+
+bc. 
+<mediaobject><imageobject><imagedata fileref="images/foo.png"/></imageobject></mediaobject>
+
+@<mediaobject/>@ is useful for some cases, however there are times when @<inlinemediaobject/>@ should be used instead.  To achieve this result, add the @inline@ class to your image as follows:
+
+bc. 
+!(inline)images/foo.png!
+
+The conversion will then result in the following:
+
+bc. 
+<inlinemediaobject><imageobject><imagedata fileref="images/foo.png"/></imageobject></inlinemediaobject>
+
+h4. Image Scaling
+
+DocBook supports image scaling with the @scale@ attribute.  For example:
+
+bc. 
+<imagedata fileref="images/foo.png" scale="80"/>
+
+To achieve this effect with Textile markup use syntax as follows:
+
+bc. 
+!{width:80%}images/foo.png!
+
+More information about image scaling in DocBook is available at  "imagedata: Scaling":http://www.docbook.org/tdg/en/html/imagedata-x.html.
+
+h4. Image Size
+
+Image size can be specified in DocBook using @width@ and @depth@ attributes for width and height, respectively:
+
+bc. 
+<imagedata fileref="images/foo.png" width="32px" height="64px"/>
+
+This is achieved with Textile markup as follows:
+
+bc. 
+!{width:32px;height:64px}images/foo.png!
+
+h3. Extended Blocks
+
+Textile extended blocks (starting with @bc..@, @pre..@ and @bq..@) are useful for blocks that may have multiple whitespace lines.  Extended blocks must be terminated by an explicit Textile block (such as @p.@).   For example:
+
+bc.. 
+ bc..
+ a block code section has started
+
+ and continues
+
+ p. a paragraph starts
+
+
+h2. Textile Extensions
+
+Mylyn WikiText adds the following extensions to Textile:
+
+* @{toc}@ - emit a table of contents.  Parameters may be specified as follows:
+** @{toc:style=circle}@ Emit with list-style=circle
+** @{toc:maxLevel=2}@ Emit with heading levels up to and including h2.
+** @{toc:class=tableOfContents}@ Emit with CSS class of "tableOfContents".  Defaults to "toc" if unspecified.
+* @{glossary}@ - emit a glossary of terms in a definition list.  Glossary terms are specified using Textile syntax for acronyms.
+
+h2. Examples
+
+This document was written in Textile markup.  The original source code for this document "is available here":https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git/tree/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide.textile
+
+h2. Textile Reference
+
+Textile syntax and references can be found here:
+
+* "Textile (markup language)":http://en.wikipedia.org/wiki/Textile_%28markup_language%29 (wikipedia.org)
+* "TxStyle · Textile Documentation":https://txstyle.org/ an online form for trying out Textile syntax (txstyle.org)
+* "Textile Reference":http://redcloth.org/hobix.com/textile/ an example-based Textile reference (hobix.com)
+
+h1. Tips and Tricks
+
+h2. Hot-Keys
+
+To get a pop-up showing the list of available hot-keys and commands, press *CTRL+SHIFT+l* (or *COMMAND+SHIFT+l* on a mac)
+
+!images/editor-command-help.png!
+
+h2. Word Completion
+
+Word completion is available from within the Textile editor.  Press *CTRL+.* (that is CTRL + '.', the dot character) repeatedly to see available completions from the current cursor position.
+
+Word completion is based on the "Hippie":http://www.xemacs.org/Documentation/packages/html/edit-utils_23.html algorithm, which finds existing words in the editing context and uses them to create completion proposals.
+
+h2. Spelling
+
+Spell checking is enabled by default in the Textile editor.  Pressing *CTRL+1* on a spelling issue will provide options for dealing with the spelling problem.
+
+!images/editor-spelling.png!
+
+h2. Content Assist
+
+Content assist is available by pressing *CTRL+SPACE*.  Content assist will make suggestions based on the cursor position.  If only one proposal is available at the cursor position, the content will be filled in automatically, otherwise a list of proposals is shown.
+
+Continued typing while the proposals are displayed will narrow the list of available choices.  A selection can be made with the mouse, or by using the up/down arrows and the enter key.
+
+!images/editor-assist-proposals.png!
+
+Suggestions include markup language syntax, document-internal anchor names and "word suggestions":#WordCompletion.
+
+h3. Cross-References and Content Assist
+
+Content assist can help to create cross-reference links within your document.  To create a cross-reference link, simply type a hash '#' character at the start of your link and use content assist to help you complete the cross-reference.
+
+!images/editor-assist-document-internal-link-proposal.png!
+
+Validation will inform you if your link is incorrect.
+
+!images/editor-document-internal-link-validation.png!
+
+h3. Template-Based Content Assist
+
+Content assist may also make proposals involving templates with variables.
+
+!images/editor-assist-template-proposal-selection.png!
+
+When such a proposal is selected the variables are displayed with a surrounding box.  Typing replaces the variable content, the *TAB* key advances to the next variable position, and the *ENTER* or *ESC* keys complete the template editing session.  The vertical line displayed at the end of the template shows where the cursor will be located when finished.
+
+!images/editor-assist-template-proposal.png!
+
+Note that while editing a template the standard undo/redo functionality is still available to you.
+
+h4. Creating Custom Templates
+
+Custom templates can be created under *Preferences -> General -> Editors -> Text Editors -> WikiText -> Templates*:
+
+!images/editor-preferences-templates.png!
+
+Templates may be large, such as a document outline, or small, such as a common phrase or token.
+
+h3. Selection and Content Assist
+
+Content assist may be invoked with selected text.  To do so, select text using the mouse or keyboard, and then press *CTRL+SPACE*.  Content assist is activated with the current selection.
+
+Selecting a template-based content proposal will cause the selected text to be included in the template.  The following shows a selection and content assist proposals before selecting a proposal:
+
+!images/editor-assist-selection-proposal.png!
+
+The following shows the same text after selecting a proposal:
+
+!images/editor-assist-selection-proposal-completed.png!
+
+The selected text in this case is wrapped in '*' characters for the 'strong' Textile markup.
+
+h2. Quick Outline
+
+A quick outline can be accessed by pressing *CTRL+O* in the editor (*Command+O* on a mac).  The quick outline provides a structured view of the markup source much the same as the "Outline view":#Outline except that it's displayed right in the editor.  A quick outline is useful when the Outline view is not visible and may also be used within the "task editor":#TaskEditorIntegration.
+
+!images/editor-quick-outline.png!
+
+Clicking on an item in the outline will show the corresponding header in the source.
+
+Also see "Outline":#Outline.
+
+h1. Preferences
+
+WikiText editor preferences may be configured via the Eclipse preferences dialog.  Preferences can be found under *General -> Editors -> Text Editors -> WikiText*.
+
+h2. Editor Preferences
+
+CSS styles are used to modify the markup syntax highlighting in the editor:
+
+!images/editor-preferences.png!
+
+The following CSS styles are recognized:
+
+| @color@ | named or rgb(r,g,b) |
+| @background-color@ | named or rgb(r,g,b) |
+| @font-family@ | monospace, courier, courier new |
+| @font-style@ | italic, bold, normal |
+| @font-weight@ | bold, bolder, normal, lighter |
+| @font-size@ | percentage, named size, or absolute size (pt or px) |
+| @text-decoration@ | none, line-through, underline |
+| @vertical-align@ | super, sub |
+
+h3. Open in Preview Mode
+
+In the WikiText preference page shown above, it is possible to specify a name pattern (as a regular expression) for files that should be shown in preview mode when opened under *Files to open in preview mode (regex)*.  The default setting matches readme files with any extension known to the WikiText editor. Opening files in preview mode improves browsing of project documentation, typically a readme file in the project root directory.
+
+h3. Font Preferences
+
+The WikiText editor default fonts can be configured in the Eclipse preferences dialog under *General -> Appearance -> Colors and Fonts*:
+
+!images/editor-preferences-fonts.png!
+
+The *Text Font* is the default font used by the WikiText editor for displaying normal text.  The *Monospace Font* is the default font used for displaying text that is teletype, preformatted or code.  CSS styles are applied to these default fonts based on the "Editor Preferences":#EditorPreferences.
+
+
+h2. Rendering Appearance
+
+CSS styles are also used to modify the appearance of rendered markup, both in the text editor preview and in the Mylyn task editor:
+
+!images/editor-preferences-appearance.png!
+
+See "Editor Preferences":#EditorPreferences for a list of supported styles.
+
+h1. Upgrading From Mylyn WikiText 2.x to 3.x
+
+Some API changes and changes affecting Ant usage have been introduced in Mylyn WikiText 3.0.  Notably:
+
+* Java package naming conventions: @core@ has been removed from Java package names, for example the @org.eclipse.mylyn.wikitext.core@ Java package has been renamed to @org.eclipse.mylyn.wikitext@
+* Ant taskdef resource paths no longer have @/core/@, for example Ant build scripts that had @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ should now use @<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties"@
+* OSGi bundles:
+** Symbolic Names: Symbolic names of some OSGi bundles has changed, removing the ".core" suffix.  For example, @org.eclipse.mylyn.wikitext.core@ has become @org.eclipse.mylyn.wikitext@
+** Exports: internal packages are no longer exported by Mylyn WikiText OSGi bundles
+** Dependencies: dependencies have been changed from @Require-Bundle@ to @Import-Package@
+
+h1. Upgrading From Mylyn WikiText 2.7 to 2.8
+
+With version 2.8 of Mylyn WikiText, the dependency to @org.apache.ant@ was removed from @org.eclipse.mylyn.wikitext.mediawiki@.
+
+The two tasks @mediawiki-fetch-images@ and @mediawiki-to-eclipse-help@ were moved to @org.eclipse.mylyn.wikitext.mediawiki.ant@. If you use those tasks you should update your classpath.
+
+h2. Ant Usage in 2.8
+
+The following jar files will be needed for running Ant tasks:
+* @org.eclipse.mylyn.wikitext.jar@
+* @org.eclipse.mylyn.wikitext.ant.jar@
+* @org.eclipse.mylyn.wikitext.textile.jar@ (only required for Textile)
+* @org.eclipse.mylyn.wikitext.confluence.jar@ (only required for Confluence)
+* @org.eclipse.mylyn.wikitext.markdown.jar@ (only required for Markdown)
+* @org.eclipse.mylyn.wikitext.creole.jar@ (only required for Creole)
+* @org.eclipse.mylyn.wikitext.mediawiki.jar@ (only required for MediaWiki)
+* @org.eclipse.mylyn.wikitext.mediawiki.ant.jar@ (only required for the MediaWiki Ant tasks)
+* @org.eclipse.mylyn.wikitext.tracwiki.jar@ (only required for TracWiki)
+* @org.eclipse.mylyn.wikitext.twiki.jar@ (only required for TWiki)
+* @guava-12.0.jar@
+
+
+h1. Upgrading From Mylyn WikiText 1.x to 2.x
+
+For 2.0 Mylyn WikiText has been reorganized into several new jar files (OSGi bundles) to better manage dependencies.
+
+Notable changes when upgrading from 1.x to 2.0:
+
+h2. Ant Usage in 2.0
+
+# The Ant classpath has changed.  The Ant classpath definition should include all jars provided with the standalone distribution of Mylyn WikiText.  The classpath should be defined with @<include name="*.jar"/>@ (see the "examples":#ContentGenerationfromWikiMarkupusingAnt ).  The following jar files will be needed for running Ant tasks:
+** @org.eclipse.mylyn.wikitext.jar@
+** @org.eclipse.mylyn.wikitext.ant.jar@ (new for 2.0)
+** @org.eclipse.mylyn.wikitext.textile.jar@ (only required for Textile)
+** @org.eclipse.mylyn.wikitext.confluence.jar@ (only required for Confluence)
+** @org.eclipse.mylyn.wikitext.markdown.jar@ (only required for Markdown)
+** @org.eclipse.mylyn.wikitext.creole.jar@ (only required for Creole)
+** @org.eclipse.mylyn.wikitext.mediawiki.jar@ (only required for MediaWiki)
+** @org.eclipse.mylyn.wikitext.tracwiki.jar@ (only required for TracWiki)
+** @org.eclipse.mylyn.wikitext.twiki.jar@ (only required for TWiki)
+** @guava-12.0.jar@ Guava is now required (new for 2.0)
+# Ant taskdefs must reference a new properties file @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ see "Ant Examples":#AntExamples for more details
+
+h2. API Changes in 2.0
+
+Many API-breaking changes have been made to Mylyn WikiText 2.0.  In most cases client code upgrading to 2.0 will simply need to be recompiled, however in a few cases client code will have to change.  All changes have been annodated with the javadoc tag <tt>@since 2.0</tt>.
+
+* Many methods in @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@ have been moved to @org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage@.
+* @org.eclipse.mylyn.wikitext.validation.MarkupValidator@ no longer accepts an @IProgressMonitor@
+* @org.eclipse.mylyn.wikitext.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.ui.WikiText@
+* Applications running in OSGi should use @org.eclipse.mylyn.wikitext.osgi.OsgiServiceLocator@ instead of @org.eclipse.mylyn.wikitext.util.ServiceLocator@.
+
+h1. More Information
+
+More information about WikiText can be found here:
+
+* "Mylyn Homepage":http://www.eclipse.org/mylyn
+* "Mylyn WikiText FAQ":http://wiki.eclipse.org/Mylyn/FAQ#WikiText
+* "Mylyn WikiText wiki":http://wiki.eclipse.org/Mylyn/WikiText
+
+Also see these articles:
+
+* "Rich Editing for Tasks via Mylyn WikiText":http://tasktop.com/blog/eclipse/rich-editing-for-tasks-via-mylyn-wikitext by Mik Kersten
+* "Getting started with WikiText":http://www.peterfriese.de/getting-started-with-wikitext/  by Peter Friese
+* "Advanced WikiText":http://www.peterfriese.de/advanced-wikitext/ by Peter Friese
+* "Mylyn WikiText Produces PDF":http://greensopinion.blogspot.com/2009/04/mylyn-wikitext-produces-pdf.html  by David Green
+* "DocumentationGuidelines/CrowdSourcingExample":http://wiki.eclipse.org/DocumentationGuidelines/CrowdSourcingExample (eclipse.org)
+
+h2. Feedback
+
+We're interested in any feedback that you might have.  For patches, enhancement requests, bugs: "post an issue":https://bugs.eclipse.org/bugs under under Tools/Mylyn/WikiText.
+
+p{font-style: italic;}. Copyright (c) 2008, 2013 David Green and others.
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at "https://www.eclipse.org/legal/epl-2.0/":https://www.eclipse.org/legal/epl-2.0/

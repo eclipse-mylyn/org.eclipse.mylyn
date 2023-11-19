@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language class="org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage"
+            name="AsciiDoc" fileExtensions="asciidoc,ad,adoc">
+      </language>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type id="org.eclipse.mylyn.wikitext.asciidoc" base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="asciidoc,ad,adoc" name="%content-type.name" priority="normal">
+      </content-type>
+   </extension>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes extension="asciidoc" type="text"/>
+   </extension>
+   
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="AsciiDoc">
+
+         <template name="[]" description="%template.inline.link" content="${text}[${text}] $"/>
+         <template name="link" description="%template.inline.relative-link" content="link:${text}[${text}] $"/>
+         <template name="image" description="%template.image" content="image::${text}[${text}] $"/>
+         <template name="image-caption" description="%template.image.caption" content="image::${text}[caption=&quot;${caption}&quot; title=&quot;${title}&quot;] $"/>
+
+         <template name="video" description="%template.video" content="video::${text}[] $"/>
+         <template name="video-youtube" description="%template.video.youtube" content="video::${youtube-id}[youtube] $"/>
+         <template name="video-vimeo" description="%template.video.vimeo" content="video::${vimeo-id}[vimeo] $"/>
+
+         <template name="source" description="%template.source" block="true" content="[source, ${language}]\n----\n${code}\n----"/>
+
+         <template name="= " description="%template.description.h1" content="\n= ${text}\n\n" block="true"/>
+         <template name="== " description="%template.description.h2" content="\n== ${text}\n\n" block="true"/>
+         <template name="=== " description="%template.description.h3" content="\n=== ${text}\n\n" block="true"/>
+         <template name="==== " description="%template.description.h4" content="\n==== ${text}\n\n" block="true"/>
+         <template name="===== " description="%template.description.h5" content="\n===== ${text}\n\n" block="true"/>
+         <template name="====== " description="%template.description.h6" content="\n====== ${text}\n\n" block="true"/>
+
+         <template name="NOTE" description="%template.admonition.note" content="\nNOTE: ${text}\n\n" block="true"/>
+         <template name="TIP" description="%template.admonition.tip" content="\nTIP: ${text}\n\n" block="true"/>
+         <template name="IMPORTANT" description="%template.admonition.important" content="\nIMPORTANT: ${text}\n\n" block="true"/>
+         <template name="CAUTION" description="%template.admonition.caution" content="\nCAUTION: ${text}\n\n" block="true"/>
+         <template name="WARNING" description="%template.admonition.warning" content="\nWARNING: ${text}\n\n" block="true"/>
+
+         <template name="NOTE Block" description="%template.admonition.noteblock" content="\n[NOTE]\n====\n${text}\n====\n" block="true"/>
+         <template name="TIP Block" description="%template.admonition.tipblock" content="\n[TIP]\n====\n${text}\n====\n" block="true"/>
+         <template name="IMPORTANT Block" description="%template.admonition.importantblock" content="\n[IMPORTANT]\n====\n${text}\n====\n" block="true"/>
+         <template name="CAUTION Block" description="%template.admonition.cautionblock" content="\n[CAUTION]\n====\n${text}\n====\n" block="true"/>
+         <template name="WARNING Block" description="%template.admonition.warningblock" content="\n[WARNING]\n====\n${text}\n====\n" block="true"/>
+
+         <template name="include" description="%template.include" content="\ninclude::${path}[]\n\n" block="true"/>
+
+         <template name="* " description="%template.uol" content="\n* ${text}\n\n" block="true"/>
+         <template name=". " description="%template.ol" content="\n. ${text}\n\n" block="true"/>
+         <template name="_"  description="%template.italic" content="_${text}_" />
+         <template name="*"  description="%template.bold" content="*${text}*" />
+         <template name="+"  description="%template.monospace" content="+${text}+" />
+         <template name="`"  description="%template.literal" content="`${text}`" />
+         <template name="^"  description="%template.superscript" content="^${text}^" />
+         <template name="~" description="%template.subscript" content="~${text}~" />
+         <template name="'" description="%template.single-quote" content="`${text}'" />
+         <template name="''" description="%template.double-quote" content="``${text}''" />
+         <template name="sourceinclude" description="%template.sourceinclude"  content="[source, ${language}]\n----\ninclude::${file}[]\n----\n" block="true"/>
+         <template name="button" description="%template.button" content="btn:[${OK}]"     block="true"/>
+         <template name="menu" description="%template.menu" content="menu:${File}[${New}]" block="true"/>
+         <template name="table" description="%template.table" content=".Table ${Title}\n|===\n|${Column1Name} |${Colume2Name}\n\n|${CellColumn1Row1}\n|${CellColumn2Row1}\n\n|${CellColumn1Row2}\n|${CellColumn2Row2}\n\n|===\n" block="true"/>
+         <template name="toc::[]" description="%template.tocmacro" content="toc::[]" block="true"/>
+         <template name=":toc:" description="%template.tocattribute" content=":toc:" block="true"/>
+         <template name=":toclevels:" description="%template.toclevels" content=":toclevels: ${level}" block="true"/>
+
+      </templates>
+   </extension>
+   <extension point="org.eclipse.mylyn.wikitext.ui.relativeFilePathHyperlinkDetector">
+      <relativeFilePathHyperlinkDetector markupLanguage="AsciiDoc">
+         <regularExpression regularExpression="include::(.+)\[\]" />
+         <regularExpression regularExpression="image::(.+)\[\]" />
+      </relativeFilePathHyperlinkDetector>
+   </extension>
+</plugin>
