@@ -159,7 +159,7 @@
           locateNestedProjects="true">
         <excludedPath>mylyn.builds/org.eclipse.mylyn.jenkins.tests/testdata</excludedPath>
         <excludedPath>mylyn.reviews/tbr</excludedPath>
-        <excludedPath>mylyn.docs</excludedPath>
+        <excludedPath>mylyn.docs/epub</excludedPath>
         <excludedPath>org.eclipse.mylar.tests</excludedPath>
         <excludedPath>mylyn.versions/org.eclipse.mylyn.versions.tests/target/work/data</excludedPath>
         <excludedPath>mylyn.context/org.eclipse.mylyn.java.tests/target/work/data</excludedPath>
@@ -323,6 +323,13 @@
             xsi:type="predicates:RepositoryPredicate"
             project="org.eclipse.mylyn-aggregator"
             relativePathPattern="mylyn.egit/.*"/>
+      </workingSet>
+      <workingSet
+          name="Docs">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn-aggregator"
+            relativePathPattern="mylyn.docs/.*"/>
       </workingSet>
     </setupTask>
     <stream

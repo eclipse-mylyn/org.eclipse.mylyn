@@ -84,5 +84,15 @@
 			<unit id="com.google.gson" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
 		</location>
+		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.jsoup</groupId>
+					<artifactId>jsoup</artifactId>
+					<version>1.16.2</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
 	</locations>
 </target>

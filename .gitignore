@@ -22,3 +22,13 @@
 **/org.eclipse*/target
 **/.polyglot.*
 **/.pom.*
+.m2
+# from mylyn docs
+bin
+target
+.DS_Store
+*.rej
+*~
+build.log
+.local-repo
+.flattened-pom.xml
