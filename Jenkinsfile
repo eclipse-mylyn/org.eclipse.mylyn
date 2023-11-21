@@ -57,7 +57,7 @@ pipeline {
 			steps {
 				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
 				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh 'mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}"'
+					sh 'cd mylyn.docs && mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}"'
 				}}
 			}
 			post {
@@ -80,7 +80,7 @@ pipeline {
 					ssh genie.mylyn@projects-storage.eclipse.org "\
 						rm -rf  ${DOWNLOAD_AREA}/* && \
 						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
+					scp -r mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
 				'''
 				}
 			}
