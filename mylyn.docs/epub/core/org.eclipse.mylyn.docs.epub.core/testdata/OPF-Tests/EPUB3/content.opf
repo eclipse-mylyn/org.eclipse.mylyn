@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/" version="3.0" xml:lang="en" unique-identifier="pub-identifier">
+  <metadata>
+    <dc:identifier id="pub-identifier">urn:isbn:123456789</dc:identifier>
+    <meta id="meta-identifier" property="dcterms:identifier">urn:isbn:123456789</meta>
+    <dc:title id="pub-title">Actual example EPUB 3 OPF</dc:title>
+    <meta property="dcterms:title" id="meta-title">Testing</meta>
+    <dc:language id="pub-language">en</dc:language>
+    <meta property="dcterms:language" id="meta-language">en</meta>
+    <meta property="dcterms:modified">2001-07-22T14:45:39Z</meta>
+    <meta property="dcterms:contributor">Nomen Gamma</meta>
+    <dc:contributor>Nomen Gamma</dc:contributor>
+    <meta property="dcterms:rights">Copyright © 2015 Nomen Beta</meta>
+    <dc:rights>Copyright © 2015 Nomen Beta</dc:rights>
+    <meta property="dcterms:rightsHolder">Nomen Beta</meta>
+    <meta property="dcterms:publisher">Eclipse Mylyn</meta>
+    <dc:publisher>Eclipse Mylyn</dc:publisher>
+    <meta property="dcterms:subject">Test</meta>
+    <dc:subject>Test</dc:subject>
+    <meta property="dcterms:date">2015-09-14</meta>
+    <dc:date>2015-03-14</dc:date>
+    <meta property="dcterms:description">description</meta>
+    <dc:description>description</dc:description>
+    <meta property="dcterms:contributor">Nomen Alfa</meta>
+    <dc:contributor>Nomen Alfa</dc:contributor>
+    <meta id="meta-creator20" property="dcterms:creator">Nomen Beta</meta>
+    <dc:creator id="pub-creator20">Nomen Beta</dc:creator>
+    <meta name="cover" content="cover-image"/>
+    <meta property="ibooks:specified-fonts">true</meta>
+  </metadata>
+  <manifest>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="epub.embedded.font" href="DejaVuSerif.otf" media-type="application/vnd.ms-opentype"/>
+    <item id="htmltoc" properties="nav" media-type="application/xhtml+xml" href="toc.html"/>
+    <item media-type="text/css" id="html-css" href="core.css"/>
+    <item id="cover" href="cover.html" media-type="application/xhtml+xml"/>
+    <item id="cover-image" properties="cover-image" href="orm_front_cover.jpg" media-type="image/jpeg"/>
+    <item id="index" href="index.html" media-type="application/xhtml+xml"/>
+    <item id="chapter" href="chapter.html" media-type="application/xhtml+xml"/>
+    <item id="dedication" href="dedication.html" media-type="application/xhtml+xml"/>
+    <item id="image" href="image.png" media-type="image/png"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="cover" linear="yes"/>
+    <itemref idref="dedication"/>
+    <itemref idref="chapter"/>
+    <itemref idref="index"/>
+  </spine>
+  <guide>
+    <reference href="cover.html" type="cover" title="Cover"/>
+    <reference href="toc.html" type="toc" title="Table of Contents"/>
+    <reference href="index.html" type="text"/>
+  </guide>
+</package>

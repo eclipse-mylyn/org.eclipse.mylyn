@@ -1,0 +1,210 @@
+%{toc}
+
+h1. Structural View Introduction
+
+{info:title=Guidance} 
+\\
+\\
+Include a diagram illustrating the component’s external view, showing how the component 
+relates to other components, and which interfaces it provides to other components. 
+In this diagram the whole component is typically represented by only one class symbol. Other components are represented by only one entity.
+\\
+The diagram must show, for each component in the system:
+\\
+ *	Interfaces provided by the component for other components;
+\\
+ *	Interfaces used from other components by a component;
+\\
+ *	and components themselves (If this document is focused on one component, then that component is shown in white. 
+\\
+All other system components are show in light grey).
+If appropriate, may reference another document with this content.
+{info}
+
+  <Body>
+
+h1. Major Components
+
+{info:title=Guidance} 
+Describe all functions the system or component is required to perform. Include inherited functionality 
+and delegated functionality. Organize the functions by category of component, interface and operation. 
+Use text, tables, and graphics as necessary for understandability. For every component listed in this table, 
+there should be corresponding sections below as required.
+{info}
+
+{anchor:Major Software Components Table}*Major Software Components Table*
+
+||Component Name ||Interface Name ||Description of Functionality||
+| xxx | xxx | xxx |
+			
+h1. Major Data Structures/Information Model Elements
+
+{info:title=Guidance} 
+The information provided here informs the logical and physical database schema design, 
+how the information model(s) of the system are used and how, for example, ORM technology 
+should be used. Additional sections may be added if the table format proves unwieldy.
+{info}
+
+{anchor:Major Data Structures Table}*Major Data Structures Table*
+
+||Name ||Description ||Purpose ||Used By ||Schema ||
+| xxx | xxx | xxx | xxx | xxx |
+
+h1. Provided External Interfaces
+
+{info:title=Guidance} 
+List the interfaces provided by the component in the table below. Identify the technology of the interface,
+how it handles errors (e.g. return code, exception, null result etc.), the arguments that the interface takes 
+and returns in summary (do not do so for every operation) and the description or function of the interface.
+{info}
+
+{anchor:Provided External Interfaces Table}*Provided External Interfaces Table*
+
+||Interface ||Interface Technology ||Error Handling ||In/Out Data ||Description/Function||
+| xxx | xxx | xxx | xxx  | xxx |
+
+h1. Authorization Requirements
+
+{info:title=Guidance} 
+For each of the provided interfaces of this component, 
+list the required authorization capability and default roles, if applicable.
+{info}
+
+{anchor:Authorization Requirements for Provided External Interfaces Table}*Authorization Requirements for Provided External Interfaces Table*
+
+||Interface ||Authorization Requirements ||Default Role ||
+| xxx | xxx | xxx |
+
+h1. Consumed External Interfaces
+
+{anchor:Consumed External Interfaces Table}*Consumed External Interfaces Table*
+
+||Interface ||Interface Technology ||Provided by Component ||Description||
+| xxx | xxx | xxx | xxx |
+			
+h1. Extensibility
+
+{info:title=Guidance} 
+Define the extension points for this component, the supertype/interface of the classes that
+provide extensibility and how extensibility will be configured at runtime.
+{info}
+
+{anchor:Extension Points Table}*Extension Points Table*
+
+||Name ||Description ||Supertype/interface ||Configuration||
+| xxx | xxx | xxx | xxx |
+
+h2. Extensibility Considerations
+
+{info:title=Guidance} 
+Consider the possibility of future extensions to this component and how it can be implemented to
+facilitate enhancement and/or limit restrictions on future changes.
+{info}
+
+  <Body>
+
+h1. Internal View
+
+{info:title=Guidance} 
+Add a diagram illustrating the component's internal view.
+\\
+\\
+The diagram should illustrate the subcomponents of this component, and how they relate to each other, 
+i.e., which interfaces are used. In this diagram all subcomponents are typically represented by only one class symbol.
+\\
+\\
+The diagram must show:
+\\
+*	Subcomponents provided by this component;
+
+*	Interfaces used only inside this component, between subcomponents;
+
+*	And interfaces provided by this component for other components per subcomponent.
+{info}
+
+ <Body>
+
+h2. Subcomponents
+
+{anchor:Subcomponents Table}*Subcomponents Table*
+ 
+||Subcomponent Abbreviation ||Subcomponent name ||Subcomponent Description ||
+| xxx | xxx | xxx |
+
+h2. Subcomponent1
+
+{info:title=Guidance} 
+Briefly describe the functionality provided by subcomponent, and its responsibilities. 
+Also explain the roles the subcomponent plays in the context of the main component.
+{info}
+
+  <Body>
+
+h2. Intra-Component Interfaces
+
+{info:title=Guidance} 
+Describe here interfaces used inside the component that are not visible outside of the 
+component. These should generally be package scope and/or protected interfaces.
+{info}
+
+{anchor:Intra-Component Interfaces Table}*Intra-Component Interfaces Table*
+
+||Interface ||Interface Technology ||Description ||
+| xxx | xxx | xxx |
+		
+h2.  Major Algorithms
+
+{info:title=Guidance} 
+Describe here algorithms used inside the component. Pay specific attention to error or exception handling.
+{info}
+
+  <Body>
+
+h1. Localization
+
+{info:title=Guidance} 
+List the properties of the component that will need to localized, e.g. messages, icons, 
+displayable properties, with the identifier used in the localizable container for these
+properties and describe the mechanism that is used to contain these properties, e.g. ResourceBundles.
+{info}
+
+{anchor:Localizable Aspects/Elements Table}*Localizable Aspects/Elements Table*
+
+||Element/Aspect Name/Description ||Type ||Identifier ||Default Value ||Purpose||
+| xxx | xxx | xxx | xxx | xxx |
+				
+  <Body>
+
+h1. Properties
+
+{info:title=Guidance} 
+List the properties of the component that should be externally managed, e.g. through a JMX or CLI management interface.
+{info}
+
+{anchor:Component Properties Table}*Component Properties Table*
+
+||Property Description ||Type ||Identifier ||Default Value ||Purpose||
+| xxx | xxx | xxx | xxx | xxx |
+			
+h1. Service Provider Interface (SPI)
+
+{info:title=Guidance} 
+Define the Service Provider Interface (SPI) for this component if there is one. Explain how implementations will be bound to this interface at runtime.
+{info}
+
+  <Body>
+
+h1. Design Constraints on Implementations
+
+{info:title=Guidance} 
+Identify all valid constraints on implementation design.  Include:
+\\
+\\
+*	Limitations: Programming language, processor type, existing software to be used or modified, and any other limitations that have been placed on the designers.
+\\
+*	Specific component architectures or standards that must be followed, e.g. XOS, OSGi, JEE etc.
+\\
+*	Serviceability: Impact of product structure on servicing and support. This includes remote diagnostic capabilities, expected maintenance, ability to upgrade software, etc.
+{info}
+
+  <Body>

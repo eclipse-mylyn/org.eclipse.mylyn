@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub.core/src-gen" modelPluginID="org.eclipse.mylyn.docs.epub.core"
+    modelName="NCX-2005-1" importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0"
+    copyrightFields="false" runtimeVersion="2.9">
+  <foreignModel>ncx.ecore</foreignModel>
+  <genPackages prefix="NCX" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
+      disposableProviderFactory="true" ecorePackage="ncx.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ncx.ecore#//BookStruct">
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/PAGENUMBER"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/NOTE"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/NOTEREFERENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/ANNOTATION"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/LINENUMBER"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/OPTIONALSIDEBAR"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//BookStruct/OPTIONALPRODUCERNOTE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ncx.ecore#//DefaultState">
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//DefaultState/true"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//DefaultState/false"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ncx.ecore#//DirType">
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//DirType/ltr"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//DirType/rtl"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ncx.ecore#//OverrideType">
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//OverrideType/visible"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//OverrideType/hidden"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ncx.ecore#//Type">
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//Type/front"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//Type/normal"/>
+      <genEnumLiterals ecoreEnumLiteral="ncx.ecore#//Type/special"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="ncx.ecore#//BookStructObject"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//DefaultStateObject"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//DirTypeObject"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//OverrideObject"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//SMILtimeVal"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//TypeObject"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//URI"/>
+    <genDataTypes ecoreDataType="ncx.ecore#//VersionObject"/>
+    <genClasses ecoreClass="ncx.ecore#//Audio">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Audio/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Audio/clipBegin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Audio/clipEnd"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Audio/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Audio/src"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Content">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Content/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Content/src"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//DocAuthor">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocAuthor/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocAuthor/audio"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocAuthor/img"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocAuthor/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocAuthor/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocAuthor/lang"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//DocTitle">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocTitle/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocTitle/audio"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//DocTitle/img"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocTitle/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocTitle/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocTitle/lang"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Head">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ncx.ecore#//Head/groups"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/smilCustomTests"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/metas"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Img">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Img/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Img/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Img/src"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Meta">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Meta/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Meta/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Meta/scheme"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavInfo">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavInfo/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavInfo/audio"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavInfo/img"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavInfo/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavInfo/lang"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavLabel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavLabel/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavLabel/audio"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavLabel/img"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavLabel/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavLabel/lang"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navTargets"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavList/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavList/id"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavMap">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navPoints"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavMap/id"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavPoint">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/content"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/navPoints"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/playOrder"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//NavTarget">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavTarget/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavTarget/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/playOrder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Ncx">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/head"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/docTitle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/docAuthors"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/navMap"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/pageList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/navLists"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/dir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/lang"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/version"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//PageList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/pageTargets"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageList/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageList/id"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//PageTarget">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageTarget/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageTarget/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/playOrder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//SmilCustomTest">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//SmilCustomTest/bookStruct"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//SmilCustomTest/defaultState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//SmilCustomTest/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//SmilCustomTest/override"/>
+    </genClasses>
+    <genClasses ecoreClass="ncx.ecore#//Text">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ncx.ecore#//Text/mixed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Text/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Text/id"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

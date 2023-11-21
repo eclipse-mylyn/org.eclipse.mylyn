@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.eclipse.mylyn.docs</groupId>
+    <artifactId>epub</artifactId>
+    <name>Mylyn Docs: EPUB</name>
+    <version>4.0.7${qualifier}</version>
+    <packaging>pom</packaging>
+	<parent>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>docs.main</artifactId>
+        <version>${releaseVersion}${qualifier}</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>core</module>
+        <module>ui</module>
+    </modules>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

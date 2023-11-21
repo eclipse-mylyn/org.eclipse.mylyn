@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language class="org.eclipse.mylyn.wikitext.creole.CreoleLanguage"
+            name="Creole" fileExtensions="creole">
+      </language>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type id="org.eclipse.mylyn.wikitext.creole" base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="creole" name="%content-type.name" priority="normal">
+      </content-type>
+   </extension>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes extension="creole" type="text"/>
+   </extension>
+
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+      <rule class="org.eclipse.mylyn.wikitext.creole.internal.validation.CreoleReferenceValidationRule"
+            markupLanguage="Creole"/>
+ </extension>
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="Creole">
+
+         <template name="**" description="%template.description.0" content="**${text}** $"/>
+         <template name="//" description="%template.description.1" content="//${text}// $"/>
+         <template name="##" description="%template.description.2" content="##${text}## $"/>
+         <template name="__" description="%template.description.3" content="__${text}__ $"/>
+         <template name="^^" description="%template.description.4" content="^^${text}^^ $"/>
+         <template name=",," description="%template.description.5" content=",,${text},, $"/>
+         <template name="\\" description="%template.description.6" content="\\\n$"/>
+
+         <template name="= " description="%template.description.7" content="\n= ${text}\n\n" block="true"/>
+         <template name="== " description="%template.description.8" content="\n== ${text}\n\n" block="true"/>
+         <template name="=== " description="%template.description.9" content="\n=== ${text}\n\n" block="true"/>
+         <template name="==== " description="%template.description.10" content="\n==== ${text}\n\n" block="true"/>
+         <template name="===== " description="%template.description.11" content="\n===== ${text}\n\n" block="true"/>
+         <template name="====== " description="%template.description.12" content="\n====== ${text}\n\n" block="true"/>
+         <template name="* " description="%template.description.13" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
+         <template name="** " description="%template.description.14" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
+         <template name="1. " description="%template.description.15" content="\n# ${text}\n# ${text2}\n\n" block="true"/>
+         <template name=" 1. " description="%template.description.16" content="\n## ${text}\n## ${text2}\n\n" block="true"/>
+         <template name="----" description="%template.description.17" content="\n----\n\n" block="true"/>
+         <template name="{{{" description="%template.description.18" content="\n{{{\n${text}\n}}}\n\n" block="true"/>
+         <template name="{{{inline" description="%template.description.19" content="\n{{{${text}}}} $"/>
+
+      </templates>
+   </extension>
+</plugin>

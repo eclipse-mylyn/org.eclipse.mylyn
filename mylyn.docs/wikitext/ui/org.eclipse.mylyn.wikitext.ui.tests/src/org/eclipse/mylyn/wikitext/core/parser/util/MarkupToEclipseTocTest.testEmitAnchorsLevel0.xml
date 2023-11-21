@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="Test.html" label="Test">
+	<topic href="Test.html" label="Top"></topic>
+	<anchor id="additions"/>
+</toc>

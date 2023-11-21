@@ -1,0 +1,1463 @@
+[[Mylyn/User Guide]], 
+[http://eclipse.org/mylyn Mylyn Home],
+[http://wiki.eclipse.org/index.php?title=Special:Userlogin&returnto=Special:Userlogout Log in to edit]
+
+For instructions on [[Mylyn/User_Guide#Download_Mylar|downloading]] [[Mylyn/User_Guide#Installation|installing]] and [[Mylyn/User_Guide#Configuration|configuring]] 
+Mylyn, see the [[Mylyn/User Guide]].  For instructions on developing and contributing to Mylyn, see the [[Mylyn Contributor Reference]].
+
+
+= What is Mylyn? =
+
+For '''tutorials and articles on using Mylyn''' refer to the '''[http://www.eclipse.org/mylyn/start/ Get Started]''' page.
+
+Mylyn is a task-focused interface for Eclipse that makes working with very large workspaces as easy as working with small ones.  Mylyn extends Eclipse with mechanisms for keeping track of the tasks that you work on. A task is defined as any unit of work that you want to recall or share with others, such as a bug reported by a user or a note to yourself about improving a feature. You can store tasks locally in your workspace, or they can come from one or more task repositories. To connect to a task repository, you must have a connector that supports that repository. (A task repository is a bug/ticket/issue tracker such as Bugzilla, Trac, JIRA, and [http://wiki.eclipse.org/index.php/Mylyn/Extensions others]). 
+
+Once your tasks are integrated, Mylyn monitors your work activity on those tasks to identify information relevant to the task-at-hand.  Mylyn monitors Eclipse and captures your interaction in a task context. System artifacts such as files, types, methods, and fields get assigned a degree-of-interest based on how recently and frequently you interact with them.  This results in uninteresting elements being filtered from view within Eclipse, allowing you to focus in on what is important.  From this, Mylyn creates a task context, which is the set of all artifacts related to your task. These can include methods you have edited, APIs you have referred to, and documents you have browsed. Mylyn uses this task context to focus the Eclipse UI on interesting information, hide what's uninteresting, and automatically find what's related. Having the information you need to get your work done at your fingertips improves your productivity by reducing the time you spend searching, scrolling, and navigating. By making task context explicit, Mylyn also facilitates multitasking, planning, reusing past efforts, and sharing expertise.
+
+
+
+= Installation =
+
+* [http://eclipse.org/mylyn/dl.php Mylyn download page]
+
+
+As of writing, Mylyn comes bundled with the main EPP distributions ([http://www.eclipse.org/downloads/ jee, java, cpp]). If you wish to manually install Mylyn there are to methods depending on the version of Eclipse. Method 1 outlines how to install using the Eclipse 3.4 update manager. Method 2 below describes how to install Mylyn into Eclipse 3.3 and below using the Update Manager. 
+
+=== Install Method 1 - Eclipse 3.4 ===
+# Select ''Help > Software Updates...
+# Select ''Available Software'' tab
+# Press the ''Add Site...'' button
+# Enter the Mylyn update site url: 
+## <code>http://download.eclipse.org/tools/mylyn/update/e3.4</code>
+## Additional extension update sites are from [http://www.eclipse.org/mylyn/downloads/ the download page]
+# After pressing ''OK'' the update site will be available in the sites list
+# Expand the Mylyn update site node and select all components desired
+# Press the ''Install...'' button to install Mylyn
+
+=== Install Method 2 - Eclipse 3.3 and older ===
+# Select ''Help->Software Updates->Find and Install''.
+# Select ''Search for new features to install'' and select ''Next''.
+# Select ''New Remote Site''.
+# Enter "Mylyn" for the name and insert the update site url:
+## <code>http://download.eclipse.org/tools/mylyn/update/e3.3</code>
+## Additional extension update sites are from [http://www.eclipse.org/mylyn/downloads/ the download page]
+# Select ''OK''.
+# Make sure there is a check in the ''Mylyn'' box, and select ''Finish''.
+# Put a check in the box next to ''Mylyn''.  If you don't mind downloading some stuff you don't need, go ahead and select ''Next''.  Otherwise, expand the ''Mylyn'' line (by clicking on the disclosure triangle) and select what you want.  We recommend downloading the ''Task List'', the ''Focused UI'', and connectors appropriate to the bug repository that you use -- Bugzilla, Trac, or Jira.  (Note that to download Jira, you need both the core and the connector.)  You can download Mylyn without a bug repository, but it won't be as interesting an experience. If you download the Focused UI you will want to also choose the Bridge appropraite to the content you work with. Most developers will want to include all bridges provided.
+# Read the license agreements, accept or decline as appropriate, and either select ''Next'' (if you accept) or ''Cancel'' (if you do not accept).  
+# You will see a list of features and where to install them.  If the default installation directory is fine, select ''Finish''.
+
+== What is the release schedule? ==
+* Weekly builds: available every Wednesday and on-demand (should be used by all Mylyn contributors not self-hosting from CVS [http://wiki.eclipse.org/index.php/Mylyn_Contributor_Reference#Self-hosting straight from CVS])
+* Release builds: see the [http://www.eclipse.org/projects/project-plan.php?projectid=tools.mylyn project plan]
+
+== What versions of Eclipse are supported? ==
+
+See the [http://eclipse.org/mylyn/dl.php download page].
+
+Mylyn also relies on a  web browser that works with the Standard Widget Toolkit; Windows and MacOS users are fine, but Linux users might have to download another browser. See [http://www.eclipse.org/swt/faq.php#browserlinux the SWT Browser guide] for which browsers will work. See [[Mylyn/User_Guide#Installing_Browser_on_Linux|installing browser on Linux]] for installation instructions.
+
+== What version of Java is required? ==
+
+Mylyn needs the '''Java 5''' virtual machine.
+
+To check the version of the Java virtual machine that Eclipse was launched with to to ''Help → About Eclipse SDK → Configuration Details'' and verify that the java.vm.version is 1.5.  
+
+Mac users should refer to the last comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4 bug 1163477] for instructions on how to change the 1.4 default.
+
+* If you do not have Java 5, you can download it from [http://72.5.124.55/javase/downloads/index.jsp Sun’s web site]. 
+* If you have more than one VM, you need to specify that Eclipse should use the JDK1.5 VM.  
+
+In Unix, set the environment variable <code>JAVA_HOME</code> to the root of the JDK1.5 installation and/or set the <code>PATH</code> variable to put the JDK1.5 executable directory before any other VM executable directories.  For example, under <code>bash</code> in Unix:
+ export JAVA_HOME="''(location of JDK1.5 root)''"
+ export PATH=$JAVA_HOME/bin:$PATH
+
+<b>We do [https://bugs.eclipse.org/bugs/show_bug.cgi?id=140955 not recommend] using JDK 1.6 on Eclipse 3.1.</b> (It works fine with Eclipse 3.2 or 3.3.) To use JDK 1.6 on Eclipse 3.1, you must add the following line to your <code>config.ini</code>file:
+
+ org.osgi.framework.executionenvironment=OSGi/Minimum-1.0,OSGi/Minimum-1.1,JRE-1.1,J2SE-1.2,
+ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
+
+== What version of Mylyn is distributed with the Eclipse downloads? ==
+
+The [http://www.eclipse.org/downloads/ default Eclipse downloads] contain the following Mylyn redistributions.  Since the redistributed versions can be missing important bug fixes or feature additions, we recommend using the [http://www.eclipse.org/mylyn/downloads latest version of Mylyn].
+
+* Eclipse IDE for Java Developers: all of Mylyn except Team integration (e.g. automatic change sets) integration.  Install the Eclipse CVS integration and then install the latest Mylyn build to get this component.
+
+* Eclipse IDE for Java EE Developers: all of Mylyn redistribution, install manually
+
+* Eclipse IDE for C/C++ Developers: no Mylyn redistribution, install manually
+
+* Eclipse for RCP/Plug-in Developers: all of Mylyn redistributed
+
+* Eclipse Classic: no Mylyn redistribution, install manually
+
+== My tasks or queries disappeared, what do I do? ==
+
+This happens if Mylyn failed to install.  First ensure that you have a correct install by following the instructions in the next section.  After that, if you still do not see your tasks use the ''Task List'' view menu → ''Restore Tasks From History…'' command (also available via ''File → Import → Task List''.
+
+== General Installation Troubleshooting ==
+
+'''I’m being asked to restart Eclipse, should I?'''
+Upon installing you will get a dialog box asking if you would like to restart Eclipse.  We recommend that you select ''Yes''.
+
+'''I’ve installed Mylyn ; why can’t I see anything different?'''
+
+The two most likely possibilities are:
+# You don’t have any Mylyn views open.  Select ''Window → Show View → Other'', then select ''Mylyn'' and you should see the available Mylyn Views. 
+# If you still don’t see anything, then perhaps you aren’t using the JDK1.5 VM (or later).  See [[Mylyn_Installation_Guide#Download_and_configure_Java|configuring Java]].
+
+'''What does “<code>Root exception: java.lang.UnsupportedClassVersionError: org/eclipse/mylar/tasklist/MylarTasklistPlugin (Unsupported major.minor version 49.0)</code>” mean?'''
+
+It probably means that the virtual machine is JDK1.4 or lower. See [[Mylyn_Installation_Guide#Download_and_configure_Java| download and configure Java]].
+
+'''What does “Could not create Browser page: No more handles (<code>java.lang.UnsatisfiedLinkError: …</code>)” mean?'''
+
+It probably means that you are running Linux and don’t have Eclipse and a Web browser configured to work together.  See [[Mylyn/User_Guide#Installing_Browser_on_Linux| installing a browser on Linux]].
+
+'''What does “Could not create Bugzilla editor input” and “<code>java.io.IOException</code>: SAX2 driver class <code>org.apache.xerces.parsers.SAXParser</code> not found” mean?'''
+
+It probably means that you are on MacOS, and for some reason are missing Xerces from the Mac JDK1.5.  You will probably need to add it to your default classpath.  Please refer to and comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=144287 bug 144287] if you see this problem.
+
+To ensure that you are using the 1.5 VM refer to the last comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4 bug 1163477] for instructions on how to change the 1.4 default.
+
+''' Startup warnings'''
+
+If you see startup errors or warnings such as <code>BundleException</code> or timeout messages restart Eclipse with the <code>-clean</code> flag either on the command line, in your shortcut link, or by temporarily it into the <code>eclipse/eclipse.ini</code> file.  These warnings do not cause any bad behavior, but this bug has been fixed in all Mylyn builds after 2.1.  The warnings have this form:
+
+  !MESSAGE While loading class "org.eclipse.mylar.tasks.ui.TasksUiPlugin", thread "Thread
+  [main,6,main]" timed out waiting (5000ms) for thread "Thread[Worker-3,5,main]" to finish
+  starting bundle "update@plugins/org.eclipse.mylar.tasks.ui_2.0.0.v20070514-1800.jar [809]". 
+  To avoid deadlock, thread "Thread[main,6,main]" is proceeding but 
+  "org.eclipse.mylar.tasks.ui.TasksUiPlugin" may not be fully initialized.
+
+== Installation Troubleshooting on Eclipse 3.4 and later ==
+
+Ensure that all required update sites are enabled under Help > Software Updates > Available Software > Manage Sites:
+
+* http://download.eclipse.org/tools/mylyn/update/e3.4
+* http://download.eclipse.org/tools/mylyn/update/extras
+* http://download.eclipse.org/tools/mylyn/update/incubator
+
+Then follow these steps:
+# Use Help > Software Update > Update to ensure that the latest version of all features is installed
+# Install again
+# If Install fails with a "No repository found containing..." message, remove and re-add the update site that hosts the feature for which the download is failing
+# Install again
+# If the update fails with a "Cannot complete the request..." message, uninstall Mylyn and all Mylyn dependencies
+# Install again
+
+=== Why does the installation fail with ''No repository found''? ===
+
+The message indicates that the Eclipse provisioning system P2 has found meta data to install a plug-in but can not locate an artifact repository that provides the required downloads. To recover please remove the Mylyn update sites under ''Help → Software Updates… → Available Software → Manage Sites''. Then re-add the sites which will refresh the meta data and artifacts available on the update sites.
+
+Also see steps under [[#Installation Troubleshooting on Eclipse 3.4 and later]].
+
+=== Why does update fail with ''Cannot complete the request''? ===
+
+If any of the installed features have unsatisfied dependencies or if features where previously installed from the extras or incubator update site P2 may fail with an error similar to the ones below. Try these steps to recover:
+
+# Ensure that the Mylyn for Eclipse 3.4 and Mylyn Extras sites are enabled in Software Updates > Available Software > Manage Sites
+# Select Update from Software Updates > Installed Software
+# Retry the installation
+
+<pre style="overflow:scroll">
+ Cannot complete the request. See the details. 
+ Mylyn Focused UI (Recommended) is already installed, so an update will be performed instead. 
+ Mylyn Task List (Required) is already installed, so an update will be performed instead.
+ Mylyn Bridge: Eclipse IDE is already installed, so an update will be performed instead.
+ Mylyn Bridge: Java Development is already installed, so an update will be performed instead.
+ Mylyn Bridge: Plug-in Development is already installed, so an update will be performed instead.
+ Mylyn Bridge: Team Support is already installed, so an update will be performed instead.
+ Mylyn Connector: Bugzilla is already installed, so an update will be performed instead.
+ Cannot find a solution where both Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.mylyn.monitor.ui/[3.0.3.v20081015-1500 -e3x,3.0.3.v20081015-1500-e3x]] and Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.mylyn.monitor.ui/[3.0.1.v20080721-2100-e3x,3.0.1.v20080721-2100-e3x]]can be satisfied.
+ […]
+</pre>
+
+ Cannot find a solution satisfying the following requirements org.eclipse.ui [3.4.2.M20090204-0800].
+
+Also see steps under [[#Installation Troubleshooting on Eclipse 3.4 and later]].
+
+== Installation Troubleshooting on Eclipse 3.3 and earlier ==
+
+''' Update failures '''
+
+First, try running the update again via ''Help → Software Updates → Search for new features…'' and ensure that all of the Mylyn features have been updated.
+
+On Eclipse versions earlier than 3.3 (final) use '''only the “Search for new features…”''' option when updating Mylyn.  If you use “Search for updates…” the Update Manager will allow a partial install that can cause Mylyn to fail to start, and you will need to run update again.  See the ''feature configuration problem'' section below for details.  If you encounter this problemm consider voting for Platform [https://bugs.eclipse.org/bugs/show_bug.cgi?id=132450 bug 132450].
+
+If you have '''updated your Eclipse 3.3 to an Eclipse 3.4 milestone''', you will not be able to update the 3.3 copy, because Mylyn has two separate downloads for Eclipse 3.3 and 3.4.  Also, not all of the 3.3 version of Mylyn will work in Eclipse 3.4.  Install the latest 3.4 version from: http://www.eclipse.org/mylyn/downloads/
+
+''' Java Persistence API Tools error when updating the JEE Eclipse Package '''
+
+If you are trying to install additional features and get this error you have hit [https://bugs.eclipse.org/bugs/show_bug.cgi?id=194959 bug 194959] which should be resolved soon.  The work-around is to check off the ''Europa Discovery Site'' and install the first two components of the ''Data Tools Platform''.
+
+'''Subclipse related problems'''
+
+If you see the following message:
+
+   Subclipse Mylyar Integration (1.0.1) requires plug-in "org.eclipse.mylar.tasks.core (0.9.2)",
+   or later version
+
+You need to uninstall the old (pre 2.0) version of Subclipse and Mylar integration.  Most users should not need to do this since the old Mylar 1.x version disabled itself after the update to 2.0.  But if you see this error uninstall via: 
+* Help → Software Updates → Manage Configuration
+* Uninstall the Subclipse Mylar Integration (1.0.1)
+* Uninstall the old version of Mylar
+
+''' Incompatible VM (e.g. JDK 1.4) '''
+
+If you are using the wrong VM, you’ll see errors like the following in your log file.  
+
+ Root exception: java.lang.UnsupportedClassVersionError:
+ org/eclipse/mylar/tasklist/MylarTasklistPlugin (Unsupported major.minor version 49.0)
+
+See [[#What_version_of_Java_is_required.3F|Configure Java]] to fix this problem.
+
+''' Incompatible version of Eclipse '''
+
+Separate versions and update sites exist [http://eclipse.org/mylyn/dl.php for Eclipse 3.1 and 3.2]), in which case you may see errors like the following in your <code>&lt;workspace&gt;/.metadata/.log </code>file or in a Mylyn view:
+
+ java.lang.NoSuchMethodError: org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()
+ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
+
+''' Mylyn feature configuration problem '''
+
+If the above do not address the issue, the easiest thing to do is uninstall any old versions and update to the latest Mylyn.  Your tasks won’t be lost, because by default they are stored in the <code><workspace>/.metadata/.mylyn</code> folder which will be read next time Mylyn starts correctly. 
+* First, uninstall the old version of Mylyn using ''Help → Software Updates → Manage Configuration''.  
+* You need to Disable all Mylyn features by right-clicking them.
+* Allow Eclipse to restart after the last is disabled.
+* After restart, ensure that the 3rd toolbar button is pressed (figure below) so that you see the disabled features to uninstall.
+* Uninstall all the disabled features using the popup menu.  
+
+If you don’t uninstall, the the Update Manager will think that you have the latest and tell you that there are no updates. 
+
+<b>Note: manually removing the plug-ins and features can lead to configuration errors.</b> 
+
+After uninstalling, update Eclipse by adding the correct update site specified at on the [http://eclipse.org/mylar/dl.php download page], and after that automatically or manually updating will install the correct version.
+
+[[Image:mylar-eclipse-manage-configuration.gif]]
+
+'''What do I need to do in installation to be able to use Mylyn task management features with bug/task/issue trackers?'''
+
+When you install, make sure that you select a connector for your bug/task/issue tracking software.  For example, to use Bugzilla, you have to install the Bugzilla connector component.
+
+'''What does the error “Network connection problems encountered during search” mean?'''
+
+If you get that message while trying to download Mylyn, it means that Eclipse couldn’t find the location you entered.  This might be because you copied something incorrectly (watch for extra characters -- even extra spaces can cause errors), or because the site went down.  You may be able to see if the site is up or down by copying the URL into your Web browser.
+
+'''What does the “Update manager failure” message mean? '''
+
+It means that Eclipse could not access the update site, or that it got confused about the configuration state of your Eclipse.  First try updating again to see if the update site is accessible.  
+
+If you are trying to update the JIRA connector you can also try de-selecting that feature in case the <code>Tigris.org</code> update site is not accessible.  Using ''Search for new features to install…'' when installing can help to avoid this problem.  If that does not work see the feature configuration troubleshooting below. 
+
+'''Why am I getting messages in my <code><workspace>/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()</code>” and “The activator <code>org.eclipse.mylar.java.MylarJavaPlugin</code> for bundle <code>org.eclipse.mylar.java</code> is invalid”?'''
+
+This probably means that your Mylyn download version didn’t match your Eclipse download version.  Note that [http://eclipse.org/mylar/dl.php the download site] has different downloads for Eclipse 3.1 and Eclipse 3.2.
+
+To fix this problem, see the [[Mylyn_Uninstallation_Guide| uninstallation guide]], then re-install from [http://eclipse.org/mylar/dl.php the correct download site].
+
+'''Why am I getting messages in my <code><workspace>/.metadata/.log</code> or my Mylyn view that say things like “<code>java.lang.NoSuchMethodError: org.eclipse.mylyn.internal.context.core.InteractionContextManager.getScalingFactors()</code>”?'''
+
+This could mean that some of your Mylyn plugins are on different versions. Use the update manager (“''Search for new features to install…''”) to obtain the latest versions of the Mylyn features.
+
+'''Why doesn’t the Eclipse Update Manager display the latest versions of the Mylyn features?'''
+
+It does. Note, however, that if you select both the Mylyn site and the Weekly Builds site, using “''Search for new features to install…''”, you must uncheck the “''Show the latest version of a feature only''” checkbox in order to see the updates available on both sites.
+
+'''I’ve just updated to Mylyn 2.0 and I don’t see any tasks in my Task List'''
+
+As part of the update to Mylyn 2.0 the old data folder has been migrated to <workspace folder>/.metadata/.mylyn from the old location <workspace folder>/.mylar. IF for some reason migration failed (.mylar folder still exists), simply shut down Eclipse and manually move your old <workspace folder>/.mylar folder to <workspace folder>/.metadata/.mylyn (note the name change to .mylyn)
+
+'''Error: Network connection problems encountered during search'''
+Eclipse couldn’t find the location you entered.  This might be because you copied something incorrectly (watch for extra characters -- even extra spaces can cause errors), or because the site went down.  You might be able to see if the site is down by copying the URL into your Web browser.
+
+'''Error: Update manager failure'''
+Eclipse could not access the update site, or that it got confused about the configuration state of your Eclipse.  First try updating again to see if the update site is accessible.  If you are trying to update the JIRA connector you can also try de-selecting that feature in case the Tigris.org update site is not accessible.  Using use ''Search for new features…'' when installing can help to avoid this problem. You will probably get a warning that '''the feature is unsigned'''.  If you trust that hackers have not befouled the Mylyn plug-in, select ''Install All''.
+
+== Why can't I update Mylyn 3.0 to a newer release? ==
+
+The update site link in the 3.0 and 3.0.1 features for Eclipse 3.3 points to the Mylyn for Eclipse 3.4 update site ({{bug|244618}}). An attempt to update will result in an error: “Mylyn Task List (Required) (3.0.1.v20080721-2100-e3x) requires plug-in "org.eclipse.ui (3.4.0.I20070918)", or later version.”
+
+To resolve the error follow these steps:
+
+# Open update '''Help → Software Updates → Find and Install…'''
+# Select '''Search for new features…''' and '''Next'''
+# '''Uncheck Mylyn'''. Add a '''New Remote Site''':
+#* Name: '''Mylyn for Eclipse 3.3'''
+#* URL: '''http://download.eclipse.org/tools/mylyn/update/e3.3'''. 
+
+Make sure the new site is selected and select Finish to proceed with the update.
+
+== Installing on Linux ==
+
+=== How can I get the SWT internal browser to work under Linux? ===
+Mylyn uses the Standard Widget Toolkit Browser, and users have experienced problems with the SWT Browser on Linux.  This is not a Mylyn specific problem and also occurs if you try to use Eclipse’s Browser view. To test to see if your browser is properly configured, select ''Window → Show View → Other → General → Internal Web Browser'', then try to load a web page. If the internal browser is problematic, consider enabling the external default browser (i.e. Firefox) via ''Window → Preferences → General → Web Browser'' and select the '''Use external Web browser''' option.
+
+=== I’m getting a “Could not create Browser page: No more handles” error ===
+When the Browser is not properly configured exceptions such such as “Could not create Browser page: No more handles (<code>java.lang.UnsatisfiedLinkError: …</code>)” will appear when attempting to open tasks.  See [http://www.eclipse.org/swt/faq.php#browserlinux the SWT Browser guide] for which browsers will work.  
+
+=== I’m having unstable performance on Linux with a Sun JVM are there options? ===
+For those experiencing unstable performance with Linux using the Sun JVM, try the [http://www-128.ibm.com/developerworks/java/jdk/linux/download.html IBM JVM], which will require you to register with IBM prior to download. We’ve also had good reports from those using JRockit JVM.
+
+=== Memory consumption problem with internal browser on Linux-GTK ===
+
+If you are experiencing abnormal memory consumption upon launching the internal browser (or opening repository tasks), try shutting down eclipse, renaming/moving your <code>~/.mozilla/eclipse</code> folder and relaunching eclipse. (see [https://bugs.eclipse.org/bugs/show_bug.cgi?id=173782 bug#172782])
+
+=== Error: No more handles error ===
+
+ (java.lang.UnsatisfiedLinkError: no swt-mozilla-gtk-3449 or swt-mozilla-gtk in swt.library.path, java.library.path or the jar file)
+
+To resolve this error install a package that provides the Gecko engine library. On Ubuntu and Debian the package is called libxul0d.
+
+=== Recommended Settings for GTK ===
+
+[http://blog.xam.dk/archives/81-Making-Eclipse-look-good-on-Linux.html This article] describes how to improve the visual appearance of Eclipse on GTK.
+
+=== Recommended GTK Setup for KDE ===
+
+The recommended GTK theme to use for KDE (and KDE based distributions like Kubuntu) is the
+“Human” theme. (Possibly, this is also a good recommendation for GNOME. GNOME users, please comment.)
+
+With Debian based distributions (e.g. Ubuntu), this theme can be installed with
+
+  aptitude install human-theme
+
+The appearance of GTK applications is controlled by the KDE System Settings / Control Center
+in the section “Appearance”.
+
+;GTK Styles and Fonts: GTK Styles: Select “Use another style [Human]”
+
+;Colors: At bottom: [x] Apply colors to non-KDE applications
+
+These changes are applied to these two GTK configuration files, respectively:
+
+* <tt>$HOME/.gtkrc-2.0-kde</tt>
+* <tt>$HOME/.kde/share/config/gtkrc-2.0</tt>
+
+=== Solving issues with KDE environment variable settings ===
+
+Most of the [[#Known_UI_issues_with_KDE | known UI issues below]] are due to a broken environment variable setting. The environment variable <tt>GTK2_RC_FILES</tt> contains a search path to find the GTK configuration files to be used by the GTK application and can be checked with
+
+  env | grep GTK2_RC_FILES
+
+The correct setting is obtained by
+
+  export GTK2_RC_FILES=$HOME/.gtkrc-2.0-kde:$HOME/.kde/share/config/gtkrc-2.0 ''# Bourne shell''
+  setenv GTK2_RC_FILES $HOME/.gtkrc-2.0-kde:$HOME/.kde/share/config/gtkrc-2.0 ''# C shell''
+
+'''Important note:''' The used environment setting seems to differ depending on the way KDE starts
+the application: from Konsole, using “Run Command…”, using a desktop icon etc. Please use this simple script to check the different ways:
+
+  #!/bin/bash
+  env | grep GTK2_RC_FILES >/tmp/GTK2_RC_FILES.env
+
+and look at the resulting output in <tt>/tmp</tt>.
+
+Consider filing a bug against the distribution showing this inconsistent behaviour.
+
+=== Known UI issues with KDE ===
+
+There a couple of bugs related to UI features not working in specific Linux distributions:
+
+* [https://bugs.eclipse.org/bugs/show_bug.cgi?id=176716 176716: Task colors are not displayed]
+* [https://bugs.eclipse.org/bugs/show_bug.cgi?id=173928 173928: Task acivate button does not work under linux]
+
+Debian 3.1 (sarge) with KDE and standard X11 installation (XFree86) works fine for all three issues.
+
+Debian testing (etch) with KDE and new X11 installation (X.Org) has issues with the color display (bug 176716 and 135928), but the Task Activate button works.
+
+Kubuntu Dapper 6.06 with KDE and X.Org triggers all above issues. An upgrade to Edgy enables Task Color display and the date picker selection. To get the Task Activation button working you have to use Edgy and Eclipse 3.3M5eh (or newer).
+
+Kubuntu Gutsy 7.10 has issues with the color display (bug 176716). A workaround is to change the GTK-Style to “Human”.
+More details and another solution in the comments of bug 176716.
+
+== Installing on MacOS ==
+
+If you see errors like the following it may be due to Xerces missing from the Mac JDK so you may need to add it to your default classpath.  Please refer to and comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=144287 bug 144287] if you see this problem.
+
+    Could not create Bugzilla editor input
+    java.io.IOException: SAX2 driver class org.apache.xerces.parsers.SAXParser not found
+
+To ensure that you are using the 1.5 VM refer to the last comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4 bug 1163477] for instructions on how to change the 1.4 default.
+
+== Configuration Troubleshooting == 
+
+=== The default Key Mappings aren’t working correctly, what can I do? ===
+If default key mappings aren’t working, try doing the following to reset them:
+* ''Window → Reset Perspective''
+* ''Then: Window → Preferences → Keys → Restore Defaults''
+
+==== Linux key mappings a problem? ====
+
+If you are running Mylyn on X-Windows, for example on Linux, FreeBSD, AIX and HP-UX, some keyboard bindings may not work by default.
+
+If the <code>Ctrl+Alt+Shift+Arrow Up</code> shortcut for ''Mark as Landmark'' does not work do the following:
+* ''Menu Bar → Desktop → Control Center → Keyboard Shortcuts → Move one workspace up, Move one workspace down'': disable both.
+
+If <code>Alt+Click</code> quick unfiltering does not work try one of the following:
+* Hold down the <code>Windows</code> key while holding <code>Alt</code>, if available (ironic, but unsurprisingly this key is not usually mapped on Linux).
+* Disable the <code>Alt+drag to move</code> functionality:
+GNOME Desktop
+# Open a terminal and run <code>gconf-editor</code>
+# Go into: <code>/apps/metacity/general</code>
+# Edit the <code>mouse_button_modifier</code> field. Setting it to nothing disables it. You can use <Super> to set it to the windows key.
+# Exit <code>gconf-editor</code>.
+KDE Desktop
+# Run the ''KDE Control Center''.
+# Go to the ''Desktop/Window Behavior'' panel and select the ''Window Actions'' tab.
+# Down in the ''Inner Window, Titlebar & Frame'' area, change the ''Modifier Key'' option from <code>Alt</code> to <code>Meta</code>.
+
+=== How do I enable spell checking in Eclipse 3.2 and older? ===
+On Eclipse versions earlier than 3.3, the spell checking must be set up manually.  Spell checking is supported in the task editor for local tasks and for connectors that support rich editing (e.g. Bugzilla, Trac).
+* To install spell checking for editors that support it you need to enable the preference in ''General → Editors → Text Editors → Spelling''.
+* You also need to install a dictionary, some instructions are [http://www.javalobby.org/java/forums/t17453.html here]. A word list is available [[http://wordlist.sourceforge.net/ here]] as well.
+
+[[Image:mylar-spell-checking-preference.gif]]
+
+===How can I change the number of editors left open before Mylyn starts closing editors?===
+
+Turn off or increase the number of editors to leave open using ''Preferences → General → Editors → Number of opened editors before closing''.  Since Mylyn will manage the open editors with task activation, this number can be set higher or you can disable automatic closing entirely.
+
+===Do I need the Outline View when running Mylyn?===
+
+No, not really.  The Package Explorer and folded signatures should provide enough context for you.  If, at some point, you really need to see an Outline View, you can always enter (Ctrl+O) to show the in-place Outline View.
+
+===What does the message “content assist proposals no longer appear” mean?===
+
+This usually happens when uninstalling when using Eclipse 3.2.  Make sure that the “Java Completions” and “Java Types” proposal categories are included in the default proposals via: ''Preferences → Java → Editor → Content Assist → Advanced → Restore Defaults''.  Also see: [[Mylyn FAQ#Content assist troubleshooting| content assist troubleshooting]].  This [https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416 bug] has been fixed in Eclipse 3.2.1.
+
+===Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?===
+
+It is likely that you need to configure these proxy server settings.  Select ''Window → Preferences → General → Network Connections'', and update the section in the “Proxy settings” section of the form.
+
+===I can’t use <code>Ctrl+Alt+Shift+Arrow Up</code> for'' Mark as Landmark''.  What do I do?===
+
+This is usually a Linux/GNOME problem, where the Gnome keyboard shortcuts are interfering with the Eclipse shortcuts.  Go to the Keyboard shortcuts (which might be something like ''Desktop → Control Center → Keyboard Shortcuts'' or ''System → Preferences → Keyboard Shortcuts'') and disable both of these shortcuts:
+* Move one workspace up
+* Move one workspace down
+
+See also: [[Mylyn/User_Guide#Keyboard_mappings_on_Linux| keyboard mappings on Linux]].
+
+===How do I turn on spell checking?===
+
+See [[Mylyn/User_Guide#Spell_Checking| spell checking]].
+
+=== Why do I get an error when accessing secured web sites? ===
+
+The internal browser may display an error if the web site certificate is not trusted and block access to the site:
+
+ (Error code: sec_error_unknown_issuer)
+
+On Linux start <code>firefox -profile ~/.mozilla/eclipse -no-remote</code> from the command line and open the web site in Mozilla Firefox. Add an exception for the web site and restart Eclipse. The site should now be accessible from Eclipse.
+
+'''Notes'''
+# <code>-no-remote</code> is added because it would otherwise open a new window in the running process. You’re probably viewing this page in firefox, so the command above will not work without <code>-no-remote</code>.
+# Replace <code>firefox</code> by the exact command that you use to start your Mozilla browser.
+
+== Uninstall troubleshooting ==
+
+We recommend '''uninstalling in Eclipse''' via the ''Help → Software Updates → Manage Configuration'' dialog.  If you get an error message when trying to uninstall, you will need to first uninstall dependencies that use Mylyn.  These include things like the Subclipse Mylyn integration and the Bugzilla Connector.
+
+You can also '''uninstall manually''' by deleting all of the Mylyn plug-ins and features from the <code>eclipse/plugins</code> and <code>eclipse/features</code> directory make sure to delete all of the plug-ins and then restart Eclipse with the -clean option (e.g. by inserting it into a shortcut or the <code>eclipse.ini</code> file.
+
+On '''Eclipse 3.2:''' if after uninstalling '''content assist proposals no longer appear''' you need to ensure that the ''Java Completions'' and ''Java Types'' proposal categories are included in the default proposals via: ''Preferences → Java → Editor → Content Assist → Advanced → Restore Defaults''.  Also see: [[Mylyn FAQ#Content assist troubleshooting| content assist troubleshooting]].  This [https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416 bug] has been fixed in Eclipse 3.2.1.
+
+On '''Eclipse 3.1:''' you may need to reset the Java editor to be default for <code>.java</code> again via: ''Preferences → General → Editors → File Associations''
+
+== Why am seeing <code>java.lang.OutOfMemoryError: PermGen space</code> errors? ==
+
+If your Eclipse crashes, or you see the above error after installing Mylyn or other plug-ins, you have most likely hit the infamous MaxPermSize bug.  This is not a Mylyn specific problem, but a general problem with the Sun Java VM that is often triggered on Eclipse 3.2 and later, if you have many plug-ins installed.
+
+To fix it simply add the following to your launch arguments. This is usually to your shortcut:
+
+    -vmargs -XX:MaxPermSize=128m
+
+Or to the <tt>eclipse/configuration/config.ini</tt> file:
+
+    -XX:MaxPermSize=128m
+
+Note: For Eclipse 3.4 with the Equinox P2 profile-based provisioning support, this setting can also be modified in the current  P2 profile. With a default installation of the SDK, see: 
+
+@config.dir/../p2/org.eclipse.equinox.p2.engine/profileRegistry/<name>.profile/<timestamp>.profile
+
+For more information, see: http://wiki.eclipse.org/Equinox_p2_Admin_UI_Users_Guide
+
+If you are using a very large number of plug-ins (e.g. WTP) and still get this error you may need to increase the number to 256M.  Note that on some VMs the size may need to be a power of 2 and may drop down to the default (e.g. 32M) if it is not accepted.
+
+Eclipse 3.3.1 users: note note that due to Platform {{bug|203325}} you need to use the instructions above and cannot set the size using <code>-launcher.XXMaxPermSizeL</code>, which will be ignored.
+
+For more information see the [[FAQ How do I increase the permgen size available to Eclipse? | Eclispe FAQ entry]].  Details of the problem are on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=92250 Platform bug 92250].
+
+== What is Mylyn’s performance profile? ==
+
+Mylyn should have '''no noticeable effect''' on Eclipse’s speed or memory usage, no matter how large your workspace is.  You do not need to increase the amount of memory Eclipse runs with to use Mylyn.  Any performance issue should be [https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn reported as a bug].  
+
+The current '''performance profile''' is:
+
+# Mylyn only runs if a task is active, and has no impact on Eclipse if no task is active.
+# Task context models have negligible memory overhead. 
+# When a task is active, additional view refresh is required to update the views based on interest model changes.  This should not be noticeable on Windows where refresh is very quick, but could be more noticeable on other platforms.
+# The time to activate a task context is dominated by the time it takes Eclipse to open the editors in the context.  You can set the preference for how many editors to open in the Mylyn preference page (e.g. setting to 1 will dramatically reduce activation time, but also remove the benefit of having open editors correspond to the task context).  You can also turn off editor management entirely in the Mylyn Tasks view pull-down.
+# Eclipse startup is slowed down by (4) if a task is active when Eclipse is shut down.
+# The low priority background searches that the Active Search view runs can be noticeable on slower machines.
+
+'''If you are seeing performance problems, this is either a bug, or caused by other performance problems in other Eclipse plug-ins''''.  If you are performance problems we suggest increasing the amount of memory available to Eclipse.  This is especially useful for very large Java project workspaces, on which the size of JDT’s element cache will grow proportionally to the amount of available memory.  The setting we recommend for launching workspaces with a couple hundred large projects is:
+
+  -Xmx768M -XX:MaxPermSize=128M
+
+'''If you are seeing content assist timeouts''' that indicate the Mylyn proposal computer did not complete quickly enough, note that the problem is not with Mylyn, but with the standard content assist mechanism timing out due to an intensive computation (eg, a large number of matches).  In this scenario switching or [[Mylyn_FAQ#Content_assist_troubleshooting|disabling the Mylyn proposal computers]] does not help improve performance, although it will get rid of those messages.
+
+= Task List =
+
+== How do I restore my tasks from backup? ==
+The task list can be restored from automated backup via the Task List view’s drop down view menu and selecting Restore Tasks from History…
+
+== How do I clear outgoing changes on a task? ==
+
+If a task has outgoing changes you wish to discard, right click on the task and select Mark as → Clear Outgoing. If a mid-air collision occurs, press the Synchronize button in the Task editor toolbar to bring in the incoming changes. Your outgoing changes will remain.
+
+== Why do my tasks not appear in the Task List? ==
+
+The task list has filtering mechanisms that can limit the items visible in the task list. If a task is missing from the task list, use the following steps to remove all filters:
+
+[[Image:Tasklist-filter.png]]
+
+# Check the filter settings in the view menu. Make sure Filter Completed tasks is not enabled and all items are checked in the Filter Priority Lower Than menu.
+# If the Go Up To Root icon is visible in the toolbar, select it to make all items in the task list visible.
+# If the Focus on Workweek button is pressed, select it to unfilter the task list.
+# If text is typed in the Find, use the clear button next to the find box.
+# Switch to All to make all all working sets visible.
+
+== Why do tasks appear in the ''Unmatched'' container? ==
+
+The ''Unmatched'' containers will automatically appear if a task needs to be shown but is not matched by any query.  This is needed to ensure that the corresponding tasks do not disappear, for example, if the query is set up to only match resolved/completed tasks (a usage anti-pattern, since Mylyn has other mechanisms for preventing completed tasks from showing in the Task List).
+
+In order to ensure that you do not miss reminders or notifications the following tasks will always be shown in the Task List, even if they have been removed from a category or a query:
+* Tasks scheduled for this week or overdue.  Remove these by using the ''Schedule'' pop-up menu option to defer them to a future week or to clear the schedule.
+* Repository tasks that have incoming changes, such as comments.  Remove these by reading them or marking them as “read” via the ''Mark → Read'' pop-up menu.
+
+To '''get rid of tasks in the ''Unmatched'' container''' you can:
+* Create a new query that matches the tasks.
+* Right-click on one or more tasks to delete them.
+
+Recommended Mylyn usage is to keep the ''Unmatched'' container empty. For query setup recommendations see the sidebar at: http://www.ibm.com/developerworks/java/library/j-mylyn1/?ca=dgr-eclipse-1
+
+== How do I change the Task List colors? ==
+
+Use ''Window → Preferences → General → Appearance → Colors and Fonts''.
+
+== The Unmatched category contains many irrelevant tasks, how do I clean it up? ==
+
+If you created very broad queries you could end up with thousands of tasks in your Unmatched containers.  Other than clearing the <tt>workspace/.metadata/.mylyn/tasklist.xml.zip</tt> and <code>workspace/.metadata/.mylyn/offline</code> folder (note that this will entirely reset your Task List) the easiest option is to:
+* Clean up your queries to include only tasks of interest (note that including completed/resolved tasks is recommended).
+* Turn off ''Focus on Workweek'' in the ''Task List''.
+* Delete all of the unneeded tasks from within the Unmatched containers.  Note that if the tasks are not matched by queries they will be deleted permanently and any local notes or scheduling information that you have added to them will be lost.
+
+== How does Mylyn count the active time for a task? ==
+
+Whenever you work on a task, Mylyn accumulates the time you spend actively working on a task.  This time can be viewed in the ''Personal Planning'' section of the ''Task Editor''.  When you are not interacting with Eclipse, the timing automatically times out after 3 minutes by default.  This means that activity outside of Eclipse will not be captured when you work on the task and that the timings in Mylyn are a lower bound of the total time spent on the task (capturing timings for work done outside of Eclipse involves OS specific extensions).
+
+== How do I prevent long-running tasks from adding to the progress bar? ==
+
+If you have many long-running or recurring tasks scheduled for this week, they can affect the ''Task List'' weekly progress bar. This can be misleading as they may never be completed.  The current work-around to prevent long-running tasks from being included in the weekly progress bar is to schedule their estimated time to be 0 (zero).  Alternatively, you can schedule only the amount of time you plan on spending on that task this week.
+
+== Does the Task List replace the Eclipse Tasks view? ==
+
+The SDK’s ''Tasks'' view is used for showing markers such as ‘todo’ tags which indicate a local problem with a resource, similar to a compiler warning.  As such, these ‘tasks’ are at a much finer granularity than Mylyn’s tasks, and one task could involve cleaning up multiple todos.  In order to make working with only the markers in a particular task context, e.g. for clean-up before committing, the ''Apply Mylyn'' filter is available for both the ''Problems'' and the ''Tasks'' views.
+
+== What if I use multiple workspaces? ==
+
+Mylyn’s support for multiple workspaces is currently limited (see [https://bugs.eclipse.org/bugs/show_bug.cgi?id=130658 bug 130658] for a discussion) because the Task List is considered to be specific to the person, and not to the workspace.  In addition, Eclipse’s support for multiple workspaces is limited to import/export based usage, and Mylyn inherits this limitation.  We highly recommend configuring your Eclipse workspace to use working sets instead of relying on multiple workspaces.  
+
+If using a single workspace is not possible you can do the following, Mylyn does provide an advanced facility for using the same data directory that’s outside of the workspace.  However, this is not generally recommended because it can cause you to overwrite an existing Task List if both workspaces are launched at the same time.  
+* In ''Preferences → Tasks → Task List'' set the ''Data Directory'' to be a shared location, and do this for both workspaces.
+* Be sure to avoid launching both Eclipse workspaces at the same time, as changes in one workspaces could overwrite the Task List in the other workspace.
+* If you upgrade Eclipse or move your workspace and don’t see your tasks, check the ''Data Directory'' setting.
+
+Note that using ''File → Import → Task Data'' is another way to get an existing ''Task List'' into your workspace.  If you use this mechanism for sharing the ''Task List'' between workspaces you should export the ''Task List'' when switching, because in this mode you are working with two separate ''Task List''s.  While much of the task state that yo uwork on is stored in shared task repositories, all read state, activity history, planning information and local tasks are maintained in the ''Task List'' and as such it can become cumbersome to end up with two different lists to manage.
+
+See also:
+* John O’Shea’s blog: [http://www.xlml.com/aehso/2007/02/02/eclipse-workspaces-containing-projects-with-overlapping-locations-and-mylar/ Eclipse workspaces containing projects with overlapping locations, and Mylar]
+
+== How do I export my task and repository data? ==
+
+Export via File → Export → Mylyn → Task Data
+
+== Why does Mylyn use the term “task”? ==
+
+There are many work items that make up the developer’s workday.  Many issue trackers and project management tools refer to these as: bugs, defects, actions, tickets, stories, enhancements, and the list goes on.  We refer to all such work items as “tasks” because the word tasks is short and commonly used in time management tools.  Task Repository connectors can customize the presentation of tasks, for example, indicating which is a defect and which is an action item.
+
+== Why are closed tasks not greyed out on Linux? ==
+
+If you are running Eclipse from KDE go to KControl → GTK Styles and Fonts and select “Use another style” in the GTK Styles section ({{bug|206399}}).
+
+See the [[Mylyn/User_Guide#Recommended_GTK_Setup_for_KDE|Recommended GTK Setup for KDE]] if the style selection does not work.
+
+== Why is starring tasks not supported? ==
+
+The current mechanism for starring tasks is to schedule them for ''Today'', which has a very similar effect to starring in other UIs.  If you schedule a task for today, the task will stand out as blue and always show (i.e., have guaranteed visibility when the Task List is focused).  If that’s too visible, you can schedule it for ''This Week'', in which case the task will always show but not turn blue.  
+
+The alternative to mark a shared task as outgoing by adding text into it and (e.g. “[review]”).  The ougtoing change will also give the task guaranteed visibility.  This is currently the only work-around for ‘starring’ completed tasks.
+
+The task-focused interface consider tasks orthogonal to resources (e.g., files and web pages).  Resources make sense to star/bookmark, since their primary residence is in some structural hierarchy (e.g. folders or a type hierarchy).  Starring provides a mechanism for locating the most relevant parts of a large hierarchy (at the cost of having our starred/bookmark lists bloat and become yet another thing to manage).  Tasks are inherently different than resources because their primary residence is in time (e.g. due dates, milestones, things completed in the past).  As such, the equivalent of starring for tasks is to schedule them to be viewed in the “current” time window (e.g. today or this week).  For a discussion on this refer to {{bug|168363}}.
+
+= Task Editor =
+
+== When I submit a new bug to eclipse.org the priority isn’t updated? ==
+
+Eclipse.org’s Bugzilla repository forces all new bug reports to priority 3 (P3) regardless of what is selected in Mylyn. Eventually we will disable this field in the new bug editor for bugs.eclipse.org and provide a tooltip with explanation ( {{bug|204630}} ).
+
+== Why am I seeing strange boxes where I expect to see proper characters? ==
+
+If for example you aren’t seeing the proper single quote chacters in the summary of [[https://bugs.eclipse.org/bugs/show_bug.cgi?id=197644 bug#197644]], check that the encoding is set correctly for the repository in the asociated Task Repositories view (Properties → Additional Settings → Character Encoding). For bugs.eclipse.org/bugs set your charcter encoding to ''ISO-8859-1''.
+
+== How can I view images or screenshots that are attached to an image? ==
+
+By default Eclipse does not provide a built-in image viewer so images can either be opened with a browser or saved to disk and opened in a native image viewer. Alternatively Eclipse extension such as QuickImage can be installed which support opening images within Eclipse.
+
+= Task Repositories =
+
+== What if I’m not using a Task Repository? ==
+
+Mylyn does not require the use a of a task repository and can be used entirely with the ''Local Tasks'' repository that it comes bundled with.  However, if working with a team, a shared ''Task Repository'' provides the key infrastructure needed to let your team work in a Task-Focused way via Mylyn’s collaborative facilities.
+
+Those not currently using another supported ''Task Repository'' should consider the repositories currently [http://www.eclipse.org/mylyn/downloads/ supported by Mylyn] as well as those supported by the [http://wiki.eclipse.org/index.php/Mylyn_Extensions third party Mylyn extensions].
+
+== What if Mylyn doesn’t support my task/bug/issue/ticket repository? ==
+
+To see support for your repository faster, do a search of the open repository connector requests and [https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=anywordssubstr&short_desc=%5Bconnector%5D&product=Mylyn&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0= vote for the corresponding bug] if your tracker is there, or [http://www.eclipse.org/mylar/bugs.php create a new bug].  
+
+[[Mylyn/User_Guide#Generic_Web_Repository_Connector|Generic Repository Connector]], allows creating Queries to the web-based issue tracking repositories and get list of issues from the web UI into the Task List.
+
+It is also possible to link a ''local task'' with the web page in web-based repository via the Mylyn Web integration.
+
+'''To create a task from any web-based repository:'''
+
+* Drag the URL from the address bar of the browser, or from a hyperlink in a bug listing to the ''Mylyn Tasks'' view.  This will create a task for the bug, link it to the page, and populate the description with the title of the corresponding page.   '''In Mozilla:''' simply drag the URL.  '''In Internet Explorer:''' you must have <code>Ctrl</code> pressed in order for Eclipse to recognize the drop.
+* '''Alternatively,''' you can copy the URL, press the ''New Task'' button on the ''Mylyn Tasks'' view.  This has the same effect as above but you can edit the description after retrieving it.
+* Opening the task will now open the corresponding issue.  You can also <code>right+click</code> the task and select ''Open in External Browser''.
+
+[[Image:mylar-tasklist-weblink-editor.gif]]
+
+== Why were my repository credentials reset? ==
+
+If you upgrade Eclipse or your Java VM, you will need to reset your credentials in the ''Task Repositories'' view because these are stored in the secure Eclipse workbench keyring.  Also see [https://bugs.eclipse.org/bugs/show_bug.cgi?id=149607 bug 149607].  If you are migrating '''from Eclipse 3.2 to 3.3''' note that you will need to use a different update site, which is listed here: http://eclipse.org/mylyn/dl.php
+
+== Why are my updated repository attributes not showing up? ==
+
+Your server’s repository attributes can change frequently, for example, there can be a new "milestone" or "version" added to the Bugzilla repository with each release.  When the ''Preferences → Mylyn → Task List → Synchronization'' setting is enabled, every 10th synchronization will update the attributes from the repository.  If you do not have this setting enabled, your can force the update via the ''Update Attributes'' action on the task repositories’ context menu in the ''Task Repositories'' view.  Note that you will need to reopen a task editor to see the updated attributes.  If you instead update via the button on the ''Attributes'' section of the ''Task Editor'' the attribute settings will be reloaded without needing to reopen.
+
+'''bugs.eclipse.org users''': Note that the attributes listing on eclipse.org is mirrored, and the mirrors are only updated 24 hours.  As such, you may need to wait up to 24 hours for the new attributes to show up.
+
+== Authentication Troubleshooting ==
+
+You must ensure repository credentials are filled out correctly. Refer to the diagram below:
+
+[[image: AuthenticationTroubleshooting2.png|right]]
+
+# Enter the repository URL (i.e. https://bugs.eclipse.org/bugs) and an optional label
+# Credentials
+#* Usually email address and password 
+#* Some sites, such as <code>dev.eclipse.org</code>, use anonymous logon with password left blank.
+#Http Authentication (optional)
+#* Some sites are protected by either BASIC or DIGEST http authentication. If this is the case, enter appropriate credentials here.
+#* One way to test if the site requires http authentication is to point your browser at the repository. If you are presented with an authentication dialog popup, the site is likely protected by http authentication.
+#Proxy Server Configuration (optional)
+#* By default Mylyn uses the Platform’s Install/Update proxy settings. Uncheck this box if you wish to use an alternative proxy.
+#* If the proxy requires authentication, this is where you enable and enter your proxy credentials.
+#* If you are experiencing connection problems, ensure your Install/Update proxy settings are valid or the repository specific settings are correct
+#* Mylyn has been tested with HTTP proxy servers. Currently SOCKS is not supported.
+#Validate Settings 
+#*Press the ''validate'' button to test the settings
+#*If you are seeing errors like “HTTP Response Code 407” or “Proxy Authentication Error” it is likely that you need to configure proxy settings as described above.
+#*If your sever uses a certificate and fails to connect, e.g. you see exceptions <tt>sun.security.validator.ValidatorException: PKIX path building failed</tt> then you need to point Eclipse at your certificate, see below.
+
+=== Certificate authentication ===
+
+Mylyn supports authentication with certificates from a Java keystore. The path and password to the keystore need to be specified in system properties. These can be set in the eclipse.ini in your eclipse install directory:
+
+ -vmargs
+ …
+ -Djavax.net.ssl.keyStore=/path/to/.eclipsekeystore
+ -Djavax.net.ssl.keyStorePassword=123456
+
+If your keystore does not have the default type (JKS) you can specify a different type:
+
+ -Djavax.net.ssl.keyStoreType=PKCS12
+
+==== Creating a keystore ====
+
+If you do not have a client certificate you can create one and have it signed by a CA:
+
+ keytool -genkey -keyalg DSA -keysize 1024
+
+Use this command to create a new certificate signing request:
+
+ keytool -certreq > client.csr
+
+Submit the client.csr file to your CA for signing. The CA’s certificate as well as your signed certificate that is returned by the CA need to be imported into the keystore:
+
+ keytool -importcert -alias ca -file ca.crt
+ keytool -importcert -file client.crt
+
+See [http://java.sun.com/j2se/1.5.0/docs/guide/security/SecurityToolsSummary.html this page] for links to the keytool documentation.
+
+=== NTLM authentication ===
+
+For NTLM authentication to work a special format for the username needs to be used where ''DOMAIN'' needs to be replaced by the Windows login domain: 
+
+ DOMAIN\username 
+
+The built-in NTLM support of the JDK which is used by Eclipse does '''not work''' with Mylyn since it uses the HttpClient library to access repositories. Limitations in regard to NTLM authentication are documented in the [http://wiki.apache.org/jakarta-httpclient/FrequentlyAskedNTLMQuestions NTLM FAQ] and also discussion on {{bug|201911}}.
+
+* If your repository uses MS NTLM authentication and only standard http authentication is being passed to the repository this can result when the local hostname cannot be resolved. Ensure your machine’s hostname is set correctly and resolves to a valid address.
+* It is not possible to use NTLM authentication for the proxy as well as for the repository.
+
+If NTLM authentication fails the '''[http://ntlmaps.sourceforge.net/ NTLM Authorization Proxy Server]''' has been reported to '''work''' with Mylyn.
+
+== Network Troubleshooting ==
+
+=== Performance Problems with HTTPS === 
+
+The built-in SSL support of the JDK will to a name lookup for each new connection. In case your network setup cannot resolve the host name (e.g. no proper name server), this lookup will time out, delaying the whole job.
+If setting up a name server is not an option, a work around would be to edit your local hosts file, and add the server IP there (and, if possible, add your computer's IP to the server's hosts file).
+
+== Why are task hyperlinks not working? ==
+
+For task hyperlinks in textual editors (e.g. Java editor) and other text viewers (e.g. History view comments) you must associate the project that contains the resource to the task repository.  
+
+:''Project association can also come from 3rd party metadata trough the contrubuted [[Mylar_Integrator_Reference#Mapping_from_projects_to_Task_Repositories|extension point]]. [http://subclipse.tigris.org/ Subclipse] and [http://docs.codehaus.org/display/M2ECLIPSE/Integration+with+Mylyn Maven integration for Eclipse] plugins contributing it. See few more details [http://jroller.com/page/eu?entry=linking_projects_from_the_eclipse here].''
+
+Note that to view a hyperlink you must hold down the <code>Ctrl</code> key when hovering over the reference to the task.  References to tasks are connector specific and the common reference is found on the top left of the task editor and other conventions tend to follow those used in the web UI (e.g. “bug 123” for Bugzilla, “ABC-123” for JIRA).
+
+[[Image:mylyn-project-repository-association.gif]]
+
+= Bugzilla Connector =
+
+== What versions are supported? ==
+
+* We '''recommend''' using the latest [http://www.bugzilla.org/download/ release] of Bugzilla (3.4.x).
+
+* Bugzilla 3.0.9 and higher is '''officially supported'''.
+
+* Bugzilla 2.18.6 is the lowest version of Bugzilla the connector is '''known to work with'''. If you are getting errors that indicate failure to update attributes this may be due to use of an older Bugzilla.
+
+*If you are using '''Bugzilla 2.18''' and are getting '''mid-air collisions''' this is likely due to incorrectly formatted timestamp field in the underlying bugs database table ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=149513 bug 149513]).  This can be resolved by upgrading to a more recent release of Bugzilla server.
+
+=== Tips for server administrators ===
+
+Mylyn periodically checks config.cgi to retrieve the repository configuration.
+On Eclipse.org this resulted in heavy CPU Load for the regeneration and a big surge in band width use.
+* This configuration seldom changes so can be cached and served from a file instead of being regenerated every time.  While the size of this file tends to be small when hosting less than a dozen projects, it can be large on repositories holding large numbers of projects, e.g. 900K on bugs.eclipse.org.
+* Generated bugzilla output contains a lot of unnecessary whitespace which can be trimmed before caching. For bugs.eclipse.org this reduces the file to about <em>660K</em>.
+* The remaining file contains a lot of redundancy so can be gzipped for further reduction.  On bugs.eclipse.org this leaves about ''28K'', a considerable saving.
+
+Mylyn has been modified to accept gzip encoding on all requests, and will do content negotiation. See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=205708 bug 205708].
+
+'''To add caching for your Bugzilla repository:'''
+* Change the name of config.cgi to config-stock.cgi and get the caching code in a new config.cgi.
+* The current version of this caching config.cgi script is hosted at:
+  via CVS: :pserver:anonymous@dev.eclipse.org:/cvsroot/technology/org.eclipse.phoenix/infra-scripts/bugzilla/
+  or: http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
+* Modifications on this script are followed on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=205416 bug 205416]
+
+== Why are queries failing? ==
+
+*If '''queries are not working''' correctly ensure that you have the right Bugzilla server version selected for the corresponding repository: ''Task Repositories (View) →'' right+click the repository ''→ Properties''.  For supported versions see the [http://www.eclipse.org/mylar/dl.php download page].  If the repository is still not functioning it may be due to authentication or connectivity problems.  If that does not resolve the problem please post a message to the newsgroup or [http://www.eclipse.org/mylar/bugs.php submit a bug].
+
+== Why do I see my old username? ==
+
+If you change the username/email address on your Bugzilla account you may notice that some tasks still have the old username/email.  Explicitly synchronize the task via the ''Task List'' popup menu or ''Task Editor'' toobar in order to update your username.
+
+== Why do tasks fail to open? ==
+
+*If upon opening a bug, the Bugzilla tab only displays a warning “'''Could not download task data, possibly due to timeout or connectivity problem. Please check connection and try again.'''”, ensure that your repository is returning XML data by pointing your browser to <code><your-repository-url>/show_bug.cgi?id=1&ctype=xml</code> to show the contents of bug 1 in XML form. The Bugzilla client requires that bugs be accessible in XML form. If the repository doesn’t support xml then it is likely that the repository is too old (Mylyn currently supports Bugzilla 2.18 and later).
+
+* If '''reports fail to load''' or '''reports fail to synchronize''' (task description remains ''italic''), check the error log for a “'''File not found'''” error pointing to <code>bugzilla.dtd</code> or a “'''Failed to retrieve products from server'''” error message, these can result when 
+** the <code>urlbase</code> parameter is not set on the bugzilla server
+** your <code>urlbase</code> parameter is incorrect, e.g. it contains <code>index.cgi</code>
+** your bugzilla installation is missing the <code>bugzilla.dtd</code> file. See: [https://bugs.eclipse.org/bugs/show_bug.cgi?id=161759 bug#161759]
+
+
+* If '''attributes are missing options''' in the bug editor (ie. missing a recently added milestone,  [https://bugs.eclipse.org/bugs/show_bug.cgi?id=155431 bug# 155431]):
+** Update attributes by choosing ''Update Attributes'' from the context menu in the ''Task Repositories'' view
+** Synchronize the task in the Task List
+** Reopen the task - new options should be available.
+
+== Why do tasks fail to submit? ==
+
+* '''Error upon submit: unable to make any match for name/email entered.''' If your bugzilla is configured for user names rather than full email address the QA Contact field will cause the submit to fail ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=166555 bug# 166555]). To resolve, select ‘Local users enabled’ option on the Repository Configuration page. 
+
+* If tasks '''fail to submit''' with credentials error, but the repository validates fine, make sure that you’ve correctly setup your account’s username and password and are not using the HTTP authentication fields instead.
+
+* If tasks '''fail to submit''' with credentials error, but the repository validates fine, make sure that you’ve correctly setup your bugzilla instance’s cookie domain under the required settings.  The cookie domain must lead with a dot.
+
+* If '''attachments are failing to submit''' and you see that after processing the attachment, the bugzilla bug shows a size of “bytes” (no numbers), your database may be dropping the packet sending the file.  '''On MySQL''', check the [http://dev.mysql.com/doc/refman/5.0/en/packet-too-large.html max_allowed_packet directive].  You may see errors like: <code>DBD::mysql::st execute</code> failed: Got a packet bigger than 'max_allowed_packet' bytes [for Statement “INSERT INTO attach_data (id, thedata) VALUES (38, ?)”] at <code>/path/to/bugzilla/attachment.cgi</code> line 993.  Also, '''check the maximum attachment size''' in ''Bugzilla Parameters → Attachments''.
+
+* If a submit fails with an '''Invalid Username or Password''' error even though repository settings do validate, make sure that cookies could be set. See also [https://bugs.eclipse.org/bugs/show_bug.cgi?id=175502 bug 175502]
+
+== What time zone is used in the task editor? ==
+
+*The '''times''' that appear in the Bugzilla bug editor (ie. created, modified) '''are local to the server hosting the Bugzilla repository''', not your local machine’s time zone. 
+
+== Known limitations ==
+
+* The <code>usermatchmode</code> is not currently supported ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=168204 bug 168204]) and as such full email addresses need to be used.
+
+* The <code>usevisibilitygroups</code> parameter is not supported ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=180876 bug#180876]). Group assignment will currently be lost if updated using the Bugzilla rich task editor.
+
+* Version 1.0 of Mylyn presents an error message upon new comment submission to Red Hat’s public Bugzilla repository. The comment is in fact posted. This issue is resolved in Mylyn 2.0M2 and higher. ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=183251 bug#183251])
+
+= JIRA Connector =
+
+If you see errors like the following, work around this by opening repository ''Properties Page'' and clicking OK (bug [https://bugs.eclipse.org/bugs/show_bug.cgi?id=169102 169102]).
+
+  org.tigris.jira.core.service.exceptions.AuthenticationException
+  at org.tigris.jira.internal.core.service.soap.SoapJiraService.getProjectsNoSchemes(SoapJiraService.java:204)
+
+== Why does the installation fail with a long error message? ==
+
+If the error message indicates unsatisfied dependencies on Mylyn plug-ins, make sure that you have the main Mylyn update site enabled as well as the extras update site for the JIRA connector. The error message would look similar to this:
+
+<pre style="overflow:scroll">
+ …
+ Cannot find a solution where both Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.swt/[3.4.1.v3449c,3.4.1.v3449c]] and Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.swt/[3.4.0.v3448f,3.4.0.v3448f]] can be satisfied.
+ Unsatisfied dependency: [org.eclipse.mylyn.commons.soap 3.1.0.I20090109-0100-e3x] requiredCapability: osgi.bundle/org.eclipse.mylyn.commons.net/[3.1.0,4.0.0)
+</pre>
+
+The update sites are listed on the [http://www.eclipse.org/mylyn/downloads/ download page].
+
+== What are the server requirements? ==
+
+* JIRA 3.3.3 or higher (3.7 or higher for attachment support)
+* JIRA RPC plugin 1.4.3 or higher
+
+The '''JIRA SOAP/RPC services have to be running on the JIRA server''' (set Administration → General Configuration → Accept remote API calls to ON in the JIRA web interface).
+
+Related Resources:
+
+* [http://confluence.atlassian.com/display/JIRA/JIRA+Development+Hub Jira Development Wiki]
+* [http://confluence.atlassian.com/pages/viewpage.action?pageId=1035 Jira RPC Plugin Overview]
+
+== Why can’t I connect? ==
+
+* If you get a <code>org.tigris.jira.core.service.exceptions.ServiceUnavailableException</code> you need to turn on the JIRA SOAP/RPC services on the server.
+* Similarly, if you get a “Processing instructions are not allowed within SOAP messages” message, ensure that SOAP/RPC services are on.
+* If you get a '''503''' error code verify that the SOAP/RPC interface is enabled.
+* If you get a '''403''' error code verify that the SOAP/RPC interface is enabled, and also check your authentication mechanism.  If the server is using NTLM authentication, see [https://bugs.eclipse.org/bugs/show_bug.cgi?id=156397 bug 156937] for diagnosis steps.
+* If you see an '''“unrecognized priority” message''' in the ''Error Log'', the problem is that the JIRA Connector does not support customized priorities so the priority value specified in that message will not correspond to the priority icons visible in the Task List.
+* If you are being '''prompted for your log-in credentials''' by the Browser tab of the task editor or the new task editor, this is because without rich editor support the connector is using the web-based UI instead of logging in on your behalf as is done with a rich task editor ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=142869 bug 142869]).
+* If you get a <code>AuthenticationException</code> and a query won’t synchronize, use Task Repositories (view) → Properties (on the repository) → Validate Settings.  This will clear the connection if it died.
+
+== Why do I get a “JIRA connector requires server 3.3.3 or later” message? ==
+
+Version 2.0 of the JIRA connector misinterprets version 3.10 as being lower than version 3.3.3. This is fixed in version 2.1 of the connector (see below for installation instructions on Eclipse 3.2).
+
+== What is the latest version of the JIRA connector that supports Eclipse 3.2 (IBM Rational Application Developer 7)? ==
+
+The most recent version that works on Eclipse 3.2 is Mylyn 2.0.0 and version ''2.1.0'' of the JIRA connector. See [http://confluence.atlassian.com/display/JIRAEXT/Mylyn#Mylyn-e3.2 this page for instructions].
+
+== Why are attachments missing in the task editor although they are displayed in the web interface? ==
+
+Attachment retrieval including retrieval of task contexts and attachment lists in the task editor requires JIRA 3.7 or above.
+
+== Are custom fields supported by the JIRA connector? ==
+
+Custom fields are supported with the following limitations, see {{bug|249057}} and its subtasks for additional details:
+
+* Custom fields are not displayed in the task editor when creating new issues. This can cause issue creation to fail if custom fields are mandatory.
+* Custom fields that are specific to a workflow state, e.g. are only displayed when resolving an issue, are not displayed in the task editor. This can cause a workflow transition to fail if custom fields are mandatory.
+* If a value is not set for a custom field it will not be displayed in the task editor.
+* Single-select and multi-select fields are not editable and options for these fields are not displayed in the task editor.
+
+== Known limitations ==
+* Attachment retrieval (including retrieval of the task context and attachment list in the task editor) require JIRA 3.7 or above ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=169757 bug 169757])
+<!-- * NTLM authentication is not supported ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=172395 bug 172395]) -->
+* Customized priorities are not currently supported, so all issues with a customized priority will have the default priority level ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=165518 bug 165518]).
+* blank but editable custom fields doesn’t appear in the RSS data, and as result we can’t show them for editing
+* because of JIRA api limitations, we can support custom fields in the task editor, but not in the new custom task editor
+<!-- * On JIRA 3.6.x private filters saved on the server can fail to retrieve results ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=174328 bug 174328]). The work-around is to create a custom query in Mylyn using the form-based query designer or to share the filter in JIRA. -->
+* Mylyn only allows the usage of US-ASCII characters in the filename when uploading an attachment ({{bug|203663}})
+
+== How can I enable compression for SOAP messages? ==
+
+If your repository has lots of projects and components you can speed up the download of the repository configuration by enabling compression. 
+
+* Add a filter-mapping to your JIRA server configuration: [http://jira.atlassian.com/browse/JRA-10353].
+* Enable compression in your global JIRA configuration.
+* Check the compression setting for your task repository in Mylyn versions 2.0M2 and later.
+
+== Reporting issues ==
+
+Since JIRA can be heavily customized there is a chance that some particular customizations may not work, so if you can’t connect to your proprietary repository it is a good idea to try the following public repositories to make sure you have working configuration:
+
+* http://jira.codehaus.org
+* http://issues.apache.org/jira/
+* http://opensource.atlassian.com/projects/spring 
+
+If you can’t get query results, you could try to call “Open with Browser” on query node in the Task List view and then save link “Current view: XML” and attach it to the bug report.
+
+Even if query don’t work you could try “Open Repository Task” from your JIRA repository node on the Task Repositories view and check if you  can open JIRA task editor for that issue. Same for the Task search (Ctrl-H, Task Search)
+
+To investigate various error you may need to enable debug tracing. To do that you need to create the <code>.options</code> file with the following content:
+
+<pre>
+  org.eclipse.mylyn.jira.ui/connector=true
+  org.eclipse.mylyn.jira.ui/dataHandler=true
+</pre>
+
+and then add the following options to the Eclipse command line (or eclipse.ini file):
+
+<pre>
+  -debug <path to the .options file>/.options
+</pre>
+
+The additional logging will go into the regular Eclipse log and the Error Log view
+
+== Why do I get errors about an unexpected redirect when submitting an issue? ==
+
+Please go to the repository properties and validate the repository. If errors about circular redirects are logged in your Eclipse error log your JIRA server or proxy might be misconfigured. 
+
+In some cases unexpected redirects can be caused by a JIRA server accessed via Apache and mod_jk (using the AJP/1.3 Tomcat connector).  Some server configurations may benefit from the ‘proxyHost’, ‘proxyPort’, ‘scheme’ and ‘secure’ settings on the AJP Connector in the Tomcat server configuration.
+
+Please see {{bug|202834}} for a more details.
+
+== What does <code>Error parsing server response: No project with key ‘xyz’ found</code>? ==
+
+This error is caused by Mylyn not having an up-to-date copy of the repository configuration for that repository. The corresponding report to automate updating of the repository configuration is {{bug|189689}}.
+
+As a work-around right-click on the query and select '''Repository → Update Attributes'''. That will download and store a fresh copy of the repository configuration.
+
+== Why does the estimated time displayed in the task editor differ from the web interface? ==
+
+Mylyn defaults to a day having 24 working hours and a week having 7 work days. If your JIRA repository uses different settings time tracking information will not show correctly when converted between Mylyn and JIRA. In order to fix this change the time tracking settings in Mylyn in the Additional Settings section of the repository properties (Window → Show View → Task Repositories) to match the server configuration. Your JIRA administrator will be able to tell you the correct settings which can be located under Administration → Time Tracking in the JIRA web interface.
+
+[[Image:Time-tracking-jira-admin.png]]<br> 
+'''JIRA Web Interface'''
+
+[[Image:Time-tracking-jira-mylyn.png]]<br>
+'''Mylyn Task Repository Settings'''
+
+== Why am I getting the message “You did not enter a valid date” when I try to submit a JIRA issue? ==
+
+Your server may be configured to use a custom date format or a non English locale. You can change the date format settings in the Advanced Configuration section under the Additional Settings section of the repository properties (Window → Show View → Task Repositories) to match the server configuration.
+
+[[Image:Jira-advanced-configuration.png]]
+
+== How can I make issue dependencies visible in the Task List? ==
+
+By default only subtask relationships are displayed in the Task List. You can enable ''Show linked tasks'' in the Additional Settings section of the repository properties (Window → Show View → Task Repositories) to also show issue links in the Task List. After enabling the setting ''Synchronize All Tasks'' from the popup menu of the task repository in the Task Repositories view needs to be selected to update all tasks. More discussion is on {{bug|255680}}.
+
+= Trac Connector =
+
+== What are the server requirements? ==
+
+The Trac connector supports two different access methods: The recommended XML-RPC mode offers complete integration with Mylyn but requires additional setup and privileges which may not be available to all users. Web mode offers less functionality but will work with any public Trac repository. 
+
+==== XML-RPC (recommended) ====
+
+Requirements:
+* Trac 0.10 or later
+* [http://trac-hacks.org/wiki/XmlRpcPlugin XmlRpcPlugin] rev. 1950 or later
+
+This access method offers editing of tasks in a rich editor, attachment support and offline editing. It requires the [http://trac-hacks.org/wiki/XmlRpcPlugin XmlRpcPlugin] for Trac to be enabled for the accessed repository. The XmlRpcPlugin provides a remote interface to the Trac repository and is distributed separately from Trac (see [http://trac.edgewall.org/ticket/217 #217]). See these [http://trac-hacks.org/wiki/XmlRpcPlugin#Installation install instructions] for requirements and documentation.
+
+In order to access the repository through XML_RPC each user needs to have the corresponding permission which can be configured through Trac's admin tool:
+
+ trac-admin </path/to/projenv> permission add <user> XML_RPC
+
+==== Web ====
+
+Requirements:
+* Trac 0.9 or later
+
+In this mode the standard Trac web interface is used for repository access. Tickets may be created and edited through a web browser. Offline editing and attachments are not supported.
+
+== Recommended Trac version ==
+
+Mylyn works with any stable Trac release that is version 0.9 or later (see below for known limitations). Mylyn works best when used with Trac’s XML-RPC Plugin (see above) but we do not recommend a particular Trac version. 
+
+The Trac connector tests are run against these Trac versions:
+
+* Trac 0.11.6, XML-RPC Plugin 1.0.6 (r7194)
+* Trac 0.10.5, XML-RPC Plugin 0.0.2 (r2125)
+* Trac 0.9.6 (support ended with Mylyn 3.3)
+
+== Does Mylyn support Trac 0.11? ==
+
+When Mylyn 3.2.1 or later is used with the latest version of the [http://trac-hacks.org/wiki/XmlRpcPlugin Trac XmlRpcPlugin] from [http://trac-hacks.org/svn/xmlrpcplugin/trunk/ SVN trunk] the Mylyn Trac connector is fully functional ({{bug|175211}}.
+
+== Why do I get an HTTP Error 500 Internal server error when creating a ticket that contains non-ASCII characters? ==
+
+Problems related to character encodings have been reported when Trac is run with Python 2.3. Upgrading to Python 2.4 may help to resolve this. Please comment on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=188363 bug #188363] if you encounter an internal server error when creating a ticket that contains non-ASCII characters.
+
+== Known limitations ==
+
+* Trac 0.10.1 
+** Known incompatibility with Trac XML-RPC Plugin. See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=164272 bug 164272] for details.
+* Trac 0.10.3 
+** Known incompatibility with old versions of the Trac HttpAuthPlugin (fixed in revision 1890 or later). The plug-in enables basic auth for XML-RPC when Trac AccountManagerPlugin for form based authentication is used. See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=168413 bug 168413] for details.
+* Trac 0.11
+** Known incompatibility with XML-RPC Plugin version 1.0.2 - 1.0.5. Using 1.0.6 or later is recommended.
+
+== Why are tasks opened in a web browser and not in the rich editor? ==
+
+Please make sure that the access type in the repository properties is set to XML-RPC. This requires Trac 0.10 and XML-RPC (see above).
+
+== Which URLs does Mylyn access in a Trac repository? ==
+
+XML-RPC:
+
+* The expected URL is either /xmlrpc or /login/xmlrpc (if login credentials are provided)
+
+Web:
+
+* Authentication: /login 
+* Querying: /query?format=tab…
+* Synchronizing ticket details: /ticket/…
+* Getting repository configuration to populate query dialog: /query or /newticket
+
+The web mode relies on screen scraping and is likely to fail if the design
+(i.e. HTML output) of the Trac repository is heavily customized.
+
+== Problems opening the web editor on Linux ==
+
+If you’re having problems opening the web task editor on Linux and the message '''Could not create Browser page: XPCOM error -2147221164''' appears in the error log, try installing the packages '''xulrunner''' and '''xulrunner-gnome-support''' on your Linux distribution.
+
+== Which Trac Plugins are supported by Mylyn? ==
+
+* [http://trac-hacks.org/wiki/XmlRpcPlugin XML-RPC Plugin] for rich-editing and attachment support
+* [http://trac-hacks.org/wiki/AccountManagerPlugin Account Manager Plugin] for form-based authentication (Mylyn 2.0 or higher)
+* [http://trac-hacks.org/wiki/MasterTicketsPlugin Master Tickets Plugin] for sub-task support (Mylyn 2.3 or higher)
+
+= Web Templates Connector =
+
+== Where can I find the Web Templates connector? ==
+
+It is available from the incubator update site. Please see http://www.eclipse.org/mylyn/downloads/ .
+
+== Why can’t I connect using one of the existing templates? ==
+
+The Web Connector have a “Preview” button in “Advanced Configuration” section in the “Query” preferences dialog. If you get an error or preview table does not show the expected list, you can use “Open” button to verify if web page downloaded by the Web Connector is correct. 
+
+Alternatively, you can use Query Pattern like 
+({Description}.+?)({Id}\n) to see content of the retrieved page in preview table and compare it with the source of the web page for the same url loaded into the web browser.
+
+If retrieved web page is correct, but “Preview” don’t show expected results you need to check the “Query Pattern”. A popular mistake is an unmasked ‘?’ that separates request parameters in the url). For example:
+
+<pre><a href="show_bug.cgi\?id\=(.+?)">.+?<span class="summary">(.+?)</span></pre>
+
+If you don’t see the correct web page, check the following:
+
+* query URL or substituted parameters are correct
+** '''Note:''' only the parameters are URL-encoded, e.g. the query URL <tt>x:${y}</tt> with the substituted parameter <tt>${y}</tt> set to <tt>a:b</tt> gets “<tt>x:a%3Ab</tt>” (only the substituted parameters are URL encoded
+* web application require user to login and login configuration in the Web Connector repository configuration is correct (see Web Connector repository settings)
+
+To debug web application auth further, you could use the wget tool (on Windows it available as a standalone command line tool and also included with Cygwin) and run the following command:
+
+<pre>wget -v -d -o query.log -O query.html "http://your.query.url"</pre>
+
+If repository require basic http auth, you’ll need to use ''--http-user=USER'' and ''--http-password=PASS'' options.
+
+Then open file ''query.html'' in the web browser and check if it show list of issues you need to fetch from the web server. If it does have correct list, then there could be a problem with query pattern used for parsing. 
+
+If ''query.html'' does not show expected list of issues you can check ''query.log'' for server responses and try to identify if server require authentication, redirecting your requests somewhere or issue any other errors.
+
+== Known limitations ==
+
+* In Mylyn 1.0: if a web server responds by requesting a redirect to an absolute URL while fetching a resource, the connector falsely prepends “/” to the URL and the request will fail. The workaround is to use final url where redirect is pointing to (you can find it as describe above). See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=167282 bug 167282] for details.
+
+== Where can I find additional templates? ==
+
+* [http://alblue.blogspot.com/2009/04/google-code-and-mylyn-redux.html Instructions for Google Code]
+
+= Task-Focused UI =
+
+== What is the Task-Focused UI? ==
+
+When you activate a task, Mylyn automatically maintains a task context by monitoring your interaction.  The task context provides a predictable degree-of-interest weighting of the relevance of the elements and relations that you work with to the task-at-hand (as described in the [http://kerstens.org/mik/publications/2006-11-mylar-fse.pdf Foundations of Software Engineering conference paper]).  The Task-Focused UI is the mechanism by which Mylyn presents Mylyn the task-context model in order to reduce information overload and to automate the manual management of UI elements like editors and change sets.  Examples:
+* Filtering, decoration and expansion management in views
+* Automatic folding in editors
+* Ranking in content assist
+* Editor management
+* Perspective management
+* Change set management
+
+== Why do files disappear from Focused views when I close them? ==
+
+By default Mylyn automatically manages the set of open files to match the task context, so that you don’t have to.  This ensures that the editor list (viewable via mechanisms like Ctrl+E) corresponds to what you in views like the ''Package Explorer'' when they are in Focused mode.  When you close a file manually, you express that it is uninteresting, and as such it will be removed from the task context.  It will also disappear from the corresponding automatically managed change sets for the same reason.  This behavior can be turned off via ''Preferences → Mylyn → Context → Manage open editors to match task context''.  However, it is highly recommended since Mylyn will prevent the number of editors from bloating by automatically closing editors for elements that have decayed in interest, and always keep the editors for interesting elements open.
+
+
+== Why did all my editor tabs disappear? ==
+
+When you deactivate a task, all editors will be closed, and then when you reactivate the task all the windows will be open again.  Try it, it’s fun. 
+
+Mylyn actively manages your open editors with task context. It takes some getting used to, but enables switching between tasks when you are multitasking without cluttering your editor tabs.  This editor management can be disabled  via ''Window → Preferences → Mylyn → Context''. However, before disabling it consider reading the ''“Managing open editors…”'' section of [http://www-128.ibm.com/developerworks/java/library/j-mylar2/index.html#N10116   Task-focused programming with Mylar].
+
+== How do I get rid of an element if it is not interesting? ==
+
+When a view is focused elements will disappear on their own if they are not repeatedly selected via a mechanism called interest decay.  Note that decay does not use the wall clock, but instead relies on the number of selections that you have made when working on that task to determine which elements disappear.  This helps make it feel very predictable.
+
+If you want want to force one or more elements to disappear from the context use the '''Remove from Focus''' action on the context menu.  Note that the element will still be part of the task context since it was previously part of the interaction.  
+
+If you want to permanently delete the element from the interaction history use the '''Remove from Context''' action on the '''Context''' tab of the '''Task Editor'''.  For example, if a company private element was part of a task context that is to be shared with a public repository, this action can be used to clean it up before sharing.  Note that elements will be removed from the task context recursively.
+
+== Which Focused UI features can I turn off? ==
+
+'''All of them.'''  When no task is active neither are any of Mylyn’s features.  When working with task contexts Mylyn’s Focused UI features are all optional and in general configurable.  While many find it the key benefit of Mylyn, the entire Focused UI is optional and can be uninstalled via ''Help → Software Updates → Manage Configuration''.
+
+The following table summarizes how the key features can be toggled:
+
+{|
+! '''UI Mechanism'''
+! '''Example/description'''
+! '''Toggle using'''
+|-
+| Interest filtering
+| Package Explorer
+| ''Focus on Active Task'' button on view toolbar
+|-
+| Automatic toggling of filtering
+| Package Explorer
+| ''Preferences → Mylar → Context → Toggle focused mode..
+|-
+| Interest decoration
+| Bolding of landmark elements
+| ''Preferences -&gt; General -&gt; Appearance -&gt; Label Decoration''
+|-
+| Content assist
+| Ranking of interesting elements
+| Eclipse 3.2: ''Java -&gt; Editor -&gt; Content Assist -&gt; Work in Progress -&gt;'' turn off Mylyn, turn on Java
+|-
+| Active change sets
+| Grouping of changes by tasks
+| ''Preferences -&gt; Mylyn -&gt; Team''
+|-
+| Editor management
+| Auto opening/closing of editors
+| ''Preferences -&gt; Mylyn -&gt; Editor Management''
+|-
+| Active views
+| Active Search and Hierarchy
+| Only on if view is active
+|}
+
+For additional configuration options see the ''Mylyn'' and ''General → Appearance'' preference pages.
+
+'''Note''': if you have turned off automatic focusing of views consider using the ''Navigate → Quick Context View'' facility.
+
+== Why can’t I Alt+Click to references libraries? ==
+
+Due to {{bug|200832}}, if you have the “Show ‘Referenced Libraries’ Node” option enabled in the view menu of the ''Package Explorer'' you will not be able to Alt+click to library nodes if there isn’t a library visible already.  Disable this option to make Alt+Click work.
+
+== Why is the ''Link with Editor'' button disabled? ==
+
+Mylyn automatically turns on editor linking when the view is focused, since the main use case for turning it off (having the view jump around) is remedied by focusing the view.  In other words, the button is pressed for you automatically and we need to ensure that it cannot be manually unchecked, which is why it appears disabled.
+
+== What happened to the Active Search and Active Hierarchy views? ==
+
+These views were not included in the Mylyn 1.0 release because they never made it beyond the experimental phase.  
+* The ''Active Search'' view has not been sufficiently tuned to adapt to the lifecycle of a task context, and as a result requires manual manipulation of the degree-of-separation scope as you work on long-running tasks.  Otherwise it becomes overloaded with elements.  In addition, it is not yet clear whether an additional view is the right UI for this facility, and it is hard to find room for an additional view of this size on screen resolutions of 1600x1200 and smaller.
+* The ''Active Hierarchy'' view is also hard to allocate space for, especially when using the in-place hierarchy (Ctrl+T) on a landmark can be a quick way to see the relevant part of the task context’s hierarchy.
+
+These features still show promise in displaying task context and saving repetitive searches, so we have not removed them.  They have instead moved to the Mylyn Sandbox, and can be used and experimented with by following the [http://wiki.eclipse.org/index.php/Mylyn_Contributor_Reference#Sandbox instructions on the Contributors page].  For feedback on these views please use the corresponding bug reports or newsgroup.
+
+= Context and Timing data =
+
+== How do I prevent code checked out from polluting my task context? ==
+When checking out a new project, you must first deactivate the active task. Otherwise all newly created files will become interesting. 
+
+== Why do I see strange elapsed times on my Planning tab? ==
+
+Some platform/jvm combinations can fill with invalid timestamps. This is known to have happened on Mac OSX 10.4 with Java 1.5. See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=207419 bug 207419].
+To resolve you can try and manually edit <workspace>/.metadata/.mylyn/contexts/activity.xml.zip.
+
+== Is the backwards compatibility and refactoring of task context handled? ==
+
+* The Task List and Context Store are compatible across all currently-supported Eclipse versions.  This means that you can use the same .mylyn data in both Eclipse 3.x.  
+
+* If elements have been renamed they may not appear as interesting when the context is activated.
+
+= Java Development =
+
+== Content assist troubleshooting ==
+
+Mylyn uses custom Content Assist processors in order to rank and separate the elements in the current task context.  To see proposals ranked according to interest you must have only the ''Type Proposals (Mylyn)'' kinds checkbox enabled in the list below, otherwise you will see duplicates.  '''If you do not see any proposals, check this list''' to ensure that either the Mylyn or the plain proposals are enabled.  '''To do this automatically''', run ''New → Mylyn → Recommended Preferences''. Or you can select them manually as in the preference page below.  
+
+[[Image:mylar-content-assist-prefs.gif]]
+
+'''Why do I see duplicate proposals?'''
+
+Ensure that you have only the ''(Mylyn)'' proposals kinds enabled in ''Window → Preferences → Java → Editor → Content Assist → Advanced'', otherwise you will see duplicates.
+
+If you use proposals via Ctrl+Shift+Space instead of the typical Ctrl+Space you will see duplicates.  Vote for JDT/Text [https://bugs.eclipse.org/bugs/show_bug.cgi?id=147781 bug 147781] if you use this mechanism.  Also see: [https://bugs.eclipse.org/bugs/show_bug.cgi?id=129080 bug 129080]
+
+'''Why do I get an error message when using content assist?'''
+
+If after invoking Content Assist you see an error message dialog that states:
+ The extension took too long to return from the 'computeCompletionProposals()' operation
+this is most likely due to something interrupting the proposal operation (e.g. garbage collection).  Ignore it if it does not recur, increase Eclipse’s memory if it does (e.g via <code>-Xmx384M</code> command line argument). See [https://bugs.eclipse.org/bugs/show_bug.cgi?id=141457 bug 141457] for more details.  
+
+Note that Mylyn should only add a trivial amount of overhead to content assist computation, however, the standard content assist mechanism will not report timeouts of this sort (i.e. taking longer than 5s to compute proposals).  If the system that you are working on is so large that increasing memeory does not reduce the timings to avoid the message, you could also consider disabling the Mylyn-specific content assist, as described above, but if doing so please comment on {{bug|141457}}.
+
+[[Image:mylyn-content-assist-timeout.gif]]
+
+== Why do interesting elements not show in the Project Explorer? ==
+
+The ''Package Presentation → Hierarchical'' mode is not supported on the ''Project Explorer'' view in Eclipse 3.2 through 3.3M3 and possibly later versions [https://bugs.eclipse.org/bugs/show_bug.cgi?id=161362 bug 161362].  Use the view menu to set ''Package Presentation → Flat'' as a work-around.
+
+== How do I stop declarations from showing in the Package Explorer? ==
+
+If you don’t like Mylyn’s constant showing of Java members in the ''Package Explorer'', select the drop-down menu, then ''Filters…'' and enable the ''Mylyn Java Declarations Filter''.  It will then stick in the menu in case you want to toggle between modes.  
+
+Note that this will hide interest information about members that aren’t in your current file (e.g. showing you which methods are landmarks).  This means that you will need to commit those methods to memeory, and the next time that you start working on the task you will have the burden of figuring out what they are.  On smaller screen resolutions this mode can be useful, but also consider turning the Package Explorer into a fast view.
+
+[[Image:mylar-java-filtering-declarations.gif]]
+
+== Why does nothing show up in the Active Search or Active Hierarchy? ==
+
+As you work, elements become Landmarks (bold decoration), and these elements populate the ''Active Search'' and ''Active Hierarchy'' views.  To force an element to populate the views manually, make it a Landmark by <code>right+clicking</code> or hitting <code>Ctrl+Alt+Shift+UpArrow</code>.
+
+== Known limitations ==
+* [https://bugs.eclipse.org/bugs/show_bug.cgi?id=106678 Bug 106678]: The Project Explorer’s Hierarchical Java package presentation layout is not supported on Eclipse 3.3Mx, and interesting elements will be hidden if enabled.  Work-around is to use the default Flat package presentation.
+
+= Team Support =
+
+== My change set is missing or doesn’t contain elements it should. Help! ==
+If a task change set disappears or is missing items, toggle the Incoming/Outgoing mode of the Synchronize view via its toolbar button. 
+
+== Why does task change set not appear when I modify files? ==
+
+A task change set should appear if you activate a task and modify a file connected to a compatible source repository (e.g. CVS, SVN).  If it does not try the following:
+
+* Ensure you have installed the [http://www.eclipse.org/mylyn/downloads/ ''Mylyn Bridge: Eclipse IDE'' feature].  Note that previously this feature was named Eclipse SDK and not distributed with the Java-only Eclipse download ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=191793 bug 191793]).
+
+* If you are using Subclipse or Subversicve, make sure you have the respective integration for Mylyn installed.
+
+* Verify that the [[Mylyn/User_Guide#Configuring_the_Synchronize_view_for_change_sets|configured ''Synchronize View'' is configured for change sets]].
+
+* Verify that Mylyn Tasks UI and Mylyn Team UI are enabled under General → Startup and Shutdown in the Eclipse preferences.
+
+If the above are working but the change set appears to be missing relevant files:
+
+* You may be seeing the ''Synchronize'' view’s refresh problem ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395 bug 142395]).  Toggle from ''Incoming/Ougtoing'' to ''Incoming'' mode and back again to refresh the view.
+
+* If the files or change set are still missing deactivate and reactivate the task to force a full refresh.
+
+== Why do files disappear from the change set when I close them? ==
+
+If you have the ''Preferences → Mylyn → Context → Manage open editors to match task context'' option enabled, Mylyn will perform editor management so that you don’t have to.  Closing a file makes it less interesting, and causes it to disappear from the active task context, and hence from the change set.  This option prevents you from having to manage the set of open files, will automatically close editors for files that become uninteresting, and will ensure that the open editors match the task context.
+
+== Why am I missing elements when I retrieve someone else’s context? ==
+
+To identify elements within a project, Mylyn relies on the name of the project being consistent across workspaces.  If the project name in the workspace that the context was created with is different than its name in your workspace, the task context will not show elements within that project ([https://bugs.eclipse.org/bugs/show_bug.cgi?id=164058 bug 164058]).  The other case where context can be lost is if the elements change names outside of the workspace ( [https://bugs.eclipse.org/bugs/show_bug.cgi?id=164243 bug 164243]).
+
+The work-around is to use the same project names across your team’s workspaces.  We recommend the following two approaches for standardizing on project names:
+* Use '''Team Project Sets''': these are a very useful Eclipse facility that allows your entire team to check out numerous projects from version control by importing a single file.  Create a project set via ''File → Export → Team Project Set'', host this file somewhere accessible, then have others import vai ''File → Import → Team Project Set''.
+* Have developers check out projects into their workspace without renaming them.  The above is a shortcut for doing this.  If alphabetical sort order in the ''Package Explorer'' is a problem, organize your projects via ''Project Explorer → view menu → Top Level Elements → Working Sets''.
+
+= WikiText =
+
+== What is WikiText? ==
+
+WikiText is a set of plug-ins for Eclipse that provide lightweight markup (wiki) parsing, editing and display capabilities to the Eclipse platform and Mylyn.  WikiText provides a parser for wiki markup and converts the markup to HTML, Docbook, DITA, or Eclipse Help format, either via the API or by using Ant tasks. WikiText also provides UI components (such as an editor) integrating with Eclipse and the Mylyn task editor.
+
+== Where can I get WikiText? ==
+
+WikiText is available on the Mylyn update site.  Unreleased weekly builds are also available via the Mylyn Weekly Builds update site.  See the [http://www.eclipse.org/mylyn/downloads/ Mylyn Downloads] for details.
+
+A stand-alone WikiText package is also available for download from the [http://www.eclipse.org/mylyn/downloads/ Mylyn Downloads] page.
+
+== How does WikiText integrate with Mylyn? ==
+
+WikiText extends the Mylyn task editor to be markup-aware.  Comments and description text is formatted according to the configured markup language.  The description and comment editors are aware of markup and provide content assist, markup help and preview.
+
+More details can be found here: [http://tasktop.com/blog/eclipse/rich-editing-for-tasks-via-mylyn-wikitext Rich Editing for Tasks via Mylyn WikiText (Mik Kersten)]
+
+== How do I enable/disable WikiText extensions to Mylyn? ==
+
+This is done on a per-repository basis.  When WikiText is installed it is automatically enabled for all configured task repositories for which there is a default markup language setting.
+
+To change the default settings open the Mylyn <i>Task Repositories</i> view, right-click your task repository and select <i>Properties</i> from the context menu.  In the properties dialog choose the <i>Editor</i> settings (you may need to click on it to expand the section).
+
+To disable WikiText for your repository, select <i>Plain Text</i>.
+
+To enable WikiText for your repository, select the desired markup language.  The default markup language if available for your repository is labeled <i>(default)</i>
+
+== Where can I find WikiText documentation? ==
+
+WikiText documentation is installed into the Eclipse help system when WikiText is installed.  To see the WikiText documentation open Eclipse, from the <i>Help</i> menu open <i>Help Contents</i>.  You will find the <i>WikiText User Guide</i> under <i>Tasks</i> in the table of contents.  If you're interested in integrating with WikiText then take a look at the <i>WikiText Developer Guide</i>.
+
+The same WikiText documentation is also available in the stand-alone distribution and online:
+
+* [http://help.eclipse.org/galileo/topic/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn%20WikiText%20User%20Guide.html WikiText User Guide]
+* [http://help.eclipse.org/galileo/topic/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText%20Developer%20Guide.html WikiText Developer Guide]
+
+== How do I run the WikiText Ant tasks? ==
+
+The WikiText documentation provides detailed information on how this is done in the <i>WikiText User Guide</i>.
+
+== Can I use WikiText without Eclipse? ==
+
+Yes, the WikiText markup parser and Ant tasks may be used outside of Eclipse without reference to any Eclipse classes.
+
+Detailed information about using WikiText APIs is available within the <i>WikiText Developer Guide</i>.  Information about using WikiText Ant tasks is available within the <i>WikiText User Guide</i>.
+
+== What output can WikiText create? ==
+
+WikiText can create HTML, Eclipse Help, DITA, DocBook and FOP from wiki markup.  Using the WikiText APIs you can also extend WikiText to create other output formats.
+DITA, DocBook and FOP can all be used to create PDF.  More information is available in the <i>WikiText User Guide</i>.
+
+== What wiki markup languages does WikiText support? ==
+
+WikiText can parse the following markup languages:
+
+* Confluence
+* MediaWiki
+* Textile
+* TracWiki
+* TWiki
+
+WikiText is also designed to make it easy to add support for new markup languages.
+
+== Where can I find out more about WikiText? ==
+
+* [http://greensopinion.blogspot.com/2009/03/mylyn-wikitext-10-released.html Mylyn WikiText 1.0 Released (David Green)]
+* [http://tasktop.com/blog/eclipse/rich-editing-for-tasks-via-mylyn-wikitext Rich Editing for Tasks via Mylyn WikiText (Mik Kersten)]
+* [http://www.peterfriese.de/getting-started-with-wikitext/ Getting started with WikiText (Peter Friese)]
+* [http://www.peterfriese.de/advanced-wikitext/ Advanced WikiText (Peter Friese)]
+* [http://greensopinion.blogspot.com/2009/04/mylyn-wikitext-produces-pdf.html Mylyn WikiText Produces PDF (David Green)]
+* [[Mylyn/WikiText| Mylyn WikiText wiki]]
+* [[Mylyn/Incubator/WikiText| The original WikiText incubation project page]]
+* [http://greensopinion.blogspot.com/2008/08/textile-j-is-moving-to-mylyn-wikitext.html Textile-J Is Moving to Mylyn WikiText]
+
+= Integration with other tools =
+
+See the '''[[Mylyn/Extensions|Mylyn Extensions]]''' page for a listing of integration downloads.
+
+Mylyn relies on [[Mylyn/Architecture|Bridges]] to integrate the context model with the structure and UI features of domain-specific tools. To create a Bridge, see [[Mylyn/Integrator_Reference#Creating_Bridges| Creating Bridges]].
+
+The core set of Bridges supports the Eclipse SDK (i.e. has bridges for Java, JUnit, PDE, Ant and Resources).  The Resources Bridge enables a basic level of interoperability with other tools that use files (e.g. <code>.php, .cpp</code>), and enables Mylyn filtering to work for generic views that show those files (i.e. the ''Project Explorer'', ''Navigator'') and any corresponding markers (i.e. the ''Problems'' and ''Tasks'' views).  This is only the most basic context model integration, and does not offer the benefits of a specialized structure bridge, such as making declarations part of the context and providing ''Active Search'' facilities.  Without a Bridge Mylyn cannot be applied to tool-specific views.  
+
+'''If you would like to see support for a particular tool''', first do a search of the open bridge requests and [https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=anywordssubstr&short_desc=%5Bbridge%5D&product=Mylyn&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0= vote for the corresponding bug] if your tool is there, or [http://www.eclipse.org/mylyn/bugs.php create a new bug].  Also consider adding your experiences to the [[Mylyn/FAQ#Integration_with_other_tools | "Integration..."]] section of the Mylyn FAQ.
+
+== Using Mylyn with WTP ==
+
+Context modeling works at the file level, noting the limitation of [https://bugs.eclipse.org/bugs/show_bug.cgi?id=144882 bug 144882: interest filter fails on WTP Dynamic Web Project]
+
+== External builders ==
+
+If an external builder (e.g. Maven, pydev, or other Ant-based builders) is producing output files that are being automatically added to your context because they are not being marked "derived" as with Eclipse-based builders.  You may note that such files are always show as interesting when they are generated or updated and can not be filtered away, since Mylyn expects all files that have changed as part of the task context to have interest.
+
+In this case you can explicitly exclude these files from being added to the task context the ''Preferences -> Mylyn -> Resources'' page.  For example, if the output folder of the builder is "target", you could set this the following way.  Similarly, you could add a filter for "*.pyc" to exclude all files generated with that extension.
+
+Source code generators can be considered analogous since they produce intermediate files.  However, if you want to inspect the results of the source code generation after it is done you can avoid setting the exclusion.  Note that if a large number of files was generated not all generated files may be unfiltered.
+
+[[Image:mylar-resource-exclusion.gif]]
+
+
+= Misc =
+
+== Performance ==
+
+=== Retrieval of repository configuration === 
+
+In order to present the valid options for attributes in the Task Editor, the repository 'configuration' must be retrieved from the repository. The default connector implementation requests a new configuration every 24hrs. In the case of Bugzilla, this is further refined by first performing a head request on the configuration to see if the Last-Modified header has changed. If so, the repository configuration is retrieved. Additionally, Eclipse.org's webmaster has redirected the config.cgi request to a static page, eliminating the processing overhead server side. For details on server side optimization of Bugzilla see [[Mylyn_FAQ#Tips_for_server_administrators]].  
+
+== Command Line ==
+
+The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
+<code>eclipse -argument</code>.
+
+{|
+|Argument || Mylyn Version || Description
+|-
+|<code>-no-activate-task</code>
+|<center>3.1</center>
+|Disables task activation on startup. The last active task is not re-activated on startup if a workspace crash is detected.
+|}
+
+== System Properties ==
+
+The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
+<code>eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>.
+
+{|
+|System Property || Mylyn Version || Default || Description
+|-
+|<code>org.eclipse.mylyn.linkProviderTimeout</code>
+|<center>3.1</center>
+|5000
+|Number of milli-seconds before link providers are timed out. Set to -1 to disable link providers timing out.
+|-
+|<code>mylyn.discovery.directory</code>
+|<center>3.2</center>
+|http://www.eclipse.org/mylyn/discovery/directory.xml
+|URL for the discovery directory.
+|}
+
+== How do I enable debugging output for network communications? ==
+
+Add the following lines to the <code>eclipse.ini</code> file in your eclipse directory to enable tracing of header information for HTTP requests. Log output is written to the console eclipse was started from. Make sure to add these after the line that says '''<code>-vmargs</code>'''. Add a <code>-vmwargs</code> line if there is none in the file.
+
+ -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
+ -Dorg.apache.commons.logging.simplelog.showlogname=true
+ -Dorg.apache.commons.logging.simplelog.defaultlog=off
+ -Dorg.apache.commons.logging.simplelog.log.httpclient.wire.header=debug
+ -Dorg.apache.commons.logging.simplelog.log.org.apache.commons.httpclient=off
+ -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
+
+To also enable logging of message content, also add this lines:
+
+ -Dorg.apache.commons.logging.simplelog.log.httpclient.wire.content=debug
+
+== How do I enable debugging output for plug-ins? ==
+
+Create a '''<code>.options</code>''' file in your eclipse directory and enable tracing by including the corresponding lines which set the tracing setting for a particular concern to true:
+
+'''JIRA'''
+
+ org.eclipse.mylyn.jira.core/debug/connector=true
+ org.eclipse.mylyn.jira.core/debug/dataHandler=true
+ org.eclipse.mylyn.jira.core/debug/repository=true
+
+'''Trac'''
+
+ # trace authentication requests
+ org.eclipse.mylyn.trac.core/debug/authentication=true
+ # trace XML-RPC calls
+ org.eclipse.mylyn.trac.core/debug/xmlrpc=true
+
+Then start eclipse with '''<code>-debug</code>'''. You can also optionally pass a filename to <code>-debug</code> if your <code>.options</code> file is not located in the eclipse directory.
+
+See also [[FAQ_How_do_I_use_the_platform_debug_tracing_facility%3F]].
+
+== Which usage monitoring framework should I use? ==
+
+Three usage data collection frameworks have been created for Eclipse:
+# [http://dev.eclipse.org/viewcvs/index.cgi/platform-ui-home/instrumentation/index.html?revision=1.12 Eclipse Instrumentation Framework]: created as part of Platform UI, not released, not currently maintained
+# [[Mylyn_Integrator_Reference#Monitor_API|Mylyn Monitor UI Usage Reporting]]: created in 2004, maintained as part of the Mylyn project, first released in 2005
+# [http://www.eclipse.org/epp/usagedata/index.php Usage Data Collector]: maintained as part of the EPP project, first released in 2008
+
+While (1) and (3) are work in a similar way, there is a significant difference between the approach used by the Mylyn Monitor and the other usage data collectors.  Instead of gathering statistics, the Mylyn UI Usage Reporting component uses the interaction history that is captured by the Mylyn Monitor.  This is the same interaction history stream that is used to determine the interest level of elements in Mylyn’s Task-Focused UI and has been refined by long-term use of Mylyn’s Task-Focused UI.  The UI Usage Monitor is extensible, de-coupled from the other parts of Mylyn and can be used independently.  
+
+There are several main benefits to the approach of capturing a full interaction history stream instead of reporting on particular statistics.
+* Since all of the interaction information is captured on the client, server-side reporting facilities can report on usage statistics that were not defined at deployment time.  For example, during one of the Mylyn studies we did not decide to monitor which views were opened within which perspective.  Since we had the full interaction histories this reporting was easy to add.
+* Interaction histories make it possible to report not just on the usage of the UI, but on the state of the UI at any given time.  For example, in one study we wanted to know what actinos the user did after invoking a build and which views were visible while the invoked that action.
+* An explicit interaction history makes it easier to avoid and debug privacy problems.  The Mylyn Monitor has a robust facility for filtering, encrypting and obfuscating data from interaction histories.
+
+For an example study see: http://kerstens.org/mik/publications/mylar-ieee2006.pdf
+
+== How does Mylyn relate to IBM’s Jazz? ==
+
+At the EclipseCon and JavaONE 2006 conferences IBM demonstrated previews of Jazz, a collaborative team server and Eclipse-based client.  Articles have remarked on the similarities between Mylyn and Jazz because both integrate tasks into Eclipse (Jazz’s “work items” and Mylyn’s “tasks”), and both provide change sets grouped by task.  But there are both significant differences and complementary aspects to the two approaches.  A key goal of Mylyn is to provide an open source framework to support integration of task management with ''existing issue trackers and source repositories''.  According to the presentations, components that come with Jazz include include a ''next-generation issue tracker and source repository'' and related lifecycle management tools such as project health.  In addition, a driving and unique goal of Mylyn is to focus the UI around a usage-based and degree-of-interested weighted task context, which is complementary to the Jazz platform.  Just as it integrates with Mylyn’s Task List, Mylyn’s Task Focused UI and task context model components are possible to integrate with other kinds of task management systems, such as the one provided by Jazz.
+
+Update: at EclipseCon 2007 the IBM Jazz team showed a Mylyn connector for Jazz.
+
+[[Category:FAQ]]
+[[Category:Mylyn]]
+
+= Updating This Document =
+
+This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
+http://wiki.eclipse.org/Mylyn/FAQ

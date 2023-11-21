@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <description>
+    Mylyn WikiText
+  </description>
+  <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
+    <category name="Features"/>
+  </feature>
+  <feature url="features/org.eclipse.mylyn.wikitext.editors_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext.editors_feature" version="0.0.0">
+    <category name="Features"/>
+  </feature>
+  <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+    <category name="SDK"/>
+  </feature>
+  <feature url="features/org.eclipse.mylyn.wikitext.extras_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext.extras_feature" version="0.0.0">
+    <category name="Features"/>
+  </feature>
+  <category-def name="Features" label="Mylyn WikiText Features">
+    <description>
+      Tools.
+    </description>
+  </category-def>
+  <category-def name="Integration" label="Mylyn WikiText Integrations">
+    <description>
+      Connectors that integrate with ALM systems.
+    </description>
+  </category-def>
+  <category-def name="SDK" label="Mylyn WikiText SDK and Framework">
+    <description>
+      Source code and documentation for integrators.
+    </description>
+  </category-def>
+</site>

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+    Copyright (c) 2007, 2009, 2017 David Green and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        David Green - initial API and implementation
+        Torkild U. Resheim - Adapted for building the EPUB user guide
+ -->
+
+<!-- Will only work when called from Maven — see pom.xml -->
+<project name="org.eclipse.mylyn.docs.epub.ui.docs" default="build">
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="help">
+				<include name="**/*"/>
+				<exclude name="title-page.html"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- Note that the WikiText component must be built first -->
+	<target name="build" description="generate plugin help documentation">
+		<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties">
+			<classpath id="wikitext-core-classpath">
+				<fileset dir="../../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/repository/plugins/">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</taskdef>
+
+		<mkdir dir="${basedir}/help"/>
+
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage"
+			overwrite="true"
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="help">
+			<fileset dir="docs">
+				<include name="*.textile"/>
+			</fileset>
+			<stylesheet url="../book.css"/>
+			<stylesheet file="${basedir}/docs/style.css"/>
+		</wikitext-to-eclipse-help>
+
+		<move todir="${basedir}/help">
+			<fileset dir="${basedir}/docs">
+				<include name="*.html" />
+				<include name="*-toc.xml" />
+			</fileset>
+		</move>
+
+		<copy todir="${basedir}/help">
+			<fileset dir="${basedir}/docs">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.jpg" />
+			</fileset>
+		</copy>
+
+	</target>
+
+</project>

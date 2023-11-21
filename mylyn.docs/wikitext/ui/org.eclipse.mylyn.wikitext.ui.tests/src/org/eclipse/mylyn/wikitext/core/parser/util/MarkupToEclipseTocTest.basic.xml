@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="Test.html" label="Test">
+	<topic href="Test.html" label="title1"></topic>
+	<topic href="Test.html#title2" label="title2">
+		<topic href="Test.html#Nestedtitle" label="Nested title"></topic>
+	</topic>
+</toc>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2007, 2009 David Green and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+    
+    SPDX-License-Identifier: EPL-2.0
+    
+    Contributors:
+        David Green - initial API and implementation
+ -->
+<new caption="New in Mylyn 3.1">
+	<category>
+		<title>WikiText</title>
+		<description>
+			<p>
+			WikiText provides parsers and editors for managing lightweight markup (wiki text).  
+			WikiText integrates with the Mylyn task editor and provides components that may be used 
+			within Eclipse or stand-alone.
+			</p>
+		</description>
+		<item>
+			<title>Markup Editor</title>
+			<description>
+				<p>
+				WikiText provides an integrated source editor for authoring files containing wiki markup.
+				The editor provides content assist, validation, folding, source formatting, an integrated preview, 
+				structured outline and a markup cheat-sheet.
+				</p>
+				<img src="images/wikitext-editor.png"/>
+				<p>
+				The WikiText editor is aware of 5 markup languages and is capable of supporting others via the common WikiText parsing framework.
+				The following markup languages are currently recognized.
+				</p>
+				<ul>
+					<li>Confluence</li>
+					<li>MediaWiki</li>
+					<li>Textile</li>
+					<li>TracWiki</li>
+					<li>TWiki</li>
+				</ul>
+			</description>
+		</item>
+		<item>
+			<title>Markup Conversion</title>
+			<description>
+				<p>
+				WikiText can convert lightweight markup to other formats including Eclipse Help, HTML, DocBook and DITA.  Conversion may be performed
+				within Eclipse or from Ant.
+				</p>
+				<img src="images/wikitext-generate-menu.png"/>
+				<p>
+				The conversion framework is extensible and can support alternative output formats by extending a simple Document Builder API.
+				</p>
+			</description>
+		</item>
+		<item>
+			<title>Content Assist</title>
+			<description>
+				<p>
+				Using markup is easy with WikiText in part due to content assist in the editor.  Suggestions are provided in the editor when CTRL+Space is pressed,
+				making it easy to insert bold, italics, bulleted lists, headings and other markup.  
+				</p>
+				<img src="images/wikitext-content-assist.png"/>
+			</description>
+		</item>
+		<item>
+			<title>Cheat Sheet</title>
+			<description>
+				<p>
+				If you forget markup syntax, pressing F1 in the editor will bring up a cheat sheet with markup language tips and syntax hints.
+				</p>
+				<img src="images/wikitext-cheatsheet.png"/>
+			</description>
+		</item>
+		<item>
+			<title>Preferences</title>
+			<description>
+				<p>
+				The appearance of the source editor and preview can be altered easily with workspace preferences.  CSS is used to specify exactly how you would like
+				the markup to appear.  This gives you ultimate control over the appearance of the editor, editor preview and the Mylyn task editor.
+				</p>
+				<img src="images/wikitext-preferences.png"/>
+			</description>
+		</item>
+	</category>
+</new>

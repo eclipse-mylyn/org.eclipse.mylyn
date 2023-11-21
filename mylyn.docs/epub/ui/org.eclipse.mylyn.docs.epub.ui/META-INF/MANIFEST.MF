@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.ui;singleton:=true
+Bundle-Version: 4.0.7.qualifier
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
+ org.eclipse.mylyn.docs.epub.core;bundle-version="4.0.7",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="[3.0.10, 3.1)",
+ org.eclipse.mylyn.wikitext;bundle-version="[3.0.10, 3.1)",
+ org.eclipse.core.resources;bundle-version="3.5.0",
+ org.eclipse.ui;bundle-version="3.5.0",
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.jface.databinding,
+ org.eclipse.emf.ecore;bundle-version="2.5.0"
+Bundle-ClassPath: .
+Bundle-Activator: org.eclipse.mylyn.internal.docs.epub.ui.EPUBUIPlugin
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.mylyn.internal.docs.epub.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.docs.epub.ui.commands;x-internal:=true
+Automatic-Module-Name: org.eclipse.mylyn.docs.epub.ui

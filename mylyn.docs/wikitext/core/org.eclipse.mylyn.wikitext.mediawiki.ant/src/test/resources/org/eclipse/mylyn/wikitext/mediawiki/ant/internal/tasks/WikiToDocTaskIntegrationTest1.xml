@@ -1,0 +1,62 @@
+<api batchcomplete="">
+<warnings>
+<query xml:space="preserve">
+Formatting of continuation data has changed. To receive raw query-continue data, use the 'rawcontinue' parameter. To silence this warning, pass an empty string for 'continue' in the initial query.
+</query>
+</warnings>
+<continue gimcontinue="49671|pict1.gif" continue="gimcontinue||"/>
+<query>
+<pages>
+<page _idx="47972" pageid="47972" ns="6" title="File:Image1.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/Image1.png" descriptionurl="http://wiki.eclipse.org/File:Image1.png"/>
+</imageinfo>
+</page>
+<page _idx="48020" pageid="48020" ns="6" title="File:IMG2.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/IMG2.png" descriptionurl="http://wiki.eclipse.org/File:IMG2.png"/>
+</imageinfo>
+</page>
+<page _idx="48021" pageid="48021" ns="6" title="File:image3.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/image3.png" descriptionurl="http://wiki.eclipse.org/File:image3.png"/>
+</imageinfo>
+</page>
+<page _idx="48015" pageid="48015" ns="6" title="File:I4.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/I4.png" descriptionurl="http://wiki.eclipse.org/File:I4.png"/>
+</imageinfo>
+</page>
+<page _idx="48018" pageid="48018" ns="6" title="File:img5.jpg" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/img5.jpg" descriptionurl="http://wiki.eclipse.org/File:img5.jpg"/>
+</imageinfo>
+</page>
+<page _idx="47974" pageid="47974" ns="6" title="File:Image6.jpeg" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/Image6.jpeg" descriptionurl="http://wiki.eclipse.org/File:Image6.jpeg"/>
+</imageinfo>
+</page>
+<page _idx="47970" pageid="47970" ns="6" title="File:image7.gif" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/image7.gif" descriptionurl="http://wiki.eclipse.org/File:image7.gif"/>
+</imageinfo>
+</page>
+<page _idx="47976" pageid="47976" ns="6" title="File:IMG8.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/IMG8.png" descriptionurl="http://wiki.eclipse.org/File:IMG8.png"/>
+</imageinfo>
+</page>
+<page _idx="49681" pageid="49681" ns="6" title="File:Icon9.gif" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/Icon9.gif" descriptionurl="http://wiki.eclipse.org/File:Icon9.gif"/>
+</imageinfo>
+</page>
+<page _idx="49674" pageid="49674" ns="6" title="File:ImageTen.png" imagerepository="local">
+<imageinfo>
+<ii url="__TEMP-DIR-URL__/ImageTen.png" descriptionurl="http://wiki.eclipse.org/File:ImageTen.png"/>
+</imageinfo>
+</page>
+</pages>
+</query>
+</api>

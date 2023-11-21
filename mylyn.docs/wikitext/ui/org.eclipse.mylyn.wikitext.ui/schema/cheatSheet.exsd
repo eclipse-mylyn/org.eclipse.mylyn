@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.wikitext.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="cheatSheet" name="Markup Language Cheat Seet"/>
+      </appInfo>
+      <documentation>
+         Plugin cheat-sheet content specific to a markup language.
+Cheat-sheet content is help text that provides information about the syntax of a specific markup language.  This help text is presented to the user within the markup editor.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="content" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="content">
+      <annotation>
+         <documentation>
+            a pointer to markup language-specific cheat sheet help content
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="markupLanguage" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name of the markup language for which the cheat sheet content is relevant (eg: &quot;Textile&quot;, &quot;MediaWiki&quot;, etc)
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="resource" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A path to the resource that provides the content.  
+
+The provided resource path is the default resource, however additional resources may be located alongside the default resource in order to provide locale-specific content.  This works in the same way as for resource bundles.  
+
+For example, the resource may be specified as help/cheatSheet.textile and for the locale &apos;no_NO_NY&apos; the following resource paths would be searched in the following order:
+
+help/cheatSheet_no_NO_NY.textile
+help/cheatSheet_no_NO.textile
+help/cheatSheet_no.textile
+help/cheatSheet.textile
+
+in this way the user is presented with the most locale-specific help resource.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="contentLanguage" type="string">
+            <annotation>
+               <documentation>
+                  The markup language of the help content.  If unspecified, then HTML is assumed.  Otherwise the contentLanguage may be specified as any registered markup language (eg: &quot;Textile&quot;, &quot;MediaWiki&quot;, etc).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;extension
+         point=&quot;org.eclipse.mylyn.wikitext.ui.cheatSheet&quot;&gt;
+      &lt;content
+            contentLanguage=&quot;Textile&quot;
+            markupLanguage=&quot;Textile&quot;
+            resource=&quot;help/cheatSheet/Textile.textile&quot;&gt;
+      &lt;/content&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2007, 2009 David Green and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-2.0/
+      </documentation>
+   </annotation>
+
+</schema>

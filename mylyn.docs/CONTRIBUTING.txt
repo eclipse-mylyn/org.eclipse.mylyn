@@ -1,0 +1,64 @@
+Contributing to Mylyn Docs
+=============================
+
+Thanks for your interest in this project.
+
+Mylyn Project description:
+--------------------
+
+Mylyn is a Task-Focused Interface for Eclipse that reduces information overload and makes multi-tasking easy.
+
+- https://projects.eclipse.org/projects/mylyn
+
+Mylyn Docs Sub-Project description:
+--------------------
+
+Mylyn Docs provides Eclipse based tools for document editing and generation. This include:
+
+	WikiText
+Mylyn WikiText provides an extensible framework and tools for parsing, editing and presenting lightweight markup. WikiText has parsers for MediaWiki, Textile, Confluence, TracWiki and TWiki markup, and can be extended to support other languages. WikiText provides Ant tasks for converting lightweight markup to HTML, Eclipse Help, DocBook, DITA and XSL-FO. WikiText also provides an editor for editing such markup within Eclipse, and integrates with the Mylyn task editor causing it to be markup-aware. WikiText provides API for integrating wiki markup capabilities into Eclipse, RCP, stand-alone and server-side applications.
+
+	EPUB
+The EPUB framework in Mylyn Docs offers API to create, manipulate, read and write EPUB formatted files. There is also an UI operation for building publications from markup. WikiText markup in all supported formats can be converted to XHTML and packaged as EPUB using a one step wizard found in the file popup menu. If more control and flexibility is required when assembling EPUBs, there is in addition an Ant task that may be used to this end.
+
+	Intent
+The Mylyn Intent prime objective is to make developers consider documentation as something useful and easy to maintain, that they can use to formalize their best practices and share their knowledge. Based on a new vision of the documentation, in which explanations in natural langage are formally linked with technical artefacts (java code, models, manifest files, bugzilla issues, git repositories, etc.), Intent allows you to efficiently update documentation when a change occurs in your software, turning it into a true Agile documentation.
+
+	Vex
+Vex is a Visual Editor for XML that hides the raw XML tags from the user, providing instead a word processor like interface. Vex uses standard DTD files to define document types and CSS stylesheets to define document layout. Vex contains definitions for DocBook and DITA. To edit other XML formats only a DTD and a CSS are needed.
+
+Developer resources:
+--------------------
+
+Information regarding source code management, builds, coding standards, and more.
+
+- http://wiki.eclipse.org/index.php/Mylyn_Contributor_Reference
+- https://projects.eclipse.org/projects/mylyn/developer
+
+Contributor License Agreement:
+------------------------------
+
+Before your contribution can be accepted by the project, you need to create and electronically sign the Eclipse Foundation Contributor License Agreement (CLA).
+
+- http://www.eclipse.org/legal/CLA.php
+
+Contact:
+--------
+
+Contact the project developers via the project's "dev" list.
+
+- https://dev.eclipse.org/mailman/listinfo/mylyn-docs-dev
+
+Search for bugs:
+----------------
+
+This project uses Bugzilla to track ongoing development and issues.
+
+- https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn Docs
+
+Create a new bug:
+-----------------
+
+Be sure to search for existing bugs before you create another one. Remember that contributions are always welcome!
+
+- https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn Docs

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2012, 2014 Torkild U. Resheim and others.
+	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v2.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v20.html
+    
+	Contributors:
+		Torkild U. Resheim - initial API and implementation
+-->
+<project name="Download epubcheck" basedir="." default="all">
+
+	<property name="epubcheck-version" value="3.0.1" />
+	<property name="epubcheck-zip" value="epubcheck-${epubcheck-version}.zip" />
+	<property name="epubcheck-dir" location="${basedir}/epubcheck/" />
+	<property name="epubcheck-jar" location="${epubcheck-dir}/epubcheck-${epubcheck-version}.jar" />
+	<available file="${epubcheck-jar}" type="file" property="jar-present" />
+	<available file="${epubcheck-dir}" type="dir" property="folder-present" />
+
+	<!--Remove older of EpubCheck if present -->
+	<target name="clean" if="folder-present">
+		<echo>Deleting older version of EpubCheck.</echo>
+		<delete>
+			<fileset dir="${epubcheck-dir}">
+				<include name="**/" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="all" unless="jar-present" >
+		<echo>Downloading version ${epubcheck-version} of EpubCheck.</echo>		
+		<get src="https://github.com/IDPF/epubcheck/releases/download/v${epubcheck-version}/${epubcheck-zip}" dest="${epubcheck-zip}" skipexisting="true" verbose="true" retries="5" />
+		<unzip src="${epubcheck-zip}" dest="${basedir}" />
+		<antcall target="clean"/>
+		<echo>Switching to new version of EpubCheck</echo>
+		<move file="epubcheck-${epubcheck-version}" tofile="${epubcheck-dir}" />
+		<delete file="${epubcheck-zip}" />
+	</target>
+
+</project>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.help;singleton:=true
+Bundle-Version: 4.0.7.qualifier
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.help
+Automatic-Module-Name: org.eclipse.mylyn.docs.epub.help
