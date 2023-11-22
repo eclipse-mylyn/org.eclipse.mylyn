@@ -69,6 +69,7 @@
 			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
 			<unit id="org.apache.commons.collections4" version="4.4.0.v20221112-0806"/>
+			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 			<unit id="org.apache.commons.lang3" version="3.12.0.v20221221-1931"/>
 			<unit id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
 		</location>
