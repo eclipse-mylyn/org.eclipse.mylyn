@@ -335,6 +335,9 @@
     <stream
         name="main"
         label="main"/>
+    <stream
+        name="315-setup-test"
+        label="MylynDocs-Setup-Test"/>
     <description>The new Setup for Mylyn hosted on GitHub</description>
   </project>
   <project name="github.admin"

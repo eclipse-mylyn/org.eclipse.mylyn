@@ -70,7 +70,7 @@ pipeline {
 		}
 		stage('Deploy Docs Snapshot') {
 			when {
-				branch 'master'
+				branch 'main'
 			}
 			steps {
 				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
