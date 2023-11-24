@@ -21,23 +21,12 @@
    <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub" version="0.0.0">
-      <category name="Features"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub.sdk_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub.sdk" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
    <bundle id="com.google.guava">
      <category name="SDK"/>
    </bundle>
    <category-def name="Features" label="Mylyn Docs Features">
       <description>
          Tools.
-      </description>
-   </category-def>
-   <category-def name="Integration" label="Mylyn Docs Integrations">
-      <description>
-         Connectors that integrate with ALM systems.
       </description>
    </category-def>
    <category-def name="SDK" label="Mylyn Docs SDK and Framework">
