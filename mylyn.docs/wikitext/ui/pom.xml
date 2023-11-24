@@ -93,7 +93,6 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <archiveSite>false</archiveSite>
                         <archive>
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </archive>
