@@ -34,7 +34,6 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <skip>${test.component.skip}</skip>
-          <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.suite}</testClass>
         </configuration>
       </plugin>
