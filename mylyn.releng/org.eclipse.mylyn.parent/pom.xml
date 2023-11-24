@@ -190,7 +190,6 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
-              <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
               <environments>
                 <environment>
                   <os>macosx</os>
@@ -299,7 +298,6 @@
           </dependencies>
           <configuration>
             <format>${dist.qualifier}</format>
-            <archiveSite>false</archiveSite>
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
             </archive>
@@ -333,7 +331,6 @@
           <artifactId>maven-pmd-plugin</artifactId>
           <version>3.21.0</version>
           <configuration>
-            <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
             <targetJdk>17</targetJdk>
             <format>xml</format>
@@ -364,15 +361,6 @@
             <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <application>org.eclipse.ui.ide.workbench</application>
-            <dependency-resolution>
-              <extraRequirements>
-                <requirement>
-                  <type>p2-installable-unit</type>
-                  <id>org.eclipse.sdk.feature.group</id>
-                  <versionRange>0.0.0</versionRange>
-                </requirement>
-              </extraRequirements>
-            </dependency-resolution>
           </configuration>
         </plugin>
       </plugins>
