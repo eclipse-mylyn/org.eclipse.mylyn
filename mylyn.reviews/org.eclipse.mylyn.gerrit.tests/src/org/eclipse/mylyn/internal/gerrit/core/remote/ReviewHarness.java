@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
@@ -86,7 +86,7 @@ class ReviewHarness {
 	private final GerritHarness gerritHarness;
 
 	ReviewHarness() throws Exception {
-		this.changeId = generateChangeId();
+		changeId = generateChangeId();
 		gerritHarness = GerritFixture.current().harness();
 		git = gerritHarness.project().getGitProject(PrivilegeLevel.USER);
 
@@ -106,7 +106,7 @@ class ReviewHarness {
 
 	ReviewHarness duplicate() throws Exception {
 		ReviewHarness reviewHarness = new ReviewHarness();
-		reviewHarness.changeId = this.changeId;
+		reviewHarness.changeId = changeId;
 		return reviewHarness;
 	}
 
@@ -123,7 +123,7 @@ class ReviewHarness {
 		provider.open();
 		assertThat(getRepository().getReviews().size(), is(0));
 		pushFileToReview(refSpec, privilegeLevel, fileName);
-		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
+		listener = new TestRemoteObserver<>(provider.getReviewFactory());
 
 		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), getShortId());
 		consumer.setAsynchronous(false);
@@ -224,10 +224,10 @@ class ReviewHarness {
 		assertThat(targetCommit.toString(), is(commitId));
 
 		git.checkout()
-				.setCreateBranch(true)
-				.setName("change" + "/" + getReview().getId() + "/" + number)
-				.setStartPoint(targetCommit)
-				.call();
+		.setCreateBranch(true)
+		.setName("change" + "/" + getReview().getId() + "/" + number)
+		.setStartPoint(targetCommit)
+		.call();
 	}
 
 	private RevCommit parseCommit(ObjectId ref) throws IOException {
@@ -246,10 +246,11 @@ class ReviewHarness {
 
 			WebLocation location = new WebLocation(GerritFixture.current().getRepositoryUrl(),
 					credentials.getUserName(), credentials.getPassword(), new IProxyProvider() {
-						public Proxy getProxyForHost(String host, String proxyType) {
-							return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
-						}
-					});
+				@Override
+				public Proxy getProxyForHost(String host, String proxyType) {
+					return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
+				}
+			});
 
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
 					.getRepository(GerritFixture.current().getRepositoryUrl());

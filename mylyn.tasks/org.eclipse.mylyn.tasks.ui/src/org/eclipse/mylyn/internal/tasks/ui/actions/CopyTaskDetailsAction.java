@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.net.URL;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -82,6 +82,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		ClipboardCopier.getDefault().copy(getStructuredSelection(), new ClipboardCopier.TextProvider() {
+			@Override
 			public String getTextForElement(Object element) {
 				return getTextForTask(element, getMode());
 			}
@@ -94,71 +95,65 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	// TODO move to TasksUiUtil / into core
 	public static String getTextForTask(Object object, Mode mode) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		switch (mode) {
-		case KEY:
-			if (object instanceof ITask) {
-				ITask task = (ITask) object;
-				if (task.getTaskKey() != null) {
-					sb.append(task.getTaskKey());
+			case KEY:
+				if (object instanceof ITask task) {
+					if (task.getTaskKey() != null) {
+						sb.append(task.getTaskKey());
+					}
 				}
-			}
-			break;
-		case URL:
-			if (object instanceof IRepositoryElement) {
-				String taskUrl = getUrl((IRepositoryElement) object);
-				if (TasksUiInternal.isValidUrl(taskUrl)) {
-					sb.append(taskUrl);
+				break;
+			case URL:
+				if (object instanceof IRepositoryElement) {
+					String taskUrl = getUrl((IRepositoryElement) object);
+					if (TasksUiInternal.isValidUrl(taskUrl)) {
+						sb.append(taskUrl);
+					}
 				}
-			}
-			break;
-		case ID_SUMMARY:
-			if (object instanceof ITask) {
-				ITask task = (ITask) object;
-				if (task.getTaskKey() != null) {
-					sb.append(StringUtils.capitalize(TasksUiInternal.getTaskPrefix(task.getConnectorKind())));
-					sb.append(task.getTaskKey());
-					sb.append(": "); //$NON-NLS-1$
+				break;
+			case ID_SUMMARY:
+				if (object instanceof ITask task) {
+					if (task.getTaskKey() != null) {
+						sb.append(StringUtils.capitalize(TasksUiInternal.getTaskPrefix(task.getConnectorKind())));
+						sb.append(task.getTaskKey());
+						sb.append(": "); //$NON-NLS-1$
+					}
+					sb.append(task.getSummary());
+				} else if (object instanceof IRepositoryElement element) {
+					sb.append(element.getSummary());
 				}
-				sb.append(task.getSummary());
-			} else if (object instanceof IRepositoryElement) {
-				IRepositoryElement element = (IRepositoryElement) object;
-				sb.append(element.getSummary());
-			}
-			break;
-		case ID_SUMMARY_URL:
-			if (object instanceof ITask) {
-				ITask task = (ITask) object;
-				if (task.getTaskKey() != null) {
-					sb.append(task.getTaskKey());
-					sb.append(": "); //$NON-NLS-1$
-				}
+				break;
+			case ID_SUMMARY_URL:
+				if (object instanceof ITask task) {
+					if (task.getTaskKey() != null) {
+						sb.append(task.getTaskKey());
+						sb.append(": "); //$NON-NLS-1$
+					}
 
-				sb.append(task.getSummary());
-				String taskUrl = getUrl((IRepositoryElement) object);
-				if (TasksUiInternal.isValidUrl(taskUrl)) {
-					sb.append(ClipboardCopier.LINE_SEPARATOR);
-					sb.append(taskUrl);
+					sb.append(task.getSummary());
+					String taskUrl = getUrl((IRepositoryElement) object);
+					if (TasksUiInternal.isValidUrl(taskUrl)) {
+						sb.append(ClipboardCopier.LINE_SEPARATOR);
+						sb.append(taskUrl);
+					}
+				} else if (object instanceof IRepositoryQuery) {
+					RepositoryQuery query = (RepositoryQuery) object;
+					sb.append(query.getSummary());
+					if (TasksUiInternal.isValidUrl(query.getUrl())) {
+						sb.append(ClipboardCopier.LINE_SEPARATOR);
+						sb.append(query.getUrl());
+					}
+				} else if (object instanceof IRepositoryElement element) {
+					sb.append(element.getSummary());
 				}
-			} else if (object instanceof IRepositoryQuery) {
-				RepositoryQuery query = (RepositoryQuery) object;
-				sb.append(query.getSummary());
-				if (TasksUiInternal.isValidUrl(query.getUrl())) {
-					sb.append(ClipboardCopier.LINE_SEPARATOR);
-					sb.append(query.getUrl());
-				}
-			} else if (object instanceof IRepositoryElement) {
-				IRepositoryElement element = (IRepositoryElement) object;
-				sb.append(element.getSummary());
-			}
-			break;
+				break;
 		}
 		return sb.toString();
 	}
 
 	private static String getUrl(IRepositoryElement element) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task) {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
 			TaskRepository repository = TasksUiInternal.getRepository(task);
 			URL location = connector.getBrowserUrl(repository, element);

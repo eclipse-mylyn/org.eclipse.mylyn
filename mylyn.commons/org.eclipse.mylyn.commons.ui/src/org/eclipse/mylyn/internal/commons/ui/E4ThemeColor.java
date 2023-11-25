@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.commons.ui;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;

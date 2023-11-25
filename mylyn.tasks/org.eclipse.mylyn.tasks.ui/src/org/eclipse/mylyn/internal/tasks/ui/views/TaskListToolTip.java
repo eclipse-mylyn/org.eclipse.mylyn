@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.LegacyActionTools;
@@ -109,7 +109,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private IRepositoryElement currentTipElement;
 
-	private final List<TaskListToolTipListener> listeners = new ArrayList<TaskListToolTipListener>();
+	private final List<TaskListToolTipListener> listeners = new ArrayList<>();
 
 	private boolean visible;
 
@@ -177,8 +177,7 @@ public class TaskListToolTip extends GradientToolTip {
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
 			}
 			return sb.toString();
-		} else if (element instanceof IRepositoryQuery) {
-			IRepositoryQuery query = (IRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery query) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			sb.append("  ["); //$NON-NLS-1$
@@ -193,8 +192,7 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getDetailsText(IRepositoryElement element) {
-		if (element instanceof ScheduledTaskContainer) {
-			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
+		if (element instanceof ScheduledTaskContainer container) {
 			int estimateTotal = 0;
 			long activeTotal = 0;
 			for (ITask child : container.getChildren()) {
@@ -207,8 +205,7 @@ public class TaskListToolTip extends GradientToolTip {
 			StringBuilder sb = new StringBuilder();
 			appendEstimateAndActive(sb, estimateTotal, activeTotal);
 			return sb.toString();
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		} else if (element instanceof ITask task) {
 			StringBuilder sb = new StringBuilder();
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
 			String kindLabel = null;
@@ -256,7 +253,7 @@ public class TaskListToolTip extends GradientToolTip {
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) { //$NON-NLS-1$
-				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+				return label.substring(repository.getRepositoryUrl().indexOf("//") + 2); //$NON-NLS-1$
 			}
 			return label;
 		}
@@ -275,8 +272,7 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private Image getOwnerImage(IRepositoryElement element) {
-		if (element instanceof ITask && !(element instanceof LocalTask)) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task && !(element instanceof LocalTask)) {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
 			TaskRepository repository = TasksUi.getRepositoryManager()
 					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
@@ -292,8 +288,7 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getExtendedToolTipText(IRepositoryElement element) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task) {
 			String extendedToolTipInfo = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP);
 			if (extendedToolTipInfo != null && extendedToolTipInfo.length() > 0) {
 				return extendedToolTipInfo;
@@ -303,9 +298,7 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getActivityText(IRepositoryElement element) {
-		if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
-
+		if (element instanceof AbstractTask task) {
 			StringBuilder sb = new StringBuilder();
 
 			Date dueDate = task.getDueDate();
@@ -331,8 +324,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private String getIncomingText(IRepositoryElement element) {
 		String text = null;
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task) {
 			if (task.getSynchronizationState().isIncoming()) {
 				text = task.getAttribute(TaskListNotifier.KEY_INCOMING_NOTIFICATION_TEXT);
 				if (StringUtils.isEmpty(text)) {
@@ -347,8 +339,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private ImageDescriptor getIncomingImage() {
 		ImageDescriptor incomingImage = CommonImages.OVERLAY_SYNC_INCOMMING;
-		if (currentTipElement instanceof ITask) {
-			ITask task = (ITask) currentTipElement;
+		if (currentTipElement instanceof ITask task) {
 			if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 				incomingImage = CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
 			}
@@ -385,8 +376,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private String getStatusText(IRepositoryElement element) {
 		IStatus status = null;
-		if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
+		if (element instanceof AbstractTask task) {
 			status = task.getStatus();
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
@@ -419,7 +409,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 	private ProgressData getProgressData(IRepositoryElement element) {
 		if (element instanceof ITaskContainer) {
-			Object[] children = new Object[0];
+			Object[] children = {};
 
 			children = ((ITaskContainer) element).getChildren().toArray();
 
@@ -432,7 +422,7 @@ public class TaskListToolTip extends GradientToolTip {
 					}
 				}
 				String text = NLS.bind(Messages.TaskListToolTip_Total_Complete_Incomplete, new Object[] { //
-						total, completed, (total - completed) });
+						total, completed, total - completed });
 				return new ProgressData(completed, total, text);
 			}
 		}
@@ -440,15 +430,13 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private Image getImage(IRepositoryElement element) {
-		if (element instanceof IRepositoryQuery) {
-			IRepositoryQuery query = (IRepositoryQuery) element;
+		if (element instanceof IRepositoryQuery query) {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl());
 			if (repository != null) {
 				return TasksUiPlugin.getDefault().getBrandManager().getBrandingIcon(repository);
 			}
 			return TasksUiPlugin.getDefault().getBrandManager().getDefaultBrandingIcon(query.getConnectorKind());
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		} else if (element instanceof ITask task) {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl());
 			if (repository != null) {
 				return TasksUiPlugin.getDefault().getBrandManager().getBrandingIcon(repository);
@@ -463,16 +451,13 @@ public class TaskListToolTip extends GradientToolTip {
 	protected Widget getTipWidget(Event event) {
 		Point widgetPosition = new Point(event.x, event.y);
 		Widget widget = event.widget;
-		if (widget instanceof ToolBar) {
-			ToolBar w = (ToolBar) widget;
+		if (widget instanceof ToolBar w) {
 			return w.getItem(widgetPosition);
 		}
-		if (widget instanceof Table) {
-			Table w = (Table) widget;
+		if (widget instanceof Table w) {
 			return w.getItem(widgetPosition);
 		}
-		if (widget instanceof Tree) {
-			Tree w = (Tree) widget;
+		if (widget instanceof Tree w) {
 			return w.getItem(widgetPosition);
 		}
 
@@ -480,16 +465,13 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private Rectangle getBounds(Widget widget) {
-		if (widget instanceof ToolItem) {
-			ToolItem w = (ToolItem) widget;
+		if (widget instanceof ToolItem w) {
 			return w.getBounds();
 		}
-		if (widget instanceof TableItem) {
-			TableItem w = (TableItem) widget;
+		if (widget instanceof TableItem w) {
 			return w.getBounds();
 		}
-		if (widget instanceof TreeItem) {
-			TreeItem w = (TreeItem) widget;
+		if (widget instanceof TreeItem w) {
 			return w.getBounds();
 		}
 		return null;
@@ -507,9 +489,7 @@ public class TaskListToolTip extends GradientToolTip {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
 				Rectangle bounds = getBounds(tipWidget);
-				if (tipWidget instanceof ScalingHyperlink) {
-					currentTipElement = getTaskListElement(tipWidget);
-				} else if (bounds != null && contains(bounds.x, bounds.y)) {
+				if ((tipWidget instanceof ScalingHyperlink) || (bounds != null && contains(bounds.x, bounds.y))) {
 					currentTipElement = getTaskListElement(tipWidget);
 				}
 			}

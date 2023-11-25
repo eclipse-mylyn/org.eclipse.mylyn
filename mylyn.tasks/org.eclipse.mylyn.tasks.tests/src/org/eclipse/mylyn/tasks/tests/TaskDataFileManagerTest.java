@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataFileManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -62,7 +62,7 @@ public class TaskDataFileManagerTest extends TestCase {
 
 		// >max, exists, requires encoding == encoded + NOT trimmed
 		result = fileManager.getFileName(TaskTestUtil.createMockTask(str), true);
-		assertEquals(str.replaceAll("\\+", "%2B"), result);
+		assertEquals(str.replace("+", "%2B"), result);
 	}
 
 	public void testGetSetDataPath() {

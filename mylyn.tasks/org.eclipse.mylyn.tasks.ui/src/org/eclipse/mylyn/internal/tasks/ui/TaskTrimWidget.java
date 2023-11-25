@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Set;
 
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -89,6 +89,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	};
 
 	private final ITaskListChangeListener taskListListener = new ITaskListChangeListener() {
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			// update label in case task changes
 			if (activeTask != null) {
@@ -96,6 +97,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 					if (activeTask.equals(taskContainerDelta.getElement())) {
 						if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
 							Display.getDefault().asyncExec(new Runnable() {
+								@Override
 								public void run() {
 									if (activeTask != null && activeTask.isActive()) {
 										indicateActiveTask();
@@ -183,6 +185,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 
 		activeTaskLabel.addMenuDetectListener(new MenuDetectListener() {
+			@Override
 			public void menuDetected(MenuDetectEvent e) {
 				if (menu != null) {
 					menu.dispose();
@@ -199,7 +202,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
 					taskListView.goUpToRoot();
 				}
-				TasksUiInternal.refreshAndOpenTaskListElement((TasksUi.getTaskActivityManager().getActiveTask()));
+				TasksUiInternal.refreshAndOpenTaskListElement(TasksUi.getTaskActivityManager().getActiveTask());
 			}
 		});
 
@@ -234,6 +237,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				actionGroup.fillContextMenu(manager);
 				// trims do not have a workbench part so there is no simple way of registering the
@@ -273,11 +277,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
 					new Object[] { null, manager, activeTaskSelectionProvider },
 					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class });
-		} catch (NoSuchMethodException e) {
-			return false;
-		} catch (IllegalAccessException e) {
-			return false;
-		} catch (InvocationTargetException e) {
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			return false;
 		}
 		return true;
@@ -288,11 +288,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
 					new Object[] { null, manager, activeTaskSelectionProvider, Collections.EMPTY_SET },
 					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class });
-		} catch (NoSuchMethodException e) {
-			return false;
-		} catch (IllegalAccessException e) {
-			return false;
-		} catch (InvocationTargetException e) {
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			return false;
 		}
 		return true;

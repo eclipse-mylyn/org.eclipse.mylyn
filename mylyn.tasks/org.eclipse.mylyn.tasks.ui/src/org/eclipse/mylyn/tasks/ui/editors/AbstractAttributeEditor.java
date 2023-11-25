@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -102,6 +102,7 @@ public abstract class AbstractAttributeEditor {
 	};
 
 	private final DisposeListener disposeListener = new DisposeListener() {
+		@Override
 		public void widgetDisposed(DisposeEvent e) {
 			getModel().removeModelListener(modelListener);
 		}
@@ -195,7 +196,7 @@ public abstract class AbstractAttributeEditor {
 	@NonNull
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
-		return (label != null) ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
+		return label != null ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
 	}
 
 	/**

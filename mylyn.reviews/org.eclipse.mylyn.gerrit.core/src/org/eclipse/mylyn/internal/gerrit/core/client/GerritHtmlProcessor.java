@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.text.html.HTML.Tag;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
@@ -57,7 +57,7 @@ public class GerritHtmlProcessor {
 				break;
 			}
 		}
-		return StringEscapeUtils.unescapeHtml(sb.toString());
+		return StringEscapeUtils.unescapeHtml4(sb.toString());
 	}
 
 	private GerritConfigX config;
@@ -90,7 +90,7 @@ public class GerritHtmlProcessor {
 					HtmlTag tag = (HtmlTag) token.getValue();
 					if (tag.getTagType() == Tag.SCRIPT) {
 						String text = getText(tokenizer);
-						text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						text = text.replace("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 						parse(text);
 					}
@@ -114,17 +114,17 @@ public class GerritHtmlProcessor {
 			if (m.find()) {
 				token = token.substring(m.toMatchResult().group(0).length());
 				token = removeExcessJson(token);
-				this.config = gerritConfigFromString(token);
+				config = gerritConfigFromString(token);
 			} else if (token.startsWith(configXsrfToken)) {
 				token = token.substring(configXsrfToken.length());
 				// remove closing "
 				token = token.substring(0, token.length() - 1);
-				this.xsrfKey = token;
+				xsrfKey = token;
 			} else if (token.startsWith(configXGerritAuth)) {
 				token = token.substring(configXGerritAuth.length());
 				// remove closing "
 				token = token.substring(0, token.length() - 1);
-				this.xGerritAuth = token;
+				xGerritAuth = token;
 			}
 		}
 	}

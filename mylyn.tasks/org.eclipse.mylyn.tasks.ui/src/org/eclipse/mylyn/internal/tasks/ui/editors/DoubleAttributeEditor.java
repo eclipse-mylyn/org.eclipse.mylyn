@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -38,6 +38,7 @@ public class DoubleAttributeEditor extends TextAttributeEditor {
 
 	IInputValidator getAttributeTypeValidator() {
 		return new IInputValidator() {
+			@Override
 			public String isValid(String newText) {
 				if (StringUtils.isNotBlank(newText)) {
 					try {

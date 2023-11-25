@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.git.ui.connector;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;

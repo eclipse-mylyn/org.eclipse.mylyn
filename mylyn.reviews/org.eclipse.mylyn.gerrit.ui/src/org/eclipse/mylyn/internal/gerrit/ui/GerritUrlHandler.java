@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.AbstractUrlHandler;
@@ -77,11 +77,9 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 
 	protected GerritTaskEditorPage revealPatchSet(EditorHandle editorHandle, Integer patchSetNumber) {
 		IWorkbenchPart part = editorHandle.getPart();
-		if (part instanceof TaskEditor) {
-			TaskEditor taskEditor = (TaskEditor) part;
+		if (part instanceof TaskEditor taskEditor) {
 			IFormPage activePage = taskEditor.setActivePage(GerritTaskEditorPage.class.getName());
-			if (activePage instanceof GerritTaskEditorPage) {
-				GerritTaskEditorPage gerritPage = (GerritTaskEditorPage) activePage;
+			if (activePage instanceof GerritTaskEditorPage gerritPage) {
 				ReviewSetSection section = (ReviewSetSection) gerritPage.getPart(ReviewSetSection.class.getName());
 				if (section != null && !section.getControl().isDisposed()) {
 					section.revealPatchSet(patchSetNumber);
@@ -113,7 +111,7 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 		if (fragments.length > 0) {
 			String patchSetFragment = fragments[0];
 			try {
-				return Integer.valueOf(patchSetFragment);
+				return Integer.parseInt(patchSetFragment);
 			} catch (NumberFormatException e) {
 				//ignore, the patch fragment simply can't be parsed
 			}

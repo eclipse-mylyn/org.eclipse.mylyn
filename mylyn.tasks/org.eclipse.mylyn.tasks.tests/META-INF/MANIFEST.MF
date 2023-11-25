@@ -40,6 +40,6 @@ Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui.editor;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.util;x-internal:=true
-Import-Package: org.apache.commons.lang;version="2.6.0"
+Import-Package: org.apache.commons.lang3;version="3.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy

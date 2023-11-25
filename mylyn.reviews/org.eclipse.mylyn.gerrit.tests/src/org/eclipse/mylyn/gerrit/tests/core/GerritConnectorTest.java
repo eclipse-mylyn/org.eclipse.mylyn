@@ -12,9 +12,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.core;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +33,8 @@ import org.eclipse.mylyn.tests.util.InMemoryTaskDataCollector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

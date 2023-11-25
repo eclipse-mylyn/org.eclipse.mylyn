@@ -12,7 +12,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.providers;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 
 /**
@@ -33,8 +33,8 @@ class GlobalCommentsNode {
 
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof GlobalCommentsNode)
-				&& ObjectUtils.equals(this.getReview(), ((GlobalCommentsNode) other).getReview());
+		return other instanceof GlobalCommentsNode
+				&& ObjectUtils.equals(getReview(), ((GlobalCommentsNode) other).getReview());
 	}
 
 	@Override
