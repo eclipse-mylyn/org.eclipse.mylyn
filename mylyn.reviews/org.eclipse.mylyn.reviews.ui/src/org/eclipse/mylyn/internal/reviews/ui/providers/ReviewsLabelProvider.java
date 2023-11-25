@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -116,8 +116,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IReviewItemSet) {
 				return CommonImages.getImage(ReviewsImages.CHANGE_LOG);
 			}
-			if (element instanceof IReviewItem) {
-				IReviewItem item = (IReviewItem) element;
+			if (element instanceof IReviewItem item) {
 				Image image = imageManager.getFileImage(item.getName());
 				if (element instanceof IFileItem) {
 					ImageDescriptor baseImage = ImageDescriptor.createFromImage(image);
@@ -141,13 +140,12 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				}
 				return image;
 			}
-			if (element instanceof IComment) {
+			if (element instanceof IComment comment) {
 				//See https://bugs.eclipse.org/bugs/show_bug.cgi?id=334967#c16
 				//			IComment comment = (IComment) element;
 				//			if (StringUtils.startsWith(comment.getAuthor().getDisplayName(), "Hudson")) {
 				//				return CommonImages.getImage(ReviewsImages.SERVER);
 				//			}
-				IComment comment = (IComment) element;
 				if (comment.isMine()) {
 					return CommonImages.getImage(CommonImages.PERSON_ME);
 				}
@@ -176,12 +174,10 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return getText(collection.iterator().next());
 				}
 			}
-			if (element instanceof IReview) {
-				IReview review = (IReview) element;
+			if (element instanceof IReview review) {
 				return NLS.bind(Messages.ReviewsLabelProvider_Change_X, review.getId());
 			}
-			if (element instanceof IFileVersion) {
-				IFileVersion version = (IFileVersion) element;
+			if (element instanceof IFileVersion version) {
 				String text = getText(version.getFile());
 				text += version.getName();
 				return text;
@@ -193,8 +189,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IReviewItem) {
 				return ((IReviewItem) element).getName();
 			}
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				String desc = comment.getDescription();
 				//desc = StringUtils.normalizeSpace(desc);
 				return desc;
@@ -240,12 +235,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 		@Override
 		public String getToolTipText(Object element) {
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				String desc = comment.getDescription();
 				desc = StringUtils.replace(desc, "\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				String[] lines = desc.split("\n"); //$NON-NLS-1$
-				List<String> seperated = new ArrayList<String>();
+				List<String> seperated = new ArrayList<>();
 				for (String line : lines) {
 					String newLine = ""; //$NON-NLS-1$
 					String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(line, " "); //$NON-NLS-1$
@@ -267,8 +261,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				}
 				return StringUtils.join(seperated, "\n"); //$NON-NLS-1$
 			}
-			if (element instanceof IFileItem) {
-				IFileItem fileItem = (IFileItem) element;
+			if (element instanceof IFileItem fileItem) {
 				IFileVersion base = fileItem.getBase();
 				IFileVersion target = fileItem.getTarget();
 				if (target != null) {
@@ -284,12 +277,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					} else {
 						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y,
 								target.getPath() == null ? target.getName() : target.getPath(),
-								target.getDescription());
+										target.getDescription());
 					}
 				}
 			}
-			if (element instanceof IUser) {
-				IUser user = (IUser) element;
+			if (element instanceof IUser user) {
 				String text = user.getDisplayName();
 				if (!StringUtils.isEmpty(user.getEmail())) {
 					text += NLS.bind(Messages.ReviewsLabelProvider_Bracket_X_bracket, user.getEmail());
@@ -319,8 +311,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IFileVersion) {
 				return ((IFileVersion) element).getFile();
 			}
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				return adapt(comment.getItem());
 			}
 			if (element instanceof IReview) {
@@ -370,16 +361,13 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 		@Override
 		public Object adapt(Object element) {
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				return comment.getAuthor();
 			}
-			if (element instanceof IReviewItem) {
-				IReviewItem item = (IReviewItem) element;
+			if (element instanceof IReviewItem item) {
 				return item.getAddedBy();
 			}
-			if (element instanceof IReview) {
-				IReview item = (IReview) element;
+			if (element instanceof IReview item) {
 				return item.getOwner();
 			}
 			return null;
@@ -391,8 +379,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 		@Override
 		public Object adapt(Object element) {
-			if (element instanceof IDated) {
-				IDated item = (IDated) element;
+			if (element instanceof IDated item) {
 				if (item.getModificationDate() != null) {
 					return item.getModificationDate();
 				}
@@ -400,8 +387,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return item.getCreationDate();
 				}
 			}
-			if (element instanceof IFileVersion) {
-				IFileVersion item = (IFileVersion) element;
+			if (element instanceof IFileVersion item) {
 				return item.getDescription();
 			}
 			return null;
@@ -427,25 +413,21 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return getText(collection.iterator().next());
 				}
 			}
-			if (element instanceof IReview) {
-				IReview review = (IReview) element;
+			if (element instanceof IReview review) {
 				return NLS.bind(Messages.ReviewsLabelProvider_Change_X, review.getId());
 			}
-			if (element instanceof IFileItem) {
-				IFileItem file = (IFileItem) element;
+			if (element instanceof IFileItem file) {
 				String fileName = StringUtils.substringAfterLast(file.getName(), File.separator);
 				return fileName;
 			}
 			if (element instanceof IReviewItem) {
 				return ((IReviewItem) element).getName();
 			}
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				String desc = comment.getDescription();
 				return desc;
 			}
-			if (element instanceof IUser) {
-				IUser user = (IUser) element;
+			if (element instanceof IUser user) {
 				return user.getDisplayName();
 			}
 			if (element instanceof Date) {
@@ -468,8 +450,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			String text = getText(element);
 			StyledString styledString = new StyledString();
 			if (text != null) {
-				if (element instanceof IComment) {
-					IComment comment = (IComment) element;
+				if (element instanceof IComment comment) {
 					String commentText = text;
 					int textLength = 0;
 					String authorText = ""; //$NON-NLS-1$
@@ -477,7 +458,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 						authorText = getText(comment.getAuthor());
 						textLength += authorText.length();
 					}
-					int descSpaceRemaining = (MAXIMUM_COMMENT_LENGTH - textLength);
+					int descSpaceRemaining = MAXIMUM_COMMENT_LENGTH - textLength;
 					if (commentText.length() > descSpaceRemaining + 3) { //Account for ellipses
 						commentText = NLS.bind(Messages.ReviewsLabelProvider_X_dot_dot_dot,
 								commentText.substring(0, descSpaceRemaining - 3));
@@ -508,7 +489,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	private final boolean includeAuthors;
 
 	public static class Flat extends ReviewsLabelProvider {
-		TableColumnProvider[] columns = new TableColumnProvider[] { ARTIFACT_COLUMN, COMMENTS_COLUMN, AUTHORS_COLUMN,
+		TableColumnProvider[] columns = { ARTIFACT_COLUMN, COMMENTS_COLUMN, AUTHORS_COLUMN,
 				DATE_COLUMN };
 
 		@Override
@@ -518,7 +499,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static class Tree extends ReviewsLabelProvider {
-		TableColumnProvider[] columns = new TableColumnProvider[] { ITEMS_COLUMN, AUTHORS_COLUMN, DATE_COLUMN };
+		TableColumnProvider[] columns = { ITEMS_COLUMN, AUTHORS_COLUMN, DATE_COLUMN };
 
 		public Tree() {
 			this(false);
@@ -535,7 +516,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static class Single extends ReviewsLabelProvider {
-		TableColumnProvider[] columns = new TableColumnProvider[] { SINGLE_COLUMN };
+		TableColumnProvider[] columns = { SINGLE_COLUMN };
 
 		@Override
 		public Image getImage(Object element) {
@@ -549,7 +530,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static class Simple extends ReviewsLabelProvider {
-		TableColumnProvider[] columns = new TableColumnProvider[] { SINGLE_COLUMN };
+		TableColumnProvider[] columns = { SINGLE_COLUMN };
 
 		@Override
 		public Image getImage(Object element) {
@@ -593,6 +574,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		return ITEMS_COLUMN.getText(element);
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		return getStyledText(element, true);
 	}
@@ -624,8 +606,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static void addAuthorStyle(Object element, StyledString styledString) {
-		if (element instanceof IComment) {
-			IComment comment = (IComment) element;
+		if (element instanceof IComment comment) {
 			String name = comment.getAuthor().getDisplayName();
 			String firstName = StringUtils.substringBefore(name, " "); //$NON-NLS-1$
 			styledString.append(firstName + ": ", AUTHOR_STYLE); //$NON-NLS-1$
@@ -633,8 +614,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static void addCommentLineNumberStyle(Object element, StyledString styledString) {
-		if (element instanceof IComment) {
-			IComment comment = (IComment) element;
+		if (element instanceof IComment comment) {
 			String[] locationStrings = new String[comment.getLocations().size()];
 			int index = 0;
 			for (ILocation location : comment.getLocations()) {
@@ -653,8 +633,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static void addCommentContainerStatsStyle(Object element, StyledString styledString) {
-		if (element instanceof ICommentContainer) {
-			ICommentContainer container = (ICommentContainer) element;
+		if (element instanceof ICommentContainer container) {
 			String statsText = getStatsText(container);
 			styledString.append(statsText, StyledString.DECORATIONS_STYLER);
 		}

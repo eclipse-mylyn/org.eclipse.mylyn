@@ -51,5 +51,4 @@ Import-Package: com.github.benmanes.caffeine.cache;version="3.1.8",
  org.apache.commons.httpclient.methods;version="3.1.0",
  org.apache.commons.httpclient.util;version="3.1.0",
  org.apache.commons.io;version="1.4.0",
- org.apache.commons.lang;version="2.6.0",
  org.apache.commons.lang3;version="3.12.0"

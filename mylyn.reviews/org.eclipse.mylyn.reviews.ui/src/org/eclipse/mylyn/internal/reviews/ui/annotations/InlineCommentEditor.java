@@ -16,7 +16,7 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
@@ -75,9 +75,9 @@ public class InlineCommentEditor {
 	 */
 	protected InlineCommentEditor(CommentPopupDialog dialog) {
 		this.dialog = dialog;
-		this.reviewItemId = dialog.getReviewItem().getId();
-		this.startLine = dialog.getRange().getStartLine();
-		this.state = CommentEditorState.VIEW;
+		reviewItemId = dialog.getReviewItem().getId();
+		startLine = dialog.getRange().getStartLine();
+		state = CommentEditorState.VIEW;
 	}
 
 	/**
@@ -126,11 +126,11 @@ public class InlineCommentEditor {
 
 			saveButton = createButton(buttonContainer, Messages.CommentPopupDialog_Save, buttonGridData,
 					new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							saveCommentAction();
-						}
-					});
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					saveCommentAction();
+				}
+			});
 			discardOrDoneButton = createButton(buttonContainer, null, buttonGridData, new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -145,11 +145,11 @@ public class InlineCommentEditor {
 			});
 			cancelButton = createButton(buttonContainer, Messages.CommentPopupDialog_Cancel, buttonGridData,
 					new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							removeControl();
-						}
-					});
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					removeControl();
+				}
+			});
 
 			editorComposite.setLayout(new GridLayout(1, false));
 			editorComposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));

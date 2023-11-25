@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -74,8 +74,8 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		IUser author = comment.getAuthor();
 		return NLS.bind(Messages.AbstractCommentPart_Section_header, //
 				author != null ? author.getDisplayName() : Messages.AbstractCommentPart_No_author, //
-				DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) // 
-		);
+						DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) //
+				);
 	}
 
 	public ReviewBehavior getBehavior() {
@@ -84,8 +84,9 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected Comparator<IComment> getComparator() {
-		return new Comparator<IComment>() {
+		return new Comparator<>() {
 
+			@Override
 			public int compare(IComment o1, IComment o2) {
 				if (o1 != null && o2 != null) {
 					return o1.getCreationDate().compareTo(o2.getCreationDate());
@@ -198,9 +199,11 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		// HACK: this is to make sure that we can't have multiple things highlighted
 		editor.getViewer().getTextWidget().addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				editor.getViewer().getTextWidget().setSelection(0);
 			}

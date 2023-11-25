@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;

@@ -15,12 +15,13 @@
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -87,7 +88,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 		Composite composite = toolkit.createComposite(subSection);
 		List<IApprovalType> approvalTypes = getModelRepository().getApprovalTypes();
-		List<IApprovalType> approvalTypesWithLabel = new ArrayList<IApprovalType>(approvalTypes.size());
+		List<IApprovalType> approvalTypesWithLabel = new ArrayList<>(approvalTypes.size());
 		for (IApprovalType approvalType : approvalTypes) {
 			if (!approvalType.getName().equals(approvalType.getKey())) {
 				approvalTypesWithLabel.add(approvalType);
@@ -96,11 +97,11 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 		int numColumns = approvalTypesWithLabel.size() + 1;
 		GridLayoutFactory.fillDefaults()
-				.numColumns(numColumns)
-				.extendedMargins(0, 0, 0, 5)
-				.equalWidth(true)
-				.spacing(4, 5)
-				.applyTo(composite);
+		.numColumns(numColumns)
+		.extendedMargins(0, 0, 0, 5)
+		.equalWidth(true)
+		.spacing(4, 5)
+		.applyTo(composite);
 		subSection.setClient(composite);
 
 		if (!approvalTypesWithLabel.isEmpty()) {
@@ -124,19 +125,19 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 				if (requirementEntry != null) {
 					status = requirementEntry.getStatus();
 					switch (status) {
-					case SATISFIED:
-						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.APPROVED));
-						break;
-					case NOT_SATISFIED:
-						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.UNKNOWN));
-						break;
-					case REJECTED:
-						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.REJECTED));
-						break;
-					default:
-						//To ensure that label is aligned properly
-						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.BLANK));
-						break;
+						case SATISFIED:
+							approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.APPROVED));
+							break;
+						case NOT_SATISFIED:
+							approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.UNKNOWN));
+							break;
+						case REJECTED:
+							approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.REJECTED));
+							break;
+						default:
+							//To ensure that label is aligned properly
+							approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.BLANK));
+							break;
 					}
 				}
 				if (status != null && (status == RequirementStatus.UNKNOWN || status == RequirementStatus.REJECTED)) {
@@ -150,7 +151,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 			AbstractUiFactoryProvider<IUser> reviewerUiFactoryProvider = getReviewerUiFactoryProvider();
 
 			Map<IUser, IReviewerEntry> sortedReviewerApprovals = new TreeMap<>(
-					(u1, u2) -> u1.getDisplayName().compareTo(u2.getDisplayName()));
+					Comparator.comparing(IUser::getDisplayName));
 			sortedReviewerApprovals.putAll(getReview().getReviewerApprovals());
 
 			for (Entry<IUser, IReviewerEntry> approval : sortedReviewerApprovals.entrySet()) {
@@ -247,7 +248,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 			String changeStatus = change.getState() != null
 					? NLS.bind(Messages.ReviewDetailSection_Bracket_X_bracket,
 							String.valueOf(change.getState().getName()))
-					: " "; //$NON-NLS-1$
+							: " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
 			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] {
 					StringUtils.left(change.getKey(), 9), change.getSubject(), changeStatus, ownerName }));
@@ -264,7 +265,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 	protected AbstractUiFactoryProvider<IUser> getReviewerUiFactoryProvider() {
 		return null;
-	};
+	}
 
 	@Override
 	protected boolean shouldExpandOnCreate() {

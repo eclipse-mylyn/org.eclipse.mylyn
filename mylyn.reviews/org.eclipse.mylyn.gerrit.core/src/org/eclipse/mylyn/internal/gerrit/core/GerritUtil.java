@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.DownloadSchemeX;
@@ -60,15 +60,13 @@ public class GerritUtil {
 		if (user.getPreferredEmail() != null) {
 			String email = user.getPreferredEmail();
 			int i = email.indexOf('@');
-			return (i > 0) ? email.substring(0, i) : email;
+			return i > 0 ? email.substring(0, i) : email;
 		}
 		return Messages.GerritUtil_Unknown;
 	}
 
 	public static boolean isPermissionOnlyProject(ProjectDetailX projectDetail, GerritConfig config) {
-		if (projectDetail.isPermissionOnly) {
-			return true;
-		} else if (projectDetail.project.getName().equals(config.getWildProject().get())) {
+		if (projectDetail.isPermissionOnly || projectDetail.project.getName().equals(config.getWildProject().get())) {
 			return true;
 		} else {
 			return false;
@@ -219,7 +217,7 @@ public class GerritUtil {
 	public static HashMap<DownloadScheme, String> getCloneUris(GerritConfiguration config, TaskRepository repository,
 			Project project) throws URISyntaxException {
 		boolean isAuthenticated = config.getAccount() != null;
-		HashMap<DownloadScheme, String> uriMap = new HashMap<DownloadScheme, String>();
+		HashMap<DownloadScheme, String> uriMap = new HashMap<>();
 		if (isAuthenticated) {
 			uriMap.put(DownloadScheme.SSH, getSshCloneUri(repository, config, project));
 			uriMap.put(DownloadScheme.HTTP, getHttpCloneUri(repository, config, project));

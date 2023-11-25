@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.gitlab.ui;singleton:=true
 Bundle-Version: 4.1.0.qualifier
 Export-Package: org.eclipse.mylyn.gitlab.ui,
  org.eclipse.mylyn.internal.gitlab.ui;x-internal:=true
-Import-Package: org.apache.commons.lang
+Import-Package: org.apache.commons.lang3
 Bundle-Activator: org.eclipse.mylyn.gitlab.ui.GitlabUiActivator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.annotation,

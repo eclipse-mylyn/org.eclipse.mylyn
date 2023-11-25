@@ -46,5 +46,5 @@ Export-Package: org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
 Import-Package: org.apache.commons.collections4;version="4.4.0",
  org.apache.commons.collections4.multimap;version="4.4.0",
  org.apache.commons.io;version="1.4.0",
- org.apache.commons.lang;version="[2.6.0,3.0.0)"
+ org.apache.commons.lang3;version="[3.13.0,4.0.0)"
 Bundle-Activator: org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin

@@ -12,7 +12,7 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.factories;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
@@ -90,8 +90,8 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 				"Cannot {0}. Try re-synchronizing the review task. If that fails, there may be a problem with your repository connection.", //$NON-NLS-1$
 				StringUtils.removeEnd(name, "...")); //$NON-NLS-1$
 		StatusManager.getManager()
-				.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
-						StatusManager.SHOW | StatusManager.LOG);
+		.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
+				StatusManager.SHOW | StatusManager.LOG);
 	}
 
 	protected abstract boolean isExecutableStateKnown();
@@ -104,26 +104,32 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 		return object;
 	}
 
+	@Override
 	public Shell getShell() {
 		return context.getShell();
 	}
 
+	@Override
 	public ITask getTask() {
 		return context.getTask();
 	}
 
+	@Override
 	public TaskData getTaskData() {
 		return context.getTaskData();
 	}
 
+	@Override
 	public TaskEditor getEditor() {
 		return context.getEditor();
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return context.getTaskRepository();
 	}
 
+	@Override
 	public IReviewRemoteFactoryProvider getFactoryProvider() {
 		return context.getFactoryProvider();
 	}

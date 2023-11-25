@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
@@ -35,9 +35,9 @@ import com.google.gerrit.reviewdb.Account.Id;
  * @author Miles Parker
  */
 public class GerritUserRemoteFactory
-		extends AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
+extends AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
 
-	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<AccountInfo>());
+	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<>());
 
 	public GerritUserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
 		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS, ReviewsPackage.Literals.USER__ID);

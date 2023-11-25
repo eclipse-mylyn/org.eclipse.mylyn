@@ -54,7 +54,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.httpclient.util.IdleConnectionTimeoutThread;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Assert;
@@ -202,13 +202,13 @@ public class WebUtil {
 		// FIXME fix connection leaks
 		if (CoreUtil.TEST_MODE) {
 			client.getHttpConnectionManager()
-					.getParams()
-					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
+			.getParams()
+			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
 		} else {
 			client.getHttpConnectionManager()
-					.getParams()
-					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
-							NetUtil.getMaxHttpConnectionsPerHost());
+			.getParams()
+			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
+					NetUtil.getMaxHttpConnectionsPerHost());
 			client.getHttpConnectionManager().getParams().setMaxTotalConnections(NetUtil.getMaxHttpConnections());
 		}
 	}
@@ -227,8 +227,7 @@ public class WebUtil {
 		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
 			InetSocketAddress address = (InetSocketAddress) proxy.address();
 			hostConfiguration.setProxy(address.getHostName(), address.getPort());
-			if (proxy instanceof AuthenticatedProxy) {
-				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
+			if (proxy instanceof AuthenticatedProxy authProxy) {
 				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
 						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
@@ -246,7 +245,7 @@ public class WebUtil {
 			IProgressMonitor monitor) throws IOException {
 		Assert.isNotNull(socket);
 
-		WebRequest<?> executor = new WebRequest<Object>() {
+		WebRequest<?> executor = new WebRequest<>() {
 			@Override
 			public void abort() {
 				try {
@@ -256,6 +255,7 @@ public class WebUtil {
 				}
 			}
 
+			@Override
 			public Object call() throws Exception {
 				socket.connect(address, timeout);
 				return null;
@@ -323,7 +323,7 @@ public class WebUtil {
 
 		monitor = Policy.monitorFor(monitor);
 
-		MonitoredRequest<Integer> executor = new MonitoredRequest<Integer>(monitor) {
+		MonitoredRequest<Integer> executor = new MonitoredRequest<>(monitor) {
 			@Override
 			public void abort() {
 				super.abort();
@@ -344,7 +344,7 @@ public class WebUtil {
 	 */
 	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
 		// check for legacy reasons
-		SubMonitor subMonitor = (monitor instanceof SubMonitor) ? (SubMonitor) monitor : SubMonitor.convert(null);
+		SubMonitor subMonitor = monitor instanceof SubMonitor ? (SubMonitor) monitor : SubMonitor.convert(null);
 
 		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {
@@ -357,11 +357,7 @@ public class WebUtil {
 					if (!future.isCancelled()) {
 						future.get();
 					}
-				} catch (CancellationException e) {
-					// ignore
-				} catch (InterruptedException e) {
-					// ignore
-				} catch (ExecutionException e) {
+				} catch (CancellationException | InterruptedException | ExecutionException e) {
 					// ignore
 				}
 				throw new OperationCanceledException();
@@ -383,11 +379,7 @@ public class WebUtil {
 	private static <T> T executeInternal(IProgressMonitor monitor, WebRequest<?> request) throws IOException {
 		try {
 			return (T) execute(monitor, request);
-		} catch (IOException e) {
-			throw e;
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Error e) {
+		} catch (IOException | RuntimeException | Error e) {
 			throw e;
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
@@ -542,7 +534,7 @@ public class WebUtil {
 				int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-					try {
+					try (in) {
 						BufferedReader reader = new BufferedReader(
 								new InputStreamReader(in, method.getResponseCharSet()));
 						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
@@ -553,7 +545,7 @@ public class WebUtil {
 									HtmlTag tag = (HtmlTag) token.getValue();
 									if (tag.getTagType() == Tag.TITLE) {
 										String text = getText(tokenizer);
-										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
+										text = text.replace("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 										return text.trim();
 									}
@@ -562,8 +554,6 @@ public class WebUtil {
 						} catch (ParseException e) {
 							throw new IOException("Error reading url"); //$NON-NLS-1$
 						}
-					} finally {
-						in.close();
 					}
 				}
 			} finally {
@@ -586,7 +576,7 @@ public class WebUtil {
 				break;
 			}
 		}
-		return StringEscapeUtils.unescapeHtml(sb.toString());
+		return StringEscapeUtils.unescapeHtml4(sb.toString());
 	}
 
 	/**
@@ -789,13 +779,13 @@ public class WebUtil {
 		}
 		if (proxyHost != null && proxyHost.length() > 0) {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0
-					&& proxyPassword.length() > 0);
-			if (authenticated) {
-				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
-			} else {
-				return new Proxy(Type.HTTP, sockAddr);
-			}
+			boolean authenticated = proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0
+					&& proxyPassword.length() > 0;
+					if (authenticated) {
+						return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+					} else {
+						return new Proxy(Type.HTTP, sockAddr);
+					}
 		}
 		return Proxy.NO_PROXY;
 	}

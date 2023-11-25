@@ -34,12 +34,11 @@ import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -237,21 +236,15 @@ public class CommonTestUtil {
 
 		String defaultPassword = properties.getProperty("pass");
 
-		realm = (realm != null) ? realm + "." : "";
-		switch (level) {
-		case ANONYMOUS:
-			return createCredentials(properties, realm + "anon.", "", "");
-		case GUEST:
-			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
-		case USER:
-			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
-		case READ_ONLY:
-			return createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
-		case ADMIN:
-			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
-		}
+		realm = realm != null ? realm + "." : "";
+		return switch (level) {
+			case ANONYMOUS -> createCredentials(properties, realm + "anon.", "", "");
+			case GUEST -> createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
+			case USER -> createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
+			case READ_ONLY -> createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
+			case ADMIN -> createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
+		};
 
-		throw new AssertionFailedError("invalid privilege level");
 	}
 
 	private static boolean isOsgiVersion310orNewer(ClassLoader classLoader) {
@@ -260,7 +253,7 @@ public class CommonTestUtil {
 	}
 
 	public static File getFile(Object source, String filename) throws IOException {
-		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
+		Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 		if (Platform.isRunning()) {
 			ClassLoader classLoader = clazz.getClassLoader();
 			try {
@@ -308,7 +301,7 @@ public class CommonTestUtil {
 				// account for bin/ when running from Eclipse workspace
 				directory += "../../";
 			}
-			filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
+			filename = path + (directory + filename).replace("/", File.separator);
 			return new File(filename).getCanonicalFile();
 		}
 	}
@@ -331,7 +324,7 @@ public class CommonTestUtil {
 	}
 
 	public static InputStream getResource(Object source, String filename) throws IOException {
-		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
+		Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 		ClassLoader classLoader = clazz.getClassLoader();
 		InputStream in = classLoader.getResourceAsStream(filename);
 		if (in == null) {
@@ -352,7 +345,7 @@ public class CommonTestUtil {
 
 	public static String read(File source) throws IOException {
 		InputStream in = new FileInputStream(source);
-		try {
+		try (in) {
 			StringBuilder sb = new StringBuilder();
 			byte[] buf = new byte[1024];
 			int len;
@@ -360,8 +353,6 @@ public class CommonTestUtil {
 				sb.append(new String(buf, 0, len));
 			}
 			return sb.toString();
-		} finally {
-			in.close();
 		}
 	}
 
@@ -370,7 +361,7 @@ public class CommonTestUtil {
 	 * running of all tests.
 	 */
 	public static boolean runHeartbeatTestsOnly() {
-		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+		return !Boolean.getBoolean("org.eclipse.mylyn.tests.all");
 	}
 
 	/**
@@ -563,11 +554,11 @@ public class CommonTestUtil {
 	 * force to ignore local running services.
 	 */
 	public static boolean ignoreLocalTestServices() {
-		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_LOCAL_SERVICES));
+		return Boolean.getBoolean(KEY_IGNORE_LOCAL_SERVICES);
 	}
 
 	public static boolean ignoreGlobalTestServices() {
-		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_GLOBAL_SERVICES));
+		return Boolean.getBoolean(KEY_IGNORE_GLOBAL_SERVICES);
 	}
 
 	public static boolean isBehindProxy() {
@@ -575,7 +566,7 @@ public class CommonTestUtil {
 	}
 
 	public static boolean skipBrowserTests() {
-		return Boolean.parseBoolean(System.getProperty("mylyn.test.skipBrowserTests"));
+		return Boolean.getBoolean("mylyn.test.skipBrowserTests");
 	}
 
 	public static boolean bundleWithNameIsPresent(String name) {

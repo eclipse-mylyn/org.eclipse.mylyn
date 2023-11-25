@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
@@ -50,6 +50,7 @@ public class GerritRestClient {
 			return result;
 		}
 
+		@Override
 		public void onFailure(Throwable exception) {
 			if (isAuthenticationException(exception)) {
 				// invalidate login cookie to force re-authentication
@@ -58,6 +59,7 @@ public class GerritRestClient {
 			this.exception = exception;
 		}
 
+		@Override
 		public void onSuccess(T result) {
 			setResult(result);
 		}
@@ -67,8 +69,8 @@ public class GerritRestClient {
 		}
 
 		public void reset() {
-			this.result = null;
-			this.exception = null;
+			result = null;
+			exception = null;
 		}
 
 	}
@@ -219,7 +221,7 @@ public class GerritRestClient {
 				}
 			}
 		}
-		TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
+		TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<>() {
 		};
 		return executeGetRestRequest(uri, queryResultListType.getType(), monitor);
 	}

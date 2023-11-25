@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -115,7 +115,7 @@ public class InlineCommentSubmitter {
 	 */
 	private void performOperation(final IComment comment) {
 		final IReviewItem item = reviewitem;
-		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
+		final AtomicReference<IStatus> result = new AtomicReference<>();
 		final ReviewBehavior reviewBehavior = annotationInput.getBehavior();
 
 		if (!commentEditor.getState().equals(CommentEditorState.VIEW)) {
@@ -131,25 +131,25 @@ public class InlineCommentSubmitter {
 					IStatus status = null;
 
 					switch (commentEditor.getState()) {
-					case REPLY:
-					case EDIT:
-						status = reviewBehavior.addComment(item, comment, monitor);
-						if (status.isOK()) {
-							result.set(status);
-							updateClient(comment, item);
-							return Status.OK_STATUS;
-						}
-						break;
-					case DISCARD:
-						status = reviewBehavior.discardComment(item, comment, monitor);
-						if (status.isOK()) {
-							result.set(status);
-							updateClient(comment, item);
-							return Status.OK_STATUS;
-						}
-						break;
-					default:
-						Assert.isTrue(false, "Unknown state " + commentEditor.getState()); //$NON-NLS-1$
+						case REPLY:
+						case EDIT:
+							status = reviewBehavior.addComment(item, comment, monitor);
+							if (status.isOK()) {
+								result.set(status);
+								updateClient(comment, item);
+								return Status.OK_STATUS;
+							}
+							break;
+						case DISCARD:
+							status = reviewBehavior.discardComment(item, comment, monitor);
+							if (status.isOK()) {
+								result.set(status);
+								updateClient(comment, item);
+								return Status.OK_STATUS;
+							}
+							break;
+						default:
+							Assert.isTrue(false, "Unknown state " + commentEditor.getState()); //$NON-NLS-1$
 					}
 					processServerError(status.getMessage());
 
@@ -218,6 +218,7 @@ public class InlineCommentSubmitter {
 	 */
 	private void processServerError(final String message) {
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				final MessageDialog dialog = new MessageDialog(null, Messages.CommentPopupDialog_ServerError, null,
 						message, MessageDialog.ERROR, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
@@ -239,7 +240,7 @@ public class InlineCommentSubmitter {
 						reviewBehavior.getTask().getRepositoryUrl());
 		@SuppressWarnings("restriction")
 		ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin
-				.getConnector(reviewBehavior.getTask().getConnectorKind());
+		.getConnector(reviewBehavior.getTask().getConnectorKind());
 		IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector
 				.getReviewClient(taskRepository)
 				.getFactoryProvider();

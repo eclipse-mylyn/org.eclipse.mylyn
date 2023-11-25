@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -106,7 +106,7 @@ public class GerritProject {
 
 		private CommitResult(RevCommit commit, PushResult result) {
 			this.commit = commit;
-			this.push = result;
+			push = result;
 		}
 	}
 

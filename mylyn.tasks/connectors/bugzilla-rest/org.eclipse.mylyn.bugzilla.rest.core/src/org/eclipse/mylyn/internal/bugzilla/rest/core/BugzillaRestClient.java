@@ -24,7 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -83,7 +83,7 @@ public class BugzillaRestClient {
 
 		VersionResponse versionResponse = new BugzillaRestUnauthenticatedGetRequest<VersionResponse>(client, "/version", //$NON-NLS-1$
 				new TypeToken<VersionResponse>() {
-				}).run(monitor);
+		}).run(monitor);
 		return new BugzillaRestVersion(versionResponse.getVersion());
 	}
 
@@ -97,7 +97,7 @@ public class BugzillaRestClient {
 
 			BooleanResult response = new BugzillaRestUnauthenticatedGetRequest<BooleanResult>(client, url,
 					new TypeToken<BooleanResult>() {
-					}).run(monitor);
+			}).run(monitor);
 			return response.getResult();
 		} else {
 			LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
@@ -123,7 +123,7 @@ public class BugzillaRestClient {
 			return config;
 		} catch (Exception e) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -149,7 +149,7 @@ public class BugzillaRestClient {
 	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
 		return new BugzillaRestGetRequest<ParameterResponse>(client, "/parameters?", //$NON-NLS-1$
 				new TypeToken<ParameterResponse>() {
-				}).run(monitor);
+		}).run(monitor);
 	}
 
 	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
@@ -163,7 +163,7 @@ public class BugzillaRestClient {
 		}
 	}
 
-	private final Function<String, String> removeLeadingZero = new Function<String, String>() {
+	private final Function<String, String> removeLeadingZero = new Function<>() {
 
 		@Override
 		public String apply(String input) {
@@ -249,7 +249,7 @@ public class BugzillaRestClient {
 	public void addAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
 			TaskAttribute attachmentAttribute, IOperationMonitor monitor) throws BugzillaRestException {
 		new BugzillaRestPostNewAttachment(client, bugReportID, comment, source, attachmentAttribute, monitor)
-				.run(monitor);
+		.run(monitor);
 	}
 
 }

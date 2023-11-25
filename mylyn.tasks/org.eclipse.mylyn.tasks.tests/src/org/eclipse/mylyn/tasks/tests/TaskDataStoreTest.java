@@ -16,9 +16,7 @@ package org.eclipse.mylyn.tasks.tests;
 import java.io.File;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -33,6 +31,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Robert Elves

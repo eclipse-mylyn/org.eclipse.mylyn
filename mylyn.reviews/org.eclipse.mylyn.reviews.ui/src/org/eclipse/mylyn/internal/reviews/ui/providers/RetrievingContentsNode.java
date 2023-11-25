@@ -12,7 +12,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.providers;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
 /**
@@ -30,8 +30,8 @@ class RetrievingContentsNode {
 
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof RetrievingContentsNode)
-				&& ObjectUtils.equals(this.parent, ((RetrievingContentsNode) other).parent);
+		return other instanceof RetrievingContentsNode
+				&& ObjectUtils.equals(parent, ((RetrievingContentsNode) other).parent);
 	}
 
 	@Override

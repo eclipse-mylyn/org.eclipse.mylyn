@@ -18,7 +18,7 @@ package org.eclipse.mylyn.internal.github.ui.issue;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -61,8 +61,9 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
 			String id = partDescriptor.getId();
-			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY))
+			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)) {
 				descriptorIt.remove();
+			}
 		}
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
@@ -97,8 +98,9 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	public void doSubmit() {
-		if (!checkCanSubmit(IMessageProvider.ERROR))
+		if (!checkCanSubmit(IMessageProvider.ERROR)) {
 			return;
+		}
 		super.doSubmit();
 	}
 
@@ -115,12 +117,12 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 				public void run() {
 					getTaskEditor().setMessage(Messages.IssueTaskEditorPage_MessageAnonymousCannotSubmit, type,
 							new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent e) {
-									TasksUiUtil.openEditRepositoryWizard(taskRepository);
-									refresh();
-								}
-							});
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+							refresh();
+						}
+					});
 				}
 			});
 			return false;

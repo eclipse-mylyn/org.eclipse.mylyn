@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.reviews.ui.providers;
 
 import java.util.Collection;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -26,14 +26,17 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public abstract class GenericTreeContentProvider implements ITreeContentProvider {
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		return getElements(parentElement);
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
@@ -41,7 +44,7 @@ public abstract class GenericTreeContentProvider implements ITreeContentProvider
 	protected Object[] getCollectionChildren(Object element) {
 		if (element instanceof Collection) {
 			Collection<?> collection = (Collection<?>) element;
-			Object[] elements = new Object[] {};
+			Object[] elements = {};
 			for (Object member : collection) {
 				elements = ArrayUtils.addAll(elements, getElements(member));
 			}
@@ -65,9 +68,11 @@ public abstract class GenericTreeContentProvider implements ITreeContentProvider
 		return false;
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

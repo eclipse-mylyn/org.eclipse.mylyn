@@ -19,7 +19,7 @@ Export-Package: org.eclipse.mylyn.commons.ui,
  org.eclipse.mylyn.commons.ui.dialogs,
  org.eclipse.mylyn.commons.ui.wizard,
  org.eclipse.mylyn.internal.commons.ui;x-internal:=true
-Import-Package: org.apache.commons.lang.reflect;version="2.6.0",
+Import-Package: org.apache.commons.lang3.reflect;version="3.13.0",
  org.w3c.dom.css
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin

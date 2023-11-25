@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
@@ -136,10 +136,10 @@ public class CommentPopupDialogTest extends TestCase {
 		commentPopupDialog = createPopupWithXComments(1, false);
 		Listener[] listeners = commentPopupDialog.getComposite().getListeners(SWT.MouseMove);
 		Arrays.asList(listeners)
-				.stream()
-				.filter(Listener.class::isInstance)
-				.findFirst()
-				.orElseThrow(() -> new NoSuchElementException());
+		.stream()
+		.filter(Listener.class::isInstance)
+		.findFirst()
+		.orElseThrow(NoSuchElementException::new);
 	}
 
 	/**
@@ -540,7 +540,7 @@ public class CommentPopupDialogTest extends TestCase {
 	 * @return the created list of {@link CommentAnnotation}
 	 */
 	private List<CommentAnnotation> addXComments(int x) {
-		List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
+		List<CommentAnnotation> annotations = new ArrayList<>();
 		for (int i = 1; i <= x; i++) {
 			boolean isDraft = i % 2 == 0;
 			annotations.add(
@@ -617,10 +617,9 @@ public class CommentPopupDialogTest extends TestCase {
 	 */
 	private void checkMouseDownListener(Control c) {
 		Listener[] listeners = c.getListeners(SWT.MouseDown);
-		List<TypedListener> typedListeners = new ArrayList<TypedListener>();
+		List<TypedListener> typedListeners = new ArrayList<>();
 		for (Listener listener : listeners) {
-			if (listener instanceof TypedListener) {
-				TypedListener tl = (TypedListener) listener;
+			if (listener instanceof TypedListener tl) {
 				if (tl.getEventListener()
 						.toString()
 						.contains("org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog")) {
@@ -750,9 +749,9 @@ public class CommentPopupDialogTest extends TestCase {
 	private void assertSavingComment(Button button, String description, boolean isDraft, boolean isDiscard)
 			throws Exception {
 		doReturn(Status.OK_STATUS).when(behavior)
-				.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+		.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 		doReturn(Status.OK_STATUS).when(behavior)
-				.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+		.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 
 		pressButton(button);
 
@@ -834,7 +833,7 @@ public class CommentPopupDialogTest extends TestCase {
 			// For there to be a match, the description of the comments need to be the same and if:
 			//	isDraft is true, then it is a draft edit so there must be an ID
 			//  isDraft is false, then it is a new draft being created so there is no ID
-			return description.equals(argument.getDescription()) && (isDraft ^ StringUtils.isEmpty(argument.getId()));
+			return description.equals(argument.getDescription()) && isDraft ^ StringUtils.isEmpty(argument.getId());
 		}
 	}
 }

@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.egit;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -57,18 +57,22 @@ public class GitFileRevisionUtils {
 					final IPath path = Path.fromPortableString(reviewFileVersion.getPath());
 					gitFileRevision = new org.eclipse.team.core.history.provider.FileRevision() {
 
+						@Override
 						public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 							return this;
 						}
 
+						@Override
 						public boolean isPropertyMissing() {
 							return false;
 						}
 
+						@Override
 						public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 							return getFileRevisionStorage(null, repository, path, objId);
 						}
 
+						@Override
 						public String getName() {
 							return path.lastSegment();
 						}
@@ -96,25 +100,30 @@ public class GitFileRevisionUtils {
 			final IPath path, final ObjectId objId) {
 
 		return new IStorage() {
+			@Override
 			@SuppressWarnings("rawtypes")
 			public Object getAdapter(Class adapter) {
 				return null;
 			}
 
+			@Override
 			public boolean isReadOnly() {
 				return true;
 			}
 
+			@Override
 			public String getName() {
 				return path.lastSegment();
 			}
 
+			@Override
 			public IPath getFullPath() {
-				//Here we append the object Id to the path to distinguish it from the path of this file revision 
+				//Here we append the object Id to the path to distinguish it from the path of this file revision
 				//from the  workspace file.  This is  needed to get good AST resolution and navigability.
 				return path.append(Path.fromPortableString(objId.getName()));
 			}
 
+			@Override
 			public InputStream getContents() throws CoreException {
 				InputStream in = null;
 				try {
