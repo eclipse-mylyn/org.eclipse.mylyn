@@ -51,7 +51,9 @@
         <module>org.eclipse.mylyn.wikitext.creole.ui</module>
         <module>org.eclipse.mylyn.wikitext.markdown.ui</module>
         <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
+<!--        
         <module>org.eclipse.mylyn.wikitext.ui.tests</module>
+-->
         <module>org.eclipse.mylyn.wikitext.textile.ui</module>
         <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
