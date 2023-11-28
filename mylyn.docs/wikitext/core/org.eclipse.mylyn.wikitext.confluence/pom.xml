@@ -36,6 +36,7 @@
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
         <version>${project.version}</version>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.eclipse.mylyn.docs</groupId>
