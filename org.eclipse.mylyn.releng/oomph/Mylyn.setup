@@ -9,10 +9,8 @@
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -123,14 +121,6 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
-        xsi:type="setup.p2:P2Task"
-        disabled="true">
-      <requirement
-          name="org.eclipse.oomph.setup.launching"/>
-      <repository
-          url="https://download.eclipse.org/oomph/updates/milestone/latest"/>
-    </setupTask>
-    <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.mylyn"
         value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
@@ -163,7 +153,8 @@
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
-        xsi:type="projects:ProjectsImportTask">
+        xsi:type="projects:ProjectsImportTask"
+        id="mylyn.project.import">
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
@@ -179,6 +170,7 @@
     </setupTask>
     <setupTask
         xsi:type="pde:TargetPlatformTask"
+        id="org.eclipse.mylyn.target"
         predecessor="mylyn.workingsets"
         name="org.eclipse.mylyn.target">
       <description>Active Mylyn Target Platform</description>
@@ -186,7 +178,7 @@
     <setupTask
         xsi:type="setup.targlets:TargletTask"
         id="mylyn.target.api"
-        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.3 //@projects[name='mylyn']/@setupTasks.4"
+        predecessor="git.clone.mylyn org.eclipse.mylyn.target mylyn.project.import"
         targetName="Mylyn Modular Target for API"
         activateTarget="false">
       <targlet
