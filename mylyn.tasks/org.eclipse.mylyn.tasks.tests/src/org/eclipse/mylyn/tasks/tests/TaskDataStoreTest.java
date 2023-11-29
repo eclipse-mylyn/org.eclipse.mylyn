@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2023 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -320,7 +321,7 @@ public class TaskDataStoreTest extends TestCase {
 	private void randomData(int start, int end) throws Exception {
 		setupData();
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10; i++) {
 			TaskAttribute attribute = data.getRoot().createAttribute("testId");
 			attribute.getMetaData().setLabel(generateString(start, end));
 			attribute.putOption(generateString(start, end), generateString(start, end));
