@@ -11,6 +11,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -329,9 +330,15 @@
       <workingSet
           name="Docs">
         <predicate
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.mylyn-aggregator"
-            relativePathPattern="mylyn.docs.*"/>
+            xsi:type="predicates:AndPredicate">
+          <operand
+              xsi:type="predicates:RepositoryPredicate"
+              project="org.eclipse.mylyn-aggregator"
+              relativePathPattern="mylyn.docs.*"/>
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern="org.eclipse.mylyn.wikitext.*"/>
+        </predicate>
       </workingSet>
     </setupTask>
     <setupTask
