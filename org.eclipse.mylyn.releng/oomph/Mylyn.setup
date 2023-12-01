@@ -344,7 +344,20 @@
     <setupTask
         xsi:type="launching:LaunchTask"
         id="launch.mylyn.docs"
-        launcher="mylyn.docs"/>
+        launcher="mylyn.docs">
+      <predecessor
+          xsi:type="pde:TargetPlatformTask"
+          href="#org.eclipse.mylyn.target"/>
+      <predecessor
+          xsi:type="setup.workingsets:WorkingSetTask"
+          href="#mylyn.workingsets"/>
+      <predecessor
+          xsi:type="setup.targlets:TargletTask"
+          href="#mylyn.target.api"/>
+      <predecessor
+          xsi:type="pde:APIBaselineFromTargetTask"
+          href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
+    </setupTask>
     <setupTask
         xsi:type="projects:ProjectsBuildTask"
         id="build.all"
