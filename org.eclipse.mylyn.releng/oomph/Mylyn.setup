@@ -345,6 +345,14 @@
         xsi:type="launching:LaunchTask"
         id="launch.mylyn.docs"
         launcher="mylyn.docs"/>
+    <setupTask
+        xsi:type="projects:ProjectsBuildTask"
+        id="build.all"
+        predecessor="launch.mylyn.docs"
+        refresh="true"
+        clean="true">
+      <description>Build All</description>
+    </setupTask>
     <stream
         name="main"
         label="main"/>
