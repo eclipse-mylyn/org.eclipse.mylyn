@@ -59,4 +59,4 @@
       VOLUMES: "1"   
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single' or docker_mode == 'gitlab'))

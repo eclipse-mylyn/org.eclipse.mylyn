@@ -1,0 +1,98 @@
+---
+- name: all
+  block:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+     
+    - name: Install required system packages
+      ansible.builtin.apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: latest
+        update_cache: true
+#    
+#    - name: install binfmt emulators
+#      ansible.builtin.shell: "docker run --privileged --rm tonistiigi/binfmt --install amd64"
+#      ansible.builtin.shell: "docker run --privileged --rm tonistiigi/binfmt --install all"
+#    - name: install
+#      ansible.builtin.shell: |
+#        curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+#      register: buildout
+#  
+#    - name: print buildout
+#      debug:
+#        msg: "{{ buildout.stdout_lines }}"
+  become: true 
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/config
+    - /mylyn-runtime-dir/{{ role_name }}/data/logs
+    - /mylyn-runtime-dir/{{ role_name }}/data/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/database
+    - /mylyn-runtime-dir/{{ role_name }}/registry
+    - /mylyn-runtime-dir/{{ role_name }}/registry/data
+    - /mylyn-runtime-dir/{{ role_name }}/registry/certs
+
+- name: Pull image
+  community.docker.docker_image:
+    name: "gitlab/gitlab-ee:16.0.5-ee.0"
+    source: pull
+    pull:
+      platform: amd64
+
+- name: setlabels registry
+  ansible.builtin.set_fact:
+    label_data: |
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.{{ role_name }}.rule: "Host(`gitlab.{{common_domain_name}}`)",
+         traefik.http.routers.{{ role_name }}.entrypoints: websecure ,
+         traefik.http.routers.{{ role_name }}.tls: "true" ,
+         traefik.http.routers.{{ role_name }}.service: {{ role_name }} ,
+         traefik.http.services.{{ role_name }}.loadbalancer.server.port: "8888" 
+       }
+#         traefik.http.services.{{ role_name }}.loadbalancer.server.url: "http://mylynmstr01:8888" 
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "gitlab"
+    image: "gitlab/gitlab-ee:16.0.5-ee.0"
+    platform: amd64
+    ports:
+      - '8888:8888'
+      - '2222:22'
+    env:
+      hostname: "gitlab.{{ common_domain_name }}"
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "https://gitlab.mylyn.local"
+        nginx['listen_https'] = false
+        nginx['listen_port'] = 8888
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        gitlab_rails['initial_root_password'] = 'mylyntest'
+    volumes:
+      - /mylyn-runtime-dir/{{ role_name }}/data/config:/etc/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data/logs:/var/log/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data:/var/opt/gitlab
+#    etc_hosts: >
+#      {
+#        "gitlab.{{ common_domain_name }}": "{{ hostvars[inventory_hostname].ansible_host }}",
+#        "{{ common_domain_name }}" : "{{ hostvars[inventory_hostname].ansible_host }}"
+#      }
+    labels: "{{ label_data | from_yaml }}"
+#docker run --detach --env 
+#GITLAB_OMNIBUS_CONFIG="external_url 'http://192.168.64.6:8888';gitlab_rails['gitlab_shell_ssh_port'] = 2222;gitlab_rails['initial_root_password'] = 'mylyntest'"
+# --hostname 192.168.64.6 -p 8888:8888 -p 2222:22 --name gitlab-test-16.0.5 --platform linux/amd64 gitlab/gitlab-ee:16.0.5-ee.0
+

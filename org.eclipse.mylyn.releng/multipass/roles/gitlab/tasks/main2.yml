@@ -1,0 +1,127 @@
+---
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/config
+    - /mylyn-runtime-dir/{{ role_name }}/data/logs
+    - /mylyn-runtime-dir/{{ role_name }}/data/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/database
+    - /mylyn-runtime-dir/{{ role_name }}/registry
+    - /mylyn-runtime-dir/{{ role_name }}/registry/data
+    - /mylyn-runtime-dir/{{ role_name }}/registry/certs
+
+- name: setlabels registry
+  ansible.builtin.set_fact:
+    label_data: |
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.{{ role_name }}.rule: "Host(`gitlab.{{common_domain_name}}`)",
+         traefik.http.routers.{{ role_name }}.entrypoints: websecure ,
+         traefik.http.routers.{{ role_name }}.tls: "true" ,
+         traefik.http.routers.{{ role_name }}.service: {{ role_name }} ,
+         traefik.http.services.{{ role_name }}.loadbalancer.server.port: "8443"
+       }
+
+- name: Deploy Database Container
+  community.docker.docker_container:
+    name: "gitlab-db"
+    image: "postgres:15-alpine"
+    networks:
+      - name: mylyn_net
+    env:
+      POSTGRES_PASSWORD: "PostgreSQLPasswort"
+      POSTGRES_DB: gitlab
+    volumes:
+      - /mylyn-runtime-dir/{{ role_name }}/data/database:/var/lib/postgresql/data
+    etc_hosts: >
+      {
+        "gitlab.{{ common_domain_name }}": "{{ hostvars[inventory_hostname].ansible_host }}",
+        "{{ common_domain_name }}" : "{{ hostvars[inventory_hostname].ansible_host }}"
+      }
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
+
+- name: Deploy registry Container
+  community.docker.docker_container:
+    name: "gitlab-registry"
+    image: registry:latest
+    networks:
+      - name: mylyn_net
+    env:
+      POSTGRES_PASSWORD: "PostgreSQLPasswort"
+      POSTGRES_DB: gitlab
+    volumes:
+      - /mylyn-runtime-dir/{{ role_name }}/data/database:/var/lib/postgresql/data
+    etc_hosts: >
+      {
+        "gitlab.{{ common_domain_name }}": "{{ hostvars[inventory_hostname].ansible_host }}",
+        "{{ common_domain_name }}" : "{{ hostvars[inventory_hostname].ansible_host }}"
+      }
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "gitlab"
+#    image: "gitlab/gitlab-ce:latest"
+    image: "zengxs/gitlab:latest"
+    networks:
+      - name: mylyn_net
+    hostname: "gitlab.{{ common_domain_name }}"
+#    platform: amd64
+    ports:
+      - '8443:8443'
+      - '8422:22'
+    env:
+      hostname: "gitlab.gitlab.{{ common_domain_name }}"
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.{{ common_domain_name }}:8443'
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['proxy_set_headers'] = {
+          "X-Forwarded-Proto" => "https",
+          "X-Forwarded-Ssl" => "on"
+        }
+        gitlab_rails['db_adapter'] = "postgresql"
+        gitlab_rails['db_database'] = "gitlab"
+        gitlab_rails['db_username'] = "postgres"
+        gitlab_rails['db_password'] = "PostgreSQLPasswort"
+        gitlab_rails['db_host'] = "gitlab-db"
+        gitlab_rails['initial_root_password'] = "mylyntest"
+        registry['enable'] = false
+        gitlab_rails['registry_enabled'] = true
+        gitlab_rails['registry_host'] = "registry.gitlab.{{ common_domain_name }}"
+        gitlab_rails['registry_api_url'] = "https://registry.gitlab.{{ common_domain_name }}"
+        gitlab_rails['registry_issuer'] = "gitlab-issuer"
+        gitlab_rails['backup_archive_permissions'] = 0644
+        gitlab_rails['backup_keep_time'] = 1468800
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = "mail.{{ common_domain_name }}"
+        gitlab_rails['smtp_port'] = 465
+        gitlab_rails['smtp_user_name'] = "noreply@{{ common_domain_name }}"
+        gitlab_rails['smtp_password'] = "emailpassword"
+        gitlab_rails['smtp_domain'] = "mail.{{ common_domain_name }}"
+        gitlab_rails['smtp_authentication'] = "login"
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_tls'] = false
+        gitlab_rails['smtp_ssl'] = true
+        gitlab_rails['smtp_force_ssl'] = true
+        gitlab_rails['gitlab_email_from'] = 'noreply@{{ common_domain_name }}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 8422
+    volumes:
+      - /mylyn-runtime-dir/{{ role_name }}/data/config:/etc/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data/logs:/var/log/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data:/var/opt/gitlab
+#    etc_hosts: >
+#      {
+#        "gitlab.{{ common_domain_name }}": "{{ hostvars[inventory_hostname].ansible_host }}",
+#        "{{ common_domain_name }}" : "{{ hostvars[inventory_hostname].ansible_host }}"
+#      }
+    labels: "{{ label_data | from_yaml }}"
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))

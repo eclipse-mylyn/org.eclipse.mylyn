@@ -1,0 +1,77 @@
+# Static configuration
+# https://docs.traefik.io/reference/static-configuration/file/
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+serversTransport:
+  insecureSkipVerify: true
+  maxIdleConnsPerHost: 10
+  forwardingTimeouts:
+    dialTimeout: "30s"
+    responseHeaderTimeout: "10s"
+    idleConnTimeout: "180s"
+
+entryPoints:
+  web:
+    address: ":80"
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: "10s"
+        graceTimeOut: "10s"
+      respondingTimeouts:
+        readTimeout: "10s"
+        writeTimeout: "10s"
+        idleTimeout: "360s"
+  websecure:
+    address: ":443"
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: "10s"
+        graceTimeOut: "10s"
+      respondingTimeouts:
+        readTimeout: "10s"
+        writeTimeout: "10s"
+        idleTimeout: "360s"
+log:
+  level: "ERROR" # "INFO" # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+  filePath: "/logs/traefik/traefik.log"
+  format: "common"
+
+##accessLog:
+##  filePath: "/logs/traefik/access.log"
+##  format: "common"
+##  bufferingSize: 100
+#   fields:
+#     defaultMode: "keep"
+#     headers:
+#       defaultMode: "keep"
+#       names:
+#           # User-Agent: redact
+#           Authorization: drop
+#           # Content-Type: keep
+
+api:
+  insecure: false
+  dashboard: true
+  debug: false
+
+#ping:
+#  entryPoint: "traefik"
+
+providers:
+  providersThrottleDuration: "2s"
+  file:
+    filename: "/etc/traefik/traefik.dynamic.yml"
+    watch: true
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watch: true
+##    swarmMode: true
+    # useBindPortIP: false
+    exposedByDefault: false
+    network: "proxy"
+##    swarmModeRefreshSeconds: "15s"
+  rest:
+    insecure: true

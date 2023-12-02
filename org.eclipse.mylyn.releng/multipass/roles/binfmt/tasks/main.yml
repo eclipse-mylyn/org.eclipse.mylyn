@@ -1,0 +1,20 @@
+---
+- name: all
+  block:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+     
+    - name: Install required system packages
+      ansible.builtin.apt:
+        pkg:
+          - qemu
+          - binfmt-support
+          - qemu-user-static
+        state: latest
+        update_cache: true
+#    
+#    - name: install binfmt emulators
+#      ansible.builtin.shell: "docker run --privileged --rm tonistiigi/binfmt --install amd64"
+#      ansible.builtin.shell: "docker run --privileged --rm tonistiigi/binfmt --install all"
+  become: true 

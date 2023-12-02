@@ -1,0 +1,80 @@
+- name: Get {{ role_name }}-data-volume
+  community.docker.docker_host_info:
+    volumes: true
+    volumes_filters: name="{{ role_name }}-data-volume"
+  register: docker_data_info_volumes
+
+- name: print buildout2
+  debug:
+    msg: "{{ docker_data_info_volumes }}"
+- name: print buildout3
+  debug:
+    msg: "{{ docker_data_info_volumes.volumes | length }}"
+
+- name: include jobs-volume
+  ansible.builtin.include_tasks:
+    file: create_data_volume.yml
+  when: (docker_data_info_volumes.volumes is defined) and (docker_data_info_volumes.volumes | length==0)
+
+
+
+- name: setlabels
+  ansible.builtin.set_fact:
+    label_data:  |
+       { traefik.enable: "true" ,
+         traefik.docker.network: mylyn_net ,
+         traefik.http.routers.artifactory.rule: Host(`artifactory.{{common_domain_name}}`) ,
+         traefik.http.routers.artifactory.entrypoints: websecure ,
+         traefik.http.routers.artifactory.tls: "true" ,
+         traefik.http.routers.artifactory.service: "artifactory" ,
+         traefik.http.routers.artifactory.middlewares: "artifact_uiRedirect,artifact_uiLongRedirect" ,
+         traefik.http.services.artifactory.loadbalancer.server.port: "8082", 
+         traefik.http.routers.artifactoryApi.rule: 'Host(`artifactory.{{common_domain_name}}`) && PathPrefix(`/artifactory{regex:|/.+}`)' ,
+         traefik.http.routers.artifactoryApi.entrypoints: websecure ,
+         traefik.http.routers.artifactoryApi.tls: "true" ,
+         traefik.http.routers.artifactoryApi.service: "artifactoryApi" ,
+         traefik.http.services.artifactoryApi.loadbalancer.server.port: "8081" ,
+         traefik.http.routers.artifactoryDocker.rule: 'Host(`docker.artifactory.{{common_domain_name}}` , `docker1.artifactory.{{common_domain_name}}`)' ,
+         traefik.http.routers.artifactoryDocker.entrypoints: websecure ,
+         traefik.http.routers.artifactoryDocker.tls: "true" ,
+         traefik.http.routers.artifactoryDocker.service: "artifactoryApi" ,
+         traefik.http.routers.artifactoryDocker.middlewares: artifact_dockerRedirect ,
+         traefik.http.middlewares.artifact_uiRedirect.replacepathregex.regex: '^/$' ,
+         traefik.http.middlewares.artifact_uiRedirect.replacepathregex.replacement: /ui/ ,
+         traefik.http.middlewares.artifact_uiLongRedirect.replacepathregex.regex: '^/ui(/)?$' ,
+         traefik.http.middlewares.artifact_uiLongRedirect.replacepathregex.replacement: /ui/ ,
+         traefik.http.middlewares.artifact_dockerRedirect.replacepathregex.regex: 'https://(.*)\\.{{common_domain_name}}\\.com/(v1|v2)/(.*)' ,
+         traefik.http.middlewares.artifact_dockerRedirect.replacepathregex.replacement: 'https://$1.{{common_domain_name}}/artifactory/api/docker/$1/$2/$3'
+       }
+
+- name: Artifactory
+  ansible.builtin.shell: |
+     docker stop artifactory || true
+     docker rm artifactory || true
+  register: buildout
+  
+- name: print buildout
+  debug:
+    msg: "{{ buildout.stdout_lines }}"
+
+- name: print buildout1
+  debug:
+    var: label_data
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: artifactory
+    image: docker.bintray.io/jfrog/artifactory-cpp-ce:latest
+    ports:       
+      - "8081:8081"
+      - "8082:8082"
+    networks:
+      - name: mylyn_net
+    volumes:
+      - "{{ role_name }}-data-volume:/var/opt/jfrog/artifactory"
+    etc_hosts: >
+      {
+        "artifactory.mylyn.local": "{{ hostvars[inventory_hostname].ansible_host }}",
+        "mylyn.local" : "{{ hostvars[inventory_hostname].ansible_host }}"
+      }
+    labels: "{{ label_data | from_yaml }}"

@@ -46,7 +46,7 @@
     label_data:  |
        { traefik.enable: "true" ,
          traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`,`{{ remote_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
@@ -110,4 +110,4 @@
     volumes:
       - "{{ role_name }}-{{act_item.servmame}}-data-volume:/var/jenkins_home"
     labels: "{{ label_data | from_yaml }}"
-  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single' or docker_mode == 'gitlab'))

@@ -77,4 +77,5 @@ This setup is only tested on am MacBook Pro M1.
    ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
    
+   ansible-playbook mylyn_setup.yml --skip-tags base_software,artifactory,binfmt,gitlab,jenkins --extra-vars="docker_run_mode=container"
 Scrach Pad
