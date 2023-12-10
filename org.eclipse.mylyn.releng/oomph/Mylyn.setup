@@ -122,11 +122,6 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
-        xsi:type="setup:EclipseIniTask"
-        option="-Doomph.redirection.mylyn"
-        value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
-        vm="true"/>
-    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn"
         remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
@@ -366,10 +361,22 @@
     </setupTask>
     <stream
         name="main"
-        label="main"/>
+        label="main">
+      <setupTask
+          xsi:type="setup:EclipseIniTask"
+          option="-Doomph.redirection.mylyn"
+          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
+    </stream>
     <stream
         name="315-setup-test"
-        label="MylynDocs-Setup-Test"/>
+        label="MylynDocs-Setup-Test">
+      <setupTask
+          xsi:type="setup:EclipseIniTask"
+          option="-Doomph.redirection.mylyn"
+          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/315-setup-test/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
+    </stream>
     <description>The new Setup for Mylyn hosted on GitHub</description>
   </project>
   <project name="github.admin"
