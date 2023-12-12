@@ -122,11 +122,6 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
-        xsi:type="setup:EclipseIniTask"
-        option="-Doomph.redirection.mylyn"
-        value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
-        vm="true"/>
-    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn"
         remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
@@ -186,39 +181,37 @@
           name="Mylyn"
           includeSources="false">
         <requirement
-            name="org.eclipse.mylyn_feature.feature.group"/>
+            name="org.eclipse.mylyn.tasks.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.context_feature.feature.group"/>
+            name="org.eclipse.mylyn.context.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.trac_feature.feature.group"/>
+            name="org.eclipse.mylyn.cdt.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.discovery.feature.group"/>
+            name="org.eclipse.mylyn.ide.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.ide_feature.feature.group"/>
+            name="org.eclipse.mylyn.jdt.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.java_feature.feature.group"/>
+            name="org.eclipse.mylyn.pde.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.pde_feature.feature.group"/>
+            name="org.eclipse.mylyn.team.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.team_feature.feature.group"/>
+            name="org.eclipse.mylyn.egit.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.git.feature.group"/>
-        <requirement
-            name="org.eclipse.cdt.mylyn.feature.group"/>
+            name="org.eclipse.mylyn.bugzilla.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.github.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.wikitext.editors_feature.feature.group"/>
         <repositoryList
             name="latest">
           <repository
-              url="https://download.eclipse.org/mylyn/releases/3.26"/>
+              url="https://download.eclipse.org/mylyn/updates/release/4.1.0"/>
           <repository
-              url="https://download.eclipse.org/egit/updates-6.2"/>
+              url="https://download.eclipse.org/mylyn/docs/releases/3.0.39"/>
           <repository
-              url="https://download.eclipse.org/tools/cdt/releases/11.0"/>
-          <repository
-              url="https://download.eclipse.org/eclipse/updates/4.26/R-4.26-202211231800/"/>
+              url="https://download.eclipse.org/releases/2023-12/202312061001"/>
         </repositoryList>
       </targlet>
     </setupTask>
@@ -368,10 +361,22 @@
     </setupTask>
     <stream
         name="main"
-        label="main"/>
+        label="main">
+      <setupTask
+          xsi:type="setup:EclipseIniTask"
+          option="-Doomph.redirection.mylyn"
+          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
+    </stream>
     <stream
         name="315-setup-test"
-        label="MylynDocs-Setup-Test"/>
+        label="MylynDocs-Setup-Test">
+      <setupTask
+          xsi:type="setup:EclipseIniTask"
+          option="-Doomph.redirection.mylyn"
+          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/315-setup-test/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
+    </stream>
     <description>The new Setup for Mylyn hosted on GitHub</description>
   </project>
   <project name="github.admin"

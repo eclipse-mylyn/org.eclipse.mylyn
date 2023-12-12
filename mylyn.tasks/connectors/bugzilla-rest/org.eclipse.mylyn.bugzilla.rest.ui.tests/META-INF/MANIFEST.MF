@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Rest Connector
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.ui.tests;singleton:=true
-Bundle-Version: 4.1.0.qualifier
+Bundle-Version: 4.2.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.bugzilla.rest.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
