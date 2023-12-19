@@ -14,7 +14,7 @@
     <properties>
     	<guava.osgi>31.1</guava.osgi>
     	<guava.osgi.upper>33.0</guava.osgi.upper>
-        <guava.version>32.1.3-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
