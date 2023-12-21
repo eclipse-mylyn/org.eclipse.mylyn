@@ -53,38 +53,6 @@ pipeline {
 				}
 			}
 		}
-		stage('Build Docs') {
-			steps {
-				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
-				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh 'cd mylyn.docs && mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}"'
-				}}
-			}
-			post {
-				always {
-					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
-					junit '**/target/surefire-reports/TEST-*.xml'
-					recordIssues publishAllIssues: true, tools: [java(), mavenConsole(), javaDoc()]
-				}
-			}
-		}
-		stage('Deploy Docs Snapshot') {
-			when {
-				branch 'main'
-			}
-			steps {
-				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
-				sh '''
-					DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/docs/
-					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
-					ssh genie.mylyn@projects-storage.eclipse.org "\
-						rm -rf  ${DOWNLOAD_AREA}/* && \
-						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
-				'''
-				}
-			}
-		}
 		stage('Build Mylyn') {
 			steps {
 				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
@@ -110,6 +78,24 @@ pipeline {
 				always {
 					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
 					junit '**/target/surefire-reports/TEST-*.xml'
+					recordIssues publishAllIssues: true, tools: [java(), mavenConsole(), javaDoc()]
+				}
+			}
+		}
+		stage('Deploy Docs Snapshot') {
+			when {
+				branch 'main'
+			}
+			steps {
+				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
+				sh '''
+					DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/docs/
+					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
+					ssh genie.mylyn@projects-storage.eclipse.org "\
+						rm -rf  ${DOWNLOAD_AREA}/* && \
+						mkdir -p ${DOWNLOAD_AREA}"
+					scp -r mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
+				'''
 				}
 			}
 		}

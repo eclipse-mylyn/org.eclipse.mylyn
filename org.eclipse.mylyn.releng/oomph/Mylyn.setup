@@ -336,8 +336,9 @@
     </setupTask>
     <setupTask
         xsi:type="launching:LaunchTask"
-        id="launch.mylyn.docs"
-        launcher="mylyn.docs">
+        id="launch.mylyn.all"
+        disabled="true"
+        launcher="org.eclipse.mylyn-aggregator-verify">
       <predecessor
           xsi:type="pde:TargetPlatformTask"
           href="#org.eclipse.mylyn.target"/>
@@ -350,11 +351,13 @@
       <predecessor
           xsi:type="pde:APIBaselineFromTargetTask"
           href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
+      <description>Mylyn Launch all</description>
     </setupTask>
     <setupTask
         xsi:type="projects:ProjectsBuildTask"
         id="build.all"
-        predecessor="launch.mylyn.docs"
+        disabled="true"
+        predecessor="launch.mylyn.all"
         refresh="true"
         clean="true">
       <description>Build All</description>
@@ -364,7 +367,7 @@
         label="main">
       <setupTask
           xsi:type="setup:EclipseIniTask"
-          option="-Doomph.redirection.mylyn"
+          option="-Doomph.redirection.org.eclipse.mylyn.git"
           value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
           vm="true"/>
     </stream>
@@ -373,9 +376,11 @@
         label="MylynDocs-Setup-Test">
       <setupTask
           xsi:type="setup:EclipseIniTask"
-          option="-Doomph.redirection.mylyn"
-          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/315-setup-test/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
-          vm="true"/>
+          option="-Doomph.redirection.org.eclipse.mylyn.git"
+          value="=https://raw.githubusercontent.com/eclipse-mylyn/org.eclipse.mylyn/main/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true">
+        <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
+      </setupTask>
     </stream>
     <description>The new Setup for Mylyn hosted on GitHub</description>
   </project>

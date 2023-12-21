@@ -60,6 +60,9 @@
     <dist.site></dist.site>
     <timestampProvider>jgit</timestampProvider>
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
+    <releaseVersion>4.2.0</releaseVersion>
+    <qualifier>-SNAPSHOT</qualifier>
+    <nexus.autoReleaseAfterClose>false</nexus.autoReleaseAfterClose>
   </properties>
   <mailingLists>
     <mailingList>
@@ -71,7 +74,7 @@
     </mailingList>
   </mailingLists>
   <issueManagement>
-    <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.commons/issues</url>
+    <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
   <repositories>
@@ -94,25 +97,17 @@
       <url>https://download.eclipse.org/cbi/updates/license/</url>
     </repository>
   </repositories>
-  <licenses>
-    <license>
-      <name>Eclipse Public License v2.0</name>
-      <url>http://www.eclipse.org/legal/epl-v20.html</url>
-      <distribution>repo</distribution>
-      <comments>
-        All rights reserved.
-
-        This program and the accompanying materials are made
-        available under the terms of the Eclipse Public License v2.0
-        which accompanies this distribution, and is available at
-        http://www.eclipse.org/legal/epl-v10.htm
-      </comments>
-    </license>
-  </licenses>
-  <organization>
-    <name>Eclipse Foundation</name>
-    <url>https://www.eclipse.org/</url>
-  </organization>
+    <licenses>
+        <license>
+            <name>Eclipse Public License Version 2.0</name>
+            <url>https://www.eclipse.org/legal/epl-2.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+      <organization>
+        <name>Eclipse Mylyn</name>
+        <url>https://projects.eclipse.org/projects/mylyn</url>
+    </organization>
   <profiles>
     <profile>
       <id>sign</id>
@@ -158,8 +153,102 @@
         <test.osvmargs>-XstartOnFirstThread</test.osvmargs>
       </properties>
     </profile>
-  </profiles>
-  <build>
+        <profile>
+            <id>ossrh</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+<!--                    
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-gpg-plugin</artifactId>
+                        <version>${tycho-version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign-p2-artifacts</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+-->                    
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>tag-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>tag</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>wikitext.core-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</tag>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>commit-version-update</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>checkin</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>**/pom.xml, **/MANIFEST.MF, **/feature.xml</includes>
+                                    <excludes>**/target/**, **/core/**/MANIFEST.MF</excludes>
+                                    <message>New development version ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion}</message>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>  <build>
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
@@ -167,10 +256,47 @@
         <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+           <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-source-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-pde-source-header</id>
+                        <goals>
+                            <goal>generate-pde-source-header</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>plugin-source</id>
+                        <goals>
+                            <goal>plugin-source</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -179,6 +305,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
+        <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+        </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -224,11 +354,12 @@
               </environments>
               <target>
                 <artifact>
-                  <groupId>${project.parent.groupId}</groupId>
-                  <artifactId>${project.parent.groupId}.target</artifactId>
-                  <version>${project.parent.version}</version>
+                  <groupId>org.eclipse.mylyn</groupId>
+                  <artifactId>org.eclipse.mylyn.target</artifactId>
+                  <version>${releaseVersion}${qualifier}</version>
                 </artifact>
               </target>
+                    <pomDependencies>consider</pomDependencies>
             </configuration>
           </plugin>
           <plugin>
@@ -363,8 +494,75 @@
             <application>org.eclipse.ui.ide.workbench</application>
           </configuration>
         </plugin>
-      </plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.16.2</version>
+                    <executions>
+                        <execution>
+                            <id>default-cli</id>
+                            <configuration>
+                                <property>releaseVersion</property>
+                                <newVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion}</newVersion>
+                                <generateBackupPoms>false</generateBackupPoms>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-versions-plugin</artifactId>
+                    <version>${tycho-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <executions>
+                        <execution>
+                            <id>default-cli</id>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <!-- Updates all wikitext manifest and feature files for the next development version. Uses the
+                                         version component properties that were initialized by a previous build helper plugin execution. -->
+                                    <replace token="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}" value="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion}" dir="wikitext">
+                                        <include name="**/MANIFEST.MF"/>
+                                        <include name="**/feature.xml"/>
+                                    </replace>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>2.0.1</version>
+                    <configuration>
+                        <connectionType>developerConnection</connectionType>
+                    </configuration>
+                </plugin>
+            	<plugin>
+                	<groupId>org.apache.felix</groupId>
+                	<artifactId>maven-bundle-plugin</artifactId>
+                	<version>5.1.9</version>
+                	<extensions>true</extensions>
+            	</plugin>
+       </plugins>
     </pluginManagement>
   </build>
   <modules></modules>
+    <scm>
+        <developerConnection>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</developerConnection>
+        <connection>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</connection>
+        <url>https://github.com/eclipse-mylyn/org.eclipse.mylyn.git</url>
+    </scm>
 </project>
