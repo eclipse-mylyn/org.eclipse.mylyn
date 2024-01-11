@@ -28,11 +28,11 @@
   <packaging>pom</packaging>
   <modules>
     <module>org.eclipse.mylyn-target</module>
+    <module>mylyn.docs/docs</module>
     <module>mylyn.docs/wikitext</module>
 <!--
     <module>mylyn.docs/epub</module>
 -->
-    <module>mylyn.docs/docs</module>
     <module>mylyn.commons</module>
     <module>mylyn.tasks</module>
     <module>mylyn.context</module>

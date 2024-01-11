@@ -72,7 +72,6 @@
         <module>org.eclipse.mylyn.wikitext.ui.tests</module>
         <module>org.eclipse.mylyn.wikitext.feature</module>
         <module>org.eclipse.mylyn.wikitext.extras.feature</module>
-        <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
     </modules>
 
     <build>
