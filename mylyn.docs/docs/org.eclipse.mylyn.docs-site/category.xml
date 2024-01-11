@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
 <site>
    <description>
       Mylyn Docs
    </description>
-   <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
+   <feature id="org.eclipse.mylyn.wikitext_feature">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.editors_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext.editors_feature" version="0.0.0">
+   <feature id="org.eclipse.mylyn.wikitext.editors_feature">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+   <feature id="org.eclipse.mylyn.wikitext.sdk">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.extras_feature_0.0.0.qualifier.jar" id="org.eclipse.mylyn.wikitext.extras_feature" version="0.0.0">
+   <feature id="org.eclipse.mylyn.wikitext.extras_feature">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.htmltext_0.0.0.jar" id="org.eclipse.mylyn.htmltext" version="0.0.0">
+   <feature id="org.eclipse.mylyn.htmltext.feature">
       <category name="Features"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
-      <category name="SDK"/>
    </feature>
    <bundle id="com.google.guava">
      <category name="SDK"/>

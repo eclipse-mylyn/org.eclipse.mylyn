@@ -61,15 +61,11 @@
 	</build>
 
 	<modules>
-		<module>org.eclipse.mylyn.docs.development-feature</module>
-		<module>org.eclipse.mylyn.docs.sdk-feature</module>
-
 		<module>org.eclipse.mylyn.htmltext.feature</module>
 		<module>org.eclipse.mylyn.htmltext.ui</module>
-<!-- published with others
 		<module>org.eclipse.mylyn.docs-site</module>
--->
 	</modules>
+	<!-- FIXME: seems to be needed for maven publishing -->
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>

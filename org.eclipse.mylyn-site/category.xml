@@ -233,7 +233,7 @@
    <feature id="org.eclipse.mylyn.htmltext.feature">
       <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.docs.sdk">
+   <feature id="org.eclipse.mylyn.htmltext.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
