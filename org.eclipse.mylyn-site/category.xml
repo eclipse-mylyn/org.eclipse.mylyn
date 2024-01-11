@@ -14,6 +14,24 @@
  *******************************************************************************
 -->
 <site>
+   <feature id="org.eclipse.mylyn.htmltext.feature">
+      <category name="org.eclipse.mylyn.docs.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.htmltext.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.feature">
+      <category name="org.eclipse.mylyn.docs.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.extras.feature">
+      <category name="org.eclipse.mylyn.docs.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.extras.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
    <feature id="org.eclipse.mylyn.context.feature">
       <category name="org.eclipse.mylyn.features.category"/>
    </feature>
@@ -192,6 +210,11 @@
    <bundle id="org.apache.xmlrpc.server"/>
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
+      <description>
+         Mylyn Docs
+      </description>
+   </category-def>
    <category-def name="org.eclipse.mylyn.features.category" label="Mylyn Features">
       <description>
          The Task List and the Task-Focused Interface.
@@ -217,32 +240,4 @@
          Source code for integrators building on Mylyn.
       </description>
    </category-def>
-<!-- Mylyn Docs, to be aligned -->
-   <feature id="org.eclipse.mylyn.htmltext.feature">
-      <category name="org.eclipse.mylyn.docs.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.htmltext.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.wikitext.feature">
-      <category name="org.eclipse.mylyn.docs.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.wikitext.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.wikitext.extras.feature">
-      <category name="org.eclipse.mylyn.docs.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.wikitext.extras.feature.source">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.wikitext.sdk">
-      <category name="org.eclipse.mylyn.sdk.source.category"/>
-   </feature>
-   <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
-      <description>
-         Mylyn Docs
-      </description>
-   </category-def>
-
 </site>
