@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
-    <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>2.11.0${qualifier}</version>
-  </parent>
-  <artifactId>org.eclipse.mylyn.htmltext</artifactId>
-  <version>1.3.0${qualifier}</version>
-  <packaging>eclipse-feature</packaging>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>4.2.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.eclipse.mylyn.htmltext</artifactId>
+	<packaging>eclipse-feature</packaging>
 </project>

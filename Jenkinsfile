@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************/
 pipeline {
 	options {
 		timeout(time: 50, unit: 'MINUTES')
@@ -50,38 +62,6 @@ pipeline {
 				withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
 					sh 'gpg --batch --import "${KEYRING}"'
 					sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
-				}
-			}
-		}
-		stage('Build Docs') {
-			steps {
-				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
-				wrap([$class: 'Xvnc', useXauthority: true]) {
-					sh 'cd mylyn.docs && mvn clean verify -B -Psign -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Ddash.fail=false -Dgpg.passphrase="${KEYRING_PASSPHRASE}"'
-				}}
-			}
-			post {
-				always {
-					archiveArtifacts artifacts: '**/target/repository/**/*,**/target/*.zip,**/target/work/data/.metadata/.log'
-					junit '**/target/surefire-reports/TEST-*.xml'
-					recordIssues publishAllIssues: true, tools: [java(), mavenConsole(), javaDoc()]
-				}
-			}
-		}
-		stage('Deploy Docs Snapshot') {
-			when {
-				branch 'main'
-			}
-			steps {
-				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
-				sh '''
-					DOWNLOAD_AREA=/home/data/httpd/download.eclipse.org/mylyn/snapshots/nightly/docs/
-					echo DOWNLOAD_AREA=$DOWNLOAD_AREA
-					ssh genie.mylyn@projects-storage.eclipse.org "\
-						rm -rf  ${DOWNLOAD_AREA}/* && \
-						mkdir -p ${DOWNLOAD_AREA}"
-					scp -r mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/repository/* genie.mylyn@projects-storage.eclipse.org:${DOWNLOAD_AREA}
-				'''
 				}
 			}
 		}

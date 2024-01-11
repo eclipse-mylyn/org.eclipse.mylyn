@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark.tests
+Bundle-Version: 4.2.0.qualifier
+Bundle-Name: Mylyn WikiText CommonMark Tests
+Bundle-Vendor: Eclipse Mylyn
+Fragment-Host: org.eclipse.mylyn.wikitext.commonmark
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Import-Package: com.google.common.base;version="[33.0,34.0)",
+ com.google.common.collect;version="[33.0,34.0)",
+ com.google.common.escape;version="[33.0,34.0)",
+ com.google.common.io;version="[33.0,34.0)",
+ com.google.common.net;version="[33.0,34.0)",
+ org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
+ org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",
+ org.eclipse.mylyn.wikitext.parser.builder.event;version="4.2.0",
+ org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",
+ org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
+ org.junit;version="4.13.2",
+ org.junit.function;version="4.13.2",
+ org.junit.runner;version="4.13.2",
+ org.junit.runners;version="4.13.2",
+ org.mockito;version="5.8.0",
+ org.mockito.stubbing;version="5.8.0"

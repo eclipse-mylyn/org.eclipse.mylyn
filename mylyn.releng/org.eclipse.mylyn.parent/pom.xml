@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -224,9 +224,12 @@
               </environments>
               <target>
                 <artifact>
-                  <groupId>${project.parent.groupId}</groupId>
-                  <artifactId>${project.parent.groupId}.target</artifactId>
-                  <version>${project.parent.version}</version>
+<!-- revert back to ${project.parent.groupId} after Mylyn.Docs integration -->
+                  <groupId>org.eclipse.mylyn</groupId>
+<!-- revert back to ${project.parent.groupId}.target after Mylyn.Docs integration -->
+                  <artifactId>org.eclipse.mylyn.target</artifactId>
+<!-- revert back to ${project.parent.version} after Mylyn.Docs integration -->
+                  <version>4.2.0-SNAPSHOT</version>
                 </artifact>
               </target>
             </configuration>

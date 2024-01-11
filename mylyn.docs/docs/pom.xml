@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *******************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/.
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *   See git history
+ *******************************************************************************
+-->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-        <groupId>org.eclipse.mylyn.docs</groupId>
-        <artifactId>docs.main</artifactId>
-        <version>${releaseVersion}${qualifier}</version>
-        <relativePath>..</relativePath>
-    </parent>
-	
-	<groupId>org.eclipse.mylyn.docs</groupId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<artifactId>docs.main</artifactId>
+		<version>4.2.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
 	<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
 	<name>Mylyn Docs</name>
-	<version>2.11.0${qualifier}</version>
 	<packaging>pom</packaging>
 	<properties>
-		<sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
+		<sonar.skippedModules>
+			org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
 	</properties>
 	<repositories>
 		<repository>
@@ -35,17 +48,17 @@
 		</repository>
 	</repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <configuration>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<configuration>
+					<skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<modules>
 		<module>org.eclipse.mylyn.docs.development-feature</module>
@@ -53,10 +66,11 @@
 
 		<module>org.eclipse.mylyn.htmltext-feature</module>
 		<module>org.eclipse.mylyn.htmltext.ui</module>
-
+		<!-- published with others
 		<module>org.eclipse.mylyn.docs-site</module>
+-->
 	</modules>
-   <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
 			<artifactId>org.eclipse.mylyn.wikitext</artifactId>
