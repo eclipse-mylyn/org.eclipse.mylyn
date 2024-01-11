@@ -64,9 +64,9 @@
 		<module>org.eclipse.mylyn.docs.development-feature</module>
 		<module>org.eclipse.mylyn.docs.sdk-feature</module>
 
-		<module>org.eclipse.mylyn.htmltext-feature</module>
+		<module>org.eclipse.mylyn.htmltext.feature</module>
 		<module>org.eclipse.mylyn.htmltext.ui</module>
-		<!-- published with others
+<!-- published with others
 		<module>org.eclipse.mylyn.docs-site</module>
 -->
 	</modules>

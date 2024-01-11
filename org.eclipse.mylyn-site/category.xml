@@ -219,24 +219,24 @@
    </category-def>
 <!-- Mylyn Docs, to be aligned -->
    <feature id="org.eclipse.mylyn.wikitext_feature">
-      <category name="org.eclipse.mylyn.wikitext.category"/>
+      <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.editors_feature">
-      <category name="org.eclipse.mylyn.wikitext.category"/>
+      <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.extras_feature">
-      <category name="org.eclipse.mylyn.wikitext.category"/>
+      <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.htmltext">
-      <category name="org.eclipse.mylyn.wikitext.category"/>
+   <feature id="org.eclipse.mylyn.htmltext.feature">
+      <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.docs.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <category-def name="org.eclipse.mylyn.wikitext.category" label="Mylyn Docs">
+   <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
       <description>
          Mylyn Docs
       </description>
