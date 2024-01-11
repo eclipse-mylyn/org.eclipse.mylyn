@@ -218,19 +218,22 @@
       </description>
    </category-def>
 <!-- Mylyn Docs, to be aligned -->
-   <feature id="org.eclipse.mylyn.wikitext_feature">
+   <feature id="org.eclipse.mylyn.htmltext.feature">
       <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.wikitext.sdk">
+   <feature id="org.eclipse.mylyn.htmltext.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.feature">
+      <category name="org.eclipse.mylyn.docs.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.extras_feature">
       <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.htmltext.feature">
-      <category name="org.eclipse.mylyn.docs.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.htmltext.feature.source">
+   <feature id="org.eclipse.mylyn.wikitext.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
