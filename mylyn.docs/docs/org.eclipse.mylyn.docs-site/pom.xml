@@ -25,6 +25,7 @@
 	<artifactId>org.eclipse.mylyn.docs-site</artifactId>
 	<packaging>eclipse-repository</packaging>
 	<name>Mylyn Docs</name>
+	<!-- FIXME: move this tycho-gpg-plugin to a proper place so we can remove this module -->
 	<profiles>
 		<profile>
 			<id>sign</id>
