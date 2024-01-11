@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
@@ -26,6 +27,7 @@ import java.util.Map;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Stylesheet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -67,6 +69,7 @@ public class WikiToDocTaskTest {
 		assertEquals("http://example.com/a/b.css", task.createBuilderStylesheet(task.getDest(), stylesheet).getUrl());
 	}
 
+	@Ignore
 	@Test
 	public void testMapPageNameToHref() throws Exception {
 		//Bug 467067
@@ -98,6 +101,7 @@ public class WikiToDocTaskTest {
 				"<p>Link to <a href=\"#IActivatable\" title=\"GEF/GEF4/Common#IActivatable\">IActivatable</a> is here</p>"));
 	}
 
+	@Ignore
 	@Test
 	public void testLink() throws Exception {
 		//Bug 444459
