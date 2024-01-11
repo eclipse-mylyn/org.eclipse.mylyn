@@ -13,7 +13,7 @@
         ArSysOp - ongoing support
  -->
 <feature
-      id="org.eclipse.mylyn.htmltext"
+      id="org.eclipse.mylyn.htmltext.feature"
       label="%featureName"
       version="4.2.0.qualifier"
       provider-name="%providerName"

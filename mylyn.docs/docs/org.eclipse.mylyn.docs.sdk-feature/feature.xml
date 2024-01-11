@@ -34,7 +34,7 @@
    </license>
 
    <includes
-         id="org.eclipse.mylyn.htmltext"
+         id="org.eclipse.mylyn.htmltext.feature"
          version="0.0.0"/>
 
    <plugin
