@@ -230,8 +230,11 @@
    <feature id="org.eclipse.mylyn.wikitext.feature.source">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.wikitext.extras_feature">
+   <feature id="org.eclipse.mylyn.wikitext.extras.feature">
       <category name="org.eclipse.mylyn.docs.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.extras.feature.source">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>

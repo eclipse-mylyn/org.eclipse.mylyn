@@ -23,7 +23,7 @@
    <feature id="org.eclipse.mylyn.wikitext.feature">
       <category name="Features"/>
    </feature>
-   <feature id="org.eclipse.mylyn.wikitext.extras_feature">
+   <feature id="org.eclipse.mylyn.wikitext.extras.feature">
       <category name="Features"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.sdk">
