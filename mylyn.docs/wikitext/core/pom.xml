@@ -57,8 +57,9 @@
 		<module>org.eclipse.mylyn.wikitext.markdown</module>
 		<module>org.eclipse.mylyn.wikitext.markdown.tests</module>
 		<module>org.eclipse.mylyn.wikitext.mediawiki</module>
-		<module>org.eclipse.mylyn.wikitext.mediawiki.tests</module>
 		<module>org.eclipse.mylyn.wikitext.mediawiki.ant</module>
+		<module>org.eclipse.mylyn.wikitext.mediawiki.ant.tests</module>
+		<module>org.eclipse.mylyn.wikitext.mediawiki.tests</module>
 		<module>org.eclipse.mylyn.wikitext.tracwiki</module>
 		<module>org.eclipse.mylyn.wikitext.tracwiki.tests</module>
 		<module>org.eclipse.mylyn.wikitext.twiki</module>
