@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2022, 2023 ArSysOp and others
+ * Copyright (c) 2022, 2024 ArSysOp and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -217,4 +217,29 @@
          Source code for integrators building on Mylyn.
       </description>
    </category-def>
+<!-- Mylyn Docs, to be aligned -->
+   <feature id="org.eclipse.mylyn.wikitext_feature">
+      <category name="org.eclipse.mylyn.wikitext.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.editors_feature">
+      <category name="org.eclipse.mylyn.wikitext.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.sdk">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.wikitext.extras_feature">
+      <category name="org.eclipse.mylyn.wikitext.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.htmltext">
+      <category name="org.eclipse.mylyn.wikitext.category"/>
+   </feature>
+   <feature id="org.eclipse.mylyn.docs.sdk">
+      <category name="org.eclipse.mylyn.sdk.source.category"/>
+   </feature>
+   <category-def name="org.eclipse.mylyn.wikitext.category" label="Mylyn Docs">
+      <description>
+         Mylyn Docs
+      </description>
+   </category-def>
+
 </site>
