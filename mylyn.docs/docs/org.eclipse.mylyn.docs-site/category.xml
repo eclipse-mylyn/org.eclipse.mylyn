@@ -17,17 +17,17 @@
    <description>
       Mylyn Docs
    </description>
-   <feature id="org.eclipse.mylyn.wikitext_feature">
+   <feature id="org.eclipse.mylyn.htmltext.feature">
       <category name="Features"/>
    </feature>
-   <feature id="org.eclipse.mylyn.wikitext.sdk">
-      <category name="SDK"/>
+   <feature id="org.eclipse.mylyn.wikitext.feature">
+      <category name="Features"/>
    </feature>
    <feature id="org.eclipse.mylyn.wikitext.extras_feature">
       <category name="Features"/>
    </feature>
-   <feature id="org.eclipse.mylyn.htmltext.feature">
-      <category name="Features"/>
+   <feature id="org.eclipse.mylyn.wikitext.sdk">
+      <category name="SDK"/>
    </feature>
    <bundle id="com.google.guava">
      <category name="SDK"/>
