@@ -8,8 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
 Import-Package: org.apache.tools.ant,
  org.apache.tools.ant.types,
- org.eclipse.mylyn.wikitext.ant,
- org.eclipse.mylyn.wikitext.ant.internal,
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",
@@ -17,6 +15,5 @@ Import-Package: org.apache.tools.ant,
  org.eclipse.mylyn.wikitext.parser.util;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.splitter;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
- org.eclipse.mylyn.wikitext.validation;version="[4.2,5)",
- org.xml.sax
+ org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
 Export-Package: org.eclipse.mylyn.wikitext.ant;version="4.2.0";uses:="org.apache.tools.ant,org.eclipse.mylyn.wikitext.parser.markup"
