@@ -70,7 +70,6 @@
         <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.ui</module>
         <module>org.eclipse.mylyn.wikitext.ui.tests</module>
-        <module>org.eclipse.mylyn.wikitext.editors-feature</module>
         <module>org.eclipse.mylyn.wikitext-feature</module>
         <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
         <module>org.eclipse.mylyn.wikitext.extras-feature</module>

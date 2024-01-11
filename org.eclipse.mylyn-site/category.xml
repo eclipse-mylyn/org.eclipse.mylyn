@@ -221,9 +221,6 @@
    <feature id="org.eclipse.mylyn.wikitext_feature">
       <category name="org.eclipse.mylyn.docs.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.wikitext.editors_feature">
-      <category name="org.eclipse.mylyn.docs.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.wikitext.sdk">
       <category name="org.eclipse.mylyn.sdk.source.category"/>
    </feature>
