@@ -336,8 +336,8 @@
     </setupTask>
     <setupTask
         xsi:type="launching:LaunchTask"
-        id="launch.mylyn.docs"
-        launcher="mylyn.docs">
+        id="launch.mylyn.verify"
+        launcher="mylyn verify">
       <predecessor
           xsi:type="pde:TargetPlatformTask"
           href="#org.eclipse.mylyn.target"/>
@@ -354,7 +354,7 @@
     <setupTask
         xsi:type="projects:ProjectsBuildTask"
         id="build.all"
-        predecessor="launch.mylyn.docs"
+        predecessor="launch.mylyn.verify"
         refresh="true"
         clean="true">
       <description>Build All</description>
