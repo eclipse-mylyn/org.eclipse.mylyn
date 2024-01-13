@@ -336,8 +336,8 @@
     </setupTask>
     <setupTask
         xsi:type="launching:LaunchTask"
-        id="launch.mylyn.verify"
-        launcher="mylyn verify">
+        id="launch.mylyn.target"
+        launcher="mylyn target">
       <predecessor
           xsi:type="pde:TargetPlatformTask"
           href="#org.eclipse.mylyn.target"/>
@@ -352,9 +352,26 @@
           href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
     </setupTask>
     <setupTask
+        xsi:type="launching:LaunchTask"
+        id="launch.mylyn.docs.build"
+        launcher="mylyn docs build">
+      <predecessor
+          xsi:type="pde:TargetPlatformTask"
+          href="#org.eclipse.mylyn.target"/>
+      <predecessor
+          xsi:type="setup.targlets:TargletTask"
+          href="#mylyn.target.api"/>
+      <predecessor
+          xsi:type="pde:APIBaselineFromTargetTask"
+          href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
+      <predecessor
+          xsi:type="launching:LaunchTask"
+          href="#launch.mylyn.target"/>
+    </setupTask>
+    <setupTask
         xsi:type="projects:ProjectsBuildTask"
         id="build.all"
-        predecessor="launch.mylyn.verify"
+        predecessor="launch.mylyn.docs.build"
         refresh="true"
         clean="true">
       <description>Build All</description>
