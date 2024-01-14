@@ -4,14 +4,13 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
-    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -149,8 +148,31 @@
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        excludedTriggers="BOOTSTRAP"
+        predecessor="git.clone.mylyn"
+        targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText-Developer-Guide-toc.xml">
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+        &lt;toc label=&quot;WikiText-Developer-Guide&quot; topic=&quot;help/devguide/WikiText-Developer-Guide.html&quot;>
+        &lt;/toc>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        excludedTriggers="BOOTSTRAP"
+        predecessor="git.clone.mylyn"
+        targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide-toc.xml">
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+        &lt;toc label=&quot;Mylyn-WikiText-User-Guide&quot; topic=&quot;help/Mylyn-WikiText-User-Guide.html&quot;>
+        &lt;/toc>
+      </content>
+    </setupTask>
+    <setupTask
         xsi:type="projects:ProjectsImportTask"
-        id="mylyn.project.import">
+        id="mylyn.project.import"
+        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.1">
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
@@ -335,43 +357,8 @@
       </workingSet>
     </setupTask>
     <setupTask
-        xsi:type="launching:LaunchTask"
-        id="launch.mylyn.target"
-        launcher="mylyn target">
-      <predecessor
-          xsi:type="pde:TargetPlatformTask"
-          href="#org.eclipse.mylyn.target"/>
-      <predecessor
-          xsi:type="setup.workingsets:WorkingSetTask"
-          href="#mylyn.workingsets"/>
-      <predecessor
-          xsi:type="setup.targlets:TargletTask"
-          href="#mylyn.target.api"/>
-      <predecessor
-          xsi:type="pde:APIBaselineFromTargetTask"
-          href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
-    </setupTask>
-    <setupTask
-        xsi:type="launching:LaunchTask"
-        id="launch.mylyn.docs.build"
-        launcher="mylyn docs build">
-      <predecessor
-          xsi:type="pde:TargetPlatformTask"
-          href="#org.eclipse.mylyn.target"/>
-      <predecessor
-          xsi:type="setup.targlets:TargletTask"
-          href="#mylyn.target.api"/>
-      <predecessor
-          xsi:type="pde:APIBaselineFromTargetTask"
-          href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@setupTasks.6"/>
-      <predecessor
-          xsi:type="launching:LaunchTask"
-          href="#launch.mylyn.target"/>
-    </setupTask>
-    <setupTask
         xsi:type="projects:ProjectsBuildTask"
         id="build.all"
-        predecessor="launch.mylyn.docs.build"
         refresh="true"
         clean="true">
       <description>Build All</description>
