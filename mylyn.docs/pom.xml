@@ -393,11 +393,9 @@
         </pluginRepository>
     </pluginRepositories>
     <modules>
-        <module>target-platform</module>
         <module>wikitext</module>
         <!--module>epub</module-->
         <module>docs</module>
-        <module>aggregate</module>
     </modules>
     <distributionManagement>
         <repository>
