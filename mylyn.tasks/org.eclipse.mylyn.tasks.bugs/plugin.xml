@@ -20,31 +20,39 @@
               adaptable="false"
               id="org.eclipse.mylyn.internal.provisional.tasks.bugs.objectContribution"
               objectClass="org.eclipse.ui.internal.views.log.LogEntry">
-			<action
-		         class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromErrorAction"
-		         enablesFor="1"
-		         icon="icons/etool16/task-bug-new.gif"
-		         menubarPath="org.eclipse.pde.runtime.LogView"
-		         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-		         label="%NewTaskFromErrorAction.label">
+            <action
+                 class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromErrorAction"
+                 enablesFor="1"
+                 icon="icons/etool16/task-bug-new.gif"
+                 menubarPath="org.eclipse.pde.runtime.LogView"
+                 id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
+                 label="%NewTaskFromErrorAction.label">
              </action>
         </objectContribution>
    </extension>
 
    <extension point="org.eclipse.ui.actionSets">
-		<actionSet
+        <actionSet
             id="org.eclipse.mylyn.doc.actionSet"
             label="%actionSet.label"
             visible="true"> 
-        <action
+          <action
               class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugAction"
               icon="icons/etool16/task-bug-new.gif"
               id="org.eclipse.mylyn.tasks.ui.bug.report"
               label="%ReportBugAction.label"
               menubarPath="help/helpStart"
               style="push"
-              tooltip="%ReportBugAction.tooltip"/> 
-    	</actionSet>
+              enablesFor="*"
+              tooltip="%ReportBugAction.tooltip"> 
+              <enablement>
+                 <systemProperty
+                       name="org.eclipse.mylyn.tasks.bugs.actions.ReportBugAction.active"
+                       value="true">
+                 </systemProperty>
+              </enablement> 
+          </action>
+        </actionSet>
    </extension>
   
    <extension

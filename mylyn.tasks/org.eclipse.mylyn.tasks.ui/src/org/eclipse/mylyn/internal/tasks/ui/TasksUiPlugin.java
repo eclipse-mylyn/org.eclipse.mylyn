@@ -129,6 +129,7 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -172,7 +173,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskDataManager taskDataManager;
 
-	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
+	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<>();
 
 	private static AbstractTaskContextStore contextStore;
 
@@ -184,16 +185,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private ServiceMessageManager serviceMessageManager;
 
-	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<AbstractTaskEditorPageFactory>();
+	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<>();
 
-	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
+	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<>(
 			new OrderComparator());
 
 	private TaskListExternalizer taskListExternalizer;
 
 	private final BrandManager brandManager = new BrandManager();
 
-	private final Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+	private final Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<>();
 
 	private ISaveParticipant saveParticipant;
 
@@ -202,7 +203,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	// shared colors for all forms
 	private FormColors formColors;
 
-	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
+	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<>();
 
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
@@ -215,16 +216,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		@Override
 		public String toString() {
-			switch (this) {
-			case ONE_HOUR:
-				return "1 hour"; //$NON-NLS-1$
-			case THREE_HOURS:
-				return "3 hours"; //$NON-NLS-1$
-			case DAY:
-				return "1 day"; //$NON-NLS-1$
-			default:
-				return "3 hours"; //$NON-NLS-1$
-			}
+			return switch (this) {
+				case ONE_HOUR -> "1 hour"; //$NON-NLS-1$
+				case THREE_HOURS -> "3 hours"; //$NON-NLS-1$
+				case DAY -> "1 day"; //$NON-NLS-1$
+				default -> "3 hours"; //$NON-NLS-1$
+			};
 		}
 
 		public static TaskListSaveMode fromString(String string) {
@@ -245,16 +242,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		public static long fromStringToLong(String string) {
 			long hour = 3600 * 1000;
-			switch (fromString(string)) {
-			case ONE_HOUR:
-				return hour;
-			case THREE_HOURS:
-				return hour * 3;
-			case DAY:
-				return hour * 24;
-			default:
-				return hour * 3;
-			}
+			return switch (fromString(string)) {
+				case ONE_HOUR -> hour;
+				case THREE_HOURS -> hour * 3;
+				case DAY -> hour * 24;
+				default -> hour * 3;
+			};
 		}
 	}
 
@@ -266,7 +259,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		public Set<AbstractUiNotification> getNotifications() {
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
-			Set<AbstractUiNotification> reminders = new HashSet<AbstractUiNotification>();
+			Set<AbstractUiNotification> reminders = new HashSet<>();
 			for (AbstractTask task : allTasks) {
 				if (TasksUiPlugin.getTaskActivityManager().isPastReminder(task) && !task.isReminded()) {
 					reminders.add(new TaskListNotificationReminder(task));
@@ -308,7 +301,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskListExternalizationParticipant taskListExternalizationParticipant;
 
-	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
+	private final Set<IRepositoryModelListener> listeners = new HashSet<>();
 
 	private File activationHistoryFile;
 
@@ -448,7 +441,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public TasksUiPlugin() {
-		super();
 		INSTANCE = this;
 	}
 
@@ -492,6 +484,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			WebUtil.init();
 			initializePreferences(getPreferenceStore());
 
+			// start plugin org.eclipse.mylyn.tasks.bugs so that we can enable/disable
+			// the "Report Bug or Enhancement..." action
+			// see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/338
+			for (Bundle bundle : context.getBundles()) {
+				String symbolicName = bundle.getSymbolicName();
+				if (symbolicName.equals("org.eclipse.mylyn.tasks.bugs")) {
+					bundle.start();
+				}
+			}
+
 			// initialize CommonFonts from UI thread: bug 240076
 			if (CommonFonts.BOLD == null) {
 				// ignore
@@ -499,7 +501,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-
 			// create data model
 			externalizationManager = new ExternalizationManager(getDataDirectory());
 
@@ -610,29 +611,29 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
 					new NotificationEnvironment() {
-						private Set<String> installedFeatures;
+				private Set<String> installedFeatures;
 
-						@Override
-						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
-							if (installedFeatures == null) {
-								installedFeatures = fetchInstalledFeatures(monitor);
-							}
-							return installedFeatures;
-						}
+				@Override
+				public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+					if (installedFeatures == null) {
+						installedFeatures = fetchInstalledFeatures(monitor);
+					}
+					return installedFeatures;
+				}
 
-						private Set<String> fetchInstalledFeatures(IProgressMonitor monitor) {
-							Set<String> features = new HashSet<>();
-							IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
-									.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
-							if (profile != null) {
-								for (IInstallableUnit unit : profile.available(QueryUtil.createIUGroupQuery(),
-										monitor)) {
-									features.add(unit.getId());
-								}
-							}
-							return features;
+				private Set<String> fetchInstalledFeatures(IProgressMonitor monitor) {
+					Set<String> features = new HashSet<>();
+					IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
+							.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
+					if (profile != null) {
+						for (IInstallableUnit unit : profile.available(QueryUtil.createIUGroupQuery(),
+								monitor)) {
+							features.add(unit.getId());
 						}
-					});
+					}
+					return features;
+				}
+			});
 
 			// Disabled for initial 3.4 release as per bug#263528
 			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
@@ -652,7 +653,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("deprecation")
 	private void migrateCredentials(final List<TaskRepository> repositories) {
-		final boolean force = Boolean.parseBoolean(System.getProperty(PROP_FORCE_CREDENTIALS_MIGRATION));
+		final boolean force = Boolean.getBoolean(PROP_FORCE_CREDENTIALS_MIGRATION);
 		final boolean migrateFromSecureStore = force
 				|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE);
 		final boolean migrateFromKeyring = (force
@@ -841,7 +842,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		} catch (Exception e) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list stop terminated abnormally", e)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list stop terminated abnormally", e)); //$NON-NLS-1$
 		} finally {
 			super.stop(context);
 		}
@@ -947,12 +948,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
 				MonitorUiPlugin.getDefault()
-						.getPreferenceStore()
-						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+				.getPreferenceStore()
+				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
 			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			.getPreferenceStore()
+			.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -989,8 +990,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED, true);
-		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000)); //$NON-NLS-1$
-		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS, "" + (5 * 60 * 1000)); //$NON-NLS-1$
+		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + 20 * 60 * 1000); //$NON-NLS-1$
+		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS, "" + 5 * 60 * 1000); //$NON-NLS-1$
 
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
@@ -1054,7 +1055,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return groupSubtasks;
 	}
 
-	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
+	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<>();
 
 	@SuppressWarnings("rawtypes")
 	private ServiceTracker identityServiceTracker;
@@ -1066,7 +1067,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public void addDynamicPopupContributor(String menuPath, IDynamicSubMenuContributor contributor) {
 		List<IDynamicSubMenuContributor> contributors = menuContributors.get(menuPath);
 		if (contributors == null) {
-			contributors = new ArrayList<IDynamicSubMenuContributor>();
+			contributors = new ArrayList<>();
 			menuContributors.put(menuPath, contributors);
 		}
 		contributors.add(contributor);
@@ -1158,7 +1159,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void addRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider repositoryLinkProvider) {
 		if (repositoryLinkProvider != null) {
-			this.repositoryLinkProviders.add(repositoryLinkProvider);
+			repositoryLinkProviders.add(repositoryLinkProvider);
 		}
 	}
 
@@ -1171,7 +1172,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
-		if (!repositoryConnectorUiMap.values().contains(repositoryConnectorUi)) {
+		if (!repositoryConnectorUiMap.containsValue(repositoryConnectorUi)) {
 			repositoryConnectorUiMap.put(repositoryConnectorUi.getConnectorKind(), repositoryConnectorUi);
 		}
 	}
@@ -1311,11 +1312,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		long timeout;
 		try {
 			timeout = Long.parseLong(System.getProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT,
-					DEFAULT_LINK_PROVIDER_TIMEOUT + "")); //$NON-NLS-1$
+			DEFAULT_LINK_PROVIDER_TIMEOUT + ""));
 		} catch (NumberFormatException e) {
 			timeout = DEFAULT_LINK_PROVIDER_TIMEOUT;
 		}
-		Set<AbstractTaskRepositoryLinkProvider> defectiveLinkProviders = new HashSet<AbstractTaskRepositoryLinkProvider>();
+		Set<AbstractTaskRepositoryLinkProvider> defectiveLinkProviders = new HashSet<>();
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			long startTime = System.currentTimeMillis();
 			final TaskRepository[] repository = new TaskRepository[1];
@@ -1433,7 +1434,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 		} catch (Throwable t) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize notifications", t)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize notifications", t)); //$NON-NLS-1$
 		}
 
 		try {
