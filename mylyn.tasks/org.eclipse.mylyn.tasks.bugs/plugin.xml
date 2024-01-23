@@ -31,30 +31,54 @@
         </objectContribution>
    </extension>
 
-   <extension point="org.eclipse.ui.actionSets">
-        <actionSet
-            id="org.eclipse.mylyn.doc.actionSet"
-            label="%actionSet.label"
-            visible="true"> 
-          <action
-              class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugAction"
-              icon="icons/etool16/task-bug-new.gif"
-              id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="%ReportBugAction.label"
-              menubarPath="help/helpStart"
-              style="push"
-              enablesFor="*"
-              tooltip="%ReportBugAction.tooltip"> 
-              <enablement>
-                 <systemProperty
-                       name="org.eclipse.mylyn.tasks.bugs.actions.ReportBugAction.active"
-                       value="true">
-                 </systemProperty>
-              </enablement> 
-          </action>
-        </actionSet>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="description for Report Bug Action"
+            id="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction"
+            name="%ReportBugAction.label">
+      </command>
    </extension>
-  
+   <extension
+         point="org.eclipse.ui.handlers">
+       <handler
+            class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugHandler"
+            commandId="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction">
+        <enabledWhen>
+          <test
+                property="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester.showTrim">
+          </test>
+        </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.mylyn.internal.tasks.bugs.ProviderPropertyTester"
+            id="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester.Provider"
+            namespace="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester"
+            properties="showTrim"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+       <menuContribution
+            locationURI="menu:help?after=group.main.ext">
+            <command
+                  commandId="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction"
+                  icon="icons/etool16/task-bug-new.gif"
+                  mnemonic="%commands.newTaskFromMarker.mnemonic"
+                  tooltip="%ReportBugAction.tooltip"
+                  style="push">
+	      	<visibleWhen
+	        	    checkEnabled="true">
+	      	</visibleWhen>
+           </command>
+      </menuContribution>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.handlers">
        <handler
