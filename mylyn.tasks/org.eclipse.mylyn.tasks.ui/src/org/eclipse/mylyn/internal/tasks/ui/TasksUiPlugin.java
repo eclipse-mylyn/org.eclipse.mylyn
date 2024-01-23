@@ -129,7 +129,6 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -484,16 +483,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			WebUtil.init();
 			initializePreferences(getPreferenceStore());
 
-			// start plugin org.eclipse.mylyn.tasks.bugs so that we can enable/disable
-			// the "Report Bug or Enhancement..." action
-			// see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/338
-			for (Bundle bundle : context.getBundles()) {
-				String symbolicName = bundle.getSymbolicName();
-				if (symbolicName.equals("org.eclipse.mylyn.tasks.bugs")) {
-					bundle.start();
-				}
-			}
-
 			// initialize CommonFonts from UI thread: bug 240076
 			if (CommonFonts.BOLD == null) {
 				// ignore
@@ -501,6 +490,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
+
 			// create data model
 			externalizationManager = new ExternalizationManager(getDataDirectory());
 
