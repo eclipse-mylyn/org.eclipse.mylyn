@@ -1,24 +1,29 @@
 /*******************************************************************************
- * Copyright © 2024 frank
+ * Copyright © 2024 Frank Becker
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * https://www.eclipse.org/legal/epl-v20.html.
  *
  * Contributors:
- *     frank - initial API and implementation
+ *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-public class ProviderPropertyTester extends PropertyTester {
+public final class ProviderPropertyTester extends PropertyTester {
+
+	private static final String ANY_PROVIDER = "anyProvider"; //$NON-NLS-1$
 
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		// ignore
-		return true;
+		if (ANY_PROVIDER.equals(property)) {
+			SupportProviderManager providerManager = TasksBugsPlugin.getTaskErrorReporter().getProviderManager();
+			return providerManager != null && providerManager.getProviders().size() > 0;
+		}
+		return false;
 	}
 
 }

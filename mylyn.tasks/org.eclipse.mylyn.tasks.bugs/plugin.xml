@@ -34,7 +34,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="description for Report Bug Action"
+            description="Report Bug or Enhancement for predefined Products / Projects"
             id="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction"
             name="%ReportBugAction.label">
       </command>
@@ -44,20 +44,15 @@
        <handler
             class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugHandler"
             commandId="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction">
-        <enabledWhen>
-          <test
-                property="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester.showTrim">
-          </test>
-        </enabledWhen>
-      </handler>
+       </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
             class="org.eclipse.mylyn.internal.tasks.bugs.ProviderPropertyTester"
             id="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester.Provider"
-            namespace="org.eclipse.mylyn.tasks.tasks.bugs.propertyTester"
-            properties="showTrim"
+            namespace="org.eclipse.mylyn.tasks.tasks.bugs"
+            properties="anyProvider"
             type="java.lang.Object">
       </propertyTester>
    </extension>
@@ -74,6 +69,9 @@
                   style="push">
 	      	<visibleWhen
 	        	    checkEnabled="true">
+          <test
+                property="org.eclipse.mylyn.tasks.tasks.bugs.anyProvider">
+          </test>
 	      	</visibleWhen>
            </command>
       </menuContribution>

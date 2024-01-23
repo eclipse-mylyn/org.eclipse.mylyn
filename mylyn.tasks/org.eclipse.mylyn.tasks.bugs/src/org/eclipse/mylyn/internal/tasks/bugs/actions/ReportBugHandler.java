@@ -16,13 +16,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.tasks.bugs.SupportProviderManager;
-import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportBugOrEnhancementWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class ReportBugHandler extends AbstractHandler {
+public final class ReportBugHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -30,13 +28,6 @@ public class ReportBugHandler extends AbstractHandler {
 		WizardDialog dialog = new WizardDialog(shell, new ReportBugOrEnhancementWizard());
 		dialog.open();
 		return null;
-	}
-
-	@Override
-	public void setEnabled(Object evaluationContext) {
-		super.setEnabled(evaluationContext);
-		SupportProviderManager providerManager = TasksBugsPlugin.getTaskErrorReporter().getProviderManager();
-		setBaseEnabled(providerManager != null && providerManager.getProviders().size() > 0);
 	}
 
 }
