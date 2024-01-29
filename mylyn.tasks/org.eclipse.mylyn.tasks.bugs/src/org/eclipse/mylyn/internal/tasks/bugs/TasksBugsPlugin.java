@@ -78,9 +78,6 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
-		SupportProviderManager providerManager = getTaskErrorReporter().getProviderManager();
-		System.setProperty("org.eclipse.mylyn.tasks.bugs.actions.ReportBugAction.active",
-				Boolean.toString(providerManager != null && providerManager.getProviders().size() > 0));
 	}
 
 	@Override

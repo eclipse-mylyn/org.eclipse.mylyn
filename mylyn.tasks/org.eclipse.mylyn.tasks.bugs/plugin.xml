@@ -34,7 +34,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="Report Bug or Enhancement for predefined Products / Projects"
+            description="%ReportBugAction.description"
             id="org.eclipse.mylyn.tasks.bugs.commands.ReportBugAction"
             name="%ReportBugAction.label">
       </command>
