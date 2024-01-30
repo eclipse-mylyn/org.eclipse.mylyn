@@ -26,14 +26,14 @@ process() {
 
 if [ ! -d $reference_folder ]
 then
-	echo '$0 must be run from the root Mylyn folder'
+	echo '$0 must be run from the root org.eclipse.mylyn folder like this: org.eclipse.mylyn.releng/bin/synch_code_style.sh'
 	exit 1
 fi
 
 for i in $(find . -type d -name .settings | grep -v $reference_folder | grep -v target/)
 do
 	process $i "org.eclipse.jdt.core.prefs"
-	process $i "org.eclipse.jdt.ui.prefs"+
+	process $i "org.eclipse.jdt.ui.prefs"
 done
 if [ "$changed_files" != "" ]
 then
