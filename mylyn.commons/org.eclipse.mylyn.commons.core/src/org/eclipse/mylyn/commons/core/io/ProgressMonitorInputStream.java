@@ -20,10 +20,9 @@ import java.io.InterruptedIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * Updates a progress monitor as bytes are read from the input stream. Also starts a background thread to provide
- * responsive cancellation on read(). Supports resuming partially completed operations after an InterruptedIOException
- * if the underlying stream does. Check the bytesTransferred field to determine how much of the operation completed;
- * conversely, at what point to resume.
+ * Updates a progress monitor as bytes are read from the input stream. Also starts a background thread to provide responsive cancellation on
+ * read(). Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does. Check the
+ * bytesTransferred field to determine how much of the operation completed; conversely, at what point to resume.
  * 
  * @since 3.7
  */
@@ -82,8 +81,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
 	 * 
 	 * @throws InterruptedIOException
-	 *             if the operation was interrupted before all of the bytes specified have been skipped,
-	 *             bytesTransferred will be zero
+	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred will be zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -101,8 +99,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
 	 * 
 	 * @throws InterruptedIOException
-	 *             if the operation was interrupted before all of the bytes specified have been skipped,
-	 *             bytesTransferred may be non-zero
+	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -126,8 +123,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
 	 * 
 	 * @throws InterruptedIOException
-	 *             if the operation was interrupted before all of the bytes specified have been skipped,
-	 *             bytesTransferred may be non-zero
+	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -155,7 +151,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	private void update(boolean now) {
 		if (bytesRead >= nextUpdate || now) {
-			nextUpdate = bytesRead - (bytesRead % updateIncrement);
+			nextUpdate = bytesRead - bytesRead % updateIncrement;
 			if (nextUpdate != lastUpdate) {
 				updateMonitor(nextUpdate, bytesTotal, monitor);
 			}

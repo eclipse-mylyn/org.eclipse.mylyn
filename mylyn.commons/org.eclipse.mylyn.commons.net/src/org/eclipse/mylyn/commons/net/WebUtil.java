@@ -84,8 +84,8 @@ import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
 public class WebUtil {
 
 	/**
-	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
-	 * Linux/2.6.20-16-lowlatency (i386; en)
+	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun) Linux/2.6.20-16-lowlatency
+	 * (i386; en)
 	 */
 	private static final String USER_AGENT;
 
@@ -202,13 +202,13 @@ public class WebUtil {
 		// FIXME fix connection leaks
 		if (CoreUtil.TEST_MODE) {
 			client.getHttpConnectionManager()
-			.getParams()
-			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
+					.getParams()
+					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
 		} else {
 			client.getHttpConnectionManager()
-			.getParams()
-			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
-					NetUtil.getMaxHttpConnectionsPerHost());
+					.getParams()
+					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
+							NetUtil.getMaxHttpConnectionsPerHost());
 			client.getHttpConnectionManager().getParams().setMaxTotalConnections(NetUtil.getMaxHttpConnections());
 		}
 	}
@@ -580,9 +580,9 @@ public class WebUtil {
 	}
 
 	/**
-	 * Returns a user agent string that contains information about the platform and operating system. The
-	 * <code>product</code> parameter allows to additional specify custom text that is inserted into the returned
-	 * string. The exact return value depends on the environment.
+	 * Returns a user agent string that contains information about the platform and operating system. The <code>product</code> parameter
+	 * allows to additional specify custom text that is inserted into the returned string. The exact return value depends on the
+	 * environment.
 	 * <p>
 	 * Examples:
 	 * <ul>
@@ -781,18 +781,18 @@ public class WebUtil {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
 			boolean authenticated = proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0
 					&& proxyPassword.length() > 0;
-					if (authenticated) {
-						return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
-					} else {
-						return new Proxy(Type.HTTP, sockAddr);
-					}
+			if (authenticated) {
+				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+			} else {
+				return new Proxy(Type.HTTP, sockAddr);
+			}
 		}
 		return Proxy.NO_PROXY;
 	}
 
 	/**
-	 * Releases the connection used by <code>method</code>. If <code>monitor</code> is cancelled the connection is
-	 * aborted to avoid blocking.
+	 * Releases the connection used by <code>method</code>. If <code>monitor</code> is cancelled the connection is aborted to avoid
+	 * blocking.
 	 * 
 	 * @since 3.4
 	 */

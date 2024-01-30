@@ -83,8 +83,8 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	@Override
 	protected WorkbenchJob doCreateRefreshJob() {
-		this.refreshJob = super.doCreateRefreshJob();
-		return this.refreshJob;
+		refreshJob = super.doCreateRefreshJob();
+		return refreshJob;
 	}
 
 	@Override

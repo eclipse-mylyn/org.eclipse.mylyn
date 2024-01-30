@@ -27,6 +27,7 @@ public abstract class Operation<T> implements Callable<T>, ICancellable {
 	 * 
 	 * @since 3.7
 	 */
+	@Override
 	public abstract void abort();
 
 }

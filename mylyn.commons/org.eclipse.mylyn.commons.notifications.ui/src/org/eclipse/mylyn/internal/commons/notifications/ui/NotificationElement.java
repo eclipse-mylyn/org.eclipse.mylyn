@@ -36,8 +36,8 @@ public class NotificationElement {
 	public NotificationElement(IConfigurationElement element) {
 		Assert.isNotNull(element);
 		this.element = element;
-		this.id = element.getAttribute("id"); //$NON-NLS-1$
-		this.label = element.getAttribute("label"); //$NON-NLS-1$
+		id = element.getAttribute("id"); //$NON-NLS-1$
+		label = element.getAttribute("label"); //$NON-NLS-1$
 	}
 
 	public String getId() {

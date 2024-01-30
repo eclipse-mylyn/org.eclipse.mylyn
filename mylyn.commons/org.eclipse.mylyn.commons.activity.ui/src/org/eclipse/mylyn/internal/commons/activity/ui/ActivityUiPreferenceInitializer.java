@@ -43,12 +43,12 @@ public class ActivityUiPreferenceInitializer extends AbstractPreferenceInitializ
 			}
 
 			boolean booleanValue = oldPrefs.getBoolean("org.eclipse.mylyn.monitor.ui.activity.timeout.enabled"); //$NON-NLS-1$
-			if (booleanValue != true) {
+			if (!booleanValue) {
 				prefs.setValue(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED, booleanValue);
 			}
 
 			booleanValue = oldPrefs.getBoolean("org.eclipse.mylyn.monitor.activity.tracking.enabled"); //$NON-NLS-1$
-			if (booleanValue != false) {
+			if (booleanValue) {
 				prefs.setValue(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED, booleanValue);
 			}
 		}

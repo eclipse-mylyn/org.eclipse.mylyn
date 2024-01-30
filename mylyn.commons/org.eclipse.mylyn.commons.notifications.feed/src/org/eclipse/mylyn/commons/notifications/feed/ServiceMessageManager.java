@@ -62,7 +62,7 @@ public class ServiceMessageManager {
 
 	private String lastModified;
 
-	private final List<IServiceMessageListener> listeners = new CopyOnWriteArrayList<IServiceMessageListener>();
+	private final List<IServiceMessageListener> listeners = new CopyOnWriteArrayList<>();
 
 	private Job messageCheckJob;
 
@@ -78,12 +78,12 @@ public class ServiceMessageManager {
 
 	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag, long checktime,
 			NotificationEnvironment environment) {
-		this.url = serviceMessageUrl;
+		url = serviceMessageUrl;
 		this.lastModified = lastModified;
 		this.checktime = checktime;
 		this.eTag = eTag;
 		this.environment = environment;
-		this.eventId = ID_EVENT_SERVICE_MESSAGE;
+		eventId = ID_EVENT_SERVICE_MESSAGE;
 	}
 
 	public void addServiceMessageListener(IServiceMessageListener listener) {
@@ -95,7 +95,7 @@ public class ServiceMessageManager {
 	}
 
 	public List<ServiceMessage> getServiceMessages() {
-		return new ArrayList<ServiceMessage>(this.messages);
+		return new ArrayList<>(messages);
 	}
 
 	public String getUrl() {
@@ -168,11 +168,13 @@ public class ServiceMessageManager {
 
 		for (final IServiceMessageListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, INotificationsFeed.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.handleEvent(event);
 				}
@@ -205,10 +207,8 @@ public class ServiceMessageManager {
 					eTag = connection.getHeaderField("ETag"); //$NON-NLS-1$
 
 					InputStream in = new BufferedInputStream(connection.getInputStream());
-					try {
+					try (in) {
 						messages = readMessages(in, monitor);
-					} finally {
-						in.close();
 					}
 				} else if (status == HttpURLConnection.HTTP_NOT_FOUND) {
 					// no messages
@@ -254,17 +254,19 @@ public class ServiceMessageManager {
 			message.setLastModified(lastModified);
 		}
 
-		ArrayList<ServiceMessage> sortedMessages = new ArrayList<ServiceMessage>(messages);
+		ArrayList<ServiceMessage> sortedMessages = new ArrayList<>(messages);
 		Collections.sort(messages);
 		final ServiceMessageEvent event = new ServiceMessageEvent(this, ServiceMessageEvent.Kind.MESSAGE_UPDATE,
 				sortedMessages);
 		for (final IServiceMessageListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, INotificationsFeed.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.handleEvent(event);
 				}

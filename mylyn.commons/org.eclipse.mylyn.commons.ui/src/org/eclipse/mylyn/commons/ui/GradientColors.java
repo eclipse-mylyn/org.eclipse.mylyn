@@ -189,12 +189,9 @@ public class GradientColors {
 	private RGB getBackground() {
 		RGB themeBg = getRGBFromTheme("background-color"); //$NON-NLS-1$
 		RGB impliedBg = getImpliedBackground().getRGB();
-		if (themeBg == null) {
-			return impliedBg;
-		}
 		// use the theme background only if it is significantly different than the implied
-		if (absoluteDifference(themeBg.red, impliedBg.red) < 40 && absoluteDifference(themeBg.blue, impliedBg.blue) < 40
-				&& absoluteDifference(themeBg.green, impliedBg.green) < 40) {
+		if ((themeBg == null) || (absoluteDifference(themeBg.red, impliedBg.red) < 40 && absoluteDifference(themeBg.blue, impliedBg.blue) < 40
+				&& absoluteDifference(themeBg.green, impliedBg.green) < 40)) {
 			return impliedBg;
 		}
 		return themeBg;

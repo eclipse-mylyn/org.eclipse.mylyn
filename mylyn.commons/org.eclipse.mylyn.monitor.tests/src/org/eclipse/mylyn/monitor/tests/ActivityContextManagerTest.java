@@ -14,10 +14,10 @@ package org.eclipse.mylyn.monitor.tests;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -67,7 +67,7 @@ public class ActivityContextManagerTest extends TestCase {
 	protected void setUp() throws Exception {
 		monitor1 = new StubMonitor();
 		monitor2 = new StubMonitor();
-		manager = new ActivityContextManager(Arrays.asList(new AbstractUserActivityMonitor[] { monitor1, monitor2 }));
+		manager = new ActivityContextManager(Arrays.asList(monitor1, monitor2));
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class ActivityContextManagerTest extends TestCase {
 		if (manager != null) {
 			manager.stop();
 		}
-	};
+	}
 
 	public void testStartStop() {
 		manager.start();

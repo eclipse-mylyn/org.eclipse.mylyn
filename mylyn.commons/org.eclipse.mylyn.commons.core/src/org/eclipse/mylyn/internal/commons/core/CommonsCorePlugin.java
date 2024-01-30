@@ -48,7 +48,7 @@ public class CommonsCorePlugin extends Plugin {
 	public static synchronized ExecutorService getExecutorService() {
 		if (service == null) {
 			service = new ThreadPoolExecutor(1, MAX_CONCURRENT_REQUESTS, 10L, TimeUnit.SECONDS,
-					new SynchronousQueue<Runnable>());
+					new SynchronousQueue<>());
 		}
 		return service;
 	}

@@ -20,14 +20,14 @@ package org.eclipse.mylyn.commons.identity.core;
  */
 public interface IProfile {
 
-	public abstract String getCity();
+	String getCity();
 
-	public abstract String getCountry();
+	String getCountry();
 
-	public abstract String getEmail();
+	String getEmail();
 
-	public abstract IIdentity getIdentity();
+	IIdentity getIdentity();
 
-	public abstract String getName();
+	String getName();
 
 }

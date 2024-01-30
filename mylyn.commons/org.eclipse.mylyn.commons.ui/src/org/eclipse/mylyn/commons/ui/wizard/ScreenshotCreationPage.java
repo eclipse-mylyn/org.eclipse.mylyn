@@ -45,6 +45,7 @@ public class ScreenshotCreationPage extends WizardPage {
 				+ Messages.ScreenshotCreationPage_NOTE_THAT_YOU_CONTINUTE);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		viewer = new ScreenshotViewer(parent, SWT.BORDER | SWT.FLAT) {
 			@Override
@@ -58,7 +59,7 @@ public class ScreenshotCreationPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return (viewer != null) && viewer.isComplete();
+		return viewer != null && viewer.isComplete();
 	}
 
 	public boolean isImageDirty() {

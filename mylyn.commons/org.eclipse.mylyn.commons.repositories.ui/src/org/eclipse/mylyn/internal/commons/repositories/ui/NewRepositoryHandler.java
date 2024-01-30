@@ -25,6 +25,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow workbenchWindow = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		return RepositoryUi.openNewRepositoryDialog(workbenchWindow, null);

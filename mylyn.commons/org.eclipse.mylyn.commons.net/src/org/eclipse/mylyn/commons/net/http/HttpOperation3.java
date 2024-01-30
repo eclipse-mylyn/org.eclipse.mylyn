@@ -74,10 +74,7 @@ public abstract class HttpOperation3<T> {
 		int code;
 		try {
 			code = WebUtil.execute(client.getHttpClient(), client.getHostConfiguration(monitor), method, monitor);
-		} catch (IOException e) {
-			WebUtil.releaseConnection((HttpMethodBase) method, monitor);
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			WebUtil.releaseConnection((HttpMethodBase) method, monitor);
 			throw e;
 		}

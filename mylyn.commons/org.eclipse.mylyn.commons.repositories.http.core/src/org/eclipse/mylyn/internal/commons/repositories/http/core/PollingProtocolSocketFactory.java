@@ -32,10 +32,12 @@ public class PollingProtocolSocketFactory implements SchemeSocketFactory {
 
 	private final static SocketFactory factory = SocketFactory.getDefault();
 
+	@Override
 	public Socket createSocket(HttpParams params) throws IOException {
 		return NetUtil.configureSocket(factory.createSocket());
 	}
 
+	@Override
 	public Socket connectSocket(Socket sock, InetSocketAddress remoteAddress, InetSocketAddress localAddress,
 			HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 
@@ -52,6 +54,7 @@ public class PollingProtocolSocketFactory implements SchemeSocketFactory {
 		return socket;
 	}
 
+	@Override
 	public boolean isSecure(Socket sock) throws IllegalArgumentException {
 		return false;
 	}

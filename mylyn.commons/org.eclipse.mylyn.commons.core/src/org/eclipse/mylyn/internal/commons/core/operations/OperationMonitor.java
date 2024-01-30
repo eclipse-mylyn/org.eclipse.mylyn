@@ -37,6 +37,7 @@ public class OperationMonitor implements IOperationMonitor {
 		this.monitor = SubMonitor.convert(monitor, taskName, work);
 	}
 
+	@Override
 	public synchronized void addFlag(OperationFlag flag) {
 		if (root != null) {
 			root.addFlag(flag);
@@ -47,14 +48,17 @@ public class OperationMonitor implements IOperationMonitor {
 		}
 	}
 
+	@Override
 	public void beginTask(String name, int totalWork) {
 		monitor.beginTask(name, totalWork);
 	}
 
+	@Override
 	public void clearBlocked() {
 		monitor.clearBlocked();
 	}
 
+	@Override
 	public void done() {
 		monitor.done();
 	}
@@ -64,6 +68,7 @@ public class OperationMonitor implements IOperationMonitor {
 		return monitor.equals(obj);
 	}
 
+	@Override
 	public synchronized boolean hasFlag(OperationFlag flag) {
 		if (root != null) {
 			return root.hasFlag(flag);
@@ -78,22 +83,27 @@ public class OperationMonitor implements IOperationMonitor {
 		return monitor.hashCode();
 	}
 
+	@Override
 	public void internalWorked(double work) {
 		monitor.internalWorked(work);
 	}
 
+	@Override
 	public boolean isCanceled() {
 		return monitor.isCanceled();
 	}
 
+	@Override
 	public IOperationMonitor newChild(int totalWork) {
-		return new OperationMonitor((root == null) ? this : root, monitor.newChild(totalWork));
+		return new OperationMonitor(root == null ? this : root, monitor.newChild(totalWork));
 	}
 
+	@Override
 	public IOperationMonitor newChild(int totalWork, int suppressFlags) {
-		return new OperationMonitor((root == null) ? this : root, monitor.newChild(totalWork, suppressFlags));
+		return new OperationMonitor(root == null ? this : root, monitor.newChild(totalWork, suppressFlags));
 	}
 
+	@Override
 	public synchronized void removeFlag(OperationFlag flag) {
 		if (root != null) {
 			root.removeFlag(flag);
@@ -102,23 +112,28 @@ public class OperationMonitor implements IOperationMonitor {
 		}
 	}
 
+	@Override
 	public void setBlocked(IStatus reason) {
 		monitor.setBlocked(reason);
 	}
 
+	@Override
 	public void setCanceled(boolean b) {
 		monitor.setCanceled(b);
 	}
 
+	@Override
 	public void setTaskName(String name) {
 		monitor.setTaskName(name);
 	}
 
+	@Override
 	public IOperationMonitor setWorkRemaining(int workRemaining) {
 		monitor.setWorkRemaining(workRemaining);
 		return this;
 	}
 
+	@Override
 	public void subTask(String name) {
 		monitor.subTask(name);
 	}
@@ -128,6 +143,7 @@ public class OperationMonitor implements IOperationMonitor {
 		return monitor.toString();
 	}
 
+	@Override
 	public void worked(int work) {
 		monitor.worked(work);
 	}

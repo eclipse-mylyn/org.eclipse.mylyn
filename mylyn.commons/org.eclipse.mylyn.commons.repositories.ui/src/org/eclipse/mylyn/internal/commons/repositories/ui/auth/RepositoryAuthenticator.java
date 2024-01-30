@@ -57,20 +57,18 @@ public class RepositoryAuthenticator<T extends AuthenticationCredentials> {
 				throw new UnsupportedOperationException();
 			}
 
-			final AtomicReference<IStatus> status = new AtomicReference<IStatus>();
-			final AtomicReference<T> requestedCredentials = new AtomicReference<T>();
+			final AtomicReference<IStatus> status = new AtomicReference<>();
+			final AtomicReference<T> requestedCredentials = new AtomicReference<>();
 
 			// show dialog
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					AbstractCredentialsProviderUi<T> provider = getCredentialsProviderUi();
+			PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+				AbstractCredentialsProviderUi<T> provider = getCredentialsProviderUi();
 
-					// open prompt
-					IStatus result = provider.open(WorkbenchUtil.getShell(), request);
-					status.set(result);
+				// open prompt
+				IStatus result = provider.open(WorkbenchUtil.getShell(), request);
+				status.set(result);
 
-					requestedCredentials.set(provider.getCredentials());
-				}
+				requestedCredentials.set(provider.getCredentials());
 			});
 
 			if (status.get() == null) {

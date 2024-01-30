@@ -14,12 +14,12 @@ package org.eclipse.mylyn.internal.monitor.ui;
 
 public interface IActivityManagerCallback {
 
-	public abstract void inactive();
+	void inactive();
 
-	public abstract void active();
+	void active();
 
-	public abstract void addMonitoredActivityTime(long localStartTime, long currentTime);
+	void addMonitoredActivityTime(long localStartTime, long currentTime);
 
-	public abstract long getLastEventTime();
+	long getLastEventTime();
 
 }

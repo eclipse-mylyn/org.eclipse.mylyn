@@ -17,8 +17,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -43,12 +41,10 @@ public class SectionComposite extends SharedScrolledComposite {
 
 	public SectionComposite(Composite parent, int style) {
 		super(parent, style | SWT.V_SCROLL);
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if (toolkit != null) {
-					toolkit.dispose();
-					toolkit = null;
-				}
+		addDisposeListener(e -> {
+			if (toolkit != null) {
+				toolkit.dispose();
+				toolkit = null;
 			}
 		});
 		content = new Composite(this, SWT.NONE);
@@ -97,8 +93,7 @@ public class SectionComposite extends SharedScrolledComposite {
 				Rectangle currentbounds = section.getShell().getBounds();
 				if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
 					Object shellData = section.getShell().getData();
-					if (shellData instanceof Window) {
-						Window window = (Window) shellData;
+					if (shellData instanceof Window window) {
 						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, newSize.x, newSize.y);
 						Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
 						section.getShell().setBounds(result);

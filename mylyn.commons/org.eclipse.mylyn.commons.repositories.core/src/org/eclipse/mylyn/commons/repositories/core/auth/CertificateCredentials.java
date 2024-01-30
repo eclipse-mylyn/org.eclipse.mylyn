@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.commons.repositories.core.auth;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -48,7 +50,7 @@ public class CertificateCredentials extends AuthenticationCredentials {
 	}
 
 	protected CertificateCredentials(ICredentialsStore store, String prefix, boolean loadSecrets) {
-		this(store.get(prefix + ".keyStoreFileName", null), (loadSecrets) ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+		this(store.get(prefix + ".keyStoreFileName", null), loadSecrets ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 				store.get(prefix + ".keyStoreType", null), store.getBoolean(prefix + ".savePassword", false), //$NON-NLS-1$//$NON-NLS-2$
 				loadSecrets);
 	}
@@ -66,35 +68,20 @@ public class CertificateCredentials extends AuthenticationCredentials {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		CertificateCredentials other = (CertificateCredentials) obj;
 		if (hasSecrets != other.hasSecrets) {
 			return false;
 		}
-		if (keyStoreFileName == null) {
-			if (other.keyStoreFileName != null) {
-				return false;
-			}
-		} else if (!keyStoreFileName.equals(other.keyStoreFileName)) {
+		if (!Objects.equals(keyStoreFileName, other.keyStoreFileName)) {
 			return false;
 		}
-		if (keyStoreType == null) {
-			if (other.keyStoreType != null) {
-				return false;
-			}
-		} else if (!keyStoreType.equals(other.keyStoreType)) {
+		if (!Objects.equals(keyStoreType, other.keyStoreType)) {
 			return false;
 		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
+		if (!Objects.equals(password, other.password)) {
 			return false;
 		}
 		if (savePassword != other.savePassword) {
@@ -121,14 +108,7 @@ public class CertificateCredentials extends AuthenticationCredentials {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (hasSecrets ? 1231 : 1237);
-		result = prime * result + ((keyStoreFileName == null) ? 0 : keyStoreFileName.hashCode());
-		result = prime * result + ((keyStoreType == null) ? 0 : keyStoreType.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + (savePassword ? 1231 : 1237);
-		return result;
+		return Objects.hash(hasSecrets, keyStoreFileName, keyStoreType, password, savePassword);
 	}
 
 	@Override
@@ -147,7 +127,7 @@ public class CertificateCredentials extends AuthenticationCredentials {
 		builder.append("CertificateCredentials [keyStoreFileName="); //$NON-NLS-1$
 		builder.append(keyStoreFileName);
 		builder.append(", password="); //$NON-NLS-1$
-		builder.append((password == null) ? password : "********"); //$NON-NLS-1$
+		builder.append(password == null ? password : "********"); //$NON-NLS-1$
 		builder.append(", keyStoreType="); //$NON-NLS-1$
 		builder.append(keyStoreType);
 		builder.append(", savePassword="); //$NON-NLS-1$

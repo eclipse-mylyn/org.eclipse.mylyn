@@ -45,11 +45,10 @@ public class StringMatcher {
 	}
 
 	/**
-	 * StringMatcher constructor takes in a String object that is a simple pattern which may contain '*' for 0 and many
-	 * characters and '?' for exactly one character. Literal '*' and '?' characters must be escaped in the pattern e.g.,
-	 * "\*" means literal "*", etc. Escaping any other character (including the escape character itself), just results
-	 * in that character in the pattern. e.g., "\a" means "a" and "\\" means "\" If invoking the StringMatcher with
-	 * string literals in Java, don't forget escape characters are represented by "\\".
+	 * StringMatcher constructor takes in a String object that is a simple pattern which may contain '*' for 0 and many characters and '?'
+	 * for exactly one character. Literal '*' and '?' characters must be escaped in the pattern e.g., "\*" means literal "*", etc. Escaping
+	 * any other character (including the escape character itself), just results in that character in the pattern. e.g., "\a" means "a" and
+	 * "\\" means "\" If invoking the StringMatcher with string literals in Java, don't forget escape characters are represented by "\\".
 	 *
 	 * @param pattern
 	 *            the pattern to match text against
@@ -84,11 +83,10 @@ public class StringMatcher {
 	 *            the starting index of the search range, inclusive
 	 * @param end
 	 *            the ending index of the search range, exclusive
-	 * @return an <code>StringMatcher.Position</code> object that keeps the starting (inclusive) and ending positions
-	 *         (exclusive) of the first occurrence of the pattern in the specified range of the text; return null if not
-	 *         found or subtext is empty (start==end). A pair of zeros is returned if pattern is empty string Note that
-	 *         for pattern like "*abc*" with leading and trailing stars, position of "abc" is returned. For a pattern
-	 *         like"*??*" in text "abcdf", (1,3) is returned
+	 * @return an <code>StringMatcher.Position</code> object that keeps the starting (inclusive) and ending positions (exclusive) of the
+	 *         first occurrence of the pattern in the specified range of the text; return null if not found or subtext is empty
+	 *         (start==end). A pair of zeros is returned if pattern is empty string Note that for pattern like "*abc*" with leading and
+	 *         trailing stars, position of "abc" is returned. For a pattern like"*??*" in text "abcdf", (1,3) is returned
 	 */
 	public StringMatcher.Position find(String text, int start, int end) {
 		if (text == null) {
@@ -156,8 +154,8 @@ public class StringMatcher {
 	}
 
 	/**
-	 * Given the starting (inclusive) and the ending (exclusive) positions in the <code>text</code>, determine if the
-	 * given substring matches with aPattern
+	 * Given the starting (inclusive) and the ending (exclusive) positions in the <code>text</code>, determine if the given substring
+	 * matches with aPattern
 	 *
 	 * @return true if the specified portion of the text matches the pattern
 	 * @param text
@@ -177,7 +175,7 @@ public class StringMatcher {
 		}
 
 		if (fIgnoreWildCards) {
-			return (end - start == fLength) && fPattern.regionMatches(fIgnoreCase, 0, text, start, fLength);
+			return end - start == fLength && fPattern.regionMatches(fIgnoreCase, 0, text, start, fLength);
 		}
 		int segCount = fSegments.length;
 		if (segCount == 0 && (fHasLeadingStar || fHasTrailingStar)) {
@@ -216,7 +214,7 @@ public class StringMatcher {
 				tCurPos = tCurPos + segLength;
 			}
 		}
-		if ((fSegments.length == 1) && (!fHasLeadingStar) && (!fHasTrailingStar)) {
+		if (fSegments.length == 1 && !fHasLeadingStar && !fHasTrailingStar) {
 			// only one segment to match, no wildcards specified
 			return tCurPos == end;
 		}
@@ -249,8 +247,8 @@ public class StringMatcher {
 	}
 
 	/**
-	 * This method parses the given pattern into segments seperated by wildcard '*' characters. Since wildcards are not
-	 * being used in this case, the pattern consists of a single segment.
+	 * This method parses the given pattern into segments seperated by wildcard '*' characters. Since wildcards are not being used in this
+	 * case, the pattern consists of a single segment.
 	 */
 	private void parseNoWildCards() {
 		fSegments = new String[1];
@@ -278,39 +276,39 @@ public class StringMatcher {
 		Vector temp = new Vector();
 
 		int pos = 0;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		while (pos < fLength) {
 			char c = fPattern.charAt(pos++);
 			switch (c) {
-			case '\\':
-				if (pos >= fLength) {
-					buf.append(c);
-				} else {
-					char next = fPattern.charAt(pos++);
-					/* if it's an escape sequence */
-					if (next == '*' || next == '?' || next == '\\') {
-						buf.append(next);
-					} else {
-						/* not an escape sequence, just insert literally */
+				case '\\':
+					if (pos >= fLength) {
 						buf.append(c);
-						buf.append(next);
+					} else {
+						char next = fPattern.charAt(pos++);
+						/* if it's an escape sequence */
+						if (next == '*' || next == '?' || next == '\\') {
+							buf.append(next);
+						} else {
+							/* not an escape sequence, just insert literally */
+							buf.append(c);
+							buf.append(next);
+						}
 					}
-				}
-				break;
-			case '*':
-				if (buf.length() > 0) {
-					/* new segment */
-					temp.addElement(buf.toString());
-					fBound += buf.length();
-					buf.setLength(0);
-				}
-				break;
-			case '?':
-				/* append special character representing single match wildcard */
-				buf.append(fSingleWildCard);
-				break;
-			default:
-				buf.append(c);
+					break;
+				case '*':
+					if (buf.length() > 0) {
+						/* new segment */
+						temp.addElement(buf.toString());
+						fBound += buf.length();
+						buf.setLength(0);
+					}
+					break;
+				case '?':
+					/* append special character representing single match wildcard */
+					buf.append(fSingleWildCard);
+					break;
+				default:
+					buf.append(c);
 			}
 		}
 
@@ -405,12 +403,9 @@ public class StringMatcher {
 				continue;
 			}
 			if (fIgnoreCase) {
-				if (Character.toUpperCase(tchar) == Character.toUpperCase(pchar)) {
-					continue;
-				}
 				// comparing after converting to upper case doesn't handle all cases;
 				// also compare after converting to lower case
-				if (Character.toLowerCase(tchar) == Character.toLowerCase(pchar)) {
+				if ((Character.toUpperCase(tchar) == Character.toUpperCase(pchar)) || (Character.toLowerCase(tchar) == Character.toLowerCase(pchar))) {
 					continue;
 				}
 			}

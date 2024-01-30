@@ -12,10 +12,10 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
+import org.eclipse.core.runtime.Assert;
+
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Steffen Pingel
@@ -47,7 +47,7 @@ public abstract class RepositoryTestFixture extends AbstractTestFixture {
 
 	public RepositoryTestFixture(String connectorKind, String repositoryUrl) {
 		super(connectorKind, repositoryUrl);
-		this.useCertificateAuthentication = repositoryUrl.contains("/secure/");
+		useCertificateAuthentication = repositoryUrl.contains("/secure/");
 	}
 
 	public void add(Class<? extends TestCase> clazz) {

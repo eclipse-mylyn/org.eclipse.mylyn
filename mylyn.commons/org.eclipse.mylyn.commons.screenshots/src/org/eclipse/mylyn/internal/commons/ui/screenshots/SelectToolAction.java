@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.FontDialog;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolItem;
@@ -223,7 +222,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 			@Override
 			public boolean isSelect() {
-				return (selectedItemID >= 0);
+				return selectedItemID >= 0;
 			}
 		};
 
@@ -238,7 +237,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	}
 
 	private void initFont(int tool) {
-		this.items = null;
+		items = null;
 		setId(tool + ""); //$NON-NLS-1$
 		toolButton = new ToolComposite(parent, SWT.CASCADE) {
 
@@ -262,18 +261,10 @@ public class SelectToolAction extends Action implements IMenuCreator {
 					Menu rightClickMenu = new Menu(parent.getShell(), SWT.POP_UP);
 					MenuItem menuItem = new MenuItem(rightClickMenu, SWT.PUSH);
 					menuItem.setText(Messages.SelectToolAction_Font_);
-					menuItem.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(final Event event) {
-							invokeFontDialog();
-						}
-					});
+					menuItem.addListener(SWT.Selection, event -> invokeFontDialog());
 					menuItem = new MenuItem(rightClickMenu, SWT.PUSH);
 					menuItem.setText(Messages.SelectToolAction_Color_);
-					menuItem.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(final Event event) {
-							invokeColorDialog();
-						}
-					});
+					menuItem.addListener(SWT.Selection, event -> invokeColorDialog());
 					Point p = parent.toDisplay(x, y);
 					rightClickMenu.setLocation(p.x, p.y);
 					rightClickMenu.setVisible(true);
@@ -282,7 +273,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 			@Override
 			public boolean isSelect() {
-				return (selectedItemID >= 0);
+				return selectedItemID >= 0;
 			}
 
 			public void invokeFontDialog() {
@@ -316,7 +307,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	}
 
 	private void initColor(int tool) {
-		this.items = null;
+		items = null;
 		setId(tool + ""); //$NON-NLS-1$
 		toolButton = new ToolComposite(parent, SWT.NONE) {
 
@@ -357,7 +348,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	private Image createFontImage(FontData fontData, RGB rgb, boolean select) {
 		Display display = parent.getDisplay();
 		Color ButtonFace = display
-				.getSystemColor((select) ? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW : SWT.COLOR_WIDGET_BACKGROUND);
+				.getSystemColor(select ? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW : SWT.COLOR_WIDGET_BACKGROUND);
 		int x = 16, y = 16;
 		Image image = new Image(display, x, y);
 		GC gc = new GC(image);
@@ -405,11 +396,11 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 		private static final int S = 1; // Border for Selected rectangle
 
-		private static final int B = 2; // Border for Shadow rectangle  
+		private static final int B = 2; // Border for Shadow rectangle
 
 		private static final int G = 3; // Gap
 
-		private static final int M = 4; // Image width for Sub menu  
+		private static final int M = 4; // Image width for Sub menu
 
 		private final Point iconSize = new Point(S + B + 16 + B + S, S + B + 16 + B + S);
 
@@ -419,82 +410,80 @@ public class SelectToolAction extends Action implements IMenuCreator {
 			super(parent, style);
 			bMenu = (style & SWT.CASCADE) != 0;
 
-			addListener(SWT.Paint, new Listener() {
-				public void handleEvent(Event e) {
-					Color background = e.gc.getBackground();
-					Color foreground = e.gc.getForeground();
-					Display display = e.widget.getDisplay();
-					Color NORMAL_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
-					boolean enabled = getEnabled();
-					if (bMouse && enabled) {
-						e.gc.setForeground(NORMAL_SHADOW);
-						if (bMenu) {
-							e.gc.drawRectangle(0, 0, maxSize.x - 1, maxSize.y - 1);
-							e.gc.drawLine(iconSize.x, 0, iconSize.x, maxSize.y);
-						} else {
-							e.gc.drawRectangle(0, 0, iconSize.x - 1, iconSize.y - 1);
-						}
-					}
-					if (showSelection && isSelect() && enabled) {
-						Color HIGHLIGHT_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
-						Color LIGHT_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-						Color SELECTION = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
-						e.gc.setBackground(HIGHLIGHT_SHADOW);
-						e.gc.fillRectangle(0, 0, iconSize.x, iconSize.y);
-						e.gc.setForeground(NORMAL_SHADOW);
-						e.gc.drawLine(S, S, iconSize.x - S - 1, S);
-						e.gc.drawLine(S + 1, S + 1, iconSize.x - S - 2, S + 1);
-						e.gc.drawLine(S, S, S, iconSize.y - S - 1);
-						e.gc.drawLine(S + 1, S + 1, S + 1, iconSize.y - S - 2);
-						e.gc.setForeground(HIGHLIGHT_SHADOW);
-						e.gc.drawLine(iconSize.x - S - 1, S + 1, iconSize.x - S - 1, iconSize.y - S - 1);
-						e.gc.drawLine(S, iconSize.y - S - 1, iconSize.x - S - 1, iconSize.y - S - 1);
-						e.gc.setForeground(LIGHT_SHADOW);
-						e.gc.drawLine(iconSize.x - S - 2, S + 2, iconSize.x - S - 2, iconSize.y - S - 2);
-						e.gc.drawLine(S + 1, iconSize.x - S - 2, iconSize.x - S - 2, iconSize.y - S - 2);
-						e.gc.setForeground(SELECTION);
+			addListener(SWT.Paint, e -> {
+				Color background = e.gc.getBackground();
+				Color foreground = e.gc.getForeground();
+				Display display = e.widget.getDisplay();
+				Color NORMAL_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+				boolean enabled = getEnabled();
+				if (bMouse && enabled) {
+					e.gc.setForeground(NORMAL_SHADOW);
+					if (bMenu) {
+						e.gc.drawRectangle(0, 0, maxSize.x - 1, maxSize.y - 1);
+						e.gc.drawLine(iconSize.x, 0, iconSize.x, maxSize.y);
+					} else {
 						e.gc.drawRectangle(0, 0, iconSize.x - 1, iconSize.y - 1);
 					}
-
-					if (getEnabled()) {
-						e.gc.drawImage(image, S + B, S + B);
-					} else {
-						Image disabled = new Image(display, image, SWT.IMAGE_DISABLE);
-						e.gc.drawImage(disabled, S + B, S + B);
-					}
-
-					if (bMenu) {
-						if (Platform.getWS().equalsIgnoreCase(Platform.WS_WIN32)
-								|| Platform.getWS().equalsIgnoreCase(Platform.WS_WPF)) {
-							Color FOREGROUND = display.getSystemColor(
-									(getEnabled()) ? SWT.COLOR_WIDGET_FOREGROUND : SWT.COLOR_WIDGET_DARK_SHADOW);
-							e.gc.setForeground(FOREGROUND);
-							int x = iconSize.x + G;
-							int y = S + B + M;
-							int h = 6;
-							while (h >= 0) {
-								e.gc.drawLine(x, y, x, y + h);
-								x++;
-								y++;
-								h -= 2;
-							}
-						} else {
-							Color FOREGROUND = display.getSystemColor(
-									(getEnabled()) ? SWT.COLOR_WIDGET_DARK_SHADOW : SWT.COLOR_WIDGET_NORMAL_SHADOW);
-							e.gc.setForeground(FOREGROUND);
-							int x = iconSize.x + G;
-							int y = S + B + M;
-							int h = 4;
-							e.gc.drawLine(x, y, x + h / 2 + 1, y + h / 2 + 1);
-							e.gc.drawLine(x, y + 1, x + h / 2, y + h / 2 + 1);
-							e.gc.drawLine(x, y + h + 1, x + h / 2, y + h / 2 + 1);
-							e.gc.drawLine(x, y + h + 2, x + h / 2, y + h / 2 + 2);
-						}
-					}
-					e.gc.setBackground(background);
-					e.gc.setForeground(foreground);
-					//System.out.println(e.toString());
 				}
+				if (showSelection && isSelect() && enabled) {
+					Color HIGHLIGHT_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+					Color LIGHT_SHADOW = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+					Color SELECTION = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
+					e.gc.setBackground(HIGHLIGHT_SHADOW);
+					e.gc.fillRectangle(0, 0, iconSize.x, iconSize.y);
+					e.gc.setForeground(NORMAL_SHADOW);
+					e.gc.drawLine(S, S, iconSize.x - S - 1, S);
+					e.gc.drawLine(S + 1, S + 1, iconSize.x - S - 2, S + 1);
+					e.gc.drawLine(S, S, S, iconSize.y - S - 1);
+					e.gc.drawLine(S + 1, S + 1, S + 1, iconSize.y - S - 2);
+					e.gc.setForeground(HIGHLIGHT_SHADOW);
+					e.gc.drawLine(iconSize.x - S - 1, S + 1, iconSize.x - S - 1, iconSize.y - S - 1);
+					e.gc.drawLine(S, iconSize.y - S - 1, iconSize.x - S - 1, iconSize.y - S - 1);
+					e.gc.setForeground(LIGHT_SHADOW);
+					e.gc.drawLine(iconSize.x - S - 2, S + 2, iconSize.x - S - 2, iconSize.y - S - 2);
+					e.gc.drawLine(S + 1, iconSize.x - S - 2, iconSize.x - S - 2, iconSize.y - S - 2);
+					e.gc.setForeground(SELECTION);
+					e.gc.drawRectangle(0, 0, iconSize.x - 1, iconSize.y - 1);
+				}
+
+				if (getEnabled()) {
+					e.gc.drawImage(image, S + B, S + B);
+				} else {
+					Image disabled = new Image(display, image, SWT.IMAGE_DISABLE);
+					e.gc.drawImage(disabled, S + B, S + B);
+				}
+
+				if (bMenu) {
+					if (Platform.getWS().equalsIgnoreCase(Platform.WS_WIN32)
+							|| Platform.getWS().equalsIgnoreCase(Platform.WS_WPF)) {
+						Color FOREGROUND = display.getSystemColor(
+								getEnabled() ? SWT.COLOR_WIDGET_FOREGROUND : SWT.COLOR_WIDGET_DARK_SHADOW);
+						e.gc.setForeground(FOREGROUND);
+						int x = iconSize.x + G;
+						int y = S + B + M;
+						int h = 6;
+						while (h >= 0) {
+							e.gc.drawLine(x, y, x, y + h);
+							x++;
+							y++;
+							h -= 2;
+						}
+					} else {
+						Color FOREGROUND = display.getSystemColor(
+								getEnabled() ? SWT.COLOR_WIDGET_DARK_SHADOW : SWT.COLOR_WIDGET_NORMAL_SHADOW);
+						e.gc.setForeground(FOREGROUND);
+						int x = iconSize.x + G;
+						int y = S + B + M;
+						int h = 4;
+						e.gc.drawLine(x, y, x + h / 2 + 1, y + h / 2 + 1);
+						e.gc.drawLine(x, y + 1, x + h / 2, y + h / 2 + 1);
+						e.gc.drawLine(x, y + h + 1, x + h / 2, y + h / 2 + 1);
+						e.gc.drawLine(x, y + h + 2, x + h / 2, y + h / 2 + 2);
+					}
+				}
+				e.gc.setBackground(background);
+				e.gc.setForeground(foreground);
+				//System.out.println(e.toString());
 			});
 
 			addMouseListener(new MouseAdapter() {
@@ -522,31 +511,22 @@ public class SelectToolAction extends Action implements IMenuCreator {
 				}
 			});
 
-			addListener(SWT.MouseEnter, new Listener() {
-
-				public void handleEvent(Event event) {
-					if (getEnabled()) {
-						bMouse = true;
-						redraw();
-					}
+			addListener(SWT.MouseEnter, event -> {
+				if (getEnabled()) {
+					bMouse = true;
+					redraw();
 				}
 			});
-			addListener(SWT.MouseMove, new Listener() {
-
-				public void handleEvent(Event event) {
-					if (getEnabled()) {
-						bMouse = true;
-						redraw();
-					}
+			addListener(SWT.MouseMove, event -> {
+				if (getEnabled()) {
+					bMouse = true;
+					redraw();
 				}
 			});
-			addListener(SWT.MouseExit, new Listener() {
-
-				public void handleEvent(Event event) {
-					if (getEnabled()) {
-						bMouse = false;
-						redraw();
-					}
+			addListener(SWT.MouseExit, event -> {
+				if (getEnabled()) {
+					bMouse = false;
+					redraw();
 				}
 			});
 		}
@@ -663,11 +643,9 @@ public class SelectToolAction extends Action implements IMenuCreator {
 					return true;
 				}
 			}
-		} else {
-			if (getId().equals(DRAWTEXT_TOOLBAR + "")) { //$NON-NLS-1$
-				toolButton.clickBody();
-				return true;
-			}
+		} else if (getId().equals(DRAWTEXT_TOOLBAR + "")) { //$NON-NLS-1$
+			toolButton.clickBody();
+			return true;
 		}
 		return false;
 	}
@@ -771,6 +749,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		return false;
 	}
 
+	@Override
 	public void dispose() {
 		if (toolButton != null) {
 			toolButton.dispose();
@@ -782,6 +761,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -791,6 +771,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -851,9 +832,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 			if (method != null) {
 				return (Transfer) method.invoke(null);
 			}
-		} catch (Exception e) {
-			// ignore
-		} catch (LinkageError e) {
+		} catch (Exception | LinkageError e) {
 			// ignore
 		}
 		return null;
@@ -893,7 +872,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	}
 
 	public static RGB int2rgb(int rgb) {
-		return new RGB(rgb >> 16, (rgb >> 8) & 0x00ff, rgb & 0x00ff);
+		return new RGB(rgb >> 16, rgb >> 8 & 0x00ff, rgb & 0x00ff);
 	}
 
 	private String font2string(FontData fontData) {

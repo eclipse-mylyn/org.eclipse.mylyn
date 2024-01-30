@@ -12,11 +12,11 @@
 
 package org.eclipse.mylyn.commons.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.osgi.framework.Version;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

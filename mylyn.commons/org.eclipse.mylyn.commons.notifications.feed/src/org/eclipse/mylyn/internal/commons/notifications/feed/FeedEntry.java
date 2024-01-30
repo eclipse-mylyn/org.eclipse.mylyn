@@ -58,7 +58,7 @@ public class FeedEntry extends ServiceMessage {
 
 	public FeedEntry(String eventId) {
 		super(eventId);
-		this.source = null;
+		source = null;
 	}
 
 	public RSSItem getSource() {
@@ -67,7 +67,7 @@ public class FeedEntry extends ServiceMessage {
 
 	public List<String> getFilters(String key) {
 		Assert.isNotNull(key);
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 
 		if (source.getSubjects() != null) {
 			for (String subject : source.getSubjects()) {

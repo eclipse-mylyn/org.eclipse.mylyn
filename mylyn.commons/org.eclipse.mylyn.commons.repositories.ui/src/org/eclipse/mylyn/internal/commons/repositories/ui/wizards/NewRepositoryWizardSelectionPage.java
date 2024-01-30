@@ -25,10 +25,9 @@ import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
- * New wizard selection tab that allows the user to either select a registered 'New' wizard to be launched, or to select
- * a solution or projects to be retrieved from an available server. This page contains two visual tabs that allow the
- * user to perform these tasks. Temporarily has two inner pages. The new format page is used if the system is currently
- * aware of activity categories.
+ * New wizard selection tab that allows the user to either select a registered 'New' wizard to be launched, or to select a solution or
+ * projects to be retrieved from an available server. This page contains two visual tabs that allow the user to perform these tasks.
+ * Temporarily has two inner pages. The new format page is used if the system is currently aware of activity categories.
  */
 @SuppressWarnings("restriction")
 class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
@@ -84,6 +83,7 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 	/**
 	 * (non-Javadoc) Method declared on IDialogPage.
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		IDialogSettings settings = getDialogSettings();
 		newResourcePage = new NewRepositoryWizardNewPage(this, wizardCategories, primaryWizards, projectsOnly);
@@ -95,8 +95,8 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 	}
 
 	/**
-	 * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next
-	 * invocation of this wizard page
+	 * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next invocation of this wizard
+	 * page
 	 */
 	protected void saveWidgetValues() {
 		newResourcePage.saveWidgetValues();

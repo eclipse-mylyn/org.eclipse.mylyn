@@ -29,8 +29,7 @@ public class RepositoryCategorySorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof RepositoryCategory && e2 instanceof RepositoryCategory) {
-			RepositoryCategory category1 = (RepositoryCategory) e1;
+		if (e1 instanceof RepositoryCategory category1 && e2 instanceof RepositoryCategory) {
 			RepositoryCategory category2 = (RepositoryCategory) e2;
 			int result = category1.getRank() - category2.getRank();
 			if (result != 0) {

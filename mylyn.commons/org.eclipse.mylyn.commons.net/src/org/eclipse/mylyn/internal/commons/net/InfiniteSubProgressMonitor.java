@@ -16,11 +16,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
- * Provides an infinite progress monitor by subdividing by half repeatedly. The ticks parameter represents the number of
- * ticks shown in the progress dialog (or propogated up to a parent IProgressMonitor). The totalWork parameter provided
- * in actually a hint used to determine how work is translated into ticks. The number of totalWork that can actually be
- * worked is n*totalWork/2 where 2^n = totalWork. What this means is that if you provide a totalWork of 32 (2^5) than
- * the maximum number of ticks is 5*32/2 = 80.
+ * Provides an infinite progress monitor by subdividing by half repeatedly. The ticks parameter represents the number of ticks shown in the
+ * progress dialog (or propogated up to a parent IProgressMonitor). The totalWork parameter provided in actually a hint used to determine
+ * how work is translated into ticks. The number of totalWork that can actually be worked is n*totalWork/2 where 2^n = totalWork. What this
+ * means is that if you provide a totalWork of 32 (2^5) than the maximum number of ticks is 5*32/2 = 80.
  */
 public class InfiniteSubProgressMonitor extends SubProgressMonitor {
 
@@ -59,10 +58,10 @@ public class InfiniteSubProgressMonitor extends SubProgressMonitor {
 	public void beginTask(String name, int totalWork) {
 		super.beginTask(name, totalWork);
 		this.totalWork = totalWork;
-		this.halfWay = totalWork / 2;
-		this.currentIncrement = 1;
-		this.nextProgress = currentIncrement;
-		this.worked = 0;
+		halfWay = totalWork / 2;
+		currentIncrement = 1;
+		nextProgress = currentIncrement;
+		worked = 0;
 	}
 
 	@Override

@@ -59,12 +59,7 @@ public class RepositoriesView extends CommonNavigator {
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		// FIXME read targets from extension point?
 		if (adapter == IShowInTargetList.class) {
-			return new IShowInTargetList() {
-				public String[] getShowInTargetIds() {
-					return new String[] { "org.eclipse.mylyn.builds.navigator.builds" }; //$NON-NLS-1$
-				}
-
-			};
+			return (IShowInTargetList) () -> new String[] { "org.eclipse.mylyn.builds.navigator.builds" };
 		}
 		return super.getAdapter(adapter);
 	}

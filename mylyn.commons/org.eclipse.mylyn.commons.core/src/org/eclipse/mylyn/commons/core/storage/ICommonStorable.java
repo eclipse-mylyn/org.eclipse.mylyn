@@ -24,16 +24,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ICommonStorable {
 
-	public void delete(String handle) throws CoreException;
+	void delete(String handle) throws CoreException;
 
-	public void deleteAll() throws CoreException;
+	void deleteAll() throws CoreException;
 
-	public boolean exists(String handle);
+	boolean exists(String handle);
 
-	public InputStream read(String handle, IProgressMonitor monitor) throws IOException, CoreException;
+	InputStream read(String handle, IProgressMonitor monitor) throws IOException, CoreException;
 
-	public void release();
+	void release();
 
-	public OutputStream write(String handle, IProgressMonitor monitor) throws IOException, CoreException;
+	OutputStream write(String handle, IProgressMonitor monitor) throws IOException, CoreException;
 
 }

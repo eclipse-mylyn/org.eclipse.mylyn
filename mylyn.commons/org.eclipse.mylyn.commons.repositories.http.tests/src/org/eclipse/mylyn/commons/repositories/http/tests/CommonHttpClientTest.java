@@ -65,12 +65,12 @@ public class CommonHttpClientTest {
 		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			System.err.println(
 					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
-			return; // skip test 
+			return; // skip test
 		}
 		if (!CommonTestUtil.hasCertificateCredentials()) {
 			System.err.println(
 					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
-			return; // skip test 
+			return; // skip test
 		}
 
 		RepositoryLocation location = new RepositoryLocation();
@@ -95,12 +95,12 @@ public class CommonHttpClientTest {
 			// bug 369805
 			System.err.println(
 					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
-			throw new SSLException(""); // skip test 
+			throw new SSLException(""); // skip test
 		}
 		if (!CommonTestUtil.hasCertificateCredentials()) {
 			System.err.println(
 					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
-			throw new SSLException(""); // skip test 
+			throw new SSLException(""); // skip test
 		}
 
 		RepositoryLocation location = new RepositoryLocation();
@@ -138,7 +138,7 @@ public class CommonHttpClientTest {
 		if (!CommonTestUtil.isHttpsProxyBroken()) {
 			System.err.println(
 					"Skipped CommonHttpClientTest.testCertificateAuthenticationNoCertificate() due to broken https proxy");
-			throw new SSLException(""); // skip test 
+			throw new SSLException(""); // skip test
 		}
 
 		RepositoryLocation location = new RepositoryLocation();
@@ -236,12 +236,12 @@ public class CommonHttpClientTest {
 	public void testHttpContextPerThread() throws Exception {
 		RepositoryLocation location = new RepositoryLocation("http://mylyn.org/");
 		final CommonHttpClient client = new CommonHttpClient(location);
-		final AtomicReference<HttpContext> otherThreadContext = new AtomicReference<HttpContext>();
+		final AtomicReference<HttpContext> otherThreadContext = new AtomicReference<>();
 		Thread t = new Thread() {
 			@Override
 			public void run() {
 				otherThreadContext.set(client.getContext());
-			};
+			}
 		};
 		t.start();
 		t.join();
@@ -256,7 +256,7 @@ public class CommonHttpClientTest {
 		Scheme oldScheme = client.getHttpClient()
 				.getConnectionManager()
 				.getSchemeRegistry()
-				.register(new Scheme("https", 443, factory)); //$NON-NLS-1$		
+				.register(new Scheme("https", 443, factory)); //$NON-NLS-1$
 		return oldScheme;
 	}
 

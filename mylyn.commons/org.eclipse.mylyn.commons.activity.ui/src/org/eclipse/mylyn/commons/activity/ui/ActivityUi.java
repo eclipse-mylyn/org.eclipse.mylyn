@@ -13,7 +13,6 @@ package org.eclipse.mylyn.commons.activity.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -33,13 +32,11 @@ import org.eclipse.mylyn.internal.commons.activity.ui.UserActivityManager;
  */
 public class ActivityUi {
 
-	private final static IPropertyChangeListener PROPERTY_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(IActivityUiConstants.ACTIVITY_TIMEOUT)
-					|| event.getProperty().equals(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED)
-					|| event.getProperty().equals(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED)) {
-				updateUserActivityMonitor();
-			}
+	private final static IPropertyChangeListener PROPERTY_LISTENER = event -> {
+		if (event.getProperty().equals(IActivityUiConstants.ACTIVITY_TIMEOUT)
+				|| event.getProperty().equals(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED)
+				|| event.getProperty().equals(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED)) {
+			updateUserActivityMonitor();
 		}
 	};
 
@@ -74,22 +71,18 @@ public class ActivityUi {
 	synchronized static UserActivityManager getUserActivityMonitor() {
 		if (userActivityManager == null) {
 			// create default activity monitor
-			List<AbstractUserActivityMonitor> items = new ArrayList<AbstractUserActivityMonitor>();
+			List<AbstractUserActivityMonitor> items = new ArrayList<>();
 			items.add(new DefaultUserActivityMonitor());
 
 			// read contributed activity monitors
-			ExtensionPointReader<AbstractUserActivityMonitor> reader = new ExtensionPointReader<AbstractUserActivityMonitor>(
+			ExtensionPointReader<AbstractUserActivityMonitor> reader = new ExtensionPointReader<>(
 					IActivityUiConstants.ID_PLUGIN, "userActivityMonitors", "osActivityTimer", //$NON-NLS-1$ //$NON-NLS-2$
 					AbstractUserActivityMonitor.class);
 			reader.read();
 
 			// rank by highest priority first
 			items.addAll(reader.getItems());
-			Collections.sort(items, new Comparator<AbstractUserActivityMonitor>() {
-				public int compare(AbstractUserActivityMonitor o1, AbstractUserActivityMonitor o2) {
-					return o2.getPriority() - o1.getPriority();
-				}
-			});
+			Collections.sort(items, (o1, o2) -> o2.getPriority() - o1.getPriority());
 
 			getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
@@ -112,7 +105,7 @@ public class ActivityUi {
 		} else {
 			userActivityManager.setInactivityTimeout(0);
 		}
-		// TODO stop if disabled 
+		// TODO stop if disabled
 	}
 
 	public static boolean isActivityTrackingEnabled() {

@@ -86,9 +86,9 @@ public class EnhancedFilteredTree extends FilteredTree {
 	protected void createFilterText(Composite parent) {
 		super.createFilterText(parent);
 
-		// This code is here to make it so that the key listener for the down arrow listens to the KeyEvent.doit 
-		// flag so that the history popup dialog can be keyboard accessible and the down arrow works to select items 
-		// from the history 
+		// This code is here to make it so that the key listener for the down arrow listens to the KeyEvent.doit
+		// flag so that the history popup dialog can be keyboard accessible and the down arrow works to select items
+		// from the history
 		if (searchControl != null && searchControl.hasHistorySupport()) {
 			Text textControl = searchControl.getTextControl();
 			KeyListener downArrowListener = null;

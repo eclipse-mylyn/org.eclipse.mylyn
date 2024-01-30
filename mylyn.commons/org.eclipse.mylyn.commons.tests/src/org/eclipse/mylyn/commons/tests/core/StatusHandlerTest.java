@@ -15,13 +15,13 @@ package org.eclipse.mylyn.commons.tests.core;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
+
+import junit.framework.TestCase;
 
 public class StatusHandlerTest extends TestCase {
 

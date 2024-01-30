@@ -21,8 +21,8 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.ui.texteditor.TextViewerDeleteLineTarget;
 
 /**
- * Abstract command handler that uses {@link TextViewerDeleteLineTarget}. Subclasses can specify the type of delete line
- * and copyToClipboard.
+ * Abstract command handler that uses {@link TextViewerDeleteLineTarget}. Subclasses can specify the type of delete line and
+ * copyToClipboard.
  * 
  * @author David Green
  * @since 3.7
@@ -38,6 +38,7 @@ public class AbstractDeleteLineHandler extends AbstractTextViewerHandler impleme
 		this.copyToClipboard = copyToClipboard;
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ITextViewer viewer = getTextViewer(event);
 		if (viewer != null) {

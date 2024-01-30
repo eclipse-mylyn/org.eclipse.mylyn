@@ -32,13 +32,13 @@ import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
 public interface ILocationService {
 
 	// FIXME e3.5 replace with 3.5 proxy API
-	public abstract Proxy getProxyForHost(String host, String proxyType);
+	Proxy getProxyForHost(String host, String proxyType);
 
-	public abstract X509TrustManager getTrustManager();
+	X509TrustManager getTrustManager();
 
-	public abstract <T extends AuthenticationCredentials> T requestCredentials(
-			AuthenticationRequest<AuthenticationType<T>> context, IProgressMonitor monitor);
+	<T extends AuthenticationCredentials> T requestCredentials(AuthenticationRequest<AuthenticationType<T>> context,
+			IProgressMonitor monitor);
 
-	public ICredentialsStore getCredentialsStore(String id);
+	ICredentialsStore getCredentialsStore(String id);
 
 }

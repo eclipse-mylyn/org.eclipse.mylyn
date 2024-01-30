@@ -38,8 +38,7 @@ public class CommonTestUtil {
 	private final static int MAX_RETRY = 5;
 
 	/**
-	 * Returns the given file path with its separator character changed from the given old separator to the given new
-	 * separator.
+	 * Returns the given file path with its separator character changed from the given old separator to the given new separator.
 	 *
 	 * @param path
 	 *            a file path
@@ -47,8 +46,7 @@ public class CommonTestUtil {
 	 *            a path separator character
 	 * @param newSeparator
 	 *            a path separator character
-	 * @return the file path with its separator character changed from the given old separator to the given new
-	 *         separator
+	 * @return the file path with its separator character changed from the given old separator to the given new separator
 	 */
 	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);
@@ -136,7 +134,7 @@ public class CommonTestUtil {
 	}
 
 	public static InputStream getResource(Object source, String filename) throws IOException {
-		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
+		Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 		ClassLoader classLoader = clazz.getClassLoader();
 		InputStream in = classLoader.getResourceAsStream(filename);
 		if (in == null) {
@@ -158,7 +156,7 @@ public class CommonTestUtil {
 
 	public static String read(File source) throws IOException {
 		InputStream in = new FileInputStream(source);
-		try {
+		try (in) {
 			StringBuilder sb = new StringBuilder();
 			byte[] buf = new byte[1024];
 			int len;
@@ -166,8 +164,6 @@ public class CommonTestUtil {
 				sb.append(new String(buf, 0, len));
 			}
 			return sb.toString();
-		} finally {
-			in.close();
 		}
 	}
 
@@ -190,8 +186,7 @@ public class CommonTestUtil {
 	}
 
 	/**
-	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
-	 * given filter.
+	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the given filter.
 	 *
 	 * @param zipFile
 	 *            the zip file to unzip

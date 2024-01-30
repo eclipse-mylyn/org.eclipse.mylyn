@@ -15,8 +15,7 @@ package org.eclipse.mylyn.commons.ui.compatibility;
 /**
  * Provides common theme constants.
  * <p>
- * NOTE: Use of this class is discouraged. The specified theme settings depend on components in Mylyn Tasks and may not
- * be available.
+ * NOTE: Use of this class is discouraged. The specified theme settings depend on components in Mylyn Tasks and may not be available.
  * </p>
  * 
  * @author Mik Kersten

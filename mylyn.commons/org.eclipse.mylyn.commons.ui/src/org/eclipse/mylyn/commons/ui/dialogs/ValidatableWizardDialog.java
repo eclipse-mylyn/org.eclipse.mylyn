@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Helen Bershadskaya and others. 
+ * Copyright (c) 2004, 2011 Helen Bershadskaya and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -63,10 +63,8 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 				validateServerButton.setVisible(true);
 			}
 			validateServerButton.setEnabled(validatable.canValidate());
-		} else {
-			if (validateServerButton != null && validateServerButton.isVisible()) {
-				validateServerButton.setVisible(false);
-			}
+		} else if (validateServerButton != null && validateServerButton.isVisible()) {
+			validateServerButton.setVisible(false);
 		}
 	}
 
@@ -76,7 +74,7 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 		if (currentPage instanceof IValidatable) {
 			validatable = (IValidatable) currentPage;
 		} else if (currentPage instanceof IAdaptable) {
-			validatable = (IValidatable) ((IAdaptable) currentPage).getAdapter(IValidatable.class);
+			validatable = ((IAdaptable) currentPage).getAdapter(IValidatable.class);
 		}
 		return validatable;
 	}
@@ -100,7 +98,7 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 	protected HashMap<String, Boolean> saveAndSetEnabledStateMylyn() {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
-			savedEnabledState = new HashMap<String, Boolean>();
+			savedEnabledState = new HashMap<>();
 			if (validateServerButton != null && validateServerButton.getShell() == getShell()) {
 				savedEnabledState.put(VALIDATE_BUTTON_KEY, validateServerButton.getEnabled());
 				validateServerButton.setEnabled(false);
@@ -110,9 +108,8 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 	}
 
 	/**
-	 * Modeled after WizardDialog.restoreEnabledState() and WizardDialog.restoreUIState() -- couldn't override those
-	 * since they are private, so create our own. Currently only single button to work with, so don't create two
-	 * separate methods
+	 * Modeled after WizardDialog.restoreEnabledState() and WizardDialog.restoreUIState() -- couldn't override those since they are private,
+	 * so create our own. Currently only single button to work with, so don't create two separate methods
 	 */
 	@Override
 	protected void restoreEnabledStateMylyn(HashMap<String, Boolean> savedEnabledState) {

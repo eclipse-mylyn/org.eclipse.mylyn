@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.commons.activity.ui;
 import org.eclipse.mylyn.commons.activity.ui.spi.AbstractUserActivityMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 /**
@@ -33,11 +32,7 @@ public class DefaultUserActivityMonitor extends AbstractUserActivityMonitor {
 	@Override
 	public void start() {
 		display = Display.getDefault();
-		interactionActivityListener = new Listener() {
-			public void handleEvent(Event event) {
-				setLastEventTime(System.currentTimeMillis());
-			}
-		};
+		interactionActivityListener = event -> setLastEventTime(System.currentTimeMillis());
 
 		display.addFilter(SWT.KeyUp, interactionActivityListener);
 		display.addFilter(SWT.MouseUp, interactionActivityListener);

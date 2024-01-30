@@ -73,7 +73,7 @@ public class RepositoryLocation extends PlatformObject {
 	private static final String ENABLED = ".enabled"; //$NON-NLS-1$
 
 	private static Map<String, String> createDefaultProperties() {
-		Map<String, String> defaultProperties = new HashMap<String, String>();
+		Map<String, String> defaultProperties = new HashMap<>();
 		defaultProperties.put(PROPERTY_PROXY_USEDEFAULT, Boolean.TRUE.toString());
 		return defaultProperties;
 	}
@@ -83,11 +83,11 @@ public class RepositoryLocation extends PlatformObject {
 	// transient
 	private IStatus errorStatus = null;
 
-	private final Map<String, String> properties = new LinkedHashMap<String, String>();
+	private final Map<String, String> properties = new LinkedHashMap<>();
 
-	private final List<PropertyChangeListener> propertyChangeListeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+	private final List<PropertyChangeListener> propertyChangeListeners = new CopyOnWriteArrayList<>();
 
-	private final List<IRepositoryLocationChangeListener> repositoryLocationChangeListeners = new CopyOnWriteArrayList<IRepositoryLocationChangeListener>();
+	private final List<IRepositoryLocationChangeListener> repositoryLocationChangeListeners = new CopyOnWriteArrayList<>();
 
 	private ILocationService service;
 
@@ -131,7 +131,7 @@ public class RepositoryLocation extends PlatformObject {
 		}
 
 		// merge properties
-		HashSet<String> removed = new HashSet<String>(properties.keySet());
+		HashSet<String> removed = new HashSet<>(properties.keySet());
 		removed.removeAll(location.properties.keySet());
 		for (Map.Entry<String, String> entry : location.properties.entrySet()) {
 			setProperty(entry.getKey(), entry.getValue());
@@ -225,11 +225,11 @@ public class RepositoryLocation extends PlatformObject {
 	}
 
 	public Map<String, String> getProperties() {
-		return new LinkedHashMap<String, String>(this.properties);
+		return new LinkedHashMap<>(properties);
 	}
 
 	public String getProperty(String name) {
-		return this.properties.get(name);
+		return properties.get(name);
 	}
 
 	public Proxy getProxy() {
@@ -364,7 +364,7 @@ public class RepositoryLocation extends PlatformObject {
 		Assert.isNotNull(id);
 		ICredentialsStore store = getCredentialsStore();
 		setProperty(RepositoryLocation.PROPERTY_ID, id);
-		if (this.credentialsStore == null) {
+		if (credentialsStore == null) {
 			setCredentialsStore(store);
 		}
 	}
@@ -379,9 +379,9 @@ public class RepositoryLocation extends PlatformObject {
 
 	public void setProperty(String key, String newValue) {
 		validatePropertyChange(key, newValue);
-		String oldValue = this.properties.get(key);
+		String oldValue = properties.get(key);
 		if (hasChanged(oldValue, newValue)) {
-			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
+			properties.put(key.intern(), newValue != null ? newValue.intern() : null);
 			handlePropertyChange(key, oldValue, newValue);
 		}
 	}

@@ -19,8 +19,8 @@ package org.eclipse.mylyn.commons.identity.core;
  */
 public interface IIdentityService {
 
-	public abstract IIdentity getIdentity(Account account);
+	IIdentity getIdentity(Account account);
 
-	public abstract IIdentity[] getIdentities();
+	IIdentity[] getIdentities();
 
 }

@@ -43,13 +43,16 @@ public class FeedReader {
 			this.entry = entry;
 		}
 
+		@Override
 		public <T> T getAdapter(Class<T> adapter) {
 			if (adapter == IFilterable.class) {
 				IFilterable filterable = new IFilterable() {
+					@Override
 					public List<String> getFilters(String key) {
 						return entry.getFilters(key);
 					}
 
+					@Override
 					public String getFilter(String key) {
 						return entry.getFilter(key);
 					}
@@ -71,7 +74,7 @@ public class FeedReader {
 	public FeedReader(String eventId, NotificationEnvironment environment) {
 		this.eventId = eventId;
 		this.environment = environment;
-		this.entries = new ArrayList<FeedEntry>();
+		entries = new ArrayList<>();
 	}
 
 	public IStatus parse(InputStream in, IProgressMonitor monitor) {

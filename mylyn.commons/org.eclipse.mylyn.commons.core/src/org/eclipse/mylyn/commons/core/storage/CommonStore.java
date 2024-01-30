@@ -64,7 +64,7 @@ public class CommonStore {
 
 	public CommonStore(File location) {
 		Assert.isNotNull(location);
-		this.storableByLocation = new HashMap<File, CommonStorable>();
+		storableByLocation = new HashMap<>();
 		this.location = location;
 	}
 
@@ -137,7 +137,7 @@ public class CommonStore {
 
 	public void move(IPath oldPath, IPath newPath) throws CoreException {
 		File oldFile = getFile(oldPath, false);
-		// TODO lock hierarchy and throw an exception if oldFile is in use 
+		// TODO lock hierarchy and throw an exception if oldFile is in use
 		if (oldFile.exists()) {
 			File newFile = getFile(newPath, false);
 			newFile.getParentFile().mkdirs();

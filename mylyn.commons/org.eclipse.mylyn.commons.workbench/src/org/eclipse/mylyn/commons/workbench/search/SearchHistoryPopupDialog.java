@@ -18,24 +18,18 @@ import java.util.Collections;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.commons.workbench.TableTreePatternFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -45,7 +39,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
@@ -94,28 +87,28 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 		int y = 0;
 
 		switch (side) {
-		case SWT.TOP:
-			x = trimBounds.x;
-			y = trimBounds.y + trimBounds.height;
-			if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
-				x = (trimBounds.x + trimBounds.width) - bounds.width;
-			}
-			break;
-		case SWT.BOTTOM:
-			x = trimBounds.x;
-			y = trimBounds.y - bounds.height;
-			if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
-				x = (trimBounds.x + trimBounds.width) - bounds.width;
-			}
-			break;
-		case SWT.RIGHT:
-			x = (trimBounds.x + trimBounds.width) - bounds.width;
-			y = trimBounds.y + trimBounds.height;
-			break;
-		case SWT.LEFT:
-			x = trimBounds.x;
-			y = trimBounds.y + trimBounds.height;
-			break;
+			case SWT.TOP:
+				x = trimBounds.x;
+				y = trimBounds.y + trimBounds.height;
+				if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
+					x = trimBounds.x + trimBounds.width - bounds.width;
+				}
+				break;
+			case SWT.BOTTOM:
+				x = trimBounds.x;
+				y = trimBounds.y - bounds.height;
+				if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
+					x = trimBounds.x + trimBounds.width - bounds.width;
+				}
+				break;
+			case SWT.RIGHT:
+				x = trimBounds.x + trimBounds.width - bounds.width;
+				y = trimBounds.y + trimBounds.height;
+				break;
+			case SWT.LEFT:
+				x = trimBounds.x;
+				y = trimBounds.y + trimBounds.height;
+				break;
 		}
 		getShell().setBounds(x, y, Math.max(trimBounds.width, bounds.width), bounds.height);
 	}
@@ -172,14 +165,17 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 
 		historyTable.setContentProvider(new ITreeContentProvider() {
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
 			}
 
+			@Override
 			public void dispose() {
 
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (inputElement instanceof Collection<?>) {
 					Object[] elements = ((Collection<?>) inputElement).toArray();
@@ -188,14 +184,17 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 				return new Object[0];
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return false;
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return null;
 			}
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				return null;
 			}
@@ -222,18 +221,14 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 		} else {
 			historyTable.setInput(Collections.emptyList());
 		}
-		historyTable.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				String text = getTextFromSelection(event.getSelection());
-				if (text != null) {
-					textSearchControl.getTextControl().setText(text);
-					textControl.setSelection(text.length());
-					textSearchControl.addToSearchHistory(text);
-				}
-				close();
+		historyTable.addOpenListener(event -> {
+			String text = getTextFromSelection(event.getSelection());
+			if (text != null) {
+				textSearchControl.getTextControl().setText(text);
+				textControl.setSelection(text.length());
+				textSearchControl.addToSearchHistory(text);
 			}
-
+			close();
 		});
 
 		// XXX CHANGE TO SELECTION LISTENER??
@@ -280,7 +275,7 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 	}
 
 	private boolean shouldOpen() {
-		return (historyTable != null && historyTable.getTable() != null && historyTable.getTable().isVisible())
+		return historyTable != null && historyTable.getTable() != null && historyTable.getTable().isVisible()
 				|| additionalControlsComposite != null;
 	}
 
@@ -311,12 +306,10 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 	}
 
 	public void asyncClose() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if ((textControl != null && !textControl.isDisposed() && textControl.isFocusControl())
-						|| !hasFocus(getShell())) {
-					close();
-				}
+		Display.getDefault().asyncExec(() -> {
+			if (textControl != null && !textControl.isDisposed() && textControl.isFocusControl()
+					|| !hasFocus(getShell())) {
+				close();
 			}
 		});
 	}
@@ -343,7 +336,7 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 			bounds.y = absPosition.y - bounds.y;
 		}
 		if (trimBounds == null || !trimBounds.equals(bounds)) {
-			this.trimBounds = bounds;
+			trimBounds = bounds;
 			return true;
 		}
 		return false;
@@ -353,44 +346,36 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 		Assert.isNotNull(textSearchControl);
 		Assert.isNotNull(textSearchControl.getTextControl());
 		this.textSearchControl = textSearchControl;
-		this.textControl = textSearchControl.getTextControl();
-		textSearchControl.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				if (!hasFocus(textControl)) {
-					// user shouldn't be modifying the text if it doesnt have focus
-					return;
+		textControl = textSearchControl.getTextControl();
+		textSearchControl.addModifyListener(e -> {
+			if (!hasFocus(textControl)) {
+				// user shouldn't be modifying the text if it doesnt have focus
+				return;
+			}
+			if (!isOpen && textControl != null && !textControl.isDisposed() && textControl.getText().length() > 0) {
+				updateBounds();
+				open();
+			}
+			if (isOpen && historyTable != null && !historyTable.getTable().isDisposed() && patternFilter != null) {
+				patternFilter.setPattern(textControl.getText());
+				historyTable.setSelection(null);
+				historyTable.refresh();
+				if (textControl.getText().length() > 0) {
+					historyTable.setSorter(new ViewerSorter());
+					historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_FILTER));
+				} else {
+					historyTable.setSorter(null);
+					historyTable
+							.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
 				}
-				if (!isOpen && textControl != null && !textControl.isDisposed() && textControl.getText().length() > 0) {
-					updateBounds();
-					open();
-				}
-				if (isOpen && historyTable != null && !historyTable.getTable().isDisposed() && patternFilter != null) {
-					patternFilter.setPattern(textControl.getText());
-					historyTable.setSelection(null);
-					historyTable.refresh();
-					if (textControl.getText().length() > 0) {
-						historyTable.setSorter(new ViewerSorter());
-						historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_FILTER));
-					} else {
-						historyTable.setSorter(null);
-						historyTable
-								.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
-					}
-					setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
-					if (!shouldOpen()) {
-						asyncClose();
-					}
+				setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
+				if (!shouldOpen()) {
+					asyncClose();
 				}
 			}
 		});
 
-		textControl.addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				close();
-			}
-		});
+		textControl.addDisposeListener(e -> close());
 
 		textControl.addKeyListener(new KeyAdapter() {
 
@@ -412,13 +397,10 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 			}
 		});
 
-		Listener moveResizeListener = new Listener() {
-
-			public void handleEvent(Event event) {
-				if (isOpen) {
-					if (updateBounds()) {
-						initializeBounds();
-					}
+		Listener moveResizeListener = event -> {
+			if (isOpen) {
+				if (updateBounds()) {
+					initializeBounds();
 				}
 			}
 		};
@@ -427,10 +409,12 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 
 		textControl.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				asyncClose();
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});

@@ -19,8 +19,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.WindowUtil;
 import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -44,12 +42,10 @@ public class SectionComposite extends SharedScrolledComposite {
 
 	public SectionComposite(Composite parent, int style) {
 		super(parent, style | SWT.V_SCROLL);
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if (toolkit != null) {
-					toolkit.dispose();
-					toolkit = null;
-				}
+		addDisposeListener(e -> {
+			if (toolkit != null) {
+				toolkit.dispose();
+				toolkit = null;
 			}
 		});
 		content = new Composite(this, SWT.NONE);
@@ -118,8 +114,8 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	/**
-	 * Invokes {@link #layout(boolean)} and resizes the shell if the preferred size of its children is larger than its
-	 * current size and invokes {@link #reflow(boolean)} to update the scroll bar.
+	 * Invokes {@link #layout(boolean)} and resizes the shell if the preferred size of its children is larger than its current size and
+	 * invokes {@link #reflow(boolean)} to update the scroll bar.
 	 * <p>
 	 * This method is invoked when sections are expanded. Clients should invoke this method when the contents of the
 	 * {@link SectionComposite} are changed.
@@ -133,8 +129,7 @@ public class SectionComposite extends SharedScrolledComposite {
 		Rectangle currentbounds = getShell().getBounds();
 		if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
 			Object shellData = getShell().getData();
-			if (shellData instanceof Window) {
-				Window window = (Window) shellData;
+			if (shellData instanceof Window window) {
 				Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y,
 						Math.max(currentbounds.width, newSize.x), Math.max(currentbounds.height, newSize.y));
 				Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);

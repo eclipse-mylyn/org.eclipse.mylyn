@@ -37,6 +37,7 @@ public class SummaryCollector implements IUsageCollector {
 
 	protected int numPreference = 0;
 
+	@Override
 	public void consumeEvent(InteractionEvent event, int userId) {
 		if (mostRecentDate.compareTo(event.getDate()) == -1) {
 			mostRecentDate = event.getDate();
@@ -57,8 +58,9 @@ public class SummaryCollector implements IUsageCollector {
 		numUserEvents++;
 	}
 
+	@Override
 	public List<String> getReport() {
-		List<String> summaries = new ArrayList<String>();
+		List<String> summaries = new ArrayList<>();
 
 		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE
 				+ mostRecentDate + "<br>"); //$NON-NLS-1$
@@ -70,17 +72,20 @@ public class SummaryCollector implements IUsageCollector {
 		return summaries;
 	}
 
+	@Override
 	public String getReportTitle() {
 		return Messages.SummaryCollector_Summary;
 	}
 
+	@Override
 	public void exportAsCSVFile(String directory) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public List<String> getPlainTextReport() {
-		List<String> summaries = new ArrayList<String>();
+		List<String> summaries = new ArrayList<>();
 
 		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE
 				+ mostRecentDate);

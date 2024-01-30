@@ -33,7 +33,7 @@ public class InteractionEventSummary {
 
 	private String delta;
 
-	private Set<Integer> userIds = new HashSet<Integer>();
+	private Set<Integer> userIds = new HashSet<>();
 
 	public InteractionEventSummary(String type, String name, int usageCount) {
 		this.type = type;
@@ -49,15 +49,15 @@ public class InteractionEventSummary {
 	}
 
 	public InteractionEventSummary(InteractionEventSummary another) {
-		this.type = another.type;
-		this.name = another.name;
-		this.usageCount = another.usageCount;
-		this.userIds.addAll(another.getUserIds());
+		type = another.type;
+		name = another.name;
+		usageCount = another.usageCount;
+		userIds.addAll(another.getUserIds());
 	}
 
 	public void combine(InteractionEventSummary another) {
-		this.usageCount = this.usageCount + another.getUsageCount();
-		this.userIds.addAll(another.getUserIds());
+		usageCount = usageCount + another.getUsageCount();
+		userIds.addAll(another.getUserIds());
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class InteractionEventSummary {
 
 	public void addUserId(int userId) {
 		if (!userIds.contains(userId)) {
-			this.userIds.add(userId);
+			userIds.add(userId);
 		}
 	}
 }

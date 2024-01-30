@@ -17,6 +17,6 @@ package org.eclipse.mylyn.internal.commons.net;
  */
 public interface ICancellable {
 
-	public abstract void abort();
+	void abort();
 
 }

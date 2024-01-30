@@ -18,7 +18,6 @@ public class UnavailableException extends Exception {
 	private static final long serialVersionUID = 6528925039337188836L;
 
 	public UnavailableException() {
-		super();
 	}
 
 	public UnavailableException(String arg0, Throwable arg1) {

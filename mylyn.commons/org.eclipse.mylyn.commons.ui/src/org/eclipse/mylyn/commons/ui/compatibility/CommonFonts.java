@@ -46,11 +46,7 @@ public class CommonFonts {
 		if (Display.getCurrent() != null) {
 			init();
 		} else {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					init();
-				}
-			});
+			Display.getDefault().asyncExec(CommonFonts::init);
 		}
 	}
 

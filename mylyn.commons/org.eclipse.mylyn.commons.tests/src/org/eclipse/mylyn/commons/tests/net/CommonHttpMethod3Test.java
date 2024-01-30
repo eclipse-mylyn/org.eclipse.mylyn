@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.eclipse.mylyn.commons.net.WebLocation;
@@ -27,6 +25,8 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest.StubProgressMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.http.CommonGetMethod3;
 import org.eclipse.mylyn.internal.commons.net.http.CommonPostMethod3;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

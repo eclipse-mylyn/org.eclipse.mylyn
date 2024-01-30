@@ -59,7 +59,7 @@ public class CommonListenerList<T> implements Iterable<T> {
 	public CommonListenerList(String pluginId) {
 		Assert.isNotNull(pluginId);
 		this.pluginId = pluginId;
-		this.listeners = new CopyOnWriteArrayList<T>();
+		listeners = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -73,23 +73,26 @@ public class CommonListenerList<T> implements Iterable<T> {
 	/**
 	 * Iterates over the list of listeners.
 	 */
+	@Override
 	public Iterator<T> iterator() {
 		return listeners.iterator();
 	}
 
 	/**
-	 * Invokes <code>runnable</code> for each listener. If {@link Notifier#run(Object)} throws an exception the
-	 * corresponding listener is removed from the list and a message is logged.
+	 * Invokes <code>runnable</code> for each listener. If {@link Notifier#run(Object)} throws an exception the corresponding listener is
+	 * removed from the list and a message is logged.
 	 */
 	public void notify(final Notifier<T> runnable) {
 		for (final T listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, pluginId,
 							NLS.bind("Unexpected error notifying listener {0}", listener.getClass()), e)); //$NON-NLS-1$
 					remove(listener);
 				}
 
+				@Override
 				public void run() throws Exception {
 					runnable.run(listener);
 				}

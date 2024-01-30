@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.commons.tests.operations;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.Policy;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

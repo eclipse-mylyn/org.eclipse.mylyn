@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.commons.identity.core;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -45,39 +46,20 @@ public class Account implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		Account other = (Account) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
+		if (!Objects.equals(id, other.id)) {
 			return false;
 		}
-		if (kind == null) {
-			if (other.kind != null) {
-				return false;
-			}
-		} else if (!kind.equals(other.kind)) {
+		if (!Objects.equals(kind, other.kind)) {
 			return false;
 		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
+		if (!Objects.equals(name, other.name)) {
 			return false;
 		}
-		if (url == null) {
-			if (other.url != null) {
-				return false;
-			}
-		} else if (!url.equals(other.url)) {
+		if (!Objects.equals(url, other.url)) {
 			return false;
 		}
 		return true;
@@ -101,13 +83,7 @@ public class Account implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
-		return result;
+		return Objects.hash(id, kind, name, url);
 	}
 
 	public Account kind(String kind) {

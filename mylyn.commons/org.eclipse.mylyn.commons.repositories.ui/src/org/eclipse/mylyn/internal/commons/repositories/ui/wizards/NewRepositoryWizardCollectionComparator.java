@@ -19,9 +19,9 @@ import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 
 /**
- * A Viewer element sorter that sorts Elements by their name attribute. Note that capitalization differences are not
- * considered by this sorter, so a < B < c. NOTE one exception to the above: an element with the system's reserved name
- * for base Wizards will always be sorted such that it will ultimately be placed at the beginning of the sorted result.
+ * A Viewer element sorter that sorts Elements by their name attribute. Note that capitalization differences are not considered by this
+ * sorter, so a < B < c. NOTE one exception to the above: an element with the system's reserved name for base Wizards will always be sorted
+ * such that it will ultimately be placed at the beginning of the sorted result.
  */
 @SuppressWarnings("restriction")
 class NewWizardCollectionComparator extends ViewerComparator {
@@ -31,11 +31,10 @@ class NewWizardCollectionComparator extends ViewerComparator {
 	public final static NewWizardCollectionComparator INSTANCE = new NewWizardCollectionComparator();
 
 	/**
-	 * Creates an instance of <code>NewWizardCollectionSorter</code>. Since this is a stateless sorter, it is only
-	 * accessible as a singleton; the private visibility of this constructor ensures this.
+	 * Creates an instance of <code>NewWizardCollectionSorter</code>. Since this is a stateless sorter, it is only accessible as a
+	 * singleton; the private visibility of this constructor ensures this.
 	 */
 	private NewWizardCollectionComparator() {
-		super();
 	}
 
 	/*

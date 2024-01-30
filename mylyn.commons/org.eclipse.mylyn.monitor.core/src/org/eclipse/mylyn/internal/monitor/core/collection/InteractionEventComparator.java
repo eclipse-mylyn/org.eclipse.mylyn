@@ -23,6 +23,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class InteractionEventComparator implements Comparator<InteractionEvent> {
 
+	@Override
 	public int compare(InteractionEvent arg0, InteractionEvent arg1) {
 		if (arg0.equals(arg1)) {
 			return 0;

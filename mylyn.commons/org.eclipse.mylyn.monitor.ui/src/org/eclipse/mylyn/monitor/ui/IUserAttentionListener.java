@@ -20,8 +20,8 @@ package org.eclipse.mylyn.monitor.ui;
  */
 public interface IUserAttentionListener {
 
-	public void userAttentionGained();
+	void userAttentionGained();
 
-	public void userAttentionLost();
+	void userAttentionLost();
 
 }

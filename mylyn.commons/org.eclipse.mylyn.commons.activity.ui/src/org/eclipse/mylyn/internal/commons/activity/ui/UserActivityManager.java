@@ -39,11 +39,12 @@ public class UserActivityManager implements IUserActivityManager {
 	private final MonitorUserActivityJob monitorJob;
 
 	public UserActivityManager(List<AbstractUserActivityMonitor> monitors) {
-		this.activityListeners = new CopyOnWriteArraySet<UserActivityListener>();
-		this.activityMonitors = new CopyOnWriteArrayList<AbstractUserActivityMonitor>(monitors);
-		this.monitorJob = createMonitorActivityJob();
+		activityListeners = new CopyOnWriteArraySet<>();
+		activityMonitors = new CopyOnWriteArrayList<>(monitors);
+		monitorJob = createMonitorActivityJob();
 	}
 
+	@Override
 	public void addAttentionListener(UserActivityListener listener) {
 		activityListeners.add(listener);
 	}
@@ -57,10 +58,12 @@ public class UserActivityManager implements IUserActivityManager {
 			final boolean[] success = new boolean[1];
 			final long[] result = new long[1];
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					disableFailedMonitor(monitor, e);
 				}
 
+				@Override
 				public void run() throws Exception {
 					if (monitor.isEnabled()) {
 						result[0] = monitor.getLastInteractionTime();
@@ -82,6 +85,7 @@ public class UserActivityManager implements IUserActivityManager {
 		return activityMonitors.size() > 1;
 	}
 
+	@Override
 	public void removeAttentionListener(UserActivityListener listener) {
 		activityListeners.remove(listener);
 	}
@@ -93,10 +97,12 @@ public class UserActivityManager implements IUserActivityManager {
 	public void start() {
 		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					disableFailedMonitor(monitor, e);
 				}
 
+				@Override
 				public void run() throws Exception {
 					monitor.start();
 				}
@@ -109,10 +115,12 @@ public class UserActivityManager implements IUserActivityManager {
 		monitorJob.cancel();
 		for (final AbstractUserActivityMonitor monitor : activityMonitors) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					disableFailedMonitor(monitor, e);
 				}
 
+				@Override
 				public void run() throws Exception {
 					monitor.stop();
 				}
@@ -122,18 +130,22 @@ public class UserActivityManager implements IUserActivityManager {
 
 	private MonitorUserActivityJob createMonitorActivityJob() {
 		MonitorUserActivityJob job = new MonitorUserActivityJob(new IUserActivityManagerCallback() {
+			@Override
 			public void active() {
 				UserActivityManager.this.fireActive();
 			}
 
+			@Override
 			public void addMonitoredActivityTime(long localStartTime, long currentTime) {
 				UserActivityManager.this.fireMonitoredActivityTime(localStartTime, currentTime);
 			}
 
+			@Override
 			public long getLastEventTime() {
 				return UserActivityManager.this.getLastInteractionTime();
 			}
 
+			@Override
 			public void inactive() {
 				UserActivityManager.this.fireInactive();
 			}
@@ -176,7 +188,7 @@ public class UserActivityManager implements IUserActivityManager {
 	}
 
 	void init(List<AbstractUserActivityMonitor> monitors) {
-		this.activityMonitors.addAll(monitors);
+		activityMonitors.addAll(monitors);
 	}
 
 }

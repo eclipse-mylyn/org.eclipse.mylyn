@@ -22,6 +22,6 @@ import org.eclipse.jface.action.IAction;
  */
 public interface IActionExecutionListener {
 
-	public void actionObserved(IAction action);
+	void actionObserved(IAction action);
 
 }

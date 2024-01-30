@@ -19,10 +19,10 @@ import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -57,7 +57,7 @@ public class TimeoutInputStreamTest extends TestCase {
 				} catch (IOException e) {
 					// ignore
 				}
-			};
+			}
 		}.start();
 	}
 
@@ -81,16 +81,14 @@ public class TimeoutInputStreamTest extends TestCase {
 	public void testCloseTimeout() throws Exception {
 		e = new SocketTimeoutException();
 		TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500);
-		try {
+		try (in) {
 			in.read();
 			fail("expected InterruptedIOException");
 		} catch (InterruptedIOException e) {
 			// expected
-		} finally {
-			in.close();
 		}
 
-		// wait 30 seconds for executor to complete 
+		// wait 30 seconds for executor to complete
 		long startTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() - startTime < 30 * 1000
 				&& ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount() > 0) {

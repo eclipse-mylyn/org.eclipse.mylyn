@@ -22,6 +22,7 @@ public class NullOperationMonitor extends NullProgressMonitor implements IOperat
 
 	private EnumSet<OperationFlag> flags;
 
+	@Override
 	public synchronized void addFlag(OperationFlag flag) {
 		if (flags == null) {
 			flags = EnumSet.of(flag);
@@ -30,10 +31,12 @@ public class NullOperationMonitor extends NullProgressMonitor implements IOperat
 		}
 	}
 
+	@Override
 	public void clearBlocked() {
-		// ignore			
+		// ignore
 	}
 
+	@Override
 	public synchronized boolean hasFlag(OperationFlag flag) {
 		if (flags != null) {
 			return flags.contains(flag);
@@ -41,24 +44,29 @@ public class NullOperationMonitor extends NullProgressMonitor implements IOperat
 		return false;
 	}
 
+	@Override
 	public IOperationMonitor newChild(int totalWork) {
 		return this;
 	}
 
+	@Override
 	public IOperationMonitor newChild(int totalWork, int suppressFlags) {
 		return this;
 	}
 
+	@Override
 	public synchronized void removeFlag(OperationFlag flag) {
 		if (flags != null) {
 			flags.remove(flag);
 		}
 	}
 
+	@Override
 	public void setBlocked(IStatus reason) {
-		// ignore			
+		// ignore
 	}
 
+	@Override
 	public IOperationMonitor setWorkRemaining(int workRemaining) {
 		return this;
 	}

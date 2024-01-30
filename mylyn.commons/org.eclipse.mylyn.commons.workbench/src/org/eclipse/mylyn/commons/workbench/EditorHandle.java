@@ -21,8 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Provides a hook for accessing the part when opening an element in an editor. This class should only be accessed from
- * the SWT thread.
+ * Provides a hook for accessing the part when opening an element in an editor. This class should only be accessed from the SWT thread.
  * 
  * @author Steffen Pingel
  */
@@ -50,6 +49,7 @@ public class EditorHandle implements IAdaptable {
 	public EditorHandle() {
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
@@ -106,11 +106,11 @@ public class EditorHandle implements IAdaptable {
 	 */
 	public void setStatus(IStatus status) {
 		this.status = status;
-		this.progressLatch.countDown();
+		progressLatch.countDown();
 	}
 
 	public boolean await(long timeout, TimeUnit unit) throws InterruptedException {
-		return this.progressLatch.await(timeout, unit);
+		return progressLatch.await(timeout, unit);
 	}
 
 }

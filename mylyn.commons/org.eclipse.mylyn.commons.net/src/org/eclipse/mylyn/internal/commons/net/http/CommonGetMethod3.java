@@ -4,7 +4,7 @@
  * the Eclipse Public License v2.0 which accompanies this distribution, and is
  * available at https://www.eclipse.org/legal/epl-v20.html
  *
- * Contributors: 
+ * Contributors:
  *  Composent, Inc. - initial API and implementation
  *  Maarten Meijer - bug 237936, added gzip encoded transfer default
  *  Henrich Kraemer - bug 263869, testHttpsReceiveFile fails using HTTP proxy
@@ -58,6 +58,7 @@ public class CommonGetMethod3 extends GetMethod implements CommonHttpMethod3 {
 		return super.execute(state, conn);
 	}
 
+	@Override
 	public InputStream getResponseBodyAsStream(IProgressMonitor monitor) throws IOException {
 		if (inputStream == null) {
 			inputStream = WebUtil.getResponseBodyAsStream(this, monitor);
@@ -79,14 +80,14 @@ public class CommonGetMethod3 extends GetMethod implements CommonHttpMethod3 {
 
 	private boolean isZippedResponse() {
 		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=269018
-		return this.getResponseHeader(CONTENT_ENCODING) != null
-				&& this.getResponseHeader(CONTENT_ENCODING).getValue().equals(CONTENT_ENCODING_GZIP);
+		return getResponseHeader(CONTENT_ENCODING) != null
+				&& getResponseHeader(CONTENT_ENCODING).getValue().equals(CONTENT_ENCODING_GZIP);
 	}
 
-	// This override is a workaround for 
+	// This override is a workaround for
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=279457
 	// This makes GetMethod.releaseConnection non-reentrant,
-	// as with reentrancy under some circumstances a NPE can be 
+	// as with reentrancy under some circumstances a NPE can be
 	// thrown with multithreaded access
 	@Override
 	public void releaseConnection() {
@@ -103,9 +104,10 @@ public class CommonGetMethod3 extends GetMethod implements CommonHttpMethod3 {
 		}
 	}
 
+	@Override
 	public void releaseConnection(IProgressMonitor monitor) {
 		if (monitor != null && monitor.isCanceled()) {
-			// force a connection close on cancel to avoid blocking to do reading the remainder of the response 
+			// force a connection close on cancel to avoid blocking to do reading the remainder of the response
 			abort();
 		}
 		try {

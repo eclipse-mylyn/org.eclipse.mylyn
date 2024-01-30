@@ -37,7 +37,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 public class CommonHttpClient3 {
 
 	static final boolean DEBUG_AUTH = Boolean
-			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.http/debug/authentication")); //$NON-NLS-1$
+			.parseBoolean(Platform.getDebugOption("org.eclipse.mylyn.commons.http/debug/authentication")); //$NON-NLS-1$
 
 	private static final String DEFAULT_USER_AGENT = "Apache XML-RPC/3.0"; //$NON-NLS-1$
 
@@ -61,7 +61,7 @@ public class CommonHttpClient3 {
 
 	public CommonHttpClient3(AbstractWebLocation location, HttpClient client) {
 		this.location = location;
-		this.httpClient = createHttpClient(DEFAULT_USER_AGENT);
+		httpClient = createHttpClient(DEFAULT_USER_AGENT);
 	}
 
 	public HttpClient getHttpClient() {
@@ -100,11 +100,7 @@ public class CommonHttpClient3 {
 
 		try {
 			location.requestCredentials(authenticationType, null, monitor);
-		} catch (UnsupportedRequestException e) {
-			IOException ioe = new IOException(HttpStatus.getStatusText(code));
-			ioe.initCause(e);
-			throw ioe;
-		} catch (UnsupportedOperationException e) {
+		} catch (UnsupportedRequestException | UnsupportedOperationException e) {
 			IOException ioe = new IOException(HttpStatus.getStatusText(code));
 			ioe.initCause(e);
 			throw ioe;

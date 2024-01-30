@@ -25,8 +25,8 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 /**
- * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
- * test takes longer than 10 minutes.
+ * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a test takes longer
+ * than 10 minutes.
  *
  * @author Steffen Pingel
  */
@@ -37,14 +37,16 @@ public class ManagedTestSuite extends TestSuite {
 		/**
 		 * Tests may execute in parallel and hence multiple dump threads maybe scheduled concurrently.
 		 */
-		private final ConcurrentHashMap<Test, DumpThreadTask> taskByTest = new ConcurrentHashMap<Test, DumpThreadTask>();
+		private final ConcurrentHashMap<Test, DumpThreadTask> taskByTest = new ConcurrentHashMap<>();
 
 		private final Timer timer = new Timer(true);
 
+		@Override
 		public void addError(Test test, Throwable t) {
 			System.err.println("[ERROR]");
 		}
 
+		@Override
 		public void addFailure(Test test, AssertionFailedError t) {
 			System.err.println("[FAILURE]");
 		}
@@ -74,6 +76,7 @@ public class ManagedTestSuite extends TestSuite {
 			System.err.println(MessageFormat.format("{0} out of {1} tests failed", failedCount, result.runCount()));
 		}
 
+		@Override
 		public void endTest(Test test) {
 			DumpThreadTask task = taskByTest.remove(test);
 			if (task != null) {
@@ -83,6 +86,7 @@ public class ManagedTestSuite extends TestSuite {
 			Thread.interrupted();
 		}
 
+		@Override
 		public void startTest(Test test) {
 			startTest(test, false);
 		}
@@ -122,10 +126,12 @@ public class ManagedTestSuite extends TestSuite {
 
 			// add dummy test to dump threads in case shutdown hangs
 			listener.startTest(new Test() {
+				@Override
 				public int countTestCases() {
 					return 1;
 				}
 
+				@Override
 				public void run(TestResult result) {
 					// do nothing
 				}

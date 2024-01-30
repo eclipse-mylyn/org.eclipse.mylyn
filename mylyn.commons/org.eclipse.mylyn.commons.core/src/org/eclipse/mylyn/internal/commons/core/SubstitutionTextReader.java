@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Reads the text contents from a reader and computes for each character a potential substitution. The substitution may
- * eat more characters than only the one passed into the computation routine.
+ * Reads the text contents from a reader and computes for each character a potential substitution. The substitution may eat more characters
+ * than only the one passed into the computation routine.
  * <p>
  * Moved into this package from <code>org.eclipse.jface.internal.text.revisions</code>.
  * </p>
@@ -55,8 +55,8 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	}
 
 	/**
-	 * Computes the substitution for the given character and if necessary subsequent characters. Implementation should
-	 * use <code>nextChar</code> to read subsequent characters.
+	 * Computes the substitution for the given character and if necessary subsequent characters. Implementation should use
+	 * <code>nextChar</code> to read subsequent characters.
 	 * 
 	 * @param c
 	 *            the character to be substituted
@@ -83,7 +83,7 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	 *             in case reading the character fails
 	 */
 	protected int nextChar() throws IOException {
-		fReadFromBuffer = (fBuffer.length() > 0);
+		fReadFromBuffer = fBuffer.length() > 0;
 		if (fReadFromBuffer) {
 			char ch = fBuffer.charAt(fIndex++);
 			if (fIndex >= fBuffer.length()) {
@@ -131,8 +131,8 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 				c = nextChar();
 			}
 
-		} while (fSkipWhiteSpace && fWasWhiteSpace && (c == ' '));
-		fWasWhiteSpace = (c == ' ' || c == '\r' || c == '\n');
+		} while (fSkipWhiteSpace && fWasWhiteSpace && c == ' ');
+		fWasWhiteSpace = c == ' ' || c == '\r' || c == '\n';
 		return c;
 	}
 

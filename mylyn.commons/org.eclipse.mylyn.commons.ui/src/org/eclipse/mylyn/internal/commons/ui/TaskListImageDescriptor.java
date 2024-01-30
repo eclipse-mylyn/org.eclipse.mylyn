@@ -33,18 +33,18 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	protected Point size;
 
 	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top, boolean left) {
-		this.base = getImageData(baseDesc);
+		base = getImageData(baseDesc);
 		this.top = top;
 		this.left = left;
 		if (overlayDesc != null) {
-			this.overlay = getImageData(overlayDesc);
+			overlay = getImageData(overlayDesc);
 		}
 		Point size = new Point(base.width, base.height);
 		setImageSize(size);
 	}
 
 	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
-		this.base = getImageData(baseDesc);
+		base = getImageData(baseDesc);
 		setImageSize(size);
 	}
 

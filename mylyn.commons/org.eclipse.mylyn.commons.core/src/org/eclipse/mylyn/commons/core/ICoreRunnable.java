@@ -20,6 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ICoreRunnable {
 
-	public void run(IProgressMonitor monitor) throws CoreException;
+	void run(IProgressMonitor monitor) throws CoreException;
 
 }

@@ -55,7 +55,7 @@ public class ZipFileUtil {
 			throws FileNotFoundException, IOException {
 		try (ZipFile zipFile = new ZipFile(zippedfile)) {
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			List<File> outputFiles = new ArrayList<File>();
+			List<File> outputFiles = new ArrayList<>();
 			File destinationFile = new File(destPath);
 			if (!destinationFile.exists()) {
 				destinationFile.mkdirs();
@@ -160,8 +160,8 @@ public class ZipFileUtil {
 				// Add ZIP entry to output stream.m
 				String path = ""; //$NON-NLS-1$
 				if (!rootPath.equals("")) { //$NON-NLS-1$
-					rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-					path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					rootPath = rootPath.replace('\\', '/'); //$NON-NLS-1$ //$NON-NLS-2$
+					path = file.getAbsolutePath().replace('\\', '/'); //$NON-NLS-1$ //$NON-NLS-2$
 					path = path.substring(rootPath.length());
 				} else {
 					path = file.getName();
@@ -169,10 +169,8 @@ public class ZipFileUtil {
 
 				zipOut.putNextEntry(new ZipEntry(path));
 				InputStream in = new BufferedInputStream(new FileInputStream(file));
-				try {
+				try (in) {
 					copyStream(in, zipOut);
-				} finally {
-					in.close();
 				}
 
 				// Complete the entry

@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.commons.repositories.core.auth;
 
+import java.util.Objects;
+
 /**
  * @author Steffen Pingel
  */
@@ -35,25 +37,14 @@ public class OpenIdCredentials extends AuthenticationCredentials {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		OpenIdCredentials other = (OpenIdCredentials) obj;
-		if (responseUrl == null) {
-			if (other.responseUrl != null) {
-				return false;
-			}
-		} else if (!responseUrl.equals(other.responseUrl)) {
+		if (!Objects.equals(responseUrl, other.responseUrl)) {
 			return false;
 		}
-		if (token == null) {
-			if (other.token != null) {
-				return false;
-			}
-		} else if (!token.equals(other.token)) {
+		if (!Objects.equals(token, other.token)) {
 			return false;
 		}
 		return true;
@@ -69,11 +60,7 @@ public class OpenIdCredentials extends AuthenticationCredentials {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((responseUrl == null) ? 0 : responseUrl.hashCode());
-		result = prime * result + ((token == null) ? 0 : token.hashCode());
-		return result;
+		return Objects.hash(responseUrl, token);
 	}
 
 	@Override

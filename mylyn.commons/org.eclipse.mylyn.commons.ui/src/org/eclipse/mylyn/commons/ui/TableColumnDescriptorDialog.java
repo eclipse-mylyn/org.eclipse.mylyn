@@ -19,15 +19,11 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -64,8 +60,8 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 
 	public TableColumnDescriptorDialog(Shell parentShell, @NonNull TableColumnDescriptor[] columnDescriptor) {
 		super(parentShell);
-		this.columnDescriptors = columnDescriptor;
-		Assert.isTrue(this.columnDescriptors.length > 0);
+		columnDescriptors = columnDescriptor;
+		Assert.isTrue(columnDescriptors.length > 0);
 	}
 
 	@Override
@@ -110,8 +106,7 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof TableColumnDescriptor) {
-					TableColumnDescriptor tableColumnDescriptors = (TableColumnDescriptor) element;
+				if (element instanceof TableColumnDescriptor tableColumnDescriptors) {
 					return tableColumnDescriptors.getName();
 				}
 				return super.getText(element);
@@ -119,18 +114,13 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 
 		});
 		attributeListViewer.setInput(columnDescriptors);
-		attributeListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				ISelection selection = event.getSelection();
-				if (!selection.isEmpty()) {
-					selectedTableColumnDescriptor = (TableColumnDescriptor) ((IStructuredSelection) selection)
-							.getFirstElement();
-					updateDetailAttributes();
-				}
+		attributeListViewer.addSelectionChangedListener(event -> {
+			ISelection selection = event.getSelection();
+			if (!selection.isEmpty()) {
+				selectedTableColumnDescriptor = (TableColumnDescriptor) ((IStructuredSelection) selection)
+						.getFirstElement();
+				updateDetailAttributes();
 			}
-
 		});
 		Composite detailComposite = new Composite(composite, SWT.BORDER);
 		detailComposite.setLayout(new GridLayout(2, false));
@@ -144,27 +134,23 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 		new Label(detailComposite, SWT.None).setText(Messages.TableColumnDescriptorDialog_Width);
 		widthTxt = new Text(detailComposite, SWT.BORDER);
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).applyTo(widthTxt);
-		widthTxt.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				try {
-					String widthString = widthTxt.getText();
-					if (widthString.isEmpty()) {
-						setErrorMessage(Messages.TableColumnDescriptorDialog_please_enter_value_for_Width);
+		widthTxt.addModifyListener(e -> {
+			try {
+				String widthString = widthTxt.getText();
+				if (widthString.isEmpty()) {
+					setErrorMessage(Messages.TableColumnDescriptorDialog_please_enter_value_for_Width);
+				} else {
+					int newWidth = Integer.parseInt(widthTxt.getText());
+					if (newWidth >= 0) {
+						selectedTableColumnDescriptor.setWidth(newWidth);
+						setErrorMessage(null);
 					} else {
-						int newWidth = Integer.parseInt(widthTxt.getText());
-						if (newWidth >= 0) {
-							selectedTableColumnDescriptor.setWidth(newWidth);
-							setErrorMessage(null);
-						} else {
-							setErrorMessage(Messages.TableColumnDescriptorDialog_Width_must_be_greater_or_equal_0);
-						}
+						setErrorMessage(Messages.TableColumnDescriptorDialog_Width_must_be_greater_or_equal_0);
 					}
-
-				} catch (NumberFormatException exception) {
-					setErrorMessage(Messages.TableColumnDescriptorDialog_Width_is_not_a_valid_number);
 				}
+
+			} catch (NumberFormatException exception) {
+				setErrorMessage(Messages.TableColumnDescriptorDialog_Width_is_not_a_valid_number);
 			}
 		});
 		new Label(detailComposite, SWT.None).setText(Messages.TableColumnDescriptorDialog_Alignment);
@@ -177,15 +163,15 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				switch (alignmentCombo.getSelectionIndex()) {
-				case 0:
-					selectedTableColumnDescriptor.setAlignment(SWT.LEFT);
-					break;
-				case 1:
-					selectedTableColumnDescriptor.setAlignment(SWT.CENTER);
-					break;
-				case 2:
-					selectedTableColumnDescriptor.setAlignment(SWT.RIGHT);
-					break;
+					case 0:
+						selectedTableColumnDescriptor.setAlignment(SWT.LEFT);
+						break;
+					case 1:
+						selectedTableColumnDescriptor.setAlignment(SWT.CENTER);
+						break;
+					case 2:
+						selectedTableColumnDescriptor.setAlignment(SWT.RIGHT);
+						break;
 				}
 			}
 
@@ -237,15 +223,15 @@ public class TableColumnDescriptorDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				switch (sortDirectionCombo.getSelectionIndex()) {
-				case 0:
-					selectedTableColumnDescriptor.setSortDirection(SWT.NONE);
-					break;
-				case 1:
-					selectedTableColumnDescriptor.setSortDirection(SWT.UP);
-					break;
-				case 2:
-					selectedTableColumnDescriptor.setSortDirection(SWT.DOWN);
-					break;
+					case 0:
+						selectedTableColumnDescriptor.setSortDirection(SWT.NONE);
+						break;
+					case 1:
+						selectedTableColumnDescriptor.setSortDirection(SWT.UP);
+						break;
+					case 2:
+						selectedTableColumnDescriptor.setSortDirection(SWT.DOWN);
+						break;
 				}
 			}
 		});

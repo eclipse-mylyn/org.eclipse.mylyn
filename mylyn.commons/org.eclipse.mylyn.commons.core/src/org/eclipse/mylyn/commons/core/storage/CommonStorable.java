@@ -40,10 +40,12 @@ class CommonStorable implements ICommonStorable {
 		this.path = path;
 	}
 
+	@Override
 	public void delete(String item) throws CoreException {
 		getFile(item).delete();
 	}
 
+	@Override
 	public void deleteAll() throws CoreException {
 		File[] children = path.listFiles();
 		if (children != null) {
@@ -66,6 +68,7 @@ class CommonStorable implements ICommonStorable {
 		}
 	}
 
+	@Override
 	public boolean exists(String handle) {
 		if (!path.exists()) {
 			return false;
@@ -85,15 +88,18 @@ class CommonStorable implements ICommonStorable {
 		return false;
 	}
 
+	@Override
 	public InputStream read(String item, IProgressMonitor monitor) throws IOException {
 		File file = getFile(item);
 		return new FileInputStream(file);
 	}
 
+	@Override
 	public void release() {
 		store.release(this);
 	}
 
+	@Override
 	public OutputStream write(String item, IProgressMonitor monitor) throws IOException {
 		File file = getFile(item);
 		return new FileOutputStream(file);

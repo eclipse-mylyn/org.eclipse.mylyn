@@ -59,8 +59,8 @@ public final class XmlMemento {
 	private static final String TAG_ID = "XmlMemento.internal.id"; //$NON-NLS-1$
 
 	/**
-	 * Creates a <code>Document</code> from the <code>Reader</code> and returns a memento on the first
-	 * <code>Element</code> for reading the document.
+	 * Creates a <code>Document</code> from the <code>Reader</code> and returns a memento on the first <code>Element</code> for reading the
+	 * document.
 	 * <p>
 	 * Same as calling createReadRoot(reader, null)
 	 * </p>
@@ -76,15 +76,15 @@ public final class XmlMemento {
 	}
 
 	/**
-	 * Creates a <code>Document</code> from the <code>Reader</code> and returns a memento on the first
-	 * <code>Element</code> for reading the document.
+	 * Creates a <code>Document</code> from the <code>Reader</code> and returns a memento on the first <code>Element</code> for reading the
+	 * document.
 	 * 
 	 * @param reader
 	 *            the <code>Reader</code> used to create the memento's document
 	 * @param baseDir
-	 *            the directory used to resolve relative file names in the XML document. This directory must exist and
-	 *            include the trailing separator. The directory format, including the separators, must be valid for the
-	 *            platform. Can be <code>null</code> if not needed.
+	 *            the directory used to resolve relative file names in the XML document. This directory must exist and include the trailing
+	 *            separator. The directory format, including the separators, must be valid for the platform. Can be <code>null</code> if not
+	 *            needed.
 	 * @return a memento on the first <code>Element</code> for reading the document
 	 * @throws InvocationTargetException
 	 *             if IO problems, invalid format, or no element.
@@ -105,6 +105,7 @@ public final class XmlMemento {
 				/**
 				 * @throws SAXException
 				 */
+				@Override
 				public void warning(SAXParseException exception) throws SAXException {
 					// ignore
 				}
@@ -112,10 +113,12 @@ public final class XmlMemento {
 				/**
 				 * @throws SAXException
 				 */
+				@Override
 				public void error(SAXParseException exception) throws SAXException {
 					// ignore
 				}
 
+				@Override
 				public void fatalError(SAXParseException exception) throws SAXException {
 					throw exception;
 				}
@@ -174,8 +177,7 @@ public final class XmlMemento {
 	/**
 	 * Creates a memento for the specified document and element.
 	 * <p>
-	 * Clients should use <code>createReadRoot</code> and <code>createWriteRoot</code> to create the initial memento on
-	 * a document.
+	 * Clients should use <code>createReadRoot</code> and <code>createWriteRoot</code> to create the initial memento on a document.
 	 * </p>
 	 * 
 	 * @param document
@@ -184,8 +186,7 @@ public final class XmlMemento {
 	 *            the element node for the memento
 	 */
 	public XmlMemento(Document document, Element element) {
-		super();
-		this.factory = document;
+		factory = document;
 		this.element = element;
 	}
 
@@ -210,8 +211,8 @@ public final class XmlMemento {
 	}
 
 	/**
-	 * Creates a new child of this memento with the given type and id. The id is stored in the child memento (using a
-	 * special reserved key, <code>TAG_ID</code>) and can be retrieved using <code>getId</code>.
+	 * Creates a new child of this memento with the given type and id. The id is stored in the child memento (using a special reserved key,
+	 * <code>TAG_ID</code>) and can be retrieved using <code>getId</code>.
 	 * <p>
 	 * The <code>getChild</code> and <code>getChildren</code> methods are used to retrieve children of a given type.
 	 * </p>
@@ -262,8 +263,7 @@ public final class XmlMemento {
 		// Find the first node which is a child of this node.
 		for (int nX = 0; nX < size; nX++) {
 			Node node = nodes.item(nX);
-			if (node instanceof Element) {
-				Element element = (Element) node;
+			if (node instanceof Element element) {
 				if (element.getNodeName().equals(type)) {
 					return new XmlMemento(factory, element);
 				}
@@ -291,8 +291,7 @@ public final class XmlMemento {
 		ArrayList list = new ArrayList(size);
 		for (int nX = 0; nX < size; nX++) {
 			Node node = nodes.item(nX);
-			if (node instanceof Element) {
-				Element element = (Element) node;
+			if (node instanceof Element element) {
 				if (element.getNodeName().equals(type)) {
 					list.add(element);
 				}
@@ -544,8 +543,8 @@ public final class XmlMemento {
 	}
 
 	/**
-	 * Sets the memento's Text node to contain the given data. Creates the Text node if none exists. If a Text node does
-	 * exist, it's current contents are replaced. Each memento is allowed only one text node.
+	 * Sets the memento's Text node to contain the given data. Creates the Text node if none exists. If a Text node does exist, it's current
+	 * contents are replaced. Each memento is allowed only one text node.
 	 * 
 	 * @param data
 	 *            the data to be placed on the Text node
@@ -557,7 +556,7 @@ public final class XmlMemento {
 		Text textNode = getTextNode();
 		if (textNode == null) {
 			textNode = factory.createTextNode(data);
-			// Always add the text node as the first child (fixes bug 93718) 
+			// Always add the text node as the first child (fixes bug 93718)
 			element.insertBefore(textNode, element.getFirstChild());
 		} else {
 			textNode.setData(data);
@@ -574,16 +573,13 @@ public final class XmlMemento {
 	 */
 	public void save(Writer writer) throws IOException {
 		DOMWriter out = new DOMWriter(writer);
-		try {
+		try (out) {
 			out.print(element);
-		} finally {
-			out.close();
 		}
 	}
 
 	/**
-	 * A simple XML writer. Using this instead of the javax.xml.transform classes allows compilation against JCL
-	 * Foundation (bug 80053).
+	 * A simple XML writer. Using this instead of the javax.xml.transform classes allows compilation against JCL Foundation (bug 80053).
 	 */
 	private static final class DOMWriter extends PrintWriter {
 
@@ -637,7 +633,7 @@ public final class XmlMemento {
 		}
 
 		private void startTag(Element element, boolean hasChildren) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append("<"); //$NON-NLS-1$
 			sb.append(element.getTagName());
 			NamedNodeMap attributes = element.getAttributes();
@@ -654,7 +650,7 @@ public final class XmlMemento {
 		}
 
 		private void endTag(Element element) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append("</"); //$NON-NLS-1$
 			sb.append(element.getNodeName());
 			sb.append(">"); //$NON-NLS-1$
@@ -687,22 +683,22 @@ public final class XmlMemento {
 			// being converted to spaces on deserialization
 			// (fixes bug 93720)
 			switch (c) {
-			case '<':
-				return "lt"; //$NON-NLS-1$
-			case '>':
-				return "gt"; //$NON-NLS-1$
-			case '"':
-				return "quot"; //$NON-NLS-1$
-			case '\'':
-				return "apos"; //$NON-NLS-1$
-			case '&':
-				return "amp"; //$NON-NLS-1$
-			case '\r':
-				return "#x0D"; //$NON-NLS-1$
-			case '\n':
-				return "#x0A"; //$NON-NLS-1$
-			case '\u0009':
-				return "#x09"; //$NON-NLS-1$
+				case '<':
+					return "lt"; //$NON-NLS-1$
+				case '>':
+					return "gt"; //$NON-NLS-1$
+				case '"':
+					return "quot"; //$NON-NLS-1$
+				case '\'':
+					return "apos"; //$NON-NLS-1$
+				case '&':
+					return "amp"; //$NON-NLS-1$
+				case '\r':
+					return "#x0D"; //$NON-NLS-1$
+				case '\n':
+					return "#x0A"; //$NON-NLS-1$
+				case '\u0009':
+					return "#x09"; //$NON-NLS-1$
 			}
 			return null;
 		}

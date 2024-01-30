@@ -39,19 +39,19 @@ public abstract class ControlListItem extends Composite {
 		/**
 		 * Select the item previous to the receiver.
 		 */
-		public void selectPrevious();
+		void selectPrevious();
 
 		/**
 		 * Select the next previous to the receiver.
 		 */
-		public void selectNext();
+		void selectNext();
 
 		/**
 		 * Select the receiver.
 		 */
-		public void select();
+		void select();
 
-		public void open();
+		void open();
 
 	}
 
@@ -71,7 +71,7 @@ public abstract class ControlListItem extends Composite {
 
 	static {
 		// Mac has different Gamma value
-		int shift = "carbon".equals(SWT.getPlatform()) ? -25 : -10;//$NON-NLS-1$ 
+		int shift = "carbon".equals(SWT.getPlatform()) ? -25 : -10;//$NON-NLS-1$
 
 		Color lightColor = Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 
@@ -117,11 +117,9 @@ public abstract class ControlListItem extends Composite {
 			@Override
 			public void mouseExit(MouseEvent e) {
 				enterCount--;
-				getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (!isDisposed()) {
-							updateHotState();
-						}
+				getDisplay().asyncExec(() -> {
+					if (!isDisposed()) {
+						updateHotState();
 					}
 				});
 			}
@@ -131,10 +129,8 @@ public abstract class ControlListItem extends Composite {
 					if (isHot()) {
 						setHot(false);
 					}
-				} else {
-					if (!isHot()) {
-						setHot(true);
-					}
+				} else if (!isHot()) {
+					setHot(true);
 				}
 			}
 		};

@@ -46,6 +46,7 @@ public class ServiceMessage extends AbstractNotification {
 		return -getId().compareTo(o.getId());
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}

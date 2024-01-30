@@ -22,8 +22,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 /**
  * Based on {@link org.eclipse.ui.internal.forms.widgets.FormHeading}.
@@ -56,7 +54,7 @@ public class GradientCanvas extends Canvas {
 
 	private Image gradientImage;
 
-	Map<String, Color> colors = new Hashtable<String, Color>();
+	Map<String, Color> colors = new Hashtable<>();
 
 	private int flags;
 
@@ -88,25 +86,17 @@ public class GradientCanvas extends Canvas {
 		super(parent, style);
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 		setSeparatorAlignment(SWT.BOTTOM);
-		addListener(SWT.Paint, new Listener() {
-			public void handleEvent(Event e) {
-				onPaint(e.gc);
+		addListener(SWT.Paint, e -> onPaint(e.gc));
+		addListener(SWT.Dispose, e -> {
+			if (gradientImage != null) {
+				// XXX FormImages.getInstance().markFinished(gradientImage);
+				gradientImage.dispose();
+				gradientImage = null;
 			}
 		});
-		addListener(SWT.Dispose, new Listener() {
-			public void handleEvent(Event e) {
-				if (gradientImage != null) {
-					// XXX FormImages.getInstance().markFinished(gradientImage);
-					gradientImage.dispose();
-					gradientImage = null;
-				}
-			}
-		});
-		addListener(SWT.Resize, new Listener() {
-			public void handleEvent(Event e) {
-				if (gradientInfo != null || (backgroundImage != null && !isBackgroundImageTiled())) {
-					updateGradientImage();
-				}
+		addListener(SWT.Resize, e -> {
+			if (gradientInfo != null || backgroundImage != null && !isBackgroundImageTiled()) {
+				updateGradientImage();
 			}
 		});
 	}
@@ -145,7 +135,7 @@ public class GradientCanvas extends Canvas {
 	}
 
 	public void setHeadingBackgroundImage(Image image) {
-		this.backgroundImage = image;
+		backgroundImage = image;
 		if (image != null) {
 			setBackground(null);
 		}
@@ -166,7 +156,7 @@ public class GradientCanvas extends Canvas {
 		} else {
 			flags &= ~BACKGROUND_IMAGE_TILED;
 		}
-		setHeadingBackgroundImage(this.backgroundImage);
+		setHeadingBackgroundImage(backgroundImage);
 	}
 
 	public boolean isBackgroundImageTiled() {
@@ -287,11 +277,11 @@ public class GradientCanvas extends Canvas {
 				}
 				gc.setBackground(lastColor);
 				if (gradientInfo.vertical) {
-					final int gradientHeight = (gradientInfo.percents[i] * height / 100) - pos;
+					final int gradientHeight = gradientInfo.percents[i] * height / 100 - pos;
 					gc.fillGradientRectangle(0, pos, width, gradientHeight, true);
 					pos += gradientHeight;
 				} else {
-					final int gradientWidth = (gradientInfo.percents[i] * width / 100) - pos;
+					final int gradientWidth = gradientInfo.percents[i] * width / 100 - pos;
 					gc.fillGradientRectangle(pos, 0, gradientWidth, height, false);
 					pos += gradientWidth;
 				}

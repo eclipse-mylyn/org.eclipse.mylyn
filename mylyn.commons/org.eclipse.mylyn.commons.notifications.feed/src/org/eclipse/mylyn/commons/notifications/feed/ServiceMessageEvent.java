@@ -26,7 +26,7 @@ public class ServiceMessageEvent extends EventObject {
 
 	public enum Kind {
 		MESSAGE_UPDATE, STOP
-	};
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,13 +35,13 @@ public class ServiceMessageEvent extends EventObject {
 	private final Kind eventKind;
 
 	public ServiceMessageEvent(ServiceMessageManager manager, Kind kind) {
-		this(manager, kind, new ArrayList<ServiceMessage>());
+		this(manager, kind, new ArrayList<>());
 	}
 
 	public ServiceMessageEvent(ServiceMessageManager manager, Kind eventKind, List<ServiceMessage> messages) {
 		super(manager);
 		this.eventKind = eventKind;
-		this.messages = Collections.unmodifiableList(new ArrayList<ServiceMessage>(messages));
+		this.messages = Collections.unmodifiableList(new ArrayList<>(messages));
 	}
 
 	public List<ServiceMessage> getMessages() {

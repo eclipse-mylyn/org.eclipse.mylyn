@@ -35,16 +35,16 @@ public class CompositeElementImageDescriptor extends CompositeImageDescriptor {
 	private int offset = 0;
 
 	public CompositeElementImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
-		this.base = getImageData(icon);
+		base = getImageData(icon);
 		if (overlayKind != null) {
-			this.kind = getImageData(overlayKind);
+			kind = getImageData(overlayKind);
 		}
 		int width = WIDTH_ICON;
 		if (wide) {
 			width += OFFSET_DECORATION;
 			offset = OFFSET_DECORATION;
 		}
-		this.size = new Point(width, base.height);
+		size = new Point(width, base.height);
 	}
 
 	@Override

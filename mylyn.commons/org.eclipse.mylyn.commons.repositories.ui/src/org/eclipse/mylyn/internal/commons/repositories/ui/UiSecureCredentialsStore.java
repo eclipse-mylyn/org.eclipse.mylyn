@@ -47,7 +47,7 @@ public class UiSecureCredentialsStore extends SecureCredentialsStore {
 				sleep(200);
 				if (lock.getDepth() > 0) {
 					acquiredLock = acquire(lock);
-					// if we acquired the lock, either the thread that alreadly held it is the current thread, or it was released 
+					// if we acquired the lock, either the thread that alreadly held it is the current thread, or it was released
 					// in either case, we can safely proceed
 					if (!acquiredLock) {
 						throw new RuntimeException("Aborting request to prevent deadlock accessing secure storage"); //$NON-NLS-1$

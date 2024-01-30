@@ -57,7 +57,7 @@ public abstract class NotificationControl extends MessageControl {
 				public void linkActivated(HyperlinkEvent e) {
 					PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencesPageId(),
 							new String[0], getEventId());
-					// Only close the message if the did not cancel the operation 
+					// Only close the message if the did not cancel the operation
 					if (pd != null) {
 						pd.open();
 					}

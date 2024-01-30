@@ -25,11 +25,10 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
 
 /**
- * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a
- * high numAttempts should be specified, and the underlying stream should time out frequently on reads (every second or
- * so). Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does.
- * Check the bytesTransferred field to determine how much of the operation completed; conversely, at what point to
- * resume.
+ * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a high numAttempts
+ * should be specified, and the underlying stream should time out frequently on reads (every second or so). Supports resuming partially
+ * completed operations after an InterruptedIOException if the underlying stream does. Check the bytesTransferred field to determine how
+ * much of the operation completed; conversely, at what point to resume.
  * 
  * @since 3.7
  */
@@ -49,8 +48,7 @@ public class PollingInputStream extends FilterInputStream {
 	 * @param in
 	 *            the underlying input stream
 	 * @param numAttempts
-	 *            the number of attempts before issuing an InterruptedIOException, if 0, retries indefinitely until
-	 *            canceled
+	 *            the number of attempts before issuing an InterruptedIOException, if 0, retries indefinitely until canceled
 	 * @param monitor
 	 *            the progress monitor to be polled for cancellation
 	 */
@@ -58,13 +56,13 @@ public class PollingInputStream extends FilterInputStream {
 		super(in);
 		this.numAttempts = numAttempts;
 		this.monitor = monitor;
-		this.cancellable = true;
+		cancellable = true;
 	}
 
 	/**
-	 * Wraps the underlying stream's method. It may be important to wait for an input stream to be closed because it
-	 * holds an implicit lock on a system resource (such as a file) while it is open. Closing a stream may take time if
-	 * the underlying stream is still servicing a previous request.
+	 * Wraps the underlying stream's method. It may be important to wait for an input stream to be closed because it holds an implicit lock
+	 * on a system resource (such as a file) while it is open. Closing a stream may take time if the underlying stream is still servicing a
+	 * previous request.
 	 * 
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
@@ -112,8 +110,7 @@ public class PollingInputStream extends FilterInputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred
-	 *             will be zero
+	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred will be zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -146,13 +143,12 @@ public class PollingInputStream extends FilterInputStream {
 	 *            - the start offset of the data.
 	 * @param len
 	 *            - the maximum number of bytes read.
-	 * @return the total number of bytes read into the buffer, or -1 if there is no more data because the end of the
-	 *         stream has been reached.
+	 * @return the total number of bytes read into the buffer, or -1 if there is no more data because the end of the stream has been
+	 *         reached.
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred
-	 *             will be zero
+	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred will be zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -188,8 +184,7 @@ public class PollingInputStream extends FilterInputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred
-	 *             will be zero
+	 *             if the underlying operation times out numAttempts times and no data was received, bytesTransferred will be zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -236,9 +231,9 @@ public class PollingInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Called to set whether cancellation will be checked by this stream. Turning cancellation checking off can be very
-	 * useful for protecting critical portions of a protocol that shouldn't be interrupted. For example, it is often
-	 * necessary to protect login sequences.
+	 * Called to set whether cancellation will be checked by this stream. Turning cancellation checking off can be very useful for
+	 * protecting critical portions of a protocol that shouldn't be interrupted. For example, it is often necessary to protect login
+	 * sequences.
 	 * 
 	 * @param cancellable
 	 *            a flag controlling whether this stream will check for cancellation.
@@ -248,8 +243,8 @@ public class PollingInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Checked whether the monitor for this stream has been cancelled. If the cancellable flag is <code>false</code>
-	 * then the monitor is never cancelled.
+	 * Checked whether the monitor for this stream has been cancelled. If the cancellable flag is <code>false</code> then the monitor is
+	 * never cancelled.
 	 * 
 	 * @return <code>true</code> if the monitor has been cancelled and <code>false</code> otherwise.
 	 */

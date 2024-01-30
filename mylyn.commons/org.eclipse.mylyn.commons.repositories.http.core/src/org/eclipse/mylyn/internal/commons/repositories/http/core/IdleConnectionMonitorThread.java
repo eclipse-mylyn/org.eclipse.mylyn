@@ -35,7 +35,7 @@ public class IdleConnectionMonitorThread extends Thread {
 
 	public IdleConnectionMonitorThread(long pollingInterval) {
 		this.pollingInterval = pollingInterval;
-		this.connectionManagers = new CopyOnWriteArrayList<ClientConnectionManager>();
+		connectionManagers = new CopyOnWriteArrayList<>();
 		setDaemon(true);
 	}
 
@@ -84,7 +84,7 @@ public class IdleConnectionMonitorThread extends Thread {
 	}
 
 	public void shutdown() {
-		this.shutdown = true;
+		shutdown = true;
 		synchronized (this) {
 			notifyAll();
 		}

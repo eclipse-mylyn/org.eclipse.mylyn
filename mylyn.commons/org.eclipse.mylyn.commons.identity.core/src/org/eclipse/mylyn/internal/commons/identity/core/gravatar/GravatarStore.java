@@ -50,7 +50,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 
 	public enum Rating {
 		G, PG, R, X
-	};
+	}
 
 	private static final long serialVersionUID = 6084425297832914970L;
 
@@ -97,14 +97,14 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#getRefreshTime()
 	 */
 	public long getRefreshTime() {
-		return this.lastRefresh;
+		return lastRefresh;
 	}
 
 	/**
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#containsGravatar(java.lang.String)
 	 */
 	public boolean containsGravatar(String hash) {
-		return hash != null && avatars != null ? this.avatars.containsKey(hash) : false;
+		return hash != null && avatars != null ? avatars.containsKey(hash) : false;
 	}
 
 	/**
@@ -128,16 +128,16 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#refresh(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public GravatarStore refresh(IProgressMonitor monitor) {
-		if (this.avatars == null) {
+		if (avatars == null) {
 			return this;
 		}
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
 		String[] entries = null;
-		synchronized (this.avatars) {
-			entries = new String[this.avatars.size()];
-			entries = this.avatars.keySet().toArray(entries);
+		synchronized (avatars) {
+			entries = new String[avatars.size()];
+			entries = avatars.keySet().toArray(entries);
 		}
 		monitor.beginTask("", entries.length); //$NON-NLS-1$
 		for (String entry : entries) {
@@ -152,7 +152,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 			monitor.worked(1);
 		}
 		monitor.done();
-		this.lastRefresh = System.currentTimeMillis();
+		lastRefresh = System.currentTimeMillis();
 		return this;
 	}
 
@@ -201,13 +201,13 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#loadGravatarByHash(java.lang.String)
 	 */
 	public Gravatar loadGravatarByHash(String hash, int size, Rating rating) throws IOException {
-		Assert.isLegal(size == -1 || (size >= 1 && size <= 512), "size must have a value of -1 or between 1 and 512"); //$NON-NLS-1$
+		Assert.isLegal(size == -1 || size >= 1 && size <= 512, "size must have a value of -1 or between 1 and 512"); //$NON-NLS-1$
 		if (!GravatarUtils.isValidHash(hash)) {
 			return null;
 		}
 
 		Gravatar avatar = null;
-		String location = this.url + hash + "?d=404"; //$NON-NLS-1$
+		String location = url + hash + "?d=404"; //$NON-NLS-1$
 		if (size != -1) {
 			location += "&s=" + size; //$NON-NLS-1$
 		}
@@ -238,8 +238,8 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 			}
 		}
 		avatar = new Gravatar(hash, System.currentTimeMillis(), output.toByteArray());
-		if (this.avatars != null) {
-			this.avatars.put(hash, avatar);
+		if (avatars != null) {
+			avatars.put(hash, avatar);
 		}
 		return avatar;
 	}
@@ -255,7 +255,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#getGravatarByHash(java.lang.String)
 	 */
 	public Gravatar getGravatarByHash(String hash) {
-		return hash != null && avatars != null ? this.avatars.get(hash) : null;
+		return hash != null && avatars != null ? avatars.get(hash) : null;
 	}
 
 	/**
@@ -268,6 +268,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	/**
 	 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
 	 */
+	@Override
 	public boolean contains(ISchedulingRule rule) {
 		return this == rule;
 	}
@@ -275,6 +276,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	/**
 	 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
 	 */
+	@Override
 	public boolean isConflicting(ISchedulingRule rule) {
 		return this == rule;
 	}

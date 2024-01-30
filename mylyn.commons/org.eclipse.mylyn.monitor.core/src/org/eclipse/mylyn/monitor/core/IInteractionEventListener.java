@@ -20,9 +20,9 @@ package org.eclipse.mylyn.monitor.core;
  */
 public interface IInteractionEventListener {
 
-	public abstract void interactionObserved(InteractionEvent event);
+	void interactionObserved(InteractionEvent event);
 
-	public abstract void startMonitoring();
+	void startMonitoring();
 
-	public abstract void stopMonitoring();
+	void stopMonitoring();
 }

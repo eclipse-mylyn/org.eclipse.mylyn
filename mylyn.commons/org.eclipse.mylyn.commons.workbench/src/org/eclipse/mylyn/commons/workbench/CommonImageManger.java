@@ -9,7 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Perforce - fixes for bug 343892
- *     GitHub - fixes for bug 350333 
+ *     GitHub - fixes for bug 350333
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench;
@@ -66,7 +66,7 @@ public class CommonImageManger {
 	}
 
 	public Image getImage(ImageDescriptor imageDescriptor) {
-		return (Image) resourceManager.get(imageDescriptor);
+		return resourceManager.get(imageDescriptor);
 	}
 
 	public LocalResourceManager getResourceManager() {

@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
- * Enhanced {@link ImageHyperlink} that truncates the link text at the end rather than the middle if it is wider than
- * the available space. Also provides default color and underline on hover.
+ * Enhanced {@link ImageHyperlink} that truncates the link text at the end rather than the middle if it is wider than the available space.
+ * Also provides default color and underline on hover.
  * 
  * @author Leo Dos Santos
  * @author Mik Kersten
@@ -35,14 +35,17 @@ public class ScalingHyperlink extends ImageHyperlink {
 
 	protected final MouseTrackListener MOUSE_TRACK_LISTENER = new MouseTrackListener() {
 
+		@Override
 		public void mouseEnter(MouseEvent e) {
 			setUnderlined(true);
 		}
 
+		@Override
 		public void mouseExit(MouseEvent e) {
 			setUnderlined(false);
 		}
 
+		@Override
 		public void mouseHover(MouseEvent e) {
 		}
 	};
@@ -74,13 +77,13 @@ public class ScalingHyperlink extends ImageHyperlink {
 			int textHeight = totalSize.y;
 
 			//			int descent = gc.getFontMetrics().getDescent();
-			int lineY = bounds.y + (textHeight / 2); // - descent + 1;
+			int lineY = bounds.y + textHeight / 2; // - descent + 1;
 			gc.drawLine(bounds.x, lineY, bounds.x + textWidth, lineY);
 		}
 	}
 
 	public void setStrikeThrough(boolean strikethrough) {
-		this.strikeThrough = strikethrough;
+		strikeThrough = strikethrough;
 	}
 
 	@Override

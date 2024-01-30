@@ -44,10 +44,10 @@ import org.eclipse.osgi.util.NLS;
 public class CommonXmlRpcClient {
 
 	static final boolean DEBUG_AUTH = Boolean
-			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/authentication")); //$NON-NLS-1$
+			.parseBoolean(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/authentication")); //$NON-NLS-1$
 
 	static final boolean DEBUG_XMLRPC = Boolean
-			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/xmlrpc")); //$NON-NLS-1$
+			.parseBoolean(Platform.getDebugOption("org.eclipse.mylyn.commons.xmlrpc/debug/xmlrpc")); //$NON-NLS-1$
 
 	private static final String DEFAULT_CHARSET = "UTF-8"; //$NON-NLS-1$
 
@@ -89,8 +89,8 @@ public class CommonXmlRpcClient {
 
 	public CommonXmlRpcClient(AbstractWebLocation location, HttpClient client) {
 		this.location = location;
-		this.httpClient = createHttpClient(DEFAULT_USER_AGENT);
-		this.authScope = new AuthScope(WebUtil.getHost(location.getUrl()), WebUtil.getPort(location.getUrl()), null,
+		httpClient = createHttpClient(DEFAULT_USER_AGENT);
+		authScope = new AuthScope(WebUtil.getHost(location.getUrl()), WebUtil.getPort(location.getUrl()), null,
 				AuthScope.ANY_SCHEME);
 	}
 
@@ -130,16 +130,17 @@ public class CommonXmlRpcClient {
 		factory = new HttpClientTransportFactory(xmlrpc, httpClient);
 		factory.setLocation(location);
 		factory.setInterceptor(new HttpMethodInterceptor() {
+			@Override
 			public void processRequest(HttpMethod method) {
 				DigestScheme scheme = digestScheme;
 				if (scheme != null) {
 					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Digest scheme is present"); //$NON-NLS-1$ 
+						System.err.println(location.getUrl() + ": Digest scheme is present"); //$NON-NLS-1$
 					}
 					Credentials creds = httpClient.getState().getCredentials(authScope);
 					if (creds != null) {
 						if (DEBUG_AUTH) {
-							System.err.println(location.getUrl() + ": Setting digest scheme for request"); //$NON-NLS-1$ 
+							System.err.println(location.getUrl() + ": Setting digest scheme for request"); //$NON-NLS-1$
 						}
 						method.getHostAuthState().setAuthScheme(digestScheme);
 						method.getHostAuthState().setAuthRequested(true);
@@ -147,6 +148,7 @@ public class CommonXmlRpcClient {
 				}
 			}
 
+			@Override
 			@SuppressWarnings("null")
 			public void processResponse(HttpMethod method) throws XmlRpcException {
 				if (isContentTypeCheckingEnabled()) {
@@ -162,7 +164,7 @@ public class CommonXmlRpcClient {
 				if (authScheme instanceof DigestScheme) {
 					digestScheme = (DigestScheme) authScheme;
 					if (DEBUG_AUTH) {
-						System.err.println(location.getUrl() + ": Received digest scheme"); //$NON-NLS-1$ 
+						System.err.println(location.getUrl() + ": Received digest scheme"); //$NON-NLS-1$
 					}
 				}
 			}

@@ -36,7 +36,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -58,11 +57,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -76,6 +73,7 @@ public class RepositoryLocationPart {
 
 	public class UrlValidator implements IValidator {
 
+		@Override
 		public IStatus validate(Object value) {
 			if (!isValidUrl(value.toString())) {
 				return new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
@@ -114,6 +112,7 @@ public class RepositoryLocationPart {
 			init();
 		}
 
+		@Override
 		public void modifyText(ModifyEvent event) {
 			apply();
 		}
@@ -129,10 +128,12 @@ public class RepositoryLocationPart {
 			}
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent event) {
 			apply();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent event) {
 			apply();
 			if (event.widget == enabledButton) {
@@ -230,7 +231,7 @@ public class RepositoryLocationPart {
 			} finally {
 				ignoreUpdate = false;
 			}
-		};
+		}
 
 	}
 
@@ -271,6 +272,7 @@ public class RepositoryLocationPart {
 			return enablementReversed;
 		}
 
+		@Override
 		public void modifyText(ModifyEvent event) {
 			apply();
 		}
@@ -289,10 +291,12 @@ public class RepositoryLocationPart {
 			this.enablementReversed = enablementReversed;
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent event) {
 			apply();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent event) {
 			apply();
 			if (event.widget == enabledButton) {
@@ -305,7 +309,7 @@ public class RepositoryLocationPart {
 				return;
 			}
 			if (getEnabledButtonSelection()) {
-				String domain = (domainText != null) ? domainText.getText() : null;
+				String domain = domainText != null ? domainText.getText() : null;
 				UserCredentials credentials = new UserCredentials(userText.getText(), passwordText.getText(), domain,
 						savePasswordButton.getSelection());
 				getWorkingCopy().setCredentials(authenticationType, credentials);
@@ -323,7 +327,7 @@ public class RepositoryLocationPart {
 					userText.setText(credentials.getUserName());
 					passwordText.setText(credentials.getPassword());
 					if (domainText != null) {
-						domainText.setText((credentials.getDomain() != null) ? credentials.getDomain() : ""); //$NON-NLS-1$
+						domainText.setText(credentials.getDomain() != null ? credentials.getDomain() : ""); //$NON-NLS-1$
 					}
 					savePasswordButton.setSelection(credentials.getSavePassword());
 				} else {
@@ -437,11 +441,7 @@ public class RepositoryLocationPart {
 
 		if (needsHttpAuth() || needsCertificateAuth() || needsProxy() || needsAdditionalSections()) {
 			final ResizingSectionComposite sectionComposite = new ResizingSectionComposite(composite, SWT.NONE);
-			composite.addListener(SWT.Resize, new Listener() {
-				public void handleEvent(Event event) {
-					sectionComposite.updateLayout();
-				}
-			});
+			composite.addListener(SWT.Resize, event -> sectionComposite.updateLayout());
 			GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
 
 			if (needsHttpAuth()) {
@@ -502,11 +502,11 @@ public class RepositoryLocationPart {
 	}
 
 	public boolean needsHttpAuth() {
-		return this.needsHttpAuth;
+		return needsHttpAuth;
 	}
 
 	public boolean needsProxy() {
-		return this.needsProxy;
+		return needsProxy;
 	}
 
 	public boolean needsValidation() {
@@ -538,7 +538,7 @@ public class RepositoryLocationPart {
 	}
 
 	public void setServiceLocator(IAdaptable container) {
-		this.serviceLocator = container;
+		serviceLocator = container;
 	}
 
 	/**
@@ -550,21 +550,19 @@ public class RepositoryLocationPart {
 			return;
 		}
 
-		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
+		final AtomicReference<IStatus> result = new AtomicReference<>();
 		try {
-			getContainer(IPartContainer.class).run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.RepositoryLocationPart_Validating_repository, IProgressMonitor.UNKNOWN);
-					try {
-						result.set(validator.run(monitor));
-					} catch (OperationCanceledException e) {
-						result.set(Status.CANCEL_STATUS);
-						throw new InterruptedException();
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						monitor.done();
-					}
+			getContainer(IPartContainer.class).run(true, true, monitor -> {
+				monitor.beginTask(Messages.RepositoryLocationPart_Validating_repository, IProgressMonitor.UNKNOWN);
+				try {
+					result.set(validator.run(monitor));
+				} catch (OperationCanceledException e) {
+					result.set(Status.CANCEL_STATUS);
+					throw new InterruptedException();
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				} finally {
+					monitor.done();
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -833,25 +831,25 @@ public class RepositoryLocationPart {
 			message = null;
 		}
 		switch (status.getSeverity()) {
-		case IStatus.OK:
-			if (status == Status.OK_STATUS) {
+			case IStatus.OK:
+				if (status == Status.OK_STATUS) {
 //				if (getUserName().length() > 0) {
 //					message = "Credentials are valid.";
 //				} else {
-				message = Messages.RepositoryLocationPart_Repository_is_valid;
+					message = Messages.RepositoryLocationPart_Repository_is_valid;
 //				}
-			}
-			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.INFO:
-			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.WARNING:
-			getPartContainer().setMessage(message, IMessageProvider.WARNING);
-			break;
-		default:
-			getPartContainer().setMessage(message, IMessageProvider.ERROR);
-			break;
+				}
+				getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
+				break;
+			case IStatus.INFO:
+				getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
+				break;
+			case IStatus.WARNING:
+				getPartContainer().setMessage(message, IMessageProvider.WARNING);
+				break;
+			default:
+				getPartContainer().setMessage(message, IMessageProvider.ERROR);
+				break;
 		}
 	}
 

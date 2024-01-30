@@ -36,7 +36,7 @@ public class LocationService implements ILocationService {
 		private static ILocationService service;
 
 		static {
-			ExtensionPointReader<ILocationService> reader = new ExtensionPointReader<ILocationService>(
+			ExtensionPointReader<ILocationService> reader = new ExtensionPointReader<>(
 					RepositoriesCoreInternal.ID_PLUGIN, "locationServices", "service", ILocationService.class); //$NON-NLS-1$ //$NON-NLS-2$
 			reader.read();
 
@@ -74,10 +74,12 @@ public class LocationService implements ILocationService {
 		this.proxyProvider = proxyProvider;
 	}
 
+	@Override
 	public ICredentialsStore getCredentialsStore(String id) {
 		return InMemoryCredentialsStore.getStore(id);
 	}
 
+	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
 		if (proxyProvider != null) {
 			return proxyProvider.getProxyForHost(host, proxyType);
@@ -85,10 +87,12 @@ public class LocationService implements ILocationService {
 		return null;
 	}
 
+	@Override
 	public X509TrustManager getTrustManager() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public <T extends AuthenticationCredentials> T requestCredentials(
 			AuthenticationRequest<AuthenticationType<T>> context, IProgressMonitor monitor) {
 		throw new UnsupportedOperationException();

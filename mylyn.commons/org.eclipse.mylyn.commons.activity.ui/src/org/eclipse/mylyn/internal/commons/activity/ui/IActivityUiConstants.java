@@ -16,14 +16,14 @@ package org.eclipse.mylyn.internal.commons.activity.ui;
  */
 public interface IActivityUiConstants {
 
-	public static final String ID_PLUGIN = "org.eclipes.mylyn.commons.activity.ui"; //$NON-NLS-1$
+	String ID_PLUGIN = "org.eclipes.mylyn.commons.activity.ui"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.activity.ui.timeout"; //$NON-NLS-1$
+	String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.activity.ui.timeout"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn..activity.ui.timeout.enabled"; //$NON-NLS-1$
+	String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn..activity.ui.timeout.enabled"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_TRACKING_ENABLED = "org.eclipse.mylyn.activity.ui.tracking.enabled"; //$NON-NLS-1$
+	String ACTIVITY_TRACKING_ENABLED = "org.eclipse.mylyn.activity.ui.tracking.enabled"; //$NON-NLS-1$
 
-	public static final int DEFAULT_ACTIVITY_TIMEOUT = 180000;
+	int DEFAULT_ACTIVITY_TIMEOUT = 180000;
 
 }

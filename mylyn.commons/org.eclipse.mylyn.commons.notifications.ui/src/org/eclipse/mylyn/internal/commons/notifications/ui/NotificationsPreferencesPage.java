@@ -22,9 +22,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -61,40 +59,44 @@ import org.eclipse.ui.dialogs.FilteredTree;
 public class NotificationsPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	/**
-	 * We need this in order to make sure that the correct element is selected in the {@link TreeViewer} when the
-	 * selection is set.
+	 * We need this in order to make sure that the correct element is selected in the {@link TreeViewer} when the selection is set.
 	 * 
 	 * @author Torkild Ulvøy Resheim
 	 */
 	public class NotificationEventComparer implements IElementComparer {
 
+		@Override
 		public boolean equals(Object a, Object b) {
 			if (a instanceof NotificationEvent && b instanceof NotificationEvent) {
 				String idA = ((NotificationEvent) a).getId();
 				String idB = ((NotificationEvent) b).getId();
-				return (idA.equals(idB));
+				return idA.equals(idB);
 			}
 			return a.equals(b);
 		}
 
+		@Override
 		public int hashCode(Object element) {
 			return element.hashCode();
 		}
 
 	}
 
-	private static final Object[] EMPTY = new Object[0];
+	private static final Object[] EMPTY = {};
 
 	private final class EventContentProvider implements ITreeContentProvider {
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// ignore
 		}
 
+		@Override
 		public void dispose() {
 			// ignore
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof NotificationCategory) {
 				return ((NotificationCategory) element).getEvents().size() > 0;
@@ -102,6 +104,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			return false;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (element instanceof NotificationEvent) {
 				return ((NotificationEvent) element).getCategory();
@@ -109,6 +112,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			return null;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof Object[]) {
 				return (Object[]) inputElement;
@@ -117,6 +121,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			}
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof NotificationCategory) {
 				return ((NotificationCategory) parentElement).getEvents().toArray();
@@ -130,10 +135,12 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		private NotificationHandler handler;
 
+		@Override
 		public void dispose() {
-			// ignore			
+			// ignore
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof NotificationHandler) {
 				handler = (NotificationHandler) newInput;
@@ -142,6 +149,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			}
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (handler != null) {
 				return handler.getActions().toArray();
@@ -156,8 +164,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof NotificationElement) {
-				NotificationElement item = (NotificationElement) element;
+			if (element instanceof NotificationElement item) {
 				return item.getLabel();
 			}
 			return super.getText(element);
@@ -165,16 +172,14 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		@Override
 		public Image getImage(Object element) {
-			if (element instanceof NotificationEvent) {
-				NotificationEvent item = (NotificationEvent) element;
+			if (element instanceof NotificationEvent item) {
 				if (model.isSelected(item)) {
 					return CommonImages.getImage(CommonImages.CHECKED);
 				} else {
 					return null;
 				}
 			}
-			if (element instanceof NotificationElement) {
-				NotificationElement item = (NotificationElement) element;
+			if (element instanceof NotificationElement item) {
 				ImageDescriptor imageDescriptor = item.getImageDescriptor();
 				if (imageDescriptor != null) {
 					return CommonImages.getImage(imageDescriptor);
@@ -238,6 +243,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		eventsViewer.setInput(model.getCategories().toArray());
 		eventsViewer.expandAll();
 		eventsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object input = getDetailsInput((IStructuredSelection) event.getSelection());
 				notifiersViewer.setInput(input);
@@ -265,29 +271,27 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(notifiersViewer.getControl());
 		notifiersViewer.setContentProvider(new NotifiersContentProvider());
 		notifiersViewer.setLabelProvider(new EventLabelProvider());
-		notifiersViewer.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				NotificationAction action = (NotificationAction) event.getElement();
-				action.setSelected(event.getChecked());
-				model.setDirty(true);
-				eventsViewer.refresh();
-			}
+		notifiersViewer.addCheckStateListener(event -> {
+			NotificationAction action = (NotificationAction) event.getElement();
+			action.setSelected(event.getChecked());
+			model.setDirty(true);
+			eventsViewer.refresh();
 		});
 		notifiersViewer.setCheckStateProvider(new ICheckStateProvider() {
+			@Override
 			public boolean isChecked(Object element) {
 				return ((NotificationAction) element).isSelected();
 			}
 
+			@Override
 			public boolean isGrayed(Object element) {
 				return false;
 			}
 		});
-		notifiersViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (item instanceof NotificationAction) {
-					// TODO show configuration pane
-				}
+		notifiersViewer.addSelectionChangedListener(event -> {
+			Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (item instanceof NotificationAction) {
+				// TODO show configuration pane
 			}
 		});
 
@@ -331,11 +335,10 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	@Override
 	public void applyData(Object data) {
-		// We may or may not have a NotificationEvent supplied when this 
-		// preference dialog is opened. If we do have this data we want to 
+		// We may or may not have a NotificationEvent supplied when this
+		// preference dialog is opened. If we do have this data we want to
 		// highlight the appropriate instance.
-		if (data instanceof String && model != null) {
-			String selectedEventId = (String) data;
+		if (data instanceof String selectedEventId && model != null) {
 			Collection<NotificationCategory> items = model.getCategories();
 			NotificationEvent selectedEvent = null;
 			for (NotificationCategory notificationCategory : items) {
@@ -363,6 +366,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		}
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// ignore
 	}

@@ -12,9 +12,9 @@
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
+
+import junit.framework.TestCase;
 
 public class ServiceMessageTest extends TestCase {
 

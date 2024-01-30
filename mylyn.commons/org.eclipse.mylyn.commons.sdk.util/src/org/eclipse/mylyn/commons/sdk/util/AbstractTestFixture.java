@@ -48,15 +48,15 @@ public abstract class AbstractTestFixture {
 	public AbstractTestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
-		this.useCertificateAuthentication = repositoryUrl.contains("/secure/");
+		useCertificateAuthentication = repositoryUrl.contains("/secure/");
 		properties = null;
 	}
 
 	public AbstractTestFixture(String connectorKind, FixtureConfiguration config) {
 		this.connectorKind = connectorKind;
-		this.repositoryUrl = config.getUrl();
-		this.useCertificateAuthentication = repositoryUrl.contains("/secure/");
-		this.properties = config.getProperties();
+		repositoryUrl = config.getUrl();
+		useCertificateAuthentication = repositoryUrl.contains("/secure/");
+		properties = config.getProperties();
 
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractTestFixture {
 	public boolean isExcluded() {
 		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
 		String[] excludeFixtureArray = excludeFixture.split(",");
-		return new HashSet<String>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
+		return new HashSet<>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
 	}
 
 	public boolean isUseCertificateAuthentication() {
@@ -151,17 +151,17 @@ public abstract class AbstractTestFixture {
 	}
 
 	public void setUseShortUserNames(boolean useShortUsernames) {
-		this.useShortUserNames = useShortUsernames;
+		useShortUserNames = useShortUsernames;
 	}
 
 	protected void setInfo(String repositoryName, String version, String description) {
 		Assert.isNotNull(repositoryName);
 		Assert.isNotNull(version);
 		this.repositoryName = repositoryName;
-		this.simpleInfo = version;
+		simpleInfo = version;
 		this.description = description;
 		if (description != null && description.length() > 0) {
-			this.simpleInfo += "/" + description;
+			simpleInfo += "/" + description;
 		}
 	}
 

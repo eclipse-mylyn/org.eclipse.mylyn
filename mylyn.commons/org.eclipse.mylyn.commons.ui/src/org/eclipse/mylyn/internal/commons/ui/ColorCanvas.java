@@ -13,10 +13,6 @@
 
 package org.eclipse.mylyn.internal.commons.ui;
 
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
@@ -37,17 +33,11 @@ public class ColorCanvas extends Canvas {
 	public ColorCanvas(Composite parent, int style, RGB rgb) {
 		super(parent, style);
 		color = new Color(parent.getDisplay(), rgb);
-		addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				e.gc.setBackground(color);
-				e.gc.fillRectangle(getClientArea());
-			}
+		addPaintListener(e -> {
+			e.gc.setBackground(color);
+			e.gc.fillRectangle(getClientArea());
 		});
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				color.dispose();
-			}
-		});
+		addDisposeListener(e -> color.dispose());
 	}
 
 	public RGB getRGB() {

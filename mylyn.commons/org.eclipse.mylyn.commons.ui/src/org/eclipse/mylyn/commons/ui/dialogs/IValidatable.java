@@ -18,10 +18,10 @@ package org.eclipse.mylyn.commons.ui.dialogs;
  */
 public interface IValidatable {
 
-	public boolean canValidate();
+	boolean canValidate();
 
-	public boolean needsValidation();
+	boolean needsValidation();
 
-	public void validate();
+	void validate();
 
 }

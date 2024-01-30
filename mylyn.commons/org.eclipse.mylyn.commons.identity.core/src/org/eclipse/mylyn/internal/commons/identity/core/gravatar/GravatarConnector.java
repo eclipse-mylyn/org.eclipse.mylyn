@@ -37,22 +37,18 @@ public class GravatarConnector extends IdentityConnector {
 
 	private final int DEFAULT_SIZE = 80;
 
-	private final Map<String, Long> noImageHashByTimeStamp = new ConcurrentHashMap<String, Long>();
+	private final Map<String, Long> noImageHashByTimeStamp = new ConcurrentHashMap<>();
 
 	public GravatarConnector() {
-		this.store = new GravatarStore();
+		store = new GravatarStore();
 	}
 
 	@Override
 	public ProfileImage getImage(IIdentity identity, int preferredWidth, int preferredHeight, IProgressMonitor monitor)
 			throws CoreException {
 		String id = getHash(identity);
-		if (id == null) {
-			return null;
-		}
-
 		// avoid retrieving image again i
-		if (noImageHashByTimeStamp.containsKey(id)) {
+		if ((id == null) || noImageHashByTimeStamp.containsKey(id)) {
 			return null;
 		}
 
@@ -70,7 +66,7 @@ public class GravatarConnector extends IdentityConnector {
 		if (gravatar != null) {
 			return new ProfileImage(gravatar.getBytes(), size, size, "jpg"); //$NON-NLS-1$
 		} else {
-			noImageHashByTimeStamp.put(id, Long.valueOf(System.currentTimeMillis()));
+			noImageHashByTimeStamp.put(id, System.currentTimeMillis());
 		}
 		return null;
 	}
@@ -84,8 +80,8 @@ public class GravatarConnector extends IdentityConnector {
 
 	@Override
 	public boolean supportsImageSize(int preferredWidth, int preferredHeight) {
-		return (preferredWidth >= 1 && preferredWidth <= 512 && preferredHeight >= 1 && preferredHeight <= 512
-				&& preferredWidth == preferredHeight);
+		return preferredWidth >= 1 && preferredWidth <= 512 && preferredHeight >= 1 && preferredHeight <= 512
+				&& preferredWidth == preferredHeight;
 	}
 
 	@Override

@@ -29,12 +29,12 @@ public class DateUtil {
 
 	public static String getIsoFormattedDate(Calendar calendar) {
 		try {
-			int monthInt = (calendar.get(Calendar.MONTH) + 1);
+			int monthInt = calendar.get(Calendar.MONTH) + 1;
 			String month = "" + monthInt; //$NON-NLS-1$
 			if (monthInt < 10) {
 				month = "0" + month; //$NON-NLS-1$
 			}
-			int dateInt = (calendar.get(Calendar.DATE));
+			int dateInt = calendar.get(Calendar.DATE);
 			String date = "" + dateInt; //$NON-NLS-1$
 			if (dateInt < 10) {
 				date = "0" + date; //$NON-NLS-1$
@@ -54,8 +54,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * Returns the time in the format: HHH:MM. If <code>includeSeconds</code> is true, the returned format is:
-	 * HHH:MM:SS.
+	 * Returns the time in the format: HHH:MM. If <code>includeSeconds</code> is true, the returned format is: HHH:MM:SS.
 	 * 
 	 * @since 3.5
 	 */
@@ -70,7 +69,7 @@ public class DateUtil {
 		long remainderMinutes = totalMinutes % 60;
 		long totalHours = totalMinutes / 60;
 
-		StringBuffer sb = new StringBuffer(8);
+		StringBuilder sb = new StringBuilder(8);
 		if (totalHours < 10) {
 			sb.append("0"); //$NON-NLS-1$
 		}
@@ -123,7 +122,7 @@ public class DateUtil {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + " minute "; //$NON-NLS-1$
-			} else if (minutes != 1) {
+			} else {
 				min = minutes + " minutes "; //$NON-NLS-1$
 			}
 			seconds -= minutes * MIN;
@@ -140,7 +139,7 @@ public class DateUtil {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + " minute "; //$NON-NLS-1$
-			} else if (minutes != 1) {
+			} else {
 				min = minutes + " minutes "; //$NON-NLS-1$
 			}
 			seconds -= minutes * MIN;
@@ -181,7 +180,7 @@ public class DateUtil {
 	private enum Period {
 
 		MONTH(MILLIS_MONTH, Messages.DateUtil_month_single, Messages.DateUtil_month_multi), //
-		WEEK(MILLIS_WEEK, Messages.DateUtil_week, Messages.DateUtil_weeks), // 
+		WEEK(MILLIS_WEEK, Messages.DateUtil_week, Messages.DateUtil_weeks), //
 		DAY(MILLIS_DAY, Messages.DateUtil_day, Messages.DateUtil_days), //
 		HOUR(MILLIS_HOUR, Messages.DateUtil_hour, Messages.DateUtil_hours), //
 		MINUTE(MILLIS_MINUTE, Messages.DateUtil_minute, Messages.DateUtil_minutes), //
@@ -230,7 +229,7 @@ public class DateUtil {
 
 		@Override
 		public String toString() {
-			return period.toString(duration) + ((next != null) ? " " + next.toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+			return period.toString(duration) + (next != null ? " " + next.toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 	}
@@ -257,7 +256,7 @@ public class DateUtil {
 	public static String getRelativeDuration(long diff) {
 		PeriodString string = null;
 		for (Period period : Period.values()) {
-			boolean wasSet = (string != null);
+			boolean wasSet = string != null;
 			if (diff >= period.duration) {
 				if (string == null) {
 					string = new PeriodString(period, diff);
@@ -266,14 +265,14 @@ public class DateUtil {
 					// do not add more than two segments
 					break;
 				}
-				diff -= (diff / period.duration) * period.duration;
+				diff -= diff / period.duration * period.duration;
 			}
-			// only return more than one segment if the second segment follows the first one directly 
+			// only return more than one segment if the second segment follows the first one directly
 			if (wasSet) {
 				break;
 			}
 		}
-		return (string != null) ? string.toString() : ""; //$NON-NLS-1$
+		return string != null ? string.toString() : ""; //$NON-NLS-1$
 	}
 
 }

@@ -29,7 +29,6 @@ import java.util.List;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -84,7 +83,7 @@ public class TestConfiguration {
 	}
 
 	public void setDefaultOnly(boolean heartbeat) {
-		this.defaultOnly = heartbeat;
+		defaultOnly = heartbeat;
 	}
 
 	public void setHeadless(boolean headless) {
@@ -115,9 +114,7 @@ public class TestConfiguration {
 			try {
 				File file = CommonTestUtil.getFile(clazz, "local.json");
 				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly, exception);
-			} catch (AssertionFailedError e) {
-				// ignore
-			} catch (IOException e) {
+			} catch (AssertionFailedError | IOException e) {
 				// ignore
 			}
 
@@ -159,12 +156,12 @@ public class TestConfiguration {
 
 	private static <T> List<T> loadFixtures(List<FixtureConfiguration> configurations, Class<T> clazz,
 			String fixtureType, boolean defaultOnly) {
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<>();
 		String defaultOverwriteUrl = System.getProperty("mylyn.tests.configuration.url", "");
 		for (FixtureConfiguration configuration : configurations) {
 			if (configuration != null && fixtureType.equals(configuration.getType())
-					&& (!defaultOnly || (defaultOverwriteUrl.equals("") && configuration.isDefault())
-							|| (configuration.url.equals(defaultOverwriteUrl)))) {
+					&& (!defaultOnly || defaultOverwriteUrl.equals("") && configuration.isDefault()
+							|| configuration.url.equals(defaultOverwriteUrl))) {
 				try {
 					Constructor<T> constructor = clazz.getConstructor(FixtureConfiguration.class);
 					result.add(constructor.newInstance(configuration));
@@ -179,14 +176,17 @@ public class TestConfiguration {
 	private static List<FixtureConfiguration> getConfigurations(String url, Exception[] result) {
 		try {
 			// Create a trust manager that does not validate certificate chains
-			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			TrustManager[] trustAllCerts = { new X509TrustManager() {
+				@Override
 				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 					return null;
 				}
 
+				@Override
 				public void checkClientTrusted(X509Certificate[] certs, String authType) {
 				}
 
+				@Override
 				public void checkServerTrusted(X509Certificate[] certs, String authType) {
 				}
 			} };
@@ -195,22 +195,16 @@ public class TestConfiguration {
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 			// Create all-trusting host name verifier
-			HostnameVerifier allHostsValid = new HostnameVerifier() {
-				public boolean verify(String hostname, SSLSession session) {
-					return true;
-				}
-			};
+			HostnameVerifier allHostsValid = (hostname, session) -> true;
 
 			// Install the all-trusting host verifier
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 			URLConnection connection = new URL(url).openConnection();
 			InputStreamReader in = new InputStreamReader(connection.getInputStream());
-			try {
-				TypeToken<List<FixtureConfiguration>> type = new TypeToken<List<FixtureConfiguration>>() {
+			try (in) {
+				TypeToken<List<FixtureConfiguration>> type = new TypeToken<>() {
 				};
 				return new Gson().fromJson(in, type.getType());
-			} finally {
-				in.close();
 			}
 		} catch (IOException e) {
 			result[0] = new IOException("IOException accessing " + url, e);

@@ -24,16 +24,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface CommonHttpMethod3 extends HttpMethod {
 
-	public static final String CONTENT_ENCODING = "Content-Encoding"; //$NON-NLS-1$
+	String CONTENT_ENCODING = "Content-Encoding"; //$NON-NLS-1$
 
-	public static final String ACCEPT_ENCODING = "Accept-encoding"; //$NON-NLS-1$
+	String ACCEPT_ENCODING = "Accept-encoding"; //$NON-NLS-1$
 
-	public static final String CONTENT_ENCODING_GZIP = "gzip"; //$NON-NLS-1$
+	String CONTENT_ENCODING_GZIP = "gzip"; //$NON-NLS-1$
 
-	public abstract String getResponseCharSet();
+	String getResponseCharSet();
 
-	public abstract InputStream getResponseBodyAsStream(IProgressMonitor monitor) throws IOException;
+	InputStream getResponseBodyAsStream(IProgressMonitor monitor) throws IOException;
 
-	public abstract void releaseConnection(IProgressMonitor monitor);
+	void releaseConnection(IProgressMonitor monitor);
 
 }

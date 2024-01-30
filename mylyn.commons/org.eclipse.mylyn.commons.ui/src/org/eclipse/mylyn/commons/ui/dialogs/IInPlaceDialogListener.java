@@ -20,6 +20,6 @@ package org.eclipse.mylyn.commons.ui.dialogs;
  */
 public interface IInPlaceDialogListener {
 
-	public void buttonPressed(InPlaceDialogEvent event);
+	void buttonPressed(InPlaceDialogEvent event);
 
 }

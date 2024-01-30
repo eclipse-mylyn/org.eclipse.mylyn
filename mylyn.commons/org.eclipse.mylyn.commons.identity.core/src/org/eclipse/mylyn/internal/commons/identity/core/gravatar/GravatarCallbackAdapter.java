@@ -21,6 +21,7 @@ public abstract class GravatarCallbackAdapter implements IGravatarCallback {
 	/**
 	 * @see org.eclipse.mylyn.internal.commons.identity.core.gravatar.IGravatarCallback#loaded(org.eclipse.mylyn.internal.commons.identity.core.gravatar.Gravatar)
 	 */
+	@Override
 	public void loaded(Gravatar avatar) {
 		// Does nothing sub-clsases should override
 	}
@@ -28,6 +29,7 @@ public abstract class GravatarCallbackAdapter implements IGravatarCallback {
 	/**
 	 * @see org.eclipse.mylyn.internal.commons.identity.core.gravatar.IGravatarCallback#error(java.lang.Exception)
 	 */
+	@Override
 	public void error(Exception exception) {
 		// Does nothing sub-clsases should override
 	}

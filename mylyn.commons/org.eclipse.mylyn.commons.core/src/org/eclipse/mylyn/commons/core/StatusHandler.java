@@ -34,8 +34,8 @@ public class StatusHandler {
 	private static ErrorReporterManager errorReporterManager;
 
 	/**
-	 * Logs <code>status</code> to this bundle's log if a platform is running. Does nothing if no platform is running.
-	 * Plug-ins that require running in Eclipse are encouraged to use their plug-in log.
+	 * Logs <code>status</code> to this bundle's log if a platform is running. Does nothing if no platform is running. Plug-ins that require
+	 * running in Eclipse are encouraged to use their plug-in log.
 	 * 
 	 * @param status
 	 *            status to log
@@ -54,8 +54,7 @@ public class StatusHandler {
 	}
 
 	/**
-	 * Logs <code>status</code> to this bundle's log if a platform is running. Forwards <code>status</code> to
-	 * registered status handlers.
+	 * Logs <code>status</code> to this bundle's log if a platform is running. Forwards <code>status</code> to registered status handlers.
 	 * <p>
 	 * Listeners should not block.
 	 * </p>

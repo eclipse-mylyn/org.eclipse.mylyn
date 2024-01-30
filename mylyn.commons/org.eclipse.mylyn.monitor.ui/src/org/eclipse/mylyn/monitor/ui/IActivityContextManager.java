@@ -20,10 +20,10 @@ package org.eclipse.mylyn.monitor.ui;
  */
 public interface IActivityContextManager {
 
-	public abstract void removeActivityTime(String handle, long start, long end);
+	void removeActivityTime(String handle, long start, long end);
 
-	public abstract void setInactivityTimeout(int inactivityTimeout);
+	void setInactivityTimeout(int inactivityTimeout);
 
-	public abstract int getInactivityTimeout();
+	int getInactivityTimeout();
 
 }

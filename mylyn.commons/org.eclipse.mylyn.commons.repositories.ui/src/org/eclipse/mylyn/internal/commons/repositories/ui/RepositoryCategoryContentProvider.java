@@ -24,34 +24,40 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
 
 public class RepositoryCategoryContentProvider implements ITreeContentProvider {
 
-	private static final Map<String, RepositoryCategory> repositoryCategories = new HashMap<String, RepositoryCategory>();
+	private static final Map<String, RepositoryCategory> repositoryCategories = new HashMap<>();
 
 	public RepositoryCategoryContentProvider() {
 		InternalExtensionPointReader.initExtensions();
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// ignore
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return repositoryCategories.values().toArray();
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		// ignore
 		return false;
@@ -69,14 +75,14 @@ public class RepositoryCategoryContentProvider implements ITreeContentProvider {
 		private static final String ELEMENT_REPOSITORY_CATEGORY_RANK = "rank"; //$NON-NLS-1$
 
 		private static void initExtensions() {
-			ExtensionPointReader<RepositoryCategory> reader = new ExtensionPointReader<RepositoryCategory>(
+			ExtensionPointReader<RepositoryCategory> reader = new ExtensionPointReader<>(
 					RepositoriesUiPlugin.ID_PLUGIN, EXTENSION_CUSTOM_CATEGORY, EXTENSION_TMPL_REPOSITORY_CATEGORY,
 					RepositoryCategory.class) {
 				@Override
 				protected RepositoryCategory readElement(IConfigurationElement element,
 						org.eclipse.core.runtime.MultiStatus result) {
 					return readRepositoryCategory(element);
-				};
+				}
 			};
 			reader.read();
 			List<RepositoryCategory> categories = reader.getItems();

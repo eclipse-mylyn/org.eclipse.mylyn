@@ -27,12 +27,13 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class ViewUsageCollector implements IUsageCollector {
 
-	protected Map<Integer, Integer> usersNumSelections = new HashMap<Integer, Integer>();
+	protected Map<Integer, Integer> usersNumSelections = new HashMap<>();
 
-	protected Map<Integer, Map<String, Integer>> usersNormalViewSelections = new HashMap<Integer, Map<String, Integer>>();
+	protected Map<Integer, Map<String, Integer>> usersNormalViewSelections = new HashMap<>();
 
 	protected int maxViewsToReport = -1;
 
+	@Override
 	public void consumeEvent(InteractionEvent event, int userId) {
 		if (!usersNumSelections.containsKey(userId)) {
 			usersNumSelections.put(userId, 0);
@@ -40,7 +41,7 @@ public class ViewUsageCollector implements IUsageCollector {
 
 		Map<String, Integer> normalViewSelections = usersNormalViewSelections.get(userId);
 		if (normalViewSelections == null) {
-			normalViewSelections = new HashMap<String, Integer>();
+			normalViewSelections = new HashMap<>();
 			usersNormalViewSelections.put(userId, normalViewSelections);
 		}
 
@@ -65,10 +66,10 @@ public class ViewUsageCollector implements IUsageCollector {
 
 		float numSelections = usersNumSelections.get(userId);
 
-		List<String> summaries = new ArrayList<String>();
-		List<String> viewUsage = new ArrayList<String>();
+		List<String> summaries = new ArrayList<>();
+		List<String> viewUsage = new ArrayList<>();
 		for (String view : normalViewSelections.keySet()) {
-			float viewUse = ((float) (normalViewSelections.get(view))) / numSelections;
+			float viewUse = (float) normalViewSelections.get(view) / numSelections;
 			String formattedViewUse = formatAsPercentage(viewUse);
 			String ending = ""; //$NON-NLS-1$
 			if (html) {
@@ -88,7 +89,7 @@ public class ViewUsageCollector implements IUsageCollector {
 	}
 
 	private String formatAsPercentage(float viewUse) {
-		String formattedViewUse = ("" + viewUse * 100); //$NON-NLS-1$
+		String formattedViewUse = "" + viewUse * 100; //$NON-NLS-1$
 
 		// sometimes the floats are so small that formattedViewUsage ends up
 		// being
@@ -105,18 +106,21 @@ public class ViewUsageCollector implements IUsageCollector {
 		return formattedViewUse + "%"; //$NON-NLS-1$
 	}
 
+	@Override
 	public List<String> getReport() {
-		List<String> summaries = new ArrayList<String>();
+		List<String> summaries = new ArrayList<>();
 		for (int userId : usersNormalViewSelections.keySet()) {
 			summaries.addAll(getSummary(userId, true));
 		}
 		return summaries;
 	}
 
+	@Override
 	public String getReportTitle() {
 		return Messages.ViewUsageCollector_View_Usage;
 	}
 
+	@Override
 	public void exportAsCSVFile(String directory) {
 		// TODO Auto-generated method stub
 
@@ -126,7 +130,7 @@ public class ViewUsageCollector implements IUsageCollector {
 	 * For testing.
 	 */
 	public Map<String, Integer> getNormalViewSelections() {
-		Map<String, Integer> normalViewSelections = new HashMap<String, Integer>();
+		Map<String, Integer> normalViewSelections = new HashMap<>();
 		for (int userId : usersNormalViewSelections.keySet()) {
 			normalViewSelections.putAll(usersNormalViewSelections.get(userId));
 		}
@@ -141,8 +145,9 @@ public class ViewUsageCollector implements IUsageCollector {
 		return usersNormalViewSelections;
 	}
 
+	@Override
 	public List<String> getPlainTextReport() {
-		List<String> summaries = new ArrayList<String>();
+		List<String> summaries = new ArrayList<>();
 		for (int userId : usersNormalViewSelections.keySet()) {
 			summaries.addAll(getSummary(userId, false));
 		}

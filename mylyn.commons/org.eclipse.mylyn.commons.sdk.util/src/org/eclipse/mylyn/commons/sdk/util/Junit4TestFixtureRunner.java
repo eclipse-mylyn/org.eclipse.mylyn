@@ -80,7 +80,7 @@ public class Junit4TestFixtureRunner extends Suite {
 
 		@Override
 		protected String testName(final FrameworkMethod method) {
-			if (Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"))) {
+			if (Boolean.getBoolean("org.eclipse.mylyn.tests.all")) {
 				return String.format("%s[%s %s]", method.getName(), fFixtureSetNumber,
 						fFixtureList.get(fFixtureSetNumber).getSimpleInfo());
 			} else {
@@ -157,7 +157,7 @@ public class Junit4TestFixtureRunner extends Suite {
 		}
 	}
 
-	private final ArrayList<Runner> runners = new ArrayList<Runner>();
+	private final ArrayList<Runner> runners = new ArrayList<>();
 
 	/**
 	 * Only called reflectively. Do not use programmatically.
@@ -190,15 +190,9 @@ public class Junit4TestFixtureRunner extends Suite {
 			TestConfiguration defFixture = TestConfiguration.getDefault();
 			List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) defFixture.discover(fixtureClass,
 					fixtureType);
-			ArrayList<AbstractTestFixture> sortedParametersList = new ArrayList<AbstractTestFixture>(parametersList);
-			sortedParametersList.sort(new Comparator<AbstractTestFixture>() {
-
-				@Override
-				public int compare(AbstractTestFixture o1, AbstractTestFixture o2) {
-					return o1.getInfo().compareTo(o2.getInfo());
-				}
-			});
-			List<AbstractTestFixture> fixturesToExecute = new ArrayList<AbstractTestFixture>();
+			ArrayList<AbstractTestFixture> sortedParametersList = new ArrayList<>(parametersList);
+			sortedParametersList.sort(Comparator.comparing(AbstractTestFixture::getInfo));
+			List<AbstractTestFixture> fixturesToExecute = new ArrayList<>();
 			if (restrictProperty != null) {
 				for (AbstractTestFixture abstractFixture : sortedParametersList) {
 					String tempProperty = abstractFixture.getProperty(restrictProperty);

@@ -43,7 +43,7 @@ public class UserCredentialsProviderUi extends AbstractCredentialsProviderUi<Use
 		UserCredentials oldCredentials = request.getLocation().getCredentials(request.getAuthenticationType());
 		if (oldCredentials != null) {
 			dialog.setUsername(oldCredentials.getUserName());
-			dialog.setDomain((oldCredentials.getDomain() != null) ? oldCredentials.getDomain() : ""); //$NON-NLS-1$
+			dialog.setDomain(oldCredentials.getDomain() != null ? oldCredentials.getDomain() : ""); //$NON-NLS-1$
 			dialog.setPassword(oldCredentials.getPassword());
 			dialog.setSavePassword(oldCredentials.getSavePassword());
 		}

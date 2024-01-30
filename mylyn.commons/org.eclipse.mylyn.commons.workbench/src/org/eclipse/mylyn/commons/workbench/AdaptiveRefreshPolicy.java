@@ -31,15 +31,15 @@ import org.eclipse.ui.progress.WorkbenchJob;
  */
 public class AdaptiveRefreshPolicy {
 
-	public static interface IFilteredTreeListener {
+	public interface IFilteredTreeListener {
 
-		public void filterTextChanged(String text);
+		void filterTextChanged(String text);
 
 	}
 
 	private int refreshDelay = 1500;
 
-	private final Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
+	private final Set<IFilteredTreeListener> listeners = new HashSet<>();
 
 	private String oldText = ""; //$NON-NLS-1$
 
@@ -62,34 +62,38 @@ public class AdaptiveRefreshPolicy {
 
 	protected final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
 
+		@Override
 		public void aboutToRun(IJobChangeEvent event) {
 			// ignore
 		}
 
+		@Override
 		public void awake(IJobChangeEvent event) {
 			// ignore
 		}
 
+		@Override
 		public void done(IJobChangeEvent event) {
 			if (event.getResult().isOK()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						for (IFilteredTreeListener listener : listeners) {
-							listener.filterTextChanged(oldText);
-						}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					for (IFilteredTreeListener listener : listeners) {
+						listener.filterTextChanged(oldText);
 					}
 				});
 			}
 		}
 
+		@Override
 		public void running(IJobChangeEvent event) {
 			// ignore
 		}
 
+		@Override
 		public void scheduled(IJobChangeEvent event) {
 			// ignore
 		}
 
+		@Override
 		public void sleeping(IJobChangeEvent event) {
 			// ignore
 		}
@@ -104,11 +108,11 @@ public class AdaptiveRefreshPolicy {
 		int delay = 0;
 		int textLength = text.length();
 		if (textLength > 0) {
-			delay = (int) (this.refreshDelay / (textLength * 0.6));
+			delay = (int) (refreshDelay / (textLength * 0.6));
 		}
 		refreshJob.schedule(delay);
 
-		this.oldText = text;
+		oldText = text;
 	}
 
 	/**

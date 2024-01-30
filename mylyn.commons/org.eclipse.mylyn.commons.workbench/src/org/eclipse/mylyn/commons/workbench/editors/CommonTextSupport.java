@@ -32,8 +32,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Control;
@@ -52,8 +50,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
- * Utility class that enables edit actions, content assist and quick fixing for {@link TextViewer} and
- * {@link SourceViewer} controls.
+ * Utility class that enables edit actions, content assist and quick fixing for {@link TextViewer} and {@link SourceViewer} controls.
  * 
  * @author Steffen Pingel
  * @since 3.7
@@ -64,6 +61,7 @@ public class CommonTextSupport {
 
 		private TextViewer viewer;
 
+		@Override
 		public void historyNotification(OperationHistoryEvent event) {
 			if (viewer != null && selectionChangedListener != null && Display.getCurrent() != null) {
 				selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
@@ -87,6 +85,7 @@ public class CommonTextSupport {
 			this.spellCheck = spellCheck;
 		}
 
+		@Override
 		public void focusGained(FocusEvent e) {
 			if (selectionChangedListener != null) {
 				selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
@@ -94,6 +93,7 @@ public class CommonTextSupport {
 			activateHandlers(viewer, spellCheck);
 		}
 
+		@Override
 		public void focusLost(FocusEvent e) {
 			deactivateHandlers();
 			if (selectionChangedListener != null) {
@@ -139,8 +139,7 @@ public class CommonTextSupport {
 	}
 
 	private static boolean canPerformDirectly(String id, Control control) {
-		if (control instanceof Text) {
-			Text text = (Text) control;
+		if (control instanceof Text text) {
 			if (id.equals(ActionFactory.CUT.getId())) {
 				text.cut();
 				return true;
@@ -233,7 +232,7 @@ public class CommonTextSupport {
 	public CommonTextSupport(IHandlerService handlerService) {
 		Assert.isNotNull(handlerService);
 		this.handlerService = handlerService;
-		this.undoRedoListener = new UndoRedoListener();
+		undoRedoListener = new UndoRedoListener();
 	}
 
 	private IHandlerActivation activateHandler(TextViewer viewer, int operation, String actionDefinitionId) {
@@ -274,11 +273,7 @@ public class CommonTextSupport {
 			support.setAnnotationPreference((AnnotationPreference) e.next());
 		}
 		support.install(EditorsUI.getPreferenceStore());
-		viewer.getTextWidget().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				support.uninstall();
-			}
-		});
+		viewer.getTextWidget().addDisposeListener(e1 -> support.uninstall());
 		AnnotationModel annotationModel = new AnnotationModel();
 		viewer.setDocument(document, annotationModel);
 	}

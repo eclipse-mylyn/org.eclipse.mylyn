@@ -35,7 +35,7 @@ public class ErrorReporterManager {
 
 	private static final String ELEMENT_ERROR_REPORTER = "errorReporter"; //$NON-NLS-1$
 
-	private final List<AbstractErrorReporter> errorReporters = new CopyOnWriteArrayList<AbstractErrorReporter>();
+	private final List<AbstractErrorReporter> errorReporters = new CopyOnWriteArrayList<>();
 
 	private boolean readExtensions;
 
@@ -56,7 +56,7 @@ public class ErrorReporterManager {
 		readExtensions();
 
 		int priority = AbstractErrorReporter.PRIORITY_NONE;
-		List<AbstractErrorReporter> interestedReporters = new ArrayList<AbstractErrorReporter>();
+		List<AbstractErrorReporter> interestedReporters = new ArrayList<>();
 		for (AbstractErrorReporter reporter : errorReporters) {
 			int newPriority = reporter.getPriority(status);
 			if (newPriority > AbstractErrorReporter.PRIORITY_NONE) {

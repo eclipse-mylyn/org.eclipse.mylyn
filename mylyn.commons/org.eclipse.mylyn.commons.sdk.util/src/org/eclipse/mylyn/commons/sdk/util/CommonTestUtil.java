@@ -74,8 +74,7 @@ public class CommonTestUtil {
 	private final static int MAX_RETRY = 5;
 
 	/**
-	 * Returns the given file path with its separator character changed from the given old separator to the given new
-	 * separator.
+	 * Returns the given file path with its separator character changed from the given old separator to the given new separator.
 	 *
 	 * @param path
 	 *            a file path
@@ -83,8 +82,7 @@ public class CommonTestUtil {
 	 *            a path separator character
 	 * @param newSeparator
 	 *            a path separator character
-	 * @return the file path with its separator character changed from the given old separator to the given new
-	 *         separator
+	 * @return the file path with its separator character changed from the given old separator to the given new separator
 	 */
 	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);
@@ -357,16 +355,14 @@ public class CommonTestUtil {
 	}
 
 	/**
-	 * Returns whether to run a limited suite of tests. Returns true, unless a system property has been set to force
-	 * running of all tests.
+	 * Returns whether to run a limited suite of tests. Returns true, unless a system property has been set to force running of all tests.
 	 */
 	public static boolean runHeartbeatTestsOnly() {
 		return !Boolean.getBoolean("org.eclipse.mylyn.tests.all");
 	}
 
 	/**
-	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
-	 * given filter.
+	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the given filter.
 	 *
 	 * @param zipFile
 	 *            the zip file to unzip
@@ -481,11 +477,11 @@ public class CommonTestUtil {
 	}
 
 	/**
-	 * Activates manual proxy configuration in the Ecipse proxy service if system proxy support is not available. This
-	 * sets proxy configuration to Java system properties.
+	 * Activates manual proxy configuration in the Ecipse proxy service if system proxy support is not available. This sets proxy
+	 * configuration to Java system properties.
 	 * <p>
-	 * This work around is required on e3.5/gtk.x86_64 where system proxy settings get enabled but the proxy
-	 * configuration is not actually detected resulting in a broken configuration.
+	 * This work around is required on e3.5/gtk.x86_64 where system proxy settings get enabled but the proxy configuration is not actually
+	 * detected resulting in a broken configuration.
 	 * <p>
 	 * Please note that this only works for http proxies. The https proxy system property is ignored.
 	 *
@@ -537,8 +533,8 @@ public class CommonTestUtil {
 	}
 
 	/**
-	 * If Eclipse proxy configuration is set to manual https proxies aren't detected and hence tests that rely on https
-	 * connections may fail. Use this method to detect whether https is configured correctly.
+	 * If Eclipse proxy configuration is set to manual https proxies aren't detected and hence tests that rely on https connections may
+	 * fail. Use this method to detect whether https is configured correctly.
 	 *
 	 * @see #fixProxyConfiguration()
 	 */
@@ -550,8 +546,8 @@ public class CommonTestUtil {
 	}
 
 	/**
-	 * Returns whether to run on local services if present. Returns false, unless a system property has been set to
-	 * force to ignore local running services.
+	 * Returns whether to run on local services if present. Returns false, unless a system property has been set to force to ignore local
+	 * running services.
 	 */
 	public static boolean ignoreLocalTestServices() {
 		return Boolean.getBoolean(KEY_IGNORE_LOCAL_SERVICES);

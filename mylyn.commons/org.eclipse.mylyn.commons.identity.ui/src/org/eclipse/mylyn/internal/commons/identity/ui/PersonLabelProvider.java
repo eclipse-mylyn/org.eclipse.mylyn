@@ -46,8 +46,7 @@ public class PersonLabelProvider extends LabelProvider {
 	public Image getImage(Object object) {
 		if (object instanceof PeopleCategory) {
 			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
-		} else if (object instanceof IIdentity) {
-			IIdentity identity = (IIdentity) object;
+		} else if (object instanceof IIdentity identity) {
 			Image image = registry.get(identity.getId().toString());
 			if (image == null) {
 				Future<IProfileImage> result = identity.requestImage(IMAGE_SIZE, IMAGE_SIZE);
@@ -74,8 +73,7 @@ public class PersonLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof IIdentity) {
-			IIdentity identity = (IIdentity) object;
+		if (object instanceof IIdentity identity) {
 			Future<IProfile> result = identity.requestProfile();
 			if (result.isDone()) {
 				try {
@@ -91,8 +89,7 @@ public class PersonLabelProvider extends LabelProvider {
 			}
 			//return identity.getAccounts()[0].getId();
 			return identity.getId().toString();
-		} else if (object instanceof Account) {
-			Account account = (Account) object;
+		} else if (object instanceof Account account) {
 			if (account.getName() != null) {
 				return account.getName() + " <" + account.getId() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {

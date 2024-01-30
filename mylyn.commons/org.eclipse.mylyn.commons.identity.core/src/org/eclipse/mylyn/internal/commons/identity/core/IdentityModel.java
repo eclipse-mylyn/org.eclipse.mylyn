@@ -41,8 +41,8 @@ public final class IdentityModel implements Serializable {
 	private final Map<UUID, Identity> identityById;
 
 	public IdentityModel() {
-		connectors = new CopyOnWriteArrayList<IdentityConnector>();
-		identityById = new WeakHashMap<UUID, Identity>();
+		connectors = new CopyOnWriteArrayList<>();
+		identityById = new WeakHashMap<>();
 	}
 
 	public void addConnector(IdentityConnector connector) {
@@ -70,7 +70,7 @@ public final class IdentityModel implements Serializable {
 	}
 
 	public IIdentity[] getIdentities() {
-		return identityById.values().toArray(new IIdentity[identityById.values().size()]);
+		return identityById.values().toArray(new IIdentity[identityById.size()]);
 	}
 
 	public ProfileImage getImage(Identity identity, int preferredWidth, int preferredHeight, IProgressMonitor monitor)

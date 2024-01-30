@@ -31,7 +31,7 @@ class XmlRpcClientRequest extends XmlRpcClientRequestImpl {
 			IProgressMonitor monitor) {
 		super(config, methodName, params);
 		this.url = url;
-		this.progressMonitor = monitor;
+		progressMonitor = monitor;
 	}
 
 	public IProgressMonitor getProgressMonitor() {

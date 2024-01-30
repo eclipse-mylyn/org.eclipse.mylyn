@@ -15,9 +15,9 @@ package org.eclipse.mylyn.commons.tests.core;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.net.AuthenticatedProxy;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

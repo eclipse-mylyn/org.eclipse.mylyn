@@ -21,8 +21,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
- * Provides an simple implementation of {@link ISelectionProvider} that propagates selection events to registered
- * listeners.
+ * Provides an simple implementation of {@link ISelectionProvider} that propagates selection events to registered listeners.
  * 
  * @author Steffen Pingel
  * @since 3.7
@@ -48,24 +47,29 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 	public SelectionProviderAdapter() {
 	}
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		addListenerObject(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return selection;
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		removeListenerObject(listener);
 	}
 
+	@Override
 	public void selectionChanged(final SelectionChangedEvent event) {
-		this.selection = event.getSelection();
+		selection = event.getSelection();
 		Object[] listeners = getListeners();
 		for (Object listener2 : listeners) {
 			final ISelectionChangedListener listener = (ISelectionChangedListener) listener2;
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					listener.selectionChanged(event);
 				}
@@ -73,6 +77,7 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 		}
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		selectionChanged(new SelectionChangedEvent(this, selection));
 	}

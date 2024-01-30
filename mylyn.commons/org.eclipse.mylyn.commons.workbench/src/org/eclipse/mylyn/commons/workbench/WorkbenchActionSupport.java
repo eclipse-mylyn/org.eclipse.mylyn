@@ -221,6 +221,7 @@ public class WorkbenchActionSupport implements ISelectionChangedListener {
 		bars.updateActionBars();
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection instanceof TextSelection) {

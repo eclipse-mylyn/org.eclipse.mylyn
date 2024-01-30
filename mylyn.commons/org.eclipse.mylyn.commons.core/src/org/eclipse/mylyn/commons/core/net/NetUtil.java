@@ -63,15 +63,14 @@ public class NetUtil {
 
 	static {
 		String value = System.getProperty("org.eclipse.mylyn.https.protocols"); //$NON-NLS-1$
-		enabledProtocols = (value != null) ? value.split(",") : null; //$NON-NLS-1$
+		enabledProtocols = value != null ? value.split(",") : null; //$NON-NLS-1$
 	}
 
 	/**
-	 * Invokes {@link Socket#connect(java.net.SocketAddress, int)} on <code>socket</code> to connect to
-	 * <code>address</code>.
+	 * Invokes {@link Socket#connect(java.net.SocketAddress, int)} on <code>socket</code> to connect to <code>address</code>.
 	 * <p>
-	 * If an operation is provided a cancellation listener is attached that aborts the connect in case the operation is
-	 * aborted while connecting.
+	 * If an operation is provided a cancellation listener is attached that aborts the connect in case the operation is aborted while
+	 * connecting.
 	 * 
 	 * @param socket
 	 *            the socket
@@ -89,13 +88,11 @@ public class NetUtil {
 	public static void connect(final Socket socket, InetSocketAddress address, int timeout,
 			MonitoredOperation<?> operation) throws IOException {
 		if (operation != null) {
-			ICancellable listener = new ICancellable() {
-				public void abort() {
-					try {
-						socket.close();
-					} catch (IOException e) {
-						// ignore
-					}
+			ICancellable listener = () -> {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					// ignore
 				}
 			};
 			try {
@@ -116,8 +113,8 @@ public class NetUtil {
 	public static Proxy createProxy(String proxyHost, int proxyPort, String username, String password, String domain) {
 		if (proxyHost != null && proxyHost.length() > 0) {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			boolean authenticated = (username != null && password != null && username.length() > 0
-					&& password.length() > 0);
+			boolean authenticated = username != null && password != null && username.length() > 0
+					&& password.length() > 0;
 			if (authenticated) {
 				return new AuthenticatedProxy(Type.HTTP, sockAddr, username, password, domain);
 			} else {
@@ -163,8 +160,8 @@ public class NetUtil {
 	}
 
 	/**
-	 * Returns the connection port for <code>url</code>. If no port is specified, 443 is returned for URLs that use the
-	 * https protocol; otherwise, 80 is returned.
+	 * Returns the connection port for <code>url</code>. If no port is specified, 443 is returned for URLs that use the https protocol;
+	 * otherwise, 80 is returned.
 	 * 
 	 * @return the port portion of <code>url</code>
 	 * @throws NumberFormatException

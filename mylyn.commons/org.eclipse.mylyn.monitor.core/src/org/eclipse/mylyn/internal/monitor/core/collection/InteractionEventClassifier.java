@@ -27,7 +27,7 @@ public class InteractionEventClassifier {
 	 */
 	public static boolean isEdit(InteractionEvent event) {
 		return event.getKind().equals(InteractionEvent.Kind.EDIT)
-				|| (event.getKind().equals(InteractionEvent.Kind.SELECTION) && isSelectionInEditor(event));
+				|| event.getKind().equals(InteractionEvent.Kind.SELECTION) && isSelectionInEditor(event);
 	}
 
 	public static boolean isSelection(InteractionEvent event) {
@@ -77,9 +77,9 @@ public class InteractionEventClassifier {
 		long timeInSeconds = timeToFormatInms / 1000;
 		long hours, minutes;
 		hours = timeInSeconds / 3600;
-		timeInSeconds = timeInSeconds - (hours * 3600);
+		timeInSeconds = timeInSeconds - hours * 3600;
 		minutes = timeInSeconds / 60;
-		timeInSeconds = timeInSeconds - (minutes * 60);
+		timeInSeconds = timeInSeconds - minutes * 60;
 		return hours + "." + minutes; //$NON-NLS-1$
 	}
 

@@ -34,6 +34,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class ExtensionPointReader<T> {
 	private final class PriorityComparator implements Comparator<IConfigurationElement> {
+		@Override
 		public int compare(IConfigurationElement arg0, IConfigurationElement arg1) {
 			double p0 = 0;
 			double p1 = 0;
@@ -101,9 +102,9 @@ public class ExtensionPointReader<T> {
 		this.clazz = clazz;
 		this.filterAttributeId = filterAttributeId;
 		this.filterAttributeValue = filterAttributeValue;
-		this.classAttributeId = DEFAULT_ATTRIBUTE_ID_CLASS;
-		this.priorityAttributeId = DEFAULT_ATTRIBUTE_ID_PRIORITY;
-		this.items = new ArrayList<T>();
+		classAttributeId = DEFAULT_ATTRIBUTE_ID_CLASS;
+		priorityAttributeId = DEFAULT_ATTRIBUTE_ID_PRIORITY;
+		items = new ArrayList<>();
 	}
 
 	public final String getClassAttributeId() {
@@ -115,11 +116,11 @@ public class ExtensionPointReader<T> {
 	}
 
 	public T getItem() {
-		return (items.isEmpty()) ? null : items.get(0);
+		return items.isEmpty() ? null : items.get(0);
 	}
 
 	public List<T> getItems() {
-		return new ArrayList<T>(items);
+		return new ArrayList<>(items);
 	}
 
 	public final String getPluginId() {
@@ -203,17 +204,16 @@ public class ExtensionPointReader<T> {
 	}
 
 	/**
-	 * Determines whether the element should be instantiated by this ExtensionPointReader. This implementation checks
-	 * whether the element defines an attribute with id and value matching filterAttributeId and filterAttributeValue.
-	 * If filterAttributeValue is the empty string, an element is also considered to match if it does not define the
-	 * attribute.
+	 * Determines whether the element should be instantiated by this ExtensionPointReader. This implementation checks whether the element
+	 * defines an attribute with id and value matching filterAttributeId and filterAttributeValue. If filterAttributeValue is the empty
+	 * string, an element is also considered to match if it does not define the attribute.
 	 * <p>
 	 * Subclasses may override.
 	 */
 	protected boolean shouldRead(IConfigurationElement element) {
 		return filterAttributeId == null || filterAttributeValue == null
 				|| filterAttributeValue.equals(element.getAttribute(filterAttributeId))
-				|| (filterAttributeValue.length() == 0 && element.getAttribute(filterAttributeId) == null);
+				|| filterAttributeValue.length() == 0 && element.getAttribute(filterAttributeId) == null;
 	}
 
 }

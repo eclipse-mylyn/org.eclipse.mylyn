@@ -45,6 +45,7 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 			((RepositoryLocation) source).removePropertyChangeListener(this);
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			if (evt.getPropertyName() == null || key.equals(evt.getPropertyName())) {
 				Object oldValue = evt.getOldValue();
@@ -70,6 +71,7 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 		this.defaultValue = defaultValue;
 	}
 
+	@Override
 	public Object getValueType() {
 		return String.class;
 	}
@@ -81,7 +83,7 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 //			return (uri != null) ? uri.toString() : uri;
 //		}
 		String value = ((RepositoryLocation) source).getProperty(key);
-		return (value != null) ? value : defaultValue;
+		return value != null ? value : defaultValue;
 	}
 
 	@Override
@@ -93,7 +95,7 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 //				// ignore
 //			}
 //		} else {
-		((RepositoryLocation) source).setProperty(key, (value != null) ? value.toString() : null);
+		((RepositoryLocation) source).setProperty(key, value != null ? value.toString() : null);
 //		}
 	}
 

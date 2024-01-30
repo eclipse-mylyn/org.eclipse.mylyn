@@ -12,12 +12,12 @@
 
 package org.eclipse.mylyn.commons.tests.xmlrpc;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 import org.eclipse.mylyn.internal.commons.xmlrpc.XmlRpcNoSuchMethodException;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

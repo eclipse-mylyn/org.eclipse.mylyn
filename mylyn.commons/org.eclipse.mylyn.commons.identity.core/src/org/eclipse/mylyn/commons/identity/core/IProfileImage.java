@@ -20,12 +20,12 @@ package org.eclipse.mylyn.commons.identity.core;
  */
 public interface IProfileImage {
 
-	public abstract byte[] getData();
+	byte[] getData();
 
-	public abstract int getWidth();
+	int getWidth();
 
-	public abstract int getHeight();
+	int getHeight();
 
-	public abstract String getFormat();
+	String getFormat();
 
 }

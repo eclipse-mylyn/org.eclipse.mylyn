@@ -22,8 +22,8 @@ public abstract class AbstractUserActivityMonitor {
 	private long lastEventTimeStamp = -1;
 
 	/**
-	 * Returns the priority of the monitor. A lower priority means that the monitor is preferred over other monitors.
-	 * The priority of the default monitor is <code>0</code>.
+	 * Returns the priority of the monitor. A lower priority means that the monitor is preferred over other monitors. The priority of the
+	 * default monitor is <code>0</code>.
 	 * 
 	 * @since 3.7
 	 */

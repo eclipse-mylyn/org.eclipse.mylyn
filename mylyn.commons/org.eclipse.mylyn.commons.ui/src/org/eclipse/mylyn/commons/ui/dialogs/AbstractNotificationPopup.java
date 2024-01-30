@@ -26,7 +26,6 @@ import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.FadeJob;
-import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.IFadeListener;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -92,21 +91,18 @@ public abstract class AbstractNotificationPopup extends Window {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			if (!display.isDisposed()) {
-				display.asyncExec(new Runnable() {
-					public void run() {
-						Shell shell = AbstractNotificationPopup.this.getShell();
-						if (shell == null || shell.isDisposed()) {
-							return;
-						}
-
-						if (isMouseOver(shell)) {
-							scheduleAutoClose();
-							return;
-						}
-
-						AbstractNotificationPopup.this.closeFade();
+				display.asyncExec(() -> {
+					Shell shell = AbstractNotificationPopup.this.getShell();
+					if (shell == null || shell.isDisposed()) {
+						return;
 					}
 
+					if (isMouseOver(shell)) {
+						scheduleAutoClose();
+						return;
+					}
+
+					AbstractNotificationPopup.this.closeFade();
 				});
 			}
 			if (monitor.isCanceled()) {
@@ -149,9 +145,9 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	/**
-	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g.
-	 * "Eclipse SDK") command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips
-	 * the trailing "SDK" for any name, since this part of the label is considered visual noise.
+	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g. "Eclipse SDK")
+	 * command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips the trailing "SDK" for any name,
+	 * since this part of the label is considered visual noise.
 	 * 
 	 * @return the name to be used in the title of the popup.
 	 */
@@ -308,15 +304,13 @@ public abstract class AbstractNotificationPopup extends Window {
 			shell.setAlpha(0);
 		}
 		shell.setVisible(true);
-		fadeJob = AnimationUtil.fadeIn(shell, new IFadeListener() {
-			public void faded(Shell shell, int alpha) {
-				if (shell.isDisposed()) {
-					return;
-				}
+		fadeJob = AnimationUtil.fadeIn(shell, (shell, alpha) -> {
+			if (shell.isDisposed()) {
+				return;
+			}
 
-				if (alpha == 255) {
-					scheduleAutoClose();
-				}
+			if (alpha == 255) {
+				scheduleAutoClose();
 			}
 		});
 
@@ -496,34 +490,30 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private Rectangle getPrimaryClientArea() {
 		Monitor primaryMonitor = shell.getDisplay().getPrimaryMonitor();
-		return (primaryMonitor != null) ? primaryMonitor.getClientArea() : shell.getDisplay().getClientArea();
+		return primaryMonitor != null ? primaryMonitor.getClientArea() : shell.getDisplay().getClientArea();
 	}
 
 	public void closeFade() {
 		if (fadeJob != null) {
 			fadeJob.cancelAndWait(false);
 		}
-		fadeJob = AnimationUtil.fadeOut(getShell(), new IFadeListener() {
-			public void faded(Shell shell, int alpha) {
-				if (!shell.isDisposed()) {
-					if (alpha == 0) {
-						shell.close();
-					} else if (isMouseOver(shell)) {
-						if (fadeJob != null) {
-							fadeJob.cancelAndWait(false);
-						}
-						fadeJob = AnimationUtil.fastFadeIn(shell, new IFadeListener() {
-							public void faded(Shell shell, int alpha) {
-								if (shell.isDisposed()) {
-									return;
-								}
-
-								if (alpha == 255) {
-									scheduleAutoClose();
-								}
-							}
-						});
+		fadeJob = AnimationUtil.fadeOut(getShell(), (shell, alpha) -> {
+			if (!shell.isDisposed()) {
+				if (alpha == 0) {
+					shell.close();
+				} else if (isMouseOver(shell)) {
+					if (fadeJob != null) {
+						fadeJob.cancelAndWait(false);
 					}
+					fadeJob = AnimationUtil.fastFadeIn(shell, (shell1, alpha1) -> {
+						if (shell1.isDisposed()) {
+							return;
+						}
+
+						if (alpha1 == 255) {
+							scheduleAutoClose();
+						}
+					});
 				}
 			}
 		});

@@ -22,6 +22,6 @@ public interface ICancellableOperation extends ICancellable {
 	/**
 	 * Returns <code>true</code> if this operation was requested to be cancelled.
 	 */
-	public boolean isCanceled();
+	boolean isCanceled();
 
 }

@@ -22,6 +22,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class RefreshHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
 		if (part instanceof PeopleView) {
