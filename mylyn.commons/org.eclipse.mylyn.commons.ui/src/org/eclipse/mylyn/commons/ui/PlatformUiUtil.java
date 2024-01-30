@@ -127,9 +127,9 @@ public class PlatformUiUtil {
 	}
 
 	/**
-	 * If a a section does not use a toolbar as its text client the spacing between the section header and client will
-	 * be different from other sections. This method returns the value to set as the vertical spacing on those sections
-	 * to align the vertical position of section clients.
+	 * If a a section does not use a toolbar as its text client the spacing between the section header and client will be different from
+	 * other sections. This method returns the value to set as the vertical spacing on those sections to align the vertical position of
+	 * section clients.
 	 *
 	 * @return value for {@link org.eclipse.ui.forms.widgets.Section#clientVerticalSpacing}
 	 */
@@ -148,20 +148,20 @@ public class PlatformUiUtil {
 	}
 
 	/**
-	 * Because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List) for MacOS we enable this
-	 * only if running on Eclipse >= "3.7.0.v201101192000"
+	 * Because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List) for MacOS we enable this only if running on
+	 * Eclipse >= "3.7.0.v201101192000"
 	 */
 	public static boolean supportsMultipleHyperlinkPresenter() {
 		if (isMac()) {
 			Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
 			if (bundle != null) {
-				String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+				String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 				Version version = new Version(versionString);
 				return version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
 			} else {
 				bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
 				if (bundle != null) {
-					String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+					String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 					Version version = new Version(versionString);
 					return version.compareTo(new Version("3.7.0.v3721")) >= 0; //$NON-NLS-1$
 				} else {
@@ -174,8 +174,8 @@ public class PlatformUiUtil {
 	}
 
 	/**
-	 * Because of bug#175655: [context] provide an on-hover affordance to supplement Alt+click navigation Tooltips will
-	 * show everyone on Linux unless they are balloons.
+	 * Because of bug#175655: [context] provide an on-hover affordance to supplement Alt+click navigation Tooltips will show everyone on
+	 * Linux unless they are balloons.
 	 */
 	public static int getSwtTooltipStyle() {
 		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
@@ -204,7 +204,7 @@ public class PlatformUiUtil {
 				internalBrowserAvailable = Boolean.FALSE;
 			}
 		}
-		return internalBrowserAvailable.booleanValue();
+		return internalBrowserAvailable;
 	}
 
 	/**
@@ -213,13 +213,13 @@ public class PlatformUiUtil {
 	public static boolean isNeonOrLater() {
 		Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
 		if (bundle != null) {
-			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 			Version version = new Version(versionString);
 			return version.compareTo(new Version("4.6.0.v20151020-0800")) >= 0; //$NON-NLS-1$
 		}
 		bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
 		if (bundle != null) {
-			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 			Version version = new Version(versionString);
 			return version.compareTo(new Version("3.105.0.v20151020-0634")) >= 0; //$NON-NLS-1$
 		}

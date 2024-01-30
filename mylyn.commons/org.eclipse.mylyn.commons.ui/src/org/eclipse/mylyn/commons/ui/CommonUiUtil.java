@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProduct;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -42,17 +41,15 @@ public class CommonUiUtil {
 
 	public static void run(IRunnableContext context, final ICoreRunnable runnable) throws CoreException {
 		try {
-			IRunnableWithProgress runner = new IRunnableWithProgress() {
-				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						runnable.run(monitor);
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					} finally {
-						monitor.done();
-					}
+			IRunnableWithProgress runner = monitor -> {
+				try {
+					runnable.run(monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} finally {
+					monitor.done();
 				}
 			};
 			context.run(true, true, runner);
@@ -71,18 +68,18 @@ public class CommonUiUtil {
 	public static void setMessage(DialogPage page, IStatus status) {
 		String message = status.getMessage();
 		switch (status.getSeverity()) {
-		case IStatus.OK:
-			page.setMessage(null, IMessageProvider.NONE);
-			break;
-		case IStatus.INFO:
-			page.setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.WARNING:
-			page.setMessage(message, IMessageProvider.WARNING);
-			break;
-		default:
-			page.setMessage(message, IMessageProvider.ERROR);
-			break;
+			case IStatus.OK:
+				page.setMessage(null, IMessageProvider.NONE);
+				break;
+			case IStatus.INFO:
+				page.setMessage(message, IMessageProvider.INFORMATION);
+				break;
+			case IStatus.WARNING:
+				page.setMessage(message, IMessageProvider.WARNING);
+				break;
+			default:
+				page.setMessage(message, IMessageProvider.ERROR);
+				break;
 		}
 	}
 
@@ -170,7 +167,7 @@ public class CommonUiUtil {
 	 */
 	@Deprecated
 	public static String toLabel(String text) {
-		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
+		return text != null ? text.replace("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

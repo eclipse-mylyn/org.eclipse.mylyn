@@ -28,8 +28,8 @@ import org.eclipse.core.net.proxy.IProxyService;
 public abstract class ProxyProvider {
 
 	/**
-	 * Returns the proxy for <code>host</code>. The type of proxy is specified by <code>proxyType</code>, see
-	 * {@link IProxyData} for possible values.
+	 * Returns the proxy for <code>host</code>. The type of proxy is specified by <code>proxyType</code>, see {@link IProxyData} for
+	 * possible values.
 	 * 
 	 * @param host
 	 *            the host to route to

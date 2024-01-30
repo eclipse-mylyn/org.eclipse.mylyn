@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.commons.repositories.core.auth;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.equinox.security.storage.StorageException;
 
@@ -67,7 +69,7 @@ public class UserCredentials extends AuthenticationCredentials {
 	}
 
 	protected UserCredentials(ICredentialsStore store, String prefix, boolean loadSecrets) throws StorageException {
-		this(store.get(prefix + ".user", ""), (loadSecrets) ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+		this(store.get(prefix + ".user", ""), loadSecrets ? store.get(prefix + ".password", "") : "", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
 				store.get(prefix + ".domain", null), //$NON-NLS-1$
 				store.getBoolean(prefix + ".savePassword", false), loadSecrets); //$NON-NLS-1$
 	}
@@ -77,38 +79,23 @@ public class UserCredentials extends AuthenticationCredentials {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		UserCredentials other = (UserCredentials) obj;
-		if (domain == null) {
-			if (other.domain != null) {
-				return false;
-			}
-		} else if (!domain.equals(other.domain)) {
+		if (!Objects.equals(domain, other.domain)) {
 			return false;
 		}
 		if (hasSecrets != other.hasSecrets) {
 			return false;
 		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
+		if (!Objects.equals(password, other.password)) {
 			return false;
 		}
 		if (savePassword != other.savePassword) {
 			return false;
 		}
-		if (userName == null) {
-			if (other.userName != null) {
-				return false;
-			}
-		} else if (!userName.equals(other.userName)) {
+		if (!Objects.equals(userName, other.userName)) {
 			return false;
 		}
 		return true;
@@ -132,29 +119,22 @@ public class UserCredentials extends AuthenticationCredentials {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((domain == null) ? 0 : domain.hashCode());
-		result = prime * result + (hasSecrets ? 1231 : 1237);
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + (savePassword ? 1231 : 1237);
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
+		return Objects.hash(domain, hasSecrets, password, savePassword, userName);
 	}
 
 	@Override
 	public void clear(ICredentialsStore store, String prefix) {
-		store.remove(prefix + ".user"); //$NON-NLS-1$ 
-		store.remove(prefix + ".password"); //$NON-NLS-1$ 
+		store.remove(prefix + ".user"); //$NON-NLS-1$
+		store.remove(prefix + ".password"); //$NON-NLS-1$
 		store.remove(prefix + ".domain"); //$NON-NLS-1$
 		store.remove(prefix + ".savePassword"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void save(ICredentialsStore store, String prefix) {
-		store.put(prefix + ".user", userName, false); //$NON-NLS-1$ 
+		store.put(prefix + ".user", userName, false); //$NON-NLS-1$
 		if (hasSecrets) {
-			store.put(prefix + ".password", password, true, savePassword); //$NON-NLS-1$ 
+			store.put(prefix + ".password", password, true, savePassword); //$NON-NLS-1$
 		}
 		store.put(prefix + ".domain", domain, false); //$NON-NLS-1$
 		store.putBoolean(prefix + ".savePassword", savePassword, false); //$NON-NLS-1$
@@ -166,7 +146,7 @@ public class UserCredentials extends AuthenticationCredentials {
 		builder.append("UserCredentials [domain="); //$NON-NLS-1$
 		builder.append(domain);
 		builder.append(", password="); //$NON-NLS-1$
-		builder.append((password == null) ? password : "********"); //$NON-NLS-1$
+		builder.append(password == null ? password : "********"); //$NON-NLS-1$
 		builder.append(", userName="); //$NON-NLS-1$
 		builder.append(userName);
 		builder.append(", savePassword="); //$NON-NLS-1$

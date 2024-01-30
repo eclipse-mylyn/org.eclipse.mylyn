@@ -34,13 +34,13 @@ public class TableViewerSupport extends AbstractColumnViewerSupport<TableColumn>
 
 	public TableViewerSupport(TableViewer viewer, File stateFile) {
 		super(viewer, stateFile);
-		this.table = viewer.getTable();
+		table = viewer.getTable();
 		initializeViewerSupport();
 	}
 
 	public TableViewerSupport(TableViewer viewer, File stateFile, boolean[] defaultVisibilities) {
 		super(viewer, stateFile, defaultVisibilities);
-		this.table = viewer.getTable();
+		table = viewer.getTable();
 		initializeViewerSupport();
 	}
 

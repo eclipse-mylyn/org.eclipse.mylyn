@@ -36,30 +36,30 @@ public class UiLocationService implements ILocationService {
 	public UiLocationService() {
 	}
 
+	@Override
 	public ICredentialsStore getCredentialsStore(String id) {
 		Assert.isNotNull(id);
 		return new UiSecureCredentialsStore(id);
 	}
 
+	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
 		return NetUtil.getProxy(host, proxyType);
 	}
 
+	@Override
 	public X509TrustManager getTrustManager() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public <T extends AuthenticationCredentials> T requestCredentials(
 			AuthenticationRequest<AuthenticationType<T>> request, IProgressMonitor monitor) {
-		if (CoreUtil.TEST_MODE) {
+		if (CoreUtil.TEST_MODE || OperationUtil.isBackgroundMonitor(monitor)) {
 			throw new UnsupportedOperationException();
 		}
 
-		if (OperationUtil.isBackgroundMonitor(monitor)) {
-			throw new UnsupportedOperationException();
-		}
-
-		RepositoryAuthenticator<T> requester = new RepositoryAuthenticator<T>(request);
+		RepositoryAuthenticator<T> requester = new RepositoryAuthenticator<>(request);
 		return requester.open(monitor);
 	}
 

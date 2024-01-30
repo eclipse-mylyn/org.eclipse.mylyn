@@ -92,11 +92,13 @@ public abstract class ControlListViewer extends StructuredViewer {
 		control.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
 		control.addControlListener(new ControlListener() {
+			@Override
 			public void controlMoved(ControlEvent e) {
 				updateVisibleItems();
 
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				updateVisibleItems();
 			}
@@ -119,67 +121,65 @@ public abstract class ControlListViewer extends StructuredViewer {
 		control.addTraverseListener(new TraverseListener() {
 			private boolean handleEvent = true;
 
+			@Override
 			public void keyTraversed(TraverseEvent event) {
 				if (!handleEvent) {
 					return;
 				}
 				switch (event.detail) {
-				case SWT.TRAVERSE_ARROW_PREVIOUS: {
-					Control[] children = control.getChildren();
-					if (children.length > 0) {
-						boolean selected = false;
-						for (int i = 0; i < children.length; i++) {
-							ControlListItem item = (ControlListItem) children[i];
-							if (item.isSelected()) {
-								selected = true;
-								if (i > 0) {
-									setSelection(new StructuredSelection(children[i - 1].getData()), true);
+					case SWT.TRAVERSE_ARROW_PREVIOUS: {
+						Control[] children = control.getChildren();
+						if (children.length > 0) {
+							boolean selected = false;
+							for (int i = 0; i < children.length; i++) {
+								ControlListItem item = (ControlListItem) children[i];
+								if (item.isSelected()) {
+									selected = true;
+									if (i > 0) {
+										setSelection(new StructuredSelection(children[i - 1].getData()), true);
+									}
+									break;
 								}
-								break;
+							}
+							if (!selected) {
+								setSelection(new StructuredSelection(children[children.length - 1].getData()), true);
 							}
 						}
-						if (!selected) {
-							setSelection(new StructuredSelection(children[children.length - 1].getData()), true);
-						}
+						break;
 					}
-					break;
-				}
-				case SWT.TRAVERSE_ARROW_NEXT: {
-					Control[] children = control.getChildren();
-					if (children.length > 0) {
-						boolean selected = false;
-						for (int i = 0; i < children.length; i++) {
-							ControlListItem item = (ControlListItem) children[i];
-							if (item.isSelected()) {
-								selected = true;
-								if (i < children.length - 1) {
-									setSelection(new StructuredSelection(children[i + 1].getData()), true);
+					case SWT.TRAVERSE_ARROW_NEXT: {
+						Control[] children = control.getChildren();
+						if (children.length > 0) {
+							boolean selected = false;
+							for (int i = 0; i < children.length; i++) {
+								ControlListItem item = (ControlListItem) children[i];
+								if (item.isSelected()) {
+									selected = true;
+									if (i < children.length - 1) {
+										setSelection(new StructuredSelection(children[i + 1].getData()), true);
+									}
+									break;
 								}
-								break;
+							}
+							if (!selected) {
+								setSelection(new StructuredSelection(children[0].getData()), true);
 							}
 						}
-						if (!selected) {
-							setSelection(new StructuredSelection(children[0].getData()), true);
-						}
+						break;
 					}
-					break;
-				}
-				default:
-					handleEvent = false;
-					event.doit = true;
-					Control control = ControlListViewer.this.control;
-					Shell shell = control.getShell();
-					while (control != null) {
-						if (control.traverse(event.detail)) {
-							break;
+					default:
+						handleEvent = false;
+						event.doit = true;
+						Control control = ControlListViewer.this.control;
+						Shell shell = control.getShell();
+						while (control != null) {
+							if (control.traverse(event.detail) || !event.doit || control == shell) {
+								break;
+							}
+							control = control.getParent();
 						}
-						if (!event.doit || control == shell) {
-							break;
-						}
-						control = control.getParent();
-					}
-					handleEvent = true;
-					break;
+						handleEvent = true;
+						break;
 				}
 			}
 		});
@@ -192,7 +192,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		ViewerComparator sorter = getComparator();
 
 		// Use a Set in case we are getting something added that exists
-		Set<Object> newItems = new HashSet<Object>(elements.length);
+		Set<Object> newItems = new HashSet<>(elements.length);
 
 		Control[] existingChildren = control.getChildren();
 		for (Control element : existingChildren) {
@@ -267,6 +267,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 //			}
 //		});
 		item.setIndexListener(new ControlListItem.IndexListener() {
+			@Override
 			public void selectNext() {
 				Control[] children = control.getChildren();
 				for (int i = 0; i < children.length; i++) {
@@ -279,6 +280,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 				}
 			}
 
+			@Override
 			public void selectPrevious() {
 				Control[] children = control.getChildren();
 				for (int i = 0; i < children.length; i++) {
@@ -291,11 +293,13 @@ public abstract class ControlListViewer extends StructuredViewer {
 				}
 			}
 
+			@Override
 			public void select() {
 				setSelection(new StructuredSelection(item.getData()));
 				setFocus();
 			}
 
+			@Override
 			public void open() {
 				handleOpen();
 			}
@@ -344,7 +348,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 	@Override
 	protected List<?> getSelectionFromWidget() {
 		Control[] children = control.getChildren();
-		ArrayList<Object> selection = new ArrayList<Object>(children.length);
+		ArrayList<Object> selection = new ArrayList<>(children.length);
 		for (Control child : children) {
 			ControlListItem item = (ControlListItem) child;
 			if (item.isSelected() && item.getData() != null) {
@@ -452,7 +456,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 	public void setFocus() {
 		Control[] children = control.getChildren();
 		if (children.length > 0) {
-			// causes the item's tool bar to get focus when clicked which is undesirable 
+			// causes the item's tool bar to get focus when clicked which is undesirable
 //			for (Control element : children) {
 //				ControlListItem item = (ControlListItem) element;
 //				if (item.isSelected()) {

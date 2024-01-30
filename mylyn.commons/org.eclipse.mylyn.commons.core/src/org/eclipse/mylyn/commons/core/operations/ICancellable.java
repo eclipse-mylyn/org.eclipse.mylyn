@@ -25,6 +25,6 @@ public interface ICancellable {
 	 * 
 	 * @since 3.7
 	 */
-	public abstract void abort();
+	void abort();
 
 }

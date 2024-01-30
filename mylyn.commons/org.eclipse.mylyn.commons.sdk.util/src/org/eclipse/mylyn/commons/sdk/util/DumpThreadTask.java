@@ -24,12 +24,12 @@ public class DumpThreadTask extends TimerTask {
 
 	public DumpThreadTask(String testName) {
 		this.testName = testName;
-		this.testThread = Thread.currentThread();
+		testThread = Thread.currentThread();
 	}
 
 	@Override
 	public void run() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(MessageFormat.format("Test {0} is taking too long:\n", testName));
 		Map<Thread, StackTraceElement[]> traces = Thread.getAllStackTraces();
 		for (Map.Entry<Thread, StackTraceElement[]> entry : traces.entrySet()) {

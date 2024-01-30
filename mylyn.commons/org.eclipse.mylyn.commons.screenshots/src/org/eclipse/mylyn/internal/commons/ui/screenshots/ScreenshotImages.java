@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Hiroyuki Inaba and others. 
+ * Copyright (c) 2009, 2011 Hiroyuki Inaba and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -112,7 +112,7 @@ public class ScreenshotImages {
 			throw new MalformedURLException();
 		}
 
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		buffer.append('/');
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());

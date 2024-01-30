@@ -19,8 +19,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 
 /**
- * A notification. Each notification has an associated <code>eventId</code> that identifies the type of the
- * notification.
+ * A notification. Each notification has an associated <code>eventId</code> that identifies the type of the notification.
  * 
  * @author Rob Elves
  * @author Mik Kersten
@@ -35,6 +34,7 @@ public abstract class AbstractNotification implements Comparable<AbstractNotific
 		this.eventId = eventId;
 	}
 
+	@Override
 	public int compareTo(AbstractNotification o) {
 		if (o == null) {
 			return 1;
@@ -53,8 +53,8 @@ public abstract class AbstractNotification implements Comparable<AbstractNotific
 	public abstract String getLabel();
 
 	/**
-	 * Returns a token that identifies correlated notifications, e.g. all notifications resulting from a refresh
-	 * operation. Returns <code>null</code> by default.
+	 * Returns a token that identifies correlated notifications, e.g. all notifications resulting from a refresh operation. Returns
+	 * <code>null</code> by default.
 	 * 
 	 * @return any object; null, if no token is specified
 	 */

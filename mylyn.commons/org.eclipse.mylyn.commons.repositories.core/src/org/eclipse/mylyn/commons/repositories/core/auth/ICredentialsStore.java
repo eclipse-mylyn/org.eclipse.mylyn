@@ -21,32 +21,32 @@ import java.io.IOException;
  */
 public interface ICredentialsStore {
 
-	public void clear();
+	void clear();
 
-	public void flush() throws IOException;
+	void flush() throws IOException;
 
-	public String get(String key, String def);
+	String get(String key, String def);
 
-	public boolean getBoolean(String key, boolean def);
+	boolean getBoolean(String key, boolean def);
 
-	public byte[] getByteArray(String key, byte[] def);
+	byte[] getByteArray(String key, byte[] def);
 
-	public String[] keys();
+	String[] keys();
 
-	public void put(String key, String value, boolean encrypt);
+	void put(String key, String value, boolean encrypt);
 
-	public void put(String key, String value, boolean encrypt, boolean persist);
+	void put(String key, String value, boolean encrypt, boolean persist);
 
-	public void putBoolean(String key, boolean value, boolean encrypt);
+	void putBoolean(String key, boolean value, boolean encrypt);
 
-	public void putByteArray(String key, byte[] value, boolean encrypt);
+	void putByteArray(String key, byte[] value, boolean encrypt);
 
-	public void remove(String key);
+	void remove(String key);
 
-	public void copyTo(ICredentialsStore target);
+	void copyTo(ICredentialsStore target);
 
 	/**
 	 * Test whether this store is available for reading and writing. Throws an {@link UnavailableException} if not
 	 */
-	public void testAvailability() throws UnavailableException;
+	void testAvailability() throws UnavailableException;
 }

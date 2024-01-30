@@ -34,9 +34,9 @@ public class CompositeSyncImageDescriptor extends CompositeImageDescriptor {
 	static int WIDTH;
 
 	public CompositeSyncImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
-		this.base = getImageData(icon);
-		this.background = getImageData(CommonImages.OVERLAY_WHITE);
-		this.size = new Point(background.width, background.height);
+		base = getImageData(icon);
+		background = getImageData(CommonImages.OVERLAY_WHITE);
+		size = new Point(background.width, background.height);
 		this.fillBackground = fillBackground;
 	}
 

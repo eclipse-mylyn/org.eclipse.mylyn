@@ -49,9 +49,9 @@ public class Identity implements IIdentity {
 
 		private boolean cancelled;
 
-		private final AtomicReference<Throwable> futureException = new AtomicReference<Throwable>();
+		private final AtomicReference<Throwable> futureException = new AtomicReference<>();
 
-		private final AtomicReference<T> futureResult = new AtomicReference<T>();
+		private final AtomicReference<T> futureResult = new AtomicReference<>();
 
 		private final CountDownLatch resultLatch = new CountDownLatch(1);
 
@@ -59,16 +59,19 @@ public class Identity implements IIdentity {
 			super(name);
 		}
 
+		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
-			this.cancelled = true;
+			cancelled = true;
 			return this.cancel();
 		}
 
+		@Override
 		public T get() throws InterruptedException, ExecutionException {
 			resultLatch.await();
 			return getFutureResult();
 		}
 
+		@Override
 		public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 			if (!resultLatch.await(timeout, unit)) {
 				throw new TimeoutException();
@@ -76,10 +79,12 @@ public class Identity implements IIdentity {
 			return getFutureResult();
 		}
 
+		@Override
 		public boolean isCancelled() {
-			return this.cancelled;
+			return cancelled;
 		}
 
+		@Override
 		public boolean isDone() {
 			return getResult() != null;
 		}
@@ -124,22 +129,27 @@ public class Identity implements IIdentity {
 			this.result = result;
 		}
 
+		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
 			return true;
 		}
 
+		@Override
 		public T get() throws InterruptedException, ExecutionException {
 			return result;
 		}
 
+		@Override
 		public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 			return result;
 		}
 
+		@Override
 		public boolean isCancelled() {
 			return false;
 		}
 
+		@Override
 		public boolean isDone() {
 			return true;
 		}
@@ -161,24 +171,28 @@ public class Identity implements IIdentity {
 
 	public Identity(IdentityModel model) {
 		this.model = model;
-		this.id = UUID.randomUUID();
-		this.accounts = new CopyOnWriteArraySet<Account>();
-		this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+		id = UUID.randomUUID();
+		accounts = new CopyOnWriteArraySet<>();
+		listeners = new CopyOnWriteArrayList<>();
 	}
 
+	@Override
 	public void addAccount(Account account) {
 		accounts.add(account);
 		refreshProfile = true;
 	}
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
 	public Account[] getAccounts() {
 		return accounts.toArray(new Account[accounts.size()]);
 	}
 
+	@Override
 	public Account getAccountById(String id) {
 		if (id == null) {
 			return null;
@@ -191,6 +205,7 @@ public class Identity implements IIdentity {
 		return null;
 	}
 
+	@Override
 	public Account getAccountByKind(String kind) {
 		if (kind == null) {
 			return null;
@@ -203,14 +218,16 @@ public class Identity implements IIdentity {
 		return null;
 	}
 
+	@Override
 	public String[] getAliases() {
-		Set<String> aliases = new HashSet<String>(accounts.size());
+		Set<String> aliases = new HashSet<>(accounts.size());
 		for (Account account : accounts) {
 			aliases.add(account.getId());
 		}
 		return aliases.toArray(new String[aliases.size()]);
 	}
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -223,23 +240,26 @@ public class Identity implements IIdentity {
 		return getAccountById(id) != null;
 	}
 
+	@Override
 	public void removeAccount(Account account) {
 		accounts.remove(account);
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		listeners.remove(listener);
 	}
 
+	@Override
 	public synchronized Future<IProfileImage> requestImage(final int preferredWidth, final int preferredHeight) {
 		if (images != null) {
 			for (final ProfileImage image : images) {
 				if (image.getWidth() == preferredWidth && image.getHeight() == preferredHeight) {
-					return new FutureResult<IProfileImage>(image);
+					return new FutureResult<>(image);
 				}
 			}
 		}
-		FutureJob<IProfileImage> job = new FutureJob<IProfileImage>(Messages.Identity_Retrieving_Image) {
+		FutureJob<IProfileImage> job = new FutureJob<>(Messages.Identity_Retrieving_Image) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -259,13 +279,14 @@ public class Identity implements IIdentity {
 		return job;
 	}
 
+	@Override
 	public Future<IProfile> requestProfile() {
 		if (profile != null && !refreshProfile) {
-			return new FutureResult<IProfile>(profile);
+			return new FutureResult<>(profile);
 		}
 
 		refreshProfile = false;
-		FutureJob<IProfile> job = new FutureJob<IProfile>(Messages.Identity_Retrieving_Profile) {
+		FutureJob<IProfile> job = new FutureJob<>(Messages.Identity_Retrieving_Profile) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -293,7 +314,7 @@ public class Identity implements IIdentity {
 
 	protected synchronized void addImage(ProfileImage image) {
 		if (images == null) {
-			images = new ArrayList<ProfileImage>();
+			images = new ArrayList<>();
 		}
 		images.add(image);
 		firePropertyChangeEvent("image", null, image); //$NON-NLS-1$

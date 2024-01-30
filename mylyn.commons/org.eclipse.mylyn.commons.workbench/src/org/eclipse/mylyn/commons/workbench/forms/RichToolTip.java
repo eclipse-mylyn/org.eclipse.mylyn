@@ -88,16 +88,13 @@ public abstract class RichToolTip extends GradientToolTip {
 	}
 
 	private Rectangle getBounds(Widget widget) {
-		if (widget instanceof ToolItem) {
-			ToolItem w = (ToolItem) widget;
+		if (widget instanceof ToolItem w) {
 			return w.getBounds();
 		}
-		if (widget instanceof TableItem) {
-			TableItem w = (TableItem) widget;
+		if (widget instanceof TableItem w) {
 			return w.getBounds();
 		}
-		if (widget instanceof TreeItem) {
-			TreeItem w = (TreeItem) widget;
+		if (widget instanceof TreeItem w) {
 			return w.getBounds();
 		}
 		return null;
@@ -125,16 +122,13 @@ public abstract class RichToolTip extends GradientToolTip {
 	protected Widget getTipWidget(Event event) {
 		Point widgetPosition = new Point(event.x, event.y);
 		Widget widget = event.widget;
-		if (widget instanceof ToolBar) {
-			ToolBar w = (ToolBar) widget;
+		if (widget instanceof ToolBar w) {
 			return w.getItem(widgetPosition);
 		}
-		if (widget instanceof Table) {
-			Table w = (Table) widget;
+		if (widget instanceof Table w) {
 			return w.getItem(widgetPosition);
 		}
-		if (widget instanceof Tree) {
-			Tree w = (Tree) widget;
+		if (widget instanceof Tree w) {
 			return w.getItem(widgetPosition);
 		}
 

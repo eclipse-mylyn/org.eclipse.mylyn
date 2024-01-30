@@ -29,16 +29,15 @@ import org.eclipse.ui.handlers.HandlerUtil;
 public abstract class AbstractTextViewerHandler extends AbstractHandler {
 
 	/**
-	 * get the {@link ITextViewer} for the given event. Depends on the <tt>activeFocusControl</tt> event variable being
-	 * an instanceof {@link StyledText}. The {@link StyledText#getData(String))} is expected to have a value for one of
+	 * get the {@link ITextViewer} for the given event. Depends on the <tt>activeFocusControl</tt> event variable being an instanceof
+	 * {@link StyledText}. The {@link StyledText#getData(String))} is expected to have a value for one of
 	 * <code>ITextViewer.class.getName()</code> or <code>ISourceViewer.class.getName()</code>.
 	 * 
 	 * @return the text viewer or null if it cannot be found
 	 */
 	protected ITextViewer getTextViewer(ExecutionEvent event) throws ExecutionException {
 		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
-		if (activeFocusControl instanceof StyledText) {
-			StyledText textWidget = (StyledText) activeFocusControl;
+		if (activeFocusControl instanceof StyledText textWidget) {
 			ITextViewer viewer = (ITextViewer) textWidget.getData(ITextViewer.class.getName());
 			if (viewer == null) {
 				viewer = (ITextViewer) textWidget.getData(ISourceViewer.class.getName());

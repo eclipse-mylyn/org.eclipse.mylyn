@@ -54,26 +54,26 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private static MonitorUiPlugin INSTANCE;
 
-	private final List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
+	private final List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<>();
 
 	/**
 	 * TODO: this could be merged with context interaction events rather than requiring update from the monitor.
 	 */
-	private final List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
+	private final List<IInteractionEventListener> interactionListeners = new ArrayList<>();
 
 	private ActivityContextManager activityContextManager;
 
-	private final List<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
+	private final List<AbstractUserActivityMonitor> monitors = new ArrayList<>();
 
-	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
+	protected Set<IPartListener> partListeners = new HashSet<>();
 
-	protected Set<IPageListener> pageListeners = new HashSet<IPageListener>();
+	protected Set<IPageListener> pageListeners = new HashSet<>();
 
-	protected Set<IPerspectiveListener> perspectiveListeners = new HashSet<IPerspectiveListener>();
+	protected Set<IPerspectiveListener> perspectiveListeners = new HashSet<>();
 
-	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
+	protected Set<ISelectionListener> postSelectionListeners = new HashSet<>();
 
-	private final Set<IWorkbenchWindow> monitoredWindows = new HashSet<IWorkbenchWindow>();
+	private final Set<IWorkbenchWindow> monitoredWindows = new HashSet<>();
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]"; //$NON-NLS-1$
 
@@ -81,33 +81,33 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
 
-	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
-		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)
-					|| event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-				updateActivityTimout();
-			} else if (event.getProperty().equals(ACTIVITY_TRACKING_ENABLED)) {
-				setActivityTrackingEnabled(getPreferenceStore().getBoolean(ACTIVITY_TRACKING_ENABLED));
-			}
+	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = event -> {
+		if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)
+				|| event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+			updateActivityTimout();
+		} else if (event.getProperty().equals(ACTIVITY_TRACKING_ENABLED)) {
+			setActivityTrackingEnabled(getPreferenceStore().getBoolean(ACTIVITY_TRACKING_ENABLED));
 		}
 	};
 
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
+		@Override
 		public void windowActivated(IWorkbenchWindow window) {
 			// ignore
 		}
 
+		@Override
 		public void windowDeactivated(IWorkbenchWindow window) {
 			// ignore
 		}
 
+		@Override
 		public void windowOpened(IWorkbenchWindow window) {
 			if (getWorkbench().isClosing()) {
 				return;
 			}
 
-			if (window instanceof IMonitoredWindow) {
-				IMonitoredWindow awareWindow = (IMonitoredWindow) window;
+			if (window instanceof IMonitoredWindow awareWindow) {
 				if (!awareWindow.isMonitored()) {
 					return;
 				}
@@ -116,6 +116,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			addListenersToWindow(window);
 		}
 
+		@Override
 		public void windowClosed(IWorkbenchWindow window) {
 			removeListenersFromWindow(window);
 			if (window == launchingWorkbenchWindow) {
@@ -138,7 +139,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
 		getPreferenceStore().setDefault(ACTIVITY_TRACKING_ENABLED, false);
 
-		this.activityContextManager = new ActivityContextManager(new ArrayList<AbstractUserActivityMonitor>(0));
+		activityContextManager = new ActivityContextManager(new ArrayList<>(0));
 
 		// delay initialization until workbench is realized
 		UIJob job = new UIJob("Mylyn Monitor Startup") { //$NON-NLS-1$
@@ -274,7 +275,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		private static void initExtensions(Collection<AbstractUserActivityMonitor> monitors) {
 			if (!extensionsRead) {
-				ExtensionPointReader<AbstractUserActivityMonitor> reader = new ExtensionPointReader<AbstractUserActivityMonitor>(
+				ExtensionPointReader<AbstractUserActivityMonitor> reader = new ExtensionPointReader<>(
 						ID_PLUGIN, EXTENSION_ID_USER, ELEMENT_ACTIVITY_TIMER, AbstractUserActivityMonitor.class);
 				reader.read();
 				List<AbstractUserActivityMonitor> items = reader.getItems();
@@ -398,7 +399,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void setActivityTrackingEnabled(boolean b) {
-		this.activityTrackingEnabled = b;
+		activityTrackingEnabled = b;
 	}
 
 	public boolean isActivityTrackingEnabled() {

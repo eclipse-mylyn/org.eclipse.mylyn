@@ -29,10 +29,12 @@ public class IdentityService extends AbstractIdentityService {
 		model.addConnector(new GravatarConnector());
 	}
 
+	@Override
 	public IIdentity getIdentity(Account account) {
 		return model.getIdentity(account);
 	}
 
+	@Override
 	public IIdentity[] getIdentities() {
 		return model.getIdentities();
 	}

@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.notification.RunNotifier;
@@ -68,7 +69,7 @@ public class ManagedSuite extends Suite {
 	}
 
 	private static Class<?>[] getSuiteClasses(Class<?> klass, Class<?>[] classes) throws SecurityException {
-		final List<Class<?>> suiteClassList = new ArrayList<Class<?>>();
+		final List<Class<?>> suiteClassList = new ArrayList<>();
 		for (Annotation annotation : klass.getAnnotations()) {
 			if (annotation.annotationType() == TestConfigurationProperty.class) {
 				if (getTestConfiguration() == null) {
@@ -81,9 +82,7 @@ public class ManagedSuite extends Suite {
 				}
 			} else if (annotation.annotationType() == SuiteClasses.class) {
 				SuiteClasses suiteClasses = (SuiteClasses) annotation;
-				for (Class<?> suiteClass : suiteClasses.value()) {
-					suiteClassList.add(suiteClass);
-				}
+				Collections.addAll(suiteClassList, suiteClasses.value());
 			}
 		}
 		if (getTestConfiguration() == null) {

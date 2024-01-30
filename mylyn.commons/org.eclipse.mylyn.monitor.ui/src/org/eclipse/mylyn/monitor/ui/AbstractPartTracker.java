@@ -33,14 +33,19 @@ public abstract class AbstractPartTracker implements IPartListener {
 		MonitorUiPlugin.getDefault().removeWindowPartListener(this);
 	}
 
+	@Override
 	public abstract void partActivated(IWorkbenchPart part);
 
+	@Override
 	public abstract void partBroughtToTop(IWorkbenchPart part);
 
+	@Override
 	public abstract void partClosed(IWorkbenchPart part);
 
+	@Override
 	public abstract void partDeactivated(IWorkbenchPart part);
 
+	@Override
 	public abstract void partOpened(IWorkbenchPart part);
 
 }

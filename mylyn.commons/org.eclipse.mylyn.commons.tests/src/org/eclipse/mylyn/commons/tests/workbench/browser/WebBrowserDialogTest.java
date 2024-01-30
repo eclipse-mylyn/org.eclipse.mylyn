@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.commons.tests.workbench.browser;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
@@ -24,6 +22,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import junit.framework.TestCase;
 
 public class WebBrowserDialogTest extends TestCase {
 

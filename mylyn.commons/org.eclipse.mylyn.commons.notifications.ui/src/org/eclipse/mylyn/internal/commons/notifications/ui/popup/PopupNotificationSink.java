@@ -44,9 +44,9 @@ public class PopupNotificationSink extends NotificationSink {
 
 	private static final boolean runSystem = true;
 
-	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<Object, Object>();
+	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<>();
 
-	private final Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
+	private final Set<AbstractNotification> notifications = new HashSet<>();
 
 	private final Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
@@ -57,33 +57,30 @@ public class PopupNotificationSink extends NotificationSink {
 				if (Platform.isRunning() && PlatformUI.getWorkbench() != null
 						&& PlatformUI.getWorkbench().getDisplay() != null
 						&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+						collectNotifications();
 
-						public void run() {
-							collectNotifications();
-
-							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-								List<AbstractNotification> notifications = popup.getNotifications();
-								for (AbstractNotification notification : notifications) {
-									if (notification.getToken() != null) {
-										cancelledTokens.put(notification.getToken(), null);
-									}
+						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
+							List<AbstractNotification> notifications = popup.getNotifications();
+							for (AbstractNotification notification : notifications) {
+								if (notification.getToken() != null) {
+									cancelledTokens.put(notification.getToken(), null);
 								}
 							}
+						}
 
-							for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-								AbstractNotification notification = it.next();
-								if (notification.getToken() != null
-										&& cancelledTokens.containsKey(notification.getToken())) {
-									it.remove();
-								}
+						for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+							AbstractNotification notification = it.next();
+							if (notification.getToken() != null
+									&& cancelledTokens.containsKey(notification.getToken())) {
+								it.remove();
 							}
+						}
 
-							synchronized (PopupNotificationSink.class) {
-								if (currentlyNotifying.size() > 0) {
+						synchronized (PopupNotificationSink.class) {
+							if (currentlyNotifying.size() > 0) {
 //										popup.close();
-									showPopup();
-								}
+								showPopup();
 							}
 						}
 					});
@@ -153,7 +150,7 @@ public class PopupNotificationSink extends NotificationSink {
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new NotificationPopup(shell);
 		popup.setFadingEnabled(isAnimationsEnabled());
-		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
+		List<AbstractNotification> toDisplay = new ArrayList<>(currentlyNotifying);
 		Collections.sort(toDisplay);
 		popup.setContents(toDisplay);
 		cleanNotified();

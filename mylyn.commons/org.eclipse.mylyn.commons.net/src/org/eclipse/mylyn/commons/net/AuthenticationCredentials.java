@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.commons.net;
 
+import java.util.Objects;
+
 /**
  * Provides a user name and password.
  * 
@@ -32,10 +34,7 @@ public class AuthenticationCredentials {
 	 *            the password, must not be null
 	 */
 	public AuthenticationCredentials(String userName, String password) {
-		if (userName == null) {
-			throw new IllegalArgumentException();
-		}
-		if (password == null) {
+		if ((userName == null) || (password == null)) {
 			throw new IllegalArgumentException();
 		}
 
@@ -53,11 +52,7 @@ public class AuthenticationCredentials {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
+		return Objects.hash(password, userName);
 	}
 
 	@Override
@@ -65,25 +60,14 @@ public class AuthenticationCredentials {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		final AuthenticationCredentials other = (AuthenticationCredentials) obj;
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
+		if (!Objects.equals(password, other.password)) {
 			return false;
 		}
-		if (userName == null) {
-			if (other.userName != null) {
-				return false;
-			}
-		} else if (!userName.equals(other.userName)) {
+		if (!Objects.equals(userName, other.userName)) {
 			return false;
 		}
 		return true;

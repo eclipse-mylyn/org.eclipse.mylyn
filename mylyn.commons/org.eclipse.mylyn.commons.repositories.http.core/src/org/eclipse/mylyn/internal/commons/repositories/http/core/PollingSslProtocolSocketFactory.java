@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -44,13 +45,14 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 	}
 
 	public PollingSslProtocolSocketFactory(SslSupport sslSupport) {
-		this.defaultSslSupport = sslSupport;
+		defaultSslSupport = sslSupport;
 	}
 
+	@Override
 	public Socket connectSocket(Socket sock, InetSocketAddress remoteAddress, InetSocketAddress localAddress,
 			HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		Assert.isNotNull(params);
-		final Socket socket = (sock != null) ? sock : createSocket(params);
+		final Socket socket = sock != null ? sock : createSocket(params);
 
 		if (localAddress != null) {
 			socket.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));
@@ -68,11 +70,13 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 		}
 	}
 
+	@Override
 	public Socket createLayeredSocket(Socket socket, String target, int port, boolean autoClose)
 			throws IOException, UnknownHostException {
 		return NetUtil.configureSocket(getDefaultSocketFactory().createSocket(socket, target, port, autoClose));
 	}
 
+	@Override
 	public Socket createSocket(HttpParams params) throws IOException {
 		Assert.isNotNull(params);
 		return NetUtil.configureSocket(getSslSupport(params).getSocketFactory().createSocket());
@@ -83,18 +87,11 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		PollingSslProtocolSocketFactory other = (PollingSslProtocolSocketFactory) obj;
-		if (defaultSslSupport == null) {
-			if (other.defaultSslSupport != null) {
-				return false;
-			}
-		} else if (!defaultSslSupport.equals(other.defaultSslSupport)) {
+		if (!Objects.equals(defaultSslSupport, other.defaultSslSupport)) {
 			return false;
 		}
 		return true;
@@ -106,12 +103,10 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((defaultSslSupport == null) ? 0 : defaultSslSupport.hashCode());
-		return result;
+		return Objects.hash(defaultSslSupport);
 	}
 
+	@Override
 	public boolean isSecure(Socket socket) throws IllegalArgumentException {
 		Assert.isNotNull(socket);
 		if (!(socket instanceof SSLSocket)) {
@@ -125,7 +120,7 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 
 	private SslSupport getSslSupport(HttpParams params) {
 		SslSupport sslSupport = (SslSupport) params.getParameter(SslSupport.class.getName());
-		return (sslSupport != null) ? sslSupport : defaultSslSupport;
+		return sslSupport != null ? sslSupport : defaultSslSupport;
 	}
 
 }

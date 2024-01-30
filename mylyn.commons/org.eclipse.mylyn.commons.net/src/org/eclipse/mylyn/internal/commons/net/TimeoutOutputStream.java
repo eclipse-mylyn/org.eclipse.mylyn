@@ -18,12 +18,11 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 
 /**
- * Wraps an output stream that blocks indefinitely to simulate timeouts on write(), flush(), and close(). The resulting
- * output stream is buffered and supports retrying operations that failed due to an InterruptedIOException. Supports
- * resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying stream
- * does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
- * resuming. Check the bytesTransferred field to determine how much of the operation completed; conversely, at what
- * point to resume.
+ * Wraps an output stream that blocks indefinitely to simulate timeouts on write(), flush(), and close(). The resulting output stream is
+ * buffered and supports retrying operations that failed due to an InterruptedIOException. Supports resuming partially completed operations
+ * after an InterruptedIOException REGARDLESS of whether the underlying stream does unless the underlying stream itself generates
+ * InterruptedIOExceptions in which case it must also support resuming. Check the bytesTransferred field to determine how much of the
+ * operation completed; conversely, at what point to resume.
  */
 public class TimeoutOutputStream extends FilterOutputStream {
 	// unsynchronized variables
@@ -55,33 +54,28 @@ public class TimeoutOutputStream extends FilterOutputStream {
 	 * @param out
 	 *            the underlying input stream
 	 * @param bufferSize
-	 *            the buffer size in bytes; should be large enough to mitigate Thread synchronization and context
-	 *            switching overhead
+	 *            the buffer size in bytes; should be large enough to mitigate Thread synchronization and context switching overhead
 	 * @param writeTimeout
-	 *            the number of milliseconds to block for a write() or flush() before throwing an
-	 *            InterruptedIOException; 0 blocks indefinitely
+	 *            the number of milliseconds to block for a write() or flush() before throwing an InterruptedIOException; 0 blocks
+	 *            indefinitely
 	 * @param closeTimeout
-	 *            the number of milliseconds to block for a close() before throwing an InterruptedIOException; 0 blocks
-	 *            indefinitely, -1 closes the stream in the background
+	 *            the number of milliseconds to block for a close() before throwing an InterruptedIOException; 0 blocks indefinitely, -1
+	 *            closes the stream in the background
 	 */
 	public TimeoutOutputStream(OutputStream out, int bufferSize, long writeTimeout, long closeTimeout) {
 		super(new BufferedOutputStream(out, bufferSize));
 		this.writeTimeout = writeTimeout;
 		this.closeTimeout = closeTimeout;
-		this.iobuffer = new byte[bufferSize];
-		thread = new Thread(new Runnable() {
-			public void run() {
-				runThread();
-			}
-		}, "TimeoutOutputStream");//$NON-NLS-1$
+		iobuffer = new byte[bufferSize];
+		thread = new Thread((Runnable) this::runThread, "TimeoutOutputStream");//$NON-NLS-1$
 		thread.setDaemon(true);
 		thread.start();
 	}
 
 	/**
-	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it
-	 * holds an implicit lock on a system resoure (such as a file) while it is open. Closing a stream may take time if
-	 * the underlying stream is still servicing a previous request.
+	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it holds an implicit
+	 * lock on a system resoure (such as a file) while it is open. Closing a stream may take time if the underlying stream is still
+	 * servicing a previous request.
 	 * 
 	 * @throws InterruptedIOException
 	 *             if the timeout expired, bytesTransferred will reflect the number of bytes flushed from the buffer

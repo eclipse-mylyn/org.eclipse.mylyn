@@ -36,7 +36,7 @@ class DefaultHttpOperation<T> extends CommonHttpOperation<T> {
 
 	public T run(IOperationMonitor monitor) throws IOException {
 		CommonHttpResponse response = execute(request, monitor);
-		return (processor.autoRelease()) ? processAndRelease(response, monitor) : process(response, monitor);
+		return processor.autoRelease() ? processAndRelease(response, monitor) : process(response, monitor);
 	}
 
 	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException {
@@ -51,10 +51,7 @@ class DefaultHttpOperation<T> extends CommonHttpOperation<T> {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
-		} catch (IOException e) {
-			response.release(monitor);
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			response.release(monitor);
 			throw e;
 		}

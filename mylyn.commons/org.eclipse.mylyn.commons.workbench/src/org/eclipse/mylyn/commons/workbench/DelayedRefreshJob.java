@@ -41,7 +41,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	private static final int NOT_SCHEDULED = -1;
 
-	private final LinkedHashSet<Object> queue = new LinkedHashSet<Object>();
+	private final LinkedHashSet<Object> queue = new LinkedHashSet<>();
 
 	private long scheduleTime = NOT_SCHEDULED;
 

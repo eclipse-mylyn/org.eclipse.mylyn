@@ -60,14 +60,7 @@ public abstract class XmlRpcOperation<T> {
 
 			try {
 				return executeCall(monitor, method, parameters);
-			} catch (XmlRpcLoginException e) {
-				try {
-					client.getLocation().requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
-				} catch (UnsupportedRequestException ignored) {
-					throw e;
-				}
-				lastException = e;
-			} catch (XmlRpcPermissionDeniedException e) {
+			} catch (XmlRpcLoginException | XmlRpcPermissionDeniedException e) {
 				try {
 					client.getLocation().requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
@@ -99,9 +92,8 @@ public abstract class XmlRpcOperation<T> {
 	}
 
 	private void checkForException(Object result) throws NumberFormatException, XmlRpcException {
-		if (result instanceof Map<?, ?>) {
-			Map<?, ?> exceptionData = (Map<?, ?>) result;
-			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$ 
+		if (result instanceof Map<?, ?> exceptionData) {
+			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) { //$NON-NLS-1$ //$NON-NLS-2$
 				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()), //$NON-NLS-1$
 						(String) exceptionData.get("faultString")); //$NON-NLS-1$
 			} else if (exceptionData.containsKey("title")) { //$NON-NLS-1$
@@ -136,10 +128,10 @@ public abstract class XmlRpcOperation<T> {
 			handleAuthenticationException(e.code, e.getAuthScheme());
 			// if not handled, re-throw exception
 			throw e;
-		} catch (XmlRpcIllegalContentTypeException e) {
+		} catch (XmlRpcIllegalContentTypeException | OperationCanceledException e) {
 			throw e;
 		} catch (XmlRpcException e) {
-			// XXX work-around for https://trac-hacks.org/ticket/5848 
+			// XXX work-around for https://trac-hacks.org/ticket/5848
 			if ("XML_RPC privileges are required to perform this operation".equals(e.getMessage()) //$NON-NLS-1$
 					|| e.code == XML_FAULT_PERMISSION_DENIED) {
 				handleAuthenticationException(HttpStatus.SC_FORBIDDEN, null);
@@ -150,8 +142,6 @@ public abstract class XmlRpcOperation<T> {
 			} else {
 				throw new XmlRpcRemoteException(e);
 			}
-		} catch (OperationCanceledException e) {
-			throw e;
 		} catch (Exception e) {
 			throw new XmlRpcException("Unexpected exception", e); //$NON-NLS-1$
 		}
@@ -176,7 +166,7 @@ public abstract class XmlRpcOperation<T> {
 	protected boolean handleAuthenticationException(int code, AuthScheme authScheme) throws XmlRpcException {
 		if (code == HttpStatus.SC_UNAUTHORIZED) {
 			if (CommonXmlRpcClient.DEBUG_AUTH) {
-				System.err.println(client.getLocation().getUrl() + ": Unauthorized (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				System.err.println(client.getLocation().getUrl() + ": Unauthorized (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			client.digestScheme = null;
 			XmlRpcLoginException exception = new XmlRpcLoginException();
@@ -184,13 +174,13 @@ public abstract class XmlRpcOperation<T> {
 			throw exception;
 		} else if (code == HttpStatus.SC_FORBIDDEN) {
 			if (CommonXmlRpcClient.DEBUG_AUTH) {
-				System.err.println(client.getLocation().getUrl() + ": Forbidden (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				System.err.println(client.getLocation().getUrl() + ": Forbidden (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			client.digestScheme = null;
 			throw new XmlRpcPermissionDeniedException();
 		} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
 			if (CommonXmlRpcClient.DEBUG_AUTH) {
-				System.err.println(client.getLocation().getUrl() + ": Proxy authentication required (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				System.err.println(client.getLocation().getUrl() + ": Proxy authentication required (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			throw new XmlRpcProxyAuthenticationException();
 		}

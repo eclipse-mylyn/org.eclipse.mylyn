@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 public class UiTestUtil {
 
 	public static int countItemsInTree(Tree tree) {
-		List<TreeItem> collectedItems = new ArrayList<TreeItem>();
+		List<TreeItem> collectedItems = new ArrayList<>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		return collectedItems.size();
 	}
@@ -48,9 +48,9 @@ public class UiTestUtil {
 	}
 
 	public static List<Object> getAllData(Tree tree) {
-		List<TreeItem> items = new ArrayList<TreeItem>();
+		List<TreeItem> items = new ArrayList<>();
 		collectTreeItemsInView(tree.getItems(), items);
-		List<Object> dataList = new ArrayList<Object>();
+		List<Object> dataList = new ArrayList<>();
 		for (TreeItem item : items) {
 			dataList.add(item.getData());
 		}

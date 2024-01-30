@@ -17,6 +17,6 @@ package org.eclipse.mylyn.commons.repositories.core;
  */
 public interface IRepositoryLocationChangeListener {
 
-	public abstract void repositoryChanged(RepositoryLocationChangeEvent event);
+	void repositoryChanged(RepositoryLocationChangeEvent event);
 
 }

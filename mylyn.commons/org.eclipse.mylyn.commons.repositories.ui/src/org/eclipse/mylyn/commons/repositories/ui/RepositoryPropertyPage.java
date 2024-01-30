@@ -46,7 +46,7 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 
 	RepositoryLocation getWorkingCopy() {
 		if (workingCopy == null) {
-			RepositoryLocation element = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
+			RepositoryLocation element = getElement().getAdapter(RepositoryLocation.class);
 			workingCopy = new RepositoryLocation(element);
 			// use an in memory credentials store that is backed by the actual credentials store
 			workingCopy.setCredentialsStore(new InMemoryCredentialsStore(workingCopy.getCredentialsStore()));
@@ -54,11 +54,9 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 		return workingCopy;
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		if (adapter == DialogPage.class) {
-			return this;
-		}
-		if (adapter == IPartContainer.class) {
+		if ((adapter == DialogPage.class) || (adapter == IPartContainer.class)) {
 			return this;
 		}
 		return null;

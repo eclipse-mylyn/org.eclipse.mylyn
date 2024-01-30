@@ -31,7 +31,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public abstract class MonitoredOperation<T> extends Operation<T> implements ICancellableOperation {
 
-	private static ThreadLocal<MonitoredOperation<?>> currentOperation = new ThreadLocal<MonitoredOperation<?>>();
+	private static ThreadLocal<MonitoredOperation<?>> currentOperation = new ThreadLocal<>();
 
 	/**
 	 * Returns the operation that is associated with the current thread.
@@ -52,7 +52,7 @@ public abstract class MonitoredOperation<T> extends Operation<T> implements ICan
 		currentOperation.set(operation);
 	}
 
-	private final CopyOnWriteArrayList<ICancellable> listeners = new CopyOnWriteArrayList<ICancellable>();
+	private final CopyOnWriteArrayList<ICancellable> listeners = new CopyOnWriteArrayList<>();
 
 	private final IProgressMonitor monitor;
 
@@ -84,6 +84,7 @@ public abstract class MonitoredOperation<T> extends Operation<T> implements ICan
 		listeners.add(listener);
 	}
 
+	@Override
 	public T call() throws Exception {
 		try {
 			assert MonitoredOperation.getCurrentOperation() == null;

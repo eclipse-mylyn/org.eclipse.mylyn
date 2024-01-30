@@ -17,6 +17,6 @@ package org.eclipse.mylyn.internal.commons.notifications.feed;
  */
 public interface INotificationsFeed {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.notifications.feed"; //$NON-NLS-1$
+	String ID_PLUGIN = "org.eclipse.mylyn.commons.notifications.feed"; //$NON-NLS-1$
 
 }

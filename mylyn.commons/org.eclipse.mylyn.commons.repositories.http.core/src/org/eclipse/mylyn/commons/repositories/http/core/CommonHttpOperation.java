@@ -127,10 +127,7 @@ public abstract class CommonHttpOperation<T> {
 			validate(response, monitor);
 			// success
 			return new CommonHttpResponse(request, response, client.getMonitorThread(), monitor);
-		} catch (IOException e) {
-			HttpUtil.release(request, response, monitor);
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			HttpUtil.release(request, response, monitor);
 			throw e;
 		}

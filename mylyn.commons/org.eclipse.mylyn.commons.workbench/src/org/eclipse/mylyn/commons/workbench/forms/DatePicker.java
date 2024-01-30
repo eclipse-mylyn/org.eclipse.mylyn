@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.dialogs.IInPlaceDialogListener;
-import org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.internal.commons.workbench.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -44,8 +42,8 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
- * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945 see bug# 19945
- * TODO: remove this class when an SWT date picker is added
+ * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945 see bug# 19945 TODO: remove this
+ * class when an SWT date picker is added
  * 
  * @author Bahadir Yagan
  * @author Mik Kersten
@@ -63,7 +61,7 @@ public class DatePicker extends Composite {
 
 	private Calendar date;
 
-	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
+	private final List<SelectionListener> pickerListeners = new LinkedList<>();
 
 	private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
@@ -80,7 +78,7 @@ public class DatePicker extends Composite {
 	public DatePicker(Composite parent, int style, String initialText, boolean includeHours, int selectedHourOfDay) {
 		super(parent, style);
 		this.initialText = initialText;
-		this.includeTimeOfday = includeHours;
+		includeTimeOfday = includeHours;
 		this.selectedHourOfDay = selectedHourOfDay;
 		initialize((style & SWT.FLAT) != 0 ? SWT.FLAT : 0);
 	}
@@ -90,7 +88,7 @@ public class DatePicker extends Composite {
 	}
 
 	public void setDatePattern(String pattern) {
-		this.dateFormat = new SimpleDateFormat(pattern);
+		dateFormat = new SimpleDateFormat(pattern);
 	}
 
 	public void setDateFormat(DateFormat dateFormat) {
@@ -103,7 +101,7 @@ public class DatePicker extends Composite {
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
-		this.setLayout(gridLayout);
+		setLayout(gridLayout);
 
 		dateText = new Text(this, style);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
@@ -177,16 +175,13 @@ public class DatePicker extends Composite {
 
 				final InPlaceDateSelectionDialog dialog = new InPlaceDateSelectionDialog(shell, pickButton, newCalendar,
 						DatePicker.TITLE_DIALOG, includeTimeOfday, selectedHourOfDay);
-				dialog.addEventListener(new IInPlaceDialogListener() {
-
-					public void buttonPressed(InPlaceDialogEvent event) {
-						Calendar selectedCalendar = null;
-						if (event.getReturnCode() == Window.OK && dialog.getDate() != null) {
-							selectedCalendar = newCalendar;
-							selectedCalendar.setTime(dialog.getDate());
-						}
-						dateSelected(event.getReturnCode() == Window.CANCEL, selectedCalendar);
+				dialog.addEventListener(event -> {
+					Calendar selectedCalendar = null;
+					if (event.getReturnCode() == Window.OK && dialog.getDate() != null) {
+						selectedCalendar = newCalendar;
+						selectedCalendar.setTime(dialog.getDate());
 					}
+					dateSelected(event.getReturnCode() == Window.CANCEL, selectedCalendar);
 				});
 				dialog.open();
 			}
@@ -247,7 +242,7 @@ public class DatePicker extends Composite {
 	// dateSelected(false, null);
 	// }
 	// }});
-	//				
+	//
 	// pickerShell.setSize(new Point(240, 180));
 	// pickerShell.setLocation(new Point(x, y));
 	//
@@ -261,17 +256,17 @@ public class DatePicker extends Composite {
 	// public void keyReleased(KeyEvent e) {
 	// }
 	// });
-	//		
+	//
 	// pickerShell.addFocusListener(new FocusListener() {
 	//
 	// public void focusGained(FocusEvent e) {
-	//				
+	//
 	// }
 	//
 	// public void focusLost(FocusEvent e) {
-	//				
+	//
 	// }});
-	//		
+	//
 	// pickerShell.pack();
 	// pickerShell.open();
 	// }
@@ -280,7 +275,7 @@ public class DatePicker extends Composite {
 	protected void dateSelected(boolean canceled, Calendar selectedDate) {
 
 		if (!canceled) {
-			this.date = selectedDate != null ? selectedDate : null;
+			date = selectedDate != null ? selectedDate : null;
 			updateDateText();
 			notifyPickerListeners();
 		}

@@ -345,26 +345,25 @@ public class HtmlStreamTokenizer {
 				String escape = null;
 				for (i = i + 1; i < sb.length(); i++) {
 					ch = sb.charAt(i);
-					if (!Character.isLetterOrDigit(ch) && !(ch == '#' && i == (start + 1))) {
+					if (!Character.isLetterOrDigit(ch) && !(ch == '#' && i == start + 1)) {
 						escape = sb.substring(start + 1, i);
 						break;
 					}
 				}
-				if (i == sb.length() && i != (start + 1)) {
+				if (i == sb.length() && i != start + 1) {
 					escape = sb.substring(start + 1);
 				}
 				if (escape != null) {
 					Character character = parseReference(escape);
-					if (character != null && !((0x0A == character || 0x0D == character || 0x09 == ch)
-							|| (character >= 0x20 && character <= 0xD7FF)
-							|| (character >= 0xE000 && character <= 0xFFFD)
-							|| (character >= 0x10000 && character <= 0x10FFFF))) {
+					if (character != null && !(0x0A == character || 0x0D == character || 0x09 == ch
+							|| character >= 0x20 && character <= 0xD7FF || character >= 0xE000 && character <= 0xFFFD
+							|| character >= 0x10000 && character <= 0x10FFFF)) {
 						// Character is an invalid xml character
 						// http://www.w3.org/TR/REC-xml/#charsets
 						character = null;
 					}
 					if (character != null) {
-						ch = character.charValue();
+						ch = character;
 					} else {
 						// not an HTML escape; rewind
 						i = start;
@@ -404,7 +403,7 @@ public class HtmlStreamTokenizer {
 					// Decimal reference
 					value = Integer.parseInt(s.substring(1));
 				}
-				return Character.valueOf((char) value);
+				return (char) value;
 			} catch (NumberFormatException e) {
 				return null;
 			}
@@ -461,7 +460,7 @@ public class HtmlStreamTokenizer {
 			} else {
 				type = TEXT;
 			}
-			this.value = text;
+			value = text;
 			this.whitespace = whitespace;
 		}
 
@@ -480,9 +479,8 @@ public class HtmlStreamTokenizer {
 		}
 
 		/**
-		 * Returns the token's value. This is an HtmlTag for tokens of type <code>TAG</code> and a StringBuffer for
-		 * tokens of type <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the value is
-		 * <code>null</code>.
+		 * Returns the token's value. This is an HtmlTag for tokens of type <code>TAG</code> and a StringBuffer for tokens of type
+		 * <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the value is <code>null</code>.
 		 */
 		public Object getValue() {
 			return value;
@@ -493,7 +491,7 @@ public class HtmlStreamTokenizer {
 		 */
 		@Override
 		public String toString() {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if (whitespace != null) {
 				sb.append(whitespace);
 			}
@@ -565,7 +563,7 @@ public class HtmlStreamTokenizer {
 	 * 
 	 */
 	static {
-		entities = new HashMap<String, Character>();
+		entities = new HashMap<>();
 		entities.put("nbsp", Character.valueOf('\240')); // no-break //$NON-NLS-1$
 		// space =
 		// non-breaking

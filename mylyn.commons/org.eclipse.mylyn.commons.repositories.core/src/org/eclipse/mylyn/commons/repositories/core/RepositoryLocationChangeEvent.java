@@ -23,7 +23,7 @@ public class RepositoryLocationChangeEvent extends EventObject {
 
 	public enum Type {
 		ALL, CREDENTIALS, PROYX
-	};
+	}
 
 	private static final long serialVersionUID = -8177578930986469693L;
 

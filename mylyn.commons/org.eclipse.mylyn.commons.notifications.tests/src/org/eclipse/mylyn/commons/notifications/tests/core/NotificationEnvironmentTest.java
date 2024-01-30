@@ -75,7 +75,7 @@ public class NotificationEnvironmentTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		installedFeatures = new HashSet<String>();
+		installedFeatures = new HashSet<>();
 		System.setProperty("EnvironmentTest", "2");
 		environment = new NotificationEnvironment() {
 			@Override
@@ -112,7 +112,7 @@ public class NotificationEnvironmentTest extends TestCase {
 	}
 
 	public void testMatchesFrameworkVersion() {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		assertTrue(environment.matches(new StubEntry(values), null));
 
 		values.put("frameworkVersion", "[1.0.0,2.0.0)");
@@ -123,7 +123,7 @@ public class NotificationEnvironmentTest extends TestCase {
 	}
 
 	public void testMatchesRequires() {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		values.put("requires", "org.eclipse.mylyn");
 		assertFalse(environment.matches(new StubEntry(values), null));
 
@@ -132,7 +132,7 @@ public class NotificationEnvironmentTest extends TestCase {
 	}
 
 	public void testMatchesConflicts() {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		values.put("conflicts", "org.eclipse.mylyn");
 		assertTrue(environment.matches(new StubEntry(values), null));
 
@@ -141,7 +141,7 @@ public class NotificationEnvironmentTest extends TestCase {
 	}
 
 	public void testMatchesRequiresConflicts() {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		values.put("requires", "org.eclipse.mylyn");
 		values.put("conflicts", "org.eclipse.cdt");
 		assertFalse(environment.matches(new StubEntry(values), null));
@@ -154,7 +154,7 @@ public class NotificationEnvironmentTest extends TestCase {
 	}
 
 	public void testMatchesFilter() {
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		values.put("filter", "(EnvironmentTest<=1)");
 		assertFalse(environment.matches(new StubEntry(values), null));
 

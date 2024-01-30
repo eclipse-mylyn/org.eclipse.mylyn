@@ -34,15 +34,18 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 	public PollingProtocolSocketFactory() {
 	}
 
+	@Override
 	public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
 		return factory.createSocket(host, port);
 	}
 
+	@Override
 	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort)
 			throws IOException, UnknownHostException {
 		return factory.createSocket(host, port, localAddress, localPort);
 	}
 
+	@Override
 	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort,
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		if (params == null) {

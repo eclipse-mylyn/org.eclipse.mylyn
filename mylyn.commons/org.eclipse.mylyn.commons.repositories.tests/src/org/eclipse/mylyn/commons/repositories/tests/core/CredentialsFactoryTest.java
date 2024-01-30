@@ -36,7 +36,7 @@ public class CredentialsFactoryTest {
 		AuthenticationCredentials credentials = new AuthenticationCredentials() {
 			@Override
 			public void save(ICredentialsStore store, String prefix) {
-				// ignore				
+				// ignore
 			}
 
 			@Override

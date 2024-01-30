@@ -66,8 +66,7 @@ public class InteractionEvent {
 		MANIPULATION,
 
 		/**
-		 * Capture interaction with tasks, the workbench, and lifecycle events that define where the user's attention is
-		 * directed.
+		 * Capture interaction with tasks, the workbench, and lifecycle events that define where the user's attention is directed.
 		 */
 		ATTENTION;
 
@@ -83,26 +82,17 @@ public class InteractionEvent {
 		 */
 		@Override
 		public String toString() {
-			switch (this) {
-			case SELECTION:
-				return "selection"; //$NON-NLS-1$
-			case EDIT:
-				return "edit"; //$NON-NLS-1$
-			case COMMAND:
-				return "command"; //$NON-NLS-1$
-			case PREFERENCE:
-				return "preference"; //$NON-NLS-1$
-			case PREDICTION:
-				return "prediction"; //$NON-NLS-1$
-			case PROPAGATION:
-				return "propagation"; //$NON-NLS-1$
-			case MANIPULATION:
-				return "manipulation"; //$NON-NLS-1$
-			case ATTENTION:
-				return "attention"; //$NON-NLS-1$
-			default:
-				return "null"; //$NON-NLS-1$
-			}
+			return switch (this) {
+				case SELECTION -> "selection"; //$NON-NLS-1$
+				case EDIT -> "edit"; //$NON-NLS-1$
+				case COMMAND -> "command"; //$NON-NLS-1$
+				case PREFERENCE -> "preference"; //$NON-NLS-1$
+				case PREDICTION -> "prediction"; //$NON-NLS-1$
+				case PROPAGATION -> "propagation"; //$NON-NLS-1$
+				case MANIPULATION -> "manipulation"; //$NON-NLS-1$
+				case ATTENTION -> "attention"; //$NON-NLS-1$
+				default -> "null"; //$NON-NLS-1$
+			};
 		}
 
 		/**
@@ -243,22 +233,21 @@ public class InteractionEvent {
 		Assert.isNotNull(startDate);
 		Assert.isNotNull(endDate);
 		this.kind = kind;
-		this.structureKind = (structureKind != null) ? structureKind.intern() : null;
-		this.structureHandle = (handle != null) ? handle.intern() : null;
+		this.structureKind = structureKind != null ? structureKind.intern() : null;
+		structureHandle = handle != null ? handle.intern() : null;
 		this.originId = originId.intern();
-		this.navigation = (navigatedRelation != null) ? navigatedRelation.intern() : null;
-		this.delta = (delta != null) ? delta.intern() : null;
+		navigation = navigatedRelation != null ? navigatedRelation.intern() : null;
+		this.delta = delta != null ? delta.intern() : null;
 		this.interestContribution = interestContribution;
-		this.date = startDate;
+		date = startDate;
 		this.endDate = endDate;
 	}
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null || !(object instanceof InteractionEvent)) {
+		if (object == null || !(object instanceof InteractionEvent event)) {
 			return false;
 		}
-		InteractionEvent event = (InteractionEvent) object;
 		return (date == null ? event.date == null : date.equals(event.date))
 				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
 				&& (kind == null ? event.kind == null : kind.equals(event.kind))

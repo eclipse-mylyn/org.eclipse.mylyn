@@ -11,12 +11,12 @@
 
 package org.eclipse.mylyn.commons.activity.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.commons.activity.ui.IUserActivityManagerCallback;
 import org.eclipse.mylyn.internal.commons.activity.ui.MonitorUserActivityJob;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -188,20 +188,24 @@ public class MonitorUserActivityJobTest extends TestCase {
 
 		private long startTime;
 
+		@Override
 		public void addMonitoredActivityTime(long startTime, long endTime) {
 			this.startTime = startTime;
-			this.activeTime += endTime - startTime;
-			this.eventCount++;
+			activeTime += endTime - startTime;
+			eventCount++;
 		}
 
+		@Override
 		public void inactive() {
-			this.inactive = true;
+			inactive = true;
 		}
 
+		@Override
 		public long getLastEventTime() {
-			return this.lastEventTime;
+			return lastEventTime;
 		}
 
+		@Override
 		public void active() {
 		}
 

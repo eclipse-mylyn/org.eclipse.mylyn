@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
- *     BREDEX GmbH - fix for bug 295050 
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -21,8 +21,7 @@ package org.eclipse.mylyn.commons.net;
  */
 public enum AuthenticationType {
 	/**
-	 * HTTP authentication, this is typically basic authentication but other methods such as digest or NTLM are used as
-	 * well.
+	 * HTTP authentication, this is typically basic authentication but other methods such as digest or NTLM are used as well.
 	 */
 	HTTP,
 	/** Proxy authentication. */

@@ -59,7 +59,7 @@ public class RSSItem {
 		if (categories == null) {
 			synchronized (this) {
 				if (categories == null) {
-					categories = new ArrayList<String>(0);
+					categories = new ArrayList<>(0);
 				}
 			}
 		}
@@ -162,7 +162,7 @@ public class RSSItem {
 		if (subjects == null) {
 			synchronized (this) {
 				if (subjects == null) {
-					subjects = new ArrayList<String>(0);
+					subjects = new ArrayList<>(0);
 				}
 			}
 		}

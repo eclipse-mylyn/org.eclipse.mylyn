@@ -33,10 +33,10 @@ public class E4ThemeColor {
 	public static RGB getRGBFromCssString(String cssValue) {
 		try {
 			if (cssValue.startsWith("rgb(")) { //$NON-NLS-1$
-				String rest = cssValue.substring(4, cssValue.length());
+				String rest = cssValue.substring(4);
 				int idx = rest.indexOf("rgb("); //$NON-NLS-1$
 				if (idx != -1) {
-					rest = rest.substring(idx + 4, rest.length());
+					rest = rest.substring(idx + 4);
 				}
 				idx = rest.indexOf(")"); //$NON-NLS-1$
 				if (idx != -1) {
@@ -57,10 +57,10 @@ public class E4ThemeColor {
 				if (cssValue.equals("#org-eclipse-ui-workbench-DARK_FOREGROUND")) { //$NON-NLS-1$
 					cssValue = "#eeeeee"; //$NON-NLS-1$
 				}
-				String rest = cssValue.substring(1, cssValue.length());
+				String rest = cssValue.substring(1);
 				int idx = rest.indexOf("#"); //$NON-NLS-1$
 				if (idx != -1) {
-					rest = rest.substring(idx + 1, rest.length());
+					rest = rest.substring(idx + 1);
 				}
 				if (rest.length() > 5) {
 					return new RGB(Integer.parseInt(rest.substring(0, 2), 16),

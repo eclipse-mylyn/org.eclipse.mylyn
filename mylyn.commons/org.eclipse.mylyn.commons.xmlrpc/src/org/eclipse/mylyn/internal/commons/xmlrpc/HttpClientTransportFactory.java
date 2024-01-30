@@ -118,8 +118,7 @@ class HttpClientTransportFactory implements XmlRpcTransportFactory {
 		protected void initHttpHeaders(XmlRpcRequest request) throws XmlRpcClientException {
 			config = (XmlRpcHttpClientConfig) request.getConfig();
 
-			if (request instanceof XmlRpcClientRequest) {
-				XmlRpcClientRequest clientRequest = (XmlRpcClientRequest) request;
+			if (request instanceof XmlRpcClientRequest clientRequest) {
 				monitor = clientRequest.getProgressMonitor();
 			} else {
 				monitor = null;
@@ -170,18 +169,22 @@ class HttpClientTransportFactory implements XmlRpcTransportFactory {
 		@Override
 		protected void writeRequest(final ReqWriter writer) throws XmlRpcException {
 			method.setRequestEntity(new RequestEntity() {
+				@Override
 				public long getContentLength() {
 					return HttpClientTransport.this.getContentLength();
 				}
 
+				@Override
 				public String getContentType() {
 					return "text/xml"; //$NON-NLS-1$
 				}
 
+				@Override
 				public boolean isRepeatable() {
 					return getContentLength() != -1;
 				}
 
+				@Override
 				public void writeRequest(OutputStream pOut) throws IOException {
 					try {
 						/* Make sure, that the socket is not closed by replacing it with our
@@ -205,9 +208,7 @@ class HttpClientTransportFactory implements XmlRpcTransportFactory {
 							};
 						}
 						writer.write(ostream);
-					} catch (XmlRpcException e) {
-						throw new XmlRpcIOException(e);
-					} catch (SAXException e) {
+					} catch (XmlRpcException | SAXException e) {
 						throw new XmlRpcIOException(e);
 					}
 				}
@@ -251,6 +252,7 @@ class HttpClientTransportFactory implements XmlRpcTransportFactory {
 		return location;
 	}
 
+	@Override
 	public XmlRpcTransport getTransport() {
 		return new HttpClientTransport(xmlRpcClient, httpClient, location, interceptor);
 	}

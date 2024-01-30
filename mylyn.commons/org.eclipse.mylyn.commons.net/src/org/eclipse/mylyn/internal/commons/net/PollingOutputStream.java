@@ -22,11 +22,10 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.Policy;
 
 /**
- * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a
- * high numAttempts should be specified, and the underlying stream should time out frequently on writes (every second or
- * so). Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does.
- * Check the bytesTransferred field to determine how much of the operation completed; conversely, at what point to
- * resume.
+ * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a high numAttempts
+ * should be specified, and the underlying stream should time out frequently on writes (every second or so). Supports resuming partially
+ * completed operations after an InterruptedIOException if the underlying stream does. Check the bytesTransferred field to determine how
+ * much of the operation completed; conversely, at what point to resume.
  */
 public class PollingOutputStream extends FilterOutputStream {
 	private static final boolean DEBUG = Policy.DEBUG_STREAMS;
@@ -43,8 +42,7 @@ public class PollingOutputStream extends FilterOutputStream {
 	 * @param out
 	 *            the underlying output stream
 	 * @param numAttempts
-	 *            the number of attempts before issuing an InterruptedIOException, if 0, retries indefinitely until
-	 *            canceled
+	 *            the number of attempts before issuing an InterruptedIOException, if 0, retries indefinitely until canceled
 	 * @param monitor
 	 *            the progress monitor to be polled for cancellation
 	 */
@@ -52,7 +50,7 @@ public class PollingOutputStream extends FilterOutputStream {
 		super(out);
 		this.numAttempts = numAttempts;
 		this.monitor = monitor;
-		this.cancellable = true;
+		cancellable = true;
 	}
 
 	/**
@@ -61,8 +59,7 @@ public class PollingOutputStream extends FilterOutputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times and no data was sent, bytesTransferred will
-	 *             be zero
+	 *             if the underlying operation times out numAttempts times and no data was sent, bytesTransferred will be zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -93,8 +90,7 @@ public class PollingOutputStream extends FilterOutputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of
-	 *             bytes sent
+	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of bytes sent
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -138,8 +134,7 @@ public class PollingOutputStream extends FilterOutputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of
-	 *             bytes sent
+	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of bytes sent
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -178,8 +173,8 @@ public class PollingOutputStream extends FilterOutputStream {
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
-	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of
-	 *             bytes sent during the flush()
+	 *             if the underlying operation times out numAttempts times, bytesTransferred will reflect the number of bytes sent during
+	 *             the flush()
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -211,9 +206,9 @@ public class PollingOutputStream extends FilterOutputStream {
 	}
 
 	/**
-	 * Called to set whether cancellation will be checked by this stream. Turning cancellation checking off can be very
-	 * useful for protecting critical portions of a protocol that shouldn't be interrupted. For example, it is often
-	 * necessary to protect login sequences.
+	 * Called to set whether cancellation will be checked by this stream. Turning cancellation checking off can be very useful for
+	 * protecting critical portions of a protocol that shouldn't be interrupted. For example, it is often necessary to protect login
+	 * sequences.
 	 * 
 	 * @param cancellable
 	 *            a flag controlling whether this stream will check for cancellation.
@@ -223,8 +218,8 @@ public class PollingOutputStream extends FilterOutputStream {
 	}
 
 	/**
-	 * Checked whether the monitor for this stream has been cancelled. If the cancellable flag is <code>false</code>
-	 * then the monitor is never cancelled.
+	 * Checked whether the monitor for this stream has been cancelled. If the cancellable flag is <code>false</code> then the monitor is
+	 * never cancelled.
 	 * 
 	 * @return <code>true</code> if the monitor has been cancelled and <code>false</code> otherwise.
 	 */

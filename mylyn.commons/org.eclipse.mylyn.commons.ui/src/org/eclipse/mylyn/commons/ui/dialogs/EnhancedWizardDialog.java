@@ -28,8 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Wizard dialog for displaying additional button in the button bar. Based on ValidatableWizardDialog from Helen
- * Bershadskaya
+ * Wizard dialog for displaying additional button in the button bar. Based on ValidatableWizardDialog from Helen Bershadskaya
  * 
  * @author Helen Bershadskaya
  * @author Frank Becker
@@ -56,14 +55,14 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 	abstract protected void restoreEnabledStateMylyn(HashMap<String, Boolean> savedEnabledState);
 
 	/**
-	 * Overridden so we can add a validate button to the wizard button bar, if a repository settings page requires it.
-	 * Validate button is added left justified at button bar bottom (next to help image).
+	 * Overridden so we can add a validate button to the wizard button bar, if a repository settings page requires it. Validate button is
+	 * added left justified at button bar bottom (next to help image).
 	 */
 	@Override
 	protected Control createButtonBar(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 0; // create 
+		layout.numColumns = 0; // create
 		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
 		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
@@ -88,9 +87,8 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 	}
 
 	/**
-	 * Overridden so we can react to the validate button being pressed. This could have been done with a straight
-	 * selection listener in the creation method above, but this is more consistent with how the other buttons work in
-	 * the wizard dialog.
+	 * Overridden so we can react to the validate button being pressed. This could have been done with a straight selection listener in the
+	 * creation method above, but this is more consistent with how the other buttons work in the wizard dialog.
 	 * 
 	 * @since 3.1
 	 */
@@ -117,7 +115,7 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 
 	@Override
 	public void updateButtons() {
-		// all navigation buttons should be disabled while an operation is running  
+		// all navigation buttons should be disabled while an operation is running
 		if (runningOperations > 0) {
 			return;
 		}

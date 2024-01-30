@@ -41,12 +41,12 @@ public class JUnitExecutionListener extends RunListener {
 		return null;
 	}
 
-	private final CopyOnWriteArrayList<String> ingored = new CopyOnWriteArrayList<String>();
+	private final CopyOnWriteArrayList<String> ingored = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Tests may execute in parallel and hence multiple dump threads maybe scheduled concurrently.
 	 */
-	private final ConcurrentHashMap<Description, DumpThreadTask> taskByTest = new ConcurrentHashMap<Description, DumpThreadTask>();
+	private final ConcurrentHashMap<Description, DumpThreadTask> taskByTest = new ConcurrentHashMap<>();
 
 	public final static long DELAY = 10 * 60 * 1000;
 
@@ -92,9 +92,7 @@ public class JUnitExecutionListener extends RunListener {
 
 	private void dumpErrorList(List<Failure> failures) {
 		System.err.println("Error: ");
-		Iterator<Failure> it = failures.iterator();
-		while (it.hasNext()) {
-			Failure failure = it.next();
+		for (Failure failure : failures) {
 			if (failure.getException() instanceof AssertionError) {
 				continue;
 			}
@@ -106,9 +104,7 @@ public class JUnitExecutionListener extends RunListener {
 
 	private void dumpFailureList(List<Failure> failures) {
 		System.err.println("Failures: ");
-		Iterator<Failure> it = failures.iterator();
-		while (it.hasNext()) {
-			Failure failure = it.next();
+		for (Failure failure : failures) {
 			if (!(failure.getException() instanceof AssertionError)) {
 				continue;
 			}

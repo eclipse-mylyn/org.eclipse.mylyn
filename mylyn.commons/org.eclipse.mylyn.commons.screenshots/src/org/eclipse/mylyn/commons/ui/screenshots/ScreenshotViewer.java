@@ -16,6 +16,7 @@
 package org.eclipse.mylyn.commons.ui.screenshots;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,15 +43,8 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
@@ -68,8 +62,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -158,9 +150,8 @@ public class ScreenshotViewer {
 	private Rectangle originalSelection;
 
 	/**
-	 * Temporary storage for selection start point, selection resizing initial reference point or previous mark point
-	 * (it depends on current tool); this value is normalized to real image coordinates, no matter the zoom level (see
-	 * {@link #scaleFactor})
+	 * Temporary storage for selection start point, selection resizing initial reference point or previous mark point (it depends on current
+	 * tool); this value is normalized to real image coordinates, no matter the zoom level (see {@link #scaleFactor})
 	 */
 	private Point startPoint;
 
@@ -177,16 +168,16 @@ public class ScreenshotViewer {
 	/**
 	 * Manages allocated cursors
 	 */
-	private final Map<Integer, Cursor> cursors = new HashMap<Integer, Cursor>();
+	private final Map<Integer, Cursor> cursors = new HashMap<>();
 
 	/**
 	 * Available actions for the screenshot editor
 	 */
-	private static enum EditorAction {
+	private enum EditorAction {
 
 		CROPPING, SELECTING, RESIZING_SELECTION, MOVING_SELECTION, MARKING;
 
-	};
+	}
 
 	/**
 	 * What am I doing now?
@@ -200,16 +191,16 @@ public class ScreenshotViewer {
 	/**
 	 * Mouse event history. Entry is [0] MouseDown/MouseMove/MouseUp, [1] x, [2] y
 	 */
-	private List<int[]> historyMouseEvent = new ArrayList<int[]>();
+	private List<int[]> historyMouseEvent = new ArrayList<>();
 
 	/**
 	 * Draw tool history. Entry is [0] drawHistory index, [1] FREE/LINE/BOX/OVAL, [2] Line type, [3] Bold, [4] R/G/B
 	 */
-	private List<int[]> historyDrawTool = new ArrayList<int[]>();
+	private List<int[]> historyDrawTool = new ArrayList<>();
 
-	private List<StringBuffer> historyDrawText = new ArrayList<StringBuffer>();
+	private List<StringBuffer> historyDrawText = new ArrayList<>();
 
-	private List<String> historyDrawFont = new ArrayList<String>();
+	private List<String> historyDrawFont = new ArrayList<>();
 
 	private int historyCheckpoint = 0;
 
@@ -237,11 +228,7 @@ public class ScreenshotViewer {
 		vf.horizontalSpacing = 0;
 		vf.verticalSpacing = 0;
 		vf.setLayoutData(GridDataFactory.fillDefaults().create());
-		vf.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				doDispose();
-			}
-		});
+		vf.addDisposeListener(e -> doDispose());
 		allocateCursors();
 
 		// TODO: need disabled versions of all toolbar icons
@@ -274,10 +261,10 @@ public class ScreenshotViewer {
 					drawTextToolbar.setEnabled(true);
 				}
 
-				historyMouseEvent = new ArrayList<int[]>();
-				historyDrawTool = new ArrayList<int[]>();
-				historyDrawText = new ArrayList<StringBuffer>();
-				historyDrawFont = new ArrayList<String>();
+				historyMouseEvent = new ArrayList<>();
+				historyDrawTool = new ArrayList<>();
+				historyDrawText = new ArrayList<>();
+				historyDrawFont = new ArrayList<>();
 				historyCheckpoint = 0;
 				undoAction.setEnabled(false);
 				redoAction.setEnabled(false);
@@ -286,7 +273,7 @@ public class ScreenshotViewer {
 
 			@Override
 			protected boolean isEnableRectangle() {
-				return (currentSelection != null);
+				return currentSelection != null;
 			}
 		};
 		captureAction.setToolTipText(Messages.ScreenshotCreationPage_Capture_Desktop);
@@ -310,12 +297,12 @@ public class ScreenshotViewer {
 ////								captureDelayedButton.setText("Capture in " + (secondsDelay-i) + " seconds");
 //							} catch (InterruptedException e1) {
 //								// ignore
-//							}	
+//							}
 //						}
 //						captureScreenshotContent();
 //						page.setErrorMessage(null);
 //						fitButton.setEnabled(true);
-//						captureDelayedButton.setText(captureIn + secondsDelay +" seconds");			
+//						captureDelayedButton.setText(captureIn + secondsDelay +" seconds");
 //						getShell().setVisible(true);
 //					}
 //				});
@@ -369,7 +356,7 @@ public class ScreenshotViewer {
 							unselectDrawToolbar();
 						}
 					}
-					boolean isDrawText = (drawTextToolbar.getSelect() >= 0) ? false : checked;
+					boolean isDrawText = drawTextToolbar.getSelect() >= 0 ? false : checked;
 					//drawLineToolbar.setEnabled(checked);
 					//drawArrowToolbar.setEnabled(checked);
 					//drawBoxToolbar.setEnabled(checked);
@@ -403,10 +390,10 @@ public class ScreenshotViewer {
 				canvas.redraw();
 				setDirty(true);
 
-				historyMouseEvent = new ArrayList<int[]>();
-				historyDrawTool = new ArrayList<int[]>();
-				historyDrawText = new ArrayList<StringBuffer>();
-				historyDrawFont = new ArrayList<String>();
+				historyMouseEvent = new ArrayList<>();
+				historyDrawTool = new ArrayList<>();
+				historyDrawText = new ArrayList<>();
+				historyDrawFont = new ArrayList<>();
 				historyCheckpoint = 0;
 				undoAction.setEnabled(false);
 				redoAction.setEnabled(false);
@@ -480,15 +467,13 @@ public class ScreenshotViewer {
 		scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
 		scrolledComposite.setContent(canvas);
-		canvas.addPaintListener(new PaintListener() {
+		canvas.addPaintListener(e -> {
+			if (workImage != null) {
+				Rectangle imageBounds = workImage.getBounds();
+				Rectangle canvasBounds = canvas.getClientArea();
 
-			public void paintControl(PaintEvent e) {
-				if (workImage != null) {
-					Rectangle imageBounds = workImage.getBounds();
-					Rectangle canvasBounds = canvas.getClientArea();
-
-					int zoom = fitAction.getSelect();
-					switch (zoom) {
+				int zoom = fitAction.getSelect();
+				switch (zoom) {
 					case SelectToolAction.ZOOM_FIT:
 						e.gc.drawImage(workImage, 0, 0, imageBounds.width, imageBounds.height, //
 								0, 0, canvasBounds.width, canvasBounds.height);
@@ -504,12 +489,11 @@ public class ScreenshotViewer {
 						e.gc.drawImage(workImage, 0, 0, imageBounds.width, imageBounds.height, //
 								0, 0, imageBounds.width * zoom / 100, imageBounds.height * zoom / 100);
 						break;
-					}
-					drawSelection(e.gc);
-				} else {
-//					page.setErrorMessage("Screenshot required");
-					fitAction.setEnabled(false);
 				}
+				drawSelection(e.gc);
+			} else {
+//					page.setErrorMessage("Screenshot required");
+				fitAction.setEnabled(false);
 			}
 		});
 
@@ -544,41 +528,32 @@ public class ScreenshotViewer {
 		rowlayout.marginRight += 1;
 		paletteArea.setLayout(rowlayout);
 
-		paletteArea.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(Event e) {
-				Color gcForeground = e.gc.getForeground();
-				Rectangle bounds = ((Composite) e.widget).getBounds();
-				Color border = e.widget.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
-				e.gc.setForeground(border);
-				e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1, bounds.height);
-				e.gc.setForeground(gcForeground);
-			}
+		paletteArea.addListener(SWT.Paint, e -> {
+			Color gcForeground = e.gc.getForeground();
+			Rectangle bounds = ((Composite) e.widget).getBounds();
+			Color border = e.widget.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+			e.gc.setForeground(border);
+			e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1, bounds.height);
+			e.gc.setForeground(gcForeground);
 		});
-		paletteArea.addMenuDetectListener(new MenuDetectListener() {
-
-			public void menuDetected(MenuDetectEvent e) {
-				Menu rightClickMenu = new Menu(Display.getDefault().getActiveShell(), SWT.POP_UP);
-				MenuItem menuItem = new MenuItem(rightClickMenu, SWT.CHECK);
-				menuItem.setText(Messages.ScreenshotCreationPage_Show_Line_Type_Selector);
-				menuItem.setSelection(lineTypeToolbar.getVisible());
-				menuItem.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(final Event event) {
-						lineTypeToolbar.setVisible(!lineTypeToolbar.getVisible());
-						paletteArea.layout();
-					}
-				});
-				menuItem = new MenuItem(rightClickMenu, SWT.CHECK);
-				menuItem.setText(Messages.ScreenshotCreationPage_Show_Line_Bold_Selector);
-				menuItem.setSelection(lineBoldToolbar.getVisible());
-				menuItem.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(final Event event) {
-						lineBoldToolbar.setVisible(!lineBoldToolbar.getVisible());
-						paletteArea.layout();
-					}
-				});
-				rightClickMenu.setLocation(e.x, e.y);
-				rightClickMenu.setVisible(true);
-			}
+		paletteArea.addMenuDetectListener(e -> {
+			Menu rightClickMenu = new Menu(Display.getDefault().getActiveShell(), SWT.POP_UP);
+			MenuItem menuItem = new MenuItem(rightClickMenu, SWT.CHECK);
+			menuItem.setText(Messages.ScreenshotCreationPage_Show_Line_Type_Selector);
+			menuItem.setSelection(lineTypeToolbar.getVisible());
+			menuItem.addListener(SWT.Selection, event -> {
+				lineTypeToolbar.setVisible(!lineTypeToolbar.getVisible());
+				paletteArea.layout();
+			});
+			menuItem = new MenuItem(rightClickMenu, SWT.CHECK);
+			menuItem.setText(Messages.ScreenshotCreationPage_Show_Line_Bold_Selector);
+			menuItem.setSelection(lineBoldToolbar.getVisible());
+			menuItem.addListener(SWT.Selection, event -> {
+				lineBoldToolbar.setVisible(!lineBoldToolbar.getVisible());
+				paletteArea.layout();
+			});
+			rightClickMenu.setLocation(e.x, e.y);
+			rightClickMenu.setVisible(true);
 		});
 		drawLineToolbar = new SelectToolAction(paletteArea, SelectToolAction.DRAWLINE_TOOLBAR) {
 
@@ -680,16 +655,7 @@ public class ScreenshotViewer {
 
 	private int getSelectDrawToolbar() {
 		int drawTool;
-		if ((drawTool = drawLineToolbar.getSelect()) >= 0) {
-			return drawTool;
-		}
-		if ((drawTool = drawArrowToolbar.getSelect()) >= 0) {
-			return drawTool;
-		}
-		if ((drawTool = drawBoxToolbar.getSelect()) >= 0) {
-			return drawTool;
-		}
-		if ((drawTool = drawTextToolbar.getSelect()) >= 0) {
+		if (((drawTool = drawLineToolbar.getSelect()) >= 0) || ((drawTool = drawArrowToolbar.getSelect()) >= 0) || ((drawTool = drawBoxToolbar.getSelect()) >= 0) || ((drawTool = drawTextToolbar.getSelect()) >= 0)) {
 			return drawTool;
 		}
 		return -1;
@@ -846,7 +812,7 @@ public class ScreenshotViewer {
 	 * @see #isComplete()
 	 */
 	protected void stateChanged() {
-		// do nothing	
+		// do nothing
 	}
 
 	private void captureScreenshotContentFromSelection() {
@@ -883,45 +849,40 @@ public class ScreenshotViewer {
 
 		// this code needs to run asynchronously to allow the workbench to refresh before the screen is captured
 		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
-		getShell().getDisplay().timerExec(delay, new Runnable() {
-			public void run() {
-				disposeImageResources();
-				Rectangle displayBounds = display.getBounds();
-				originalImage = new Image(display, displayBounds.width, displayBounds.height);
-				workImage = new Image(display, displayBounds.width, displayBounds.height);
+		getShell().getDisplay().timerExec(delay, () -> {
+			disposeImageResources();
+			Rectangle displayBounds = display.getBounds();
+			originalImage = new Image(display, displayBounds.width, displayBounds.height);
+			workImage = new Image(display, displayBounds.width, displayBounds.height);
 
-				GC gc = new GC(display);
-				gc.copyArea(originalImage, displayBounds.x, displayBounds.y);
-				gc.copyArea(workImage, displayBounds.x, displayBounds.y);
-				gc.dispose();
+			GC gc = new GC(display);
+			gc.copyArea(originalImage, displayBounds.x, displayBounds.y);
+			gc.copyArea(workImage, displayBounds.x, displayBounds.y);
+			gc.dispose();
 
-				workImageGC = new GC(workImage);
-				workImageGC.setLineCap(SWT.CAP_ROUND);
+			workImageGC = new GC(workImage);
+			workImageGC.setLineCap(SWT.CAP_ROUND);
 
-				scrolledComposite.setEnabled(true);
-				clearSelection();
-				refreshCanvasSize();
+			scrolledComposite.setEnabled(true);
+			clearSelection();
+			refreshCanvasSize();
 
-				wizardShell.setVisible(true);
-				stateChanged();
-			}
+			wizardShell.setVisible(true);
+			stateChanged();
 		});
 	}
 
 	private void captureScreenshotContentDelayed() {
-		IInputValidator delayValidator = new IInputValidator() {
-
-			public String isValid(String newText) {
-				try {
-					int result = Integer.parseInt(newText);
-					if (result > 0) {
-						return null;
-					}
-				} catch (NumberFormatException e) {
-					// fall through
+		IInputValidator delayValidator = newText -> {
+			try {
+				int result = Integer.parseInt(newText);
+				if (result > 0) {
+					return null;
 				}
-				return Messages.ScreenshotViewer_EnterValidSeconds;
+			} catch (NumberFormatException e) {
+				// fall through
 			}
+			return Messages.ScreenshotViewer_EnterValidSeconds;
 		};
 		String delay = getDelayFromSettings(DEFAULT_DELAY);
 		InputDialog delayDialog = new InputDialog(getShell(), Messages.ScreenshotViewer_Delay,
@@ -973,8 +934,8 @@ public class ScreenshotViewer {
 	}
 
 	/**
-	 * Sets the selection rectangle based on the initial selection start point previously set in {@link #startPoint} and
-	 * the end point passed as parameters to this method
+	 * Sets the selection rectangle based on the initial selection start point previously set in {@link #startPoint} and the end point
+	 * passed as parameters to this method
 	 * <p>
 	 * The coordinates are based on the real image coordinates
 	 */
@@ -1051,8 +1012,8 @@ public class ScreenshotViewer {
 	}
 
 	private void refreshSelectionPosition(int x, int y) {
-		int newX = originalSelection.x + (x - startPoint.x);
-		int newY = originalSelection.y + (y - startPoint.y);
+		int newX = originalSelection.x + x - startPoint.x;
+		int newY = originalSelection.y + y - startPoint.y;
 		if (newX < 0) {
 			newX = 0;
 		}
@@ -1070,75 +1031,69 @@ public class ScreenshotViewer {
 	}
 
 	private void registerMouseListeners() {
-		canvas.addMouseMoveListener(new MouseMoveListener() {
+		canvas.addMouseMoveListener(e -> {
+			int scaledX = (int) Math.round(e.x / scaleFactor);
+			int scaledY = (int) Math.round(e.y / scaleFactor);
 
-			/**
-			 * If a selection is in course, moving the mouse around refreshes the selection rectangle
-			 */
-			public void mouseMove(MouseEvent e) {
-				int scaledX = (int) Math.round(e.x / scaleFactor);
-				int scaledY = (int) Math.round(e.y / scaleFactor);
+			if (currentAction == EditorAction.SELECTING) {
+				refreshCurrentSelection(scaledX, scaledY);
+				canvas.redraw();
+			} else if (currentAction == EditorAction.RESIZING_SELECTION) {
+				refreshSelectionResize(scaledX, scaledY);
+				canvas.redraw();
+			} else if (currentAction == EditorAction.MOVING_SELECTION) {
+				refreshSelectionPosition(scaledX, scaledY);
+				canvas.redraw();
+			} else if (currentAction == EditorAction.CROPPING && currentSelection != null) {
+				boolean cursorSet = false;
 
-				if (currentAction == EditorAction.SELECTING) {
-					refreshCurrentSelection(scaledX, scaledY);
-					canvas.redraw();
-				} else if (currentAction == EditorAction.RESIZING_SELECTION) {
-					refreshSelectionResize(scaledX, scaledY);
-					canvas.redraw();
-				} else if (currentAction == EditorAction.MOVING_SELECTION) {
-					refreshSelectionPosition(scaledX, scaledY);
-					canvas.redraw();
-				} else if (currentAction == EditorAction.CROPPING && currentSelection != null) {
-					boolean cursorSet = false;
+				// No selection in course, but have something selected; first test if I'm hovering some grab point
+				int info = getGrabPoint(e.x, e.y);
+				if (info >= 0) {
+					canvas.setCursor(cursors.get(grabPointCurosr[info]));
+					cursorSet = true;
+				}
 
-					// No selection in course, but have something selected; first test if I'm hovering some grab point
-					int info = getGrabPoint(e.x, e.y);
-					if (info >= 0) {
-						canvas.setCursor(cursors.get(grabPointCurosr[info]));
-						cursorSet = true;
-					}
+				// Test if I'm inside selection, so I can move it
+				if (!cursorSet && getScaledSelection().contains(e.x, e.y)) {
+					canvas.setCursor(cursors.get(SWT.CURSOR_SIZEALL));
+					cursorSet = true;
+				}
 
-					// Test if I'm inside selection, so I can move it
-					if (!cursorSet && getScaledSelection().contains(e.x, e.y)) {
-						canvas.setCursor(cursors.get(SWT.CURSOR_SIZEALL));
-						cursorSet = true;
-					}
-
-					// If I'm out, the default cursor for cropping mode is cross
-					Cursor crossCursor = cursors.get(SWT.CURSOR_CROSS);
-					if (!cursorSet && canvas.getCursor() != crossCursor) {
-						canvas.setCursor(crossCursor);
-					}
-				} else if (currentAction == EditorAction.MARKING) {
-					if (startPoint != null) {
-						int drawTool = getSelectDrawToolbar();
-						if (drawTool == SelectToolAction.DRAW_FREE) {
-							int[] history = new int[3];
+				// If I'm out, the default cursor for cropping mode is cross
+				Cursor crossCursor = cursors.get(SWT.CURSOR_CROSS);
+				if (!cursorSet && canvas.getCursor() != crossCursor) {
+					canvas.setCursor(crossCursor);
+				}
+			} else if (currentAction == EditorAction.MARKING) {
+				if (startPoint != null) {
+					int drawTool = getSelectDrawToolbar();
+					if (drawTool == SelectToolAction.DRAW_FREE) {
+						int[] history = new int[3];
+						history[0] = SWT.MouseMove;
+						history[1] = scaledX;
+						history[2] = scaledY;
+						historyMouseEvent.add(history);
+					} else {
+						int[] history = historyMouseEvent.get(historyMouseEvent.size() - 1);
+						if (history[0] == SWT.MouseMove) {
+							history[1] = scaledX;
+							history[2] = scaledY;
+						} else {
+							history = new int[3];
 							history[0] = SWT.MouseMove;
 							history[1] = scaledX;
 							history[2] = scaledY;
 							historyMouseEvent.add(history);
-						} else {
-							int[] history = historyMouseEvent.get(historyMouseEvent.size() - 1);
-							if (history[0] == SWT.MouseMove) {
-								history[1] = scaledX;
-								history[2] = scaledY;
-							} else {
-								history = new int[3];
-								history[0] = SWT.MouseMove;
-								history[1] = scaledX;
-								history[2] = scaledY;
-								historyMouseEvent.add(history);
-							}
 						}
 					}
+				}
 
-					drawMarkLine(scaledX, scaledY);
+				drawMarkLine(scaledX, scaledY);
 
-					Cursor markCursor = cursors.get(CURSOR_MARK_TOOL);
-					if (canvas.getCursor() != markCursor) {
-						canvas.setCursor(markCursor);
-					}
+				Cursor markCursor = cursors.get(CURSOR_MARK_TOOL);
+				if (canvas.getCursor() != markCursor) {
+					canvas.setCursor(markCursor);
 				}
 			}
 		});
@@ -1146,8 +1101,7 @@ public class ScreenshotViewer {
 		canvas.addMouseListener(new MouseAdapter() {
 
 			/**
-			 * Releasing the mouse button ends the selection or a drawing; compute the selection rectangle and redraw
-			 * the cropped image
+			 * Releasing the mouse button ends the selection or a drawing; compute the selection rectangle and redraw the cropped image
 			 */
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -1240,74 +1194,71 @@ public class ScreenshotViewer {
 				Point point = textArea.getCaretLocation();
 				textArea.setBounds(new Rectangle(xs - point.x, ys, xe - xs + point.x + point.x, ye - ys));
 				textArea.setFocus();
-				textArea.addListener(SWT.Deactivate, new Listener() {
-
-					public void handleEvent(Event event) {
-						String text = textArea.getText();
-						{
-							String newtext = ""; //$NON-NLS-1$
-							int currpos = 0;
-							int charpos = currpos;
-							textArea.setTopIndex(0);
-							textArea.setSelection(currpos);
-							int linepos = textArea.getCaretLineNumber();
-							boolean remove1st = false;
-							String line;
-							while (currpos < text.length()) {
-								int y = textArea.getCaretLineNumber();
-								if (linepos != y) {
-									line = text.substring(charpos, currpos);
-									if (line.endsWith("\n")) { //$NON-NLS-1$
-										line = line.substring(0, line.length() - 1);
-									}
-									newtext = newtext + "\n" + line; //$NON-NLS-1$
-									remove1st = true;
-									charpos = currpos;
-									linepos = y;
+				textArea.addListener(SWT.Deactivate, event -> {
+					String text = textArea.getText();
+					{
+						String newtext = ""; //$NON-NLS-1$
+						int currpos = 0;
+						int charpos = currpos;
+						textArea.setTopIndex(0);
+						textArea.setSelection(currpos);
+						int linepos = textArea.getCaretLineNumber();
+						boolean remove1st = false;
+						String line;
+						while (currpos < text.length()) {
+							int y = textArea.getCaretLineNumber();
+							if (linepos != y) {
+								line = text.substring(charpos, currpos);
+								if (line.endsWith("\n")) { //$NON-NLS-1$
+									line = line.substring(0, line.length() - 1);
 								}
-								currpos++;
-								textArea.setSelection(currpos);
-							}
-							line = text.substring(charpos, currpos);
-							if (line.endsWith("\n")) { //$NON-NLS-1$
-								line = line.substring(0, line.length() - 1);
-							}
-							if (line.length() > 0) {
-								newtext = newtext + "\n" + text.substring(charpos, currpos); //$NON-NLS-1$
+								newtext = newtext + "\n" + line; //$NON-NLS-1$
 								remove1st = true;
+								charpos = currpos;
+								linepos = y;
 							}
+							currpos++;
+							textArea.setSelection(currpos);
+						}
+						line = text.substring(charpos, currpos);
+						if (line.endsWith("\n")) { //$NON-NLS-1$
+							line = line.substring(0, line.length() - 1);
+						}
+						if (line.length() > 0) {
+							newtext = newtext + "\n" + text.substring(charpos, currpos); //$NON-NLS-1$
+							remove1st = true;
+						}
+						currpos = newtext.indexOf("\r"); //$NON-NLS-1$
+						while (currpos > 0) {
+							newtext = newtext.substring(0, currpos) + newtext.substring(currpos + 1);
 							currpos = newtext.indexOf("\r"); //$NON-NLS-1$
-							while (currpos > 0) {
-								newtext = newtext.substring(0, currpos) + newtext.substring(currpos + 1);
-								currpos = newtext.indexOf("\r"); //$NON-NLS-1$
-							}
-							newtext = newtext.replace("\t", " "); //$NON-NLS-1$//$NON-NLS-2$
-							if (remove1st) {
-								newtext = newtext.substring(1);
-							}
-							text = newtext;
 						}
-
-						textArea.dispose();
-						textArea = null;
-
-						if (text.length() > 0) {
-							historyDrawText.get(historyCheckpoint - 1).append(text);
-							Color color = workImageGC.getForeground();
-							FontData fontData = new FontData(drawTextToolbar.getStringCustom());
-							workImageGC.setFont(new Font(getShell().getDisplay(), fontData));
-							workImageGC.setForeground(new Color(getShell().getDisplay(),
-									SelectToolAction.int2rgb(drawTextToolbar.getIntgerCustom())));
-							workImageGC.setClipping(bounds);
-							workImageGC.drawText(text, bounds.x, bounds.y, true);
-							workImageGC.setClipping((Rectangle) null);
-							workImageGC.setForeground(color);
-						} else {
-							historyCheckpoint--;
-							updateAnnotationHistory();
+						newtext = newtext.replace("\t", " "); //$NON-NLS-1$//$NON-NLS-2$
+						if (remove1st) {
+							newtext = newtext.substring(1);
 						}
-						canvas.redraw();
+						text = newtext;
 					}
+
+					textArea.dispose();
+					textArea = null;
+
+					if (text.length() > 0) {
+						historyDrawText.get(historyCheckpoint - 1).append(text);
+						Color color = workImageGC.getForeground();
+						FontData fontData1 = new FontData(drawTextToolbar.getStringCustom());
+						workImageGC.setFont(new Font(getShell().getDisplay(), fontData1));
+						workImageGC.setForeground(new Color(getShell().getDisplay(),
+								SelectToolAction.int2rgb(drawTextToolbar.getIntgerCustom())));
+						workImageGC.setClipping(bounds);
+						workImageGC.drawText(text, bounds.x, bounds.y, true);
+						workImageGC.setClipping((Rectangle) null);
+						workImageGC.setForeground(color);
+					} else {
+						historyCheckpoint--;
+						updateAnnotationHistory();
+					}
+					canvas.redraw();
 				});
 			}
 
@@ -1326,8 +1277,8 @@ public class ScreenshotViewer {
 					int[] history = new int[5];
 					history[0] = historyMouseEvent.size();
 					history[1] = drawTool;
-					history[2] = (lineTypeToolbar != null) ? lineTypeToolbar.getSelect() : SWT.LINE_DOT;
-					history[3] = (lineBoldToolbar != null) ? lineBoldToolbar.getSelect() : 1;
+					history[2] = lineTypeToolbar != null ? lineTypeToolbar.getSelect() : SWT.LINE_DOT;
+					history[3] = lineBoldToolbar != null ? lineBoldToolbar.getSelect() : 1;
 					RGB rgb;
 					if (drawTool == SelectToolAction.DRAW_TEXT) {
 						rgb = SelectToolAction.int2rgb(drawTextToolbar.getIntgerCustom());
@@ -1385,10 +1336,8 @@ public class ScreenshotViewer {
 					if (info >= 0) {
 						originalSelection = currentSelection;
 						currentAction = EditorAction.RESIZING_SELECTION;
-						resizableSides = new HashSet<SelectionSide>();
-						for (SelectionSide side : grabPointResizableSides[info]) {
-							resizableSides.add(side);
-						}
+						resizableSides = new HashSet<>();
+						Collections.addAll(resizableSides, grabPointResizableSides[info]);
 						startPoint = new Point(scaledX, scaledY);
 						canvas.redraw();
 						return;
@@ -1424,21 +1373,19 @@ public class ScreenshotViewer {
 	/**
 	 * Recalculates image canvas size based on "fit on canvas" setting, set up the grab points, and redraws
 	 * <p>
-	 * This method should be called whenever the {@link #workImage image} <strong>visible</strong> size is changed,
-	 * which can happen when:
+	 * This method should be called whenever the {@link #workImage image} <strong>visible</strong> size is changed, which can happen when:
 	 * <p>
 	 * <ul>
 	 * <li>The "Fit Image" setting is changed, so the image zoom level changes
 	 * <li>The image changes (by recapturing)
-	 * <li>The canvas is resized (indirectly happens by resizing the wizard page) <strong>AND</strong> "Fit Image"
-	 * setting is ON
+	 * <li>The canvas is resized (indirectly happens by resizing the wizard page) <strong>AND</strong> "Fit Image" setting is ON
 	 * </ul>
 	 * <p>
 	 * Calling this method under other circumstances may lead to strange behavior in the scrolled composite
 	 */
 	private void refreshCanvasSize() {
 		if (fitAction.getSelect() == SelectToolAction.ZOOM_FIT) {
-			// This little hack is necessary to get the client area without scrollbars; 
+			// This little hack is necessary to get the client area without scrollbars;
 			// they'll be automatically restored if necessary after Canvas.setBounds()
 			scrolledComposite.getHorizontalBar().setVisible(false);
 			scrolledComposite.getVerticalBar().setVisible(false);
@@ -1508,7 +1455,7 @@ public class ScreenshotViewer {
 			workImageGC.setLineWidth(boldlKind);
 			workImageGC.setForeground(new Color(getShell().getDisplay(), //
 					history[4] >> 16, //
-					(history[4] >> 8) & 0x00ff, //
+					history[4] >> 8 & 0x00ff, //
 					history[4] & 0x00ff));
 
 			int h = history[0];
@@ -1526,14 +1473,13 @@ public class ScreenshotViewer {
 					workImageGC.drawLine(start_x, start_y, x, y);
 					start_x = x;
 					start_y = y;
+				} else if (start_x == x && start_y == y) {
+					workImageGC.drawLine(start_x, start_y, x, y);
 				} else {
-					if (start_x == x && start_y == y) {
-						workImageGC.drawLine(start_x, start_y, x, y);
-					} else {
-						int rounded;
-						int width = x - start_x;
-						int height = y - start_y;
-						switch (toolKind) {
+					int rounded;
+					int width = x - start_x;
+					int height = y - start_y;
+					switch (toolKind) {
 						case SelectToolAction.DRAW_LINE:
 							workImageGC.drawLine(start_x, start_y, x, y);
 							break;
@@ -1579,7 +1525,6 @@ public class ScreenshotViewer {
 							workImageGC.setFont(backFont);
 						}
 							break;
-						}
 					}
 				}
 			}
@@ -1672,64 +1617,64 @@ public class ScreenshotViewer {
 					int width = x - startPoint.x;
 					int height = y - startPoint.y;
 					switch (drawTool) {
-					case SelectToolAction.DRAW_LINE:
-						workImageGC.drawLine(startPoint.x, startPoint.y, x, y);
-						break;
-					case SelectToolAction.DRAW_ARROW1:
-						backColor = workImageGC.getBackground();
-						markColor = new Color(getShell().getDisplay(),
-								SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
-						workImageGC.setBackground(markColor);
-						drawArrowLine(startPoint.x, startPoint.y, x, y, false);
-						workImageGC.setBackground(backColor);
-						break;
-					case SelectToolAction.DRAW_ARROW2:
-						backColor = workImageGC.getBackground();
-						markColor = new Color(getShell().getDisplay(),
-								SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
-						workImageGC.setBackground(markColor);
-						drawArrowLine(startPoint.x, startPoint.y, x, y, true);
-						workImageGC.setBackground(backColor);
-						break;
-					case SelectToolAction.DRAW_BOX:
-						workImageGC.drawRectangle(startPoint.x, startPoint.y, width, height);
-						break;
-					case SelectToolAction.DRAW_RBOX:
-						rounded = lineBoldToolbar.getSelect() * 8;
-						workImageGC.drawRoundRectangle(startPoint.x, startPoint.y, width, height, rounded, rounded);
-						break;
-					case SelectToolAction.DRAW_OVAL:
-						workImageGC.drawOval(startPoint.x, startPoint.y, width, height);
-						break;
-					case SelectToolAction.DRAW_FILL_BOX:
-						backColor = workImageGC.getBackground();
-						markColor = new Color(getShell().getDisplay(),
-								SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
-						workImageGC.setBackground(markColor);
-						workImageGC.fillRectangle(startPoint.x, startPoint.y, width, height);
-						workImageGC.setBackground(backColor);
-						break;
-					case SelectToolAction.DRAW_FILL_RBOX:
-						rounded = lineBoldToolbar.getSelect() * 8;
-						backColor = workImageGC.getBackground();
-						markColor = new Color(getShell().getDisplay(),
-								SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
-						workImageGC.setBackground(markColor);
-						workImageGC.fillRoundRectangle(startPoint.x, startPoint.y, width, height, rounded, rounded);
-						workImageGC.setBackground(backColor);
-						break;
-					case SelectToolAction.DRAW_FILL_OVAL:
-						backColor = workImageGC.getBackground();
-						markColor = new Color(getShell().getDisplay(),
-								SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
-						workImageGC.setBackground(markColor);
-						workImageGC.fillOval(startPoint.x, startPoint.y, width, height);
-						workImageGC.setBackground(backColor);
-						break;
-					case SelectToolAction.DRAW_TEXT:
-						workImageGC.fillRectangle(startPoint.x, startPoint.y, width, height);
-						workImageGC.drawRectangle(startPoint.x, startPoint.y, width, height);
-						break;
+						case SelectToolAction.DRAW_LINE:
+							workImageGC.drawLine(startPoint.x, startPoint.y, x, y);
+							break;
+						case SelectToolAction.DRAW_ARROW1:
+							backColor = workImageGC.getBackground();
+							markColor = new Color(getShell().getDisplay(),
+									SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
+							workImageGC.setBackground(markColor);
+							drawArrowLine(startPoint.x, startPoint.y, x, y, false);
+							workImageGC.setBackground(backColor);
+							break;
+						case SelectToolAction.DRAW_ARROW2:
+							backColor = workImageGC.getBackground();
+							markColor = new Color(getShell().getDisplay(),
+									SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
+							workImageGC.setBackground(markColor);
+							drawArrowLine(startPoint.x, startPoint.y, x, y, true);
+							workImageGC.setBackground(backColor);
+							break;
+						case SelectToolAction.DRAW_BOX:
+							workImageGC.drawRectangle(startPoint.x, startPoint.y, width, height);
+							break;
+						case SelectToolAction.DRAW_RBOX:
+							rounded = lineBoldToolbar.getSelect() * 8;
+							workImageGC.drawRoundRectangle(startPoint.x, startPoint.y, width, height, rounded, rounded);
+							break;
+						case SelectToolAction.DRAW_OVAL:
+							workImageGC.drawOval(startPoint.x, startPoint.y, width, height);
+							break;
+						case SelectToolAction.DRAW_FILL_BOX:
+							backColor = workImageGC.getBackground();
+							markColor = new Color(getShell().getDisplay(),
+									SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
+							workImageGC.setBackground(markColor);
+							workImageGC.fillRectangle(startPoint.x, startPoint.y, width, height);
+							workImageGC.setBackground(backColor);
+							break;
+						case SelectToolAction.DRAW_FILL_RBOX:
+							rounded = lineBoldToolbar.getSelect() * 8;
+							backColor = workImageGC.getBackground();
+							markColor = new Color(getShell().getDisplay(),
+									SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
+							workImageGC.setBackground(markColor);
+							workImageGC.fillRoundRectangle(startPoint.x, startPoint.y, width, height, rounded, rounded);
+							workImageGC.setBackground(backColor);
+							break;
+						case SelectToolAction.DRAW_FILL_OVAL:
+							backColor = workImageGC.getBackground();
+							markColor = new Color(getShell().getDisplay(),
+									SelectToolAction.int2rgb(drawColorToolbar.getSelect()));
+							workImageGC.setBackground(markColor);
+							workImageGC.fillOval(startPoint.x, startPoint.y, width, height);
+							workImageGC.setBackground(backColor);
+							break;
+						case SelectToolAction.DRAW_TEXT:
+							workImageGC.fillRectangle(startPoint.x, startPoint.y, width, height);
+							workImageGC.drawRectangle(startPoint.x, startPoint.y, width, height);
+							break;
 					}
 				}
 			}
@@ -1740,13 +1685,13 @@ public class ScreenshotViewer {
 	private void drawArrowLine(int xs, int ys, int xe, int ye, boolean bothsides) {
 		int width = xe - xs, height = ye - ys;
 		int bold = workImageGC.getLineWidth();
-		int leng = (bold == 8) ? bold * 4 : (bold == 4) ? bold * 6 : (bold == 2) ? bold * 8 : bold * 10;
+		int leng = bold == 8 ? bold * 4 : bold == 4 ? bold * 6 : bold == 2 ? bold * 8 : bold * 10;
 		double delta = Math.PI / 6.0;
 		double theta = Math.atan2(height, width);
 
 		// Draw line
 		if (bothsides) {
-			workImageGC.drawLine( // 
+			workImageGC.drawLine( //
 					xs + (int) (leng / 2 * Math.cos(theta)), //
 					ys + (int) (leng / 2 * Math.sin(theta)), //
 					xe - (int) (leng / 2 * Math.cos(theta)), //
@@ -1782,19 +1727,19 @@ public class ScreenshotViewer {
 		workImageGC.setLineWidth(bold);
 	}
 
-	private static enum SelectionSide {
+	private enum SelectionSide {
 
 		LEFT, RIGHT, TOP, BOTTOM;
 
-	};
+	}
 
 	private static final int SQUARE_SIZE = 3;
 
 	/**
 	 * Creates the final screenshot.
 	 * 
-	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is
-	 *         responsible for disposing the returned image</strong>
+	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is responsible for
+	 *         disposing the returned image</strong>
 	 */
 	public Image createImage() {
 		// use default display to support invocation from non UI thread

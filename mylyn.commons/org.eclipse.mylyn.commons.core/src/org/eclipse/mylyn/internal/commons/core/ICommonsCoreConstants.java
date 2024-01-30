@@ -17,6 +17,6 @@ package org.eclipse.mylyn.internal.commons.core;
  */
 public interface ICommonsCoreConstants {
 
-	public static String ID_PLUGIN = "org.eclipse.mylyn.commons.core"; //$NON-NLS-1$
+	String ID_PLUGIN = "org.eclipse.mylyn.commons.core"; //$NON-NLS-1$
 
 }

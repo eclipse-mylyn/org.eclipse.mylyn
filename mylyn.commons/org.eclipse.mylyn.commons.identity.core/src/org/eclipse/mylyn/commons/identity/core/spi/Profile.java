@@ -41,22 +41,27 @@ public final class Profile implements IProfile, Serializable {
 		this.identity = identity;
 	}
 
+	@Override
 	public String getCity() {
 		return city;
 	}
 
+	@Override
 	public String getCountry() {
 		return country;
 	}
 
+	@Override
 	public String getEmail() {
 		return email;
 	}
 
+	@Override
 	public IIdentity getIdentity() {
 		return identity;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

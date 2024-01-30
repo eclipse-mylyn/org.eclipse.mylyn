@@ -23,10 +23,10 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public interface IUsageScanner {
 
-	public void scanEvent(InteractionEvent event, int userId);
+	void scanEvent(InteractionEvent event, int userId);
 
-	public boolean accept(int userId);
+	boolean accept(int userId);
 
-	public Set<Integer> acceptedUsers();
+	Set<Integer> acceptedUsers();
 
 }

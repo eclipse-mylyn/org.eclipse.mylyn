@@ -16,7 +16,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -81,18 +80,14 @@ public class BrowserUtil {
 		private static List<AbstractUrlHandler> handlers;
 
 		static {
-			ExtensionPointReader<AbstractUrlHandler> reader = new ExtensionPointReader<AbstractUrlHandler>(
+			ExtensionPointReader<AbstractUrlHandler> reader = new ExtensionPointReader<>(
 					CommonsWorkbenchPlugin.ID_PLUGIN, "urlHandlers", "handler", AbstractUrlHandler.class); //$NON-NLS-1$ //$NON-NLS-2$
 			reader.read();
 
 			handlers = reader.getItems();
 
 			// handlers with higher priories are sorted first
-			Collections.sort(handlers, new Comparator<AbstractUrlHandler>() {
-				public int compare(AbstractUrlHandler o1, AbstractUrlHandler o2) {
-					return o2.getPriority() - o1.getPriority();
-				};
-			});
+			Collections.sort(handlers, (o1, o2) -> o2.getPriority() - o1.getPriority());
 		}
 
 	}
@@ -110,14 +105,13 @@ public class BrowserUtil {
 	}
 
 	/**
-	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench
-	 * preferences.
+	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench preferences.
 	 * 
 	 * @param location
 	 *            the url to open
 	 * @param customFlags
-	 *            additional flags that are passed to {@link IWorkbenchBrowserSupport}, pass
-	 *            {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to force opening external browser
+	 *            additional flags that are passed to {@link IWorkbenchBrowserSupport}, pass {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to
+	 *            force opening external browser
 	 * @see #openUrl(IWorkbenchPage, String, int)
 	 * @since 3.7
 	 */
@@ -130,18 +124,17 @@ public class BrowserUtil {
 	}
 
 	/**
-	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench
-	 * preferences.
+	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench preferences.
 	 * 
 	 * @param page
 	 *            the workbench page to open the editor in
 	 * @param location
 	 *            the url to open
 	 * @param customFlags
-	 *            additional flags that are passed to {@link IWorkbenchBrowserSupport}, pass
-	 *            {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to force opening external browser
-	 * @return a handle that describes the editor or browser that was opened; if {@link EditorHandle#getStatus()}
-	 *         returns an error status the operation was not successful
+	 *            additional flags that are passed to {@link IWorkbenchBrowserSupport}, pass {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to
+	 *            force opening external browser
+	 * @return a handle that describes the editor or browser that was opened; if {@link EditorHandle#getStatus()} returns an error status
+	 *         the operation was not successful
 	 * @since 3.7
 	 */
 	public static EditorHandle openUrl(IWorkbenchPage page, String location, int customFlags) {
@@ -226,12 +219,14 @@ public class BrowserUtil {
 	private static EditorHandle openUrlByHandler(final IWorkbenchPage page, final String location,
 			final int customFlags) {
 		for (final AbstractUrlHandler handler : UrlHandlerInitializer.handlers) {
-			final AtomicReference<EditorHandle> result = new AtomicReference<EditorHandle>();
+			final AtomicReference<EditorHandle> result = new AtomicReference<>();
 			SafeRunnable.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					result.set(handler.openUrl(page, location, customFlags));
 				}
 
+				@Override
 				public void handleException(Throwable exception) {
 					CommonsWorkbenchPlugin.getDefault()
 							.getLog()

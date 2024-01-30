@@ -57,6 +57,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		}
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.getSite() != null && part.getSite().getWorkbenchWindow() != null) {
 			IWorkbenchWindow window = part.getSite().getWorkbenchWindow();

@@ -39,7 +39,7 @@ public class MockServer implements Runnable {
 
 	public static class Message {
 
-		public List<String> headers = new ArrayList<String>();
+		public List<String> headers = new ArrayList<>();
 
 		public String request;
 
@@ -47,7 +47,7 @@ public class MockServer implements Runnable {
 
 		public Message(String request) {
 			this.request = request;
-			this.charset = "ISO-8859-1";
+			charset = "ISO-8859-1";
 		}
 
 		public String getCharset() {
@@ -69,14 +69,14 @@ public class MockServer implements Runnable {
 			String header = getHeader(prefix);
 			if (header != null) {
 				int i = header.indexOf(": ");
-				return (i != -1) ? header.substring(i + 2) : "";
+				return i != -1 ? header.substring(i + 2) : "";
 			}
 			return null;
 		}
 
 		public String getMethod() {
 			int i = request.indexOf(" ");
-			return (i != -1) ? request.substring(0, i) : request;
+			return i != -1 ? request.substring(0, i) : request;
 		}
 
 		public void setCharset(String charset) {
@@ -85,7 +85,7 @@ public class MockServer implements Runnable {
 
 		public String getStatusLine() {
 			int i = request.indexOf("\n");
-			return (i != -1) ? request.substring(0, i) : request;
+			return i != -1 ? request.substring(0, i) : request;
 		}
 
 		@Override
@@ -137,9 +137,9 @@ public class MockServer implements Runnable {
 
 	private final int listenPort;
 
-	private final List<Message> requests = new ArrayList<Message>();
+	private final List<Message> requests = new ArrayList<>();
 
-	private final List<Message> responses = new ArrayList<Message>();
+	private final List<Message> responses = new ArrayList<>();
 
 	private Thread runner;
 
@@ -159,21 +159,21 @@ public class MockServer implements Runnable {
 
 	public MockServer(int listenPort) {
 		this.listenPort = listenPort;
-		this.autoClose = true;
+		autoClose = true;
 	}
 
 	public synchronized void addRequest(Message request) {
-		this.requests.add(request);
+		requests.add(request);
 		notifyAll();
 	}
 
 	public synchronized void addResponse(Message response) {
-		this.responses.add(response);
+		responses.add(response);
 		notifyAll();
 	}
 
 	public synchronized void addResponse(String response) {
-		this.responses.add(new Message(response));
+		responses.add(new Message(response));
 		notifyAll();
 	}
 
@@ -271,6 +271,7 @@ public class MockServer implements Runnable {
 		throw new EOFException();
 	}
 
+	@Override
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(listenPort);

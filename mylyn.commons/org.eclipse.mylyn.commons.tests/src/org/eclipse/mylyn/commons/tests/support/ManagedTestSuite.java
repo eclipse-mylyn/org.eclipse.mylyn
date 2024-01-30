@@ -24,6 +24,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestFailure;
@@ -31,13 +35,9 @@ import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
-
 /**
- * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
- * test takes longer than 10 minutes.
+ * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a test takes longer
+ * than 10 minutes.
  * 
  * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite} instead
  * @author Steffen Pingel
@@ -53,12 +53,12 @@ public class ManagedTestSuite extends TestSuite {
 
 		public DumpThreadTask(Test test) {
 			this.test = test;
-			this.testThread = Thread.currentThread();
+			testThread = Thread.currentThread();
 		}
 
 		@Override
 		public void run() {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(MessageFormat.format("Test {0} is taking too long:\n", test.toString()));
 			Map<Thread, StackTraceElement[]> traces = Thread.getAllStackTraces();
 			for (Map.Entry<Thread, StackTraceElement[]> entry : traces.entrySet()) {
@@ -85,10 +85,12 @@ public class ManagedTestSuite extends TestSuite {
 
 		private final Timer timer = new Timer(true);
 
+		@Override
 		public void addError(Test test, Throwable t) {
 			System.err.println("[ERROR]");
 		}
 
+		@Override
 		public void addFailure(Test test, AssertionFailedError t) {
 			System.err.println("[FAILURE]");
 		}
@@ -114,6 +116,7 @@ public class ManagedTestSuite extends TestSuite {
 			System.err.println(MessageFormat.format("{0} out of {1} tests failed", failedCount, result.runCount()));
 		}
 
+		@Override
 		public void endTest(Test test) {
 			if (task != null) {
 				task.cancel();
@@ -121,6 +124,7 @@ public class ManagedTestSuite extends TestSuite {
 			}
 		}
 
+		@Override
 		public void startTest(Test test) {
 			System.err.println("Running " + test.toString());
 			task = new DumpThreadTask(test);
@@ -149,10 +153,12 @@ public class ManagedTestSuite extends TestSuite {
 
 		// add dummy test to dump threads in case shutdown hangs
 		listener.startTest(new Test() {
+			@Override
 			public int countTestCases() {
 				return 1;
 			}
 
+			@Override
 			public void run(TestResult result) {
 				// do nothing
 			}

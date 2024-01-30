@@ -21,6 +21,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Objects;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -73,32 +74,17 @@ public class SslSupport {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		SslSupport other = (SslSupport) obj;
-		if (keyStoreFileName == null) {
-			if (other.keyStoreFileName != null) {
-				return false;
-			}
-		} else if (!keyStoreFileName.equals(other.keyStoreFileName)) {
+		if (!Objects.equals(keyStoreFileName, other.keyStoreFileName)) {
 			return false;
 		}
-		if (keyStorePassword == null) {
-			if (other.keyStorePassword != null) {
-				return false;
-			}
-		} else if (!keyStorePassword.equals(other.keyStorePassword)) {
+		if (!Objects.equals(keyStorePassword, other.keyStorePassword)) {
 			return false;
 		}
-		if (keyStoreType == null) {
-			if (other.keyStoreType != null) {
-				return false;
-			}
-		} else if (!keyStoreType.equals(other.keyStoreType)) {
+		if (!Objects.equals(keyStoreType, other.keyStoreType)) {
 			return false;
 		}
 		return true;
@@ -132,7 +118,7 @@ public class SslSupport {
 				SSLContext sslContext = SSLContext.getInstance("SSL"); //$NON-NLS-1$
 				sslContext.init(keyManagers, trustManagers, null);
 
-				this.socketFactory = sslContext.getSocketFactory();
+				socketFactory = sslContext.getSocketFactory();
 			} catch (Exception cause) {
 				IOException e = new SslCertificateException();
 				e.initCause(cause);
@@ -144,12 +130,7 @@ public class SslSupport {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((keyStoreFileName == null) ? 0 : keyStoreFileName.hashCode());
-		result = prime * result + ((keyStorePassword == null) ? 0 : keyStorePassword.hashCode());
-		result = prime * result + ((keyStoreType == null) ? 0 : keyStoreType.hashCode());
-		return result;
+		return Objects.hash(keyStoreFileName, keyStorePassword, keyStoreType);
 	}
 
 	private KeyManager[] openKeyStore(String type) throws KeyStoreException, IOException, NoSuchAlgorithmException,

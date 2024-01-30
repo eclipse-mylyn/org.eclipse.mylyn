@@ -38,7 +38,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 
 	@Override
 	public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		String source = this.getPerspectiveId(perspective);
+		String source = getPerspectiveId(perspective);
 
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_ACTIVATED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
@@ -57,7 +57,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 
 	@Override
 	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
-		String source = this.getPerspectiveId(perspective);
+		String source = getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": " //$NON-NLS-1$
 				+ changeId);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
@@ -65,14 +65,14 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 
 	@Override
 	public void perspectiveClosed(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		String source = this.getPerspectiveId(perspective);
+		String source = getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CLOSED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
 	public void perspectiveOpened(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		String source = this.getPerspectiveId(perspective);
+		String source = getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_OPENED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
@@ -80,7 +80,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 	@Override
 	public void perspectiveSavedAs(IWorkbenchPage page, IPerspectiveDescriptor oldPerspective,
 			IPerspectiveDescriptor newPerspective) {
-		String source = this.getPerspectiveId(newPerspective);
+		String source = getPerspectiveId(newPerspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_SAVED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}

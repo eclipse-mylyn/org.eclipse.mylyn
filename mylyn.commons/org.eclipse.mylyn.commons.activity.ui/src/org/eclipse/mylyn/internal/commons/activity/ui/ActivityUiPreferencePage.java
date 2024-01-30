@@ -63,6 +63,7 @@ public class ActivityUiPreferencePage extends PreferencePage implements IWorkben
 		return container;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// ignore
 	}
@@ -71,8 +72,7 @@ public class ActivityUiPreferencePage extends PreferencePage implements IWorkben
 	public boolean performOk() {
 		getPreferenceStore().setValue(IActivityUiConstants.ACTIVITY_TIMEOUT_ENABLED,
 				timeoutEnabledButton.getSelection());
-		getPreferenceStore().setValue(IActivityUiConstants.ACTIVITY_TIMEOUT,
-				timeoutMinutes.getSelection() * (60 * 1000));
+		getPreferenceStore().setValue(IActivityUiConstants.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * 60 * 1000);
 		getPreferenceStore().setValue(IActivityUiConstants.ACTIVITY_TRACKING_ENABLED,
 				activityTrackingEnabledButton.getSelection());
 		return true;

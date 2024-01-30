@@ -17,8 +17,6 @@ import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.workbench.forms.DatePickerPanel.DateSelection;
 import org.eclipse.mylyn.internal.commons.workbench.Messages;
 import org.eclipse.swt.SWT;
@@ -54,7 +52,7 @@ public class DateSelectionDialog extends Dialog {
 			this.title = title;
 		}
 		if (initialDate != null) {
-			this.initialCalendar.setTime(initialDate.getTime());
+			initialCalendar.setTime(initialDate.getTime());
 		}
 		selectedDate = initialCalendar.getTime();
 	}
@@ -64,15 +62,12 @@ public class DateSelectionDialog extends Dialog {
 		getShell().setText(title);
 		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime,
 				hourOfDay);
-		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (!event.getSelection().isEmpty()) {
-					DateSelection dateSelection = (DateSelection) event.getSelection();
-					selectedDate = dateSelection.getDate().getTime();
-					if (dateSelection.isDefaultSelection()) {
-						okPressed();
-					}
+		datePanel.addSelectionChangedListener(event -> {
+			if (!event.getSelection().isEmpty()) {
+				DateSelection dateSelection = (DateSelection) event.getSelection();
+				selectedDate = dateSelection.getDate().getTime();
+				if (dateSelection.isDefaultSelection()) {
+					okPressed();
 				}
 			}
 		});

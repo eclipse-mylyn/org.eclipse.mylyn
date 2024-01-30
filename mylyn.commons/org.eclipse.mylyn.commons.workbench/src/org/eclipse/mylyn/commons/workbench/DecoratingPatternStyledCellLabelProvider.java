@@ -63,7 +63,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 		private StringMatcher matcher = null;
 
 		public PatternStyledLabelProvider(ILabelProvider provider) {
-			this.labelProvider = provider;
+			labelProvider = provider;
 		}
 
 		/**
@@ -73,15 +73,16 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 		 */
 		public void setPattern(String pattern) {
 			if (pattern != null && pattern.length() > 0) {
-				this.matcher = new StringMatcher(pattern, true, false);
+				matcher = new StringMatcher(pattern, true, false);
 			} else {
-				this.matcher = null;
+				matcher = null;
 			}
 		}
 
+		@Override
 		public StyledString getStyledText(Object element) {
 			StyledString styled = null;
-			String label = this.labelProvider.getText(element);
+			String label = labelProvider.getText(element);
 			if (matcher == null || label.length() == 0) {
 				styled = new StyledString(label);
 			} else {
@@ -104,27 +105,31 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 			return styled;
 		}
 
+		@Override
 		public Image getImage(Object element) {
-			return this.labelProvider.getImage(element);
+			return labelProvider.getImage(element);
 		}
 
+		@Override
 		public Font getFont(Object element) {
 			if (labelProvider instanceof IFontProvider) {
-				return ((IFontProvider) this.labelProvider).getFont(element);
+				return ((IFontProvider) labelProvider).getFont(element);
 			}
 			return null;
 		}
 
+		@Override
 		public Color getForeground(Object element) {
 			if (labelProvider instanceof IColorProvider) {
-				return ((IColorProvider) this.labelProvider).getForeground(element);
+				return ((IColorProvider) labelProvider).getForeground(element);
 			}
 			return null;
 		}
 
+		@Override
 		public Color getBackground(Object element) {
 			if (labelProvider instanceof IColorProvider) {
-				return ((IColorProvider) this.labelProvider).getBackground(element);
+				return ((IColorProvider) labelProvider).getBackground(element);
 			}
 			return null;
 		}
@@ -167,7 +172,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 	 * @return label provider
 	 */
 	public ILabelProvider getLabelProvider() {
-		return this.labelProvider;
+		return labelProvider;
 	}
 
 	/**
@@ -177,7 +182,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 	public void dispose() {
 		PlatformUI.getPreferenceStore().removePropertyChangeListener(this);
 		JFaceResources.getColorRegistry().removeListener(this);
-		this.labelProvider.dispose();
+		labelProvider.dispose();
 		super.dispose();
 	}
 
@@ -209,16 +214,13 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 	 * Schedule a refresh of this label provider. This method can be called from any thread.
 	 */
 	protected void scheduleRefresh() {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				refresh();
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().asyncExec(this::refresh);
 	}
 
 	/**
 	 * @param event
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		if (IWorkbenchPreferenceConstants.USE_COLORED_LABELS.equals(property)
@@ -232,15 +234,15 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 	 *
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
-		return this.labelProvider.getText(element);
+		return labelProvider.getText(element);
 	}
 
 	/**
 	 * Override preparation of style range to add border dot about highlight regions that don't have colors applied
 	 *
-	 * @see org.eclipse.jface.viewers.StyledCellLabelProvider#prepareStyleRange(org.eclipse.swt.custom.StyleRange,
-	 *      boolean)
+	 * @see org.eclipse.jface.viewers.StyledCellLabelProvider#prepareStyleRange(org.eclipse.swt.custom.StyleRange, boolean)
 	 */
 	@Override
 	protected StyleRange prepareStyleRange(StyleRange styleRange, boolean applyColors) {

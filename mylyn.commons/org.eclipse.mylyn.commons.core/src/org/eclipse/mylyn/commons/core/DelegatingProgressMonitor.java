@@ -69,9 +69,10 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 	private int worked;
 
 	public DelegatingProgressMonitor() {
-		monitors = new CopyOnWriteArrayList<IProgressMonitor>();
+		monitors = new CopyOnWriteArrayList<>();
 	}
 
+	@Override
 	public void attach(IProgressMonitor monitor) {
 		Assert.isNotNull(monitor);
 		if (calledBeginTask) {
@@ -98,23 +99,26 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 		monitors.add(monitor);
 	}
 
+	@Override
 	public void beginTask(String name, int totalWork) {
 		if (!calledBeginTask) {
-			this.taskName = name;
+			taskName = name;
 			this.totalWork = totalWork;
-			this.calledBeginTask = true;
+			calledBeginTask = true;
 		}
 		for (IProgressMonitor monitor : monitors) {
 			monitor.beginTask(name, totalWork);
 		}
 	}
 
+	@Override
 	public void detach(IProgressMonitor monitor) {
 		monitors.remove(monitor);
 	}
 
+	@Override
 	public void done() {
-		this.done = true;
+		done = true;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.done();
 		}
@@ -124,17 +128,20 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 	 * @see IDelegatingProgressMonitor#getData()
 	 * @since 3.5
 	 */
+	@Override
 	public Object getData() {
 		return data;
 	}
 
+	@Override
 	public void internalWorked(double work) {
-		this.internalWorked += work;
+		internalWorked += work;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.internalWorked(work);
 		}
 	}
 
+	@Override
 	public boolean isCanceled() {
 		boolean canceled = false;
 		for (IProgressMonitor monitor : monitors) {
@@ -146,8 +153,9 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 		return canceled;
 	}
 
+	@Override
 	public void setCanceled(boolean value) {
-		this.canceled = value;
+		canceled = value;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.setCanceled(value);
 		}
@@ -157,26 +165,30 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 	 * @see IDelegatingProgressMonitor#setData()
 	 * @since 3.5
 	 */
+	@Override
 	public void setData(Object o) {
-		this.data = o;
+		data = o;
 	}
 
+	@Override
 	public void setTaskName(String name) {
-		this.taskName = name;
+		taskName = name;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.setTaskName(name);
 		}
 	}
 
+	@Override
 	public void subTask(String name) {
-		this.subTaskName = name;
+		subTaskName = name;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.subTask(name);
 		}
 	}
 
+	@Override
 	public void worked(int work) {
-		this.worked += work;
+		worked += work;
 		for (IProgressMonitor monitor : monitors) {
 			monitor.worked(work);
 		}

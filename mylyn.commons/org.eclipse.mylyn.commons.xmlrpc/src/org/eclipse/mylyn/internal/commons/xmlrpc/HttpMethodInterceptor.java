@@ -21,8 +21,8 @@ import org.apache.xmlrpc.client.XmlRpcClientException;
  */
 interface HttpMethodInterceptor {
 
-	public abstract void processRequest(HttpMethod method) throws XmlRpcClientException;
+	void processRequest(HttpMethod method) throws XmlRpcClientException;
 
-	public abstract void processResponse(HttpMethod method) throws XmlRpcException;
+	void processResponse(HttpMethod method) throws XmlRpcException;
 
 }

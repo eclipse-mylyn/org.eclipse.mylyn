@@ -19,13 +19,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -101,7 +97,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 		Assert.isNotNull(values);
 		Assert.isNotNull(validValues);
 		Assert.isNotNull(dialogLabel);
-		this.selectedValues = new HashSet<String>(values);
+		selectedValues = new HashSet<>(values);
 		this.validValues = validValues;
 		this.dialogLabel = dialogLabel;
 		this.validDescriptions = validDescriptions;
@@ -151,6 +147,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 			viewer.setContentProvider(new ITreeContentProvider() {
 
+				@Override
 				public Object[] getChildren(Object parentElement) {
 					if (parentElement instanceof Map<?, ?>) {
 						return ((Map<?, ?>) parentElement).keySet().toArray();
@@ -158,21 +155,26 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 					return null;
 				}
 
+				@Override
 				public Object getParent(Object element) {
 					return null;
 				}
 
+				@Override
 				public boolean hasChildren(Object element) {
 					return false;
 				}
 
+				@Override
 				public Object[] getElements(Object inputElement) {
 					return getChildren(inputElement);
 				}
 
+				@Override
 				public void dispose() {
 				}
 
+				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				}
 
@@ -190,7 +192,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 			});
 			viewer.setInput(validValues);
 
-			Set<String> invalidValues = new HashSet<String>();
+			Set<String> invalidValues = new HashSet<>();
 
 			// Remove any currently entered invalid values
 			for (String value : selectedValues) {
@@ -212,28 +214,21 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 		}
 
-		viewer.addCheckStateListener(new ICheckStateListener() {
-
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				if (event.getChecked()) {
-					selectedValues.add((String) event.getElement());
-				} else {
-					selectedValues.remove(event.getElement());
-				}
+		viewer.addCheckStateListener(event -> {
+			if (event.getChecked()) {
+				selectedValues.add((String) event.getElement());
+			} else {
+				selectedValues.remove(event.getElement());
 			}
-
 		});
 		if (validDescriptions != null) {
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-				public void selectionChanged(SelectionChangedEvent event) {
-					TreeSelection treeSelection = (TreeSelection) event.getSelection();
-					Object firstSelectedElement = treeSelection.getFirstElement();
-					if (validDescriptions.containsKey(firstSelectedElement)) {
-						description.setText(validDescriptions.get(firstSelectedElement));
-					} else {
-						description.setText(""); //$NON-NLS-1$
-					}
+			viewer.addSelectionChangedListener(event -> {
+				TreeSelection treeSelection = (TreeSelection) event.getSelection();
+				Object firstSelectedElement = treeSelection.getFirstElement();
+				if (validDescriptions.containsKey(firstSelectedElement)) {
+					description.setText(validDescriptions.get(firstSelectedElement));
+				} else {
+					description.setText(""); //$NON-NLS-1$
 				}
 			});
 		}
@@ -242,7 +237,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 	}
 
 	public Set<String> getSelectedValues() {
-		return new HashSet<String>(selectedValues);
+		return new HashSet<>(selectedValues);
 	}
 
 }

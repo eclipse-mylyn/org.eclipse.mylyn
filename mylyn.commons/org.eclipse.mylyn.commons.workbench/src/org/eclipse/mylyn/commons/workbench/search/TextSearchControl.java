@@ -31,11 +31,8 @@ import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleControlAdapter;
 import org.eclipse.swt.accessibility.AccessibleControlEvent;
 import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -118,9 +115,9 @@ public class TextSearchControl extends Composite {
 
 	private final boolean automaticFind;
 
-	private final Set<SelectionListener> selectionListeners = new HashSet<SelectionListener>();
+	private final Set<SelectionListener> selectionListeners = new HashSet<>();
 
-	private Collection<String> searchHistory = new LinkedHashSet<String>();
+	private Collection<String> searchHistory = new LinkedHashSet<>();
 
 	private boolean hasHistorySupport;
 
@@ -167,13 +164,7 @@ public class TextSearchControl extends Composite {
 					JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON),
 					WorkbenchMessages.FilteredTree_ClearToolTip, //FilteredTree_AccessibleListenerClearButton,
 					WorkbenchMessages.FilteredTree_ClearToolTip, ICON_CANCEL);
-			addModifyListener(new ModifyListener() {
-
-				public void modifyText(ModifyEvent e) {
-					updateButtonVisibilityAndEnablement();
-
-				}
-			});
+			addModifyListener(e -> updateButtonVisibilityAndEnablement());
 			updateButtonVisibilityAndEnablement();
 		}
 
@@ -229,8 +220,8 @@ public class TextSearchControl extends Composite {
 						style |= ICON_SEARCH;
 					}
 					testText = new Text(parent, style);
-					useNativeSearchField = Boolean.valueOf((testText.getStyle() & ICON_CANCEL) != 0
-							&& (!automaticFind || (testText.getStyle() & ICON_SEARCH) != 0));
+					useNativeSearchField = (testText.getStyle() & ICON_CANCEL) != 0
+							&& (!automaticFind || (testText.getStyle() & ICON_SEARCH) != 0);
 				} finally {
 					if (testText != null) {
 						testText.dispose();
@@ -241,7 +232,7 @@ public class TextSearchControl extends Composite {
 		} else {
 			useNativeSearchField = Boolean.FALSE;
 		}
-		return useNativeSearchField.booleanValue();
+		return useNativeSearchField;
 	}
 
 	private Control createLabelButtonControl(Composite parent, final Text textControl,
@@ -259,17 +250,15 @@ public class TextSearchControl extends Composite {
 		labelButton.setImage(inactiveImage);
 		labelButton.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		labelButton.setToolTipText(toolTipText);
-		labelButton.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if (nativeImage == null && activeImage != null && !activeImage.isDisposed()) {
-					activeImage.dispose();
-				}
-				if (inactiveImage != null && !inactiveImage.isDisposed()) {
-					inactiveImage.dispose();
-				}
-				if (pressedImage != null && !pressedImage.isDisposed()) {
-					pressedImage.dispose();
-				}
+		labelButton.addDisposeListener(e -> {
+			if (nativeImage == null && activeImage != null && !activeImage.isDisposed()) {
+				activeImage.dispose();
+			}
+			if (inactiveImage != null && !inactiveImage.isDisposed()) {
+				inactiveImage.dispose();
+			}
+			if (pressedImage != null && !pressedImage.isDisposed()) {
+				pressedImage.dispose();
 			}
 		});
 		labelButton.addMouseListener(new MouseAdapter() {
@@ -281,6 +270,7 @@ public class TextSearchControl extends Composite {
 				fMoveListener = new MouseMoveListener() {
 					private boolean fMouseInButton = true;
 
+					@Override
 					public void mouseMove(MouseEvent e) {
 						boolean mouseInButton = isMouseInButton(e);
 						if (mouseInButton != fMouseInButton) {
@@ -314,18 +304,21 @@ public class TextSearchControl extends Composite {
 		});
 
 		labelButton.addMouseTrackListener(new MouseTrackListener() {
+			@Override
 			public void mouseEnter(MouseEvent e) {
 				if (labelButton.getImage() != activeImage) {
 					labelButton.setImage(activeImage);
 				}
 			}
 
+			@Override
 			public void mouseExit(MouseEvent e) {
 				if (labelButton.getImage() != inactiveImage) {
 					labelButton.setImage(inactiveImage);
 				}
 			}
 
+			@Override
 			public void mouseHover(MouseEvent e) {
 			}
 		});
@@ -474,7 +467,7 @@ public class TextSearchControl extends Composite {
 		if (memento == null) {
 			return;
 		}
-		List<String> history = new ArrayList<String>();
+		List<String> history = new ArrayList<>();
 
 		IMemento rootMemento = memento.getChild(FIND_MEMENTO_TYPE);
 		if (rootMemento != null) {

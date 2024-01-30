@@ -23,12 +23,12 @@ public class InteractionByTypeSummary {
 	HashMap<String, HashMap<Integer, Integer>> usageMap;
 
 	public InteractionByTypeSummary() {
-		usageMap = new HashMap<String, HashMap<Integer, Integer>>();
+		usageMap = new HashMap<>();
 	}
 
 	public void setUserCount(int userId, String originId, int count) {
 		if (!usageMap.containsKey(originId)) {
-			usageMap.put(originId, new HashMap<Integer, Integer>());
+			usageMap.put(originId, new HashMap<>());
 		}
 		usageMap.get(originId).put(userId, count);
 	}
@@ -78,7 +78,7 @@ public class InteractionByTypeSummary {
 	}
 
 	public ArrayList<String> getOriginIdList() {
-		ArrayList<String> originIdList = new ArrayList<String>(usageMap.keySet());
+		ArrayList<String> originIdList = new ArrayList<>(usageMap.keySet());
 
 		return originIdList;
 	}

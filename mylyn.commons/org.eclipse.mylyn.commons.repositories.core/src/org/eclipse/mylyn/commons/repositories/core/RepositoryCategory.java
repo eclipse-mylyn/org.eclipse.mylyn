@@ -58,7 +58,7 @@ public class RepositoryCategory extends PlatformObject {
 
 	public int compareTo(Object arg0) {
 		if (arg0 instanceof RepositoryCategory) {
-			return this.getRank() - ((RepositoryCategory) arg0).getRank();
+			return getRank() - ((RepositoryCategory) arg0).getRank();
 		}
 		return 0;
 	}

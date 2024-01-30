@@ -22,13 +22,13 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class DelegatingUsageCollector implements IUsageCollector {
 
-	protected List<IUsageScanner> scanners = new ArrayList<IUsageScanner>();
+	protected List<IUsageScanner> scanners = new ArrayList<>();
 
 	public void addScanner(IUsageScanner aScanner) {
 		scanners.add(aScanner);
 	}
 
-	private List<IUsageCollector> delegates = new ArrayList<IUsageCollector>();
+	private List<IUsageCollector> delegates = new ArrayList<>();
 
 	private String reportTitle = ""; //$NON-NLS-1$
 
@@ -40,14 +40,16 @@ public class DelegatingUsageCollector implements IUsageCollector {
 		this.delegates = delegates;
 	}
 
+	@Override
 	public void consumeEvent(InteractionEvent event, int userId) {
 		for (IUsageCollector collector : delegates) {
 			collector.consumeEvent(event, userId);
 		}
 	}
 
+	@Override
 	public List<String> getReport() {
-		List<String> combinedReports = new ArrayList<String>();
+		List<String> combinedReports = new ArrayList<>();
 		for (IUsageCollector collector : delegates) {
 			combinedReports.add("<h3>" + collector.getReportTitle() + "</h3>"); //$NON-NLS-1$ //$NON-NLS-2$
 			combinedReports.addAll(collector.getReport());
@@ -55,10 +57,12 @@ public class DelegatingUsageCollector implements IUsageCollector {
 		return combinedReports;
 	}
 
+	@Override
 	public void exportAsCSVFile(String directory) {
 
 	}
 
+	@Override
 	public String getReportTitle() {
 		return reportTitle;
 	}
@@ -67,8 +71,9 @@ public class DelegatingUsageCollector implements IUsageCollector {
 		this.reportTitle = reportTitle;
 	}
 
+	@Override
 	public List<String> getPlainTextReport() {
-		List<String> combinedReports = new ArrayList<String>();
+		List<String> combinedReports = new ArrayList<>();
 		for (IUsageCollector collector : delegates) {
 			combinedReports.add(collector.getReportTitle());
 			combinedReports.addAll(collector.getPlainTextReport());

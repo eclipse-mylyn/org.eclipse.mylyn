@@ -21,20 +21,23 @@ import org.eclipse.mylyn.commons.identity.core.IIdentityService;
  */
 public class PeopleContentProvider implements ITreeContentProvider {
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	public PeopleContentProvider() {
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// ignore
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		IIdentityService identityService = IdentityUiPlugin.getDefault().getIdentityService();
 		if (identityService != null) {
@@ -43,6 +46,7 @@ public class PeopleContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IIdentity) {
 			return ((IIdentity) parentElement).getAccounts();
@@ -50,10 +54,12 @@ public class PeopleContentProvider implements ITreeContentProvider {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof IIdentity) {
 			return true;

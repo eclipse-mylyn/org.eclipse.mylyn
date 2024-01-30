@@ -25,18 +25,18 @@ public interface IOperationMonitor extends IProgressMonitorWithBlocking {
 
 	public enum OperationFlag {
 		BACKGROUND
-	};
+	}
 
-	public abstract void addFlag(OperationFlag flag);
+	void addFlag(OperationFlag flag);
 
-	public abstract boolean hasFlag(OperationFlag flag);
+	boolean hasFlag(OperationFlag flag);
 
-	public abstract IOperationMonitor newChild(int totalWork);
+	IOperationMonitor newChild(int totalWork);
 
-	public abstract IOperationMonitor newChild(int totalWork, int suppressFlags);
+	IOperationMonitor newChild(int totalWork, int suppressFlags);
 
-	public void removeFlag(OperationFlag flag);
+	void removeFlag(OperationFlag flag);
 
-	public abstract IOperationMonitor setWorkRemaining(int workRemaining);
+	IOperationMonitor setWorkRemaining(int workRemaining);
 
 }

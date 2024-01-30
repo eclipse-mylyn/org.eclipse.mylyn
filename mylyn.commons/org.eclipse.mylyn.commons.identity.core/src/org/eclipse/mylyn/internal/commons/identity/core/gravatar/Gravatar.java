@@ -54,7 +54,7 @@ public class Gravatar implements Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		return this.id.hashCode();
+		return id.hashCode();
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class Gravatar implements Serializable {
 	 * @return non-null byte array
 	 */
 	public byte[] getBytes() {
-		byte[] copy = new byte[this.bytes.length];
-		System.arraycopy(this.bytes, 0, copy, 0, copy.length);
+		byte[] copy = new byte[bytes.length];
+		System.arraycopy(bytes, 0, copy, 0, copy.length);
 		return copy;
 	}
 
@@ -86,7 +86,7 @@ public class Gravatar implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class Gravatar implements Serializable {
 	 * @return id
 	 */
 	public String getId() {
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class Gravatar implements Serializable {
 	 * @return update time
 	 */
 	public long getUpdateTime() {
-		return this.updateTime;
+		return updateTime;
 	}
 
 }

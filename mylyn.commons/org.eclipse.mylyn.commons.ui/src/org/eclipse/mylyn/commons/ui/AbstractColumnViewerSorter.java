@@ -42,8 +42,7 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 	/**
 	 * Returns the current sort order.
 	 * 
-	 * @return {@link SWT#DOWN}, if sorting descending; 0, if no sort order is specified; {@link SWT#UP}, if sorting
-	 *         ascending
+	 * @return {@link SWT#DOWN}, if sorting descending; 0, if no sort order is specified; {@link SWT#UP}, if sorting ascending
 	 */
 	abstract int getSortDirection(V viewer);
 
@@ -78,8 +77,8 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 	}
 
 	/**
-	 * Compares <code>e1</code> and <code>e2</code> following the contract of
-	 * {@link ViewerComparator#compare(Viewer, Object, Object)}. Subclasses may override.
+	 * Compares <code>e1</code> and <code>e2</code> following the contract of {@link ViewerComparator#compare(Viewer, Object, Object)}.
+	 * Subclasses may override.
 	 * 
 	 * @see ViewerComparator#compare(Viewer, Object, Object)
 	 */
@@ -107,8 +106,7 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 			name2 = e2.toString();
 		} else {
 			CellLabelProvider prov = viewer.getLabelProvider(columnIndex);
-			if (prov instanceof ILabelProvider) {
-				ILabelProvider lprov = (ILabelProvider) prov;
+			if (prov instanceof ILabelProvider lprov) {
 				name1 = lprov.getText(e1);
 				name2 = lprov.getText(e2);
 			} else {

@@ -34,27 +34,30 @@ public class WindowChangeMonitor implements IWindowListener {
 	public static final String WINDOW_DEACTIVATED = "deactivated"; //$NON-NLS-1$
 
 	public WindowChangeMonitor() {
-		super();
 	}
 
 	// TODO: Should we add the default set of monitors to the new window as
 	// well?
+	@Override
 	public void windowOpened(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_OPENED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
+	@Override
 	public void windowClosed(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_CLOSED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
+	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
 //		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 //				WINDOW_DEACTIVATED);
 //		MylynMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
+	@Override
 	public void windowActivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_ACTIVATED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);

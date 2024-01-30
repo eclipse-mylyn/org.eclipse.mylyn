@@ -14,12 +14,9 @@
 package org.eclipse.mylyn.commons.workbench;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -40,6 +37,7 @@ import org.eclipse.ui.themes.IThemeManager;
 public abstract class GradientDrawer {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
+		@Override
 		public void handleEvent(Event event) {
 			GC gc = event.gc;
 			if (shouldApplyGradient(event) && gc != null) {
@@ -102,21 +100,19 @@ public abstract class GradientDrawer {
 
 	protected abstract boolean shouldApplyGradient(Event event);
 
-	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_PAST)
-					|| event.getProperty().equals(CommonThemes.COLOR_COMPLETED_TODAY)
-					|| event.getProperty().equals(CommonThemes.COLOR_COMPLETED)
-					|| event.getProperty().equals(CommonThemes.COLOR_OVERDUE)
-					|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_TODAY)
-					|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_PAST)
-					|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_TODAY)
-					|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_THIS_WEEK)
-					|| event.getProperty().equals(CommonThemes.COLOR_TASK_ACTIVE)
-					|| CommonThemes.isCommonTheme(event.getProperty())) {
-				configureGradientColors();
-			}
+	private final IPropertyChangeListener THEME_CHANGE_LISTENER = event -> {
+		if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
+				|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_PAST)
+				|| event.getProperty().equals(CommonThemes.COLOR_COMPLETED_TODAY)
+				|| event.getProperty().equals(CommonThemes.COLOR_COMPLETED)
+				|| event.getProperty().equals(CommonThemes.COLOR_OVERDUE)
+				|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_TODAY)
+				|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_PAST)
+				|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_TODAY)
+				|| event.getProperty().equals(CommonThemes.COLOR_SCHEDULED_THIS_WEEK)
+				|| event.getProperty().equals(CommonThemes.COLOR_TASK_ACTIVE)
+				|| CommonThemes.isCommonTheme(event.getProperty())) {
+			configureGradientColors();
 		}
 	};
 
@@ -131,14 +127,11 @@ public abstract class GradientDrawer {
 	private final TreeViewer treeViewer;
 
 	public GradientDrawer(IThemeManager theThemeManager, TreeViewer treeViewer) {
-		this.themeManager = theThemeManager;
+		themeManager = theThemeManager;
 		this.treeViewer = treeViewer;
-		treeViewer.getControl().addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				if (themeManager != null) {
-					themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
-				}
+		treeViewer.getControl().addDisposeListener(e -> {
+			if (themeManager != null) {
+				themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
 			}
 		});
 		configureGradientColors();
@@ -161,7 +154,7 @@ public abstract class GradientDrawer {
 			customized = false;
 		}
 
-		if (gradientListenerAdded == false && categoryGradientStart != null
+		if (!gradientListenerAdded && categoryGradientStart != null
 				&& !categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			gradientListenerAdded = true;

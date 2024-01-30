@@ -27,8 +27,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.mylyn.commons.core.XmlMemento;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -37,9 +35,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -118,25 +114,23 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 		final MenuItem item = new MenuItem(parent, SWT.CHECK);
 		item.setText(column.getText());
 		item.setSelection(getWidth(column) > 0);
-		item.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				int lastWidth = getWidth(column);
-				if (lastWidth != 0) {
-					lastStates[i].width = lastWidth;
-				}
-				if (lastStates[i].width == 0) {
-					// if the user shrunk it to 0, use the default
-					lastStates[i].width = defaults[i].width;
-				}
-				if (lastStates[i].width == 0) {
-					// if the default and the last width was 0, then set to 150 pixels
-					lastStates[i].width = 150;
-				}
-				if (item.getSelection()) {
-					setWidth(column, lastStates[i].width);
-				} else {
-					setWidth(column, 0);
-				}
+		item.addListener(SWT.Selection, event -> {
+			int lastWidth = getWidth(column);
+			if (lastWidth != 0) {
+				lastStates[i].width = lastWidth;
+			}
+			if (lastStates[i].width == 0) {
+				// if the user shrunk it to 0, use the default
+				lastStates[i].width = defaults[i].width;
+			}
+			if (lastStates[i].width == 0) {
+				// if the default and the last width was 0, then set to 150 pixels
+				lastStates[i].width = 150;
+			}
+			if (item.getSelection()) {
+				setWidth(column, lastStates[i].width);
+			} else {
+				setWidth(column, 0);
 			}
 		});
 		return item;
@@ -148,11 +142,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 
 		final MenuItem restoreDefaults = new MenuItem(parent, SWT.PUSH);
 		restoreDefaults.setText(Messages.AbstractColumnViewerSupport_Restore_defaults);
-		restoreDefaults.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				restoreDefaults();
-			}
-		});
+		restoreDefaults.addListener(SWT.Selection, event -> restoreDefaults());
 	}
 
 	abstract Rectangle getClientArea();
@@ -197,7 +187,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 				if (totalWidth == 0) {
 					return width;
 				} else {
-					return (width * 100) / totalWidth;
+					return width * 100 / totalWidth;
 				}
 			} else {
 				// we dont know
@@ -222,7 +212,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 					public void widgetSelected(SelectionEvent e) {
 						int direction = getSortDirection();
 						if (getSortColumn() == column && direction != SWT.NONE) {
-							direction = (direction == SWT.DOWN) ? SWT.UP : SWT.NONE;
+							direction = direction == SWT.DOWN ? SWT.UP : SWT.NONE;
 						} else {
 							direction = SWT.DOWN;
 						}
@@ -254,27 +244,21 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 		defaultOrder = getColumnOrder();
 		defaultSortDirection = getSortDirection();
 
-		control.addListener(SWT.MenuDetect, new Listener() {
-			public void handleEvent(Event event) {
-				Menu menu = control.getMenu();
-				if (menu != null && menu != headerMenu) {
-					contextMenu = menu;
-				}
-
-				Display display = control.getDisplay();
-				Point pt = display.map(null, control, new Point(event.x, event.y));
-				Rectangle clientArea = getClientArea();
-				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + getHeaderHeight());
-
-				control.setMenu(header ? headerMenu : contextMenu);
+		control.addListener(SWT.MenuDetect, event -> {
+			Menu menu = control.getMenu();
+			if (menu != null && menu != headerMenu) {
+				contextMenu = menu;
 			}
+
+			Display display = control.getDisplay();
+			Point pt = display.map(null, control, new Point(event.x, event.y));
+			Rectangle clientArea = getClientArea();
+			boolean header = clientArea.y <= pt.y && pt.y < clientArea.y + getHeaderHeight();
+
+			control.setMenu(header ? headerMenu : contextMenu);
 		});
 
-		control.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent event) {
-				save();
-			}
-		});
+		control.addDisposeListener(event -> save());
 	}
 
 	private boolean canHide(T column) {
@@ -299,7 +283,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 		if (stateFile.exists()) {
 			try {
 				FileReader reader = new FileReader(stateFile);
-				try {
+				try (reader) {
 					XmlMemento memento = XmlMemento.createReadRoot(reader);
 
 					XmlMemento[] children = memento.getChildren("Column"); //$NON-NLS-1$
@@ -316,7 +300,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 						}
 						headerMenu.getItem(i).setSelection(getWidth(column) > 0);
 						Integer orderInteger = children[i].getInteger("order"); //$NON-NLS-1$
-						order[i] = (orderInteger != null) ? orderInteger.intValue() : 0;
+						order[i] = orderInteger != null ? orderInteger : 0;
 						restoreAdditionalChildInfo(children[i], column);
 					}
 					try {
@@ -334,8 +318,6 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 					}
 				} catch (Exception e) {
 					// ignore
-				} finally {
-					reader.close();
 				}
 			} catch (IOException e) {
 				// ignore
@@ -397,10 +379,8 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 
 		try {
 			FileWriter writer = new FileWriter(stateFile);
-			try {
+			try (writer) {
 				memento.save(writer);
-			} finally {
-				writer.close();
 			}
 		} catch (IOException e) {
 			// ignore

@@ -54,8 +54,8 @@ public class CoreUtil {
 	}
 
 	/**
-	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will
-	 * contains a comma separated list of contained elements.
+	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will contains a comma
+	 * separated list of contained elements.
 	 *
 	 * @since 3.4
 	 */
@@ -108,15 +108,14 @@ public class CoreUtil {
 	}
 
 	/**
-	 * Returns true, if <code>o1</code> is equal to <code>o2</code> or <code>o1</code> and <code>o2</code> are
-	 * <code>null</code>.
+	 * Returns true, if <code>o1</code> is equal to <code>o2</code> or <code>o1</code> and <code>o2</code> are <code>null</code>.
 	 *
 	 * @see Object#equals(Object)
 	 * @since 3.7
 	 */
 	public static boolean areEqual(Object o1, Object o2) {
 		if (o1 == null) {
-			return (o2 == null);
+			return o2 == null;
 		} else {
 			return o1.equals(o2);
 		}
@@ -126,12 +125,12 @@ public class CoreUtil {
 	 * Compares <code>o1</code> and <code>o2</code>.
 	 *
 	 * @since 3.7
-	 * @return a negative integer, 0, or a positive, if o1 is less than o2, o1 equals o2 or o1 is more than o2; null is
-	 *         considered less than any value
+	 * @return a negative integer, 0, or a positive, if o1 is less than o2, o1 equals o2 or o1 is more than o2; null is considered less than
+	 *         any value
 	 */
 	public static <T> int compare(Comparable<T> o1, T o2) {
 		if (o1 == null) {
-			return (o2 != null) ? 1 : 0;
+			return o2 != null ? 1 : 0;
 		} else if (o2 == null) {
 			return -1;
 		}
@@ -145,7 +144,7 @@ public class CoreUtil {
 	 * @see Boolean#equals(Object)
 	 */
 	public static boolean propertyEquals(boolean value, Object expectedValue) {
-		return (expectedValue == null) ? value == true : Boolean.valueOf(value).equals(expectedValue);
+		return expectedValue == null ? value : Boolean.valueOf(value).equals(expectedValue);
 	}
 
 	/**
@@ -237,7 +236,7 @@ public class CoreUtil {
 	 * @since 3.7
 	 */
 	public static String asFileName(String name) {
-		StringBuffer sb = new StringBuffer(name.length());
+		StringBuilder sb = new StringBuilder(name.length());
 		char[] chars = name.toCharArray();
 		for (char c : chars) {
 			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {

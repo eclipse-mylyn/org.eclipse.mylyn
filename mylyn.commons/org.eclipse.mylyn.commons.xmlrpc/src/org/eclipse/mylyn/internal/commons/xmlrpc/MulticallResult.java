@@ -31,7 +31,7 @@ public class MulticallResult {
 	}
 
 	public <T> List<T> getItems(Class<T> itemClass) {
-		List<T> items = new ArrayList<T>(response.length);
+		List<T> items = new ArrayList<>(response.length);
 		for (Object element : response) {
 			items.add(itemClass.cast(getMultiCallResult(element)));
 		}

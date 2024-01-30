@@ -49,7 +49,7 @@ public class CloneableHostConfiguration extends HostConfiguration {
 		final Protocol oldProtocol = getProtocol();
 		if (oldProtocol != null) {
 			final String oldScheme = oldProtocol.getScheme();
-			if (oldScheme == scheme || (oldScheme != null && oldScheme.equalsIgnoreCase(scheme))) {
+			if (oldScheme == scheme || oldScheme != null && oldScheme.equalsIgnoreCase(scheme)) {
 				return oldProtocol;
 			}
 		}

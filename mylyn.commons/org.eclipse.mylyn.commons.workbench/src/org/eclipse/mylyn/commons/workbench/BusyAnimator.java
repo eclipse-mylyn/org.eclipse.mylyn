@@ -31,8 +31,8 @@ import org.eclipse.ui.part.WorkbenchPart;
 public class BusyAnimator {
 
 	/**
-	 * A callback for modifying the title image of an editor. Clients that provide busy animations should implement this
-	 * interface and delegate to the respective methods in {@link WorkbenchPart}.
+	 * A callback for modifying the title image of an editor. Clients that provide busy animations should implement this interface and
+	 * delegate to the respective methods in {@link WorkbenchPart}.
 	 * 
 	 * @author Shawn Minto
 	 * @see BusyAnimator
@@ -46,12 +46,12 @@ public class BusyAnimator {
 		 * @param image
 		 *            the image
 		 */
-		public void setImage(Image image);
+		void setImage(Image image);
 
 		/**
 		 * Returns the current title image of the editor.
 		 */
-		public Image getImage();
+		Image getImage();
 
 	}
 
@@ -67,6 +67,7 @@ public class BusyAnimator {
 			this.images = images;
 		}
 
+		@Override
 		public void run() {
 			if (stopped) {
 				return;
@@ -158,10 +159,8 @@ public class BusyAnimator {
 			if (image != null && !image.isDisposed()) {
 				client.setImage(image);
 				return true;
-			} else {
-				if (oldImage != null && !oldImage.isDisposed()) {
-					client.setImage(oldImage);
-				}
+			} else if (oldImage != null && !oldImage.isDisposed()) {
+				client.setImage(oldImage);
 			}
 		}
 		return false;

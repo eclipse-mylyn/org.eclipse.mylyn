@@ -32,13 +32,13 @@ public class TreeViewerSupport extends AbstractColumnViewerSupport<TreeColumn> {
 
 	public TreeViewerSupport(TreeViewer viewer, File stateFile) {
 		super(viewer, stateFile);
-		this.tree = viewer.getTree();
+		tree = viewer.getTree();
 		initializeViewerSupport();
 	}
 
 	public TreeViewerSupport(TreeViewer viewer, File stateFile, boolean[] defaultVisibilities) {
 		super(viewer, stateFile, defaultVisibilities);
-		this.tree = viewer.getTree();
+		tree = viewer.getTree();
 		initializeViewerSupport();
 	}
 

@@ -21,8 +21,8 @@ import org.eclipse.jface.operation.IRunnableContext;
  */
 public interface IPartContainer extends IRunnableContext {
 
-	public void setMessage(String message, int messageType);
+	void setMessage(String message, int messageType);
 
-	public void updateButtons();
+	void updateButtons();
 
 }

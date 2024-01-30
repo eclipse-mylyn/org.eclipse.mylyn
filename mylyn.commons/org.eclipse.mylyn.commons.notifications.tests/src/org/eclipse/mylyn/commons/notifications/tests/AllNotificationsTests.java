@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.commons.notifications.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmentTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageManagerTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageTest;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel

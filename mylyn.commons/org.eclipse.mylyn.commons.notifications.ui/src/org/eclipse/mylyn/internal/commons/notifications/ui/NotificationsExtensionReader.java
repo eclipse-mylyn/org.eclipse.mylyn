@@ -42,8 +42,8 @@ public class NotificationsExtensionReader {
 	private static Collection<NotificationCategory> categories;
 
 	/**
-	 * Returns a list of notification categories, each containing their belonging notification events. Once initialised
-	 * the same list will be returned upon subsequent calls of this method.
+	 * Returns a list of notification categories, each containing their belonging notification events. Once initialised the same list will
+	 * be returned upon subsequent calls of this method.
 	 * 
 	 * @return a list of notification categories.
 	 * @see NotificationModel#save(org.eclipse.ui.IMemento)
@@ -53,7 +53,7 @@ public class NotificationsExtensionReader {
 		if (categories != null) {
 			return categories;
 		}
-		HashMap<String, NotificationCategory> categoryById = new HashMap<String, NotificationCategory>();
+		HashMap<String, NotificationCategory> categoryById = new HashMap<>();
 
 		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0, "Notifcation extensions failed to load", //$NON-NLS-1$
 				null);
@@ -87,7 +87,7 @@ public class NotificationsExtensionReader {
 							result.add(new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN,
 									NLS.bind("Extension {0} contributed by {1} specify unknown category ''{2}''", //$NON-NLS-1$
 											new String[] { element.getNamespaceIdentifier(),
-													element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$ 
+													element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$
 						}
 					} else {
 						result.add(status);
@@ -110,7 +110,7 @@ public class NotificationsExtensionReader {
 			return sinks;
 		}
 
-		sinks = new ArrayList<NotificationSinkDescriptor>();
+		sinks = new ArrayList<>();
 
 		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0, "Notifcation extensions failed to load", //$NON-NLS-1$
 				null);

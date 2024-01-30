@@ -17,6 +17,6 @@ package org.eclipse.mylyn.internal.monitor.core;
  */
 public interface IMonitorCoreConstants {
 
-	public static String ID_PLUGIN = "org.eclipse.mylyn.monitor.core"; //$NON-NLS-1$
+	String ID_PLUGIN = "org.eclipse.mylyn.monitor.core"; //$NON-NLS-1$
 
 }

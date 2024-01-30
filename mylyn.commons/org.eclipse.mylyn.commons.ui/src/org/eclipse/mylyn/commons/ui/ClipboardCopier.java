@@ -34,7 +34,7 @@ public class ClipboardCopier {
 	 */
 	public interface TextProvider {
 
-		public abstract String getTextForElement(Object element);
+		String getTextForElement(Object element);
 
 	}
 
@@ -52,8 +52,7 @@ public class ClipboardCopier {
 	private Clipboard clipboard;
 
 	/**
-	 * Constructs a new instance. Instances must be disposed by invoking {@link #dispose()} when they are no longer
-	 * needed.
+	 * Constructs a new instance. Instances must be disposed by invoking {@link #dispose()} when they are no longer needed.
 	 */
 	public ClipboardCopier() {
 	}

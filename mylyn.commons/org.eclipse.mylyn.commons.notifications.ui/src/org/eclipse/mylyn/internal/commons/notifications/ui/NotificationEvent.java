@@ -22,9 +22,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
 
 /**
- * Describes an event that is handled through a notification. The handling of event is stored in
- * {@link NotificationAction} objects that delegate to {@link NotificationSink} objects for the handling of actual
- * events.
+ * Describes an event that is handled through a notification. The handling of event is stored in {@link NotificationAction} objects that
+ * delegate to {@link NotificationSink} objects for the handling of actual events.
  * 
  * @author Steffen Pingel
  * @author Torkild U. Resheim
@@ -55,7 +54,7 @@ public class NotificationEvent extends NotificationElement {
 
 	public NotificationEvent(IConfigurationElement element) {
 		super(element);
-		defaultSinks = new ArrayList<String>();
+		defaultSinks = new ArrayList<>();
 		IConfigurationElement[] children = element.getChildren("defaultHandler"); //$NON-NLS-1$
 		for (IConfigurationElement child : children) {
 			defaultSinks.add(child.getAttribute("sinkId")); //$NON-NLS-1$

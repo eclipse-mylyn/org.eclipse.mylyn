@@ -40,6 +40,7 @@ public class NotificationService implements INotificationService {
 	/**
 	 * Notify sinks about the.
 	 */
+	@Override
 	public void notify(List<? extends AbstractNotification> notifications) {
 		// Return if notifications are not globally enabled.
 		if (!NotificationsPlugin.getDefault()
@@ -49,7 +50,7 @@ public class NotificationService implements INotificationService {
 		}
 		// For each sink assemble a list of notifications that are not blocked
 		// and pass these along.
-		HashMap<NotificationSink, ArrayList<AbstractNotification>> filtered = new HashMap<NotificationSink, ArrayList<AbstractNotification>>();
+		HashMap<NotificationSink, ArrayList<AbstractNotification>> filtered = new HashMap<>();
 		for (AbstractNotification notification : notifications) {
 			String id = notification.getEventId();
 			NotificationHandler handler = NotificationsPlugin.getDefault().getModel().getNotificationHandler(id);
@@ -61,7 +62,7 @@ public class NotificationService implements INotificationService {
 						if (sink != null) {
 							ArrayList<AbstractNotification> list = filtered.get(sink);
 							if (list == null) {
-								list = new ArrayList<AbstractNotification>();
+								list = new ArrayList<>();
 								filtered.put(sink, list);
 							}
 							list.add(notification);
@@ -75,13 +76,15 @@ public class NotificationService implements INotificationService {
 		for (Entry<NotificationSink, ArrayList<AbstractNotification>> entry : filtered.entrySet()) {
 			final NotificationSink sink = entry.getKey();
 			final NotificationSinkEvent event = new NotificationSinkEvent(
-					new ArrayList<AbstractNotification>(entry.getValue()));
+					new ArrayList<>(entry.getValue()));
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, NotificationsPlugin.ID_PLUGIN, "Sink failed: " //$NON-NLS-1$
 							+ sink.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					sink.notify(event);
 				}

@@ -37,7 +37,7 @@ public class NotificationEnvironment {
 	private final Dictionary<Object, Object> environment;
 
 	public NotificationEnvironment() {
-		environment = new Hashtable<Object, Object>(System.getProperties());
+		environment = new Hashtable<>(System.getProperties());
 	}
 
 	public Version getFrameworkVersion() {
@@ -50,7 +50,7 @@ public class NotificationEnvironment {
 			bundle = Platform.getBundle(Platform.PI_RUNTIME);
 		}
 		if (bundle != null) {
-			String versionString = (String) bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+			String versionString = bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
 			try {
 				return new Version(versionString);
 			} catch (IllegalArgumentException e) {
@@ -66,18 +66,12 @@ public class NotificationEnvironment {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean matches(IAdaptable item, IProgressMonitor monitor) {
-		IFilterable entry = (IFilterable) item.getAdapter(IFilterable.class);
+		IFilterable entry = item.getAdapter(IFilterable.class);
 		if (entry == null) {
 			return true;
 		}
 
-		if (!matchesVersion(entry.getFilter("frameworkVersion"), getFrameworkVersion())) { //$NON-NLS-1$
-			return false;
-		}
-		if (!matchesVersion(entry.getFilter("platformVersion"), getPlatformVersion())) { //$NON-NLS-1$
-			return false;
-		}
-		if (!matchesVersion(entry.getFilter("runtimeVersion"), getRuntimeVersion())) { //$NON-NLS-1$
+		if (!matchesVersion(entry.getFilter("frameworkVersion"), getFrameworkVersion()) || !matchesVersion(entry.getFilter("platformVersion"), getPlatformVersion()) || !matchesVersion(entry.getFilter("runtimeVersion"), getRuntimeVersion())) { //$NON-NLS-1$
 			return false;
 		}
 		List<String> filterExpressions = entry.getFilters("filter"); //$NON-NLS-1$

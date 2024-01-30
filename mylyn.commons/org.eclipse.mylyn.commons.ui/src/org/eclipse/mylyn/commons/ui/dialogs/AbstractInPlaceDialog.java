@@ -24,7 +24,6 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -55,16 +54,11 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 
 	private Control control;
 
-	private final Set<IInPlaceDialogListener> listeners = new HashSet<IInPlaceDialogListener>();
+	private final Set<IInPlaceDialogListener> listeners = new HashSet<>();
 
 	private final Control openControl;
 
-	DisposeListener disposeListener = new DisposeListener() {
-
-		public void widgetDisposed(DisposeEvent e) {
-			dispose();
-		}
-	};
+	DisposeListener disposeListener = e -> dispose();
 
 	public AbstractInPlaceDialog(Shell parent, int side, Control openControl) {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE, false, false, false, false, false, null, null);
@@ -80,7 +74,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 			bounds.x = absPosition.x - bounds.x;
 			bounds.y = absPosition.y - bounds.y;
 		}
-		this.controlBounds = bounds;
+		controlBounds = bounds;
 		if (openControl != null) {
 			openControl.addDisposeListener(disposeListener);
 		}
@@ -104,7 +98,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		composite.setLayout(gl);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
 
-		this.control = createControl(composite);
+		control = createControl(composite);
 
 		Composite buttonComposite = new Composite(parent, SWT.NONE);
 		gl = new GridLayout();
@@ -142,6 +136,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		button.setText(text);
 		button.addSelectionListener(new SelectionListener() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setReturnCode(returnCode);
 				if (shouldClose) {
@@ -151,6 +146,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 				}
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
@@ -195,12 +191,14 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		final InPlaceDialogEvent event = new InPlaceDialogEvent(getReturnCode(), isClosing);
 		for (final IInPlaceDialogListener listener : listeners) {
 			SafeRunnable.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					listener.buttonPressed(event);
 				}
 
+				@Override
 				public void handleException(Throwable exception) {
-					// ignore					
+					// ignore
 				}
 			});
 		}
@@ -219,28 +217,28 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 		int y = 0;
 
 		switch (side) {
-		case SWT.TOP:
-			x = controlBounds.x;
-			y = controlBounds.y + controlBounds.height;
-			if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
-				x = (controlBounds.x + controlBounds.width) - bounds.width;
-			}
-			break;
-		case SWT.BOTTOM:
-			x = controlBounds.x;
-			y = controlBounds.y - bounds.height;
-			if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
-				x = (controlBounds.x + controlBounds.width) - bounds.width;
-			}
-			break;
-		case SWT.RIGHT:
-			x = (controlBounds.x + controlBounds.width) - bounds.width;
-			y = controlBounds.y + controlBounds.height;
-			break;
-		case SWT.LEFT:
-			x = controlBounds.x;
-			y = controlBounds.y + controlBounds.height;
-			break;
+			case SWT.TOP:
+				x = controlBounds.x;
+				y = controlBounds.y + controlBounds.height;
+				if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
+					x = controlBounds.x + controlBounds.width - bounds.width;
+				}
+				break;
+			case SWT.BOTTOM:
+				x = controlBounds.x;
+				y = controlBounds.y - bounds.height;
+				if (x + bounds.width > monitorBounds.x + monitorBounds.width) {
+					x = controlBounds.x + controlBounds.width - bounds.width;
+				}
+				break;
+			case SWT.RIGHT:
+				x = controlBounds.x + controlBounds.width - bounds.width;
+				y = controlBounds.y + controlBounds.height;
+				break;
+			case SWT.LEFT:
+				x = controlBounds.x;
+				y = controlBounds.y + controlBounds.height;
+				break;
 		}
 		getShell().setBounds(x, y, bounds.width, bounds.height);
 	}

@@ -12,9 +12,6 @@
 
 package org.eclipse.mylyn.commons.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizerTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
@@ -34,6 +31,9 @@ import org.eclipse.mylyn.commons.tests.operations.CancellableOperationMonitorThr
 import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.WebBrowserDialogTest;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Mik Kersten

@@ -29,8 +29,8 @@ public class CredentialsStores {
 	}
 
 	/**
-	 * Create an ICredentialsStore that is isolated and transient. The returned instance is suitable for use when
-	 * creating a {@link RepositoryLocation} that should not persist changes to its credentials.
+	 * Create an ICredentialsStore that is isolated and transient. The returned instance is suitable for use when creating a
+	 * {@link RepositoryLocation} that should not persist changes to its credentials.
 	 */
 	public static ICredentialsStore createInMemoryStore() {
 		return new InMemoryCredentialsStore();

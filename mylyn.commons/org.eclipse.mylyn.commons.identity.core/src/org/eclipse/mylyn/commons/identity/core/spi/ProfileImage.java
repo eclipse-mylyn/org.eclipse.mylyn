@@ -39,21 +39,25 @@ public final class ProfileImage implements IProfileImage, Serializable {
 		this.width = width;
 		this.height = height;
 		this.format = format;
-		this.timestamp = System.currentTimeMillis();
+		timestamp = System.currentTimeMillis();
 	}
 
+	@Override
 	public byte[] getData() {
 		return data;
 	}
 
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
+	@Override
 	public int getHeight() {
 		return height;
 	}
 
+	@Override
 	public String getFormat() {
 		return format;
 	}

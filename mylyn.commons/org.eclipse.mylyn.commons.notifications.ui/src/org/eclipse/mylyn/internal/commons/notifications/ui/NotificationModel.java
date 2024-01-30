@@ -39,7 +39,7 @@ public class NotificationModel {
 	}
 
 	void initialize(IMemento memento) {
-		this.handlerByEventId = new HashMap<String, NotificationHandler>();
+		handlerByEventId = new HashMap<>();
 		// We need the handlerByEventId map to be populated early
 		for (NotificationCategory category : getCategories()) {
 			for (NotificationEvent event : category.getEvents()) {
@@ -70,7 +70,7 @@ public class NotificationModel {
 
 	private List<NotificationAction> getActions(NotificationEvent event) {
 		List<NotificationSinkDescriptor> descriptors = NotificationsExtensionReader.getSinks();
-		List<NotificationAction> actions = new ArrayList<NotificationAction>(descriptors.size());
+		List<NotificationAction> actions = new ArrayList<>(descriptors.size());
 		for (NotificationSinkDescriptor descriptor : descriptors) {
 			NotificationAction action = new NotificationAction(descriptor);
 			if (event.defaultHandledBySink(descriptor.getId())) {

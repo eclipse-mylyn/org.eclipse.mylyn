@@ -58,7 +58,7 @@ public class MonitorUserActivityJob extends Job {
 	}
 
 	public int getInactivityTimeout() {
-		return this.inactivityTimeout;
+		return inactivityTimeout;
 	}
 
 	public boolean isActive() {
@@ -70,8 +70,8 @@ public class MonitorUserActivityJob extends Job {
 	}
 
 	/**
-	 * Uses a short interval when inactive. This makes event notifications more accurate when switching from an inactive
-	 * to an active state, e.g. to ensure lively updates of the UI.
+	 * Uses a short interval when inactive. This makes event notifications more accurate when switching from an inactive to an active state,
+	 * e.g. to ensure lively updates of the UI.
 	 */
 	public void reschedule() {
 		schedule(active ? tick : tick / 6);
@@ -85,45 +85,43 @@ public class MonitorUserActivityJob extends Job {
 					long lastEventTime = callback.getLastEventTime();
 					long currentTime = System.currentTimeMillis();
 					// check if the last activity exceeds timeout
-					if ((currentTime - lastEventTime) >= inactivityTimeout && inactivityTimeout != 0) {
+					if (currentTime - lastEventTime >= inactivityTimeout && inactivityTimeout != 0) {
 						if (active) {
 							// time out
 							active = false;
 							callback.inactive();
 						}
-					} else {
-						if (!active) {
-							active = true;
-							// back, start recording activity
-							if (inactivityTimeout != 0) {
-								previousEventTime = lastEventTime;
-							} else {
-								// if timeouts are disabled only the currentTime is relevant for tracking activity 
-								previousEventTime = currentTime;
-							}
-							callback.active();
+					} else if (!active) {
+						active = true;
+						// back, start recording activity
+						if (inactivityTimeout != 0) {
+							previousEventTime = lastEventTime;
 						} else {
-							// check if the activity internal is unreasonably long, it is likely that 
-							// the computer came back from sleep at worst difference should be tick * 2
-							if (currentTime - previousEventTime > tick * 3) {
-								if (inactivityTimeout != 0) {
-									// check for recent event
-									if (currentTime - lastEventTime <= tick) {
-										// event since resume
-										previousEventTime = lastEventTime;
-									} else {
-										// time out
-										active = false;
-										callback.inactive();
-									}
+							// if timeouts are disabled only the currentTime is relevant for tracking activity
+							previousEventTime = currentTime;
+						}
+						callback.active();
+					} else {
+						// check if the activity internal is unreasonably long, it is likely that
+						// the computer came back from sleep at worst difference should be tick * 2
+						if (currentTime - previousEventTime > tick * 3) {
+							if (inactivityTimeout != 0) {
+								// check for recent event
+								if (currentTime - lastEventTime <= tick) {
+									// event since resume
+									previousEventTime = lastEventTime;
 								} else {
-									// if timeouts are disabled only the currentTime is relevant for tracking activity 
-									previousEventTime = currentTime;
+									// time out
+									active = false;
+									callback.inactive();
 								}
 							} else {
-								callback.addMonitoredActivityTime(previousEventTime, currentTime);
+								// if timeouts are disabled only the currentTime is relevant for tracking activity
 								previousEventTime = currentTime;
 							}
+						} else {
+							callback.addMonitoredActivityTime(previousEventTime, currentTime);
+							previousEventTime = currentTime;
 						}
 					}
 				} finally {

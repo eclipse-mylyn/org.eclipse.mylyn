@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.commons.core.Html2TextReader;
+
+import junit.framework.TestCase;
 
 /**
  * <p>

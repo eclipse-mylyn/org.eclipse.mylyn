@@ -79,7 +79,7 @@ public class OperationUtil {
 	@Deprecated
 	public static <T> T execute(IProgressMonitor monitor, Operation<T> request) throws Throwable {
 		// check for legacy reasons
-		SubMonitor subMonitor = (monitor instanceof SubMonitor) ? (SubMonitor) monitor : SubMonitor.convert(null);
+		SubMonitor subMonitor = monitor instanceof SubMonitor ? (SubMonitor) monitor : SubMonitor.convert(null);
 
 		Future<T> future = getExecutorService().submit(request);
 		while (true) {
@@ -92,11 +92,7 @@ public class OperationUtil {
 					if (!future.isCancelled()) {
 						future.get();
 					}
-				} catch (CancellationException e) {
-					// ignore
-				} catch (InterruptedException e) {
-					// ignore
-				} catch (ExecutionException e) {
+				} catch (CancellationException | InterruptedException | ExecutionException e) {
 					// ignore
 				}
 				throw new OperationCanceledException();
@@ -107,7 +103,7 @@ public class OperationUtil {
 			} catch (CancellationException e) {
 				throw new OperationCanceledException();
 			} catch (ExecutionException e) {
-				// XXX this hides the original stack trace from the caller invoking execute() 
+				// XXX this hides the original stack trace from the caller invoking execute()
 				throw e.getCause();
 			} catch (TimeoutException ignored) {
 			}

@@ -26,7 +26,7 @@ public class NotificationCategory extends NotificationElement {
 
 	public NotificationCategory(IConfigurationElement element) {
 		super(element);
-		this.events = new ArrayList<NotificationEvent>();
+		events = new ArrayList<>();
 	}
 
 	public void addEvent(NotificationEvent event) {

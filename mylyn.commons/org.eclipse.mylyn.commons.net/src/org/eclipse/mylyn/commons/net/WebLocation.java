@@ -24,6 +24,7 @@ public class WebLocation extends AbstractWebLocation {
 
 	private static class PlatformProxyProvider implements IProxyProvider {
 
+		@Override
 		public Proxy getProxyForHost(String host, String proxyType) {
 			return WebUtil.getProxy(host, proxyType);
 		}
@@ -37,7 +38,7 @@ public class WebLocation extends AbstractWebLocation {
 	public WebLocation(String url, String username, String password, IProxyProvider proxyProvider) {
 		super(url);
 
-		this.credentialsByType = new HashMap<AuthenticationType, AuthenticationCredentials>();
+		credentialsByType = new HashMap<>();
 		this.proxyProvider = proxyProvider;
 
 		if (username != null && password != null) {

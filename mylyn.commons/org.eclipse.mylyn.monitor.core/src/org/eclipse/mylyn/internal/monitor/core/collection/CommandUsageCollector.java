@@ -28,8 +28,9 @@ public class CommandUsageCollector implements IUsageCollector {
 
 	private final InteractionByTypeSummary commands = new InteractionByTypeSummary();
 
-	private final Set<Integer> userIdSet = new HashSet<Integer>();
+	private final Set<Integer> userIdSet = new HashSet<>();
 
+	@Override
 	public void consumeEvent(InteractionEvent event, int userId) {
 		userIdSet.add(userId);
 		if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
@@ -38,14 +39,17 @@ public class CommandUsageCollector implements IUsageCollector {
 		}
 	}
 
+	@Override
 	public List<String> getReport() {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public String getReportTitle() {
 		return Messages.CommandUsageCollector_Command_Usage;
 	}
 
+	@Override
 	public void exportAsCSVFile(String directoryName) {
 		// TODO Auto-generated method stub
 
@@ -55,6 +59,7 @@ public class CommandUsageCollector implements IUsageCollector {
 		return commands;
 	}
 
+	@Override
 	public List<String> getPlainTextReport() {
 		return Collections.emptyList();
 	}

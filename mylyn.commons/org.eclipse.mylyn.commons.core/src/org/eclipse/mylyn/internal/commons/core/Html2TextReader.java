@@ -160,7 +160,7 @@ public class Html2TextReader extends SubstitutionTextReader {
 			return EMPTY_STRING;
 		}
 
-		if ((html.length() > 1 && html.charAt(0) == 'h' && Character.isDigit(html.charAt(1))) || "dt".equals(html)) { //$NON-NLS-1$
+		if (html.length() > 1 && html.charAt(0) == 'h' && Character.isDigit(html.charAt(1)) || "dt".equals(html)) { //$NON-NLS-1$
 			startBold();
 			return EMPTY_STRING;
 		}
@@ -197,7 +197,7 @@ public class Html2TextReader extends SubstitutionTextReader {
 			return inParagraph ? EMPTY_STRING : LINE_DELIM;
 		}
 
-		if ((html.startsWith("/h") && html.length() > 2 && Character.isDigit(html.charAt(2))) || "/dt".equals(html)) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (html.startsWith("/h") && html.length() > 2 && Character.isDigit(html.charAt(2)) || "/dt".equals(html)) { //$NON-NLS-1$ //$NON-NLS-2$
 			stopBold();
 			return LINE_DELIM;
 		}
@@ -253,7 +253,7 @@ public class Html2TextReader extends SubstitutionTextReader {
 
 			int tagLen = buf.length();
 			// needs special treatment for comments
-			if ((tagLen >= 3 && "!--".equals(buf.substring(0, 3))) //$NON-NLS-1$
+			if (tagLen >= 3 && "!--".equals(buf.substring(0, 3)) //$NON-NLS-1$
 					&& !(tagLen >= 5 && "--".equals(buf.substring(tagLen - 2)))) { //$NON-NLS-1$
 				// unfinished comment
 				buf.append(ch);

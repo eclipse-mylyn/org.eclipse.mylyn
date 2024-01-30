@@ -44,12 +44,14 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		this.id = id;
 	}
 
+	@Override
 	public void clear() {
 		//getSecurePreferences().clear();
 		getSecurePreferences().removeNode();
 		getInMemoryStore().clear();
 	}
 
+	@Override
 	public synchronized void copyTo(ICredentialsStore target) {
 		Assert.isNotNull(target);
 		if (!(target instanceof SecureCredentialsStore)) {
@@ -72,10 +74,12 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public void flush() throws IOException {
 		getSecurePreferences().flush();
 	}
 
+	@Override
 	public String get(final String key, final String def) {
 		InMemoryCredentialsStore memoryStore = getInMemoryStore();
 		synchronized (memoryStore) {
@@ -91,6 +95,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public boolean getBoolean(String key, boolean def) {
 		InMemoryCredentialsStore memoryStore = getInMemoryStore();
 		synchronized (memoryStore) {
@@ -106,6 +111,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public byte[] getByteArray(String key, byte[] def) {
 		InMemoryCredentialsStore memoryStore = getInMemoryStore();
 		synchronized (memoryStore) {
@@ -125,14 +131,17 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		return id;
 	}
 
+	@Override
 	public String[] keys() {
 		return getSecurePreferences().keys();
 	}
 
+	@Override
 	public void put(String key, String value, boolean encrypt) {
 		put(key, value, encrypt, true);
 	}
 
+	@Override
 	public void put(String key, String value, boolean encrypt, boolean persist) {
 		if (persist) {
 			try {
@@ -148,6 +157,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public void putBoolean(String key, boolean value, boolean encrypt) {
 		try {
 			getSecurePreferences().putBoolean(key, value, encrypt);
@@ -158,6 +168,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public void putByteArray(String key, byte[] value, boolean encrypt) {
 		try {
 			getSecurePreferences().putByteArray(key, value, encrypt);
@@ -168,6 +179,7 @@ public class SecureCredentialsStore implements ICredentialsStore {
 		}
 	}
 
+	@Override
 	public void remove(String key) {
 		getSecurePreferences().remove(key);
 	}

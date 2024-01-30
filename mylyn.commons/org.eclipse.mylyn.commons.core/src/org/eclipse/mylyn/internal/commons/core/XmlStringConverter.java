@@ -43,22 +43,22 @@ public class XmlStringConverter {
 
 	private static String getReplacementForSymbol(char c) {
 		switch (c) {
-		case '<':
-			return "lt"; //$NON-NLS-1$
-		case '>':
-			return "gt"; //$NON-NLS-1$
-		case '"':
-			return "quot"; //$NON-NLS-1$
-		case '\'':
-			return "apos"; //$NON-NLS-1$
-		case '&':
-			return "amp"; //$NON-NLS-1$
-		case '\r':
-			return "#x0D"; //$NON-NLS-1$
-		case '\n':
-			return "#x0A"; //$NON-NLS-1$
-		case '\u0009':
-			return "#x09"; //$NON-NLS-1$
+			case '<':
+				return "lt"; //$NON-NLS-1$
+			case '>':
+				return "gt"; //$NON-NLS-1$
+			case '"':
+				return "quot"; //$NON-NLS-1$
+			case '\'':
+				return "apos"; //$NON-NLS-1$
+			case '&':
+				return "amp"; //$NON-NLS-1$
+			case '\r':
+				return "#x0D"; //$NON-NLS-1$
+			case '\n':
+				return "#x0A"; //$NON-NLS-1$
+			case '\u0009':
+				return "#x09"; //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -70,7 +70,7 @@ public class XmlStringConverter {
 			char xChar = string.charAt(i);
 			if (xChar == '&') {
 				i++;
-				StringBuffer escapeChar = new StringBuffer(10);
+				StringBuilder escapeChar = new StringBuilder(10);
 				boolean flag = true;
 				while (flag) {
 					xChar = string.charAt(i++);
@@ -135,8 +135,8 @@ public class XmlStringConverter {
 	 * @see http://www.w3.org/TR/REC-xml/
 	 */
 	public static boolean isValid(char ch) {
-		return (0x0A == ch || 0x0D == ch || 0x09 == ch) || (ch >= 0x20 && ch <= 0xD7FF)
-				|| (ch >= 0xE000 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0x10FFFF);
+		return 0x0A == ch || 0x0D == ch || 0x09 == ch || ch >= 0x20 && ch <= 0xD7FF || ch >= 0xE000 && ch <= 0xFFFD
+				|| ch >= 0x10000 && ch <= 0x10FFFF;
 	}
 
 }

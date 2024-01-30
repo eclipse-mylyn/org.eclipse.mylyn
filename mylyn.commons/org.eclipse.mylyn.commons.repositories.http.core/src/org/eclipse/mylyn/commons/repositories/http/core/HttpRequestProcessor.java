@@ -21,7 +21,7 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
  */
 public abstract class HttpRequestProcessor<T> {
 
-	public static final HttpRequestProcessor<CommonHttpResponse> DEFAULT = new HttpRequestProcessor<CommonHttpResponse>() {
+	public static final HttpRequestProcessor<CommonHttpResponse> DEFAULT = new HttpRequestProcessor<>() {
 		@Override
 		protected CommonHttpResponse doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 				throws IOException {

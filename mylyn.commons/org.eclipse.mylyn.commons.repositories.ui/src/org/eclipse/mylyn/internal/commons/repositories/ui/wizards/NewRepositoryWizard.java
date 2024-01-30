@@ -24,8 +24,8 @@ import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
- * The new wizard is responsible for allowing the user to choose which new (nested) wizard to run. The set of available
- * new wizards comes from the new extension point.
+ * The new wizard is responsible for allowing the user to choose which new (nested) wizard to run. The set of available new wizards comes
+ * from the new extension point.
  */
 @SuppressWarnings("restriction")
 public class NewRepositoryWizard extends Wizard {
@@ -69,8 +69,8 @@ public class NewRepositoryWizard extends Wizard {
 	}
 
 	/**
-	 * Returns the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can
-	 * be found with this id then all categories are shown.
+	 * Returns the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can be found with this
+	 * id then all categories are shown.
 	 * 
 	 * @return String or <code>null</code>.
 	 */
@@ -100,8 +100,8 @@ public class NewRepositoryWizard extends Wizard {
 	 *            the current selection
 	 */
 	public void init(IWorkbench aWorkbench, IStructuredSelection currentSelection) {
-		this.workbench = aWorkbench;
-		this.selection = currentSelection;
+		workbench = aWorkbench;
+		selection = currentSelection;
 
 		if (getWindowTitle() == null) {
 			// No title supplied. Set the default title
@@ -137,8 +137,8 @@ public class NewRepositoryWizard extends Wizard {
 	}
 
 	/**
-	 * Sets the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can be
-	 * found with this id then all categories are shown.
+	 * Sets the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can be found with this id
+	 * then all categories are shown.
 	 * 
 	 * @param id
 	 *            may be <code>null</code>.

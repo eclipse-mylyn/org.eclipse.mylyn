@@ -56,14 +56,10 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 		if (file.exists()) {
 			try {
 				FileReader reader = new FileReader(file);
-				try {
+				try (reader) {
 					memento = XMLMemento.createReadRoot(reader);
-				} finally {
-					reader.close();
 				}
-			} catch (IOException e) {
-				getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e)); //$NON-NLS-1$
-			} catch (WorkbenchException e) {
+			} catch (IOException | WorkbenchException e) {
 				getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e)); //$NON-NLS-1$
 			}
 		}
@@ -99,9 +95,9 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 
 	public void saveWorkingCopy(NotificationModel workingCopy) {
 		XMLMemento memento = save(workingCopy);
-		if (this.model != null) {
+		if (model != null) {
 			// reload model
-			this.model.initialize(memento);
+			model.initialize(memento);
 		}
 	}
 

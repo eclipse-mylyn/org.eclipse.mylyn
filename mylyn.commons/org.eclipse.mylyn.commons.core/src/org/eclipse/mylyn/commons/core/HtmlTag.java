@@ -52,7 +52,7 @@ public class HtmlTag {
 		tagName = null;
 		tagType = Type.UNKNOWN;
 		isEndTag = false;
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 		baseUrl = null;
 	}
 
@@ -64,7 +64,7 @@ public class HtmlTag {
 		tagName = null;
 		tagType = Type.UNKNOWN;
 		isEndTag = false;
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 		tagName = htmltag.tagName;
 		baseUrl = htmltag.baseUrl;
 		tagType = htmltag.tagType;
@@ -76,7 +76,7 @@ public class HtmlTag {
 	 * Constructor.
 	 */
 	public HtmlTag(String s) throws ParseException {
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 		setTagName(s);
 		baseUrl = null;
 	}
@@ -88,7 +88,7 @@ public class HtmlTag {
 		tagName = null;
 		tagType = Type.UNKNOWN;
 		isEndTag = false;
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 		baseUrl = url;
 	}
 
@@ -168,10 +168,8 @@ public class HtmlTag {
 	public StringBuffer getURLs() {
 		StringBuffer sb = new StringBuffer();
 
-		Iterator<String> attributeNames = attributes.keySet().iterator();
 		Iterator<String> attributeValues = attributes.values().iterator();
-		while (attributeNames.hasNext()) {
-			String attributeName = attributeNames.next();
+		for (String attributeName : attributes.keySet()) {
 			if (attributeName.compareTo("href") == 0 || attributeName.compareTo("src") == 0) { //$NON-NLS-1$ //$NON-NLS-2$
 				String target = attributeValues.next();
 				if (!target.endsWith(".jpg") && !target.endsWith(".gif") && !target.endsWith(".css") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -189,7 +187,7 @@ public class HtmlTag {
 					}
 					target = target.replace('\\', '/');
 
-					if (target.startsWith("news:") || (target.indexOf("://") != -1 && target.length() >= 7)) { //$NON-NLS-1$ //$NON-NLS-2$
+					if (target.startsWith("news:") || target.indexOf("://") != -1 && target.length() >= 7) { //$NON-NLS-1$ //$NON-NLS-2$
 						// Absolute URL
 						if (target.substring(0, 7).compareToIgnoreCase("https://") == 0) { //$NON-NLS-1$
 							sb.append(target);
@@ -240,16 +238,14 @@ public class HtmlTag {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append('<');
 		if (isEndTag) {
 			sb.append('/');
 		}
 		sb.append(tagName);
-		Iterator<String> keys = attributes.keySet().iterator();
 		Iterator<String> values = attributes.values().iterator();
-		while (keys.hasNext()) {
-			String name = keys.next();
+		for (String name : attributes.keySet()) {
 			sb.append(' ');
 			sb.append(name);
 			String value = values.next();
@@ -286,7 +282,7 @@ public class HtmlTag {
 
 	private static HashMap<String, Tag> tags;
 	static {
-		tags = new HashMap<String, Tag>();
+		tags = new HashMap<>();
 		tags.put("A", Tag.A); //$NON-NLS-1$
 		tags.put("ADDRESS", Tag.ADDRESS); //$NON-NLS-1$
 		tags.put("APPLET", Tag.APPLET); //$NON-NLS-1$
@@ -365,7 +361,7 @@ public class HtmlTag {
 	}
 
 	public void setSelfTerminating(boolean terminating) {
-		this.selfTerminating = terminating;
+		selfTerminating = terminating;
 
 	}
 

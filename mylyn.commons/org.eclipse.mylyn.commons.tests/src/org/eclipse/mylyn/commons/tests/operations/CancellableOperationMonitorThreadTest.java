@@ -12,11 +12,11 @@
 
 package org.eclipse.mylyn.commons.tests.operations;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
 import org.eclipse.mylyn.commons.core.operations.ICancellableOperation;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.commons.ui;
 
+import java.util.Objects;
+
 /**
  * @since 3.22
  */
@@ -33,7 +35,6 @@ public class TableColumnDescriptor {
 
 	public TableColumnDescriptor(int width, String name, int alignment, boolean defaultSortColumn, int sortDirection,
 			boolean autoSize) {
-		super();
 		this.width = width;
 		this.name = name;
 		this.alignment = alignment;
@@ -43,13 +44,12 @@ public class TableColumnDescriptor {
 	}
 
 	public TableColumnDescriptor(TableColumnDescriptor other) {
-		super();
-		this.width = other.width;
-		this.name = other.name;
-		this.alignment = other.alignment;
-		this.defaultSortColumn = other.defaultSortColumn;
-		this.sortDirection = other.sortDirection;
-		this.autoSize = other.autoSize;
+		width = other.width;
+		name = other.name;
+		alignment = other.alignment;
+		defaultSortColumn = other.defaultSortColumn;
+		sortDirection = other.sortDirection;
+		autoSize = other.autoSize;
 	}
 
 	public int getWidth() {
@@ -98,15 +98,7 @@ public class TableColumnDescriptor {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + alignment;
-		result = prime * result + (autoSize ? 1231 : 1237);
-		result = prime * result + (defaultSortColumn ? 1231 : 1237);
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + sortDirection;
-		result = prime * result + width;
-		return result;
+		return Objects.hash(alignment, autoSize, defaultSortColumn, name, sortDirection, width);
 	}
 
 	@Override
@@ -114,10 +106,7 @@ public class TableColumnDescriptor {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TableColumnDescriptor other = (TableColumnDescriptor) obj;
@@ -130,11 +119,7 @@ public class TableColumnDescriptor {
 		if (defaultSortColumn != other.defaultSortColumn) {
 			return false;
 		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
+		if (!Objects.equals(name, other.name)) {
 			return false;
 		}
 		if (sortDirection != other.sortDirection) {

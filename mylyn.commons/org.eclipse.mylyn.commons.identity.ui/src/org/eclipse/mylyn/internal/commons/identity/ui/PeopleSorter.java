@@ -31,8 +31,7 @@ public class PeopleSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof IIdentity && e2 instanceof IIdentity) {
-			IIdentity id1 = (IIdentity) e1;
+		if (e1 instanceof IIdentity id1 && e2 instanceof IIdentity) {
 			IIdentity id2 = (IIdentity) e2;
 			int result = id1.getAccounts()[0].getId().compareTo(id2.getAccounts()[0].getId());
 			if (result != 0) {

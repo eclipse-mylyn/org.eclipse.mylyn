@@ -20,8 +20,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -51,7 +49,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 
 	public enum Mode {
 		KEY_STORE, USER,
-	};
+	}
 
 	private String domain;
 
@@ -72,10 +70,10 @@ public class CredentialsDialog extends TitleAreaDialog {
 	public CredentialsDialog(Shell parentShell, Mode mode) {
 		super(parentShell);
 		this.mode = mode;
-		this.domain = ""; //$NON-NLS-1$
-		this.username = ""; //$NON-NLS-1$
-		this.password = ""; //$NON-NLS-1$
-		this.keyStoreFileName = ""; //$NON-NLS-1$
+		domain = ""; //$NON-NLS-1$
+		username = ""; //$NON-NLS-1$
+		password = ""; //$NON-NLS-1$
+		keyStoreFileName = ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -160,11 +158,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 		new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_KeyStore);
 
 		final Text keyStoreField = new Text(composite, SWT.BORDER);
-		keyStoreField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				keyStoreFileName = keyStoreField.getText();
-			}
-		});
+		keyStoreField.addModifyListener(e -> keyStoreFileName = keyStoreField.getText());
 		keyStoreField.setText(keyStoreFileName);
 		if (keyStoreFileName.length() == 0) {
 			keyStoreField.setFocus();
@@ -197,11 +191,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 		new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_Password);
 
 		final Text passwordField = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-		passwordField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				password = passwordField.getText();
-			}
-		});
+		passwordField.addModifyListener(e -> password = passwordField.getText());
 		passwordField.setText(password);
 		if (username.length() > 0) {
 			passwordField.setFocus();
@@ -230,11 +220,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 
 		final Text usernameText = new Text(composite, SWT.BORDER);
 		usernameText.setText(username);
-		usernameText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				username = usernameText.getText();
-			}
-		});
+		usernameText.addModifyListener(e -> username = usernameText.getText());
 		if (username.length() == 0) {
 			usernameText.setFocus();
 		}
@@ -250,11 +236,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 
 			final Text domainText = new Text(composite, SWT.BORDER);
 			domainText.setText(domain);
-			domainText.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					domain = domainText.getText();
-				}
-			});
+			domainText.addModifyListener(e -> domain = domainText.getText());
 			GridDataFactory.fillDefaults()
 					.align(SWT.FILL, SWT.CENTER)
 					.hint(convertHorizontalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)

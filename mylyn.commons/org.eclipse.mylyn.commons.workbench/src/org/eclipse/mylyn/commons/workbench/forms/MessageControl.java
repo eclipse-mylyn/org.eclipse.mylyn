@@ -18,8 +18,6 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -60,11 +58,7 @@ public abstract class MessageControl {
 		}
 		final Font textFont = new Font(text.getDisplay(), fontData);
 		text.setFont(textFont);
-		text.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				textFont.dispose();
-			}
-		});
+		text.addDisposeListener(e -> textFont.dispose());
 		Color color = CommonsWorkbenchPlugin.getDefault().getFormColors(text.getDisplay()).getColor(IFormColors.TITLE);
 		text.setForeground(color);
 		return textFont;
@@ -108,7 +102,7 @@ public abstract class MessageControl {
 	 * @return <code>true</code> if the control is closed
 	 */
 	protected boolean isClosed() {
-		return (head == null || head.isDisposed());
+		return head == null || head.isDisposed();
 	}
 
 	/**
@@ -250,8 +244,8 @@ public abstract class MessageControl {
 	}
 
 	/**
-	 * Sets the eventId of the message being displayed. How to handle certain kind of messages can be configured in
-	 * preference settings if this property is set to a legal value. The event identifiers are declared using the
+	 * Sets the eventId of the message being displayed. How to handle certain kind of messages can be configured in preference settings if
+	 * this property is set to a legal value. The event identifiers are declared using the
 	 * <i>org.eclipse.mylyn.commons.notifications.notifications</i> extension point.
 	 * 
 	 * @param eventId

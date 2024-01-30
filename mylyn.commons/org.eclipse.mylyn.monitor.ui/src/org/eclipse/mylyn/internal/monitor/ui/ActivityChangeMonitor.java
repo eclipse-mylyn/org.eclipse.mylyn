@@ -23,6 +23,7 @@ public class ActivityChangeMonitor implements IActivityManagerListener {
 
 	private static final String ACTIVITIES_CHANGED = "activities changed"; //$NON-NLS-1$
 
+	@Override
 	public void activityManagerChanged(ActivityManagerEvent activityManagerEvent) {
 		if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
 			String source = activityManagerEvent.getActivityManager().toString();

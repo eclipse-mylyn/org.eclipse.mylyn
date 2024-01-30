@@ -167,7 +167,7 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 	}
 
 	public List<AbstractNotification> getNotifications() {
-		return new ArrayList<AbstractNotification>(notifications);
+		return new ArrayList<>(notifications);
 	}
 
 	@Override

@@ -36,7 +36,6 @@ public abstract class AbstractMonitorLog {
 	protected boolean started = false;
 
 	public AbstractMonitorLog() {
-		super();
 	}
 
 	public void startMonitoring() {
@@ -83,7 +82,7 @@ public abstract class AbstractMonitorLog {
 			} else {
 				outputFile.delete();
 			}
-			this.outputFile = newFile;
+			outputFile = newFile;
 		} catch (Exception e) {
 			StatusHandler.log(
 					new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not set logger output file", e)); //$NON-NLS-1$

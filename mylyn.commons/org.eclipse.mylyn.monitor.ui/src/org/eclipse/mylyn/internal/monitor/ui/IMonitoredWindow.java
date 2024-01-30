@@ -19,8 +19,8 @@ package org.eclipse.mylyn.internal.monitor.ui;
  */
 public interface IMonitoredWindow {
 
-	public boolean isMonitored();
+	boolean isMonitored();
 
-	public boolean isPerspectiveManaged();
+	boolean isPerspectiveManaged();
 
 }

@@ -75,7 +75,7 @@ public class SwtUtil {
 			if (delay < 1) {
 				throw new IllegalArgumentException("delay must be > 0"); //$NON-NLS-1$
 			}
-			this.currentAlpha = shell.getAlpha();
+			currentAlpha = shell.getAlpha();
 			this.shell = shell;
 			this.increment = increment;
 			this.delay = delay;
@@ -102,11 +102,9 @@ public class SwtUtil {
 				return;
 			}
 			cancel();
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					if (setAlpha) {
-						shell.setAlpha(getLastAlpha());
-					}
+			Display.getDefault().syncExec(() -> {
+				if (setAlpha) {
+					shell.setAlpha(getLastAlpha());
 				}
 			});
 		}
@@ -124,22 +122,20 @@ public class SwtUtil {
 				currentAlpha = 255;
 			}
 
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					if (stopped) {
-						return;
-					}
+			Display.getDefault().syncExec(() -> {
+				if (stopped) {
+					return;
+				}
 
-					if (shell.isDisposed()) {
-						stopped = true;
-						return;
-					}
+				if (shell.isDisposed()) {
+					stopped = true;
+					return;
+				}
 
-					shell.setAlpha(currentAlpha);
+				shell.setAlpha(currentAlpha);
 
-					if (fadeListener != null) {
-						fadeListener.faded(shell, currentAlpha);
-					}
+				if (fadeListener != null) {
+					fadeListener.faded(shell, currentAlpha);
 				}
 			});
 
@@ -152,14 +148,14 @@ public class SwtUtil {
 		}
 
 		private int getLastAlpha() {
-			return (increment < 0) ? 0 : 255;
+			return increment < 0 ? 0 : 255;
 		}
 
 	}
 
-	public static interface IFadeListener {
+	public interface IFadeListener {
 
-		public void faded(Shell shell, int alpha);
+		void faded(Shell shell, int alpha);
 
 	}
 

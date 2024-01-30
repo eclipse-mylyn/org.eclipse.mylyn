@@ -26,13 +26,13 @@ import org.apache.xmlrpc.XmlRpcException;
  */
 public class Multicall {
 
-	List<Map<String, Object>> calls = new ArrayList<Map<String, Object>>();
+	List<Map<String, Object>> calls = new ArrayList<>();
 
 	public Multicall() {
 	}
 
 	public Multicall add(String methodName, Object... parameters) throws XmlRpcException {
-		Map<String, Object> table = new HashMap<String, Object>();
+		Map<String, Object> table = new HashMap<>();
 		table.put("methodName", methodName); //$NON-NLS-1$
 		table.put("params", parameters); //$NON-NLS-1$
 		calls.add(table);

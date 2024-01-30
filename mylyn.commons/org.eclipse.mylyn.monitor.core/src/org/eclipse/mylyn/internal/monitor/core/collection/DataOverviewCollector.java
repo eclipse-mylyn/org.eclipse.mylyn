@@ -35,11 +35,11 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	private static long FIVEMININMS = 5 * 60 * 1000;
 
-	private final Map<Integer, Integer> interactionHistorySizes = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> interactionHistorySizes = new HashMap<>();
 
-	private final Map<Integer, List<Date>> interactionHistoryRanges = new HashMap<Integer, List<Date>>();
+	private final Map<Integer, List<Date>> interactionHistoryRanges = new HashMap<>();
 
-	private final Map<Integer, Long> interactionHistoryActiveDuration = new HashMap<Integer, Long>();
+	private final Map<Integer, Long> interactionHistoryActiveDuration = new HashMap<>();
 
 	// For calculating active milliseconds
 	private int currentUser = -1;
@@ -56,10 +56,12 @@ public class DataOverviewCollector implements IUsageCollector {
 		filePrefix = prefix;
 	}
 
+	@Override
 	public String getReportTitle() {
 		return Messages.DataOverviewCollector_Data_Overview;
 	}
 
+	@Override
 	public void consumeEvent(InteractionEvent event, int userId) {
 
 		// Add to size of history
@@ -72,7 +74,7 @@ public class DataOverviewCollector implements IUsageCollector {
 		List<Date> dateRange;
 		if (!interactionHistoryRanges.containsKey(userId)) {
 			// There are two positions in the array: start and end date
-			dateRange = new ArrayList<Date>(2);
+			dateRange = new ArrayList<>(2);
 			interactionHistoryRanges.put(userId, dateRange);
 		}
 		dateRange = interactionHistoryRanges.get(userId);
@@ -94,7 +96,7 @@ public class DataOverviewCollector implements IUsageCollector {
 		long elapsed = event.getDate().getTime() - lastUserEvent.getDate().getTime();
 		if (elapsed < FIVEMININMS) {
 			if (!interactionHistoryActiveDuration.containsKey(userId)) {
-				interactionHistoryActiveDuration.put(userId, Long.valueOf(0));
+				interactionHistoryActiveDuration.put(userId, (long) 0);
 			}
 			interactionHistoryActiveDuration.put(userId, interactionHistoryActiveDuration.get(userId) + elapsed);
 		}
@@ -102,10 +104,11 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	}
 
+	@Override
 	public List<String> getReport() {
-		List<String> report = new ArrayList<String>();
+		List<String> report = new ArrayList<>();
 		report.add(Messages.DataOverviewCollector__h4_Data_Overview_h4_);
-		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.keySet().size() + "<br>"); //$NON-NLS-1$
+		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.size() + "<br>"); //$NON-NLS-1$
 		for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
 			report.add(entry.getKey() + ": " + entry.getValue() + Messages.DataOverviewCollector_events); //$NON-NLS-1$
 			report.add(InteractionEventClassifier.formatDuration(interactionHistoryActiveDuration.get(entry.getKey()))
@@ -121,6 +124,7 @@ public class DataOverviewCollector implements IUsageCollector {
 		return report;
 	}
 
+	@Override
 	public void exportAsCSVFile(String directory) {
 
 		String filename = directory + File.separator + filePrefix + "baseLine.csv"; //$NON-NLS-1$
@@ -193,7 +197,7 @@ public class DataOverviewCollector implements IUsageCollector {
 	public long getDurationUseOfUser(int userid) {
 		if (interactionHistoryRanges.containsKey(userid)) {
 			List<Date> dateRange = interactionHistoryRanges.get(userid);
-			return (dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime());
+			return dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime();
 		}
 		return -1;
 	}
@@ -208,10 +212,11 @@ public class DataOverviewCollector implements IUsageCollector {
 		return -1;
 	}
 
+	@Override
 	public List<String> getPlainTextReport() {
-		List<String> report = new ArrayList<String>();
+		List<String> report = new ArrayList<>();
 		report.add(Messages.DataOverviewCollector_Data_Overview);
-		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.keySet().size());
+		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.size());
 		for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
 			report.add(entry.getKey() + ": " + entry.getValue() + Messages.DataOverviewCollector_events); //$NON-NLS-1$
 			report.add(InteractionEventClassifier.formatDuration(interactionHistoryActiveDuration.get(entry.getKey()))

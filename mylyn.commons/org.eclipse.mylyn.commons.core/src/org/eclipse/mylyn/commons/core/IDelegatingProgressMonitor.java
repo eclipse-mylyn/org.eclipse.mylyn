@@ -25,13 +25,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface IDelegatingProgressMonitor extends IProgressMonitor {
 
 	/**
-	 * Registers to <code>monitor</code> to receive all progress events. If the operation is already in progress
-	 * <code>monitor</code> will receive all queued events.
+	 * Registers to <code>monitor</code> to receive all progress events. If the operation is already in progress <code>monitor</code> will
+	 * receive all queued events.
 	 * 
 	 * @since 3.2
 	 * @see #detach(IProgressMonitor)
 	 */
-	public void attach(IProgressMonitor monitor);
+	void attach(IProgressMonitor monitor);
 
 	/**
 	 * Unregisters <code>monitor</code>. No progress events will be sent to <code>monitor</code>.
@@ -39,7 +39,7 @@ public interface IDelegatingProgressMonitor extends IProgressMonitor {
 	 * @since 3.2
 	 * @see #attach(IProgressMonitor)
 	 */
-	public void detach(IProgressMonitor monitor);
+	void detach(IProgressMonitor monitor);
 
 	/**
 	 * Sets a user object.
@@ -47,7 +47,7 @@ public interface IDelegatingProgressMonitor extends IProgressMonitor {
 	 * @see #getData()
 	 * @since 3.5
 	 */
-	public void setData(Object data);
+	void setData(Object data);
 
 	/***
 	 * Returns a user object.
@@ -55,6 +55,6 @@ public interface IDelegatingProgressMonitor extends IProgressMonitor {
 	 * @see #setData(Object)
 	 * @since 3.5
 	 */
-	public Object getData();
+	Object getData();
 
 }

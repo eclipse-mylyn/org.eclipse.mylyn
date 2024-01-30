@@ -55,7 +55,7 @@ public class CommonHttpClient {
 
 	private boolean authenticated;
 
-	private final ThreadLocal<BasicHttpContext> context = new ThreadLocal<BasicHttpContext>();
+	private final ThreadLocal<BasicHttpContext> context = new ThreadLocal<>();
 
 	private AuthenticationType<UserCredentials> httpAuthenticationType;
 
@@ -69,13 +69,13 @@ public class CommonHttpClient {
 
 	public CommonHttpClient(RepositoryLocation location) {
 		this.location = location;
-		this.httpAuthenticationType = AuthenticationType.HTTP;
+		httpAuthenticationType = AuthenticationType.HTTP;
 	}
 
 	public <T> T executeGet(String requestPath, IOperationMonitor monitor, HttpRequestProcessor<T> processor)
 			throws IOException {
 		HttpGet request = new HttpGet(location.getUrl() + requestPath);
-		DefaultHttpOperation<T> op = new DefaultHttpOperation<T>(this, request, processor);
+		DefaultHttpOperation<T> op = new DefaultHttpOperation<>(this, request, processor);
 		return op.run(monitor);
 	}
 
@@ -136,7 +136,7 @@ public class CommonHttpClient {
 			HttpUtil.configureAuthentication(getHttpClient(), location, httpCredentials);
 
 			if (isPreemptiveAuthenticationEnabled()) {
-				// create or pre-populate auth cache 
+				// create or pre-populate auth cache
 				HttpHost host = HttpUtil.createHost(request);
 				Object authCache = getContext().getAttribute(ClientContext.AUTH_CACHE);
 				if (authCache == null) {
@@ -199,11 +199,11 @@ public class CommonHttpClient {
 	protected void validate(HttpResponse response, IProgressMonitor monitor) throws AuthenticationException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
-			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<>(
 					getLocation(), httpAuthenticationType);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		} else if (statusCode == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<>(
 					getLocation(), AuthenticationType.PROXY);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		}

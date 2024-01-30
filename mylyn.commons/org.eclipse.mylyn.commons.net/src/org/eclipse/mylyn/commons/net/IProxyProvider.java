@@ -23,6 +23,6 @@ public interface IProxyProvider {
 	/**
 	 * @since 2.2
 	 */
-	public Proxy getProxyForHost(String host, String proxyType);
+	Proxy getProxyForHost(String host, String proxyType);
 
 }

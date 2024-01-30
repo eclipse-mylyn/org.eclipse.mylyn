@@ -40,10 +40,12 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		setPageComplete(false);
 	}
 
+	@Override
 	public boolean canValidate() {
 		return part.canValidate();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -62,14 +64,9 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		return new RepositoryLocationPart(getWorkingCopy());
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		if (adapter == WizardPage.class) {
-			return this;
-		}
-		if (adapter == DialogPage.class) {
-			return this;
-		}
-		if (adapter == IPartContainer.class) {
+		if ((adapter == WizardPage.class) || (adapter == DialogPage.class) || (adapter == IPartContainer.class)) {
 			return this;
 		}
 		return null;
@@ -85,15 +82,17 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 
 	protected RepositoryLocation getWorkingCopy() {
 		if (workingCopy == null) {
-			workingCopy = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
+			workingCopy = getElement().getAdapter(RepositoryLocation.class);
 		}
 		return workingCopy;
 	}
 
+	@Override
 	public boolean needsValidation() {
 		return part.needsValidation();
 	}
 
+	@Override
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
 			throws InvocationTargetException, InterruptedException {
 		getContainer().run(fork, cancelable, runnable);
@@ -109,10 +108,12 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		this.element = element;
 	}
 
+	@Override
 	public void updateButtons() {
 		getContainer().updateButtons();
 	}
 
+	@Override
 	public void validate() {
 		part.validate();
 	}

@@ -56,8 +56,7 @@ public class CommonFormUtil {
 	}
 
 	/**
-	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
-	 * bug#70358)
+	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see bug#70358)
 	 * 
 	 * @param comp
 	 */

@@ -51,13 +51,13 @@ public class RepositoryUiUtil {
 			if (PlatformUiUtil.isNeonOrLater()) {
 				Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
 				Class<?> clazz = bundle.loadClass("org.eclipse.core.runtime.Adapters"); //$NON-NLS-1$
-				Method adaptMethod = clazz.getMethod("adapt", new Class[] { Object.class, Class.class }); //$NON-NLS-1$
+				Method adaptMethod = clazz.getMethod("adapt", Object.class, Class.class); //$NON-NLS-1$
 				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
 				return (T) result;
 			} else {
 				Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
 				Class<?> clazz = bundle.loadClass("org.eclipse.ui.internal.util.Util"); //$NON-NLS-1$
-				Method adaptMethod = clazz.getMethod("getAdapter", new Class[] { Object.class, Class.class }); //$NON-NLS-1$
+				Method adaptMethod = clazz.getMethod("getAdapter", Object.class, Class.class); //$NON-NLS-1$
 				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
 				return (T) result;
 			}

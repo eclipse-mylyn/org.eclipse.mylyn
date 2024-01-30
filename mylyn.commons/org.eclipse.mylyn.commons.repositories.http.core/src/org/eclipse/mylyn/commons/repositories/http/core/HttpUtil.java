@@ -265,8 +265,7 @@ public class HttpUtil {
 					.setParameter(ConnRoutePNames.DEFAULT_PROXY,
 							new HttpHost(address.getHostName(), address.getPort()));
 
-			if (proxy instanceof AuthenticatedProxy) {
-				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
+			if (proxy instanceof AuthenticatedProxy authProxy) {
 				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
 						address.getAddress(), false);
 				if (credentials instanceof NTCredentials) {

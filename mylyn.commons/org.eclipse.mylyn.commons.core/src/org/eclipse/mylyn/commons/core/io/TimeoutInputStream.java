@@ -22,12 +22,11 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 
 /**
- * Wraps an input stream that blocks indefinitely to simulate timeouts on read(), skip(), and close(). The resulting
- * input stream is buffered and supports retrying operations that failed due to an InterruptedIOException. Supports
- * resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying stream
- * does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
- * resuming. Check the bytesTransferred field to determine how much of the operation completed; conversely, at what
- * point to resume.
+ * Wraps an input stream that blocks indefinitely to simulate timeouts on read(), skip(), and close(). The resulting input stream is
+ * buffered and supports retrying operations that failed due to an InterruptedIOException. Supports resuming partially completed operations
+ * after an InterruptedIOException REGARDLESS of whether the underlying stream does unless the underlying stream itself generates
+ * InterruptedIOExceptions in which case it must also support resuming. Check the bytesTransferred field to determine how much of the
+ * operation completed; conversely, at what point to resume.
  * 
  * @since 3.7
  */
@@ -63,25 +62,20 @@ public class TimeoutInputStream extends FilterInputStream {
 	 * @param in
 	 *            the underlying input stream
 	 * @param bufferSize
-	 *            the buffer size in bytes; should be large enough to mitigate Thread synchronization and context
-	 *            switching overhead
+	 *            the buffer size in bytes; should be large enough to mitigate Thread synchronization and context switching overhead
 	 * @param readTimeout
-	 *            the number of milliseconds to block for a read() or skip() before throwing an InterruptedIOException;
-	 *            0 blocks indefinitely
+	 *            the number of milliseconds to block for a read() or skip() before throwing an InterruptedIOException; 0 blocks
+	 *            indefinitely
 	 * @param closeTimeout
-	 *            the number of milliseconds to block for a close() before throwing an InterruptedIOException; 0 blocks
-	 *            indefinitely, -1 closes the stream in the background
+	 *            the number of milliseconds to block for a close() before throwing an InterruptedIOException; 0 blocks indefinitely, -1
+	 *            closes the stream in the background
 	 */
 	public TimeoutInputStream(InputStream in, int bufferSize, long readTimeout, long closeTimeout) {
 		super(in);
 		this.readTimeout = readTimeout;
 		this.closeTimeout = closeTimeout;
-		this.iobuffer = new byte[bufferSize];
-		this.future = OperationUtil.getExecutorService().submit(new Runnable() {
-			public void run() {
-				runThread();
-			}
-		});
+		iobuffer = new byte[bufferSize];
+		future = OperationUtil.getExecutorService().submit((Runnable) this::runThread);
 	}
 
 	public TimeoutInputStream(InputStream in, int bufferSize, long readTimeout, long closeTimeout,
@@ -91,9 +85,9 @@ public class TimeoutInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it
-	 * holds an implicit lock on a system resoure (such as a file) while it is open. Closing a stream may take time if
-	 * the underlying stream is still servicing a previous request.
+	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it holds an implicit
+	 * lock on a system resoure (such as a file) while it is open. Closing a stream may take time if the underlying stream is still
+	 * servicing a previous request.
 	 * 
 	 * @throws InterruptedIOException
 	 *             if the timeout expired
@@ -107,7 +101,7 @@ public class TimeoutInputStream extends FilterInputStream {
 		}
 		synchronized (this) {
 			closeRequested = true;
-			// interrupts waitUntilClose and triggers closing of stream 
+			// interrupts waitUntilClose and triggers closing of stream
 			future.cancel(true);
 			checkError();
 		}
@@ -196,8 +190,7 @@ public class TimeoutInputStream extends FilterInputStream {
 	 * Skips multiple bytes in the stream.
 	 * 
 	 * @throws InterruptedIOException
-	 *             if the timeout expired before all of the bytes specified have been skipped, bytesTransferred may be
-	 *             non-zero
+	 *             if the timeout expired before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -325,7 +318,7 @@ public class TimeoutInputStream extends FilterInputStream {
 					waitForRead();
 				}
 				off = (head + length) % iobuffer.length;
-				len = ((head > off) ? head : iobuffer.length) - off;
+				len = (head > off ? head : iobuffer.length) - off;
 			}
 			int count;
 			try {
@@ -347,7 +340,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/*
 	 * Wait for a read when the buffer is full (with the implication
-	 * that space will become available in the buffer after the read 
+	 * that space will become available in the buffer after the read
 	 * takes place).
 	 */
 	private synchronized void waitForRead() {

@@ -20,13 +20,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.commons.core.storage.CommonStore;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -175,21 +175,17 @@ public class CommonStoreTest extends TestCase {
 		assertTrue(storable.exists("handle"));
 
 		InputStream in = storable.read("handle", null);
-		try {
+		try (in) {
 			byte[] buffer = new byte[5];
 			in.read(buffer);
 			assertEquals("hello", new String(buffer));
-		} finally {
-			in.close();
 		}
 	}
 
 	private void writeHello(ICommonStorable storable, String handle) throws IOException, CoreException {
 		OutputStream out = storable.write(handle, null);
-		try {
+		try (out) {
 			out.write("hello".getBytes());
-		} finally {
-			out.close();
 		}
 	}
 

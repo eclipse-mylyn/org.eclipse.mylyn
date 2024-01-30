@@ -28,26 +28,26 @@ public interface IIdentity {
 	//
 	//	public static final String KIND_EMAIL = "org.eclipse.mylyn.commons.identity.email"; //$NON-NLS-1$
 
-	public void addAccount(Account account);
+	void addAccount(Account account);
 
-	public void addPropertyChangeListener(PropertyChangeListener listener);
+	void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public Account getAccountById(String id);
+	Account getAccountById(String id);
 
-	public Account getAccountByKind(String kind);
+	Account getAccountByKind(String kind);
 
-	public Account[] getAccounts();
+	Account[] getAccounts();
 
-	public String[] getAliases();
+	String[] getAliases();
 
-	public UUID getId();
+	UUID getId();
 
-	public void removeAccount(Account account);
+	void removeAccount(Account account);
 
-	public void removePropertyChangeListener(PropertyChangeListener listener);
+	void removePropertyChangeListener(PropertyChangeListener listener);
 
-	public Future<IProfileImage> requestImage(int preferredWidth, int preferredHeight);
+	Future<IProfileImage> requestImage(int preferredWidth, int preferredHeight);
 
-	public Future<IProfile> requestProfile();
+	Future<IProfile> requestProfile();
 
 }

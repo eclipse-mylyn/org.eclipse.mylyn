@@ -32,7 +32,6 @@ public class ConditionalIgnoreRule implements TestRule {
 	private final IFixtureJUnitClass fixtureJUnitClass;
 
 	public ConditionalIgnoreRule(IFixtureJUnitClass fixtureJUnitClass) {
-		super();
 		this.fixtureJUnitClass = fixtureJUnitClass;
 	}
 
@@ -75,7 +74,7 @@ public class ConditionalIgnoreRule implements TestRule {
 
 		IgnoreConditionCreator(Class<?> testClass, ConditionalIgnore annotation) {
 			this.testClass = testClass;
-			this.conditionType = annotation.condition();
+			conditionType = annotation.condition();
 		}
 
 		IgnoreCondition create() {
@@ -99,11 +98,12 @@ public class ConditionalIgnoreRule implements TestRule {
 
 		private void checkConditionType() {
 			if (!isConditionTypeStandalone() && !isConditionTypeDeclaredInTarget()) {
-				String msg = "Conditional class '%s' is a member class "
-						+ "but was not declared inside the test case using it.\n"
-						+ "Either make this class a static class, "
-						+ "standalone class (by declaring it in it's own file) "
-						+ "or move it inside the test case using it";
+				String msg = """
+						Conditional class '%s' is a member class\s\
+						but was not declared inside the test case using it.
+						Either make this class a static class,\s\
+						standalone class (by declaring it in it's own file)\s\
+						or move it inside the test case using it""";
 				throw new IllegalArgumentException(String.format(msg, conditionType.getName()));
 			}
 		}

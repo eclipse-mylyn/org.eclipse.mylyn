@@ -13,5 +13,5 @@
 package org.eclipse.mylyn.commons.sdk.util;
 
 public interface IFixtureJUnitClass {
-	public AbstractTestFixture getActualFixture();
+	AbstractTestFixture getActualFixture();
 }

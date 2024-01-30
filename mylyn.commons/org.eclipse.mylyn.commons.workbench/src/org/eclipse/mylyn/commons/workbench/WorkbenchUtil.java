@@ -8,8 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
- *     IBM Corporation - helper methods from 
- *       org.eclipse.wst.common.frameworks.internal.ui.WTPActivityHelper 
+ *     IBM Corporation - helper methods from
+ *       org.eclipse.wst.common.frameworks.internal.ui.WTPActivityHelper
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench;
@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.QualifiedName;
@@ -152,9 +151,8 @@ public class WorkbenchUtil {
 	}
 
 	/**
-	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to
-	 * avoid two modal dialogs. If not then return the shell of the active workbench window. If neither can be found
-	 * return null.
+	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to avoid two modal dialogs.
+	 * If not then return the shell of the active workbench window. If neither can be found return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
 	 * 
@@ -203,8 +201,7 @@ public class WorkbenchUtil {
 		if (!isFiltering()) {
 			return true;
 		}
-		if (object instanceof IPluginContribution) {
-			IPluginContribution contribution = (IPluginContribution) object;
+		if (object instanceof IPluginContribution contribution) {
 			if (contribution.getPluginId() != null) {
 				IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
 				IIdentifier identifier = workbenchActivitySupport.getActivityManager()
@@ -241,7 +238,7 @@ public class WorkbenchUtil {
 	}
 
 	public static Object openProperties(IServiceLocator serviceLocator) {
-		IHandlerService service = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+		IHandlerService service = serviceLocator.getService(IHandlerService.class);
 		if (service != null) {
 			try {
 				return service.executeCommand(IWorkbenchCommandConstants.FILE_PROPERTIES, null);
@@ -259,17 +256,15 @@ public class WorkbenchUtil {
 
 	public static void busyCursorWhile(final ICoreRunnable runnable) throws OperationCanceledException, CoreException {
 		try {
-			IRunnableWithProgress runner = new IRunnableWithProgress() {
-				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						runnable.run(monitor);
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					} finally {
-						monitor.done();
-					}
+			IRunnableWithProgress runner = monitor -> {
+				try {
+					runnable.run(monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} finally {
+					monitor.done();
 				}
 			};
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runner);
@@ -293,17 +288,15 @@ public class WorkbenchUtil {
 	public static void runInUi(IRunnableContext context, final ICoreRunnable runnable, ISchedulingRule rule)
 			throws CoreException {
 		try {
-			IRunnableWithProgress runner = new IRunnableWithProgress() {
-				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						runnable.run(monitor);
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					} finally {
-						monitor.done();
-					}
+			IRunnableWithProgress runner = monitor -> {
+				try {
+					runnable.run(monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} finally {
+					monitor.done();
 				}
 			};
 			PlatformUI.getWorkbench().getProgressService().runInUI(context, runner, rule);
@@ -336,7 +329,7 @@ public class WorkbenchUtil {
 
 				Image[] images = getShell().getImages();
 				if (images != null && images.length > 0) {
-					// find the icon that is closest in size, but not larger than maximumHeight 
+					// find the icon that is closest in size, but not larger than maximumHeight
 					for (Image image2 : images) {
 						int newDiff = maximumHeight - image2.getBounds().height;
 						if (newDiff >= 0 && newDiff <= diff) {

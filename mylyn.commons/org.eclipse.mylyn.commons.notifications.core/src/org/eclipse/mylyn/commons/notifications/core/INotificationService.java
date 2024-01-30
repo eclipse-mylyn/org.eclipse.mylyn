@@ -21,6 +21,6 @@ import java.util.List;
  */
 public interface INotificationService {
 
-	public void notify(List<? extends AbstractNotification> notifications);
+	void notify(List<? extends AbstractNotification> notifications);
 
 }

@@ -46,28 +46,28 @@ public final class ShellDragSupport implements Listener {
 	public void handleEvent(Event event) {
 		Point pt = shell.toDisplay(event.x, event.y);
 		switch (event.type) {
-		case SWT.MouseEnter:
-			shell.setCursor(moveCursor);
-			break;
-		case SWT.MouseExit:
-			shell.setCursor(null);
-			break;
-		case SWT.MouseMove:
-			if (x == -1) {
+			case SWT.MouseEnter:
+				shell.setCursor(moveCursor);
 				break;
-			}
-			Point location = shell.getLocation();
-			shell.setLocation(location.x + pt.x - x, location.y + pt.y - y);
-			// fall through
-		case SWT.MouseDown:
-			x = pt.x;
-			y = pt.y;
-			break;
-		case SWT.MouseUp:
-			x = -1;
-			break;
-		case SWT.Dispose:
-			moveCursor.dispose();
+			case SWT.MouseExit:
+				shell.setCursor(null);
+				break;
+			case SWT.MouseMove:
+				if (x == -1) {
+					break;
+				}
+				Point location = shell.getLocation();
+				shell.setLocation(location.x + pt.x - x, location.y + pt.y - y);
+				// fall through
+			case SWT.MouseDown:
+				x = pt.x;
+				y = pt.y;
+				break;
+			case SWT.MouseUp:
+				x = -1;
+				break;
+			case SWT.Dispose:
+				moveCursor.dispose();
 		}
 	}
 

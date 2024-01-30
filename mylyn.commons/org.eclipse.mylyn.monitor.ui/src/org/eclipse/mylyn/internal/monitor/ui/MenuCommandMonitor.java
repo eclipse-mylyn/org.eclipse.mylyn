@@ -41,12 +41,12 @@ public class MenuCommandMonitor implements Listener {
 
 	public static final String MENU_PATH_DELIM = "/"; //$NON-NLS-1$
 
+	@Override
 	public void handleEvent(Event event) {
 		try {
-			if (!(event.widget instanceof Item)) {
+			if (!(event.widget instanceof Item item)) {
 				return;
 			}
-			Item item = (Item) event.widget;
 			if (item.getData() == null) {
 				return;
 			}
@@ -67,8 +67,7 @@ public class MenuCommandMonitor implements Listener {
 				id = target.getClass().getName();
 			}
 
-			if (item instanceof MenuItem) {
-				MenuItem menu = (MenuItem) item;
+			if (item instanceof MenuItem menu) {
 				Menu parentMenu = menu.getParent();
 				String location = ""; //$NON-NLS-1$
 				if (parentMenu != null) {
@@ -82,7 +81,7 @@ public class MenuCommandMonitor implements Listener {
 					// TODO: would be good to put back this info in some form
 					// but it can contain private data, bug 178604
 
-//					if (id == null) 
+//					if (id == null)
 //						id = "null";
 //					String itemText = obfuscateItemText(item.getText());
 //					id = id + "$" + MENU_ITEM_ID + location + itemText;

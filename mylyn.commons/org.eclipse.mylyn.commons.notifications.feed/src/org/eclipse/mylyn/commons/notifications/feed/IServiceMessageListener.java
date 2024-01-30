@@ -17,6 +17,6 @@ package org.eclipse.mylyn.commons.notifications.feed;
  */
 public interface IServiceMessageListener {
 
-	public void handleEvent(ServiceMessageEvent event);
+	void handleEvent(ServiceMessageEvent event);
 
 }

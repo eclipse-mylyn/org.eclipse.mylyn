@@ -32,7 +32,7 @@ public class CommonListenerListTest extends TestCase {
 
 	public void testAddRemove() {
 		final Listener addedListener = new Listener();
-		CommonListenerList<Listener> list = new CommonListenerList<Listener>("a");
+		CommonListenerList<Listener> list = new CommonListenerList<>("a");
 
 		list.add(addedListener);
 		assertTrue(list.iterator().hasNext());
@@ -44,7 +44,7 @@ public class CommonListenerListTest extends TestCase {
 
 	public void testAddTwice() {
 		final Listener addedListener = new Listener();
-		CommonListenerList<Listener> list = new CommonListenerList<Listener>("a");
+		CommonListenerList<Listener> list = new CommonListenerList<>("a");
 		list.add(addedListener);
 		list.add(addedListener);
 
@@ -58,7 +58,7 @@ public class CommonListenerListTest extends TestCase {
 		final Listener listener1 = new Listener();
 		final Listener listener2 = new Listener();
 		final Listener listener3 = new Listener();
-		CommonListenerList<Listener> list = new CommonListenerList<Listener>("a");
+		CommonListenerList<Listener> list = new CommonListenerList<>("a");
 		list.add(listener1);
 		list.add(listener2);
 		list.add(listener3);
@@ -72,7 +72,7 @@ public class CommonListenerListTest extends TestCase {
 
 	public void testNotify() {
 		final Listener addedListener = new Listener();
-		CommonListenerList<Listener> list = new CommonListenerList<Listener>("a");
+		CommonListenerList<Listener> list = new CommonListenerList<>("a");
 		list.add(addedListener);
 
 		list.notify(new Notifier<Listener>() {
@@ -87,7 +87,7 @@ public class CommonListenerListTest extends TestCase {
 
 	public void testNotifyException() {
 		final Listener addedListener = new Listener();
-		CommonListenerList<Listener> list = new CommonListenerList<Listener>("a");
+		CommonListenerList<Listener> list = new CommonListenerList<>("a");
 		list.add(addedListener);
 
 		list.notify(new Notifier<Listener>() {

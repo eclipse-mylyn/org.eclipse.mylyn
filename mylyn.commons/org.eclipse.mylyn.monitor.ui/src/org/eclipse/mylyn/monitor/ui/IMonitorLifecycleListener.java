@@ -20,8 +20,8 @@ package org.eclipse.mylyn.monitor.ui;
  */
 public interface IMonitorLifecycleListener {
 
-	public void startMonitoring();
+	void startMonitoring();
 
-	public void stopMonitoring();
+	void stopMonitoring();
 
 }

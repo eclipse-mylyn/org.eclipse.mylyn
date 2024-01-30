@@ -34,7 +34,7 @@ public class CancellableOperationMonitorThread extends Thread {
 		return instance;
 	}
 
-	private final List<ICancellableOperation> operations = new CopyOnWriteArrayList<ICancellableOperation>();
+	private final List<ICancellableOperation> operations = new CopyOnWriteArrayList<>();
 
 	private final long pollingInterval;
 
@@ -50,8 +50,8 @@ public class CancellableOperationMonitorThread extends Thread {
 	}
 
 	/**
-	 * Registers <code>operation</code> to be be monitored for cancellation. If the operation is complete it must be
-	 * unregistered by invoking {@link #removeOperation(ICancellableOperation)}.
+	 * Registers <code>operation</code> to be be monitored for cancellation. If the operation is complete it must be unregistered by
+	 * invoking {@link #removeOperation(ICancellableOperation)}.
 	 * 
 	 * @see #removeOperation(ICancellableOperation)
 	 */
@@ -82,7 +82,7 @@ public class CancellableOperationMonitorThread extends Thread {
 		checkShutdown();
 		notify();
 		wait();
-		// ensure processing happens again in case the first notify happened while the queue was processing 
+		// ensure processing happens again in case the first notify happened while the queue was processing
 		notify();
 		wait();
 	}
@@ -134,7 +134,7 @@ public class CancellableOperationMonitorThread extends Thread {
 	 *             thrown if an interrupted signal is received while waiting for shutdown to complete
 	 */
 	public synchronized void shutdown() throws InterruptedException {
-		this.shutdown = true;
+		shutdown = true;
 		notify();
 		if (isAlive()) {
 			join();

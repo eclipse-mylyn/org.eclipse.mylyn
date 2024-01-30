@@ -30,8 +30,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
-import org.eclipse.swt.browser.StatusTextEvent;
-import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,7 +66,7 @@ public class WebBrowserDialog extends MessageDialog {
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
 		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
 				defaultIndex);
-		this.setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
+		setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
 	}
 
 	public void setText(String text) {
@@ -98,10 +96,8 @@ public class WebBrowserDialog extends MessageDialog {
 				file = File.createTempFile("temp", ".html"); //$NON-NLS-1$ //$NON-NLS-2$
 				file.deleteOnExit();
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				try {
+				try (writer) {
 					writer.write(message);
-				} finally {
-					writer.close();
 				}
 			} catch (IOException e) {
 				if (file != null) {
@@ -137,18 +133,16 @@ public class WebBrowserDialog extends MessageDialog {
 			statusLabel = new Label(parent, SWT.NONE);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(statusLabel);
 
-			browser.addStatusTextListener(new StatusTextListener() {
-				public void changed(StatusTextEvent event) {
-					statusLabel.setText((event.text != null) ? event.text : ""); //$NON-NLS-1$
-				}
-			});
+			browser.addStatusTextListener(event -> statusLabel.setText(event.text != null ? event.text : ""));
 		}
 		if (showLocation) {
 			browser.addLocationListener(new LocationListener() {
+				@Override
 				public void changing(LocationEvent event) {
-					// ignore			
+					// ignore
 				}
 
+				@Override
 				public void changed(LocationEvent event) {
 					if (!event.top) {
 						// ignore nested frames

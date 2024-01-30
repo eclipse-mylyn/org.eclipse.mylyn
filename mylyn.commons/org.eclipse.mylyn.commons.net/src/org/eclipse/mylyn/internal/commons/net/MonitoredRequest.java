@@ -26,7 +26,7 @@ import org.eclipse.mylyn.commons.net.WebRequest;
  */
 public abstract class MonitoredRequest<T> extends WebRequest<T> implements ICancellable {
 
-	private static ThreadLocal<MonitoredRequest<?>> currentRequest = new ThreadLocal<MonitoredRequest<?>>();
+	private static ThreadLocal<MonitoredRequest<?>> currentRequest = new ThreadLocal<>();
 
 	public static MonitoredRequest<?> getCurrentRequest() {
 		return currentRequest.get();
@@ -36,7 +36,7 @@ public abstract class MonitoredRequest<T> extends WebRequest<T> implements ICanc
 		currentRequest.set(request);
 	}
 
-	private final CopyOnWriteArrayList<ICancellable> listeners = new CopyOnWriteArrayList<ICancellable>();
+	private final CopyOnWriteArrayList<ICancellable> listeners = new CopyOnWriteArrayList<>();
 
 	private final IProgressMonitor monitor;
 
@@ -45,6 +45,7 @@ public abstract class MonitoredRequest<T> extends WebRequest<T> implements ICanc
 		this.monitor = monitor;
 	}
 
+	@Override
 	public T call() throws Exception {
 		try {
 			assert MonitoredRequest.getCurrentRequest() == null;
@@ -84,13 +85,11 @@ public abstract class MonitoredRequest<T> extends WebRequest<T> implements ICanc
 	public static void connect(final Socket socket, InetSocketAddress address, int timeout) throws IOException {
 		MonitoredRequest<?> request = MonitoredRequest.getCurrentRequest();
 		if (request != null) {
-			ICancellable listener = new ICancellable() {
-				public void abort() {
-					try {
-						socket.close();
-					} catch (IOException e) {
-						// ignore
-					}
+			ICancellable listener = () -> {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					// ignore
 				}
 			};
 			try {

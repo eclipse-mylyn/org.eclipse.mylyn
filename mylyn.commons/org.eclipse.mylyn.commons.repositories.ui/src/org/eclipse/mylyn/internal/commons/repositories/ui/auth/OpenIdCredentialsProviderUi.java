@@ -41,12 +41,10 @@ public class OpenIdCredentialsProviderUi extends AbstractCredentialsProviderUi<O
 
 	@Override
 	public IStatus open(Shell parentShell, AuthenticationRequest<AuthenticationType<OpenIdCredentials>> authRequest) {
-		if (!(authRequest instanceof OpenIdAuthenticationRequest)) {
+		if (!(authRequest instanceof final OpenIdAuthenticationRequest request)) {
 			throw new IllegalArgumentException(
 					"Extected instanceof OpenIdAuthenticationRequest, got " + authRequest.getClass()); //$NON-NLS-1$
 		}
-		final OpenIdAuthenticationRequest request = (OpenIdAuthenticationRequest) authRequest;
-
 		final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(),
 				Messages.OpenIdCredentialsProviderUi_Login, null,
 				Messages.OpenIdCredentialsProviderUi_Login_to_OpenID_Provider, MessageDialog.NONE,
@@ -59,7 +57,7 @@ public class OpenIdCredentialsProviderUi extends AbstractCredentialsProviderUi<O
 				if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
 					credentials = new OpenIdCredentials(event.location, null);
 				}
-				// alternatively check cookies since IE does not notify listeners of redirects 
+				// alternatively check cookies since IE does not notify listeners of redirects
 				String value = Browser.getCookie(request.getCookie(), request.getCookieUrl());
 				if (value != null) {
 					credentials = new OpenIdCredentials(event.location, value);
@@ -67,11 +65,9 @@ public class OpenIdCredentialsProviderUi extends AbstractCredentialsProviderUi<O
 				if (credentials != null) {
 					event.doit = false;
 					// delay execution to avoid IE crash
-					dialog.getBrowser().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (dialog.getShell() != null && !dialog.getShell().isDisposed()) {
-								dialog.close();
-							}
+					dialog.getBrowser().getDisplay().asyncExec(() -> {
+						if (dialog.getShell() != null && !dialog.getShell().isDisposed()) {
+							dialog.close();
 						}
 					});
 				}

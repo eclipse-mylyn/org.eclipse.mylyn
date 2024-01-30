@@ -20,8 +20,8 @@ import org.eclipse.mylyn.commons.activity.ui.UserActivityListener;
  */
 public interface IUserActivityManager {
 
-	public void addAttentionListener(UserActivityListener listener);
+	void addAttentionListener(UserActivityListener listener);
 
-	public void removeAttentionListener(UserActivityListener listener);
+	void removeAttentionListener(UserActivityListener listener);
 
 }

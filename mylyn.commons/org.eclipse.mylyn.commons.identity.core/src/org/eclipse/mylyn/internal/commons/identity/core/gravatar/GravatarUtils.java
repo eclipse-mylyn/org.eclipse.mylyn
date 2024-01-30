@@ -41,18 +41,15 @@ public abstract class GravatarUtils {
 				Arrays.fill(zeros, '0');
 				hashed = new String(zeros) + hashed;
 			}
-		} catch (NoSuchAlgorithmException e) {
-			hashed = null;
-		} catch (UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			hashed = null;
 		}
 		return hashed;
 	}
 
 	/**
-	 * Get hash for object by attempting to adapt it to an {@link IGravatarHashProvider} and fall back on
-	 * {@link Object#toString()} value if adaptation fails and {@link Object#toString()} is or can be transformed into a
-	 * valid hash.
+	 * Get hash for object by attempting to adapt it to an {@link IGravatarHashProvider} and fall back on {@link Object#toString()} value if
+	 * adaptation fails and {@link Object#toString()} is or can be transformed into a valid hash.
 	 * 
 	 * @param element
 	 * @return hash
@@ -67,7 +64,7 @@ public abstract class GravatarUtils {
 		if (element instanceof IGravatarHashProvider) {
 			provider = (IGravatarHashProvider) element;
 		} else if (element instanceof IAdaptable) {
-			provider = (IGravatarHashProvider) ((IAdaptable) element).getAdapter(IGravatarHashProvider.class);
+			provider = ((IAdaptable) element).getAdapter(IGravatarHashProvider.class);
 		}
 		if (provider != null) {
 			hash = provider.getGravatarHash();

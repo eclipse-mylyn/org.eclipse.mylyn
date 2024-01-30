@@ -20,12 +20,10 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
@@ -58,7 +56,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 	private DateTime calendar = null;
 
-	private final List<ISelectionChangedListener> selectionListeners = new ArrayList<ISelectionChangedListener>();
+	private final List<ISelectionChangedListener> selectionListeners = new ArrayList<>();
 
 	private int hourOfDay = 0;
 
@@ -72,7 +70,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	public DatePickerPanel(Composite parent, int style, Calendar initialDate, boolean includeTime, int hourOfDay,
 			int marginSize) {
 		super(parent, style);
-		this.date = initialDate;
+		date = initialDate;
 		this.hourOfDay = hourOfDay;
 		initialize(includeTime, marginSize);
 		setDate(date);
@@ -97,7 +95,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		if (marginSize != -1) {
 			gridLayout.marginWidth = marginSize;
 		}
-		this.setLayout(gridLayout);
+		setLayout(gridLayout);
 
 		calendar = new DateTime(this, SWT.CALENDAR);
 		calendar.addSelectionListener(new SelectionAdapter() {
@@ -172,24 +170,18 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 		timeList = listViewer.getList();
 
-		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
-				date.set(Calendar.MINUTE, 0);
-				setSelection(new DateSelection(date));
-				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
-			}
+		listViewer.addSelectionChangedListener(event -> {
+			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
+			date.set(Calendar.MINUTE, 0);
+			setSelection(new DateSelection(date));
+			notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 		});
 
-		listViewer.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
-				date.set(Calendar.MINUTE, 0);
-				setSelection(new DateSelection(date, true));
-				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
-			}
+		listViewer.addOpenListener(event -> {
+			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
+			date.set(Calendar.MINUTE, 0);
+			setSelection(new DateSelection(date, true));
+			notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 		});
 
 		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 50).applyTo(timeList);
@@ -219,17 +211,15 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		}
 	}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.keyCode == SWT.ESC) {
-			SelectionChangedEvent changeEvent = new SelectionChangedEvent(this, new ISelection() {
-				public boolean isEmpty() {
-					return true;
-				}
-			});
+			SelectionChangedEvent changeEvent = new SelectionChangedEvent(this, () -> true);
 			notifyListeners(changeEvent);
 		}
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {
 	}
 
@@ -239,18 +229,22 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		}
 	}
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return selection;
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		this.selection = selection;
 	}
@@ -270,6 +264,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 		}
 
+		@Override
 		public boolean isEmpty() {
 			return date == null;
 		}
