@@ -28,7 +28,6 @@ public class QueryPageDetails {
 
 	public QueryPageDetails(boolean needsTitle, String queryUrlPart, String pageTitle, String pageDescription,
 			String urlPattern, String queryAttributeName) {
-		super();
 		this.needsTitle = needsTitle;
 		this.queryUrlPart = queryUrlPart;
 		this.pageTitle = pageTitle;

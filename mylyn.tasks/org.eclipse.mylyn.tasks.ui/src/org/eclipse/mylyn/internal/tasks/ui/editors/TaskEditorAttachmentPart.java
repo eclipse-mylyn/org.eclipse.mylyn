@@ -24,15 +24,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -92,17 +89,17 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		private int direction = DESCENDING;
 
 		public AttachmentTableViewerComparator() {
-			this.propertyIndex = 0;
+			propertyIndex = 0;
 			direction = DESCENDING;
 		}
 
 		public void setColumn(int column) {
-			if (column == this.propertyIndex) {
+			if (column == propertyIndex) {
 				// Same column as last sort; toggle the direction
 				direction = 1 - direction;
 			} else {
 				// New column; do an ascending sort
-				this.propertyIndex = column;
+				propertyIndex = column;
 				direction = DESCENDING;
 			}
 		}
@@ -244,21 +241,13 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		attachmentsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		attachmentsViewer.setLabelProvider(createTableProvider());
-		attachmentsViewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				openAttachments(event);
-			}
-		});
+		attachmentsViewer.addOpenListener(this::openAttachments);
 		attachmentsViewer.addSelectionChangedListener(getTaskEditorPage());
 		attachmentsViewer.setInput(attachmentList.toArray());
 
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				TasksUiMenus.fillTaskAttachmentMenu(manager);
-			}
-		});
+		menuManager.addMenuListener(TasksUiMenus::fillTaskAttachmentMenu);
 		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, true);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
@@ -354,7 +343,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private void initialize() {
 		attachmentAttributes = getTaskData().getAttributeMapper()
 				.getAttributesByType(getTaskData(), TaskAttribute.TYPE_ATTACHMENT);
-		attachmentList = new ArrayList<ITaskAttachment>(attachmentAttributes.size());
+		attachmentList = new ArrayList<>(attachmentAttributes.size());
 		for (TaskAttribute attribute : attachmentAttributes) {
 			if (getModel().hasIncomingChanges(attribute)) {
 				hasIncoming = true;
@@ -423,7 +412,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	protected void openAttachments(OpenEvent event) {
-		List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+		List<ITaskAttachment> attachments = new ArrayList<>();
 
 		StructuredSelection selection = (StructuredSelection) event.getSelection();
 
@@ -448,8 +437,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	@Override
 	public boolean setFormInput(Object input) {
-		if (input instanceof String) {
-			String text = (String) input;
+		if (input instanceof String text) {
 			if (attachmentAttributes != null) {
 				for (ITaskAttachment attachment : attachmentList) {
 					if (text.equals(attachment.getTaskAttribute().getId())) {
@@ -493,36 +481,27 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	protected int compareColumn(ITaskAttachment attachment1, ITaskAttachment attachment2, int propertyIndex) {
-		int rc;
-		switch (propertyIndex) {
-		case 0:
-			rc = CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
-			break;
-		case 1:
-			String description1 = attachment1.getDescription();
-			String description2 = attachment2.getDescription();
-			rc = CoreUtil.compare(description1, description2);
-			break;
-		case 2:
-			rc = CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
-			break;
-		case 3:
-			String author1 = attachment1.getAuthor() != null ? attachment1.getAuthor().toString() : null;
-			String author2 = attachment2.getAuthor() != null ? attachment2.getAuthor().toString() : null;
-			rc = CoreUtil.compare(author1, author2);
-			break;
-		case 4:
-			rc = CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
-			break;
-		case 5:
-			String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
-			String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
-			rc = keyComparator.compare2(key1, key2);
-			break;
-		default:
-			rc = 0;
-			break;
-		}
+		int rc = switch (propertyIndex) {
+			case 0 -> CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
+			case 1 -> {
+				String description1 = attachment1.getDescription();
+				String description2 = attachment2.getDescription();
+				yield CoreUtil.compare(description1, description2);
+			}
+			case 2 -> CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
+			case 3 -> {
+				String author1 = attachment1.getAuthor() != null ? attachment1.getAuthor().toString() : null;
+				String author2 = attachment2.getAuthor() != null ? attachment2.getAuthor().toString() : null;
+				yield CoreUtil.compare(author1, author2);
+			}
+			case 4 -> CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
+			case 5 -> {
+				String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
+				String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
+				yield keyComparator.compare2(key1, key2);
+			}
+			default -> 0;
+		};
 		return rc;
 	}
 

@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface ISupportRequest {
 
-	public ITaskContribution getOrCreateContribution(IProduct product);
+	ITaskContribution getOrCreateContribution(IProduct product);
 
-	public ITaskContribution getDefaultContribution();
+	ITaskContribution getDefaultContribution();
 
-	public IStatus getStatus();
+	IStatus getStatus();
 
 }

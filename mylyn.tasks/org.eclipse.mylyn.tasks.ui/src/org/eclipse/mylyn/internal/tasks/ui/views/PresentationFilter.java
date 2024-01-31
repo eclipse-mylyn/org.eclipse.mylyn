@@ -75,15 +75,10 @@ public class PresentationFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean selectTask(Object parent, TaskTask task) {
-		if (!filterNonMatching) {
-			return true;
-		}
+		
 		// tasks matching a query or category should be included
-		if (isInVisibleQuery(task)) {
-			return true;
-		}
 		// explicitly scheduled subtasks should be shown in those containers
-		if (parent != null && parent.getClass().equals(ScheduledTaskContainer.class)) {
+		if (!filterNonMatching || isInVisibleQuery(task) || (parent != null && parent.getClass().equals(ScheduledTaskContainer.class))) {
 			return true;
 		}
 
@@ -91,11 +86,11 @@ public class PresentationFilter extends AbstractTaskListFilter {
 	}
 
 	public void setFilterHiddenQueries(boolean enabled) {
-		this.filterHiddenQueries = enabled;
+		filterHiddenQueries = enabled;
 	}
 
 	public void setFilterNonMatching(boolean filterSubtasks) {
-		this.filterNonMatching = filterSubtasks;
+		filterNonMatching = filterSubtasks;
 	}
 
 	public void updateSettings() {
@@ -109,11 +104,8 @@ public class PresentationFilter extends AbstractTaskListFilter {
 	public boolean isInVisibleQuery(ITask task) {
 		for (AbstractTaskContainer container : ((AbstractTask) task).getParentContainers()) {
 			// categories and local subtasks are always visible
-			if (container instanceof AbstractTaskCategory) {
-				return true;
-			}
 			// show task if is contained in a query
-			if (container instanceof IRepositoryQuery && selectQuery((IRepositoryQuery) container)) {
+			if ((container instanceof AbstractTaskCategory) || (container instanceof IRepositoryQuery && selectQuery((IRepositoryQuery) container))) {
 				return true;
 			}
 		}

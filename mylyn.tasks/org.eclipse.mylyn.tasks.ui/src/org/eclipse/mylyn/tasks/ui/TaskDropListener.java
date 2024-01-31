@@ -20,17 +20,17 @@ import java.util.Collections;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
- * Clients can contribute an extension of this class to be notified when one task is dropped on a repository task in the
- * task list, or when a task is dropped on a task editor.
+ * Clients can contribute an extension of this class to be notified when one task is dropped on a repository task in the task list, or when
+ * a task is dropped on a task editor.
  * 
  * @author Sam Davis
  * @since 3.7
  */
 public abstract class TaskDropListener {
 
-	public static enum Operation {
+	public enum Operation {
 		COPY, LINK, DROP_ON_TASK_EDITOR
-	};
+	}
 
 	public static class TaskDropEvent {
 
@@ -41,7 +41,7 @@ public abstract class TaskDropListener {
 		private final Operation operation;
 
 		public TaskDropEvent(Collection<ITask> tasks, ITask target, Operation operation) {
-			this.tasks = Collections.unmodifiableList(new ArrayList<ITask>(tasks));
+			this.tasks = Collections.unmodifiableList(new ArrayList<>(tasks));
 			this.target = target;
 			this.operation = operation;
 		}

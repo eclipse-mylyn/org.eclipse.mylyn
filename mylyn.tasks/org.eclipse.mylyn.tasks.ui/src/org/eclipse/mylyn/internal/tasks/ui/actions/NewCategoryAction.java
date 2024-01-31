@@ -45,9 +45,11 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		setImageDescriptor(TasksUiImages.CATEGORY_NEW);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
@@ -91,6 +93,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		return null;
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 }

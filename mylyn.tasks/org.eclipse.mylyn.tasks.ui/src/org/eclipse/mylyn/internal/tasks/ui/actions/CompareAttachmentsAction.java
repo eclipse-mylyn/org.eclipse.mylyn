@@ -63,13 +63,14 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		super(text);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
-		if (currentSelection instanceof IStructuredSelection) {
-			IStructuredSelection selection = (IStructuredSelection) currentSelection;
+		if (currentSelection instanceof IStructuredSelection selection) {
 			Object[] elements = selection.toArray();
 			if (elements.length >= 2) {
 				final ITaskAttachment attachment1 = (ITaskAttachment) elements[0];
@@ -128,8 +129,9 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.currentSelection = selection;
+		currentSelection = selection;
 	}
 
 	private class CompareItem implements IStreamContentAccessor, ITypedElement {
@@ -140,6 +142,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			this.attachment = attachment;
 		}
 
+		@Override
 		public InputStream getContents() throws CoreException {
 			TaskAttribute attachmentAttribute = attachment.getTaskAttribute();
 			if (attachmentAttribute == null) {
@@ -154,14 +157,17 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			return handler.getContent(taskRepository, task, attachmentAttribute, new NullProgressMonitor());
 		}
 
+		@Override
 		public Image getImage() {
 			return null;
 		}
 
+		@Override
 		public String getName() {
 			return attachment.getFileName();
 		}
 
+		@Override
 		public String getType() {
 			// ImageMergeViewerCreator - gif,jpg,jpeg,png,bmp,ico,tif,tiff
 			// BinaryCompareViewerCreator - class,exe,dll,binary,zip,jar
@@ -169,7 +175,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			// PropertiesFileMergeViewerCreator - properties,properties2
 			// JavaContentViewerCreator - java,java2"
 			// RefactoringDescriptorCompareViewerCreator - refactoring_descriptor
-			// 
+			//
 			String filename = attachment.getFileName();
 			int n = filename.lastIndexOf('.');
 			if (n > -1) {

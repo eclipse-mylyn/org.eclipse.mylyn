@@ -77,7 +77,7 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 
 	private TaskData targetTaskData;
 
-	protected final Map<String, AbstractAttributeEditor> editorMap = new HashMap<String, AbstractAttributeEditor>();
+	protected final Map<String, AbstractAttributeEditor> editorMap = new HashMap<>();
 
 	public RepositoryQuerySchemaPage(String pageName, TaskRepository repository, IRepositoryQuery query,
 			AbstractQueryPageSchema schema, TaskData data, QueryPageDetails pageDetails) {
@@ -97,7 +97,7 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 
 	@Override
 	protected void createPageContent(@NonNull SectionComposite parent) {
-		this.scrolledComposite = parent;
+		scrolledComposite = parent;
 
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
 		GridLayout layout = new GridLayout();
@@ -156,7 +156,7 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 
 			String layoutPriorityString = dataAttribute.getMetaData().getValue("LayoutPriority");
 			int layoutPriority = layoutPriorityString == null ? -1 : Integer.parseInt(layoutPriorityString);
-			int priority = (attributeEditor.getLayoutHint() != null)
+			int priority = attributeEditor.getLayoutHint() != null
 					? attributeEditor.getLayoutHint().getPriority()
 					: LayoutHint.DEFAULT_PRIORITY;
 			// TODO: copied from AbstractTaskEditorAttributeSection.createAttributeControls (only layoutPriority is new)
@@ -209,8 +209,8 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 			attributeEditor.getControl().setForeground(attributesComposite.getForeground());
 			LayoutHint layoutHint = attributeEditor.getLayoutHint();
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-			RowSpan rowSpan = (layoutHint != null && layoutHint.rowSpan != null) ? layoutHint.rowSpan : RowSpan.SINGLE;
-			ColumnSpan columnSpan = (layoutHint != null && layoutHint.columnSpan != null)
+			RowSpan rowSpan = layoutHint != null && layoutHint.rowSpan != null ? layoutHint.rowSpan : RowSpan.SINGLE;
+			ColumnSpan columnSpan = layoutHint != null && layoutHint.columnSpan != null
 					? layoutHint.columnSpan
 					: ColumnSpan.SINGLE;
 			gd.horizontalIndent = 1;// prevent clipping of decorators on Windows
@@ -247,8 +247,8 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 		setMessage("");
 		boolean oneFieldHasValue = false;
 		for (Field field : schema.getFields()) {
-			oneFieldHasValue |= (targetTaskData.getRoot().getAttribute(field.getKey()).hasValue()
-					&& !targetTaskData.getRoot().getAttribute(field.getKey()).getValue().equals(""));
+			oneFieldHasValue |= targetTaskData.getRoot().getAttribute(field.getKey()).hasValue()
+					&& !targetTaskData.getRoot().getAttribute(field.getKey()).getValue().equals("");
 			if (field.isQueryRequired()) {
 				String text = targetTaskData.getRoot().getAttribute(field.getKey()).getValue();
 				if (text == null || text.length() == 0) {
@@ -288,7 +288,7 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		query.setSummary(this.getQueryTitle());
+		query.setSummary(getQueryTitle());
 		query.setUrl(getQueryUrl(getTaskRepository().getRepositoryUrl()));
 		if (pageDetails.getQueryAttributeName() != null) {
 			query.setAttribute(pageDetails.getQueryAttributeName(), Boolean.TRUE.toString());

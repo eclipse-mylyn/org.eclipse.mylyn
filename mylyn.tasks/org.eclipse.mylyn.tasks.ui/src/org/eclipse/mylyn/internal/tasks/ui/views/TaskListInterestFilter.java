@@ -44,8 +44,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean select(Object parent, Object child) {
 		try {
-			if (child instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer dateRangeTaskContainer = (ScheduledTaskContainer) child;
+			if (child instanceof ScheduledTaskContainer dateRangeTaskContainer) {
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
 			if (child instanceof ITask) {
@@ -110,10 +109,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return task.isActive() || TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
 				|| hasChanges(parent, task) || hasInterestingSubTasks(parent, task, depth)
 				// note that following condition is wrapped in ()!
-				|| (!task.isCompleted() && (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
+				|| !task.isCompleted() && (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task)
-						|| isInterestingForThisWeek(parent, task)));
+						|| isInterestingForThisWeek(parent, task));
 	}
 
 	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
@@ -137,20 +136,12 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			return false;
 		}
 
-		if (parent instanceof Incoming) {
-			return true;
-		}
-
-		if (parent instanceof Outgoing) {
-			return true;
-		}
-
-		if (parent instanceof Completed) {
+		if ((parent instanceof Incoming) || (parent instanceof Outgoing) || (parent instanceof Completed)) {
 			return true;
 		}
 
 		if (parent instanceof ScheduledTaskContainer) {
-			return (isDateRangeInteresting((ScheduledTaskContainer) parent));
+			return isDateRangeInteresting((ScheduledTaskContainer) parent);
 		}
 
 		return false;

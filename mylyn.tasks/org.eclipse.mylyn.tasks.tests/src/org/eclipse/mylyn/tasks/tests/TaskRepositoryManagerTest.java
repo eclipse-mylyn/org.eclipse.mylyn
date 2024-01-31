@@ -180,7 +180,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	private Map<String, String> createAuthInfo() {
-		Map<String, String> authInfo = new HashMap<String, String>();
+		Map<String, String> authInfo = new HashMap<>();
 		authInfo.put(AUTH_USERNAME, "testuser");
 		authInfo.put(AUTH_PASSWORD, "testpassword");
 		authInfo.put(AUTH_HTTP_USERNAME, "testhttpuser");
@@ -407,7 +407,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 		assertEquals(2, manager.getAllRepositories().size());
-		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
+		List<TaskRepository> repositoryList = new ArrayList<>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		TaskTestUtil.saveNow();

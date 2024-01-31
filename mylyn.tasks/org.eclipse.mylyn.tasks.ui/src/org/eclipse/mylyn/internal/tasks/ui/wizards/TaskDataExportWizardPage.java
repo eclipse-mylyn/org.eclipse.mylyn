@@ -20,8 +20,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -62,6 +60,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	/**
 	 * Create the widgets on the page
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
@@ -92,11 +91,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 		destDirText = new Text(parent, SWT.BORDER);
 		destDirText.setEditable(false);
 		destDirText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		destDirText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				controlChanged();
-			}
-		});
+		destDirText.addModifyListener(e -> controlChanged());
 
 		browseButton = new Button(parent, SWT.PUSH);
 		browseButton.setText(Messages.TaskDataExportWizardPage_Browse_);

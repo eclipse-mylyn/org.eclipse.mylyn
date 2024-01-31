@@ -17,8 +17,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -32,6 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.internal.Workbench;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for the Task Import Wizard.
@@ -82,8 +82,8 @@ public class TaskDataImportTest extends TestCase {
 	}
 
 	/**
-	 * Tests import of task data with working set active doesn't result in queries and categories being erroneously
-	 * added to the active working set.
+	 * Tests import of task data with working set active doesn't result in queries and categories being erroneously added to the active
+	 * working set.
 	 */
 	public void testDisableWorkingSets() throws Exception {
 		IWorkingSetManager workingSetManager = Workbench.getInstance().getWorkingSetManager();
@@ -91,7 +91,7 @@ public class TaskDataImportTest extends TestCase {
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
 		assertEquals(0, workingSet.getElements().length);
 		workingSetManager.addWorkingSet(workingSet);
-		Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>();
+		Set<IWorkingSet> workingSets = new HashSet<>();
 		workingSets.add(workingSet);
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
 
@@ -99,7 +99,7 @@ public class TaskDataImportTest extends TestCase {
 
 		assertEquals(2, TasksUiPlugin.getTaskList().getCategories().size());
 
-		// Active working set should not be populated with 
+		// Active working set should not be populated with
 		// imported "Test" category
 		assertEquals(0, workingSet.getElements().length);
 		workingSetManager.removeWorkingSet(workingSet);

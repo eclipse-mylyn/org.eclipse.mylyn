@@ -71,7 +71,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		public TaskCollector(RepositoryQuery repositoryQuery, SynchronizationSession session) {
 			this.repositoryQuery = repositoryQuery;
 			this.session = session;
-			this.removedQueryResults = new HashSet<ITask>(repositoryQuery.getChildren());
+			removedQueryResults = new HashSet<>(repositoryQuery.getChildren());
 		}
 
 		@Override
@@ -136,7 +136,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		this.connector = connector;
 		this.repository = repository;
 		this.queries = queries;
-		this.statuses = new ArrayList<IStatus>();
+		statuses = new ArrayList<>();
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 				Set<ITask> allTasks;
 				if (!isFullSynchronization()) {
-					allTasks = new HashSet<ITask>();
+					allTasks = new HashSet<>();
 					for (RepositoryQuery query : queries) {
 						allTasks.addAll(query.getChildren());
 					}
@@ -161,7 +161,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				try {
 					Job.getJobManager().beginRule(rule, monitor);
 
-					final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<String, TaskRelation[]>();
+					final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<>();
 					SynchronizationSession session = new SynchronizationSession(taskDataManager) {
 						@Override
 						public void putTaskData(ITask task, TaskData taskData) throws CoreException {
@@ -189,7 +189,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					try {
 						boolean success = preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
-						if ((success && session.needsPerformQueries()) || isUser()) {
+						if (success && session.needsPerformQueries() || isUser()) {
 							// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
 							synchronizeQueries(monitor, session);
 						} else {
@@ -202,7 +202,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 						taskList.notifySynchronizationStateChanged(queries);
 					}
 
-					Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
+					Set<ITask> tasksToBeSynchronized = new HashSet<>();
 					for (ITask task : session.getStaleTasks()) {
 						tasksToBeSynchronized.add(task);
 						((AbstractTask) task).setSynchronizing(true);

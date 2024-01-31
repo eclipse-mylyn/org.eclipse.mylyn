@@ -43,17 +43,20 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 		}
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			selectionChanged((IStructuredSelection) selection);
-			action.setEnabled(this.isEnabled());
+			action.setEnabled(isEnabled());
 		} else {
 			clearCache();
 			action.setEnabled(false);

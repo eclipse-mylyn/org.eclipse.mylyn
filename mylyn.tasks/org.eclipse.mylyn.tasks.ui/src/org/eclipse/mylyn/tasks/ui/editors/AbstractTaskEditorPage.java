@@ -59,7 +59,6 @@ import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
@@ -167,12 +166,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	private final class ParentResizeHandler implements Listener {
 		private int generation;
 
+		@Override
 		public void handleEvent(Event event) {
 			++generation;
 
 			Display.getCurrent().timerExec(300, new Runnable() {
 				int scheduledGeneration = generation;
 
+				@Override
 				public void run() {
 					if (getManagedForm().getForm().isDisposed()) {
 						return;
@@ -213,6 +214,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
 				}
 
+				@Override
 				public void run() {
 					try {
 						if (job.getStatus() == null) {
@@ -263,6 +265,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	private final ITaskDataManagerListener TASK_DATA_LISTENER = new ITaskDataManagerListener() {
 
+		@Override
 		public void taskDataUpdated(final TaskDataManagerEvent event) {
 			ITask task = event.getTask();
 			if (task.equals(AbstractTaskEditorPage.this.getTask()) && event.getTaskDataUpdated()) {
@@ -271,29 +274,28 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		}
 
 		private void refresh(final ITask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (refreshDisabled || busy) {
-						return;
-					}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+				if (refreshDisabled || busy) {
+					return;
+				}
 
-					if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-						// automatically refresh if the user has not made any changes and there is no chance of missing incomings
-						AbstractTaskEditorPage.this.refresh();
-					} else {
-						getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
-								IMessageProvider.WARNING, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										AbstractTaskEditorPage.this.refresh();
-									}
-								});
-						setSubmitEnabled(false);
-					}
+				if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
+					// automatically refresh if the user has not made any changes and there is no chance of missing incomings
+					AbstractTaskEditorPage.this.refresh();
+				} else {
+					getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
+							IMessageProvider.WARNING, new HyperlinkAdapter() {
+								@Override
+								public void linkActivated(HyperlinkEvent e) {
+									AbstractTaskEditorPage.this.refresh();
+								}
+							});
+					setSubmitEnabled(false);
 				}
 			});
 		}
 
+		@Override
 		public void editsDiscarded(TaskDataManagerEvent event) {
 			if (event.getTask().equals(AbstractTaskEditorPage.this.getTask())) {
 				refresh(event.getTask());
@@ -313,26 +315,24 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			getTaskEditor().setMessage(null, IMessageProvider.NONE);
 		}
 
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			// clears message if task is added to Task List.
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (task.equals(taskContainerDelta.getElement())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.ADDED)) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								getTaskEditor().setMessage(null, IMessageProvider.NONE);
-							}
-						});
+						PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getTaskEditor().setMessage(null, IMessageProvider.NONE));
 					}
 				}
 			}
 		}
 
+		@Override
 		public void dispose() {
 			TasksUiPlugin.getTaskList().removeChangeListener(this);
 		}
 
-	};
+	}
 
 	private class MenuCreator implements IMenuCreator {
 
@@ -343,6 +343,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		public MenuCreator() {
 		}
 
+		@Override
 		public void dispose() {
 			if (menu != null) {
 				menu.dispose();
@@ -354,6 +355,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			}
 		}
 
+		@Override
 		public Menu getMenu(Control parent) {
 			if (menuManager == null) {
 				menuManager = new MenuManager();
@@ -362,6 +364,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			return menuManager.createContextMenu(parent);
 		}
 
+		@Override
 		public Menu getMenu(Menu parent) {
 			return null;
 		}
@@ -479,10 +482,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		super(editor, id, label);
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
-		this.reflow = true;
-		this.selectionChangedListeners = new ListenerList();
-		this.submitEnabled = true;
-		this.needsSubmit = true;
+		reflow = true;
+		selectionChangedListeners = new ListenerList();
+		submitEnabled = true;
+		needsSubmit = true;
 	}
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
@@ -498,6 +501,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		return (TaskEditor) super.getEditor();
 	}
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.add(listener);
 	}
@@ -523,14 +527,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		} else {
 			// TODO consider removing asyncExec()
 			Display activeDisplay = getSite().getShell().getDisplay();
-			activeDisplay.asyncExec(new Runnable() {
-				public void run() {
-					if (getSite() != null && getSite().getPage() != null && !getManagedForm().getForm().isDisposed()) {
-						if (getTaskEditor() != null) {
-							getSite().getPage().closeEditor(getTaskEditor(), false);
-						} else {
-							getSite().getPage().closeEditor(AbstractTaskEditorPage.this, false);
-						}
+			activeDisplay.asyncExec(() -> {
+				if (getSite() != null && getSite().getPage() != null && !getManagedForm().getForm().isDisposed()) {
+					if (getTaskEditor() != null) {
+						getSite().getPage().closeEditor(getTaskEditor(), false);
+					} else {
+						getSite().getPage().closeEditor(AbstractTaskEditorPage.this, false);
 					}
 				}
 			});
@@ -612,18 +614,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getTaskEditor().setMessage(
-								Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
-								IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										AbstractTaskEditorPage.this.refresh();
-									}
-								});
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getTaskEditor().setMessage(
+						Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
+						IMessageProvider.INFORMATION, new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								AbstractTaskEditorPage.this.refresh();
+							}
+						}));
 			}
 
 			if (taskData != null) {
@@ -639,13 +637,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			boolean reflowRequired = calculateReflowRequired(form);
 
 			if (reflowRequired) {
-				Display.getCurrent().asyncExec(new Runnable() {
-					public void run() {
-						// this fixes a problem with layout that occurs when an editor
-						// is restored before the workbench is fully initialized
-						reflow();
-					}
-				});
+				Display.getCurrent().asyncExec(this::reflow);
 			}
 		}
 	}
@@ -703,12 +695,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	/**
-	 * To suppress a section, just remove its descriptor from the list. To add your own section in a specific order on
-	 * the page, use the path value for where you want it to appear (your descriptor will appear after previously added
-	 * descriptors with the same path), and add it to the descriptors list in your override of this method.
+	 * To suppress a section, just remove its descriptor from the list. To add your own section in a specific order on the page, use the
+	 * path value for where you want it to appear (your descriptor will appear after previously added descriptors with the same path), and
+	 * add it to the descriptors list in your override of this method.
 	 */
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
+		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<>();
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
@@ -785,7 +777,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	protected void createParts() {
-		List<TaskEditorPartDescriptor> descriptors = new LinkedList<TaskEditorPartDescriptor>(createPartDescriptors());
+		List<TaskEditorPartDescriptor> descriptors = new LinkedList<>(createPartDescriptors());
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);
 		createParts(PATH_ASSOCIATIONS, editorComposite, descriptors);
@@ -809,11 +801,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			final TaskEditorPartDescriptor descriptor = it.next();
 			if (path == null || path.equals(descriptor.getPath())) {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Error creating task editor part: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
+					@Override
 					public void run() throws Exception {
 						AbstractTaskEditorPart part = descriptor.createPart();
 						part.setPartId(descriptor.getId());
@@ -835,11 +829,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 				final String subPath = path.substring(i + 1);
 				if (parentId.equals(parentPart.getPartId())) {
 					SafeRunner.run(new ISafeRunnable() {
+						@Override
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 									"Error creating task editor part: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 
+						@Override
 						public void run() throws Exception {
 							AbstractTaskEditorPart part = descriptor.createPart();
 							part.setPartId(descriptor.getId());
@@ -899,11 +895,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		if (getTask().getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
 			String summary = connector.getTaskMapping(model.getTaskData()).getSummary();
 			try {
-				TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
-					public void execute(IProgressMonitor monitor) throws CoreException {
-						task.setSummary(summary);
-					}
-				});
+				TasksUiPlugin.getTaskList().run(monitor1 -> task.setSummary(summary));
 				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -957,7 +949,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	 */
 	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
-		final TaskRepository taskRepository = (model != null) ? getModel().getTaskRepository() : null;
+		final TaskRepository taskRepository = model != null ? getModel().getTaskRepository() : null;
 
 		if (taskData == null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
@@ -971,7 +963,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			} else if (taskRepository != null) {
 				ClearOutgoingAction clearOutgoingAction = new ClearOutgoingAction(
 						Collections.singletonList((IRepositoryElement) task));
-				(clearOutgoingAction).setTaskEditorPage(this);
+				clearOutgoingAction.setTaskEditorPage(this);
 				if (clearOutgoingAction.isEnabled()) {
 					toolBarManager.appendToGroup("new", clearOutgoingAction); //$NON-NLS-1$
 				}
@@ -1011,7 +1003,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 									menuManager.add(openWithBrowserAction);
 									menuManager.add(new Separator());
 									menuManager.add(historyAction);
-								};
+								}
 							});
 						} else {
 							toolBarManager.prependToGroup("open", historyAction); //$NON-NLS-1$
@@ -1028,11 +1020,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 						submitButton.setText(Messages.TaskEditorActionPart_Submit + " "); //$NON-NLS-1$
 						submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 						submitButton.setBackground(null);
-						submitButton.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								doSubmit();
-							}
-						});
+						submitButton.addListener(SWT.Selection, e -> doSubmit());
 						return submitButton;
 					}
 				};
@@ -1054,6 +1042,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		for (Object listener : listeners) {
 			final ISelectionChangedListener l = (ISelectionChangedListener) listener;
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					l.selectionChanged(event);
 				}
@@ -1078,14 +1067,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	private void updateOutlinePage() {
 		if (outlinePage == null) {
 			outlinePage = new TaskEditorOutlinePage();
-			outlinePage.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					ISelection selection = event.getSelection();
-					if (selection instanceof StructuredSelection) {
-						Object select = ((StructuredSelection) selection).getFirstElement();
-						selectReveal(select);
-						getEditor().setActivePage(getId());
-					}
+			outlinePage.addSelectionChangedListener(event -> {
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection) {
+					Object select = ((StructuredSelection) selection).getFirstElement();
+					selectReveal(select);
+					getEditor().setActivePage(getId());
 				}
 			});
 		}
@@ -1136,8 +1123,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		Assert.isNotNull(partId);
 		if (getManagedForm() != null) {
 			for (IFormPart part : getManagedForm().getParts()) {
-				if (part instanceof AbstractTaskEditorPart) {
-					AbstractTaskEditorPart taskEditorPart = (AbstractTaskEditorPart) part;
+				if (part instanceof AbstractTaskEditorPart taskEditorPart) {
 					if (partId.equals(taskEditorPart.getPartId())) {
 						return taskEditorPart;
 					}
@@ -1147,6 +1133,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		return null;
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return lastSelection;
 	}
@@ -1165,9 +1152,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	/**
-	 * Invoked after task submission has completed. This method is invoked on the UI thread in all cases whether
-	 * submission was successful, canceled or failed. The value returned by <code>event.getJob().getStatus()</code>
-	 * indicates the result of the submit job. Sub-classes may override but are encouraged to invoke the super method.
+	 * Invoked after task submission has completed. This method is invoked on the UI thread in all cases whether submission was successful,
+	 * canceled or failed. The value returned by <code>event.getJob().getStatus()</code> indicates the result of the submit job. Sub-classes
+	 * may override but are encouraged to invoke the super method.
 	 *
 	 * @since 3.2
 	 * @see SubmitJob
@@ -1224,7 +1211,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		} else {
 			message = Messages.AbstractTaskEditorPage_Submit_failed;
 		}
-		return message.replaceAll("\n", " ").replaceAll("\r", " "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return message.replace('\n', ' ').replace('\r', ' '); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	@Override
@@ -1232,12 +1219,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		super.init(site, input);
 
 		TaskEditorInput taskEditorInput = (TaskEditorInput) input;
-		this.task = taskEditorInput.getTask();
-		this.defaultSelection = new StructuredSelection(task);
-		this.lastSelection = defaultSelection;
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-		this.textSupport = new CommonTextSupport(handlerService);
-		this.textSupport.setSelectionChangedListener(this);
+		task = taskEditorInput.getTask();
+		defaultSelection = new StructuredSelection(task);
+		lastSelection = defaultSelection;
+		IHandlerService handlerService = getSite().getService(IHandlerService.class);
+		textSupport = new CommonTextSupport(handlerService);
+		textSupport.setSelectionChangedListener(this);
 		createFindSupport();
 
 		initModel(taskEditorInput);
@@ -1248,8 +1235,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	private void initModel(TaskEditorInput input) {
 		Assert.isTrue(model == null);
 		try {
-			this.model = createModel(input);
-			this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+			model = createModel(input);
+			connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
 			setTaskData(model.getTaskData());
 			model.addModelListener(new TaskDataModelListener() {
 				@Override
@@ -1284,18 +1271,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 							.align(SWT.FILL, SWT.FILL)
 							.grab(false, false)
 							.applyTo(part.getControl());
+				} else if (part.getExpandVertically()) {
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.FILL)
+							.grab(true, true)
+							.applyTo(part.getControl());
 				} else {
-					if (part.getExpandVertically()) {
-						GridDataFactory.fillDefaults()
-								.align(SWT.FILL, SWT.FILL)
-								.grab(true, true)
-								.applyTo(part.getControl());
-					} else {
-						GridDataFactory.fillDefaults()
-								.align(SWT.FILL, SWT.TOP)
-								.grab(true, false)
-								.applyTo(part.getControl());
-					}
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.TOP)
+							.grab(true, false)
+							.applyTo(part.getControl());
 				}
 				// for outline
 				if (ID_PART_COMMENTS.equals(part.getPartId())) {
@@ -1313,7 +1298,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	 * @since 3.11
 	 */
 	protected void createFindSupport() {
-		this.findSupport = new TaskEditorFindSupport(this);
+		findSupport = new TaskEditorFindSupport(this);
 	}
 
 	@Override
@@ -1463,8 +1448,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	/**
-	 * Registers a drop listener for <code>control</code>. The default implementation registers a listener for attaching
-	 * files. Does nothing if the editor is showing a new task.
+	 * Registers a drop listener for <code>control</code>. The default implementation registers a listener for attaching files. Does nothing
+	 * if the editor is showing a new task.
 	 * <p>
 	 * Clients may override.
 	 * </p>
@@ -1481,7 +1466,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		LocalSelectionTransfer localSelectionTransfer = LocalSelectionTransfer.getTransfer();
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		final FileTransfer fileTransfer = FileTransfer.getInstance();
-		Transfer[] types = new Transfer[] { localSelectionTransfer, textTransfer, fileTransfer };
+		Transfer[] types = { localSelectionTransfer, textTransfer, fileTransfer };
 		target.setTransfer(types);
 		if (defaultDropListener == null) {
 			defaultDropListener = new TaskAttachmentDropListener(this);
@@ -1489,6 +1474,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		target.addDropListener(defaultDropListener);
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.remove(listener);
 	}
@@ -1497,6 +1483,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		selectionChanged(new SelectionChangedEvent(this, new StructuredSelection(element)));
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection instanceof TextSelection) {
@@ -1512,7 +1499,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			((TaskEditorActionContributor) getEditorSite().getActionBarContributor()).forceActionsEnabled();
 		}
 		if (!selection.equals(lastSelection)) {
-			this.lastSelection = selection;
+			lastSelection = selection;
 			fireSelectionChanged(lastSelection);
 			getSite().getSelectionProvider().setSelection(selection);
 		}
@@ -1541,6 +1528,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		form.setRedraw(reflow);
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		IFormPart[] parts = getManagedForm().getParts();
 		for (IFormPart formPart : parts) {
@@ -1695,8 +1683,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	@Override
 	public boolean selectReveal(Object object) {
-		if (object instanceof TaskEditorOutlineNode) {
-			TaskEditorOutlineNode node = (TaskEditorOutlineNode) object;
+		if (object instanceof TaskEditorOutlineNode node) {
 			TaskAttribute attribute = node.getData();
 			if (attribute != null) {
 				super.selectReveal(attribute.getId());
@@ -1707,7 +1694,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 					String taskID = taskRelation.getTaskId();
 					TasksUiUtil.openTask(taskRepository, taskID);
 				} else {
-					EditorUtil.reveal(this.getManagedForm().getForm(), node.getLabel());
+					EditorUtil.reveal(getManagedForm().getForm(), node.getLabel());
 				}
 				return true;
 			}
@@ -1716,12 +1703,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	void expandLastComment() {
-		if (getManagedForm() == null || getManagedForm().getForm().isDisposed()) {
-			// editor possibly closed or page has not been initialized
-			return;
-		}
-
-		if (taskData == null) {
+		if (getManagedForm() == null || getManagedForm().getForm().isDisposed() || (taskData == null)) {
 			return;
 		}
 

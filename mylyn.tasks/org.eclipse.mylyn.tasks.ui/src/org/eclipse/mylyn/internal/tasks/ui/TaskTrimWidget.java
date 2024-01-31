@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -34,8 +33,6 @@ import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.GC;
@@ -88,24 +85,18 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	};
 
-	private final ITaskListChangeListener taskListListener = new ITaskListChangeListener() {
-		@Override
-		public void containersChanged(Set<TaskContainerDelta> containers) {
-			// update label in case task changes
-			if (activeTask != null) {
-				for (TaskContainerDelta taskContainerDelta : containers) {
-					if (activeTask.equals(taskContainerDelta.getElement())) {
-						if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
-							Display.getDefault().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									if (activeTask != null && activeTask.isActive()) {
-										indicateActiveTask();
-									}
-								}
-							});
-							return;
-						}
+	private final ITaskListChangeListener taskListListener = containers -> {
+		// update label in case task changes
+		if (activeTask != null) {
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (activeTask.equals(taskContainerDelta.getElement())) {
+					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
+						Display.getDefault().asyncExec(() -> {
+							if (activeTask != null && activeTask.isActive()) {
+								indicateActiveTask();
+							}
+						});
+						return;
 					}
 				}
 			}
@@ -184,15 +175,12 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			indicateActiveTask();
 		}
 
-		activeTaskLabel.addMenuDetectListener(new MenuDetectListener() {
-			@Override
-			public void menuDetected(MenuDetectEvent e) {
-				if (menu != null) {
-					menu.dispose();
-				}
-				menu = menuManager.createContextMenu(container);
-				menu.setVisible(true);
+		activeTaskLabel.addMenuDetectListener(e -> {
+			if (menu != null) {
+				menu.dispose();
 			}
+			menu = menuManager.createContextMenu(container);
+			menu.setVisible(true);
 		});
 
 		activeTaskLabel.addHyperlinkListener(new HyperlinkAdapter() {
@@ -236,15 +224,12 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				actionGroup.fillContextMenu(manager);
-				// trims do not have a workbench part so there is no simple way of registering the
-				// context menu
-				if (!contributeObjectActionsOld(manager)) {
-					contributeObjectActionsNew(manager);
-				}
+		menuManager.addMenuListener(manager -> {
+			actionGroup.fillContextMenu(manager);
+			// trims do not have a workbench part so there is no simple way of registering the
+			// context menu
+			if (!contributeObjectActionsOld(manager)) {
+				contributeObjectActionsNew(manager);
 			}
 		});
 	}

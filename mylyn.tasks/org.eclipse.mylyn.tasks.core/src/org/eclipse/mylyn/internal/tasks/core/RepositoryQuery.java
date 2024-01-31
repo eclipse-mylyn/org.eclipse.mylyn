@@ -49,6 +49,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		setSummary(handle);
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return connectorKind;
 	}
@@ -72,6 +73,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		return highestPriority;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -86,7 +88,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 	}
 
 	public void setLastSynchronizedStamp(String lastRefreshTimeStamp) {
-		this.lastSynchronizedStamp = lastRefreshTimeStamp;
+		lastSynchronizedStamp = lastRefreshTimeStamp;
 	}
 
 	public void setRepositoryUrl(String newRepositoryUrl) {
@@ -95,7 +97,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 			// change corresponding part of the query URL
 			setUrl(newRepositoryUrl + url.substring(repositoryUrl.length()));
 		}
-		this.repositoryUrl = newRepositoryUrl;
+		repositoryUrl = newRepositoryUrl;
 	}
 
 	public void setStatus(IStatus status) {
@@ -111,14 +113,17 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		return summary;
 	}
 
+	@Override
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
 
+	@Override
 	public synchronized String getAttribute(String key) {
-		return (attributeMap != null) ? attributeMap.getAttribute(key) : null;
+		return attributeMap != null ? attributeMap.getAttribute(key) : null;
 	}
 
+	@Override
 	public synchronized Map<String, String> getAttributes() {
 		if (attributeMap != null) {
 			return attributeMap.getAttributes();
@@ -127,6 +132,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		}
 	}
 
+	@Override
 	public synchronized void setAttribute(String key, String value) {
 		if (attributeMap == null) {
 			attributeMap = new AttributeMap();

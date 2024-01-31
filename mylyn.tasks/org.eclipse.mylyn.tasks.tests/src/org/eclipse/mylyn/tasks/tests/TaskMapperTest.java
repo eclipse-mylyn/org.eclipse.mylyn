@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
@@ -28,6 +26,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -208,12 +208,12 @@ public class TaskMapperTest extends TestCase {
 			super(taskRepository);
 		}
 
-		private final Map<String, String> attributeMap = new HashMap<String, String>();
+		private final Map<String, String> attributeMap = new HashMap<>();
 
 		@Override
 		public String mapToRepositoryKey(TaskAttribute parent, String key) {
 			String mappedKey = attributeMap.get(key);
-			return (mappedKey != null) ? mappedKey : key;
+			return mappedKey != null ? mappedKey : key;
 		}
 
 	}

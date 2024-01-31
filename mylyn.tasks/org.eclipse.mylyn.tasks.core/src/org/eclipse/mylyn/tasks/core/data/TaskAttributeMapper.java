@@ -104,7 +104,7 @@ public class TaskAttributeMapper {
 	public List<TaskAttribute> getAttributesByType(@NonNull TaskData taskData, @NonNull String type) {
 		Assert.isNotNull(taskData);
 		Assert.isNotNull(type);
-		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
+		List<TaskAttribute> result = new ArrayList<>();
 		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
 			if (type.equals(taskAttribute.getMetaData().getType())) {
 				result.add(taskAttribute);
@@ -123,10 +123,9 @@ public class TaskAttributeMapper {
 
 	/**
 	 * Connectors should ensure that this method returns dates at midnight in the local time zone when the
-	 * {@link TaskAttribute#META_ATTRIBUTE_PRECISION precision} is {@link TimeUnit#DAYS} or coarser. This is because
-	 * {@link Date Dates} are automatically displayed in the local time zone. This is not a concern when the precision
-	 * is finer than {@link TimeUnit#DAYS}, because in that case the value has a time component which can meaningfully
-	 * be converted to local time.
+	 * {@link TaskAttribute#META_ATTRIBUTE_PRECISION precision} is {@link TimeUnit#DAYS} or coarser. This is because {@link Date Dates} are
+	 * automatically displayed in the local time zone. This is not a concern when the precision is finer than {@link TimeUnit#DAYS}, because
+	 * in that case the value has a time component which can meaningfully be converted to local time.
 	 */
 	@Nullable
 	public Date getDateValue(@NonNull TaskAttribute attribute) {
@@ -219,7 +218,7 @@ public class TaskAttributeMapper {
 	public List<TaskOperation> getTaskOperations(@NonNull TaskAttribute operationsAttribute) {
 		Assert.isNotNull(operationsAttribute);
 		TaskData taskData = operationsAttribute.getTaskData();
-		List<TaskOperation> result = new ArrayList<TaskOperation>();
+		List<TaskOperation> result = new ArrayList<>();
 		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
 			if (TaskAttribute.TYPE_OPERATION.equals(taskAttribute.getMetaData().getType())
 					&& !taskAttribute.getId().equals(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.OPERATION))) {
@@ -264,7 +263,7 @@ public class TaskAttributeMapper {
 	public List<String> getValueLabels(@NonNull TaskAttribute taskAttribute) {
 		List<String> values = taskAttribute.getValues();
 		Map<String, String> options = getOptions(taskAttribute);
-		List<String> result = new ArrayList<String>(values.size());
+		List<String> result = new ArrayList<>(values.size());
 		for (String value : values) {
 			String option = options.get(value);
 			if (option != null) {
@@ -279,7 +278,7 @@ public class TaskAttributeMapper {
 
 	@NonNull
 	public List<String> getValues(@NonNull TaskAttribute attribute) {
-		return new ArrayList<String>(attribute.getValues());
+		return new ArrayList<>(attribute.getValues());
 	}
 
 	public boolean hasValue(@NonNull TaskAttribute attribute) {
@@ -364,8 +363,7 @@ public class TaskAttributeMapper {
 	}
 
 	/**
-	 * Connectors may override this method to specify the mapping from the repository's priority options to
-	 * {@link PriorityLevel}
+	 * Connectors may override this method to specify the mapping from the repository's priority options to {@link PriorityLevel}
 	 *
 	 * @return the {@link PriorityLevel} corresponding to the given option for the given priority attribute
 	 * @since 3.20

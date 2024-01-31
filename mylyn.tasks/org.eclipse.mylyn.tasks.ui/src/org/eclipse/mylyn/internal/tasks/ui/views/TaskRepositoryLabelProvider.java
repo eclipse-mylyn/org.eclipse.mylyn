@@ -41,19 +41,18 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 		}
 	}
 
+	@Override
 	public Image getImage(Object object) {
 		if (object instanceof Category) {
 			return CommonImages.getImage(TasksUiImages.CATEGORY);
-		} else if (object instanceof AbstractRepositoryConnector) {
-			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
+		} else if (object instanceof AbstractRepositoryConnector repositoryConnector) {
 			Image image = getBrandManager().getDefaultBrandingIcon(repositoryConnector.getConnectorKind());
 			if (image != null) {
 				return image;
 			} else {
 				return CommonImages.getImage(TasksUiImages.REPOSITORY);
 			}
-		} else if (object instanceof ConnectorBrand) {
-			ConnectorBrand connectorBrand = (ConnectorBrand) object;
+		} else if (object instanceof ConnectorBrand connectorBrand) {
 			Image image = getBrandManager().getBrandingIcon(connectorBrand.getConnector().getConnectorKind(),
 					connectorBrand.getBrandId());
 			if (image != null) {
@@ -71,9 +70,9 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 		return null;
 	}
 
+	@Override
 	public String getText(Object object) {
-		if (object instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) object;
+		if (object instanceof TaskRepository repository) {
 			StringBuilder label = new StringBuilder();
 			label.append(repository.getRepositoryLabel());
 			if (repository.isOffline()) {
@@ -82,8 +81,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			return label.toString();
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
-		} else if (object instanceof ConnectorBrand) {
-			ConnectorBrand connectorBrand = (ConnectorBrand) object;
+		} else if (object instanceof ConnectorBrand connectorBrand) {
 			return getBrandManager().getConnectorLabel(connectorBrand.getConnector(), connectorBrand.getBrandId());
 		} else if (object instanceof Category) {
 			return ((Category) object).getLabel();
@@ -96,21 +94,25 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 		return TasksUiPlugin.getDefault().getBrandManager();
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
 
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		// ignore
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
 

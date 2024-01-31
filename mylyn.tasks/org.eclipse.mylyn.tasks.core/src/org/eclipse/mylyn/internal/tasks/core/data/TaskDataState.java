@@ -63,7 +63,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
-		this.saved = true;
+		saved = true;
 	}
 
 	@Override
@@ -71,10 +71,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskDataState other = (TaskDataState) obj;
@@ -82,30 +79,37 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 				&& taskId.equals(other.taskId);
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return connectorKind;
 	}
 
+	@Override
 	public TaskData getEditsData() {
 		return editsTaskData;
 	}
 
+	@Override
 	public TaskData getLastReadData() {
 		return lastReadTaskData;
 	}
 
+	@Override
 	public TaskData getLocalData() {
 		return localTaskData;
 	}
 
+	@Override
 	public TaskData getRepositoryData() {
 		return repositoryTaskData;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
 
+	@Override
 	public String getTaskId() {
 		return taskId;
 	}
@@ -121,14 +125,16 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	void init(TaskDataManager taskSynchronizationManager, ITask task) {
-		this.taskDataManager = taskSynchronizationManager;
+		taskDataManager = taskSynchronizationManager;
 		this.task = task;
 	}
 
+	@Override
 	public boolean isSaved() {
 		return saved;
 	}
 
+	@Override
 	public void refresh(IProgressMonitor monitor) throws CoreException {
 		ITaskDataWorkingCopy state = taskDataManager.getWorkingCopy(task);
 		setRepositoryData(state.getRepositoryData());
@@ -137,6 +143,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		revert();
 	}
 
+	@Override
 	public void revert() {
 		localTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
 				repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
@@ -157,6 +164,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		}
 	}
 
+	@Override
 	public void save(Set<TaskAttribute> edits, IProgressMonitor monitor) throws CoreException {
 		if (edits != null) {
 			for (TaskAttribute edit : edits) {
@@ -182,7 +190,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	 * @see #getLastReadData()
 	 */
 	public void setLastReadData(TaskData oldTaskData) {
-		this.lastReadTaskData = oldTaskData;
+		lastReadTaskData = oldTaskData;
 	}
 
 	/**
@@ -200,7 +208,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	 * @see #getRepositoryData()
 	 */
 	public void setRepositoryData(TaskData newTaskData) {
-		this.repositoryTaskData = newTaskData;
+		repositoryTaskData = newTaskData;
 	}
 
 	public void merge(TaskDataState oldState) {

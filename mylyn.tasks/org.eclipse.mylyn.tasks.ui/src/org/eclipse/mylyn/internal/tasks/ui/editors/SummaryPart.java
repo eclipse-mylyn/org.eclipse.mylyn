@@ -18,8 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -85,11 +83,9 @@ public class SummaryPart extends AbstractLocalEditorPart {
 		if (textSupport != null) {
 			textSupport.install(summaryEditor.getViewer(), true);
 		}
-		summaryEditor.getViewer().addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				if (!getTask().getSummary().equals(summaryEditor.getText())) {
-					markDirty(summaryEditor.getControl());
-				}
+		summaryEditor.getViewer().addTextListener(event -> {
+			if (!getTask().getSummary().equals(summaryEditor.getText())) {
+				markDirty(summaryEditor.getControl());
 			}
 		});
 		summaryEditor.getViewer().getControl().setMenu(composite.getMenu());
@@ -113,9 +109,9 @@ public class SummaryPart extends AbstractLocalEditorPart {
 				priorityEditor.select(value, PriorityLevel.fromString(value));
 				priorityEditor.setToolTipText(value);
 				markDirty(priorityEditor.getControl());
-			};
+			}
 		};
-		Map<String, String> labelByValue = new LinkedHashMap<String, String>();
+		Map<String, String> labelByValue = new LinkedHashMap<>();
 		for (PriorityLevel level : PriorityLevel.values()) {
 			labelByValue.put(level.toString(), level.getDescription());
 		}
@@ -253,10 +249,8 @@ public class SummaryPart extends AbstractLocalEditorPart {
 			if (!getTask().isCompleted()) {
 				getTask().setCompletionDate(new Date());
 			}
-		} else {
-			if (getTask().isCompleted()) {
-				getTask().setCompletionDate(null);
-			}
+		} else if (getTask().isCompleted()) {
+			getTask().setCompletionDate(null);
 		}
 		clearState(statusCompleteButton);
 		super.commit(onSave);

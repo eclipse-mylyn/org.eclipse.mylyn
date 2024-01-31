@@ -129,6 +129,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		// empty
 	}
 
+	@Override
 	public void setContainer(ITaskSearchPageContainer container) {
 		searchContainer = container;
 	}
@@ -137,6 +138,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		return searchContainer != null;
 	}
 
+	@Override
 	public boolean performSearch() {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(taskRepository.getConnectorKind());

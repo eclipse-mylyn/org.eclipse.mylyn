@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -37,6 +35,8 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -91,7 +91,7 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getTaskActivityManager().setDueDate(mockTask, TaskActivityUtil.getCalendar().getTime());
 		TasksUiPlugin.getTaskList().addTask(mockTask);
 
-		Map<ITask, ScheduledTaskContainer> results = new HashMap<ITask, ScheduledTaskContainer>();
+		Map<ITask, ScheduledTaskContainer> results = new HashMap<>();
 		results.put(mockTask, null);
 		results.put(task1, null);
 
@@ -124,7 +124,7 @@ public class ScheduledPresentationTest extends TestCase {
 		results.put(mockTask, null);
 		results.put(task1, null);
 
-		// Scheduled and Due for a day next week 
+		// Scheduled and Due for a day next week
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		TasksUiPlugin.getTaskActivityManager()
 				.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
@@ -169,7 +169,7 @@ public class ScheduledPresentationTest extends TestCase {
 		results.put(mockTask, null);
 		results.put(task1, null);
 
-		// Should be revealed in date bin NOT Next Week day bin 
+		// Should be revealed in date bin NOT Next Week day bin
 		populateResults(results, false);
 		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
 		assertFalse("Next Week".equals(results.get(mockTask).getSummary()));

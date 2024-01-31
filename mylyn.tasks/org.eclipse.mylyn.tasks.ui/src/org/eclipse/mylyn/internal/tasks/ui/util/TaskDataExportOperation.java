@@ -55,10 +55,11 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		this.destinationDirectory = destinationDirectory;
 	}
 
+	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException {
 		monitor = Policy.monitorFor(monitor);
 
-		Set<File> filesToExport = new HashSet<File>();
+		Set<File> filesToExport = new HashSet<>();
 		selectFiles(filesToExport);
 
 		if (filesToExport.size() > 0 && Platform.isRunning()) {
@@ -68,7 +69,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 				Job.getJobManager()
 						.beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, new SubProgressMonitor(monitor, 1));
 
-				ZipFileUtil.createZipFile(getDestinationFile(), new ArrayList<File>(filesToExport),
+				ZipFileUtil.createZipFile(getDestinationFile(), new ArrayList<>(filesToExport),
 						TasksUiPlugin.getDefault().getDataDirectory(), monitor);
 			} catch (IOException e) {
 				throw new InvocationTargetException(e);
@@ -84,7 +85,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 	}
 
 	protected void selectFiles(Set<File> filesToExport) {
-		Set<Pattern> exclusionPatterns = new HashSet<Pattern>();
+		Set<Pattern> exclusionPatterns = new HashSet<>();
 		exclusionPatterns.add(excludePattern);
 		String dataRoot = TasksUiPlugin.getDefault().getDataDirectory();
 		File dataFolder = new File(dataRoot);

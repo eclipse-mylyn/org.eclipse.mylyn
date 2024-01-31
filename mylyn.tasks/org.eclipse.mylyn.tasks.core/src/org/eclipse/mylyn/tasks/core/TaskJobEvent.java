@@ -50,16 +50,16 @@ public class TaskJobEvent {
 	}
 
 	/**
-	 * @return the task that exists after submission has completed; will be the same as originalTask unless originalTask
-	 *         was a new (previously unsubmitted) task and this is a submission complete event
+	 * @return the task that exists after submission has completed; will be the same as originalTask unless originalTask was a new
+	 *         (previously unsubmitted) task and this is a submission complete event
 	 */
 	public ITask getTask() {
 		return task;
 	}
 
 	/**
-	 * @return The taskData of the task being submitted. On 'aboutTosubmit', it holds the unsubmitted taskData, on
-	 *         'taskSubmitted' it is the updated taskData. May be <code>null</code>.
+	 * @return The taskData of the task being submitted. On 'aboutTosubmit', it holds the unsubmitted taskData, on 'taskSubmitted' it is the
+	 *         updated taskData. May be <code>null</code>.
 	 * @since 3.11
 	 */
 	public TaskData getTaskData() {

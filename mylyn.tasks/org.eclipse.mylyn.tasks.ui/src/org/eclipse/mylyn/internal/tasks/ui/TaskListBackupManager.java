@@ -167,7 +167,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	public SortedMap<Long, File> getBackupFiles() {
 
-		SortedMap<Long, File> filesMap = new TreeMap<Long, File>();
+		SortedMap<Long, File> filesMap = new TreeMap<>();
 		String destination = backupFolderPath;
 
 		File backupFolder = new File(destination);
@@ -204,9 +204,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					} else {
 						continue;
 					}
-				} catch (IndexOutOfBoundsException e) {
-					continue;
-				} catch (ParseException e) {
+				} catch (IndexOutOfBoundsException | ParseException e) {
 					continue;
 				}
 				if (date != null && date.getTime() > 0) {
@@ -273,6 +271,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(ITasksUiPreferenceConstants.PREF_DATA_DIR)) {
 			backupFolderPath = TasksUiPlugin.getDefault().getBackupFolderPath();

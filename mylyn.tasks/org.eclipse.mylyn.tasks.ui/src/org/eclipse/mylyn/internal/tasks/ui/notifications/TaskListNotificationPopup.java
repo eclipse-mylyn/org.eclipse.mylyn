@@ -60,7 +60,7 @@ public class TaskListNotificationPopup extends AbstractWorkbenchNotificationPopu
 	}
 
 	public List<AbstractUiNotification> getNotifications() {
-		return new ArrayList<AbstractUiNotification>(notifications);
+		return new ArrayList<>(notifications);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class TaskListNotificationPopup extends AbstractWorkbenchNotificationPopu
 				notificationLabelIcon.setBackground(parent.getBackground());
 				notificationLabelIcon.setImage(notification.getNotificationKindImage());
 				if (!(notification instanceof TaskListNotificationReminder)) {
-					final AbstractTask task = (AbstractTask) notification.getAdapter(AbstractTask.class);
+					final AbstractTask task = notification.getAdapter(AbstractTask.class);
 					if (task != null) {
 						notificationLabelIcon.addMouseListener(new MouseAdapter() {
 							@Override

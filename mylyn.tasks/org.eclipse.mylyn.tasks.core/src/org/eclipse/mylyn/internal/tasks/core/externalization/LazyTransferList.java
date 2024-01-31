@@ -28,11 +28,10 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
- * This class delegates the calls to underlying {@link ITransferList} while altering behavior of {@link #addTask(ITask)}
- * and {@link #addTask(ITask, category)} methods to avoid adding tasks being loaded to task list's
- * {@link UnmatchedTaskContainer} if they belong to a different task container. Instead, tasks added with
- * {@link #addTask(ITask)} method are stored internally, and only pushed to underlying {@link ITransferList} during
- * subsequent calls to {@link #addTask(ITask, category)} or on final {@link #commit(void)}.
+ * This class delegates the calls to underlying {@link ITransferList} while altering behavior of {@link #addTask(ITask)} and
+ * {@link #addTask(ITask, category)} methods to avoid adding tasks being loaded to task list's {@link UnmatchedTaskContainer} if they belong
+ * to a different task container. Instead, tasks added with {@link #addTask(ITask)} method are stored internally, and only pushed to
+ * underlying {@link ITransferList} during subsequent calls to {@link #addTask(ITask, category)} or on final {@link #commit(void)}.
  * <p>
  * <b>Usage</b>
  * <p>
@@ -54,40 +53,49 @@ class LazyTransferList implements ITransferList {
 		this.taskList = taskList;
 	}
 
+	@Override
 	public void addCategory(TaskCategory category) {
 		taskList.addCategory(category);
 	}
 
+	@Override
 	public void addQuery(RepositoryQuery query) {
 		taskList.addQuery(query);
 	}
 
+	@Override
 	public void addTask(ITask task) {
 		untransferedTasks.put(task.getHandleIdentifier(), task);
 	}
 
+	@Override
 	public boolean addTask(ITask task, AbstractTaskContainer parentContainer) {
 		boolean result = taskList.addTask(task, commit(parentContainer));
 		untransferedTasks.remove(task.getHandleIdentifier());
 		return result;
 	}
 
+	@Override
 	public AbstractTaskCategory getContainerForHandle(String handle) {
 		return taskList.getContainerForHandle(handle);
 	}
 
+	@Override
 	public Collection<AbstractTask> getAllTasks() {
 		return taskList.getAllTasks();
 	}
 
+	@Override
 	public Set<AbstractTaskCategory> getCategories() {
 		return taskList.getCategories();
 	}
 
+	@Override
 	public Set<RepositoryQuery> getQueries() {
 		return taskList.getQueries();
 	}
 
+	@Override
 	public AbstractTask getTask(String handleIdentifier) {
 		AbstractTask task = (AbstractTask) untransferedTasks.get(handleIdentifier);
 
@@ -98,6 +106,7 @@ class LazyTransferList implements ITransferList {
 		return task;
 	}
 
+	@Override
 	public ITask getTask(String repositoryUrl, String taskId) {
 		return taskList.getTask(repositoryUrl, taskId);
 	}

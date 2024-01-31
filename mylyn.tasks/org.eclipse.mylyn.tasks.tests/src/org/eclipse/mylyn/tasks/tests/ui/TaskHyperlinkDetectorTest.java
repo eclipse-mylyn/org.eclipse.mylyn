@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -24,6 +22,8 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

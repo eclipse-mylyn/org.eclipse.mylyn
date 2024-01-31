@@ -27,61 +27,59 @@ public interface ITaskActivityManager {
 	/**
 	 * activate the given <code>task</code>
 	 */
-	public abstract void activateTask(ITask task);
+	void activateTask(ITask task);
 
 	/**
-	 * deactivate the currently active task (if any). There are no negative side effects if this method is called when
-	 * no task is active
+	 * deactivate the currently active task (if any). There are no negative side effects if this method is called when no task is active
 	 */
-	public abstract void deactivateActiveTask();
+	void deactivateActiveTask();
 
 	/**
 	 * deactivate the given task
 	 */
-	public abstract void deactivateTask(ITask task);
+	void deactivateTask(ITask task);
 
 	/**
-	 * returns all tasks that where active between <code>start</code> and <code>end</end> (exclusive) both ranges are
-	 * floored to the hour
+	 * returns all tasks that where active between <code>start</code> and <code>end</end> (exclusive) both ranges are floored to the hour
 	 */
-	public abstract Set<AbstractTask> getActiveTasks(Calendar start, Calendar end);
+	Set<AbstractTask> getActiveTasks(Calendar start, Calendar end);
 
 	/**
 	 * @return the currently active task if any
 	 */
-	public abstract ITask getActiveTask();
+	ITask getActiveTask();
 
 	/**
 	 * returns all tasks with a due date set
 	 */
-	public abstract Set<ITask> getAllDueTasks();
+	Set<ITask> getAllDueTasks();
 
 	/**
 	 * returns all tasks due between the given dates
 	 */
-	public abstract Set<ITask> getDueTasks(Calendar start, Calendar end);
+	Set<ITask> getDueTasks(Calendar start, Calendar end);
 
 	/** total elapsed time based on activation history */
-	public abstract long getElapsedTime(ITask task);
+	long getElapsedTime(ITask task);
 
 	/**
-	 * return the total elapsed time based on activation history between <code>start</code> and <code>end</code> If task
-	 * is null, the elapsed time for the range with no task active is returned
+	 * return the total elapsed time based on activation history between <code>start</code> and <code>end</code> If task is null, the
+	 * elapsed time for the range with no task active is returned
 	 */
-	public abstract long getElapsedTime(ITask task, Calendar start, Calendar end);
+	long getElapsedTime(ITask task, Calendar start, Calendar end);
 
-	public abstract void addActivityListener(ITaskActivityListener listener);
+	void addActivityListener(ITaskActivityListener listener);
 
-	public abstract void removeActivityListener(ITaskActivityListener listener);
+	void removeActivityListener(ITaskActivityListener listener);
 
-	public abstract void addActivationListener(ITaskActivationListener listener);
+	void addActivationListener(ITaskActivationListener listener);
 
-	public abstract void removeActivationListener(ITaskActivationListener listener);
+	void removeActivationListener(ITaskActivationListener listener);
 
 	/**
 	 * @param task
 	 *            cannot be null
 	 * @return whether the task is the single currently active task
 	 */
-	public abstract boolean isActive(ITask task);
+	boolean isActive(ITask task);
 }

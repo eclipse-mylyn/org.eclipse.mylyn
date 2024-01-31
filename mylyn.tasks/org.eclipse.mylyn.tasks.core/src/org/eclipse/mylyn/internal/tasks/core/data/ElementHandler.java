@@ -35,8 +35,8 @@ class ElementHandler extends DefaultHandler {
 	public ElementHandler(ElementHandler parent, String elementName) {
 		this.parent = parent;
 		this.elementName = elementName;
-		this.handlers = new HashMap<String, ElementHandler>();
-		this.currentElementText = new StringBuilder();
+		handlers = new HashMap<>();
+		currentElementText = new StringBuilder();
 	}
 
 	public void addElementHandler(ElementHandler handler) {
@@ -118,7 +118,7 @@ class ElementHandler extends DefaultHandler {
 				currentHandler = handler;
 				currentHandler.start(uri, localName, name, attributes);
 			}
-		} else if (currentHandler != null) {
+		} else {
 			currentHandler.startElement(uri, localName, name, attributes);
 		}
 	}

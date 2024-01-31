@@ -15,8 +15,6 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -31,6 +29,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -48,6 +48,7 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 	protected IHyperlink[] detect(final String text, int start, int length) {
 		AbstractHyperlinkDetector detector = new TaskUrlHyperlinkDetector();
 		detector.setContext(new IAdaptable() {
+			@Override
 			@SuppressWarnings("rawtypes")
 			public Object getAdapter(Class adapter) {
 				return repository;

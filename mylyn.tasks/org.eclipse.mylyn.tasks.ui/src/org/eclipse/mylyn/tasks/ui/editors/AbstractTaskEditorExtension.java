@@ -21,8 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.contexts.IContextService;
 
 /**
- * An extension that provides task editor capabilities beyond the default, oriented towards providing markup-aware
- * editing and viewing
+ * An extension that provides task editor capabilities beyond the default, oriented towards providing markup-aware editing and viewing
  * 
  * @author David Green
  * @since 3.1
@@ -37,8 +36,8 @@ public abstract class AbstractTaskEditorExtension {
 	public static final String INTERNAL_WIKI_LINK_PATTERN = "wikiLinkPattern"; //$NON-NLS-1$
 
 	/**
-	 * Creates a source viewer that can be used to view content in the task editor. The source viewer should be
-	 * configured with a source viewer configuration prior to returning.
+	 * Creates a source viewer that can be used to view content in the task editor. The source viewer should be configured with a source
+	 * viewer configuration prior to returning.
 	 * 
 	 * @param taskRepository
 	 *            the task repository for which the viewer is created
@@ -53,8 +52,8 @@ public abstract class AbstractTaskEditorExtension {
 	public abstract SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style);
 
 	/**
-	 * Creates a source viewer that can be used to view content in the task editor. The source viewer should be
-	 * configured with a source viewer configuration prior to returning.
+	 * Creates a source viewer that can be used to view content in the task editor. The source viewer should be configured with a source
+	 * viewer configuration prior to returning.
 	 * 
 	 * @param taskRepository
 	 *            the task repository for which the viewer is created
@@ -71,8 +70,8 @@ public abstract class AbstractTaskEditorExtension {
 	}
 
 	/**
-	 * Creates a source viewer that can be used to edit content in the task editor. The source viewer should be
-	 * configured with a source viewer configuration prior to returning.
+	 * Creates a source viewer that can be used to edit content in the task editor. The source viewer should be configured with a source
+	 * viewer configuration prior to returning.
 	 * 
 	 * @param taskRepository
 	 *            the task repository for which the viewer is created
@@ -94,8 +93,8 @@ public abstract class AbstractTaskEditorExtension {
 	public abstract String getEditorContextId();
 
 	/**
-	 * Creates a source viewer that can be used to edit content in the task editor. The source viewer should be
-	 * configured with a source viewer configuration prior to returning.
+	 * Creates a source viewer that can be used to edit content in the task editor. The source viewer should be configured with a source
+	 * viewer configuration prior to returning.
 	 * 
 	 * @param taskRepository
 	 *            the task repository for which the viewer is created

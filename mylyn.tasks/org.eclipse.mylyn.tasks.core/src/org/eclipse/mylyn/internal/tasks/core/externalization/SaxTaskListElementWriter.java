@@ -34,7 +34,7 @@ public abstract class SaxTaskListElementWriter<T extends IRepositoryElement> {
 
 	public SaxTaskListElementWriter(ContentHandlerWrapper handler) {
 		this.handler = handler;
-		this.errors = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.OK, null, null);
+		errors = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.OK, null, null);
 	}
 
 	public abstract void writeElement(T element) throws SAXException;

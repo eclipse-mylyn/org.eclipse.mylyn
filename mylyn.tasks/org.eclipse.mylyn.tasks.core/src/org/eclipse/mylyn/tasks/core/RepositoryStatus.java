@@ -121,7 +121,7 @@ public class RepositoryStatus extends Status {
 
 	@Override
 	protected void setMessage(String message) {
-		super.setMessage((message != null) ? message : ""); //$NON-NLS-1$
+		super.setMessage(message != null ? message : ""); //$NON-NLS-1$
 	}
 
 	protected void setHtmlMessage(String htmlMessage) {

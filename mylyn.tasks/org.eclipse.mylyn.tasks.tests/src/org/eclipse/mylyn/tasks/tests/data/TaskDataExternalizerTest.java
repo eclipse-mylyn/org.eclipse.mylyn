@@ -17,8 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.ZipInputStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
@@ -30,6 +28,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.xml.sax.SAXParseException;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -52,12 +52,10 @@ public class TaskDataExternalizerTest extends TestCase {
 	public void testRead() throws Exception {
 		ZipInputStream in = new ZipInputStream(
 				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
-		try {
+		try (in) {
 			in.getNextEntry();
 			@SuppressWarnings("unused")
 			ITaskDataWorkingCopy state = externalizer.readState(in);
-		} finally {
-			in.close();
 		}
 	}
 

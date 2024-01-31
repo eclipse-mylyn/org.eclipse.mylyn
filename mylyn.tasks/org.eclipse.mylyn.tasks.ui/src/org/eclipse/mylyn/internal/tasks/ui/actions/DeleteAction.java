@@ -34,7 +34,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -86,8 +85,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 
 		// determine what repository elements are to be deleted so that we can present the correct message to the user
 		for (Object object : toDelete) {
-			if (object instanceof ITask) {
-				ITask task = (ITask) object;
+			if (object instanceof ITask task) {
 				AbstractRepositoryConnector repositoryConnector = TasksUi
 						.getRepositoryConnector(task.getConnectorKind());
 				TaskRepository repository = TasksUi.getRepositoryManager()
@@ -149,23 +147,18 @@ public class DeleteAction extends BaseSelectionListenerAction {
 	}
 
 	private void deleteElements(final List<?> toDelete, final boolean deleteOnServer) {
-		ICoreRunnable op = new ICoreRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				try {
-					monitor.beginTask(Messages.DeleteAction_Delete_in_progress, IProgressMonitor.UNKNOWN);
-					prepareDeletion(toDelete);
-					TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
-						public void execute(IProgressMonitor monitor) throws CoreException {
-							performDeletion(toDelete);
-							if (deleteOnServer) {
-								performDeletionFromServer(toDelete);
-							}
-						}
-
-					}, monitor);
-				} finally {
-					monitor.done();
-				}
+		ICoreRunnable op = monitor -> {
+			try {
+				monitor.beginTask(Messages.DeleteAction_Delete_in_progress, IProgressMonitor.UNKNOWN);
+				prepareDeletion(toDelete);
+				TasksUiPlugin.getTaskList().run(monitor1 -> {
+					performDeletion(toDelete);
+					if (deleteOnServer) {
+						performDeletionFromServer(toDelete);
+					}
+				}, monitor);
+			} finally {
+				monitor.done();
 			}
 		};
 		try {
@@ -203,12 +196,10 @@ public class DeleteAction extends BaseSelectionListenerAction {
 			} else {
 				message = Messages.DeleteAction_Permanently_delete_the_element_listed_below;
 			}
+		} else if (allElementsAreTasks) {
+			message = Messages.DeleteAction_Delete_tasks_from_task_list_context_planning_deleted;
 		} else {
-			if (allElementsAreTasks) {
-				message = Messages.DeleteAction_Delete_tasks_from_task_list_context_planning_deleted;
-			} else {
-				message = Messages.DeleteAction_Delete_elements_from_task_list_context_planning_deleted;
-			}
+			message = Messages.DeleteAction_Delete_elements_from_task_list_context_planning_deleted;
 		}
 		message += "\n\n" + elements; //$NON-NLS-1$
 		return message;
@@ -238,8 +229,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 
 	public static void prepareDeletion(Collection<?> toDelete) {
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) selectedObject;
+			if (selectedObject instanceof AbstractTask task) {
 				TasksUi.getTaskActivityManager().deactivateTask(task);
 				TasksUiInternal.closeTaskEditorInAllPages(task, false);
 			} else if (selectedObject instanceof AutomaticRepositoryTaskContainer) {
@@ -253,8 +243,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 
 	public static void performDeletion(Collection<?> toDelete) {
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) selectedObject;
+			if (selectedObject instanceof AbstractTask task) {
 				TasksUiInternal.deleteTask(task);
 			} else if (selectedObject instanceof IRepositoryQuery) {
 				TasksUiInternal.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
@@ -277,7 +266,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 	}
 
 	private void performDeletionFromServer(List<?> toDelete) {
-		List<ITask> tasksToDelete = new ArrayList<ITask>();
+		List<ITask> tasksToDelete = new ArrayList<>();
 		for (Object element : toDelete) {
 			if (element instanceof ITask) {
 				tasksToDelete.add((ITask) element);
@@ -301,7 +290,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		List<?> elements = (selection).toList();
+		List<?> elements = selection.toList();
 		for (Object object : elements) {
 			if (object instanceof UncategorizedTaskContainer) {
 				return false;

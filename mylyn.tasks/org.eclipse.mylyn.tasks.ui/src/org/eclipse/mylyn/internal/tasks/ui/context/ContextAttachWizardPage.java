@@ -46,6 +46,7 @@ public class ContextAttachWizardPage extends WizardPage {
 		setDescription(Messages.ContextAttachWizardPage_Attaches_local_context_to_repository_task);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -62,10 +63,12 @@ public class ContextAttachWizardPage extends WizardPage {
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		commentText.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				getWizard().getContainer().updateButtons();
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				getWizard().getContainer().updateButtons();
 			}

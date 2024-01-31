@@ -39,7 +39,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 	private IBundleGroup versioningBundleGroup;
 
 	public SupportProduct() {
-		mappingByNamespace = new TreeMap<String, ProductRepositoryMapping>();
+		mappingByNamespace = new TreeMap<>();
 	}
 
 	public void addRepositoryMapping(ProductRepositoryMapping mapping) {
@@ -57,7 +57,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 			ProductRepositoryMapping mapping = getMapping(prefix.substring(0, i));
 			if (mapping != null) {
 				if (attributes == null) {
-					attributes = new HashMap<String, String>();
+					attributes = new HashMap<>();
 				}
 				attributes.putAll(mapping.getAttributes());
 			}
@@ -65,7 +65,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 		if (attributes != null) {
 			return attributes;
 		} else {
-			return new HashMap<String, String>();
+			return new HashMap<>();
 		}
 	}
 
@@ -94,6 +94,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 		return pluginId;
 	}
 
+	@Override
 	public IProvider getProvider() {
 		return provider;
 	}
@@ -135,7 +136,7 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 	}
 
 	public void setInstalled(boolean enabled) {
-		this.installed = enabled;
+		installed = enabled;
 	}
 
 	public void setPluginId(String pluginId) {

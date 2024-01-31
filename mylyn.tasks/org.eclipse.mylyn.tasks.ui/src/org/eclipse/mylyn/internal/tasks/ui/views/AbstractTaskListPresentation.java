@@ -35,7 +35,7 @@ public abstract class AbstractTaskListPresentation implements IPluginContributio
 
 	private boolean primary = false;
 
-	private final Map<TaskListView, AbstractTaskListContentProvider> contentProviders = new HashMap<TaskListView, AbstractTaskListContentProvider>();
+	private final Map<TaskListView, AbstractTaskListContentProvider> contentProviders = new HashMap<>();
 
 	public AbstractTaskListPresentation(String id) {
 		this.id = id;
@@ -51,8 +51,7 @@ public abstract class AbstractTaskListPresentation implements IPluginContributio
 	}
 
 	/**
-	 * Creates a new instance of a content provider for a particular instance of the Task List TODO: change view
-	 * parameter to be the viewer
+	 * Creates a new instance of a content provider for a particular instance of the Task List TODO: change view parameter to be the viewer
 	 */
 	protected abstract AbstractTaskListContentProvider createContentProvider(TaskListView taskListView);
 
@@ -84,10 +83,12 @@ public abstract class AbstractTaskListPresentation implements IPluginContributio
 		return id;
 	}
 
+	@Override
 	public final String getLocalId() {
 		return getId();
 	}
 
+	@Override
 	public final String getPluginId() {
 		return pluginId;
 	}

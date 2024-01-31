@@ -68,7 +68,7 @@ public class GetTaskHistoryJob extends TaskJob {
 			} finally {
 				monitor.done();
 			}
-			return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
+			return errorStatus == Status.CANCEL_STATUS ? Status.CANCEL_STATUS : Status.OK_STATUS;
 		} finally {
 			monitor.detach(jobMonitor);
 		}

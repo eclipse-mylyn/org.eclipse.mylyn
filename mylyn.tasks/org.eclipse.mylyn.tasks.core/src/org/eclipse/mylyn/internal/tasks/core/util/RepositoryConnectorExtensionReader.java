@@ -73,7 +73,7 @@ public class RepositoryConnectorExtensionReader {
 		}
 
 		public String getConnectorKind() {
-			return (getConnector() != null) ? getConnector().getConnectorKind() : null;
+			return getConnector() != null ? getConnector().getConnectorKind() : null;
 		}
 
 		public AbstractRepositoryConnector getConnector() {
@@ -167,16 +167,16 @@ public class RepositoryConnectorExtensionReader {
 
 	private final TaskRepositoryManager repositoryManager;
 
-	private final List<ConnectorFactory> factories = new ArrayList<ConnectorFactory>();
+	private final List<ConnectorFactory> factories = new ArrayList<>();
 
-	private final List<RepositoryConnectorDescriptor> descriptors = new ArrayList<RepositoryConnectorDescriptor>();
+	private final List<RepositoryConnectorDescriptor> descriptors = new ArrayList<>();
 
 	private final MultiStatus result;
 
 	public RepositoryConnectorExtensionReader(TaskListExternalizer taskListExternalizer,
 			TaskRepositoryManager repositoryManager) {
 		this.repositoryManager = repositoryManager;
-		this.result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
+		result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
 	}
 
 	public void loadConnectors(IExtensionPoint repositoriesExtensionPoint) {
@@ -246,7 +246,7 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	public Map<String, List<ConnectorFactory>> createConnectorInstances() {
-		Map<String, List<ConnectorFactory>> factoryByConnectorKind = new LinkedHashMap<String, List<ConnectorFactory>>();
+		Map<String, List<ConnectorFactory>> factoryByConnectorKind = new LinkedHashMap<>();
 		for (ConnectorFactory descriptor : factories) {
 			IStatus status = descriptor.createConnector();
 			if (status.isOK() && descriptor.getConnector() != null) {
@@ -259,7 +259,7 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	private void registerConnectorInstances() {
-		List<AbstractRepositoryMigrator> repositoryMigrators = new ArrayList<AbstractRepositoryMigrator>();
+		List<AbstractRepositoryMigrator> repositoryMigrators = new ArrayList<>();
 
 		for (ConnectorFactory descriptor : factories) {
 			if (descriptor.getConnector() != null) {
@@ -282,7 +282,7 @@ public class RepositoryConnectorExtensionReader {
 	private Map<String, List<ConnectorFactory>> readFromRepositoriesExtensionPoint(
 			IExtensionPoint repositoriesExtensionPoint) {
 		// read core and migrator extensions to check for id conflicts
-		Map<String, List<ConnectorFactory>> factoryById = new LinkedHashMap<String, List<ConnectorFactory>>();
+		Map<String, List<ConnectorFactory>> factoryById = new LinkedHashMap<>();
 
 		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension repositoryExtension : repositoryExtensions) {
@@ -327,14 +327,14 @@ public class RepositoryConnectorExtensionReader {
 	private void add(Map<String, List<ConnectorFactory>> descriptorById, String id, ConnectorFactory descriptor) {
 		List<ConnectorFactory> list = descriptorById.get(id);
 		if (list == null) {
-			list = new ArrayList<ConnectorFactory>();
+			list = new ArrayList<>();
 			descriptorById.put(id, list);
 		}
 		list.add(descriptor);
 	}
 
 	public List<RepositoryConnectorDescriptor> getDescriptors() {
-		return new ArrayList<RepositoryConnectorDescriptor>(descriptors);
+		return new ArrayList<>(descriptors);
 	}
 
 	public ContributorBlackList getBlackList() {

@@ -30,23 +30,27 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 
 	private ISelection selection;
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		addListenerObject(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return selection;
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		removeListenerObject(listener);
 	}
 
 	protected void selectionChanged(final SelectionChangedEvent event) {
 		Object[] listeners = getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			final ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
+		for (Object listener2 : listeners) {
+			final ISelectionChangedListener listener = (ISelectionChangedListener) listener2;
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					listener.selectionChanged(event);
 				}
@@ -54,6 +58,7 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 		}
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		this.selection = selection;
 		selectionChanged(new SelectionChangedEvent(this, selection));

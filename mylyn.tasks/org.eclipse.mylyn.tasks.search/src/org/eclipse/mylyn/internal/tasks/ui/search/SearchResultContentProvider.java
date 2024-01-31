@@ -22,15 +22,17 @@ import org.eclipse.jface.viewers.Viewer;
 public abstract class SearchResultContentProvider implements ITreeContentProvider {
 
 	/** An empty array of objects */
-	protected final Object[] EMPTY_ARR = new Object[0];
+	protected final Object[] EMPTY_ARR = {};
 
 	/** The search result for this content provider */
 	protected RepositorySearchResult searchResult;
 
+	@Override
 	public void dispose() {
 		// nothing to do
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof RepositorySearchResult) {
 			initialize((RepositorySearchResult) newInput);

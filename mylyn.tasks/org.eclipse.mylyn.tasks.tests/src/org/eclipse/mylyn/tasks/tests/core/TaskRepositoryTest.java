@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import junit.framework.TestCase;
 
 /**
  * @author Shawn Minto

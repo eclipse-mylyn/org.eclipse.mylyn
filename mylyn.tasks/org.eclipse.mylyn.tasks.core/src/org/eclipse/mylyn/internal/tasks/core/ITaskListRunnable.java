@@ -21,5 +21,5 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ITaskListRunnable {
 
-	public void execute(IProgressMonitor monitor) throws CoreException;
+	void execute(IProgressMonitor monitor) throws CoreException;
 }

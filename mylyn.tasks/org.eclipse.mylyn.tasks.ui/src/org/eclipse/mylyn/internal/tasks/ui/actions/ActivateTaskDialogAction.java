@@ -32,6 +32,7 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 
 	private IWorkbenchWindow window;
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}

@@ -23,8 +23,6 @@ import java.util.Set;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractInPlaceDialog;
-import org.eclipse.mylyn.commons.ui.dialogs.IInPlaceDialogListener;
-import org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.commons.workbench.InPlaceCheckBoxTreeDialog;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -134,27 +132,24 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 	}
 
 	private void addEventListener(final List<String> values, final InPlaceCheckBoxTreeDialog selectionDialog) {
-		selectionDialog.addEventListener(new IInPlaceDialogListener() {
-
-			public void buttonPressed(InPlaceDialogEvent event) {
-				suppressRefresh = true;
-				try {
-					if (event.getReturnCode() == Window.OK) {
-						Set<String> newValues = selectionDialog.getSelectedValues();
-						if (!new HashSet<String>(values).equals(newValues)) {
-							setValues(new ArrayList<String>(newValues));
-							refresh();
-						}
-					} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
-						Set<String> newValues = new HashSet<String>();
-						if (!new HashSet<String>(values).equals(newValues)) {
-							setValues(new ArrayList<String>(newValues));
-							refresh();
-						}
+		selectionDialog.addEventListener(event -> {
+			suppressRefresh = true;
+			try {
+				if (event.getReturnCode() == Window.OK) {
+					Set<String> newValues = selectionDialog.getSelectedValues();
+					if (!new HashSet<String>(values).equals(newValues)) {
+						setValues(new ArrayList<>(newValues));
+						refresh();
 					}
-				} finally {
-					suppressRefresh = false;
+				} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+					Set<String> newValues = new HashSet<String>();
+					if (!new HashSet<String>(values).equals(newValues)) {
+						setValues(new ArrayList<>(newValues));
+						refresh();
+					}
 				}
+			} finally {
+				suppressRefresh = false;
 			}
 		});
 	}

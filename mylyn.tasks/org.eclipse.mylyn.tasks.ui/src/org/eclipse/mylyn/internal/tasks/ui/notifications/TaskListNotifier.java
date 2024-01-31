@@ -50,7 +50,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	private final TaskDataManager taskDataManager;
 
-	private final List<TaskListNotification> notificationQueue = new ArrayList<TaskListNotification>();
+	private final List<TaskListNotification> notificationQueue = new ArrayList<>();
 
 	public boolean enabled;
 
@@ -148,12 +148,13 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		}
 	}
 
+	@Override
 	public Set<AbstractUiNotification> getNotifications() {
 		synchronized (notificationQueue) {
 			if (notificationQueue.isEmpty()) {
 				return Collections.emptySet();
 			}
-			HashSet<AbstractUiNotification> result = new HashSet<AbstractUiNotification>(notificationQueue);
+			HashSet<AbstractUiNotification> result = new HashSet<>(notificationQueue);
 			notificationQueue.clear();
 			return result;
 		}

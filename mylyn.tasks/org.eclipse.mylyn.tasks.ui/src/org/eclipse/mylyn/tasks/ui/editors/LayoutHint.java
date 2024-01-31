@@ -31,14 +31,14 @@ public class LayoutHint {
 	 */
 	public enum ColumnSpan {
 		MULTIPLE, SINGLE
-	};
+	}
 
 	/**
 	 * @since 3.0
 	 */
 	public enum RowSpan {
 		MULTIPLE, SINGLE
-	};
+	}
 
 	/**
 	 * @since 3.0
@@ -54,13 +54,12 @@ public class LayoutHint {
 	 * @since 3.0
 	 */
 	public LayoutHint(RowSpan rowHint, ColumnSpan columnHint) {
-		this.rowSpan = rowHint;
-		this.columnSpan = columnHint;
+		rowSpan = rowHint;
+		columnSpan = columnHint;
 	}
 
 	/**
-	 * Clones <code>source</code>. Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}, if
-	 * <code>source</code> is null.
+	 * Clones <code>source</code>. Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}, if <code>source</code> is null.
 	 * 
 	 * @param source
 	 *            the layout hint to clone or <code>null</code>
@@ -68,8 +67,8 @@ public class LayoutHint {
 	 */
 	public LayoutHint(LayoutHint source) {
 		if (source != null) {
-			this.rowSpan = source.rowSpan;
-			this.columnSpan = source.columnSpan;
+			rowSpan = source.rowSpan;
+			columnSpan = source.columnSpan;
 		}
 	}
 
@@ -95,12 +94,10 @@ public class LayoutHint {
 			} else {
 				return DEFAULT_PRIORITY * 2;
 			}
+		} else if (rowSpan == null || rowSpan == RowSpan.SINGLE) {
+			return DEFAULT_PRIORITY * 3;
 		} else {
-			if (rowSpan == null || rowSpan == RowSpan.SINGLE) {
-				return DEFAULT_PRIORITY * 3;
-			} else {
-				return DEFAULT_PRIORITY * 4;
-			}
+			return DEFAULT_PRIORITY * 4;
 		}
 	}
 

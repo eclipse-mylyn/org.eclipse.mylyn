@@ -23,6 +23,6 @@ package org.eclipse.mylyn.tasks.core.data;
  */
 public interface ITaskAttributeDiff {
 
-	public String getAttributeId();
+	String getAttributeId();
 
 }

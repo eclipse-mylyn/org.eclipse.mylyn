@@ -25,15 +25,14 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
-			TaskRepository t1 = (TaskRepository) e1;
+		if (e1 instanceof TaskRepository t1 && e2 instanceof TaskRepository) {
 			TaskRepository t2 = (TaskRepository) e2;
 
 			String label1 = t1.getRepositoryLabel();
 			String label2 = t2.getRepositoryLabel();
 
 			if (label1 == null) {
-				return (label2 != null) ? 1 : 0;
+				return label2 != null ? 1 : 0;
 			} else if (label2 == null) {
 				return -1;
 			}

@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -40,6 +38,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.internal.Workbench;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -112,7 +112,7 @@ public class TaskListFilterTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<>(0));
 		view.clearFilters();
 		for (AbstractTaskListFilter filter : previousFilters) {
 			view.addFilter(filter);
@@ -137,7 +137,7 @@ public class TaskListFilterTest extends TestCase {
 
 		TaskWorkingSetFilter workingSetFilter = new TaskWorkingSetFilter();
 		view.addFilter(workingSetFilter);
-		HashSet<IWorkingSet> workingSets = new HashSet<IWorkingSet>(1);
+		HashSet<IWorkingSet> workingSets = new HashSet<>(1);
 		workingSets.add(workingSet);
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
 		view.getFilteredTree().setFilterText("over");
@@ -146,7 +146,7 @@ public class TaskListFilterTest extends TestCase {
 		items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertFalse(items.contains(taskCompleted));
 		assertTrue(items.contains(taskOverdue));
-		workingSets = new HashSet<IWorkingSet>(0);
+		workingSets = new HashSet<>(0);
 		view.removeFilter(workingSetFilter);
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(workingSets);
 		taskList.removeFromContainer(category, taskOverdue);

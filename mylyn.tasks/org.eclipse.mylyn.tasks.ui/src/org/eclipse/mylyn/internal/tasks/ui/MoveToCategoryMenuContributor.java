@@ -38,12 +38,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor {
 
+	@Override
 	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(
 				Messages.MoveToCategoryMenuContributor_Set_Category_Menu_Item);
 
 		// Compute selected tasks
-		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
+		List<AbstractTask> selectedTasks = new ArrayList<>(selectedElements.size());
 		for (IRepositoryElement element : selectedElements) {
 			if (element instanceof ITask) {
 				selectedTasks.add((AbstractTask) element);
@@ -51,7 +52,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		subMenuManager.setVisible(!selectedTasks.isEmpty());
 
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
+		List<AbstractTaskCategory> categories = new ArrayList<>(
 				TasksUiInternal.getTaskList().getCategories());
 		Collections.sort(categories, new TaskContainerComparator());
 		for (final AbstractTaskCategory category : categories) {
@@ -89,9 +90,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	}
 
 	/**
-	 * public for testing Deals with text where user has entered a '@' or tab character but which are not meant to be
-	 * accelerators. from: Action#setText: Note that if you want to insert a '@' character into the text (but no
-	 * accelerator, you can simply insert a '@' or a tab at the end of the text. see Action#setText
+	 * public for testing Deals with text where user has entered a '@' or tab character but which are not meant to be accelerators. from:
+	 * Action#setText: Note that if you want to insert a '@' character into the text (but no accelerator, you can simply insert a '@' or a
+	 * tab at the end of the text. see Action#setText
 	 */
 	public String handleAcceleratorKeys(String text) {
 		if (text == null) {

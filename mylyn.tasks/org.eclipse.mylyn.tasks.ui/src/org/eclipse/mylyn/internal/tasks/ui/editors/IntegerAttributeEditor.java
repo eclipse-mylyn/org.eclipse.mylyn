@@ -37,18 +37,15 @@ public class IntegerAttributeEditor extends TextAttributeEditor {
 	}
 
 	IInputValidator getAttributeTypeValidator() {
-		return new IInputValidator() {
-			@Override
-			public String isValid(String newText) {
-				if (StringUtils.isNotBlank(newText)) {
-					try {
-						Integer.parseInt(newText);
-					} catch (NumberFormatException e) {
-						return Messages.IntegerAttributeEditor_this_field_requires_integer_value;
-					}
+		return newText -> {
+			if (StringUtils.isNotBlank(newText)) {
+				try {
+					Integer.parseInt(newText);
+				} catch (NumberFormatException e) {
+					return Messages.IntegerAttributeEditor_this_field_requires_integer_value;
 				}
-				return null;
 			}
+			return null;
 		};
 	}
 }

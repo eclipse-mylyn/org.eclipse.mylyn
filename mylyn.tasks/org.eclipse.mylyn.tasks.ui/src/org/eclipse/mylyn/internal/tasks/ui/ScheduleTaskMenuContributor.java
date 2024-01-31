@@ -43,8 +43,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private AbstractTask singleTaskSelection;
 
-	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<IRepositoryElement>();
+	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<>();
 
+	@Override
 	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
 		singleTaskSelection = null;
 		taskListElementsToSchedule.clear();
@@ -58,7 +59,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 				// Tasks artifacts are not able to be scheduled; we'll simply mark them as not supported here
 				String artifactFlag = singleTaskSelection.getAttribute(ITasksCoreConstants.ATTRIBUTE_ARTIFACT);
-				if (Boolean.valueOf(artifactFlag)) {
+				if (Boolean.parseBoolean(artifactFlag)) {
 					return null;
 				}
 			}
@@ -222,7 +223,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private boolean selectionIncludesCompletedTasks() {
 		if (singleTaskSelection instanceof AbstractTask) {
-			if ((singleTaskSelection).isCompleted()) {
+			if (singleTaskSelection.isCompleted()) {
 				return true;
 			}
 		}
@@ -262,7 +263,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		if (taskListElementsToSchedule.size() == 0) {
 			return true;
 		} else if (singleTaskSelection instanceof ITask) {
-			return ((!(singleTaskSelection).isCompleted()) || taskListElementsToSchedule.size() > 0);
+			return !singleTaskSelection.isCompleted() || taskListElementsToSchedule.size() > 0;
 		} else {
 			return taskListElementsToSchedule.size() > 0;
 		}
@@ -270,8 +271,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	protected void setScheduledDate(DateRange dateContainer) {
 		for (IRepositoryElement element : taskListElementsToSchedule) {
-			if (element instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) element;
+			if (element instanceof AbstractTask task) {
 				TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
 				if (dateContainer != null) {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);

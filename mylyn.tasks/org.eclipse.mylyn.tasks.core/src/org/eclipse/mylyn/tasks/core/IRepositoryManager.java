@@ -25,20 +25,20 @@ import java.util.Set;
  */
 public interface IRepositoryManager {
 
-	public abstract void addListener(IRepositoryListener listener);
+	void addListener(IRepositoryListener listener);
 
-	public abstract void addRepository(TaskRepository repository);
+	void addRepository(TaskRepository repository);
 
-	public abstract List<TaskRepository> getAllRepositories();
+	List<TaskRepository> getAllRepositories();
 
-	public abstract Set<TaskRepository> getRepositories(String connectorKind);
+	Set<TaskRepository> getRepositories(String connectorKind);
 
-	public abstract TaskRepository getRepository(String connectorKind, String repositoryUrl);
+	TaskRepository getRepository(String connectorKind, String repositoryUrl);
 
-	public abstract AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
+	AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
 
-	public abstract Collection<AbstractRepositoryConnector> getRepositoryConnectors();
+	Collection<AbstractRepositoryConnector> getRepositoryConnectors();
 
-	public abstract void removeListener(IRepositoryListener listener);
+	void removeListener(IRepositoryListener listener);
 
 }

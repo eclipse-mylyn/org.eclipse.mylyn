@@ -41,6 +41,7 @@ public class EditorBusyIndicator {
 			this.images = images;
 		}
 
+		@Override
 		public void run() {
 			if (stopped) {
 				return;
@@ -127,10 +128,8 @@ public class EditorBusyIndicator {
 			if (image != null && !image.isDisposed()) {
 				editor.setTitleImage(image);
 				return true;
-			} else {
-				if (oldImage != null && !oldImage.isDisposed()) {
-					editor.setTitleImage(oldImage);
-				}
+			} else if (oldImage != null && !oldImage.isDisposed()) {
+				editor.setTitleImage(oldImage);
 			}
 		}
 		return false;

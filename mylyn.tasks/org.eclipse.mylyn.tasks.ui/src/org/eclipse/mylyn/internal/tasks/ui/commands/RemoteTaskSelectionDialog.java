@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Willian Mitsuda and others. 
+ * Copyright (c) 2004, 2011 Willian Mitsuda and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
  *     Tasktop Technologies - improvements
- *     Tomasz Zarna, IBM Corporation - improvements for bug 261648   
+ *     Tomasz Zarna, IBM Corporation - improvements for bug 261648
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
@@ -29,13 +29,9 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -59,8 +55,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -98,7 +92,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	// TODO: copy'n pasted code; make API?
 	private List<TaskRepository> getTaskRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		List<TaskRepository> repositories = new ArrayList<>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
@@ -131,15 +125,10 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (selectedIds == null) {
-					return false;
-				}
-
 				// Only shows exact task matches
-				if (!(element instanceof ITask)) {
+				if ((selectedIds == null) || !(element instanceof ITask task)) {
 					return false;
 				}
-				ITask task = (ITask) element;
 				String taskId = task.getTaskKey();
 				for (String id : selectedIds) {
 					if (id.equals(taskId)) {
@@ -151,30 +140,16 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		});
 		tasksViewer.setInput(TasksUiPlugin.getTaskList().getAllTasks());
-		idText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				computeIds();
-				validate();
-				tasksViewer.refresh(false);
-			}
-
+		idText.addModifyListener(e -> {
+			computeIds();
+			validate();
+			tasksViewer.refresh(false);
 		});
-		tasksViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				validate();
+		tasksViewer.addSelectionChangedListener(event -> validate());
+		tasksViewer.addOpenListener(event -> {
+			if (getOkButton().getEnabled()) {
+				okPressed();
 			}
-
-		});
-		tasksViewer.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				if (getOkButton().getEnabled()) {
-					okPressed();
-				}
-			}
-
 		});
 		Table table = tasksViewer.getTable();
 		table.showSelection();
@@ -199,13 +174,9 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			repositoriesViewer.setSelection(new StructuredSelection(currentRepository), true);
 		}
 		repositoriesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		repositoriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				tasksViewer.setSelection(StructuredSelection.EMPTY);
-				validate();
-			}
-
+		repositoriesViewer.addSelectionChangedListener(event -> {
+			tasksViewer.setSelection(StructuredSelection.EMPTY);
+			validate();
 		});
 
 		Button addRepositoryButton = new Button(repositoriesComposite, SWT.NONE);
@@ -214,7 +185,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		addRepositoryButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				IHandlerService hndSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+				IHandlerService hndSvc = PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
 					hndSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 					repositoriesViewer.setInput(getTaskRepositories());
@@ -233,7 +204,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(ArrayContentProvider.getInstance());
 		TaskList taskList = TasksUiPlugin.getTaskList();
-		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList.getCategories());
+		LinkedList<AbstractTaskContainer> categories = new LinkedList<>(taskList.getCategories());
 		categories.addFirst(taskList.getDefaultCategory());
 		categoryViewer.setInput(categories);
 		categoryViewer.setLabelProvider(new LabelProvider() {

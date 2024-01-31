@@ -16,12 +16,12 @@ package org.eclipse.mylyn.tasks.tests.ui.editor;
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PlanningPart;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

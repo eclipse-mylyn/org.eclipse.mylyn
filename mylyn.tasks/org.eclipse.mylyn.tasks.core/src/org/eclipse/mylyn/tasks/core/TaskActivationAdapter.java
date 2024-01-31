@@ -26,15 +26,19 @@ public class TaskActivationAdapter implements ITaskActivationListener {
 		return true;
 	}
 
+	@Override
 	public void preTaskActivated(ITask task) {
 	}
 
+	@Override
 	public void preTaskDeactivated(ITask task) {
 	}
 
+	@Override
 	public void taskActivated(ITask task) {
 	}
 
+	@Override
 	public void taskDeactivated(ITask task) {
 	}
 

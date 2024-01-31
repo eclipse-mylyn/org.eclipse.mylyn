@@ -19,12 +19,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -199,7 +195,7 @@ public class SelectSupportElementPage extends WizardPage {
 			}
 			iconLabel.setImage(image);
 			titleLabel.setText(data.getName());
-			descriptionLabel.setText((data.getDescription() != null) ? data.getDescription() : ""); //$NON-NLS-1$
+			descriptionLabel.setText(data.getDescription() != null ? data.getDescription() : ""); //$NON-NLS-1$
 
 			toolBarManager.removeAll();
 			final String url = data.getUrl();
@@ -303,6 +299,7 @@ public class SelectSupportElementPage extends WizardPage {
 		}
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, true);
@@ -311,29 +308,25 @@ public class SelectSupportElementPage extends WizardPage {
 		ControlListViewer viewer = new SupportElementViewer(container, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().grab(true, true).hint(500, TABLE_HEIGHT).applyTo(viewer.getControl());
 		viewer.setContentProvider(contentProvider);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				Object object = selection.getFirstElement();
-				if (object instanceof AbstractSupportElement) {
-					selectedElement = (AbstractSupportElement) object;
-				} else {
-					selectedElement = null;
-				}
-				updatePageStatus();
+		viewer.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			Object object = selection.getFirstElement();
+			if (object instanceof AbstractSupportElement) {
+				selectedElement = (AbstractSupportElement) object;
+			} else {
+				selectedElement = null;
 			}
+			updatePageStatus();
 		});
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				if (getWizard().canFinish()) {
-					if (getWizard().performFinish()) {
-						((WizardDialog) getContainer()).close();
-					}
-				} else {
-					IWizardPage nextPage = getNextPage();
-					if (nextPage != null) {
-						((WizardDialog) getContainer()).showPage(nextPage);
-					}
+		viewer.addOpenListener(event -> {
+			if (getWizard().canFinish()) {
+				if (getWizard().performFinish()) {
+					((WizardDialog) getContainer()).close();
+				}
+			} else {
+				IWizardPage nextPage = getNextPage();
+				if (nextPage != null) {
+					((WizardDialog) getContainer()).showPage(nextPage);
 				}
 			}
 		});

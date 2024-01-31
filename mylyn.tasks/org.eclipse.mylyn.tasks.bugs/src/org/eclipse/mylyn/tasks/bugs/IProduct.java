@@ -28,23 +28,23 @@ public interface IProduct {
 	 * 
 	 * @return null, if a name is not available; the name, otherwise
 	 */
-	public abstract String getName();
+	String getName();
 
 	/**
 	 * Returns a description for the product.
 	 * 
 	 * @return null, if a description is not available; the description, otherwise
 	 */
-	public abstract String getDescription();
+	String getDescription();
 
 	/**
 	 * Returns an id for the product that is unique in respect to other product ids.
 	 */
-	public abstract String getId();
+	String getId();
 
 	/**
 	 * Returns a provider that supports the product.
 	 */
-	public abstract IProvider getProvider();
+	IProvider getProvider();
 
 }

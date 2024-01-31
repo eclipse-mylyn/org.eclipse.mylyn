@@ -19,8 +19,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -30,6 +28,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * @author Eugene Kuleshov
@@ -47,26 +47,34 @@ public class TaskDiffUtilTest extends TestCase {
 	}
 
 	public void testCleanComment() {
-		assertEquals("attachment: some attachment. attachment description",
-				TaskDiffUtil.cleanCommentText(("Created an attachment (id=111)\n" //
-						+ "some attachment\n" //
-						+ "\n" //
-						+ "attachment description")));
-		assertEquals("attachment: some attachment", TaskDiffUtil.cleanCommentText(("Created an attachment (id=111)\n" //
-				+ "some attachment\n" //
-				+ "\n")));
-		assertEquals("some comment", TaskDiffUtil.cleanCommentText(("(In reply to comment #11)\n" //
-				+ "some comment\n")));
-		assertEquals("some comment. other comment", TaskDiffUtil.cleanCommentText((" (In reply to comment #11)\n" //
-				+ "some comment\n" //
-				+ "\n" //
-				+ " (In reply to comment #12)\n" //
-				+ "other comment\n")));
-		assertEquals("some comment. other comment", TaskDiffUtil.cleanCommentText((" (In reply to comment #11)\n" //
-				+ "some comment.  \n" //
-				+ "\n" //
-				+ " (In reply to comment #12)\n" //
-				+ "> loren ipsum\n" + "> loren ipsum\n" + "other comment\n")));
+		assertEquals("attachment: some attachment. attachment description", TaskDiffUtil.cleanCommentText("""
+				Created an attachment (id=111)
+				some attachment
+
+				attachment description"""));
+		assertEquals("attachment: some attachment", TaskDiffUtil.cleanCommentText("""
+				Created an attachment (id=111)
+				some attachment
+
+				"""));
+		assertEquals("some comment", TaskDiffUtil.cleanCommentText("(In reply to comment #11)\n" //
+				+ "some comment\n"));
+		assertEquals("some comment. other comment", TaskDiffUtil.cleanCommentText("""
+				 (In reply to comment #11)
+				some comment
+
+				 (In reply to comment #12)
+				other comment
+				"""));
+		assertEquals("some comment. other comment", TaskDiffUtil.cleanCommentText("""
+				 (In reply to comment #11)
+				some comment.\s\s
+
+				 (In reply to comment #12)
+				> loren ipsum
+				> loren ipsum
+				other comment
+				"""));
 	}
 
 	public void testDateDiff() {

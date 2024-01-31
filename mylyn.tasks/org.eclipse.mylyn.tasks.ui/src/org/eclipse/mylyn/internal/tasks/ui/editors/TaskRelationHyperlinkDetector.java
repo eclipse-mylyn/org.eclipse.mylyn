@@ -65,7 +65,7 @@ public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector
 			Matcher m = HYPERLINK_PATTERN.matcher(content);
 			while (m.find()) {
 				if (links == null) {
-					links = new ArrayList<IHyperlink>();
+					links = new ArrayList<>();
 				}
 				Region region = new Region(contentOffset + m.start(), m.end() - m.start());
 				links.add(new TaskHyperlink(region, repository, m.group()));

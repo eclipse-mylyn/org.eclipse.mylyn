@@ -28,18 +28,18 @@ public interface IProvider {
 	 * 
 	 * @return null, if a name is not available; the name, otherwise
 	 */
-	public abstract String getName();
+	String getName();
 
 	/**
 	 * Returns a description for the provider.
 	 * 
 	 * @return null, if a description is not available; the description, otherwise
 	 */
-	public abstract String getDescription();
+	String getDescription();
 
 	/**
 	 * Returns an id for the provider that is unique in respect to other provider ids.
 	 */
-	public abstract String getId();
+	String getId();
 
 }

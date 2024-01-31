@@ -24,6 +24,7 @@ import org.eclipse.ui.actions.ActionDelegate;
  */
 public class DeactivateAllTasksAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		// ignore
 	}

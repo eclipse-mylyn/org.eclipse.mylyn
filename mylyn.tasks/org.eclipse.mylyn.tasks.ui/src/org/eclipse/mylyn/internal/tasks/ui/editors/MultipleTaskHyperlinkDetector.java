@@ -32,12 +32,12 @@ public class MultipleTaskHyperlinkDetector extends TaskHyperlinkDetector {
 
 	@Override
 	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int index, int contentOffset) {
-		List<IHyperlink> result = new ArrayList<IHyperlink>();
+		List<IHyperlink> result = new ArrayList<>();
 		TaskRepository currentRepository = getTaskRepository(textViewer);
 		final IHyperlink[] currentRepositoryLinks = detectHyperlinks(currentRepository, content, index, contentOffset);
 		if (currentRepositoryLinks != null && currentRepositoryLinks.length > 0) {
 			result.addAll(Arrays.asList(currentRepositoryLinks));
-			Set<Region> currentRepositoryRegions = new HashSet<Region>();
+			Set<Region> currentRepositoryRegions = new HashSet<>();
 			for (IHyperlink link : currentRepositoryLinks) {
 				currentRepositoryRegions.add(getRegion(link));
 			}

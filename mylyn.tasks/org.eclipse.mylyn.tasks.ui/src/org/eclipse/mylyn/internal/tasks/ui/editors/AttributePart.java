@@ -210,7 +210,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 	public void refresh(boolean discardChanges) {
 		if (shouldRefresh(categoryChooser, discardChanges)) {
 			ITaskList taskList = TasksUiInternal.getTaskList();
-			categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
+			categories = new ArrayList<>(taskList.getCategories());
 			Collections.sort(categories, new TaskContainerComparator());
 
 			AbstractTaskCategory selectedCategory = category;
@@ -241,7 +241,7 @@ public class AttributePart extends AbstractLocalEditorPart {
 	private void updateCategoryLabel() {
 		if (category == null) {
 			AbstractTaskCategory parentTaskCategory = TaskCategory.getParentTaskCategory(getTask());
-			categoryLabel.setText((parentTaskCategory != null) ? parentTaskCategory.getSummary() : ""); //$NON-NLS-1$
+			categoryLabel.setText(parentTaskCategory != null ? parentTaskCategory.getSummary() : ""); //$NON-NLS-1$
 		} else {
 			categoryLabel.setText(category.getSummary());
 		}

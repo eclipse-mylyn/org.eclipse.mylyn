@@ -44,7 +44,7 @@ public class SupportHandlerManager {
 
 	private boolean readExtensions;
 
-	private final List<AbstractSupportHandler> taskContributors = new CopyOnWriteArrayList<AbstractSupportHandler>();
+	private final List<AbstractSupportHandler> taskContributors = new CopyOnWriteArrayList<>();
 
 	public SupportHandlerManager() {
 	}
@@ -58,11 +58,13 @@ public class SupportHandlerManager {
 
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler
 							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
+				@Override
 				public void run() throws Exception {
 					contributor.process(contribution, monitor);
 				}
@@ -81,11 +83,13 @@ public class SupportHandlerManager {
 
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler
 							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
+				@Override
 				public void run() throws Exception {
 					contributor.postProcess(response, monitor);
 				}
@@ -99,11 +103,13 @@ public class SupportHandlerManager {
 
 		for (final AbstractSupportHandler contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler
 							.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e)); //$NON-NLS-1$
 				}
 
+				@Override
 				public void run() throws Exception {
 					contributor.preProcess(request);
 				}
@@ -118,7 +124,7 @@ public class SupportHandlerManager {
 		}
 		readExtensions = true;
 
-		ExtensionPointReader<AbstractSupportHandler> reader = new ExtensionPointReader<AbstractSupportHandler>(
+		ExtensionPointReader<AbstractSupportHandler> reader = new ExtensionPointReader<>(
 				TasksBugsPlugin.ID_PLUGIN, EXTENSION_ID_TASK_CONTRIBUTORS, ELEMENT_TASK_HANDLER,
 				AbstractSupportHandler.class) {
 			@Override

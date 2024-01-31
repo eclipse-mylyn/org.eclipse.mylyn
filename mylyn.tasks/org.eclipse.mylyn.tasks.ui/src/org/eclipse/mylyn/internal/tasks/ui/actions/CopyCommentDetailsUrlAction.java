@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
+import org.eclipse.mylyn.commons.ui.ClipboardCopier.TextProvider;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -28,14 +29,11 @@ public class CopyCommentDetailsUrlAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
-		ClipboardCopier.getDefault().copy(getStructuredSelection(), new ClipboardCopier.TextProvider() {
-			public String getTextForElement(Object element) {
-				if (element instanceof ITaskComment) {
-					ITaskComment comment = (ITaskComment) element;
-					return comment.getUrl();
-				}
-				return null;
+		ClipboardCopier.getDefault().copy(getStructuredSelection(), (TextProvider) element -> {
+			if (element instanceof ITaskComment comment) {
+				return comment.getUrl();
 			}
+			return null;
 		});
 	}
 

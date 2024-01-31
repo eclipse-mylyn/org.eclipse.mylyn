@@ -36,8 +36,7 @@ public class SearchResultSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof ITask && e2 instanceof ITask) {
-			ITask entry1 = (ITask) e1;
+		if (e1 instanceof ITask entry1 && e2 instanceof ITask) {
 			ITask entry2 = (ITask) e2;
 			return taskComparator.compare(entry1, entry2);
 		} else {

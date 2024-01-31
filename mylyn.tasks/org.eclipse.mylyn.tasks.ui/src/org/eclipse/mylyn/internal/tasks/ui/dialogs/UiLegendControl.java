@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -33,8 +32,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -65,7 +62,7 @@ public class UiLegendControl extends Composite {
 
 	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
-	private final ArrayList<LegendElement> legendElements = new ArrayList<LegendElement>();
+	private final ArrayList<LegendElement> legendElements = new ArrayList<>();
 
 	public UiLegendControl(Composite parent, FormToolkit toolkit) {
 		this(parent, toolkit, true, SWT.VERTICAL);
@@ -76,11 +73,7 @@ public class UiLegendControl extends Composite {
 		this.toolkit = toolkit;
 		toolkit.adapt(this);
 
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				doDispose();
-			}
-		});
+		addDisposeListener(e -> doDispose());
 
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.leftMargin = 0;
@@ -216,15 +209,18 @@ public class UiLegendControl extends Composite {
 
 		Hyperlink openView = toolkit.createHyperlink(tasksClient, Messages.UiLegendControl_Open_Task_List_, SWT.WRAP);
 		openView.addHyperlinkListener(new IHyperlinkListener() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 				TasksUiUtil.openTasksViewInActivePerspective();
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
@@ -341,6 +337,7 @@ public class UiLegendControl extends Composite {
 		Hyperlink adjust = toolkit.createHyperlink(activityClient, Messages.UiLegendControl_Adjust_Colors_and_Fonts_,
 				SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -349,10 +346,12 @@ public class UiLegendControl extends Composite {
 				dlg.open();
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
@@ -456,13 +455,9 @@ public class UiLegendControl extends Composite {
 		TableWrapData data = new TableWrapData(TableWrapData.FILL);
 		composite.setLayoutData(data);
 
-		List<AbstractRepositoryConnector> connectors = new ArrayList<AbstractRepositoryConnector>(
+		List<AbstractRepositoryConnector> connectors = new ArrayList<>(
 				TasksUi.getRepositoryManager().getRepositoryConnectors());
-		Collections.sort(connectors, new Comparator<AbstractRepositoryConnector>() {
-			public int compare(AbstractRepositoryConnector o1, AbstractRepositoryConnector o2) {
-				return o1.getLabel().compareToIgnoreCase(o2.getLabel());
-			}
-		});
+		Collections.sort(connectors, (o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
 		for (AbstractRepositoryConnector connector : connectors) {
 			if (TasksUi.getRepositoryManager().getRepositories(connector.getConnectorKind()).isEmpty()) {
 				continue;
@@ -481,7 +476,7 @@ public class UiLegendControl extends Composite {
 
 		// show 3 columns by default
 		Point w = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		data.maxWidth = (w.x / layout.numColumns) * 3;
+		data.maxWidth = w.x / layout.numColumns * 3;
 	}
 
 	private void addLegendElements(Composite composite, AbstractRepositoryConnector connector,
@@ -537,15 +532,18 @@ public class UiLegendControl extends Composite {
 		Hyperlink gettingStartedLink = toolkit.createHyperlink(hyperlinkClient,
 				Messages.UiLegendControl_Also_see_the_Getting_Started_documentation_online, SWT.WRAP);
 		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 				TasksUiUtil.openUrl(Messages.UiLegendControl_http_www_eclipse_org_mylyn_start);
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}

@@ -47,18 +47,22 @@ public class TaskDataDiffNode extends DiffNode {
 			this.name = name;
 		}
 
+		@Override
 		public String getName() {
 			return name;
 		}
 
+		@Override
 		public Image getImage() {
 			return null;
 		}
 
+		@Override
 		public String getType() {
 			return ITypedElement.TEXT_TYPE;
 		}
 
+		@Override
 		public InputStream getContents() throws CoreException {
 			return new ByteArrayInputStream(content.getBytes());
 		}

@@ -28,22 +28,27 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class ShowTasksUiLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		UiLegendDialog uiLegendDialog = new UiLegendDialog(WorkbenchUtil.getShell());
 		uiLegendDialog.open();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 }

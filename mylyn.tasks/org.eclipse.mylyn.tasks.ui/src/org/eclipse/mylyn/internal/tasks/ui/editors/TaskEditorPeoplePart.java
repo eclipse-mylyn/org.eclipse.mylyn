@@ -93,7 +93,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 
 	protected Collection<TaskAttribute> getAttributes() {
 		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
-		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		List<TaskAttribute> attributes = new ArrayList<>(allAttributes.size());
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));

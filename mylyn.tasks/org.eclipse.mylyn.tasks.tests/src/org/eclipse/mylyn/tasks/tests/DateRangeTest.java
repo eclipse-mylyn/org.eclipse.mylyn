@@ -22,14 +22,14 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.ITask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -56,7 +56,7 @@ public class DateRangeTest extends TestCase {
 		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
 				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
 		DateRange range1 = TaskActivityUtil.getCurrentWeek().getToday().previous();
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(new LocalTask("1", "summaryForLocalTask"));
 		scheduledTasks.put(range1, tasks);
 		assertFalse(scheduledTasks.isEmpty());
@@ -66,7 +66,7 @@ public class DateRangeTest extends TestCase {
 		assertNotNull(scheduledTasks.get(rangeTest));
 
 		DateRange range2 = TaskActivityUtil.getCurrentWeek().getToday();
-		tasks = new HashSet<ITask>();
+		tasks = new HashSet<>();
 		tasks.add(new LocalTask("2", "summaryForLocalTask2"));
 		scheduledTasks.put(range2, tasks);
 
@@ -83,7 +83,7 @@ public class DateRangeTest extends TestCase {
 		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
 				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
 		DateRange range1 = TaskActivityUtil.getDayOf(new Date(0));
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(new LocalTask("1", "summaryForLocalTask"));
 		scheduledTasks.put(range1, tasks);
 		assertFalse(scheduledTasks.isEmpty());

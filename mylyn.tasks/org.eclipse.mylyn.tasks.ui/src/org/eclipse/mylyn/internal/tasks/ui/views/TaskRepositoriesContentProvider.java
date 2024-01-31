@@ -31,25 +31,29 @@ public class TaskRepositoriesContentProvider implements ITreeContentProvider {
 	private final TaskRepositoryManager manager;
 
 	public TaskRepositoriesContentProvider() {
-		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
+		manager = (TaskRepositoryManager) TasksUi.getRepositoryManager();
 	}
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
 
-		Set<Object> objects = new HashSet<Object>();
+		Set<Object> objects = new HashSet<>();
 		objects.addAll(manager.getCategories());
 		return objects.toArray();
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Category) {
-			Set<Object> objects = new HashSet<Object>();
+			Set<Object> objects = new HashSet<>();
 			for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 				Category cat = manager.getCategory(repository);
 				if (cat.equals(parentElement)) {
@@ -65,10 +69,12 @@ public class TaskRepositoriesContentProvider implements ITreeContentProvider {
 		return new Object[0];
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return element instanceof Category;
 	}

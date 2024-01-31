@@ -31,8 +31,7 @@ public class TaskHyperlinkTextPresentationManager extends AbstractHyperlinkTextP
 
 	@Override
 	public boolean select(IHyperlink hyperlink) {
-		if (hyperlink instanceof TaskHyperlink) {
-			TaskHyperlink taskHyperlink = (TaskHyperlink) hyperlink;
+		if (hyperlink instanceof TaskHyperlink taskHyperlink) {
 			String taskId = taskHyperlink.getTaskId();
 			String repositoryUrl = taskHyperlink.getRepository().getRepositoryUrl();
 

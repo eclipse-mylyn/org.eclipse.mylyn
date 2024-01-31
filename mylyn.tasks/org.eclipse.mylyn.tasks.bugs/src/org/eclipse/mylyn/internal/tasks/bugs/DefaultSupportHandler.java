@@ -179,8 +179,7 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 				}
 				return sb.toString();
 			}
-		} else if (status instanceof ErrorLogStatus) {
-			ErrorLogStatus errorLogStatus = (ErrorLogStatus) status;
+		} else if (status instanceof ErrorLogStatus errorLogStatus) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n\n"); //$NON-NLS-1$
 			sb.append(Messages.DefaultSupportHandler_What_steps_message);
@@ -214,10 +213,9 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 	}
 
 	private void appendStatus(IStatus status, StringBuilder sb, boolean includeSessionData) {
-		Date date = (status instanceof ErrorLogStatus) ? ((ErrorLogStatus) status).getDate() : null;
+		Date date = status instanceof ErrorLogStatus ? ((ErrorLogStatus) status).getDate() : null;
 		appendErrorDetails(sb, status, date);
-		if (status instanceof ErrorLogStatus) {
-			ErrorLogStatus errorStatus = (ErrorLogStatus) status;
+		if (status instanceof ErrorLogStatus errorStatus) {
 			if (includeSessionData && errorStatus.getLogSessionData() != null) {
 				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);
 				sb.append(errorStatus.getLogSessionData());
@@ -238,14 +236,14 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 
 	private String getSeverityText(int severity) {
 		switch (severity) {
-		case IStatus.ERROR:
-			return Messages.DefaultTaskContributor_Error;
-		case IStatus.WARNING:
-			return Messages.DefaultTaskContributor_Warning;
-		case IStatus.INFO:
-			return Messages.DefaultTaskContributor_Info;
-		case IStatus.OK:
-			return Messages.DefaultTaskContributor_OK;
+			case IStatus.ERROR:
+				return Messages.DefaultTaskContributor_Error;
+			case IStatus.WARNING:
+				return Messages.DefaultTaskContributor_Warning;
+			case IStatus.INFO:
+				return Messages.DefaultTaskContributor_Info;
+			case IStatus.OK:
+				return Messages.DefaultTaskContributor_OK;
 		}
 		return "?"; //$NON-NLS-1$
 	}

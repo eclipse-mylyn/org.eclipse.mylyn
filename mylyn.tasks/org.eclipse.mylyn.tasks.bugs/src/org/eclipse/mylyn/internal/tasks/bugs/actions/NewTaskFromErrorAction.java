@@ -74,10 +74,12 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		createTask(entry);
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		if (object instanceof LogEntry) {
@@ -85,6 +87,7 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		}
 	}
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 

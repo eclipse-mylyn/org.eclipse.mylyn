@@ -58,9 +58,9 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 
 	}
 
-	private final Map<String, T> clientByUrl = new HashMap<String, T>();
+	private final Map<String, T> clientByUrl = new HashMap<>();
 
-	private final Map<String, C> respoitoryConfigurationByUrl = new HashMap<String, C>();
+	private final Map<String, C> respoitoryConfigurationByUrl = new HashMap<>();
 
 	private final File cacheFile;
 
@@ -105,6 +105,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		// ignore
 	}
 
+	@Override
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		removeClient(repository);
 		respoitoryConfigurationByUrl.remove(repository.getRepositoryUrl());
@@ -114,11 +115,13 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
+	@Override
 	public synchronized void repositoryRemoved(TaskRepository repository) {
 		removeClient(repository);
 		respoitoryConfigurationByUrl.remove(repository.getRepositoryUrl());
 	}
 
+	@Override
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
 		removeClient(repository);
 	}
@@ -183,6 +186,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		this.locationFactory = locationFactory;
 	}
 
+	@Override
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		// ignore
 	}

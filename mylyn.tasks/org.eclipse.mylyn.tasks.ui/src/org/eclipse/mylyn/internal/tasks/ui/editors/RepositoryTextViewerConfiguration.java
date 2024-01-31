@@ -82,7 +82,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		super(EditorsUI.getPreferenceStore());
 		this.taskRepository = taskRepository;
 		this.spellCheck = spellCheck;
-		this.mode = Mode.DEFAULT;
+		mode = Mode.DEFAULT;
 		this.task = task;
 	}
 
@@ -150,7 +150,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
 		IAdaptable context = getDefaultHyperlinkTarget();
 
-		Map<String, IAdaptable> targets = new HashMap<String, IAdaptable>();
+		Map<String, IAdaptable> targets = new HashMap<>();
 		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		targets.put(ID_CONTEXT_EDITOR_TASK, context);
 		return targets;

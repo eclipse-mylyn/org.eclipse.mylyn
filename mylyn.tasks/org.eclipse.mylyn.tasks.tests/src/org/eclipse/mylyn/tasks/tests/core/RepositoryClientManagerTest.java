@@ -16,10 +16,10 @@ package org.eclipse.mylyn.tasks.tests.core;
 import java.io.File;
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.core.RepositoryClientManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla
@@ -32,7 +32,7 @@ public class RepositoryClientManagerTest extends TestCase {
 
 		public String someString = "mylyn";
 
-		public ConfigSubObject[] anArray = new ConfigSubObject[] { new ConfigSubObject() };
+		public ConfigSubObject[] anArray = { new ConfigSubObject() };
 
 		public TaskRepository repository = null;
 	}

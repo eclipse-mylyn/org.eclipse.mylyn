@@ -52,10 +52,10 @@ public class TaskPropertyTester extends PropertyTester {
 		return Boolean.valueOf(value).equals(expectedValue);
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof ITask) {
-			ITask task = (ITask) receiver;
+		if (receiver instanceof ITask task) {
 			if (PROPERTY_CONNECTOR_KIND.equals(property)) {
 				return task.getConnectorKind().equals(expectedValue);
 			} else if (PROPERTY_CAN_POST_ATTACHMENT.equals(property)) {
@@ -75,12 +75,12 @@ public class TaskPropertyTester extends PropertyTester {
 			} else if (PROPERTY_IS_COMPLETED.equals(property)) {
 				return equals(task.isCompleted(), expectedValue);
 			} else if (PROPERTY_IS_LOCAL.equals(property)) {
-				return (task instanceof AbstractTask) && equals(((AbstractTask) task).isLocal(), expectedValue);
+				return task instanceof AbstractTask && equals(((AbstractTask) task).isLocal(), expectedValue);
 			} else if (PROPERTY_LOCAL_COMPLETION_STATE.equals(property)) {
 				return equals(TasksUiInternal.hasLocalCompletionState(task), expectedValue);
 			} else if (PROPERTY_IS_ARTIFACT.equals(property)) {
 				String artifactFlag = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_ARTIFACT);
-				return equals(Boolean.valueOf(artifactFlag), expectedValue);
+				return equals(Boolean.parseBoolean(artifactFlag), expectedValue);
 			}
 		}
 		return false;

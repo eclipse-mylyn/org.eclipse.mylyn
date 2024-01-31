@@ -49,16 +49,12 @@ public class TaskListSorter extends ViewerSorter {
 		NONE, CATEGORY_QUERY, CATEGORY_REPOSITORY;
 
 		public String getLabel() {
-			switch (this) {
-			case NONE:
-				return Messages.TaskListSorter_No_Grouping;
-			case CATEGORY_QUERY:
-				return Messages.TaskListSorter_Catagory_and_Query;
-			case CATEGORY_REPOSITORY:
-				return Messages.TaskListSorter_Catagory_and_Repository;
-			default:
-				return null;
-			}
+			return switch (this) {
+				case NONE -> Messages.TaskListSorter_No_Grouping;
+				case CATEGORY_QUERY -> Messages.TaskListSorter_Catagory_and_Query;
+				case CATEGORY_REPOSITORY -> Messages.TaskListSorter_Catagory_and_Repository;
+				default -> null;
+			};
 		}
 
 		public static GroupBy valueOfLabel(String label) {
@@ -89,10 +85,10 @@ public class TaskListSorter extends ViewerSorter {
 	private final SortElement key2;
 
 	public TaskListSorter() {
-		this.taskComparator = new TaskComparator();
-		this.groupBy = GroupBy.CATEGORY_QUERY;
-		this.key1 = new SortElement();
-		this.key2 = new SortElement();
+		taskComparator = new TaskComparator();
+		groupBy = GroupBy.CATEGORY_QUERY;
+		key1 = new SortElement();
+		key2 = new SortElement();
 	}
 
 	/**
@@ -105,9 +101,8 @@ public class TaskListSorter extends ViewerSorter {
 			ITask element1 = (ITask) o1;
 			ITask element2 = (ITask) o2;
 			return taskComparator.compare(element1, element2);
-		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
+		} else if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer) {
 			// scheduled Mode compare
-			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
 		} else {
@@ -122,13 +117,13 @@ public class TaskListSorter extends ViewerSorter {
 				return result;
 			}
 			result = compare(key1.values[1], key2.values[1]);
-			return (result != 0) ? result : compare(key1.values[2], key2.values[2]);
+			return result != 0 ? result : compare(key1.values[2], key2.values[2]);
 		}
 	}
 
 	private int compare(String key1, String key2) {
 		if (key1 == null) {
-			return (key2 != null) ? 1 : 0;
+			return key2 != null ? 1 : 0;
 		} else if (key2 == null) {
 			return -1;
 		}
@@ -160,31 +155,30 @@ public class TaskListSorter extends ViewerSorter {
 		key.values[2] = null;
 
 		switch (groupBy) {
-		case NONE:
-			weight = 1;
-			break;
-		case CATEGORY_QUERY:
-			break;
-		case CATEGORY_REPOSITORY:
-			if (weight == 1) {
-				// keep
-			} else if (weight == 3) {
-				weight = 2;
-			} else {
-				key.values[0] = getRepositoryUrl(object);
-				key.values[1] = Integer.toString(weight);
-				key.values[2] = ((AbstractTaskContainer) object).getSummary();
-				weight = 3;
-			}
-			break;
+			case NONE:
+				weight = 1;
+				break;
+			case CATEGORY_QUERY:
+				break;
+			case CATEGORY_REPOSITORY:
+				if (weight == 1) {
+					// keep
+				} else if (weight == 3) {
+					weight = 2;
+				} else {
+					key.values[0] = getRepositoryUrl(object);
+					key.values[1] = Integer.toString(weight);
+					key.values[2] = ((AbstractTaskContainer) object).getSummary();
+					weight = 3;
+				}
+				break;
 		}
 
 		key.weight = weight;
 	}
 
 	private String getRepositoryUrl(Object object) {
-		if (object instanceof ITaskRepositoryElement) {
-			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) object;
+		if (object instanceof ITaskRepositoryElement repositoryElement) {
 			String repositoryUrl = repositoryElement.getRepositoryUrl();
 			TaskRepository taskRepository = TasksUi.getRepositoryManager()
 					.getRepository(repositoryElement.getConnectorKind(), repositoryUrl);
@@ -203,7 +197,7 @@ public class TaskListSorter extends ViewerSorter {
 
 	public void setGroupBy(GroupBy sortByIndex) {
 		Assert.isNotNull(sortByIndex);
-		this.groupBy = sortByIndex;
+		groupBy = sortByIndex;
 	}
 
 	public void restoreState(IMemento memento) {

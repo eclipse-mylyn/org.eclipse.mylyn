@@ -33,7 +33,7 @@ public class TaskEditorBloatMonitor {
 
 	public static void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
-		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+		List<IEditorReference> toClose = new ArrayList<>();
 		int totalTaskEditors = 0;
 		for (IEditorReference editorReference : page.getEditorReferences()) {
 			if (TaskEditor.ID_EDITOR.equals(editorReference.getId())) {
@@ -57,7 +57,7 @@ public class TaskEditorBloatMonitor {
 							toClose.add(editorReference);
 						}
 					}
-					if ((totalTaskEditors - toClose.size()) <= MAX_EDITORS) {
+					if (totalTaskEditors - toClose.size() <= MAX_EDITORS) {
 						break;
 					}
 				} catch (PartInitException e) {

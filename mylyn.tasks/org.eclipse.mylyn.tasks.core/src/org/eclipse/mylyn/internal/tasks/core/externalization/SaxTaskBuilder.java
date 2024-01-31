@@ -118,7 +118,7 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 		}
 
 		String active = elementAttributes.getValue(TaskListExternalizationConstants.KEY_ACTIVE);
-		task.setActive(Boolean.valueOf(active));
+		task.setActive(Boolean.parseBoolean(active));
 
 		String url = elementAttributes.getValue(TaskListExternalizationConstants.KEY_ISSUEURL);
 		task.setUrl(StringUtils.defaultString(url));
@@ -182,12 +182,12 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 
 		String reminded = elementAttributes.getValue(TaskListExternalizationConstants.KEY_REMINDED);
 		if (reminded != null) {
-			task.setReminded(Boolean.valueOf(reminded));
+			task.setReminded(Boolean.parseBoolean(reminded));
 		}
 
 		String markReadPending = elementAttributes.getValue(TaskListExternalizationConstants.KEY_MARK_READ_PENDING);
 		if (markReadPending != null) {
-			task.setMarkReadPending(Boolean.valueOf(markReadPending));
+			task.setMarkReadPending(Boolean.parseBoolean(markReadPending));
 		}
 
 		String owner = elementAttributes.getValue(TaskListExternalizationConstants.KEY_OWNER);
@@ -201,7 +201,7 @@ public class SaxTaskBuilder extends SaxTaskListElementBuilder<AbstractTask> {
 		}
 
 		String notified = elementAttributes.getValue(TaskListExternalizationConstants.KEY_NOTIFIED_INCOMING);
-		task.setNotified(Boolean.valueOf(notified));
+		task.setNotified(Boolean.parseBoolean(notified));
 
 		String syncStateString = elementAttributes.getValue(TaskListExternalizationConstants.KEY_SYNC_STATE);
 		if (syncStateString != null) {

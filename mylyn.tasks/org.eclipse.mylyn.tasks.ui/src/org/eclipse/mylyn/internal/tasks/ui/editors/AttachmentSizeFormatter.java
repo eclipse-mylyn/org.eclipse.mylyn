@@ -34,8 +34,8 @@ import java.util.Locale;
  * <p>
  * This formatter always uses 2 decimal places.
  * <p>
- * The size is provided as a String, because it will probably come from a attachment attribute. If the value cannot be
- * decoded, for any reason, it returns {@link #UNKNOWN_SIZE}
+ * The size is provided as a String, because it will probably come from a attachment attribute. If the value cannot be decoded, for any
+ * reason, it returns {@link #UNKNOWN_SIZE}
  *
  * @author Willian Mitsuda
  * @author Frank Becker
@@ -59,7 +59,7 @@ public class AttachmentSizeFormatter {
 	}
 
 	public AttachmentSizeFormatter(Locale locale) {
-		this.decimalFormat = (DecimalFormat) NumberFormat.getInstance(locale);
+		decimalFormat = (DecimalFormat) NumberFormat.getInstance(locale);
 	}
 
 	public String format(String sizeInBytes) {

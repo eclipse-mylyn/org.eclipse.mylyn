@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction;
  */
 public class OpenRepositoryTaskHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		new OpenRepositoryTaskAction().run(null);
 		return null;

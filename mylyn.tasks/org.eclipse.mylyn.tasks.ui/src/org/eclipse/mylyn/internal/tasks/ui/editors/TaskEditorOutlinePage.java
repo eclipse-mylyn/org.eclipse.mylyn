@@ -35,12 +35,12 @@ public class TaskEditorOutlinePage extends ContentOutlinePage {
 
 	public void setInput(TaskRepository taskRepository, TaskEditorOutlineNode rootNode) {
 		if (rootNode != null) {
-			this.model = new TaskEditorOutlineModel(rootNode);
+			model = new TaskEditorOutlineModel(rootNode);
 		} else {
-			this.model = null;
+			model = null;
 		}
 		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-			viewer.setInput(this.model);
+			viewer.setInput(model);
 			viewer.expandAll();
 			viewer.refresh(true);
 		}

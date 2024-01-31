@@ -37,7 +37,7 @@ public class TaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	@Override
 	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, final String content, final int index,
 			final int contentOffset) {
-		List<IHyperlink> result = new ArrayList<IHyperlink>();
+		List<IHyperlink> result = new ArrayList<>();
 		for (final TaskRepository repository : getTaskRepositories(textViewer)) {
 			final IHyperlink[] links = detectHyperlinks(repository, content, index, contentOffset);
 			if (links != null && links.length > 0) {
@@ -58,11 +58,13 @@ public class TaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 		}
 		final IHyperlink[][] links = new IHyperlink[1][];
 		SafeRunnable.run(new ISafeRunnable() {
+			@Override
 			public void handleException(Throwable exception) {
 			}
 
+			@Override
 			public void run() throws Exception {
-				final ITask task = (ITask) getAdapter(ITask.class);
+				final ITask task = getAdapter(ITask.class);
 				links[0] = connectorUi.findHyperlinks(repository, task, content, index, contentOffset);
 			}
 		});

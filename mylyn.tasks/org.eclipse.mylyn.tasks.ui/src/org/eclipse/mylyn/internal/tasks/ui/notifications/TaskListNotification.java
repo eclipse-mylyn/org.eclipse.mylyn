@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -91,11 +92,7 @@ public class TaskListNotification extends AbstractUiNotification {
 
 	@Override
 	public void open() {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				TasksUiInternal.refreshAndOpenTaskListElement(task);
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> TasksUiInternal.refreshAndOpenTaskListElement(task));
 	}
 
 	@Override
@@ -141,12 +138,7 @@ public class TaskListNotification extends AbstractUiNotification {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((task == null) ? 0 : task.hashCode());
-		return result;
+		return Objects.hash(date, description, task);
 	}
 
 	@Override
@@ -154,37 +146,23 @@ public class TaskListNotification extends AbstractUiNotification {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskListNotification other = (TaskListNotification) obj;
-		if (date == null) {
-			if (other.date != null) {
-				return false;
-			}
-		} else if (!date.equals(other.date)) {
+		if (!Objects.equals(date, other.date)) {
 			return false;
 		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
+		if (!Objects.equals(description, other.description)) {
 			return false;
 		}
-		if (task == null) {
-			if (other.task != null) {
-				return false;
-			}
-		} else if (!task.equals(other.task)) {
+		if (!Objects.equals(task, other.task)) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (adapter == AbstractTask.class) {

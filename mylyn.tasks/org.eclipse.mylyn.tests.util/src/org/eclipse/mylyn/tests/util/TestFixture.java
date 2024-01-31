@@ -17,15 +17,11 @@ import java.net.Proxy;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -38,6 +34,9 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel
@@ -79,8 +78,8 @@ public abstract class TestFixture {
 	}
 
 	/**
-	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
-	 * list will only have default categories but no tasks.
+	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task list will only have
+	 * default categories but no tasks.
 	 */
 	public static void resetTaskListAndRepositories() throws Exception {
 		TasksUiPlugin.getRepositoryManager().clearRepositories();
@@ -186,11 +185,7 @@ public abstract class TestFixture {
 	}
 
 	public AbstractWebLocation location(String username, String password, final Proxy proxy) throws Exception {
-		return new WebLocation(repositoryUrl, username, password, new IProxyProvider() {
-			public Proxy getProxyForHost(String host, String proxyType) {
-				return proxy;
-			}
-		});
+		return new WebLocation(repositoryUrl, username, password, (host, proxyType) -> proxy);
 	}
 
 	public TaskRepository repository() {
@@ -208,10 +203,10 @@ public abstract class TestFixture {
 		Assert.isNotNull(repositoryName);
 		Assert.isNotNull(version);
 		this.repositoryName = repositoryName;
-		this.simpleInfo = version;
+		simpleInfo = version;
 		this.description = description;
 		if (description != null && description.length() > 0) {
-			this.simpleInfo += "/" + description;
+			simpleInfo += "/" + description;
 		}
 	}
 
@@ -258,7 +253,7 @@ public abstract class TestFixture {
 	public boolean isExcluded() {
 		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
 		String[] excludeFixtureArray = excludeFixture.split(",");
-		return new HashSet<String>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
+		return new HashSet<>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
 	}
 
 	public String getDescription() {

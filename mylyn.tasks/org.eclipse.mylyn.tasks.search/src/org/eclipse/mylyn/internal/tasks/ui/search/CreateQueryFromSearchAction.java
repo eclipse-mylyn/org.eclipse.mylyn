@@ -64,8 +64,7 @@ public class CreateQueryFromSearchAction extends Action {
 	@Override
 	public void run() {
 		ISelection selection = resultView.getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			if (structuredSelection.getFirstElement() instanceof ITask) {
 				ISearchQuery[] queries = NewSearchUI.getQueries();
 				ITask task = (ITask) structuredSelection.getFirstElement();
@@ -76,8 +75,7 @@ public class CreateQueryFromSearchAction extends Action {
 					IRepositoryQuery query = searchHitCollector.getRepositoryQuery();
 					InputDialog dialog = new InputDialog(
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.CreateQueryFromSearchAction_CLEAR_QUERY,
-							MessageFormat.format(
+							Messages.CreateQueryFromSearchAction_CLEAR_QUERY, MessageFormat.format(
 									Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X,
 									TaskListView.LABEL_VIEW) + ": ", //$NON-NLS-1$
 							"", null); //$NON-NLS-1$

@@ -18,7 +18,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -59,11 +58,7 @@ public class WorkweekProgressBar extends Canvas {
 				redraw();
 			}
 		});
-		addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				paint(e);
-			}
-		});
+		addPaintListener(this::paint);
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		completedColor = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY);
 	}

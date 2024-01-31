@@ -29,6 +29,7 @@ public abstract class AbstractTaskAttachmentCommandHandler extends AbstractHandl
 	public AbstractTaskAttachmentCommandHandler() {
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {

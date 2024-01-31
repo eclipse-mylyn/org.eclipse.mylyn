@@ -64,7 +64,7 @@ public class SynchronizeRelevantTasksJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		HashSet<ITask> relevantTasks = new HashSet<ITask>();
+		HashSet<ITask> relevantTasks = new HashSet<>();
 
 		addOpenEditorTasks(relevantTasks);
 		addActiveTask(relevantTasks);

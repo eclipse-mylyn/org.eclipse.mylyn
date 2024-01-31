@@ -63,14 +63,17 @@ public class ImportAction implements IViewActionDelegate {
 
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		FileDialog dialog = new FileDialog(WorkbenchUtil.getShell());
 		dialog.setText(Messages.ImportAction_Dialog_Title);

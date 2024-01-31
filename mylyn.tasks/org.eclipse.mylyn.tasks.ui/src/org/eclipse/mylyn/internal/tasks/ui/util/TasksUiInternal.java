@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -180,11 +179,10 @@ public class TasksUiInternal {
 	 * @return the command, or null if it is not available.
 	 */
 	public static Command getConfiguredDiscoveryWizardCommand() {
-		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
 		final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.tasks.ui.discoveryWizardCommand"); //$NON-NLS-1$
 		if (discoveryWizardCommand != null) {
-			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-					.getService(IHandlerService.class);
+			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 			EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
 			if (!discoveryWizardCommand.isEnabled()) {
 				// update enabled state in case something has changed (ProxyHandler caches state)
@@ -210,7 +208,7 @@ public class TasksUiInternal {
 	}
 
 	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
-		List<TaskEditor> repositoryTaskEditors = new ArrayList<TaskEditor>();
+		List<TaskEditor> repositoryTaskEditors = new ArrayList<>();
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow window : windows) {
 			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
@@ -237,38 +235,22 @@ public class TasksUiInternal {
 		return new ProgressMonitorWrapper(monitor) {
 			@Override
 			public void beginTask(final String name, final int totalWork) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getWrappedProgressMonitor().beginTask(name, totalWork);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getWrappedProgressMonitor().beginTask(name, totalWork));
 			}
 
 			@Override
 			public void done() {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getWrappedProgressMonitor().done();
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getWrappedProgressMonitor().done());
 			}
 
 			@Override
 			public void subTask(final String name) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getWrappedProgressMonitor().subTask(name);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getWrappedProgressMonitor().subTask(name));
 			}
 
 			@Override
 			public void worked(final int work) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getWrappedProgressMonitor().worked(work);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getWrappedProgressMonitor().worked(work));
 			}
 		};
 	}
@@ -276,19 +258,17 @@ public class TasksUiInternal {
 	public static void openEditor(TaskCategory category) {
 		final String name = category.getSummary();
 		InputDialog dialog = new InputDialog(WorkbenchUtil.getShell(), Messages.TasksUiInternal_Rename_Category_Title,
-				Messages.TasksUiInternal_Rename_Category_Message, name, new IInputValidator() {
-					public String isValid(String newName) {
-						if (newName.trim().length() == 0 || newName.equals(name)) {
-							return ""; //$NON-NLS-1$
-						}
-						Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskList().getCategories();
-						for (AbstractTaskCategory category : categories) {
-							if (newName.equals(category.getSummary())) {
-								return Messages.TasksUiInternal_Rename_Category_Name_already_exists_Error;
-							}
-						}
-						return null;
+				Messages.TasksUiInternal_Rename_Category_Message, name, newName -> {
+					if (newName.trim().length() == 0 || newName.equals(name)) {
+						return ""; //$NON-NLS-1$
 					}
+					Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskList().getCategories();
+					for (AbstractTaskCategory category1 : categories) {
+						if (newName.equals(category1.getSummary())) {
+							return Messages.TasksUiInternal_Rename_Category_Name_already_exists_Error;
+						}
+					}
+					return null;
 				});
 		if (dialog.open() == Window.OK) {
 			TasksUiPlugin.getTaskList().renameContainer(category, dialog.getValue());
@@ -326,11 +306,7 @@ public class TasksUiInternal {
 							TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 								@Override
 								public void done(IJobChangeEvent event) {
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-										public void run() {
-											TasksUiUtil.openTask(task);
-										}
-									});
+									PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiUtil.openTask(task));
 								}
 							});
 						} else {
@@ -422,8 +398,7 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * For synchronizing a single query. Use synchronize(Set, IJobChangeListener) if synchronizing multiple queries at a
-	 * time.
+	 * For synchronizing a single query. Use synchronize(Set, IJobChangeListener) if synchronizing multiple queries at a time.
 	 */
 	public static final Job synchronizeQuery(AbstractRepositoryConnector connector, RepositoryQuery repositoryQuery,
 			IJobChangeListener listener, boolean force) {
@@ -475,7 +450,7 @@ public class TasksUiInternal {
 	}
 
 	public static void synchronizeTaskInBackground(final AbstractRepositoryConnector connector, final ITask task) {
-		synchronizationScheduler.schedule(task, new Synchronizer<Job>() {
+		synchronizationScheduler.schedule(task, new Synchronizer<>() {
 			@Override
 			public Job createJob() {
 				SynchronizationJob job = TasksUiPlugin.getTaskJobFactory()
@@ -488,8 +463,8 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Synchronize a single task. Note that if you have a collection of tasks to synchronize with this connector then
-	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
+	 * Synchronize a single task. Note that if you have a collection of tasks to synchronize with this connector then you should call
+	 * synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
 	 *
 	 * @param listener
 	 *            can be null
@@ -581,17 +556,17 @@ public class TasksUiInternal {
 				message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
 			}
 			switch (status.getSeverity()) {
-			case IStatus.CANCEL:
-			case IStatus.INFO:
-				createDialog(shell, title, message, MessageDialog.INFORMATION).open();
-				break;
-			case IStatus.WARNING:
-				createDialog(shell, title, message, MessageDialog.WARNING).open();
-				break;
-			case IStatus.ERROR:
-			default:
-				createDialog(shell, title, message, MessageDialog.ERROR).open();
-				break;
+				case IStatus.CANCEL:
+				case IStatus.INFO:
+					createDialog(shell, title, message, MessageDialog.INFORMATION).open();
+					break;
+				case IStatus.WARNING:
+					createDialog(shell, title, message, MessageDialog.WARNING).open();
+					break;
+				case IStatus.ERROR:
+				default:
+					createDialog(shell, title, message, MessageDialog.ERROR).open();
+					break;
 			}
 		}
 	}
@@ -599,11 +574,7 @@ public class TasksUiInternal {
 	public static void asyncDisplayStatus(final String title, final IStatus status) {
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		if (!display.isDisposed()) {
-			display.asyncExec(new Runnable() {
-				public void run() {
-					displayStatus(title, status);
-				}
-			});
+			display.asyncExec(() -> displayStatus(title, status));
 		} else {
 			StatusHandler.log(status);
 		}
@@ -612,11 +583,7 @@ public class TasksUiInternal {
 	public static void asyncLogAndDisplayStatus(final String title, final IStatus status) {
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		if (!display.isDisposed()) {
-			display.asyncExec(new Runnable() {
-				public void run() {
-					logAndDisplayStatus(title, status);
-				}
-			});
+			display.asyncExec(() -> logAndDisplayStatus(title, status));
 		} else {
 			StatusHandler.log(status);
 		}
@@ -682,14 +649,14 @@ public class TasksUiInternal {
 
 	private static DateRange getNewTaskScheduleDateRange(String preference) {
 		switch (preference) {
-		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED:
-			return null;
-		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY:
-			return TaskActivityUtil.getCurrentWeek().getToday();
-		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW:
-			return TaskActivityUtil.getCurrentWeek().getToday().next();
-		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK:
-			return TaskActivityUtil.getCurrentWeek();
+			case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED:
+				return null;
+			case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY:
+				return TaskActivityUtil.getCurrentWeek().getToday();
+			case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW:
+				return TaskActivityUtil.getCurrentWeek().getToday().next();
+			case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK:
+				return TaskActivityUtil.getCurrentWeek();
 		}
 		return TaskActivityUtil.getCurrentWeek();
 	}
@@ -701,8 +668,7 @@ public class TasksUiInternal {
 		}
 		if (selectedObject instanceof TaskCategory) {
 			return (TaskCategory) selectedObject;
-		} else if (selectedObject instanceof ITask) {
-			ITask task = (ITask) selectedObject;
+		} else if (selectedObject instanceof ITask task) {
 			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
 			if (container instanceof TaskCategory) {
 				return (TaskCategory) container;
@@ -717,12 +683,12 @@ public class TasksUiInternal {
 
 	public static Set<AbstractTaskContainer> getContainersFromWorkingSet(Set<IWorkingSet> containers) {
 
-		Set<AbstractTaskContainer> allTaskContainersInWorkingSets = new HashSet<AbstractTaskContainer>();
+		Set<AbstractTaskContainer> allTaskContainersInWorkingSets = new HashSet<>();
 		for (IWorkingSet workingSet : containers) {
 			IAdaptable[] elements = workingSet.getElements();
 			for (IAdaptable adaptable : elements) {
 				if (adaptable instanceof AbstractTaskContainer) {
-					allTaskContainersInWorkingSets.add(((AbstractTaskContainer) adaptable));
+					allTaskContainersInWorkingSets.add((AbstractTaskContainer) adaptable);
 				}
 			}
 		}
@@ -851,9 +817,8 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to
-	 * avoid two modal dialogs. If not then return the shell of the active workbench window. If neither can be found
-	 * return null.
+	 * Utility method to get the best parenting possible for a dialog. If there is a modal shell create it so as to avoid two modal dialogs.
+	 * If not then return the shell of the active workbench window. If neither can be found return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
 	 *
@@ -1071,8 +1036,8 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
-	 * falling back to the web browser if not available.
+	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor, falling back to the web
+	 * browser if not available.
 	 *
 	 * @return true if the task was successfully opened
 	 */
@@ -1082,8 +1047,8 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
-	 * falling back to the web browser if not available.
+	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor, falling back to the web
+	 * browser if not available.
 	 *
 	 * @return true if the task was successfully opened
 	 */
@@ -1199,11 +1164,7 @@ public class TasksUiInternal {
 			ISelection newSelection = viewer.getSelection();
 			if ((newSelection == null || newSelection.isEmpty()) && !(selection == null || selection.isEmpty())) {
 				// delay execution to ensure that any delayed tree updates such as expand all have been processed and the selection is revealed properly
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						viewer.setSelection(selection, true);
-					}
-				});
+				Display.getDefault().asyncExec(() -> viewer.setSelection(selection, true));
 			} else if (newSelection instanceof ITreeSelection && !newSelection.isEmpty()) {
 				viewer.reveal(((ITreeSelection) newSelection).getFirstElement());
 			}
@@ -1234,7 +1195,7 @@ public class TasksUiInternal {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + Messages.TasksUiInternal__minute_;
-			} else if (minutes != 1) {
+			} else {
 				min = minutes + Messages.TasksUiInternal__minutes_;
 			}
 			seconds -= minutes * MIN;
@@ -1251,7 +1212,7 @@ public class TasksUiInternal {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + Messages.TasksUiInternal__minute_;
-			} else if (minutes != 1) {
+			} else {
 				min = minutes + Messages.TasksUiInternal__minutes_;
 			}
 			seconds -= minutes * MIN;
@@ -1324,9 +1285,9 @@ public class TasksUiInternal {
 
 	public static void executeCommand(IServiceLocator serviceLocator, String commandId, String title, Object object,
 			Event event) throws NotEnabledException {
-		IHandlerService service = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+		IHandlerService service = serviceLocator.getService(IHandlerService.class);
 		if (service != null) {
-			ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+			ICommandService commandService = serviceLocator.getService(ICommandService.class);
 			if (commandService != null) {
 				Command command = commandService.getCommand(commandId);
 				if (command != null) {
@@ -1392,7 +1353,7 @@ public class TasksUiInternal {
 		if (connector != null) {
 			String prefix = connector.getTaskIdPrefix();
 			// work around short prefixes which are not separated by space, e.g. "#" for Trac
-			return (prefix.length() > 1) ? prefix + " " : prefix; //$NON-NLS-1$
+			return prefix.length() > 1 ? prefix + " " : prefix; //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -1449,15 +1410,14 @@ public class TasksUiInternal {
 			return Collections.emptyList();
 		}
 
-		List<ITask> tasks = new ArrayList<ITask>();
+		List<ITask> tasks = new ArrayList<>();
 		if (selection instanceof IStructuredSelection) {
 			for (Object element : ((IStructuredSelection) selection).toList()) {
 				ITask task = null;
 				if (element instanceof ITask) {
 					task = (ITask) element;
-				} else if (element instanceof IAdaptable) {
-					IAdaptable adaptable = (IAdaptable) element;
-					task = (ITask) adaptable.getAdapter(ITask.class);
+				} else if (element instanceof IAdaptable adaptable) {
+					task = adaptable.getAdapter(ITask.class);
 				}
 				if (task != null) {
 					tasks.add(task);
@@ -1469,8 +1429,8 @@ public class TasksUiInternal {
 
 	public static boolean shouldShowIncoming(ITask task) {
 		SynchronizationState state = task.getSynchronizationState();
-		if ((state == SynchronizationState.INCOMING
-				&& !Boolean.valueOf(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)))
+		if (state == SynchronizationState.INCOMING
+				&& !Boolean.valueOf(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING))
 				|| state == SynchronizationState.INCOMING_NEW || state == SynchronizationState.CONFLICT) {
 			return true;
 		}
@@ -1499,7 +1459,7 @@ public class TasksUiInternal {
 
 		if (lastRevision != null && lastRevision.getDate() != null) {
 			// remove attachments and comments that are newer than lastRevision
-			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(
+			List<TaskAttribute> attributes = new ArrayList<>(
 					newTaskData.getRoot().getAttributes().values());
 			for (TaskAttribute attribute : attributes) {
 				if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
@@ -1552,12 +1512,12 @@ public class TasksUiInternal {
 		ImageDescriptor image;
 		boolean showError = false;
 		Throwable exception = query.getStatus().getException();
-		showError = (query.getLastSynchronizedTimeStamp().equals("<never>") //$NON-NLS-1$
-				&& ((RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null
-						&& exception instanceof SocketTimeoutException) || //
+		showError = query.getLastSynchronizedTimeStamp().equals("<never>") //$NON-NLS-1$
+				&& (RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null
+						&& exception instanceof SocketTimeoutException || //
 				// only when we change SocketTimeout or Eclipse.org change there timeout for long running Queries
-						(RepositoryStatus.ERROR_NETWORK) == query.getStatus().getCode()
-								&& query.getStatus().getMessage().equals("Http error: Internal Server Error"))); //$NON-NLS-1$
+						RepositoryStatus.ERROR_NETWORK == query.getStatus().getCode()
+								&& query.getStatus().getMessage().equals("Http error: Internal Server Error")); //$NON-NLS-1$
 		if (showError) {
 			image = CommonImages.OVERLAY_SYNC_ERROR;
 		} else {

@@ -16,9 +16,9 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentSizeFormatter;
+
+import junit.framework.TestCase;
 
 /**
  * Tests attachment size value formatting.

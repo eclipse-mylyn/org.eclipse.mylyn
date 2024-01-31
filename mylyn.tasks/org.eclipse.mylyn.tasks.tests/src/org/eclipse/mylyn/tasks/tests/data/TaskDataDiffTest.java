@@ -91,7 +91,7 @@ public class TaskDataDiffTest extends TestCase {
 		TaskDataDiff diff = new TaskDataDiff(model, newData, oldData);
 		List<TaskAttributeDiff> expected = Arrays.asList(new TaskAttributeDiff(null, attributeSummary),
 				new TaskAttributeDiff(null, attributeCustom));
-		assertEquals(new LinkedHashSet<ITaskAttributeDiff>(expected), diff.getChangedAttributes());
+		assertEquals(new LinkedHashSet<>(expected), diff.getChangedAttributes());
 	}
 
 	@Test

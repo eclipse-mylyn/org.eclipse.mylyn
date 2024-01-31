@@ -39,7 +39,7 @@ import org.junit.Test;
 @SuppressWarnings("restriction")
 public class TaskActivityProviderTest {
 
-	protected List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+	protected List<ActivityEvent> events = new ArrayList<>();
 
 	private IndexReference reference;
 
@@ -81,10 +81,12 @@ public class TaskActivityProviderTest {
 
 		TaskActivityProvider provider = new TaskActivityProvider();
 		IActivitySession session = new IActivitySession() {
+			@Override
 			public IActivityManager getManger() {
 				return null;
 			}
 
+			@Override
 			public void fireActivityEvent(ActivityEvent event) {
 				events.add(event);
 			}

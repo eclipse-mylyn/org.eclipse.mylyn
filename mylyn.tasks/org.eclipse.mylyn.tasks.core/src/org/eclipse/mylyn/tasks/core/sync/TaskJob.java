@@ -36,8 +36,8 @@ public abstract class TaskJob extends Job {
 	 */
 	public TaskJob(String name) {
 		super(name);
-		this.monitor = new DelegatingProgressMonitor();
-		this.monitor.setData(this);
+		monitor = new DelegatingProgressMonitor();
+		monitor.setData(this);
 	}
 
 	/**

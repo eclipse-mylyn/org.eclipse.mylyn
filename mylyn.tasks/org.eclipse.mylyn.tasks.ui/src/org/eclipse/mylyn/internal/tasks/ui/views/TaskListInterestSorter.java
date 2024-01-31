@@ -46,8 +46,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
-		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
-			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
+		if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
 		} else if (o1 instanceof ITaskContainer && o2 instanceof ScheduledTaskContainer) {

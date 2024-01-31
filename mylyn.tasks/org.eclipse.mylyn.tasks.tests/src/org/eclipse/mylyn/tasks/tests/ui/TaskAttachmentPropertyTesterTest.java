@@ -13,11 +13,11 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskAttachmentPropertyTester;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

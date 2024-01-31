@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -23,6 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -101,7 +101,7 @@ public class EditorUtilTest extends TestCase {
 
 		CommonUiUtil.setEnabled(composite, false);
 		CommonUiUtil.setEnabled(composite, true);
-		// the second call should have not changed anything 
+		// the second call should have not changed anything
 		CommonUiUtil.setEnabled(composite, true);
 		assertTrue(composite.getEnabled());
 		assertFalse(label.getEnabled());

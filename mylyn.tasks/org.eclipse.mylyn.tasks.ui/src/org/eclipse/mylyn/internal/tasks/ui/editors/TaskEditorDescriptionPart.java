@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -56,7 +53,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	private void addDuplicateDetection(Composite composite, FormToolkit toolkit) {
-		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
+		List<AbstractDuplicateDetector> allCollectors = new ArrayList<>();
 		if (getDuplicateSearchCollectorsList() != null) {
 			allCollectors.addAll(getDuplicateSearchCollectorsList());
 		}
@@ -82,13 +79,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			duplicateDetectorChooser.setFont(TEXT_FONT);
 			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 
-			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
-
-				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
-					return c1.getName().compareToIgnoreCase(c2.getName());
-				}
-
-			});
+			Collections.sort(allCollectors, (c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
 
 			for (AbstractDuplicateDetector detector : allCollectors) {
 				duplicateDetectorChooser.add(detector.getName());
@@ -103,12 +94,10 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 						Messages.TaskEditorDescriptionPart_Search, SWT.NONE);
 				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-				searchForDuplicates.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						String selectedDetector = duplicateDetectorChooser
-								.getItem(duplicateDetectorChooser.getSelectionIndex());
-						searchForDuplicates(selectedDetector);
-					}
+				searchForDuplicates.addListener(SWT.Selection, e -> {
+					String selectedDetector = duplicateDetectorChooser
+							.getItem(duplicateDetectorChooser.getSelectionIndex());
+					searchForDuplicates(selectedDetector);
 				});
 			}
 
@@ -158,7 +147,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<>();
 		for (AbstractDuplicateDetector detector : TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList()) {
 			if (isValidDuplicateDetector(detector)) {
 				duplicateDetectors.add(detector);

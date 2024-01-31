@@ -25,8 +25,8 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
- * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
- * that contains their data.
+ * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source that contains their
+ * data.
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -54,7 +54,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean reminded = false;
 
-	private final Set<AbstractTaskContainer> containers = new CopyOnWriteArraySet<AbstractTaskContainer>();
+	private final Set<AbstractTaskContainer> containers = new CopyOnWriteArraySet<>();
 
 	// ************ Synch ****************
 
@@ -113,14 +113,15 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	/**
-	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked
-	 * completed via the Task List.
+	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked completed via the Task
+	 * List.
 	 * 
 	 * @deprecated use <code>task instanceof LocalTask</code> instead
 	 */
 	@Deprecated
 	public abstract boolean isLocal();
 
+	@Override
 	public abstract String getConnectorKind();
 
 	@Deprecated
@@ -130,7 +131,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	@Deprecated
 	public void setLastReadTimeStamp(String lastReadTimeStamp) {
-		this.lastReadTimeStamp = (lastReadTimeStamp != null) ? lastReadTimeStamp.intern() : null;
+		this.lastReadTimeStamp = lastReadTimeStamp != null ? lastReadTimeStamp.intern() : null;
 	}
 
 	/**
@@ -138,12 +139,13 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 */
 	public void setSynchronizationState(SynchronizationState syncState) {
 		Assert.isNotNull(syncState);
-		this.synchronizationState = syncState;
+		synchronizationState = syncState;
 	}
 
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public SynchronizationState getSynchronizationState() {
 		return synchronizationState;
 	}
@@ -153,7 +155,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setSynchronizing(boolean sychronizing) {
-		this.synchronizing = sychronizing;
+		synchronizing = sychronizing;
 	}
 
 	public boolean isNotified() {
@@ -164,26 +166,30 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		isNotifiedIncoming = notified;
 	}
 
+	@Override
 	public String getOwner() {
 		return owner;
 	}
 
+	@Override
 	public void setOwner(String owner) {
 		if (!areEqual(this.owner, owner)) {
 			String oldValue = this.owner;
-			this.owner = (owner != null) ? owner.intern() : null;
+			this.owner = owner != null ? owner.intern() : null;
 			firePropertyChange("owner", oldValue, owner); //$NON-NLS-1$
 		}
 	}
 
+	@Override
 	public String getOwnerId() {
 		return ownerId;
 	}
 
+	@Override
 	public void setOwnerId(String ownerId) {
 		if (!areEqual(this.ownerId, ownerId)) {
 			String oldValue = this.ownerId;
-			this.ownerId = (ownerId != null) ? ownerId.intern() : null;
+			this.ownerId = ownerId != null ? ownerId.intern() : null;
 			firePropertyChange("ownerId", oldValue, ownerId); //$NON-NLS-1$
 		}
 	}
@@ -199,10 +205,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.status = status;
 	}
 
+	@Override
 	public final String getTaskId() {
 		return taskId;
 	}
 
+	@Override
 	public final String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -213,16 +221,17 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public final void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = (repositoryUrl != null) ? repositoryUrl.intern() : null;
+		this.repositoryUrl = repositoryUrl != null ? repositoryUrl.intern() : null;
 		super.setHandleIdentifier(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 	}
 
 	/**
-	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references.
-	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
+	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references. Can return the same
+	 * as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
+	@Override
 	public String getTaskKey() {
-		return (taskKey == null) ? taskId : taskKey;
+		return taskKey == null ? taskId : taskKey;
 	}
 
 	@Deprecated
@@ -249,6 +258,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.active = active;
 	}
 
+	@Override
 	public boolean isActive() {
 		return active;
 	}
@@ -256,7 +266,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractTask) {
-			return this.getHandleIdentifier().equals(((ITask) obj).getHandleIdentifier());
+			return getHandleIdentifier().equals(((ITask) obj).getHandleIdentifier());
 		} else {
 			return false;
 		}
@@ -267,6 +277,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return taskId.hashCode();
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return completionDate != null;
 	}
@@ -288,10 +299,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return priority;
 	}
 
+	@Override
 	public void setPriority(String priority) {
 		if (!areEqual(this.priority, priority)) {
 			String oldValue = this.priority;
-			this.priority = (priority != null) ? priority.intern() : null;
+			this.priority = priority != null ? priority.intern() : null;
 			firePropertyChange("priority", oldValue, priority); //$NON-NLS-1$
 		}
 	}
@@ -321,7 +333,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setEstimatedTimeHours(int estimated) {
-		this.estimatedTimeHours = estimated;
+		estimatedTimeHours = estimated;
 	}
 
 	void addParentContainer(AbstractTaskContainer container) {
@@ -342,6 +354,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return summary;
 	}
 
+	@Override
 	public Date getCompletionDate() {
 		return completionDate;
 	}
@@ -362,10 +375,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.reminded = reminded;
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		if (!areEqual(this.creationDate, creationDate)) {
 			Date oldValue = this.creationDate;
@@ -374,6 +389,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		}
 	}
 
+	@Override
 	public void setSummary(String summary) {
 		Assert.isNotNull(summary);
 		if (!areEqual(this.summary, summary)) {
@@ -383,6 +399,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		}
 	}
 
+	@Override
 	public void setCompletionDate(Date completionDate) {
 		if (!areEqual(this.completionDate, completionDate)) {
 			Date oldValue = this.completionDate;
@@ -392,7 +409,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	private boolean areEqual(Object oldValue, Object newValue) {
-		return (oldValue != null) ? oldValue.equals(newValue) : oldValue == newValue;
+		return oldValue != null ? oldValue.equals(newValue) : oldValue == newValue;
 	}
 
 	private void firePropertyChange(String key, Object oldValue, Object newValue) {
@@ -418,24 +435,24 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	public boolean isPastReminder() {
 		if (isCompleted() || scheduledForDate == null || !(getScheduledForDate() instanceof DayDateRange)) {
 			return false;
+		} else if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate()
+				.compareTo(TaskActivityUtil.getCalendar()) < 0) {
+			return true;
 		} else {
-			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate()
-					.compareTo(TaskActivityUtil.getCalendar()) < 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 
+	@Override
 	public String getTaskKind() {
 		return taskKind;
 	}
 
+	@Override
 	public void setTaskKind(String taskKind) {
 		if (!areEqual(this.taskKind, taskKind)) {
 			String oldValue = this.taskKind;
-			this.taskKind = (taskKind != null) ? taskKind.intern() : null;
+			this.taskKind = taskKind != null ? taskKind.intern() : null;
 			firePropertyChange("taskKind", oldValue, taskKind); //$NON-NLS-1$
 		}
 	}
@@ -445,14 +462,16 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return summary.compareTo(((AbstractTask) taskListElement).summary);
 	}
 
+	@Override
 	public Date getDueDate() {
 		return dueDate;
 	}
 
+	@Override
 	public void setDueDate(Date date) {
-		if (!areEqual(this.dueDate, date)) {
-			Date oldValue = this.dueDate;
-			this.dueDate = date;
+		if (!areEqual(dueDate, date)) {
+			Date oldValue = dueDate;
+			dueDate = date;
 			firePropertyChange("dueDate", oldValue, date); //$NON-NLS-1$
 		}
 	}
@@ -467,10 +486,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.stale = stale;
 	}
 
+	@Override
 	public Date getModificationDate() {
 		return modificationDate;
 	}
 
+	@Override
 	public void setModificationDate(Date modificationDate) {
 		if (!areEqual(this.modificationDate, modificationDate)) {
 			Date oldValue = this.modificationDate;
@@ -487,6 +508,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.markReadPending = markReadPending;
 	}
 
+	@Override
 	public void setTaskKey(String taskKey) {
 		if (!areEqual(this.taskKey, taskKey)) {
 			String oldValue = this.taskKey;
@@ -495,10 +517,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		}
 	}
 
+	@Override
 	public synchronized String getAttribute(String key) {
-		return (attributeMap != null) ? attributeMap.getAttribute(key) : null;
+		return attributeMap != null ? attributeMap.getAttribute(key) : null;
 	}
 
+	@Override
 	public synchronized Map<String, String> getAttributes() {
 		if (attributeMap != null) {
 			return attributeMap.getAttributes();
@@ -507,6 +531,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		}
 	}
 
+	@Override
 	public void setAttribute(String key, String value) {
 		String oldValue;
 		synchronized (this) {

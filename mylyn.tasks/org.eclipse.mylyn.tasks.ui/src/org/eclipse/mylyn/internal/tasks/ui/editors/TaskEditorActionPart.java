@@ -60,9 +60,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -83,37 +81,46 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			this.button = button;
 		}
 
+		@Override
 		public void modifyText(ModifyEvent e) {
 			selected();
 		}
 
+		@Override
 		public void verifyText(VerifyEvent e) {
 			selected();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			selected();
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			selected();
 		}
 
+		@Override
 		public void focusGained(FocusEvent event) {
 			selected();
 		}
 
+		@Override
 		public void focusLost(FocusEvent e) {
 		}
 
+		@Override
 		public void textChanged(TextChangedEvent event) {
 			selected();
 		}
 
+		@Override
 		public void textSet(TextChangedEvent event) {
 			selected();
 		}
 
+		@Override
 		public void textChanging(TextChangingEvent event) {
 		}
 
@@ -164,11 +171,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		//if (!getTaskEditorPage().needsSubmitButton()) {
 		submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
 		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-		submitButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				getTaskEditorPage().doSubmit();
-			}
-		});
+		submitButton.addListener(SWT.Selection, e -> getTaskEditorPage().doSubmit());
 		Point minSize = submitButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = Math.max(100, minSize.x);
@@ -192,14 +195,13 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			ITask task = taskEditorPage.getTask();
 			canPostContent = taskAttachmentHandler.canPostContent(taskRepository, task);
 		}
-		if ((!getTaskData().isNew() && canPostContent)) {
+		if (!getTaskData().isNew() && canPostContent) {
 			addAttachContextButton(buttonComposite, toolkit);
 		}
 	}
 
 	/**
-	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be
-	 * performed on the bug.
+	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be performed on the bug.
 	 * 
 	 * @param toolkit
 	 */
@@ -212,7 +214,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.adapt(categoryChooser, false, false);
 		categoryChooser.setFont(TEXT_FONT);
 		ITaskList taskList = TasksUiInternal.getTaskList();
-		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
+		final List<AbstractTaskCategory> categories = new ArrayList<>(taskList.getCategories());
 		Collections.sort(categories, new TaskContainerComparator());
 		AbstractTaskCategory selectedCategory = TasksUiInternal
 				.getSelectedCategory(TaskListView.getFromActivePerspective());
@@ -377,7 +379,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		List<TaskOperation> operations = getTaskData().getAttributeMapper()
 				.getTaskOperations(selectedOperationAttribute);
 		if (operations.size() > 0) {
-			operationButtons = new ArrayList<Button>();
+			operationButtons = new ArrayList<>();
 			Button selectedButton = null;
 			for (TaskOperation operation : operations) {
 				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);

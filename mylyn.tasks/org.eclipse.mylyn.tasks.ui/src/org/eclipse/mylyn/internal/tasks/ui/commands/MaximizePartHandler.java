@@ -31,6 +31,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class MaximizePartHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
 		if (site instanceof IEditorSite) {
@@ -40,8 +41,7 @@ public class MaximizePartHandler extends AbstractHandler {
 				Control focusedControl = EditorUtil.getFocusControl(page);
 				if (focusedControl != null) {
 					Object data = focusedControl.getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION);
-					if (data instanceof IAction) {
-						IAction action = (IAction) data;
+					if (data instanceof IAction action) {
 						action.setChecked(!action.isChecked());
 						action.run();
 					}

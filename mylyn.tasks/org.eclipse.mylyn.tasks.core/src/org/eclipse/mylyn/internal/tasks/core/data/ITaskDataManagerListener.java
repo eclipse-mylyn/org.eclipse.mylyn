@@ -18,8 +18,8 @@ package org.eclipse.mylyn.internal.tasks.core.data;
  */
 public interface ITaskDataManagerListener {
 
-	public abstract void taskDataUpdated(TaskDataManagerEvent event);
+	void taskDataUpdated(TaskDataManagerEvent event);
 
-	public abstract void editsDiscarded(TaskDataManagerEvent event);
+	void editsDiscarded(TaskDataManagerEvent event);
 
 }

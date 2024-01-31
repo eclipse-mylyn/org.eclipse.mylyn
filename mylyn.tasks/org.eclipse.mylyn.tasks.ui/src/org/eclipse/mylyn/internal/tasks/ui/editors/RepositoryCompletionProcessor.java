@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +88,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			this.replacementLength = replacementLength;
 		}
 
+		@Override
 		public void apply(IDocument document) {
 			try {
 				document.replace(replacementOffset, replacementLength, getReplacement());
@@ -112,22 +112,27 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			return replacement;
 		}
 
+		@Override
 		public String getAdditionalProposalInfo() {
 			return null;
 		}
 
+		@Override
 		public IContextInformation getContextInformation() {
 			return null;
 		}
 
+		@Override
 		public String getDisplayString() {
 			return labelProvider.getText(task);
 		}
 
+		@Override
 		public Image getImage() {
 			return labelProvider.getImage(task);
 		}
 
+		@Override
 		public Point getSelection(IDocument document) {
 			return new Point(replacementOffset + getReplacement().length(), 0);
 		}
@@ -146,7 +151,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		public static final String LABEL_SEPARATOR = " -------------------------------------------- "; //$NON-NLS-1$
 
-		private final Set<ITask> addedTasks = new HashSet<ITask>();
+		private final Set<ITask> addedTasks = new HashSet<>();
 
 		private boolean addSeparator;
 
@@ -154,11 +159,11 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private final String prefix;
 
-		private final List<ICompletionProposal> resultList = new ArrayList<ICompletionProposal>();
+		private final List<ICompletionProposal> resultList = new ArrayList<>();
 
 		public ProposalComputer(ITextViewer viewer, int offset) {
 			this.offset = offset;
-			this.prefix = extractPrefix(viewer, offset).toLowerCase();
+			prefix = extractPrefix(viewer, offset).toLowerCase();
 		}
 
 		private void addProposal(ITask task, String replacement, boolean includeTaskPrefix) {
@@ -186,11 +191,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		public void addTask(ITask task) {
-			if (addedTasks.contains(task)) {
-				return;
-			}
-
-			if (getNeverIncludePrefix() && !task.getRepositoryUrl().equals(repository.getRepositoryUrl())) {
+			if (addedTasks.contains(task) || (getNeverIncludePrefix() && !task.getRepositoryUrl().equals(repository.getRepositoryUrl()))) {
 				return;
 			}
 
@@ -213,7 +214,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			if (haystackTokens.length == 0 || needles.length == 0) {
 				return false;
 			}
-			// check if all needles are contained in haystack  
+			// check if all needles are contained in haystack
 			for (String needle : needles) {
 				boolean matched = false;
 				haystack: for (String haystackToken : haystackTokens) {
@@ -235,8 +236,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		/**
-		 * Returns the prefix of the currently completed text. Assumes that any character that is not a line break or
-		 * white space can be part of a task id.
+		 * Returns the prefix of the currently completed text. Assumes that any character that is not a line break or white space can be
+		 * part of a task id.
 		 */
 		private String extractPrefix(ITextViewer viewer, int offset) {
 			int i = offset;
@@ -303,8 +304,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 	private boolean neverIncludePrefix;
 
 	public RepositoryCompletionProcessor(TaskRepository taskRepository) {
-		this.repository = taskRepository;
-		this.neverIncludePrefix = false;
+		repository = taskRepository;
+		neverIncludePrefix = false;
 	}
 
 	public boolean getNeverIncludePrefix() {
@@ -312,9 +313,10 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 	}
 
 	public void setNeverIncludePrefix(boolean includePrefix) {
-		this.neverIncludePrefix = includePrefix;
+		neverIncludePrefix = includePrefix;
 	}
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
 		// adjust offset to end of normalized selection
@@ -380,35 +382,36 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			proposalComputer.addSeparator();
 
 			TaskList taskList = TasksUiPlugin.getTaskList();
-			tasks = new ArrayList<AbstractTask>(taskList.getAllTasks());
+			tasks = new ArrayList<>(taskList.getAllTasks());
 			proposalComputer.filterTasks(tasks);
-			Collections.sort(tasks, new Comparator<AbstractTask>() {
-				public int compare(AbstractTask o1, AbstractTask o2) {
-					return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
-				}
-			});
+			Collections.sort(tasks, (o1, o2) -> labelProvider.getText(o1).compareTo(labelProvider.getText(o2)));
 			proposalComputer.addTasks(tasks);
 		}
 
 		return proposalComputer.getResult();
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		return null;
 	}
 
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage() {
 		return null;
 	}

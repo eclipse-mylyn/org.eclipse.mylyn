@@ -51,12 +51,12 @@ public class FocusTracker {
 	public void track(Composite composite) {
 		Control[] children = composite.getChildren();
 		for (Control control : children) {
-			if ((control instanceof Text) || (control instanceof Button) || (control instanceof Combo)
-					|| (control instanceof CCombo) || (control instanceof Tree) || (control instanceof Table)
-					|| (control instanceof Spinner) || (control instanceof Link)
-					|| (control instanceof org.eclipse.swt.widgets.List) || (control instanceof TabFolder)
-					|| (control instanceof CTabFolder) || (control instanceof Hyperlink)
-					|| (control instanceof FilteredTree) || (control instanceof StyledText)) {
+			if (control instanceof Text || control instanceof Button || control instanceof Combo
+					|| control instanceof CCombo || control instanceof Tree || control instanceof Table
+					|| control instanceof Spinner || control instanceof Link
+					|| control instanceof org.eclipse.swt.widgets.List || control instanceof TabFolder
+					|| control instanceof CTabFolder || control instanceof Hyperlink || control instanceof FilteredTree
+					|| control instanceof StyledText) {
 				control.addFocusListener(listener);
 			}
 			if (control instanceof Composite) {

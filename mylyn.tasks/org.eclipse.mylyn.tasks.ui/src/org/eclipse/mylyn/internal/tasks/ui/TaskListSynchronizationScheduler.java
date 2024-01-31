@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
 public class TaskListSynchronizationScheduler implements IUserAttentionListener {
 
 	private static final boolean TRACE_ENABLED = Boolean
-			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/synchronization")); //$NON-NLS-1$
+			.parseBoolean(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/synchronization")); //$NON-NLS-1$
 
 	private long interval;
 
@@ -52,8 +52,8 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	private final JobChangeAdapter jobListener;
 
 	public TaskListSynchronizationScheduler(Job refreshJob) {
-		this.userActive = true;
-		this.jobListener = new JobChangeAdapter() {
+		userActive = true;
+		jobListener = new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
 				jobDone();
@@ -68,22 +68,22 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	}
 
 	private synchronized void reschedule() {
-		long delay = this.interval;
+		long delay = interval;
 		if (delay != 0 && PlatformUI.isWorkbenchRunning()) {
 			if (!userActive) {
 				// triple scheduling interval each time
-				this.inactiveInterval *= 3;
-				delay = this.inactiveInterval;
+				inactiveInterval *= 3;
+				delay = inactiveInterval;
 				if (TRACE_ENABLED) {
-					trace("Set inactive interval to " + DateUtil.getFormattedDurationShort(this.inactiveInterval)); //$NON-NLS-1$
+					trace("Set inactive interval to " + DateUtil.getFormattedDurationShort(inactiveInterval)); //$NON-NLS-1$
 				}
 			}
-			if (this.scheduledTime != 0) {
-				if (this.scheduledTime < System.currentTimeMillis() + delay) {
+			if (scheduledTime != 0) {
+				if (scheduledTime < System.currentTimeMillis() + delay) {
 					// already scheduled, nothing to do
 					if (TRACE_ENABLED) {
 						trace("Synchronization already scheduled in " //$NON-NLS-1$
-								+ DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis()));
+								+ DateUtil.getFormattedDurationShort(scheduledTime - System.currentTimeMillis()));
 					}
 					return;
 				} else {
@@ -100,7 +100,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		// prevent listener from rescheduling due to cancel
 		if (TRACE_ENABLED) {
 			trace("Canceling synchronization scheduled to run in " //$NON-NLS-1$
-					+ DateUtil.getFormattedDurationShort(this.scheduledTime - System.currentTimeMillis()));
+					+ DateUtil.getFormattedDurationShort(scheduledTime - System.currentTimeMillis()));
 		}
 		refreshJob.removeJobChangeListener(jobListener);
 		refreshJob.cancel();
@@ -111,7 +111,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		if (TRACE_ENABLED) {
 			trace("Scheduling synchronization in " + DateUtil.getFormattedDurationShort(interval)); //$NON-NLS-1$
 		}
-		this.scheduledTime = System.currentTimeMillis() + interval;
+		scheduledTime = System.currentTimeMillis() + interval;
 		refreshJob.schedule(interval);
 	}
 
@@ -122,8 +122,8 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	public synchronized void setInterval(long delay, long interval) {
 		if (this.interval != interval) {
 			this.interval = interval;
-			this.inactiveInterval = interval;
-			this.scheduledTime = 0;
+			inactiveInterval = interval;
+			scheduledTime = 0;
 
 			cancel();
 			if (interval > 0) {
@@ -132,15 +132,16 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		}
 	}
 
+	@Override
 	public void userAttentionGained() {
 		synchronized (this) {
 			if (!userActive) {
 				if (TRACE_ENABLED) {
 					trace("User activity detected"); //$NON-NLS-1$
 				}
-				this.userActive = true;
+				userActive = true;
 				// reset inactive interval each time the user becomes active
-				this.inactiveInterval = interval;
+				inactiveInterval = interval;
 				if (interval != 0) {
 					if (System.currentTimeMillis() - lastSyncTime > interval) {
 						// the last sync was long ago, sync right away
@@ -158,15 +159,16 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		System.err.println("[" + new Date() + "] " + message); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public void userAttentionLost() {
 		synchronized (this) {
-			this.userActive = false;
+			userActive = false;
 		}
 	}
 
 	synchronized void jobDone() {
-		this.scheduledTime = 0;
-		this.lastSyncTime = System.currentTimeMillis();
+		scheduledTime = 0;
+		lastSyncTime = System.currentTimeMillis();
 		reschedule();
 	}
 

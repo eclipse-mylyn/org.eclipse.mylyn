@@ -30,11 +30,13 @@ public class TasksAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { ITask.class, TaskRepository.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(final Object adaptable, Class adapterType) {
 		if (adapterType == ITask.class) {

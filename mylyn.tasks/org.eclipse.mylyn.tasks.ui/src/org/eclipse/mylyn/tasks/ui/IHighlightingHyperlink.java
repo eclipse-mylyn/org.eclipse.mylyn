@@ -21,6 +21,6 @@ import org.eclipse.jface.text.IRegion;
  */
 public interface IHighlightingHyperlink {
 
-	public IRegion getHighlightingRegion();
+	IRegion getHighlightingRegion();
 
 }

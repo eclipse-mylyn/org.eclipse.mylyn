@@ -40,8 +40,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -91,10 +89,11 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
-		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
+		connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
 		setTitle(Messages.AbstractRepositoryQueryPage2_Enter_query_parameters);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(composite);
@@ -123,7 +122,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	@Override
 	public String getQueryTitle() {
-		return (titleText != null) ? titleText.getText() : null;
+		return titleText != null ? titleText.getText() : null;
 	}
 
 	public boolean handleExtraButtonPressed(int buttonId) {
@@ -153,8 +152,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	/**
-	 * Allows connectors to suggest a query title. As long as the title field does not contain edits made by the user,
-	 * the field will be updated with the suggestion whenever the button enablement is updated.
+	 * Allows connectors to suggest a query title. As long as the title field does not contain edits made by the user, the field will be
+	 * updated with the suggestion whenever the button enablement is updated.
 	 *
 	 * @return a query title suggested based on the query parameters, or the empty string
 	 * @since 3.18
@@ -171,8 +170,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		if (editQueryTitleInProgress) {
 			titleWasSuggested = false;
 		} else if (titleWasSuggested || StringUtils.isEmpty(getQueryTitle())
-				|| (getQuery() != null && Objects.equals(getQuery().getSummary(), getQueryTitle())
-						&& suggestQueryTitle().equals(getQueryTitle()))) {
+				|| getQuery() != null && Objects.equals(getQuery().getSummary(), getQueryTitle())
+						&& suggestQueryTitle().equals(getQueryTitle())) {
 			setQueryTitle(suggestQueryTitle());
 			titleWasSuggested = true;
 		}
@@ -215,10 +214,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 					button.setVisible(true);
 				}
 				button.setEnabled(true);
-			} else {
-				if (button != null && button.isVisible()) {
-					button.setVisible(false);
-				}
+			} else if (button != null && button.isVisible()) {
+				button.setVisible(false);
 			}
 		} else if (obj == QueryWizardDialog.CLEAR_BUTTON_ID) {
 			if (!button.isVisible()) {
@@ -230,7 +227,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	public void setNeedsClear(boolean needsClearButton) {
-		this.needsClear = needsClearButton;
+		needsClear = needsClearButton;
 	}
 
 	public void setNeedsRefresh(boolean needsRefresh) {
@@ -256,11 +253,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			if (!hasRepositoryConfiguration() && needsRefresh) {
 				// delay the execution so the dialog's progress bar is visible
 				// when the attributes are updated
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (getControl() != null && !getControl().isDisposed()) {
-							initializePage();
-						}
+				Display.getDefault().asyncExec(() -> {
+					if (getControl() != null && !getControl().isDisposed()) {
+						initializePage();
 					}
 				});
 			} else {
@@ -297,14 +292,12 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 		titleText = new Text(control, SWT.BORDER);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(titleText);
-		titleText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				try {
-					editQueryTitleInProgress = true;
-					getContainer().updateButtons();
-				} finally {
-					editQueryTitleInProgress = false;
-				}
+		titleText.addModifyListener(e -> {
+			try {
+				editQueryTitleInProgress = true;
+				getContainer().updateButtons();
+			} finally {
+				editQueryTitleInProgress = false;
 			}
 		});
 	}
@@ -357,20 +350,18 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	private void doRefreshConfiguration() throws InvocationTargetException, InterruptedException {
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				monitor = SubMonitor.convert(monitor);
-				monitor.beginTask(Messages.AbstractRepositoryQueryPage2_Refresh_Configuration_Button_Label,
-						IProgressMonitor.UNKNOWN);
-				try {
-					connector.updateRepositoryConfiguration(getTaskRepository(), monitor);
-				} catch (CoreException e) {
-					throw new InvocationTargetException(e);
-				} catch (OperationCanceledException e) {
-					throw new InterruptedException();
-				} finally {
-					monitor.done();
-				}
+		IRunnableWithProgress runnable = monitor -> {
+			monitor = SubMonitor.convert(monitor);
+			monitor.beginTask(Messages.AbstractRepositoryQueryPage2_Refresh_Configuration_Button_Label,
+					IProgressMonitor.UNKNOWN);
+			try {
+				connector.updateRepositoryConfiguration(getTaskRepository(), monitor);
+			} catch (CoreException e) {
+				throw new InvocationTargetException(e);
+			} catch (OperationCanceledException e) {
+				throw new InterruptedException();
+			} finally {
+				monitor.done();
 			}
 		};
 		if (getContainer() != null) {
@@ -490,8 +481,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	protected abstract boolean restoreState(@NonNull IRepositoryQuery query);
 
 	/**
-	 * Reflows the page and resizes the shell as necessary. Clients should invoke this if the content of the page is
-	 * changed dynamically.
+	 * Reflows the page and resizes the shell as necessary. Clients should invoke this if the content of the page is changed dynamically.
 	 *
 	 * @see SectionComposite#resizeAndReflow()
 	 * @since 3.10

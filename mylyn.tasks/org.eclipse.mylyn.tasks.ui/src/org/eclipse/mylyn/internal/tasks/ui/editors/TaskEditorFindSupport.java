@@ -30,8 +30,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -63,15 +61,15 @@ public class TaskEditorFindSupport {
 
 	private static final Color ERROR_NO_RESULT = new Color(Display.getDefault(), 255, 150, 150);
 
-	private final List<StyledText> styledTexts = new ArrayList<StyledText>();
+	private final List<StyledText> styledTexts = new ArrayList<>();
 
-	private final List<CommentGroupViewer> commentGroupViewers = new ArrayList<CommentGroupViewer>();
+	private final List<CommentGroupViewer> commentGroupViewers = new ArrayList<>();
 
-	private final AbstractTaskEditorPage taskEditorPage;;
+	private final AbstractTaskEditorPage taskEditorPage;
 
 	public TaskEditorFindSupport(AbstractTaskEditorPage page) {
 		Assert.isNotNull(page);
-		this.taskEditorPage = page;
+		taskEditorPage = page;
 	}
 
 	public void toggleFind() {
@@ -100,13 +98,10 @@ public class TaskEditorFindSupport {
 					findText.setFocus();
 					toolkit.adapt(findText, false, false);
 
-					findText.addModifyListener(new ModifyListener() {
-						@Override
-						public void modifyText(ModifyEvent e) {
-							if (findText.getText().equals("")) { //$NON-NLS-1$
-								clearSearchResults();
-								findText.setBackground(null);
-							}
+					findText.addModifyListener(e -> {
+						if (findText.getText().equals("")) { //$NON-NLS-1$
+							clearSearchResults();
+							findText.setBackground(null);
 						}
 					});
 
@@ -128,7 +123,7 @@ public class TaskEditorFindSupport {
 			toggleFindAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
-					if (!this.isChecked()) {
+					if (!isChecked()) {
 						clearSearchResults();
 					}
 					taskEditorPage.getEditor().updateHeaderToolBar();
@@ -259,7 +254,7 @@ public class TaskEditorFindSupport {
 		HyperlinkAdapter listener = new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				List<StyledText> commentStyledTexts = new ArrayList<StyledText>();
+				List<StyledText> commentStyledTexts = new ArrayList<>();
 				try {
 					taskEditorPage.setReflow(false);
 					part.setReflow(false);
@@ -297,7 +292,7 @@ public class TaskEditorFindSupport {
 
 	private static List<CommentViewer> searchComments(List<TaskAttribute> commentAttributes,
 			List<CommentViewer> commentViewers, String searchString) {
-		List<CommentViewer> matchingViewers = new ArrayList<TaskEditorCommentPart.CommentViewer>();
+		List<CommentViewer> matchingViewers = new ArrayList<>();
 		for (int i = 0; i < commentViewers.size(); i++) {
 			CommentViewer viewer = commentViewers.get(i);
 			if (commentContains(commentAttributes.get(i), searchString)) {
@@ -323,8 +318,7 @@ public class TaskEditorFindSupport {
 	}
 
 	private static void gatherStyledTexts(Control control, List<StyledText> result) {
-		if (control instanceof ExpandableComposite) {
-			ExpandableComposite composite = (ExpandableComposite) control;
+		if (control instanceof ExpandableComposite composite) {
 			if (!composite.isExpanded()) {
 				CommonFormUtil.setExpanded(composite, true);
 			}
@@ -359,7 +353,7 @@ public class TaskEditorFindSupport {
 
 	private void clearSearchResults() {
 		for (StyledText oldText : styledTexts) {
-			List<StyleRange> otherRanges = new ArrayList<StyleRange>();
+			List<StyleRange> otherRanges = new ArrayList<>();
 			if (!oldText.isDisposed()) {
 				for (StyleRange styleRange : oldText.getStyleRanges()) {
 					if (styleRange.background == null || !styleRange.background.equals(HIGHLIGHTER_YELLOW)) {

@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
@@ -26,7 +25,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
@@ -143,12 +141,8 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		final boolean[] result = new boolean[1];
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
-			CommonUiUtil.run(service, new ICoreRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
-							monitor);
-				}
-			});
+			CommonUiUtil.run(service, monitor -> result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
+					monitor));
 		} catch (CoreException e) {
 			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, e.getStatus());
 			return null;
@@ -168,10 +162,12 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		return null;
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
@@ -198,6 +194,7 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		return selectedTask != null;
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof StructuredSelection) {
 			selectionChanged((IStructuredSelection) selection);
@@ -207,6 +204,7 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		action.setEnabled(isEnabled());
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 	}

@@ -58,8 +58,8 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 		this.repositoryModel = repositoryModel;
 		this.manager = manager;
 		this.taskList = taskList;
-		this.taskListWriter = taskListExternalizer;
-		this.taskRepositoryManager = repositoryManager;
+		taskListWriter = taskListExternalizer;
+		taskRepositoryManager = repositoryManager;
 	}
 
 	@Override
@@ -74,11 +74,9 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public void load(final File sourceFile, IProgressMonitor monitor) throws CoreException {
-		ITaskListRunnable loadRunnable = new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				resetTaskList();
-				taskListWriter.readTaskList(taskList, sourceFile);
-			}
+		ITaskListRunnable loadRunnable = monitor1 -> {
+			resetTaskList();
+			taskListWriter.readTaskList(taskList, sourceFile);
 		};
 
 		taskList.run(loadRunnable, monitor);
@@ -123,13 +121,11 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public void save(final File targetFile, IProgressMonitor monitor) throws CoreException {
-		ITaskListRunnable saveRunnable = new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				synchronized (TaskListExternalizationParticipant.this) {
-					dirty = false;
-				}
-				taskListWriter.writeTaskList(taskList, targetFile);
+		ITaskListRunnable saveRunnable = monitor1 -> {
+			synchronized (TaskListExternalizationParticipant.this) {
+				dirty = false;
 			}
+			taskListWriter.writeTaskList(taskList, targetFile);
 		};
 
 		taskList.run(saveRunnable, monitor);
@@ -145,6 +141,7 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 		return ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 	}
 
+	@Override
 	public void containersChanged(Set<TaskContainerDelta> containers) {
 		for (TaskContainerDelta taskContainerDelta : containers) {
 			if (!taskContainerDelta.isTransient()) {
@@ -157,16 +154,19 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 		}
 	}
 
+	@Override
 	public void preTaskActivated(ITask task) {
 		// ignore
 
 	}
 
+	@Override
 	public void preTaskDeactivated(ITask task) {
 		// ignore
 
 	}
 
+	@Override
 	public void taskActivated(ITask task) {
 		synchronized (TaskListExternalizationParticipant.this) {
 			dirty = true;
@@ -175,6 +175,7 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 		return;
 	}
 
+	@Override
 	public void taskDeactivated(ITask task) {
 		synchronized (TaskListExternalizationParticipant.this) {
 			dirty = true;

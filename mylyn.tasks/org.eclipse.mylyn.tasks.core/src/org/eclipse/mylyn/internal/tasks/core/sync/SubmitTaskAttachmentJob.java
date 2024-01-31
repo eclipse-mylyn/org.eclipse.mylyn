@@ -109,7 +109,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 			monitor.done();
 		}
 		fireDone();
-		return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
+		return errorStatus == Status.CANCEL_STATUS ? Status.CANCEL_STATUS : Status.OK_STATUS;
 	}
 
 }

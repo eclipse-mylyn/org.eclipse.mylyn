@@ -134,21 +134,9 @@ public class BrowserPreviewViewer {
 			public void done(final IJobChangeEvent event) {
 				if (!browser.isDisposed()) {
 					if (job.getStatus().isOK()) {
-						browser.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								setText(browser, job.getHtmlText());
-								// TODO 3.5 error handling
-								//getAttributeEditorManager().setMessage(null, IMessageProvider.NONE);
-							}
-						});
+						browser.getDisplay().asyncExec(() -> setText(browser, job.getHtmlText()));
 					} else {
-						browser.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								TasksUiInternal.displayStatus(Messages.BrowserPreviewViewer_Error, job.getStatus());
-								// TODO 3.5 error handling
-								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
-							}
-						});
+						browser.getDisplay().asyncExec(() -> TasksUiInternal.displayStatus(Messages.BrowserPreviewViewer_Error, job.getStatus()));
 					}
 				}
 				super.done(event);
@@ -162,7 +150,7 @@ public class BrowserPreviewViewer {
 	private void setText(Browser browser, String html) {
 		try {
 			ignoreLocationEvents = true;
-			browser.setText((html != null) ? html : ""); //$NON-NLS-1$
+			browser.setText(html != null ? html : ""); //$NON-NLS-1$
 		} finally {
 			ignoreLocationEvents = false;
 		}

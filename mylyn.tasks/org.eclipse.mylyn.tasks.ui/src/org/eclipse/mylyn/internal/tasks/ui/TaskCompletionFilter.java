@@ -27,8 +27,7 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
+		if (element instanceof AbstractTask task) {
 			if (task.isCompleted()) {
 				Collection<ITask> children = task.getChildren();
 				for (ITask child : children) {

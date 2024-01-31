@@ -52,7 +52,7 @@ import org.eclipse.osgi.util.NLS;
 public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private static final boolean TRACE_ENABLED = Boolean
-			.valueOf(Platform.getDebugOption("org.eclipse.mylyn.tasks.core/debug/synchronization")); //$NON-NLS-1$
+			.parseBoolean(Platform.getDebugOption("org.eclipse.mylyn.tasks.core/debug/synchronization")); //$NON-NLS-1$
 
 	private final TaskList taskList;
 
@@ -64,7 +64,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final IRepositoryModel tasksModel;
 
-	private final Map<QualifiedName, Object> properties = new ConcurrentHashMap<QualifiedName, Object>();
+	private final Map<QualifiedName, Object> properties = new ConcurrentHashMap<>();
 
 	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			IRepositoryManager repositoryManager) {
@@ -81,7 +81,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	public void setRepositories(Collection<TaskRepository> repositories) {
 		if (repositories != null) {
-			this.repositories = new HashSet<TaskRepository>(repositories);
+			this.repositories = new HashSet<>(repositories);
 		} else {
 			this.repositories = null;
 		}
@@ -96,7 +96,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			// get the current list of repositories
 			Set<TaskRepository> repositories = this.repositories;
 			if (repositories == null) {
-				repositories = new HashSet<TaskRepository>(repositoryManager.getAllRepositories());
+				repositories = new HashSet<>(repositoryManager.getAllRepositories());
 			}
 			try {
 				monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
@@ -122,7 +122,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 					final AbstractRepositoryConnector connector = repositoryManager
 							.getRepositoryConnector(repository.getConnectorKind());
-					Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>(
+					Set<RepositoryQuery> queries = new HashSet<>(
 							taskList.getRepositoryQueries(repository.getRepositoryUrl()));
 					// remove queries that are not configured for auto update
 					if (!isUser()) {

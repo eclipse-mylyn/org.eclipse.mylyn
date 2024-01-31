@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -33,6 +31,8 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.swt.widgets.Shell;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for the Task Export Wizard
@@ -47,7 +47,7 @@ public class TaskDataExportTest extends TestCase {
 
 	private File mylynFolder;
 
-	private final List<File> tempFiles = new ArrayList<File>();
+	private final List<File> tempFiles = new ArrayList<>();
 
 	private TaskDataExportWizard wizard;
 
@@ -72,16 +72,14 @@ public class TaskDataExportTest extends TestCase {
 	}
 
 	private List<String> getEntries(File file) throws IOException {
-		ArrayList<String> entries = new ArrayList<String>();
+		ArrayList<String> entries = new ArrayList<>();
 		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
-		try {
+		try (zipInputStream) {
 			ZipEntry entry = zipInputStream.getNextEntry();
 			while (entry != null) {
 				entries.add(entry.getName());
 				entry = zipInputStream.getNextEntry();
 			}
-		} finally {
-			zipInputStream.close();
 		}
 		Collections.sort(entries);
 		return entries;

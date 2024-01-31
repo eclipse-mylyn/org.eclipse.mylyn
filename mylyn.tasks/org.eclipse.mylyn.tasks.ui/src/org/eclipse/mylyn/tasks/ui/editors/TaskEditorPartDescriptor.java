@@ -47,7 +47,7 @@ public abstract class TaskEditorPartDescriptor {
 	public TaskEditorPartDescriptor(String id) {
 		Assert.isNotNull(id);
 		this.id = id;
-		this.path = AbstractTaskEditorPage.PATH_COMMENTS;
+		path = AbstractTaskEditorPage.PATH_COMMENTS;
 	}
 
 	public abstract AbstractTaskEditorPart createPart();

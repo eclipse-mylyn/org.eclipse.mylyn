@@ -21,8 +21,8 @@ import org.eclipse.jface.operation.IRunnableContext;
  */
 public interface ITaskSearchPageContainer {
 
-	public abstract IRunnableContext getRunnableContext();
+	IRunnableContext getRunnableContext();
 
-	public abstract void setPerformActionEnabled(boolean enabled);
+	void setPerformActionEnabled(boolean enabled);
 
 }

@@ -54,8 +54,8 @@ public class InMemoryTaskDataCollector extends TaskDataCollector {
 	}
 
 	public void reset() {
-		results = new ArrayList<TaskData>();
-		failureByTaskId = new HashMap<String, IStatus>();
+		results = new ArrayList<>();
+		failureByTaskId = new HashMap<>();
 	}
 
 }

@@ -24,17 +24,17 @@ public interface IRepositoryModel {
 	/**
 	 * @since 3.0
 	 */
-	public abstract IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository);
+	IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITask createTask(TaskRepository taskRepository, String taskId);
+	ITask createTask(TaskRepository taskRepository, String taskId);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
+	ITask getTask(TaskRepository taskRepository, String taskId);
 
 	/**
 	 * Gets a task by its {@link ITask#getTaskKey() key}.
@@ -42,11 +42,11 @@ public interface IRepositoryModel {
 	 * @return the task or null if no such task was found
 	 * @since 3.2
 	 */
-	public abstract ITask getTaskByKey(TaskRepository repository, String taskKey);
+	ITask getTaskByKey(TaskRepository repository, String taskKey);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITask getTask(String handle);
+	ITask getTask(String handle);
 
 }

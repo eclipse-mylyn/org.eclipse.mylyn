@@ -40,26 +40,28 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider
 	 */
 	public TaskTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
 		super(provider, decorator);
-		this.categoryBackgroundColor = parentBackground;
+		categoryBackgroundColor = parentBackground;
 	}
 
+	@Override
 	public String getColumnText(Object obj, int columnIndex) {
 		if (obj instanceof ITaskContainer) {
 			switch (columnIndex) {
-			case 0:
+				case 0:
 //				if (obj instanceof ScheduledTaskContainer) {
 //					if (((ScheduledTaskContainer) obj).isToday()) {
 //						return super.getText(obj) + " - Today";
 //					}
 //				}
-				return super.getText(obj);
-			case 1:
-				return null;
+					return super.getText(obj);
+				case 1:
+					return null;
 			}
 		}
 		return null;
 	}
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (!(element instanceof ITaskContainer)) {
 			return null;
@@ -70,14 +72,17 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider
 		return null;
 	}
 
+	@Override
 	public Font getFont(Object element, int columnIndex) {
 		return super.getFont(element);
 	}
 
+	@Override
 	public Color getForeground(Object element, int columnIndex) {
 		return super.getForeground(element);
 	}
 
+	@Override
 	public Color getBackground(Object element, int columnIndex) {
 		if (element instanceof ITaskContainer && !(element instanceof ITask)) {
 			return categoryBackgroundColor;
@@ -89,6 +94,6 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider
 	}
 
 	public void setCategoryBackgroundColor(Color parentBackgroundColor) {
-		this.categoryBackgroundColor = parentBackgroundColor;
+		categoryBackgroundColor = parentBackgroundColor;
 	}
 }

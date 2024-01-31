@@ -38,7 +38,6 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	private static Pattern HYPERLINK_PATTERN = Pattern.compile("(\\d+)");
 
 	public MockRepositoryConnectorUi() {
-		super();
 	}
 
 	public MockRepositoryConnectorUi(AbstractRepositoryConnector connector) {
@@ -75,7 +74,7 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	@SuppressWarnings("deprecation")
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
-		List<IHyperlink> links = new ArrayList<IHyperlink>();
+		List<IHyperlink> links = new ArrayList<>();
 		Matcher m = HYPERLINK_PATTERN.matcher(text);
 		while (m.find()) {
 			links.add(

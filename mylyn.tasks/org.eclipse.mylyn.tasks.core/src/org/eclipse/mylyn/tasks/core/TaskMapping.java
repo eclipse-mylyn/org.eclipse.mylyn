@@ -30,6 +30,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public void merge(ITaskMapping source) {
 		// ignore
 	}
@@ -37,6 +38,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public Date getCompletionDate() {
 		// ignore
 		return null;
@@ -45,6 +47,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getComponent() {
 		// ignore
 		return null;
@@ -53,6 +56,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public Date getCreationDate() {
 		// ignore
 		return null;
@@ -61,6 +65,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getDescription() {
 		// ignore
 		return null;
@@ -69,6 +74,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public Date getDueDate() {
 		// ignore
 		return null;
@@ -77,6 +83,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public Date getModificationDate() {
 		// ignore
 		return null;
@@ -85,6 +92,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getOwner() {
 		// ignore
 		return null;
@@ -93,6 +101,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.15
 	 */
+	@Override
 	public String getOwnerId() {
 		// ignore
 		return null;
@@ -101,6 +110,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public PriorityLevel getPriorityLevel() {
 		// ignore
 		return null;
@@ -109,6 +119,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getProduct() {
 		// ignore
 		return null;
@@ -117,6 +128,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getSummary() {
 		// ignore
 		return null;
@@ -125,6 +137,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public TaskData getTaskData() {
 		// ignore
 		return null;
@@ -133,6 +146,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getTaskKey() {
 		// ignore
 		return null;
@@ -141,6 +155,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getTaskKind() {
 		// ignore
 		return null;
@@ -149,6 +164,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getTaskUrl() {
 		// ignore
 		return null;
@@ -157,6 +173,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public List<String> getCc() {
 		// ignore
 		return null;
@@ -165,6 +182,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public List<String> getKeywords() {
 		// ignore
 		return null;
@@ -173,6 +191,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getReporter() {
 		// ignore
 		return null;
@@ -181,6 +200,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getResolution() {
 		// ignore
 		return null;
@@ -189,6 +209,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getTaskStatus() {
 		// ignore
 		return null;
@@ -197,6 +218,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getStatus() {
 		// ignore
 		return null;
@@ -205,6 +227,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getPriority() {
 		// ignore
 		return null;
@@ -213,6 +236,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Override
 	public String getSeverity() {
 		// ignore
 		return null;
@@ -221,6 +245,7 @@ public class TaskMapping implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Override
 	public String getVersion() {
 		// ignore
 		return null;

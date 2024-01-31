@@ -37,7 +37,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -67,8 +66,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -94,8 +91,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
- * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
- * the Task Repositories view.
+ * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via the Task Repositories
+ * view.
  *
  * @author Mik Kersten
  * @author Rob Elves
@@ -274,7 +271,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private TaskRepository validatedTaskRepository;
 
-	private final Map<AuthenticationType, AuthenticationCredentials> validatedAuthenticationCredentials = new HashMap<AuthenticationType, AuthenticationCredentials>();
+	private final Map<AuthenticationType, AuthenticationCredentials> validatedAuthenticationCredentials = new HashMap<>();
 
 	private String brand;
 
@@ -436,11 +433,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (serverUrlReadOnly) {
 			serverUrlCombo.setEnabled(false);
 		} else {
-			serverUrlCombo.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					if (getWizard() != null) {
-						getWizard().getContainer().updateButtons();
-					}
+			serverUrlCombo.addModifyListener(e -> {
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
 				}
 			});
 			serverUrlCombo.addFocusListener(new FocusAdapter() {
@@ -893,10 +888,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
 		certAuthButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setCertAuth(certAuthButton.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
@@ -988,10 +985,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
 		httpAuthButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setHttpAuth(httpAuthButton.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
@@ -1132,10 +1131,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		systemProxyButton.setText(Messages.AbstractRepositorySettingsPage_Use_global_Network_Connections_preferences);
 
 		systemProxyButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setUseDefaultProxy(systemProxyButton.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
@@ -1146,16 +1147,19 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		changeProxySettingsLink.setBackground(compositeContainer.getBackground());
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(getShell(), PREFS_PAGE_ID_NET_PROXY,
 						new String[] { PREFS_PAGE_ID_NET_PROXY }, null);
 				dlg.open();
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
@@ -1217,10 +1221,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		GridDataFactory.fillDefaults().span(3, SWT.DEFAULT).applyTo(proxyAuthButton);
 		proxyAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_proxy_authentication);
 		proxyAuthButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setProxyAuth(proxyAuthButton.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
@@ -1264,7 +1270,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// advancedComp);
 
 		// need to increase column number here, because above string editor will use them if declared beforehand
-		((GridLayout) (proxyAuthComp.getLayout())).numColumns++;
+		((GridLayout) proxyAuthComp.getLayout()).numColumns++;
 		saveProxyPasswordButton = new Button(proxyAuthComp, SWT.CHECK);
 		saveProxyPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
 		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
@@ -1298,15 +1304,13 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	protected void setEncoding(String encoding) {
 		if (encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
 			setDefaultEncoding();
+		} else if (otherEncodingCombo.indexOf(encoding) != -1) {
+			defaultEncoding.setSelection(false);
+			otherEncodingCombo.setEnabled(true);
+			otherEncoding.setSelection(true);
+			otherEncodingCombo.select(otherEncodingCombo.indexOf(encoding));
 		} else {
-			if (otherEncodingCombo.indexOf(encoding) != -1) {
-				defaultEncoding.setSelection(false);
-				otherEncodingCombo.setEnabled(true);
-				otherEncoding.setSelection(true);
-				otherEncodingCombo.select(otherEncodingCombo.indexOf(encoding));
-			} else {
-				setDefaultEncoding();
-			}
+			setDefaultEncoding();
 		}
 	}
 
@@ -1343,7 +1347,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				repositoryPasswordEditor.setStringValue(oldPassword);
 			} else {
 				oldUsername = repositoryUserNameEditor.getStringValue();
-				oldPassword = (repositoryPasswordEditor).getStringValue();
+				oldPassword = repositoryPasswordEditor.getStringValue();
 				repositoryUserNameEditor.setStringValue(""); //$NON-NLS-1$
 				repositoryPasswordEditor.setStringValue(""); //$NON-NLS-1$
 			}
@@ -1543,6 +1547,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String getRepositoryUrl() {
 		return TaskRepositoryManager.stripSlashes(serverUrlCombo.getText());
 	}
@@ -1772,7 +1777,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			return repositoryPasswordEditor.getStringValue().trim().isEmpty();
 		} else {
 			return needsRepositoryCredentials() && repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
-					|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
+					|| getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals(""); //$NON-NLS-1$
 		}
 	}
 
@@ -1783,7 +1788,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (!urlString.equals(originalUrl)) {
 			if (repositoryUrls == null) {
 				List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-				repositoryUrls = new HashSet<String>(repositories.size());
+				repositoryUrls = new HashSet<>(repositories.size());
 				for (TaskRepository repository : repositories) {
 					repositoryUrls.add(repository.getRepositoryUrl());
 				}
@@ -1839,21 +1844,19 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		if (defaultEncoding.getSelection()) {
 			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
+		} else if (otherEncodingCombo.getSelectionIndex() > -1) {
+			return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
 		} else {
-			if (otherEncodingCombo.getSelectionIndex() > -1) {
-				return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
-			} else {
-				return TaskRepository.DEFAULT_CHARACTER_ENCODING;
-			}
+			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
 		}
 	}
 
 	/**
 	 * Creates a {@link TaskRepository} based on the current settings.
 	 * <p>
-	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding,
-	 * subclasses must either call super or call {@link TaskRepository#setShouldPersistCredentials(boolean)
-	 * setShouldPersistCredentials(false)} before calling {@link #applyTo(TaskRepository)}.
+	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding, subclasses must either
+	 * call super or call {@link TaskRepository#setShouldPersistCredentials(boolean) setShouldPersistCredentials(false)} before calling
+	 * {@link #applyTo(TaskRepository)}.
 	 *
 	 * @since 2.0
 	 */
@@ -2006,21 +2009,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.6
 	 */
 	public boolean needsCertAuth() {
-		return this.needsCertAuth;
+		return needsCertAuth;
 	}
 
 	/**
 	 * @since 3.6
 	 */
 	public void setNeedsCertAuth(boolean needsCertificate) {
-		this.needsCertAuth = needsCertificate;
+		needsCertAuth = needsCertificate;
 	}
 
 	/**
 	 * @since 2.0
 	 */
 	public boolean needsHttpAuth() {
-		return this.needsHttpAuth;
+		return needsHttpAuth;
 	}
 
 	/**
@@ -2041,7 +2044,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 2.0
 	 */
 	public boolean needsProxy() {
-		return this.needsProxy;
+		return needsProxy;
 	}
 
 	/**
@@ -2182,25 +2185,23 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 
 		try {
-			getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.AbstractRepositorySettingsPage_Validating_server_settings,
-							IProgressMonitor.UNKNOWN);
-					try {
-						validator.run(monitor);
-						if (validator.getStatus() == null) {
-							validator.setStatus(Status.OK_STATUS);
-						}
-					} catch (CoreException e) {
-						validator.setStatus(e.getStatus());
-					} catch (OperationCanceledException e) {
-						validator.setStatus(Status.CANCEL_STATUS);
-						throw new InterruptedException();
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						monitor.done();
+			getWizard().getContainer().run(true, true, monitor -> {
+				monitor.beginTask(Messages.AbstractRepositorySettingsPage_Validating_server_settings,
+						IProgressMonitor.UNKNOWN);
+				try {
+					validator.run(monitor);
+					if (validator.getStatus() == null) {
+						validator.setStatus(Status.OK_STATUS);
 					}
+				} catch (CoreException e) {
+					validator.setStatus(e.getStatus());
+				} catch (OperationCanceledException e) {
+					validator.setStatus(Status.CANCEL_STATUS);
+					throw new InterruptedException();
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				} finally {
+					monitor.done();
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -2239,25 +2240,25 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			message = null;
 		}
 		switch (status.getSeverity()) {
-		case IStatus.OK:
-			if (status == Status.OK_STATUS) {
-				if (getUserName().length() > 0) {
-					message = Messages.AbstractRepositorySettingsPage_Authentication_credentials_are_valid;
-				} else {
-					message = Messages.AbstractRepositorySettingsPage_Repository_is_valid;
+			case IStatus.OK:
+				if (status == Status.OK_STATUS) {
+					if (getUserName().length() > 0) {
+						message = Messages.AbstractRepositorySettingsPage_Authentication_credentials_are_valid;
+					} else {
+						message = Messages.AbstractRepositorySettingsPage_Repository_is_valid;
+					}
 				}
-			}
-			setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.INFO:
-			setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.WARNING:
-			setMessage(message, IMessageProvider.WARNING);
-			break;
-		default:
-			setMessage(message, IMessageProvider.ERROR);
-			break;
+				setMessage(message, IMessageProvider.INFORMATION);
+				break;
+			case IStatus.INFO:
+				setMessage(message, IMessageProvider.INFORMATION);
+				break;
+			case IStatus.WARNING:
+				setMessage(message, IMessageProvider.WARNING);
+				break;
+			default:
+				setMessage(message, IMessageProvider.ERROR);
+				break;
 		}
 		setErrorMessage(null);
 
@@ -2265,9 +2266,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
-	 * For version 3.11 we change the abstract implementation to a default implementation. The default implementation
-	 * creates an {@link Validator} and deligate the work to
-	 * {@link AbstractRepositoryConnector#validateRepository(TaskRepository, IProgressMonitor)}
+	 * For version 3.11 we change the abstract implementation to a default implementation. The default implementation creates an
+	 * {@link Validator} and deligate the work to {@link AbstractRepositoryConnector#validateRepository(TaskRepository, IProgressMonitor)}
 	 *
 	 * @since 2.0
 	 */
@@ -2312,17 +2312,21 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.7
 	 * @see IAdaptable#getAdapter(Class)
 	 */
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IValidatable.class) {
 			return new IValidatable() {
+				@Override
 				public void validate() {
 					AbstractRepositorySettingsPage.this.validateSettings();
 				}
 
+				@Override
 				public boolean needsValidation() {
 					return AbstractRepositorySettingsPage.this.needsValidation();
 				}
 
+				@Override
 				public boolean canValidate() {
 					return AbstractRepositorySettingsPage.this.canValidate();
 				}
@@ -2422,8 +2426,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
-	 * Updates the branding of this repository settings page. This also updates the title and wizard banner for the
-	 * given brand.
+	 * Updates the branding of this repository settings page. This also updates the title and wizard banner for the given brand.
 	 *
 	 * @param brand
 	 *            new connector branding ID
@@ -2442,8 +2445,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
-	 * Called when the page's branding is set. Implementors may change the wizard's title to one with branding specific
-	 * information. Sets the title to the branding's connector title by default.
+	 * Called when the page's branding is set. Implementors may change the wizard's title to one with branding specific information. Sets
+	 * the title to the branding's connector title by default.
 	 *
 	 * @param brand
 	 *            The current connector branding ID
@@ -2455,8 +2458,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
-	 * Called when the page's branding is set. Implementors may change the wizard's banner to one with branding specific
-	 * information. Does nothing by default.
+	 * Called when the page's branding is set. Implementors may change the wizard's banner to one with branding specific information. Does
+	 * nothing by default.
 	 *
 	 * @param brand
 	 *            The current connector branding ID
@@ -2490,7 +2493,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 *            Allow username as well as token
 	 */
 	public void setUseTokenForAuthentication(final boolean userOptional) {
-		this.useTokenForAuthentication = true;
+		useTokenForAuthentication = true;
 		this.userOptional = userOptional;
 	}
 

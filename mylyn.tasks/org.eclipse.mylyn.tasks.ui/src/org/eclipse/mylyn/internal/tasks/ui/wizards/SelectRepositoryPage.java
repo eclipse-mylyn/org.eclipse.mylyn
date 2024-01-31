@@ -25,12 +25,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -83,7 +79,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	protected MultiRepositoryAwareWizard wizard;
 
-	private List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+	private List<TaskRepository> repositories = new ArrayList<>();
 
 	private final ITaskRepositoryFilter taskRepositoryFilter;
 
@@ -91,27 +87,33 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	class RepositoryContentProvider implements ITreeContentProvider {
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			return null;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			return false;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return repositories.toArray();
 		}
 
+		@Override
 		public void dispose() {
 			// ignore
 
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// ignore
 
@@ -126,11 +128,11 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		setDescription(Messages.SelectRepositoryPage_Add_new_repositories_using_the_X_view);
 
 		this.taskRepositoryFilter = taskRepositoryFilter;
-		this.repositories = getTaskRepositories();
+		repositories = getTaskRepositories();
 	}
 
 	public List<TaskRepository> getTaskRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		List<TaskRepository> repositories = new ArrayList<>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
@@ -143,6 +145,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		return repositories;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, true);
@@ -171,7 +174,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			public void widgetSelected(SelectionEvent e) {
 				TaskRepository taskRepository = action.showWizard();
 				if (taskRepository != null) {
-					SelectRepositoryPage.this.repositories = getTaskRepositories();
+					repositories = getTaskRepositories();
 					viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 					viewer.setSelection(new StructuredSelection(taskRepository));
 				}
@@ -187,8 +190,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			discoveryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-							.getService(IHandlerService.class);
+					IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {
@@ -218,16 +220,14 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() instanceof TaskRepository) {
-					setSelectedNode(new CustomWizardNode((TaskRepository) selection.getFirstElement()));
-					setPageComplete(true);
-				} else {
-					setSelectedNode(null);
-					setPageComplete(false);
-				}
+		viewer.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			if (selection.getFirstElement() instanceof TaskRepository) {
+				setSelectedNode(new CustomWizardNode((TaskRepository) selection.getFirstElement()));
+				setPageComplete(true);
+			} else {
+				setSelectedNode(null);
+				setPageComplete(false);
 			}
 		});
 
@@ -252,20 +252,17 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		};
 
-		viewer.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				if (canFlipToNextPage()) {
-					try {
-						getContainer().showPage(getNextPage());
-					} catch (RuntimeException e) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Exception while opening the next wizard page", e)); //$NON-NLS-1$
-					}
-				} else if (canFinish()) {
-					if (getWizard().performFinish()) {
-						((WizardDialog) getContainer()).close();
-					}
+		viewer.addOpenListener(event -> {
+			if (canFlipToNextPage()) {
+				try {
+					getContainer().showPage(getNextPage());
+				} catch (RuntimeException e) {
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+							"Exception while opening the next wizard page", e)); //$NON-NLS-1$
+				}
+			} else if (canFinish()) {
+				if (getWizard().performFinish()) {
+					((WizardDialog) getContainer()).close();
 				}
 			}
 		});
@@ -307,19 +304,22 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			this.repository = repository;
 		}
 
+		@Override
 		public void dispose() {
 			if (wizard != null) {
 				wizard.dispose();
 			}
 		}
 
+		@Override
 		public Point getExtent() {
 			return new Point(-1, -1);
 		}
 
+		@Override
 		public IWizard getWizard() {
 			if (wizard == null) {
-				wizard = SelectRepositoryPage.this.createWizard(repository);
+				wizard = createWizard(repository);
 				if (wizard != null) {
 					wizard.setContainer(getContainer());
 				}
@@ -327,27 +327,27 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			return wizard;
 		}
 
+		@Override
 		public boolean isContentCreated() {
 			return wizard != null;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (!(obj instanceof CustomWizardNode)) {
+			if (!(obj instanceof CustomWizardNode that)) {
 				return false;
 			}
-			CustomWizardNode that = (CustomWizardNode) obj;
 			if (this == that) {
 				return true;
 			}
 
-			return this.repository.getConnectorKind().equals(that.repository.getConnectorKind())
-					&& this.repository.getRepositoryUrl().equals(that.repository.getRepositoryUrl());
+			return repository.getConnectorKind().equals(that.repository.getConnectorKind())
+					&& repository.getRepositoryUrl().equals(that.repository.getRepositoryUrl());
 		}
 
 		@Override
 		public int hashCode() {
-			return 31 * this.repository.getRepositoryUrl().hashCode() + this.repository.getConnectorKind().hashCode();
+			return 31 * repository.getRepositoryUrl().hashCode() + repository.getConnectorKind().hashCode();
 		}
 
 	}

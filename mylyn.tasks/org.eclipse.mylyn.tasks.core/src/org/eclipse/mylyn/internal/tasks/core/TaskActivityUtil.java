@@ -150,7 +150,7 @@ public class TaskActivityUtil {
 			snapStartOfWorkWeek(weekStart);
 			Calendar weekEnd = getCalendar();
 			snapEndOfWeek(weekEnd);
-			return (time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0);
+			return time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0;
 		}
 		return false;
 	}
@@ -162,7 +162,7 @@ public class TaskActivityUtil {
 			Calendar weekEnd = getCalendar();
 			snapNextWorkWeek(weekEnd);
 			snapEndOfWeek(weekEnd);
-			return (time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0);
+			return time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0;
 		}
 		return false;
 	}
@@ -173,7 +173,7 @@ public class TaskActivityUtil {
 			snapStartOfDay(dayStart);
 			Calendar midnight = getCalendar();
 			snapEndOfDay(midnight);
-			return (time.compareTo(dayStart) >= 0 && time.compareTo(midnight) <= 0);
+			return time.compareTo(dayStart) >= 0 && time.compareTo(midnight) <= 0;
 		}
 		return false;
 	}
@@ -209,7 +209,7 @@ public class TaskActivityUtil {
 	}
 
 	public static boolean isBetween(Calendar time, Calendar start, Calendar end) {
-		return (time.compareTo(start) >= 0 && time.compareTo(end) <= 0);
+		return time.compareTo(start) >= 0 && time.compareTo(end) <= 0;
 	}
 
 	protected static void setStartDay(int startDay) {

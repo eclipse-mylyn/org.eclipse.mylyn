@@ -36,9 +36,10 @@ public class NewWebTaskPage extends WizardPage {
 		setTitle(Messages.NewWebTaskPage_Create_via_Web_Browser);
 		setDescription(Messages.NewWebTaskPage_This_will_open_a_web_browser_that_can_be_used_to_create_a_new_task);
 
-		// TODO display selection 
+		// TODO display selection
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Text text = new Text(parent, SWT.WRAP);
 		text.setEditable(false);

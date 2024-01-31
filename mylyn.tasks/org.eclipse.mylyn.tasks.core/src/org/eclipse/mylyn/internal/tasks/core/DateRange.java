@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -45,13 +46,13 @@ public class DateRange implements Comparable<DateRange> {
 	}
 
 	public boolean includes(DateRange range) {
-		return (startDate.getTimeInMillis() <= range.getStartDate().getTimeInMillis())
-				&& (endDate.getTimeInMillis() >= range.getEndDate().getTimeInMillis());
+		return startDate.getTimeInMillis() <= range.getStartDate().getTimeInMillis()
+				&& endDate.getTimeInMillis() >= range.getEndDate().getTimeInMillis();
 	}
 
 	public boolean includes(Calendar cal) {
-		return (startDate.getTimeInMillis() <= cal.getTimeInMillis())
-				&& (endDate.getTimeInMillis() >= cal.getTimeInMillis());
+		return startDate.getTimeInMillis() <= cal.getTimeInMillis()
+				&& endDate.getTimeInMillis() >= cal.getTimeInMillis();
 	}
 
 	public Calendar getStartDate() {
@@ -92,7 +93,7 @@ public class DateRange implements Comparable<DateRange> {
 //	}
 
 	public boolean isPresent() {
-		return this.getStartDate().before(Calendar.getInstance()) && this.getEndDate().after(Calendar.getInstance());
+		return getStartDate().before(Calendar.getInstance()) && getEndDate().after(Calendar.getInstance());
 	}
 
 	public boolean isPast() {
@@ -100,20 +101,16 @@ public class DateRange implements Comparable<DateRange> {
 	}
 
 	public boolean isFuture() {
-		return !isPresent() && this.getStartDate().after(Calendar.getInstance());
+		return !isPresent() && getStartDate().after(Calendar.getInstance());
 	}
 
 	public boolean isBefore(DateRange scheduledDate) {
-		return this.getEndDate().compareTo(scheduledDate.getStartDate()) < 0;
+		return getEndDate().compareTo(scheduledDate.getStartDate()) < 0;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		return result;
+		return Objects.hash(endDate, startDate);
 	}
 
 	@Override
@@ -128,18 +125,10 @@ public class DateRange implements Comparable<DateRange> {
 //			return false;
 //		}
 		DateRange other = (DateRange) obj;
-		if (endDate == null) {
-			if (other.endDate != null) {
-				return false;
-			}
-		} else if (!endDate.equals(other.endDate)) {
+		if (!Objects.equals(endDate, other.endDate)) {
 			return false;
 		}
-		if (startDate == null) {
-			if (other.startDate != null) {
-				return false;
-			}
-		} else if (!startDate.equals(other.startDate)) {
+		if (!Objects.equals(startDate, other.startDate)) {
 			return false;
 		}
 		return true;
@@ -153,6 +142,7 @@ public class DateRange implements Comparable<DateRange> {
 		return cal.before(getEndDate());
 	}
 
+	@Override
 	public int compareTo(DateRange range) {
 		if (range.getStartDate().equals(startDate) && range.getEndDate().equals(endDate)) {
 			return 0;

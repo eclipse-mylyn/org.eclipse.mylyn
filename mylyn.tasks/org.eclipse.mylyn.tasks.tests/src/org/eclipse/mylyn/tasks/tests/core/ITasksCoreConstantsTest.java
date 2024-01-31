@@ -13,11 +13,11 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.ObjectSchedulingRule;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

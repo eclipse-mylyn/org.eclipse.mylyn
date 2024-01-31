@@ -70,20 +70,24 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 		update();
 	}
 
+	@Override
 	public void taskActivated(ITask task) {
 		update();
 	}
 
+	@Override
 	public void taskDeactivated(ITask task) {
 		update();
 	}
 
+	@Override
 	public void preTaskActivated(ITask task) {
 		// ignore
 	}
 
+	@Override
 	public void preTaskDeactivated(ITask task) {
-		// ignore		
+		// ignore
 	}
 
 }

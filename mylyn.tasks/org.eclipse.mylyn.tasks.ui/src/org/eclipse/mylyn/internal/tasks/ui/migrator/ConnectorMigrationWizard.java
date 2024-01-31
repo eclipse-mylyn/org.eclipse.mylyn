@@ -22,16 +22,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -85,7 +81,7 @@ public class ConnectorMigrationWizard extends Wizard {
 		}
 	}
 
-	private Object[] selectedConnectors = new Object[0];
+	private Object[] selectedConnectors = {};
 
 	private final ConnectorMigrator migrator;
 
@@ -133,13 +129,9 @@ public class ConnectorMigrationWizard extends Wizard {
 				final CheckboxTreeViewer viewer = createConnectorList(c, kinds);
 				selectedConnectors = kinds.toArray();
 				viewer.setCheckedElements(selectedConnectors);
-				viewer.addCheckStateListener(new ICheckStateListener() {
-
-					@Override
-					public void checkStateChanged(CheckStateChangedEvent event) {
-						selectedConnectors = viewer.getCheckedElements();
-						setPageComplete(selectedConnectors.length > 0);
-					}
+				viewer.addCheckStateListener(event -> {
+					selectedConnectors = viewer.getCheckedElements();
+					setPageComplete(selectedConnectors.length > 0);
 				});
 				GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 				setControl(c);
@@ -160,8 +152,7 @@ public class ConnectorMigrationWizard extends Wizard {
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof String) {
-					String kind = (String) element;
+				if (element instanceof String kind) {
 					IRepositoryManager manager = migrator.getRepositoryManager();
 					AbstractRepositoryConnector connector = manager.getRepositoryConnector(kind);
 					if (connector != null) {
@@ -189,21 +180,17 @@ public class ConnectorMigrationWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
-
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					List<String> connectors = Arrays.asList(selectedConnectors)
-							.stream()
-							.filter(String.class::isInstance)
-							.map(String.class::cast)
-							.collect(Collectors.toUnmodifiableList());
-					try {
-						migrator.setConnectorsToMigrate(connectors);
-						migrator.migrateConnectors(monitor);
-					} catch (IOException e) {
-						throw new InvocationTargetException(e);
-					}
+			getContainer().run(true, true, monitor -> {
+				List<String> connectors = Arrays.asList(selectedConnectors)
+						.stream()
+						.filter(String.class::isInstance)
+						.map(String.class::cast)
+						.collect(Collectors.toUnmodifiableList());
+				try {
+					migrator.setConnectorsToMigrate(connectors);
+					migrator.migrateConnectors(monitor);
+				} catch (IOException e) {
+					throw new InvocationTargetException(e);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

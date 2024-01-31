@@ -30,33 +30,39 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.workingSets.elementFactory"; //$NON-NLS-1$
 
 	@SuppressWarnings("rawtypes")
-	private static final Class[] ADAPTER_TYPES = new Class[] { IPersistableElement.class };
+	private static final Class[] ADAPTER_TYPES = { IPersistableElement.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(final Object adaptableObject, Class adapterType) {
 		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
 			return new IPersistableElement() {
+				@Override
 				public void saveState(IMemento memento) {
 					IRepositoryElement container = (IRepositoryElement) adaptableObject;
 					memento.putString(TaskWorkingSetElementFactory.HANDLE_TASK, container.getHandleIdentifier());
 				}
 
+				@Override
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}
 			};
 		} else if (adapterType == IPersistableElement.class && adaptableObject instanceof IProject) {
 			return new IPersistableElement() {
+				@Override
 				public void saveState(IMemento memento) {
 					IProject project = (IProject) adaptableObject;
 					memento.putString(TaskWorkingSetElementFactory.HANDLE_PROJECT, project.getName());
 				}
 
+				@Override
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}

@@ -70,8 +70,9 @@ public class ContentProposalProvider implements IContentProposalProvider {
 
 	}
 
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
-		List<IContentProposal> proposals = new ArrayList<IContentProposal>(10);
+		List<IContentProposal> proposals = new ArrayList<>(10);
 
 		ProposalContentState contentState = computeProposalContentState(contents, position);
 
@@ -195,7 +196,7 @@ public class ContentProposalProvider implements IContentProposalProvider {
 	}
 
 	public void computePersonProposals(List<IContentProposal> proposals, ProposalContentState contentState) {
-		Set<String> addresses = new TreeSet<String>();
+		Set<String> addresses = new TreeSet<>();
 
 		Collection<AbstractTask> allTasks = taskList.getAllTasks();
 		for (AbstractTask task : allTasks) {

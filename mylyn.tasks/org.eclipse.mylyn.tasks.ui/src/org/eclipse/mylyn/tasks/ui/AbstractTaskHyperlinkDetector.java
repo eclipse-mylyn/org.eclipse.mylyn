@@ -54,6 +54,7 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 	/**
 	 * @since 3.1
 	 */
+	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region,
 			boolean canShowMultipleHyperlinks) {
 		IDocument document = textViewer.getDocument();
@@ -78,7 +79,7 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 					content = document.get(lineOffset, regionLength);
 					index = region.getOffset() - lineOffset;
 				} else {
-					// the line starts after region, may never happen 
+					// the line starts after region, may never happen
 					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
 					contentOffset = region.getOffset();
 					content = document.get(contentOffset, regionLength);
@@ -129,7 +130,7 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 	 * @since 3.1
 	 */
 	protected List<TaskRepository> getTaskRepositories(ITextViewer textViewer) {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		List<TaskRepository> repositories = new ArrayList<>();
 		TaskRepository selectedRepository = getTaskRepository(textViewer);
 		if (selectedRepository != null) {
 			repositories.add(selectedRepository);
@@ -143,12 +144,12 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 	 * @since 3.1
 	 */
 	protected TaskRepository getTaskRepository(ITextViewer textViewer) {
-		TaskRepository repository = (TaskRepository) getAdapter(TaskRepository.class);
+		TaskRepository repository = getAdapter(TaskRepository.class);
 		if (repository != null) {
 			return repository;
 		}
 
-		IResource resource = (IResource) getAdapter(IResource.class);
+		IResource resource = getAdapter(IResource.class);
 		if (resource == null) {
 			// use currently active editor (if any)
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -159,7 +160,7 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 					if (part instanceof IEditorPart) {
 						IEditorInput input = ((IEditorPart) part).getEditorInput();
 						if (input != null) {
-							resource = (IResource) input.getAdapter(IResource.class);
+							resource = input.getAdapter(IResource.class);
 						}
 					}
 				}

@@ -34,8 +34,6 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -189,27 +187,17 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 				return super.getText(object);
 			}
 		});
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				if (viewer.getSelection() instanceof IStructuredSelection) {
-					Object element = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-					if (element instanceof IRepositoryQuery) {
-						IRepositoryQuery query = (IRepositoryQuery) element;
-						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-								.getConnectorUi(query.getConnectorKind());
-						TasksUiInternal.openEditQueryDialog(connectorUi, query);
-					}
+		viewer.addDoubleClickListener(event -> {
+			if (viewer.getSelection() instanceof IStructuredSelection) {
+				Object element = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+				if (element instanceof IRepositoryQuery query) {
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+							.getConnectorUi(query.getConnectorKind());
+					TasksUiInternal.openEditQueryDialog(connectorUi, query);
 				}
 			}
 		});
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				viewer.expandAll();
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> viewer.expandAll());
 		return viewer;
 	}
 

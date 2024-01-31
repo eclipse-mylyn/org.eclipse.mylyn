@@ -46,17 +46,13 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	private static final String PASSWORD = ".password";
 
 	private static String getKeyPrefix(AuthenticationType type) {
-		switch (type) {
-		case HTTP:
-			return AUTH_HTTP;
-		case CERTIFICATE:
-			return AUTH_CERT;
-		case PROXY:
-			return AUTH_PROXY;
-		case REPOSITORY:
-			return AUTH_REPOSITORY;
-		}
-		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
+		return switch (type) {
+			case HTTP -> AUTH_HTTP;
+			case CERTIFICATE -> AUTH_CERT;
+			case PROXY -> AUTH_PROXY;
+			case REPOSITORY -> AUTH_REPOSITORY;
+			default -> throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
+		};
 	}
 
 	private String getPassword(AuthenticationType authType) {

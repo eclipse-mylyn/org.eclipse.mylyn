@@ -26,8 +26,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 public abstract class RepositoryConnectorContributor {
 
 	/**
-	 * Returns a list of descriptors for connectors that are to be contributed. This method is invoked when the tasks
-	 * core framework is initialized.
+	 * Returns a list of descriptors for connectors that are to be contributed. This method is invoked when the tasks core framework is
+	 * initialized.
 	 * 
 	 * @return a list of descriptors
 	 */

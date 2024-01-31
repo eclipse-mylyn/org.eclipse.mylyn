@@ -48,17 +48,18 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 		private Object input;
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof SupportProvider) {
 				List<SupportProduct> providerProducts = getProducts((SupportProvider) inputElement);
 				return providerProducts.toArray();
 			} else if (input == inputElement) {
-				List<AbstractSupportElement> elements = new ArrayList<AbstractSupportElement>();
+				List<AbstractSupportElement> elements = new ArrayList<>();
 				Collection<SupportCategory> categories = providerManager.getCategories();
 				for (SupportCategory category : categories) {
 					List<IProvider> providers = category.getProviders();
 					// filter valid providers
-					List<IProvider> validProviders = new ArrayList<IProvider>();
+					List<IProvider> validProviders = new ArrayList<>();
 					for (IProvider provider : providers) {
 						if (isValid((SupportProvider) provider)) {
 							validProviders.add(provider);
@@ -89,7 +90,7 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 		private List<SupportProduct> getProducts(SupportProvider provider) {
 			Collection<SupportProduct> products = providerManager.getProducts();
-			List<SupportProduct> providerProducts = new ArrayList<SupportProduct>();
+			List<SupportProduct> providerProducts = new ArrayList<>();
 			for (SupportProduct product : products) {
 				if (provider.equals(product.getProvider()) && product.isInstalled()) {
 					providerProducts.add(product);
@@ -98,13 +99,15 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 			return providerProducts;
 		}
 
+		@Override
 		public void dispose() {
 			// ignore
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			this.input = newInput;
-			this.providerManager = TasksBugsPlugin.getTaskErrorReporter().getProviderManager();
+			input = newInput;
+			providerManager = TasksBugsPlugin.getTaskErrorReporter().getProviderManager();
 		}
 
 	}
@@ -151,11 +154,8 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		final AbstractSupportElement product = getSelectedElement();
-		if (!(product instanceof SupportProduct)) {
-			return false;
-		}
 		// bug 341886: avoid executing finish twice
-		if (inFinish) {
+		if (!(product instanceof SupportProduct) || inFinish) {
 			return false;
 		}
 		try {

@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 public class QueryPageSearch {
 
 	/** Stores search criteria in the order entered by the user. */
-	private final Map<String, QueryPageFilter> filterByFieldName = new LinkedHashMap<String, QueryPageFilter>();
+	private final Map<String, QueryPageFilter> filterByFieldName = new LinkedHashMap<>();
 
 	public QueryPageSearch() {
 	}
@@ -53,7 +53,7 @@ public class QueryPageSearch {
 	}
 
 	public List<QueryPageFilter> getFilters() {
-		return new ArrayList<QueryPageFilter>(filterByFieldName.values());
+		return new ArrayList<>(filterByFieldName.values());
 	}
 
 	public QueryPageFilter getFilter(String key) {

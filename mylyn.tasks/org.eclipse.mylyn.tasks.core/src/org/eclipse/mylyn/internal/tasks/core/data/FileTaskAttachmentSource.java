@@ -56,8 +56,8 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
 	static {
 		// see http://www.iana.org/assignments/media-types/
-		extensions2Types = new HashMap<String, String>();
-		extensions2Types.put("txt", TEXT_PLAIN); //$NON-NLS-1$ 
+		extensions2Types = new HashMap<>();
+		extensions2Types.put("txt", TEXT_PLAIN); //$NON-NLS-1$
 		extensions2Types.put("html", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("htm", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
 		extensions2Types.put("xhtml", "application/xhtml+xml"); //$NON-NLS-1$//$NON-NLS-2$
@@ -103,7 +103,7 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 	}
 
 	public static String[] getContentTypes() {
-		Set<String> types = new HashSet<String>(extensions2Types.values());
+		Set<String> types = new HashSet<>(extensions2Types.values());
 		String[] array = types.toArray(new String[0]);
 		Arrays.sort(array);
 		return array;
@@ -119,8 +119,8 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
 	public FileTaskAttachmentSource(File file) {
 		this.file = file;
-		this.name = file.getName();
-		this.contentType = getContentTypeFromFilename(name);
+		name = file.getName();
+		contentType = getContentTypeFromFilename(name);
 	}
 
 	@Override

@@ -26,59 +26,58 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public interface ITaskList {
 
-	public abstract void addChangeListener(ITaskListChangeListener listener);
+	void addChangeListener(ITaskListChangeListener listener);
 
-	public abstract void addQuery(RepositoryQuery query) throws IllegalArgumentException;
+	void addQuery(RepositoryQuery query) throws IllegalArgumentException;
 
 	/**
 	 * Add orphaned task to the task list
 	 */
-	public abstract void addTask(ITask task) throws IllegalArgumentException;
+	void addTask(ITask task) throws IllegalArgumentException;
 
 	/**
-	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query) If the
-	 * parentContainer is null the task is considered an orphan and added to the appropriate repository's orphaned tasks
-	 * container.
+	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query) If the parentContainer is null
+	 * the task is considered an orphan and added to the appropriate repository's orphaned tasks container.
 	 * 
 	 * @param task
 	 *            to be added
 	 * @param container
 	 *            task container, query or parent task must not be null
 	 */
-	public abstract boolean addTask(ITask task, AbstractTaskContainer parentContainer);
+	boolean addTask(ITask task, AbstractTaskContainer parentContainer);
 
-	public abstract void deleteCategory(AbstractTaskCategory category);
+	void deleteCategory(AbstractTaskCategory category);
 
-	public abstract void deleteQuery(RepositoryQuery query);
+	void deleteQuery(RepositoryQuery query);
 
 	/**
-	 * TODO: refactor around querying containers for their tasks Task is removed from all containers: root, archive,
-	 * category, and orphan bin Currently subtasks are not deleted but rather are rather potentially orphaned
+	 * TODO: refactor around querying containers for their tasks Task is removed from all containers: root, archive, category, and orphan
+	 * bin Currently subtasks are not deleted but rather are rather potentially orphaned
 	 */
-	public abstract void deleteTask(ITask task);
+	void deleteTask(ITask task);
 
-	public abstract Set<AbstractTaskCategory> getCategories();
+	Set<AbstractTaskCategory> getCategories();
 
-	public abstract Set<RepositoryQuery> getQueries();
+	Set<RepositoryQuery> getQueries();
 
 	/**
 	 * @since 2.0
 	 */
-	public abstract ITask getTask(String repositoryUrl, String taskId);
+	ITask getTask(String repositoryUrl, String taskId);
 
 	/**
 	 * @param task
 	 *            list element
 	 */
-	public abstract void notifyElementChanged(IRepositoryElement element);
+	void notifyElementChanged(IRepositoryElement element);
 
-	public abstract void notifySynchronizationStateChanged(IRepositoryElement element);
+	void notifySynchronizationStateChanged(IRepositoryElement element);
 
-	public abstract void removeChangeListener(ITaskListChangeListener listener);
+	void removeChangeListener(ITaskListChangeListener listener);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void removeFromContainer(AbstractTaskContainer container, ITask task);
+	void removeFromContainer(AbstractTaskContainer container, ITask task);
 
 }

@@ -31,36 +31,35 @@ import org.eclipse.mylyn.tasks.core.sync.TaskJob;
  */
 public interface ITaskJobFactory {
 
-	public abstract SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, Set<ITask> tasks);
+	SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			Set<ITask> tasks);
 
-	public abstract SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
-			TaskRepository repository, Set<RepositoryQuery> queries);
+	SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector, TaskRepository repository,
+			Set<RepositoryQuery> queries);
 
-	public abstract SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories);
+	SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories);
 
-	public abstract SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes);
+	SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository, ITask task,
+			TaskData taskData, Set<TaskAttribute> changedAttributes);
 
-	public abstract TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, ITask task);
+	TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			ITask task);
 
 	@Deprecated
-	public abstract TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
+	TaskJob createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository);
 
-	public abstract SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
-			TaskAttribute attachmentAttribute);
+	SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			ITask task, AbstractTaskAttachmentSource source, String comment, TaskAttribute attachmentAttribute);
 
 	/**
 	 * Specify whether subtasks should be fetched as part of task synchronization. Defaults to true.
 	 */
-	public void setFetchSubtasks(boolean fetchSubtasks);
+	void setFetchSubtasks(boolean fetchSubtasks);
 
 	/**
 	 * @return whether subtasks should be fetched as part of task synchronization
 	 */
-	public boolean getFetchSubtasks();
+	boolean getFetchSubtasks();
 
 }

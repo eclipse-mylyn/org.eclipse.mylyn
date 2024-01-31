@@ -48,11 +48,10 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 
 	@Override
 	public String getText(Object element) {
-		if (!(element instanceof ITask)) {
+		if (!(element instanceof ITask task)) {
 			return super.getText(element);
 		}
 
-		ITask task = (ITask) element;
 		TaskRepository repository = TasksUi.getRepositoryManager()
 				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		return repository.getRepositoryLabel();

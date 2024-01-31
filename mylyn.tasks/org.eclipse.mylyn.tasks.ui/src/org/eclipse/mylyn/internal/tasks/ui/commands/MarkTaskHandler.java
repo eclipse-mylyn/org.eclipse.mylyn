@@ -144,7 +144,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 				}
 				return null;
 			}
-		};;
+		};
 
 		private final boolean markRead;
 
@@ -167,7 +167,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 		@Override
 		public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-			List<ITask> affectedTasks = new ArrayList<ITask>(tasks.size());
+			List<ITask> affectedTasks = new ArrayList<>(tasks.size());
 			for (ITask task : tasks) {
 				if (TasksUiPlugin.getTaskDataManager().setTaskRead(task, markRead)) {
 					affectedTasks.add(task);
@@ -197,8 +197,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {
-			if (item instanceof ITask) {
-				ITask task = (ITask) item;
+			if (item instanceof ITask task) {
 				markTasksRead(event, new ITask[] { task }, true);
 				GoToUnreadTaskHandler.execute(event,
 						org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.DOWN);
@@ -210,8 +209,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {
-			if (item instanceof ITask) {
-				ITask task = (ITask) item;
+			if (item instanceof ITask task) {
 				markTasksRead(event, new ITask[] { task }, true);
 				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.UP);
 			}
@@ -221,7 +219,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	private static void markTasksRead(final ExecutionEvent event, final ITask[] tasks, boolean markRead)
 			throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShell(event);
-		String label = (markRead)
+		String label = markRead
 				? Messages.MarkTaskHandler_MarkTasksReadOperation
 				: Messages.MarkTaskHandler_MarkTasksUnreadOperation;
 		MarkTaskReadOperation operation = new MarkTaskReadOperation(shell, label, markRead, tasks);

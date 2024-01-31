@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others. 
+ * Copyright (c) 2004, 2011 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -57,7 +57,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute,
 			int style, IContextService contextService, AbstractTaskEditorExtension extension) {
 		super(manager, taskAttribute);
-		this.editor = new RichTextEditor(taskRepository, style, contextService, extension, getModel().getTask()) {
+		editor = new RichTextEditor(taskRepository, style, contextService, extension, getModel().getTask()) {
 			@Override
 			public void valueChanged(String value) {
 				if (!ignoreNotification) {
@@ -68,9 +68,9 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 						suppressRefresh = false;
 					}
 				}
-			};
+			}
 		};
-		this.editor.setReadOnly(isReadOnly());
+		editor.setReadOnly(isReadOnly());
 		if ((style & SWT.MULTI) != 0) {
 			setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
 		} else {
@@ -82,8 +82,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		// refresh again, in case the value changed in the mean time, needs to be invoked before control is 
-		// created otherwise WikiText rendering breaks 
+		// refresh again, in case the value changed in the mean time, needs to be invoked before control is
+		// created otherwise WikiText rendering breaks
 		refresh();
 
 		editor.createControl(parent, toolkit);

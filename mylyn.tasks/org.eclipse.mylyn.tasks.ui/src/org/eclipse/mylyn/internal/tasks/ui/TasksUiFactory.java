@@ -27,14 +27,17 @@ import org.eclipse.mylyn.tasks.ui.ITasksUiFactory;
  */
 public class TasksUiFactory implements ITasksUiFactory {
 
+	@Override
 	public IContentProposalProvider createPersonContentProposalProvider(TaskRepository repository) {
 		return new PersonProposalProvider(repository.getRepositoryUrl(), repository.getConnectorKind());
 	}
 
+	@Override
 	public ILabelProvider createPersonContentProposalLabelProvider(TaskRepository repository) {
 		return new PersonProposalLabelProvider();
 	}
 
+	@Override
 	public IContentAssistProcessor createTaskContentAssistProcessor(TaskRepository repository) {
 		return new RepositoryCompletionProcessor(repository);
 	}

@@ -97,8 +97,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	}
 
 	/**
-	 * Action for navigating to a specified task. This class should be protected but has been made public for testing
-	 * only
+	 * Action for navigating to a specified task. This class should be protected but has been made public for testing only
 	 */
 	private class ActivateTaskAction extends Action {
 
@@ -159,11 +158,11 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 	@Override
 	protected IContributionItem[] getContributionItems() {
-		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
+		List<AbstractTask> tasks = new ArrayList<>(taskHistory.getPreviousTasks());
 		Set<IWorkingSet> sets = TaskWorkingSetUpdater
 				.getActiveWorkingSets(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 		if (scopedToWorkingSet && !sets.isEmpty()) {
-			Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
+			Set<ITask> allWorkingSetTasks = new HashSet<>();
 			for (IWorkingSet workingSet : sets) {
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
@@ -172,7 +171,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 					}
 				}
 			}
-			List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(tasks);
+			List<AbstractTask> allScopedTasks = new ArrayList<>(tasks);
 			for (ITask task : tasks) {
 				if (!allWorkingSetTasks.contains(task)) {
 					allScopedTasks.remove(task);
@@ -185,7 +184,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			tasks = tasks.subList(tasks.size() - MAX_ITEMS_TO_DISPLAY, tasks.size());
 		}
 
-		List<IContributionItem> items = new ArrayList<IContributionItem>();
+		List<IContributionItem> items = new ArrayList<>();
 		for (int i = tasks.size() - 1; i >= 0; i--) {
 			AbstractTask currTask = tasks.get(i);
 			Action taskNavAction = new ActivateTaskAction(currTask);

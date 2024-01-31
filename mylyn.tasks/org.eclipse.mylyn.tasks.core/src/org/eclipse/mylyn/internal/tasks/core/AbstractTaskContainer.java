@@ -35,7 +35,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	private String handleIdentifier = ""; //$NON-NLS-1$
 
-	private final Collection<ITask> children = new CopyOnWriteArrayList<ITask>();
+	private final Collection<ITask> children = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.
@@ -44,7 +44,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	public AbstractTaskContainer(String handleAndDescription) {
 		Assert.isNotNull(handleAndDescription);
-		this.handleIdentifier = handleAndDescription;
+		handleIdentifier = handleAndDescription;
 	}
 
 	/**
@@ -66,11 +66,11 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	}
 
 	/**
-	 * Removes any cyclic dependencies in children. TODO: review to make sure that this is too expensive, or move to
-	 * creation.
+	 * Removes any cyclic dependencies in children. TODO: review to make sure that this is too expensive, or move to creation.
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public Collection<ITask> getChildren() {
 		return Collections.unmodifiableCollection(children);
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	 */
 	public boolean contains(String handle) {
 		Assert.isNotNull(handle);
-		return containsHelper(children, handle, new HashSet<IRepositoryElement>());
+		return containsHelper(children, handle, new HashSet<>());
 	}
 
 	private boolean containsHelper(Collection<ITask> children, String handle,
@@ -100,6 +100,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 		return false;
 	}
 
+	@Override
 	public String getSummary() {
 		return handleIdentifier;
 	}
@@ -108,6 +109,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 		return children.isEmpty();
 	}
 
+	@Override
 	public String getHandleIdentifier() {
 		return handleIdentifier;
 	}
@@ -128,6 +130,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	/**
 	 * @return can be null
 	 */
+	@Override
 	public String getUrl() {
 		return url;
 	}
@@ -139,7 +142,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 		}
 		if (object instanceof AbstractTaskContainer) {
 			IRepositoryElement compare = (IRepositoryElement) object;
-			return this.getHandleIdentifier().equals(compare.getHandleIdentifier());
+			return getHandleIdentifier().equals(compare.getHandleIdentifier());
 		} else {
 			return false;
 		}
@@ -167,6 +170,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	/**
 	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
+	@Override
 	public int compareTo(IRepositoryElement taskListElement) {
 		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}

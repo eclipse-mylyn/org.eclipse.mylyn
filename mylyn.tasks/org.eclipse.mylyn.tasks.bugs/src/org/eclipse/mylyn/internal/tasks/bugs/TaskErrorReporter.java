@@ -42,8 +42,8 @@ public class TaskErrorReporter {
 	private final SupportProviderManager providerManager;
 
 	public TaskErrorReporter() {
-		this.handlerManager = new SupportHandlerManager();
-		this.providerManager = new SupportProviderManager();
+		handlerManager = new SupportHandlerManager();
+		providerManager = new SupportProviderManager();
 	}
 
 	public SupportHandlerManager getHandlerManager() {
@@ -60,15 +60,13 @@ public class TaskErrorReporter {
 
 	public boolean process(final ITaskContribution response, IRunnableContext context) {
 		Assert.isNotNull(response);
-		ICoreRunnable runner = new ICoreRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				try {
-					monitor.beginTask(Messages.TaskErrorReporter_Job_Progress_Process_support_request,
-							IProgressMonitor.UNKNOWN);
-					process((AttributeTaskMapper) response, monitor);
-				} finally {
-					monitor.done();
-				}
+		ICoreRunnable runner = monitor -> {
+			try {
+				monitor.beginTask(Messages.TaskErrorReporter_Job_Progress_Process_support_request,
+						IProgressMonitor.UNKNOWN);
+				process((AttributeTaskMapper) response, monitor);
+			} finally {
+				monitor.done();
 			}
 		};
 		try {
@@ -91,14 +89,12 @@ public class TaskErrorReporter {
 			mapper.setTaskData(taskData);
 			handlerManager.postProcess(mapper, monitor);
 			// XXX open task asynchronously to make sure the workbench is active
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					try {
-						TasksUiInternal.createAndOpenNewTask(taskData);
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
-								"Unexpected error while creating task", e)); //$NON-NLS-1$
-					}
+			Display.getDefault().asyncExec(() -> {
+				try {
+					TasksUiInternal.createAndOpenNewTask(taskData);
+				} catch (CoreException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
+							"Unexpected error while creating task", e)); //$NON-NLS-1$
 				}
 			});
 		}

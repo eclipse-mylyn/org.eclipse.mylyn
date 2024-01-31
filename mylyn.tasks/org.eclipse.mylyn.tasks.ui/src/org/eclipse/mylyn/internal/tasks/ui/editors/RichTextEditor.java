@@ -11,12 +11,10 @@
  *     Tasktop Technologies - initial API and implementation
  *     Raphael Ackermann - spell checking support on bug 195514
  *     Jingwen Ou - extensibility improvements
- *     David Green - fix for bug 256702 
+ *     David Green - fix for bug 256702
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
-
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -25,8 +23,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -43,8 +39,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -56,8 +50,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -81,7 +73,7 @@ public class RichTextEditor {
 
 	public enum State {
 		DEFAULT, BROWSER, EDITOR, PREVIEW;
-	};
+	}
 
 	public static class StateChangedEvent {
 
@@ -91,7 +83,7 @@ public class RichTextEditor {
 
 	public interface StateChangedListener {
 
-		public void stateChanged(StateChangedEvent event);
+		void stateChanged(StateChangedEvent event);
 
 	}
 
@@ -184,8 +176,8 @@ public class RichTextEditor {
 		this.style = style;
 		this.contextService = contextService;
 		this.extension = extension;
-		this.text = ""; //$NON-NLS-1$
-		this.viewSourceAction = new ViewSourceAction();
+		text = ""; //$NON-NLS-1$
+		viewSourceAction = new ViewSourceAction();
 		setMode(Mode.DEFAULT);
 		this.task = task;
 	}
@@ -224,7 +216,7 @@ public class RichTextEditor {
 
 	/** Configures annotation model for spell checking. */
 	private void updateDocument(SourceViewer viewer, Document document, boolean readOnly) {
-		if (Integer.valueOf(this.textVersion).equals(viewer.getData(KEY_TEXT_VERSION))) {
+		if (Integer.valueOf(textVersion).equals(viewer.getData(KEY_TEXT_VERSION))) {
 			// already up-to-date, skip re-loading of the document
 			return;
 		}
@@ -238,20 +230,15 @@ public class RichTextEditor {
 			IAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 			final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null,
 					annotationAccess, EditorsUI.getSharedTextColors());
-			Iterator<?> e = new MarkerAnnotationPreferences().getAnnotationPreferences().iterator();
-			while (e.hasNext()) {
-				support.setAnnotationPreference((AnnotationPreference) e.next());
+			for (AnnotationPreference element : new MarkerAnnotationPreferences().getAnnotationPreferences()) {
+				support.setAnnotationPreference((AnnotationPreference) element);
 			}
 			support.install(EditorsUI.getPreferenceStore());
-			viewer.getTextWidget().addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					support.uninstall();
-				}
-			});
+			viewer.getTextWidget().addDisposeListener(e1 -> support.uninstall());
 			//viewer.getTextWidget().setIndent(2);
 			viewer.setDocument(document, annotationModel);
 		}
-		viewer.setData(KEY_TEXT_VERSION, this.textVersion);
+		viewer.setData(KEY_TEXT_VERSION, textVersion);
 	}
 
 	public void createControl(Composite parent, FormToolkit toolkit) {
@@ -281,19 +268,17 @@ public class RichTextEditor {
 					editorViewer = extension.createEditor(repository, editorComposite, style,
 							createHyperlinkDetectorContext());
 					editorViewer.getTextWidget().addFocusListener(new FocusListener() {
+						@Override
 						public void focusGained(FocusEvent e) {
 							setContext();
 						}
 
+						@Override
 						public void focusLost(FocusEvent e) {
 							unsetContext();
 						}
 					});
-					editorViewer.getTextWidget().addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							unsetContext();
-						}
-					});
+					editorViewer.getTextWidget().addDisposeListener(e -> unsetContext());
 				}
 				configure(editorViewer, new Document(getText()), isReadOnly());
 				show(editorViewer.getControl());
@@ -368,8 +353,8 @@ public class RichTextEditor {
 			defaultViewer.getTextWidget().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
 			// adapt maximize action
 			defaultViewer.getControl()
-					.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
-							editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
+			.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
+					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
 			// adapt menu to the new viewer
 			installMenu(defaultViewer.getControl(), editorViewer.getControl().getMenu());
 		}
@@ -414,8 +399,8 @@ public class RichTextEditor {
 			configure(previewViewer, new Document(getText()), true);
 			// adapt maximize action
 			previewViewer.getControl()
-					.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
-							editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
+			.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
+					editorViewer.getControl().getData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION));
 			installMenu(previewViewer.getControl(), editorViewer.getControl().getMenu());
 			//set the background color in case there is an incoming to show
 			previewViewer.getTextWidget().setBackground(editorComposite.getBackground());
@@ -432,7 +417,7 @@ public class RichTextEditor {
 	}
 
 	public String getText() {
-		return this.text;
+		return text;
 	}
 
 	public SourceViewer getViewer() {
@@ -487,29 +472,25 @@ public class RichTextEditor {
 	}
 
 	private void installListeners(final SourceViewer viewer) {
-		viewer.addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				// filter out events caused by text presentation changes, e.g. annotation drawing
-				String value = viewer.getTextWidget().getText();
-				if (!RichTextEditor.this.text.equals(value)) {
-					RichTextEditor.this.text = value;
-					RichTextEditor.this.textVersion++;
-					viewer.setData(KEY_TEXT_VERSION, RichTextEditor.this.textVersion);
-					valueChanged(value);
-					CommonFormUtil.ensureVisible(viewer.getTextWidget());
-				}
+		viewer.addTextListener(event -> {
+			// filter out events caused by text presentation changes, e.g. annotation drawing
+			String value = viewer.getTextWidget().getText();
+			if (!text.equals(value)) {
+				text = value;
+				textVersion++;
+				viewer.setData(KEY_TEXT_VERSION, textVersion);
+				valueChanged(value);
+				CommonFormUtil.ensureVisible(viewer.getTextWidget());
 			}
 		});
 		// ensure that tab traverses to next control instead of inserting a tab character unless editing multi-line text
 		if ((style & SWT.MULTI) != 0 && mode != Mode.DEFAULT) {
-			viewer.getTextWidget().addListener(SWT.Traverse, new Listener() {
-				public void handleEvent(Event event) {
-					switch (event.detail) {
+			viewer.getTextWidget().addListener(SWT.Traverse, event -> {
+				switch (event.detail) {
 					case SWT.TRAVERSE_TAB_NEXT:
 					case SWT.TRAVERSE_TAB_PREVIOUS:
 						event.doit = true;
 						break;
-					}
 				}
 			});
 		}
@@ -518,11 +499,7 @@ public class RichTextEditor {
 	private void installMenu(final Control control, Menu menu) {
 		if (menu != null) {
 			control.setMenu(menu);
-			control.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					control.setMenu(null);
-				}
-			});
+			control.addDisposeListener(e -> control.setMenu(null));
 		}
 	}
 
@@ -569,8 +546,8 @@ public class RichTextEditor {
 	}
 
 	public void setText(String value) {
-		this.text = value;
-		this.textVersion++;
+		text = value;
+		textVersion++;
 		SourceViewer viewer = getViewer();
 		if (viewer != null) {
 			viewer.getDocument().set(value);
@@ -618,7 +595,7 @@ public class RichTextEditor {
 	 * Brings <code>viewer</code> to top.
 	 */
 	private void show(SourceViewer viewer) {
-		// WikiText modifies the document therefore, set a new document every time a viewer is changed to synchronize content between viewers 
+		// WikiText modifies the document therefore, set a new document every time a viewer is changed to synchronize content between viewers
 		// ensure that editor has an annotation model
 		updateDocument(viewer, new Document(getText()), !viewer.isEditable());
 		show(viewer.getControl());
@@ -676,22 +653,19 @@ public class RichTextEditor {
 				public void mouseUp(MouseEvent e) {
 					if (!toggled && e.count == 1) {
 						// delay switching in case user intended to select text
-						Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), new Runnable() {
+						Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), () -> {
+							if (previewViewer.getTextWidget() == null
+									|| previewViewer.getTextWidget().isDisposed()) {
+								return;
+							}
 
-							public void run() {
-								if (previewViewer.getTextWidget() == null
-										|| previewViewer.getTextWidget().isDisposed()) {
-									return;
-								}
+							if (previewViewer.getTextWidget().getSelectionCount() == 0) {
+								int offset = previewViewer.getTextWidget().getCaretOffset();
+								showEditor();
+								editorViewer.getTextWidget().setCaretOffset(offset);
 
-								if (previewViewer.getTextWidget().getSelectionCount() == 0) {
-									int offset = previewViewer.getTextWidget().getCaretOffset();
-									showEditor();
-									editorViewer.getTextWidget().setCaretOffset(offset);
-
-									// only do this once, let the user manage toggling from then on
-									toggled = true;
-								}
+								// only do this once, let the user manage toggling from then on
+								toggled = true;
 							}
 						});
 					}

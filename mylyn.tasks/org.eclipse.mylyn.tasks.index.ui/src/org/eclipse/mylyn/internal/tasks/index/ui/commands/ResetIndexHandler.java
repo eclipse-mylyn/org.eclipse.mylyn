@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.index.ui.IndexReference;
  */
 public class ResetIndexHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Job job = new Job(Messages.ResetIndexHandler_Refresh_Index_Job_Name) {
 			@Override

@@ -39,7 +39,7 @@ public class TaskHistory {
 		Assert.isNotNull(task);
 		this.repository = repository;
 		this.task = task;
-		this.revisions = new ArrayList<TaskRevision>();
+		revisions = new ArrayList<>();
 	}
 
 	public void add(TaskRevision entry) {
@@ -51,7 +51,7 @@ public class TaskHistory {
 	}
 
 	public List<TaskRevision> getRevisions() {
-		return new ArrayList<TaskRevision>(revisions);
+		return new ArrayList<>(revisions);
 	}
 
 	/**

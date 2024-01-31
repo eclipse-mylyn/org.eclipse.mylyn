@@ -145,7 +145,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 		} else if (list != null && !list.isDisposed()) {
 			if (values != null) {
 				list.deselectAll();
-				Set<String> selectedValues = new HashSet<String>(Arrays.asList(values));
+				Set<String> selectedValues = new HashSet<>(Arrays.asList(values));
 				for (int i = 0; i < allValues.length; i++) {
 					if (selectedValues.contains(allValues[i])) {
 						list.select(i);

@@ -40,7 +40,7 @@ public class Category extends PlatformObject {
 
 	public int compareTo(Object arg0) {
 		if (arg0 instanceof Category) {
-			return this.getRank() - ((Category) arg0).getRank();
+			return getRank() - ((Category) arg0).getRank();
 		}
 		return 0;
 	}
@@ -56,6 +56,6 @@ public class Category extends PlatformObject {
 	@Override
 	public String toString() {
 		return getLabel();
-	};
+	}
 
 }

@@ -68,15 +68,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(final Object data) {
-		List<ITask> tasksToMove = new ArrayList<ITask>();
+		List<ITask> tasksToMove = new ArrayList<>();
 		if (localTransfer) {
 			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 			List<ITask> tasks = TasksUiInternal.getTasksFromSelection(selection);
 			tasksToMove.addAll(tasks);
 		} else if (fileTransfer) {
 			// TODO implement dropping of files
-		} else if (data instanceof String) {
-			String text = (String) data;
+		} else if (data instanceof String text) {
 			AbstractTask task = createTaskFromUrl(text);
 			if (task == null) {
 				task = TasksUiInternal.createNewLocalTask(text);
@@ -84,11 +83,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			if (task != null) {
 				tasksToMove.add(task);
 				final ITask newTask = task;
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						TasksUiUtil.openTask(newTask);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiUtil.openTask(newTask));
 			}
 		}
 
@@ -100,59 +95,54 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					TasksUiInternal.getTaskList().addTask(task, (LocalTask) currentTarget);
 				}
 			}
+		} else if (currentTarget instanceof ITask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
+				&& getCurrentOperation() != DND.DROP_MOVE) {
+			TasksUiInternal.getTaskDropHandler().loadTaskDropListeners();
+			Operation operation = getCurrentOperation() == DND.DROP_COPY ? Operation.COPY : Operation.LINK;
+			TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, (ITask) currentTarget, operation);
 		} else {
-			if (currentTarget instanceof ITask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
-					&& getCurrentOperation() != DND.DROP_MOVE) {
-				TasksUiInternal.getTaskDropHandler().loadTaskDropListeners();
-				Operation operation = (getCurrentOperation() == DND.DROP_COPY) ? Operation.COPY : Operation.LINK;
-				TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, (ITask) currentTarget, operation);
-			} else {
-				for (ITask task : tasksToMove) {
-					if (currentTarget instanceof UncategorizedTaskContainer) {
-						moveTask(task, (UncategorizedTaskContainer) currentTarget);
-					} else if (currentTarget instanceof TaskCategory) {
-						moveTask(task, (TaskCategory) currentTarget);
-					} else if (currentTarget instanceof UnmatchedTaskContainer) {
-						if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl()
-								.equals(task.getRepositoryUrl())) {
-							moveTask(task, (AbstractTaskCategory) currentTarget);
-						}
-					} else if (currentTarget instanceof ITask) {
-						ITask targetTask = (ITask) currentTarget;
-						TaskListView view = TaskListView.getFromActivePerspective();
-						if ((getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER)
-								&& view != null && view.isScheduledPresentation()) {
-							if (targetTask instanceof AbstractTask) {
-								DateRange targetDate = ((AbstractTask) targetTask).getScheduledForDate();
-								TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, targetDate);
-							}
-						} else {
-							AbstractTaskCategory targetCategory = null;
-							// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-							ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
-								targetCategory = (AbstractTaskCategory) container;
-							} else if (container instanceof UnmatchedTaskContainer) {
-								if (((UnmatchedTaskContainer) container).getRepositoryUrl()
-										.equals(task.getRepositoryUrl())) {
-									targetCategory = (AbstractTaskCategory) container;
-								}
-							}
-							if (targetCategory != null) {
-								moveTask(task, targetCategory);
-							}
-						}
-					} else if (currentTarget instanceof ScheduledTaskContainer) {
-						ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-						if (container instanceof Unscheduled) {
-							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
-						} else if (isValidTarget(container)) {
-							TasksUiPlugin.getTaskActivityManager()
-									.setScheduledFor((AbstractTask) task, container.getDateRange());
-						}
-					} else if (currentTarget == null) {
-						moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
+			for (ITask task : tasksToMove) {
+				if (currentTarget instanceof UncategorizedTaskContainer) {
+					moveTask(task, (UncategorizedTaskContainer) currentTarget);
+				} else if (currentTarget instanceof TaskCategory) {
+					moveTask(task, (TaskCategory) currentTarget);
+				} else if (currentTarget instanceof UnmatchedTaskContainer) {
+					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+						moveTask(task, (AbstractTaskCategory) currentTarget);
 					}
+				} else if (currentTarget instanceof ITask targetTask) {
+					TaskListView view = TaskListView.getFromActivePerspective();
+					if ((getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER)
+							&& view != null && view.isScheduledPresentation()) {
+						if (targetTask instanceof AbstractTask) {
+							DateRange targetDate = ((AbstractTask) targetTask).getScheduledForDate();
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, targetDate);
+						}
+					} else {
+						AbstractTaskCategory targetCategory = null;
+						// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+						ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+						if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
+							targetCategory = (AbstractTaskCategory) container;
+						} else if (container instanceof UnmatchedTaskContainer) {
+							if (((UnmatchedTaskContainer) container).getRepositoryUrl()
+									.equals(task.getRepositoryUrl())) {
+								targetCategory = (AbstractTaskCategory) container;
+							}
+						}
+						if (targetCategory != null) {
+							moveTask(task, targetCategory);
+						}
+					}
+				} else if (currentTarget instanceof ScheduledTaskContainer container) {
+					if (container instanceof Unscheduled) {
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
+					} else if (isValidTarget(container)) {
+						TasksUiPlugin.getTaskActivityManager()
+								.setScheduledFor((AbstractTask) task, container.getDateRange());
+					}
+				} else if (currentTarget == null) {
+					moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 				}
 			}
 		}
@@ -229,7 +219,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(url) {
 					@Override
 					protected void titleRetrieved(final String pageTitle) {
-						// make sure summary was not changed in the mean time 
+						// make sure summary was not changed in the mean time
 						if (newTask.getSummary().equals(summary)) {
 							newTask.setSummary(pageTitle);
 							TasksUiInternal.getTaskList().notifyElementChanged(newTask);
@@ -256,7 +246,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			Object target = getCurrentTarget();
 			if (target instanceof UncategorizedTaskContainer || target instanceof TaskCategory
 					|| target instanceof UnmatchedTaskContainer
-					|| (target instanceof ScheduledTaskContainer && isValidTarget((ScheduledTaskContainer) target))) {
+					|| target instanceof ScheduledTaskContainer && isValidTarget((ScheduledTaskContainer) target)) {
 				return true;
 			} else if (target instanceof ITaskContainer && (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER
 					|| getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {

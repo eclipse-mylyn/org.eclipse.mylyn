@@ -67,11 +67,11 @@ public class OpenRepositoryTaskJob extends Job {
 	 */
 	public OpenRepositoryTaskJob(TaskRepository repository, String taskKey, String taskUrl, IWorkbenchPage page) {
 		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskKey));
-		this.repositoryKind = repository.getConnectorKind();
-		this.taskId = null;
-		this.repositoryUrl = repository.getRepositoryUrl();
+		repositoryKind = repository.getConnectorKind();
+		taskId = null;
+		repositoryUrl = repository.getRepositoryUrl();
 		this.taskUrl = taskUrl;
-		this.timestamp = 0;
+		timestamp = 0;
 		this.repository = repository;
 		this.taskKey = taskKey;
 	}
@@ -85,8 +85,7 @@ public class OpenRepositoryTaskJob extends Job {
 	}
 
 	/**
-	 * Creates a job that fetches a task with the given task id and opens it, expanding all comments made after the
-	 * given timestamp.
+	 * Creates a job that fetches a task with the given task id and opens it, expanding all comments made after the given timestamp.
 	 */
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			long timestamp, IWorkbenchPage page) {
@@ -128,17 +127,14 @@ public class OpenRepositoryTaskJob extends Job {
 			repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		}
 		if (repository == null) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openError(null, Messages.OpenRepositoryTaskJob_Repository_Not_Found,
-							MessageFormat.format(
-									Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
-									repositoryUrl) + "\n" + //$NON-NLS-1$
-									MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
-											Messages.TasksUiPlugin_Task_Repositories));
-					TasksUiUtil.openUrl(taskUrl);
-				}
-
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+				MessageDialog.openError(null, Messages.OpenRepositoryTaskJob_Repository_Not_Found,
+						MessageFormat.format(
+								Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
+								repositoryUrl) + "\n" + //$NON-NLS-1$
+								MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
+										Messages.TasksUiPlugin_Task_Repositories));
+				TasksUiUtil.openUrl(taskUrl);
 			});
 			return Status.OK_STATUS;
 		}
@@ -149,51 +145,40 @@ public class OpenRepositoryTaskJob extends Job {
 			if (taskData != null) {
 				task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
-						if (listener != null && event != null) {
-							listener.taskOpened(event);
-						}
-						if (timestamp != 0 && event != null) {
-							List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
-									.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
-							if (commentAttributes.size() > 0) {
-								for (TaskAttribute commentAttribute : commentAttributes) {
-									TaskAttribute commentCreateDate = commentAttribute
-											.getMappedAttribute(TaskAttribute.COMMENT_DATE);
-									if (commentCreateDate != null) {
-										Date dateValue = taskData.getAttributeMapper().getDateValue(commentCreateDate);
-										if (dateValue.getTime() < timestamp) {
-											continue;
-										}
-										TaskAttribute dn = commentAttribute
-												.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
-										TaskEditor editor = (TaskEditor) event.getEditor();
-										if (dn != null) {
-											editor.selectReveal(TaskAttribute.PREFIX_COMMENT + dn.getValue());
-										}
-										break;
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
+					if (listener != null && event != null) {
+						listener.taskOpened(event);
+					}
+					if (timestamp != 0 && event != null) {
+						List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
+								.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
+						if (commentAttributes.size() > 0) {
+							for (TaskAttribute commentAttribute : commentAttributes) {
+								TaskAttribute commentCreateDate = commentAttribute
+										.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+								if (commentCreateDate != null) {
+									Date dateValue = taskData.getAttributeMapper().getDateValue(commentCreateDate);
+									if (dateValue.getTime() < timestamp) {
+										continue;
 									}
+									TaskAttribute dn = commentAttribute
+											.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
+									TaskEditor editor = (TaskEditor) event.getEditor();
+									if (dn != null) {
+										editor.selectReveal(TaskAttribute.PREFIX_COMMENT + dn.getValue());
+									}
+									break;
 								}
 							}
 						}
 					}
 				});
 			} else {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						TasksUiUtil.openUrl(taskUrl);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiUtil.openUrl(taskUrl));
 			}
 		} catch (final CoreException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					TasksUiInternal.displayStatus(Messages.OpenRepositoryTaskJob_Unable_to_open_task, e.getStatus());
-				}
-			});
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiInternal.displayStatus(Messages.OpenRepositoryTaskJob_Unable_to_open_task, e.getStatus()));
 		} finally {
 			monitor.done();
 		}

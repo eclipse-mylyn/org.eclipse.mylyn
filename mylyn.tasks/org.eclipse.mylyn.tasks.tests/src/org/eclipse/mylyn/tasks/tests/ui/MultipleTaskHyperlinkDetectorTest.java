@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -33,6 +31,8 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Sam Davis
@@ -62,14 +62,14 @@ public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 
 			@Override
 			public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
-				List<IHyperlink> links = new ArrayList<IHyperlink>();
+				List<IHyperlink> links = new ArrayList<>();
 				Matcher m = HYPERLINK_PATTERN.matcher(text);
 				while (m.find()) {
 					links.add(new TaskHyperlink(new Region(textOffset + m.start(), m.end() - m.start()), repository,
 							m.group()));
 				}
 				return links.toArray(new IHyperlink[0]);
-			};
+			}
 		};
 		// define 1 repository using "xxx" as task id
 		repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,

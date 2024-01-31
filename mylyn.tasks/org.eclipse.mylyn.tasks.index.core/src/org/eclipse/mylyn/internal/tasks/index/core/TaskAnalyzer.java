@@ -29,7 +29,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 class TaskAnalyzer {
 
 	public static PerFieldAnalyzerWrapper instance() {
-		Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
+		Map<String, Analyzer> analyzerPerField = new HashMap<>();
 		analyzerPerField.put(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
 		analyzerPerField.put(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
 		analyzerPerField.put(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());

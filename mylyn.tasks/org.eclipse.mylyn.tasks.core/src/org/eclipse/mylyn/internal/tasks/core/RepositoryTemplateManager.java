@@ -33,11 +33,11 @@ public class RepositoryTemplateManager {
 
 	public synchronized Set<RepositoryTemplate> getTemplates(String connectorKind) {
 		if (templateByConnectorKind == null) {
-			templateByConnectorKind = new HashMap<String, Set<RepositoryTemplate>>();
+			templateByConnectorKind = new HashMap<>();
 		}
 		Set<RepositoryTemplate> templates = templateByConnectorKind.get(connectorKind);
 		if (templates == null) {
-			templates = new LinkedHashSet<RepositoryTemplate>();
+			templates = new LinkedHashSet<>();
 			templateByConnectorKind.put(connectorKind, templates);
 		}
 		return templates;

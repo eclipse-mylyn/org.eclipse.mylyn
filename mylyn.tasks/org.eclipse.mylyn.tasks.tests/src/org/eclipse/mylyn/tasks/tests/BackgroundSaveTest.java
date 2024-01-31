@@ -17,11 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the mechanism for saving the task data periodically.

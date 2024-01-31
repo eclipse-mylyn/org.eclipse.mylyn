@@ -16,9 +16,9 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
+
+import junit.framework.TestCase;
 
 /**
  * @author Eugene Kuleshov - bug 129511
@@ -63,8 +63,8 @@ public class TaskKeyComparatorTest extends TestCase {
 	private static final TaskKeyComparator tkc = new TaskKeyComparator();
 
 	public void comparisonCheck(String s1, String s2, int n) {
-		final String[] c1 = new String[] { null, null, s1 };
-		final String[] c2 = new String[] { null, null, s2 };
+		final String[] c1 = { null, null, s1 };
+		final String[] c2 = { null, null, s2 };
 		assertEquals(n, tkc.compare(c1, c2));
 	}
 

@@ -14,10 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+
+import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla

@@ -31,7 +31,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -41,10 +40,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -93,12 +88,12 @@ public class AttachmentPreviewPage extends WizardPage {
 		setTitle(Messages.AttachmentPreviewPage_Attachment_Preview);
 		setDescription(Messages.AttachmentPreviewPage_Review_the_attachment_before_submitting);
 
-		textTypes = new HashSet<String>();
+		textTypes = new HashSet<>();
 		textTypes.add("text/plain"); //$NON-NLS-1$
 		textTypes.add("text/html"); //$NON-NLS-1$
 		textTypes.add("application/xml"); //$NON-NLS-1$
 
-		imageTypes = new HashSet<String>();
+		imageTypes = new HashSet<>();
 		imageTypes.add("image/jpeg"); //$NON-NLS-1$
 		imageTypes.add("image/gif"); //$NON-NLS-1$
 		imageTypes.add("image/png"); //$NON-NLS-1$
@@ -121,6 +116,7 @@ public class AttachmentPreviewPage extends WizardPage {
 		vBar.setIncrement(10);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -211,16 +207,8 @@ public class AttachmentPreviewPage extends WizardPage {
 				.grab(true, true)
 				.hint(imgSize.width, imgSize.height)
 				.create());
-		canvas.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent event) {
-				event.gc.drawImage(bufferedImage, 0, 0);
-			}
-		});
-		canvas.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent event) {
-				bufferedImage.dispose();
-			}
-		});
+		canvas.addPaintListener(event -> event.gc.drawImage(bufferedImage, 0, 0));
+		canvas.addDisposeListener(event -> bufferedImage.dispose());
 		canvas.setSize(imgSize.width, imgSize.height);
 		scrolledComposite.setMinSize(imgSize.width, imgSize.height);
 		scrolledComposite.setContent(canvasComposite);
@@ -246,55 +234,51 @@ public class AttachmentPreviewPage extends WizardPage {
 	private Object getContent(final Composite composite) {
 		final Object result[] = new Object[1];
 		try {
-			getContainer().run(true, false, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			getContainer().run(true, false, monitor -> {
+				try {
+					monitor.beginTask(Messages.AttachmentPreviewPage_Preparing_preview, IProgressMonitor.UNKNOWN);
+					final InputStream in = model.getSource().createInputStream(monitor);
 					try {
-						monitor.beginTask(Messages.AttachmentPreviewPage_Preparing_preview, IProgressMonitor.UNKNOWN);
-						final InputStream in = model.getSource().createInputStream(monitor);
-						try {
-							if (isTextAttachment()) {
-								StringBuilder content = new StringBuilder();
-								BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-								String line;
-								while ((line = reader.readLine()) != null && content.length() < MAX_TEXT_SIZE
-										&& !monitor.isCanceled()) {
-									content.append(line);
-									content.append("\n"); //$NON-NLS-1$
-								}
-								result[0] = content.toString();
-							} else if (isImageAttachment()) {
-								Display.getDefault().syncExec(new Runnable() {
-									public void run() {
-										// Uses double buffering to paint the image; there was a weird behavior
-										// with transparent images and flicker with large images
-										Image originalImage = new Image(getShell().getDisplay(), in);
-										final Image bufferedImage = new Image(getShell().getDisplay(),
-												originalImage.getBounds());
-										GC gc = new GC(bufferedImage);
-										gc.setBackground(composite.getBackground());
-										gc.fillRectangle(originalImage.getBounds());
-										gc.drawImage(originalImage, 0, 0);
-										gc.dispose();
-										originalImage.dispose();
-										result[0] = bufferedImage;
-									}
-								});
+						if (isTextAttachment()) {
+							StringBuilder content = new StringBuilder();
+							BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+							String line;
+							while ((line = reader.readLine()) != null && content.length() < MAX_TEXT_SIZE
+									&& !monitor.isCanceled()) {
+								content.append(line);
+								content.append("\n"); //$NON-NLS-1$
 							}
-						} catch (IOException e) {
-							throw new InvocationTargetException(e);
-						} finally {
-							try {
-								in.close();
-							} catch (IOException e) {
-								StatusHandler.log(
-										new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to close file", e)); //$NON-NLS-1$
-							}
+							result[0] = content.toString();
+						} else if (isImageAttachment()) {
+							Display.getDefault().syncExec(() -> {
+								// Uses double buffering to paint the image; there was a weird behavior
+								// with transparent images and flicker with large images
+								Image originalImage = new Image(getShell().getDisplay(), in);
+								final Image bufferedImage = new Image(getShell().getDisplay(),
+										originalImage.getBounds());
+								GC gc = new GC(bufferedImage);
+								gc.setBackground(composite.getBackground());
+								gc.fillRectangle(originalImage.getBounds());
+								gc.drawImage(originalImage, 0, 0);
+								gc.dispose();
+								originalImage.dispose();
+								result[0] = bufferedImage;
+							});
 						}
-					} catch (CoreException e) {
+					} catch (IOException e) {
 						throw new InvocationTargetException(e);
 					} finally {
-						monitor.done();
+						try {
+							in.close();
+						} catch (IOException e) {
+							StatusHandler.log(
+									new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to close file", e)); //$NON-NLS-1$
+						}
 					}
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} finally {
+					monitor.done();
 				}
 			});
 		} catch (InvocationTargetException e) {

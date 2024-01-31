@@ -13,14 +13,14 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.tasks.core.TaskMigrationEvent;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

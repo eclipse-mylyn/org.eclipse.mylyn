@@ -35,6 +35,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		super(provider, decorator);
 	}
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (!(element instanceof ITaskContainer)) {
 			return null;
@@ -42,21 +43,18 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		if (columnIndex == 0) {
 			if (element instanceof ITaskContainer && !(element instanceof ITask)) {
 				return super.getImage(element);
-			} else {
-				if (element instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) element;
-					if (task.isActive()) {
-						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
-					} else {
-						if (TasksUiPlugin.getContextStore().hasContext(task)) {
-							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE);
-						} else {
-							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
-						}
-					}
+			} else if (element instanceof AbstractTask task) {
+				if (task.isActive()) {
+					return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
 				} else {
-					return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
+					if (TasksUiPlugin.getContextStore().hasContext(task)) {
+						return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE);
+					} else {
+						return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
+					}
 				}
+			} else {
+				return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 			}
 		} else if (columnIndex == 1) {
 			if (element instanceof ITaskContainer || element instanceof IRepositoryQuery) {
@@ -67,6 +65,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		return null;
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		return null;
 	}

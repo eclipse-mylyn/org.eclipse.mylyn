@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -40,14 +39,14 @@ import org.eclipse.ui.menus.UIElement;
  */
 public class DisconnectHandler extends AbstractHandler implements IElementUpdater {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Command command0 = event.getCommand();
 
 		boolean oldValue = HandlerUtil.toggleCommandState(command0);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator<?> iter = ((IStructuredSelection) selection).iterator(); iter.hasNext();) {
-				Object item = iter.next();
+			for (Object item : ((IStructuredSelection) selection)) {
 				if (item instanceof TaskRepository) {
 					((TaskRepository) item).setOffline(!oldValue);
 					TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged((TaskRepository) item);
@@ -57,8 +56,9 @@ public class DisconnectHandler extends AbstractHandler implements IElementUpdate
 		return null;
 	}
 
+	@Override
 	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
-		IWorkbenchWindow window = (IWorkbenchWindow) element.getServiceLocator().getService(IWorkbenchWindow.class);
+		IWorkbenchWindow window = element.getServiceLocator().getService(IWorkbenchWindow.class);
 		if (window != null) {
 			IWorkbenchPage activePage = ((WorkbenchWindow) window).getActivePage();
 			if (activePage != null) {

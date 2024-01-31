@@ -58,8 +58,7 @@ public class CopyContextHandler extends AbstractTaskHandler {
 
 		Object result = dialog.getFirstResult();
 
-		if (result instanceof ITask) {
-			ITask targetTask = (ITask) result;
+		if (result instanceof ITask targetTask) {
 			TasksUi.getTaskActivityManager().deactivateActiveTask();
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -80,19 +79,20 @@ public class CopyContextHandler extends AbstractTaskHandler {
 				}
 
 				switch (action) {
-				case REPLACE:
-					IAdaptable context = TasksUiPlugin.getContextStore().copyContext(sourceTask, targetTask);
-					if (context == null) {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								TITLE_DIALOG, Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);
+					case REPLACE:
+						IAdaptable context = TasksUiPlugin.getContextStore().copyContext(sourceTask, targetTask);
+						if (context == null) {
+							MessageDialog.openInformation(
+									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), TITLE_DIALOG,
+									Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);
+							return;
+						}
+						break;
+					case MERGE:
+						TasksUiPlugin.getContextStore().mergeContext(sourceTask, targetTask);
+						break;
+					case CANCEL:
 						return;
-					}
-					break;
-				case MERGE:
-					TasksUiPlugin.getContextStore().mergeContext(sourceTask, targetTask);
-					break;
-				case CANCEL:
-					return;
 				}
 
 				TasksUiInternal.activateTaskThroughCommand(targetTask);

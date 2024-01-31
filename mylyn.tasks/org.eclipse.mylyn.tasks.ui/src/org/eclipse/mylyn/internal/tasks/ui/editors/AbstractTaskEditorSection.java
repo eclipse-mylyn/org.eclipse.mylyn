@@ -45,7 +45,7 @@ public abstract class AbstractTaskEditorSection extends AbstractTaskEditorPart {
 
 	private Section section;
 
-	private final List<AbstractTaskEditorPart> subParts = new ArrayList<AbstractTaskEditorPart>();
+	private final List<AbstractTaskEditorPart> subParts = new ArrayList<>();
 
 	public void addSubPart(String path, AbstractTaskEditorPart part) {
 		subParts.add(part);
@@ -111,11 +111,13 @@ public abstract class AbstractTaskEditorSection extends AbstractTaskEditorPart {
 
 			for (final AbstractTaskEditorPart part : subParts) {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Error creating task editor part: \"" + part.getPartId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
+					@Override
 					public void run() throws Exception {
 						part.createControl(sectionClient, toolkit);
 						if (part.getControl() != null) {

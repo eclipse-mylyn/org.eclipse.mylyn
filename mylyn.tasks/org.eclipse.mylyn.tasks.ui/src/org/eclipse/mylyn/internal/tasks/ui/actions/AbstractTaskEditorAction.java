@@ -32,13 +32,13 @@ public abstract class AbstractTaskEditorAction extends BaseSelectionListenerActi
 	}
 
 	public void setEditor(TaskEditor taskEditor) {
-		this.editor = taskEditor;
+		editor = taskEditor;
 	}
 
 	protected boolean taskDirty(ITask task) {
-		return (((editor != null && editor.isDirty())
+		return editor != null && editor.isDirty()
 				|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
-				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT)));
+				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT);
 
 	}
 

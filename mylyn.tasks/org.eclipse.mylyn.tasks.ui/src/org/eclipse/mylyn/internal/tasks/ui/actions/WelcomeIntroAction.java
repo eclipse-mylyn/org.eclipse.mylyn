@@ -33,18 +33,22 @@ public class WelcomeIntroAction implements IWorkbenchWindowActionDelegate, IView
 
 	private IWorkbenchWindow wbWindow;
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		wbWindow = view.getViewSite().getWorkbenchWindow();
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		wbWindow = window;
 	}
 
+	@Override
 	public void run(IAction action) {
 		IIntroManager introMgr = wbWindow.getWorkbench().getIntroManager();
 		IIntroPart intro = introMgr.getIntro();
@@ -62,9 +66,10 @@ public class WelcomeIntroAction implements IWorkbenchWindowActionDelegate, IView
 	}
 
 	private Shell getShell() {
-		return (wbWindow != null) ? wbWindow.getShell() : WorkbenchUtil.getShell();
+		return wbWindow != null ? wbWindow.getShell() : WorkbenchUtil.getShell();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

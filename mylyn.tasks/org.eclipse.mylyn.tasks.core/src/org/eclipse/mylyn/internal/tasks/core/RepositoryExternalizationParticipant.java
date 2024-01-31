@@ -39,9 +39,9 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 	private boolean dirty = false;
 
 	public RepositoryExternalizationParticipant(ExternalizationManager exManager, TaskRepositoryManager manager) {
-		this.repositoryManager = manager;
-		this.externalizationManager = exManager;
-		this.repositoryManager.addListener(this);
+		repositoryManager = manager;
+		externalizationManager = exManager;
+		repositoryManager.addListener(this);
 	}
 
 	@Override
@@ -84,6 +84,7 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 		return TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
 	}
 
+	@Override
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		requestSave();
 	}
@@ -92,14 +93,17 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 		// ignore
 	}
 
+	@Override
 	public void repositoryAdded(TaskRepository repository) {
 		requestSave();
 	}
 
+	@Override
 	public void repositoryRemoved(TaskRepository repository) {
 		requestSave();
 	}
 
+	@Override
 	public void repositorySettingsChanged(TaskRepository repository) {
 		requestSave();
 	}

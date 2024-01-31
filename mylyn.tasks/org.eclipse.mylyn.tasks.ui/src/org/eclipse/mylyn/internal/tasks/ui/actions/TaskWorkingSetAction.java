@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,9 +28,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
@@ -74,6 +71,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		setMenuCreator(this);
 	}
 
+	@Override
 	public void dispose() {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -81,6 +79,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -90,6 +89,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -110,9 +110,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			List<IWorkingSet> sortedWorkingSets = Arrays.asList(workingSets);
 			Collections.sort(sortedWorkingSets, new WorkingSetComparator());
 
-			Iterator<IWorkingSet> iter = sortedWorkingSets.iterator();
-			while (iter.hasNext()) {
-				IWorkingSet workingSet = iter.next();
+			for (IWorkingSet workingSet : sortedWorkingSets) {
 				if (workingSet != null
 						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					ActionContributionItem itemSet = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
@@ -193,12 +191,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		@Override
 		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
+			Set<IWorkingSet> newList = new HashSet<>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
 
-			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-			Iterator<IWorkingSet> iter = newList.iterator();
-			while (iter.hasNext()) {
-				IWorkingSet workingSet = iter.next();
+			Set<IWorkingSet> tempList = new HashSet<>();
+			for (IWorkingSet workingSet : newList) {
 				if (workingSet != null
 						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
@@ -244,10 +240,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			if (workingSetIds == null || workingSetIds.length == 0) {
 				taskWorkingSetIds = null;
 			} else {
-				taskWorkingSetIds = new HashSet<String>();
-				for (String id : workingSetIds) {
-					taskWorkingSetIds.add(id);
-				}
+				taskWorkingSetIds = new HashSet<>();
+				Collections.addAll(taskWorkingSetIds, workingSetIds);
 			}
 		}
 
@@ -278,11 +272,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 			viewer.setCheckedElements(TaskWorkingSetUpdater.getActiveWorkingSets(window).toArray());
 
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					handleSelectionChanged();
-				}
-			});
+			viewer.addSelectionChangedListener(event -> handleSelectionChanged());
 
 			data = new GridData(GridData.FILL_BOTH);
 			data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
@@ -302,8 +292,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		@Override
 		protected void okPressed() {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
-			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
+			Set<IWorkingSet> newList = new HashSet<>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
+			Set<IWorkingSet> tempList = new HashSet<>();
 			for (IWorkingSet workingSet : newList) {
 				for (String id : taskWorkingSetIds) {
 					if (workingSet.getId().equalsIgnoreCase(id)) {
@@ -316,7 +306,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			Object[] selection = viewer.getCheckedElements();
 			IWorkingSet[] setsToEnable = new IWorkingSet[selection.length];
 			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);
-			newList.addAll(new HashSet<IWorkingSet>(Arrays.asList(setsToEnable)));
+			newList.addAll(new HashSet<>(Arrays.asList(setsToEnable)));
 
 			TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);
 			super.okPressed();

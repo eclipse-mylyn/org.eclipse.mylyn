@@ -17,7 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
@@ -65,6 +64,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		this.taskRepository = taskRepository;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
@@ -99,16 +99,14 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		final ITaskMapping initializationData = getInitializationData();
 		final ITaskMapping selectionData = getTaskSelection();
 		try {
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						taskData[0] = TasksUiInternal.createTaskData(taskRepository, initializationData, selectionData,
-								monitor);
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
+			IRunnableWithProgress runnable = monitor -> {
+				try {
+					taskData[0] = TasksUiInternal.createTaskData(taskRepository, initializationData, selectionData,
+							monitor);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
 				}
 			};
 			if (getContainer().getShell().isVisible()) {

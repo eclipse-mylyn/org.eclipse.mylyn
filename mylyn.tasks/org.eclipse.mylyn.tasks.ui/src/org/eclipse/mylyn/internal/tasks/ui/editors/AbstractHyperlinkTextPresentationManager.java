@@ -30,8 +30,8 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.swt.custom.StyleRange;
 
 /**
- * A manager that ensures that all task hyperlinks have the appropriate text presentation. Subclasses may specify logic
- * for filtering detected hyperlinks and text decoration.
+ * A manager that ensures that all task hyperlinks have the appropriate text presentation. Subclasses may specify logic for filtering
+ * detected hyperlinks and text decoration.
  * 
  * @author David Green
  */
@@ -42,6 +42,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 	 */
 	public static class RegionComparator implements Comparator<IRegion> {
 
+		@Override
 		public int compare(IRegion o1, IRegion o2) {
 			if (o1 == o2) {
 				return 0;
@@ -62,6 +63,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 	}
 
 	private class Support implements ITextPresentationListener {
+		@Override
 		public void applyTextPresentation(TextPresentation textPresentation) {
 			StyleRange[] styleRanges = computeStyleRanges(textPresentation.getCoverage());
 			if (styleRanges != null && styleRanges.length > 0) {
@@ -96,25 +98,22 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 		if (regions != null) {
 			// style ranges may be adjacent but must not overlap, and they must be in order
 			// of increasing offset.
-			List<StyleRange> ranges = new ArrayList<StyleRange>(regions.size());
+			List<StyleRange> ranges = new ArrayList<>(regions.size());
 			// sort them first to ensure increasing offset
 			Collections.sort(regions, REGION_COMPARATOR);
 			// now merge overlapping (and adjacent) ranges
 			int start = -1;
 			int end = -1;
-			for (int x = 0; x < regions.size(); ++x) {
-				IRegion region = regions.get(x);
+			for (IRegion region : regions) {
 				if (start == -1) {
 					start = region.getOffset();
 					end = region.getOffset() + region.getLength();
+				} else if (region.getOffset() >= end) {
+					addRange(ranges, start, end);
+					start = region.getOffset();
+					end = region.getOffset() + region.getLength();
 				} else {
-					if (region.getOffset() >= end) {
-						addRange(ranges, start, end);
-						start = region.getOffset();
-						end = region.getOffset() + region.getLength();
-					} else {
-						end = region.getOffset() + region.getLength();
-					}
+					end = region.getOffset() + region.getLength();
 				}
 			}
 			if (start != -1) {
@@ -142,7 +141,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 				for (IHyperlink hyperlink : hyperlinks) {
 					if (select(hyperlink)) {
 						if (regions == null) {
-							regions = new ArrayList<IRegion>();
+							regions = new ArrayList<>();
 						}
 						regions.add(hyperlink instanceof IHighlightingHyperlink
 								? ((IHighlightingHyperlink) hyperlink).getHighlightingRegion()
@@ -174,7 +173,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 
 	public void uninstall() {
 		((ITextViewerExtension4) viewer).removeTextPresentationListener(textPresentationListener);
-		this.viewer = null;
+		viewer = null;
 	}
 
 }

@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.Future;
@@ -35,8 +34,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
@@ -55,20 +52,14 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 
 	private IIdentity identity;
 
-	private final PropertyChangeListener imageListener = new PropertyChangeListener() {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getPropertyName().equals("image")) { //$NON-NLS-1$
-				final ProfileImage profileImage = (ProfileImage) event.getNewValue();
-				Display.getDefault().asyncExec(new Runnable() {
-
-					public void run() {
-						if (!label.isDisposed()) {
-							updateImage(profileImage);
-						}
-					}
-				});
-			}
+	private final PropertyChangeListener imageListener = event -> {
+		if (event.getPropertyName().equals("image")) { //$NON-NLS-1$
+			final ProfileImage profileImage = (ProfileImage) event.getNewValue();
+			Display.getDefault().asyncExec(() -> {
+				if (!label.isDisposed()) {
+					updateImage(profileImage);
+				}
+			});
 		}
 	};
 
@@ -108,14 +99,12 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		label = new Label(parent, SWT.NONE);
 		label.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
-		label.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if (image != null) {
-					image.dispose();
-				}
-				if (identity != null) {
-					identity.removePropertyChangeListener(imageListener);
-				}
+		label.addDisposeListener(e -> {
+			if (image != null) {
+				image.dispose();
+			}
+			if (identity != null) {
+				identity.removePropertyChangeListener(imageListener);
 			}
 		});
 		refresh();

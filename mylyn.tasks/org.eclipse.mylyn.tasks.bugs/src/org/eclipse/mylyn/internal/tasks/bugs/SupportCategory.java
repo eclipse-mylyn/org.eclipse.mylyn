@@ -33,7 +33,7 @@ public class SupportCategory extends AbstractSupportElement {
 
 	public void add(IProvider provider) {
 		if (providers == null) {
-			providers = new ArrayList<IProvider>();
+			providers = new ArrayList<>();
 		}
 		providers.add(provider);
 	}
@@ -48,7 +48,7 @@ public class SupportCategory extends AbstractSupportElement {
 		if (providers == null) {
 			return Collections.emptyList();
 		}
-		return new ArrayList<IProvider>(providers);
+		return new ArrayList<>(providers);
 	}
 
 	public int getWeight() {

@@ -26,18 +26,18 @@ public interface ITaskContribution {
 	/**
 	 * Appends <code>text</code> to the description of the task.
 	 */
-	public abstract void appendToDescription(String text);
+	void appendToDescription(String text);
 
-	public abstract String getAttribute(String name);
+	String getAttribute(String name);
 
-	public abstract IProduct getProduct();
+	IProduct getProduct();
 
-	public abstract IStatus getStatus();
+	IStatus getStatus();
 
-	public abstract boolean isHandled();
+	boolean isHandled();
 
-	public abstract void setAttribute(String name, String value);
+	void setAttribute(String name, String value);
 
-	public abstract void setHandled(boolean handled);
+	void setHandled(boolean handled);
 
 }

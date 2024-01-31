@@ -56,11 +56,7 @@ public abstract class AbstractRetrieveTitleFromUrlJob extends Job {
 		try {
 			pageTitle = WebUtil.getTitleFromUrl(new WebLocation(getUrl()), monitor);
 			if (pageTitle != null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						titleRetrieved(pageTitle);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> titleRetrieved(pageTitle));
 			}
 		} catch (IOException e) {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Retrieving summary from URL failed", e); //$NON-NLS-1$

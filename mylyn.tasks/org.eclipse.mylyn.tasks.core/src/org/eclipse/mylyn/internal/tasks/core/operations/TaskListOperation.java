@@ -45,19 +45,16 @@ public abstract class TaskListOperation {
 	final public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		final InvocationTargetException[] ite = new InvocationTargetException[1];
 		try {
-			ITaskListRunnable runnable = new ITaskListRunnable() {
-
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					try {
-						Job.getJobManager().beginRule(rule, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-						operations(monitor);
-					} catch (InvocationTargetException e) {
-						ite[0] = e;
-					} catch (InterruptedException e) {
-						throw new OperationCanceledException(e.getMessage());
-					} finally {
-						Job.getJobManager().endRule(rule);
-					}
+			ITaskListRunnable runnable = monitor1 -> {
+				try {
+					Job.getJobManager().beginRule(rule, new SubProgressMonitor(monitor1, IProgressMonitor.UNKNOWN));
+					operations(monitor1);
+				} catch (InvocationTargetException e) {
+					ite[0] = e;
+				} catch (InterruptedException e) {
+					throw new OperationCanceledException(e.getMessage());
+				} finally {
+					Job.getJobManager().endRule(rule);
 				}
 			};
 			getTaskList().run(runnable, monitor);

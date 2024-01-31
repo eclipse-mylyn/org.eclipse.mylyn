@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.index.tests.util.MockTestContext;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -69,8 +68,8 @@ public abstract class AbstractTaskListIndexTest {
 	}
 
 	protected void setupIndex() {
-		index = new TaskListIndex(context.getTaskList(), context.getDataManager(),
-				(IRepositoryManager) context.getRepositoryManager(), tempDir, 0L);
+		index = new TaskListIndex(context.getTaskList(), context.getDataManager(), context.getRepositoryManager(),
+				tempDir, 0L);
 		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 		index.setReindexDelay(0L);
 	}

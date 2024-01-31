@@ -14,10 +14,7 @@
 package org.eclipse.mylyn.tasks.tests.core;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
@@ -26,6 +23,8 @@ import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -70,11 +69,9 @@ public class DefaultTaskSchemaTest extends TestCase {
 
 	public void testIterator() {
 		AbstractTaskSchema schema = new DefaultTaskSchema();
-		Iterator<Field> fields = schema.getFields().iterator();
 		int i = 0;
-		Set<String> attributeIds = new HashSet<String>();
-		while (fields.hasNext()) {
-			Field next = fields.next();
+		Set<String> attributeIds = new HashSet<>();
+		for (Field next : schema.getFields()) {
 			attributeIds.add(next.getKey());
 			i++;
 		}
@@ -90,7 +87,7 @@ public class DefaultTaskSchemaTest extends TestCase {
 		TaskData testData = new TaskData(new TaskAttributeMapper(new TaskRepository("mock", "http://mock")), "mock",
 				"http://mock", "-1");
 		schema.initialize(testData);
-		int size = testData.getRoot().getAttributes().values().size();
+		int size = testData.getRoot().getAttributes().size();
 		//Let's allow for adding fields to default schema without breaking test, but assume that no-existing attributes will be removed
 		assertTrue("Actual Attribute Count: " + size, size >= 40);
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.ADD_SELF_CC));

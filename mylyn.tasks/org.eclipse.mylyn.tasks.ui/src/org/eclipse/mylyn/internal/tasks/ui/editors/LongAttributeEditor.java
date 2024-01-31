@@ -38,18 +38,15 @@ public class LongAttributeEditor extends TextAttributeEditor {
 	}
 
 	IInputValidator getAttributeTypeValidator() {
-		return new IInputValidator() {
-			@Override
-			public String isValid(String newText) {
-				if (StringUtils.isNotBlank(newText)) {
-					try {
-						Long.parseLong(newText);
-					} catch (NumberFormatException e) {
-						return Messages.LongAttributeEditor_This_field_requires_a_long_value;
-					}
+		return newText -> {
+			if (StringUtils.isNotBlank(newText)) {
+				try {
+					Long.parseLong(newText);
+				} catch (NumberFormatException e) {
+					return Messages.LongAttributeEditor_This_field_requires_a_long_value;
 				}
-				return null;
 			}
+			return null;
 		};
 	}
 

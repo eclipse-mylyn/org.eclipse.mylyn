@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
- * A settings page for the local repository properties dialog. Local repositories have no settings, however they may
- * have settings contributed via the taskRepositoryPageContribution.
+ * A settings page for the local repository properties dialog. Local repositories have no settings, however they may have settings
+ * contributed via the taskRepositoryPageContribution.
  * 
  * @author David Green
  */
@@ -39,6 +39,7 @@ public class LocalRepositorySettingsPage extends AbstractTaskRepositoryPage {
 		return LocalRepositoryConnector.CONNECTOR_KIND;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return LocalRepositoryConnector.REPOSITORY_URL;
 	}

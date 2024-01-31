@@ -88,8 +88,7 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 		updateDrillDownActions();
 
 		Object element = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
-		if (element instanceof ITaskContainer && !(element instanceof ITask)) {
-			ITaskContainer cat = (ITaskContainer) element;
+		if (element instanceof ITaskContainer cat && !(element instanceof ITask)) {
 			if (cat.getChildren().size() > 0) {
 				goIntoAction.setEnabled(true);
 			} else {

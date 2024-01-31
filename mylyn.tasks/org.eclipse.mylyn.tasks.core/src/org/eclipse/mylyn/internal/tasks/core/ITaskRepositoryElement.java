@@ -18,8 +18,8 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public interface ITaskRepositoryElement {
 
-	public String getConnectorKind();
+	String getConnectorKind();
 
-	public String getRepositoryUrl();
+	String getRepositoryUrl();
 
 }

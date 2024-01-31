@@ -27,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -45,8 +44,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 public abstract class AbstractAttributeEditor {
 
 	/**
-	 * The key used to associate the editor control with the corresponding task attribute. This enables lookup of the
-	 * model element from the widget hierarchy.
+	 * The key used to associate the editor control with the corresponding task attribute. This enables lookup of the model element from the
+	 * widget hierarchy.
 	 *
 	 * @since 3.5
 	 * @see Control#getData(String)
@@ -101,20 +100,12 @@ public abstract class AbstractAttributeEditor {
 		}
 	};
 
-	private final DisposeListener disposeListener = new DisposeListener() {
-		@Override
-		public void widgetDisposed(DisposeEvent e) {
-			getModel().removeModelListener(modelListener);
-		}
-	};
+	private final DisposeListener disposeListener = e -> getModel().removeModelListener(modelListener);
 
-	private final DisposeListener disposeDecorationListener = new DisposeListener() {
-		@Override
-		public void widgetDisposed(DisposeEvent e) {
-			if (decoration != null) {
-				decoration.dispose();
-				decoration = null;
-			}
+	private final DisposeListener disposeDecorationListener = e -> {
+		if (this.decoration != null) {
+			this.decoration.dispose();
+			this.decoration = null;
 		}
 	};
 
@@ -357,8 +348,7 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	/**
-	 * Refreshes the state of the widget from the data model. The default implementation throws
-	 * <code>UnsupportedOperationException</code>.
+	 * Refreshes the state of the widget from the data model. The default implementation throws <code>UnsupportedOperationException</code>.
 	 * <p>
 	 * Subclasses should overwrite this method.
 	 *
@@ -371,8 +361,8 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	/**
-	 * Subclasses that implement refresh should override this method to return true, so that they will be automatically
-	 * refreshed when the model changes.
+	 * Subclasses that implement refresh should override this method to return true, so that they will be automatically refreshed when the
+	 * model changes.
 	 *
 	 * @return whether the editor should be automatically refreshed when the model changes
 	 * @since 3.6

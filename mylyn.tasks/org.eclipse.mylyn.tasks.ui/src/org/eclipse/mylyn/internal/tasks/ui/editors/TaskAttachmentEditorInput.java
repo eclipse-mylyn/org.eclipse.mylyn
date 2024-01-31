@@ -36,23 +36,28 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 		this.attachment = attachment;
 	}
 
+	@Override
 	public boolean exists() {
 		return true;
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		return attachment.getFileName();
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
+	@Override
 	public String getToolTipText() {
 		if (attachment.getUrl() != null) {
 			return attachment.getUrl();
@@ -61,6 +66,7 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 		}
 	}
 
+	@Override
 	public IStorage getStorage() throws CoreException {
 		return TaskAttachmentStorage.create(attachment);
 	}

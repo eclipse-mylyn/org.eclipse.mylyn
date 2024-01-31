@@ -49,12 +49,13 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		Assert.isNotNull(product);
 		this.status = status;
 		this.product = product;
-		this.attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 	}
 
+	@Override
 	public void appendToDescription(String text) {
 		String description = getAttribute(IRepositoryConstants.DESCRIPTION);
-		setAttribute(IRepositoryConstants.DESCRIPTION, (description != null) ? description + text : text);
+		setAttribute(IRepositoryConstants.DESCRIPTION, description != null ? description + text : text);
 	}
 
 	public TaskData createTaskData(IProgressMonitor monitor) throws CoreException {
@@ -62,6 +63,7 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		return TasksUiInternal.createTaskData(getTaskRepository(), taskMapping, taskMapping, monitor);
 	}
 
+	@Override
 	public String getAttribute(String name) {
 		return attributes.get(name);
 	}
@@ -70,14 +72,17 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		return attributes;
 	}
 
+	@Override
 	public IProduct getProduct() {
 		return product;
 	}
 
+	@Override
 	public IStatus getStatus() {
 		return status;
 	}
 
+	@Override
 	public TaskData getTaskData() {
 		return taskData;
 	}
@@ -102,6 +107,7 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		return getAttribute(IRepositoryConstants.MAPPING_COMPLETE) != null || getTaskRepository() != null;
 	}
 
+	@Override
 	public void setAttribute(String name, String value) {
 		attributes.put(name, value);
 	}
@@ -110,10 +116,12 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		this.taskData = taskData;
 	}
 
+	@Override
 	public boolean isHandled() {
 		return handled;
 	}
 
+	@Override
 	public void setHandled(boolean handled) {
 		this.handled = handled;
 	}

@@ -18,6 +18,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +37,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -54,8 +51,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -93,7 +88,7 @@ public class AttachmentSourcePage extends WizardPage {
 
 	protected final static int SCREENSHOT = 4;
 
-	static final char SEPARATOR = System.getProperty("file.separator").charAt(0); //$NON-NLS-1$
+	static final char SEPARATOR = FileSystems.getDefault().getSeparator().charAt(0);
 
 	private boolean showError = false;
 
@@ -150,7 +145,7 @@ public class AttachmentSourcePage extends WizardPage {
 
 		String selection = settings.get(S_LAST_SELECTION);
 		if (selection != null) {
-			setInputMethod(Integer.valueOf(selection).intValue());
+			setInputMethod(Integer.parseInt(selection));
 		} else {
 			updateWidgetEnablements();
 		}
@@ -170,7 +165,7 @@ public class AttachmentSourcePage extends WizardPage {
 	 * org.eclipse.core.runtime.IPath
 	 */
 	protected IPath getPathFromText(Text textField) {
-		return (new Path(textField.getText())).makeAbsolute();
+		return new Path(textField.getText()).makeAbsolute();
 	}
 
 	public String getAttachmentName() {
@@ -182,6 +177,7 @@ public class AttachmentSourcePage extends WizardPage {
 		return getAttachmentFilePath();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout());
@@ -220,7 +216,7 @@ public class AttachmentSourcePage extends WizardPage {
 		String[] fileNames = settings.getArray(S_FILE_HISTORY);
 		String newFileName = fileNameField.getText().trim();
 		if (getInputMethod() == FILE && newFileName.length() > 0) {
-			List<String> history = new ArrayList<String>(10);
+			List<String> history = new ArrayList<>(10);
 			history.add(newFileName);
 			if (fileNames != null) {
 				for (int i = 0; i < fileNames.length && history.size() < COMBO_HISTORY_LENGTH; i++) {
@@ -279,7 +275,7 @@ public class AttachmentSourcePage extends WizardPage {
 		data.widthHint = Math.max(widthHint, minSize.x);
 		fileBrowseButton.setLayoutData(data);
 
-		// new row		
+		// new row
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 3;
 		useClipboardButton = new Button(composite, SWT.RADIO);
@@ -318,7 +314,7 @@ public class AttachmentSourcePage extends WizardPage {
 				}
 				// If there is anything typed in at all
 				clearErrorMessage();
-				showError = (fileNameField.getText() != ""); //$NON-NLS-1$
+				showError = fileNameField.getText() != ""; //$NON-NLS-1$
 				updateWidgetEnablements();
 			}
 		});
@@ -329,12 +325,10 @@ public class AttachmentSourcePage extends WizardPage {
 				updateWidgetEnablements();
 			}
 		});
-		fileNameField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				clearErrorMessage();
-				showError = true;
-				updateWidgetEnablements();
-			}
+		fileNameField.addModifyListener(e -> {
+			clearErrorMessage();
+			showError = true;
+			updateWidgetEnablements();
 		});
 		fileBrowseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -353,7 +347,7 @@ public class AttachmentSourcePage extends WizardPage {
 					return;
 				}
 
-				// remember the last selected directory 
+				// remember the last selected directory
 				lastFilename = file;
 				fileNameField.setText(file);
 				updateWidgetEnablements();
@@ -367,34 +361,29 @@ public class AttachmentSourcePage extends WizardPage {
 				}
 				clearErrorMessage();
 				// If there is anything typed in at all
-				showError = (!treeViewer.getSelection().isEmpty());
+				showError = !treeViewer.getSelection().isEmpty();
 				updateWidgetEnablements();
 			}
 		});
 
-		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				clearErrorMessage();
-				updateWidgetEnablements();
-			}
+		treeViewer.addSelectionChangedListener(event -> {
+			clearErrorMessage();
+			updateWidgetEnablements();
 		});
 
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				ISelection selection = event.getSelection();
-				if (selection instanceof TreeSelection) {
-					TreeSelection treeSel = (TreeSelection) selection;
-					Object res = treeSel.getFirstElement();
-					if (res != null) {
-						if (res instanceof IProject || res instanceof IFolder) {
-							if (treeViewer.getExpandedState(res)) {
-								treeViewer.collapseToLevel(res, 1);
-							} else {
-								treeViewer.expandToLevel(res, 1);
-							}
-						} else if (res instanceof IFile) {
-							getContainer().showPage(getNextPage());
+		treeViewer.addDoubleClickListener(event -> {
+			ISelection selection = event.getSelection();
+			if (selection instanceof TreeSelection treeSel) {
+				Object res = treeSel.getFirstElement();
+				if (res != null) {
+					if (res instanceof IProject || res instanceof IFolder) {
+						if (treeViewer.getExpandedState(res)) {
+							treeViewer.collapseToLevel(res, 1);
+						} else {
+							treeViewer.expandToLevel(res, 1);
 						}
+					} else if (res instanceof IFile) {
+						getContainer().showPage(getNextPage());
 					}
 				}
 			}
@@ -481,8 +470,8 @@ public class AttachmentSourcePage extends WizardPage {
 	}
 
 	/**
-	 * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the
-	 * source combo and selects it.
+	 * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the source combo and
+	 * selects it.
 	 * 
 	 * @param path
 	 *            the path to be added
@@ -538,23 +527,23 @@ public class AttachmentSourcePage extends WizardPage {
 
 	protected void setInputMethod(int input) {
 		switch (input) {
-		case WORKSPACE:
-			useWorkspaceButton.setSelection(true);
-			useClipboardButton.setSelection(false);
-			useFileButton.setSelection(false);
-			break;
-		case CLIPBOARD:
-			storeClipboardContents();
+			case WORKSPACE:
+				useWorkspaceButton.setSelection(true);
+				useClipboardButton.setSelection(false);
+				useFileButton.setSelection(false);
+				break;
+			case CLIPBOARD:
+				storeClipboardContents();
 
-			useClipboardButton.setSelection(true);
-			useFileButton.setSelection(false);
-			useWorkspaceButton.setSelection(false);
-			break;
-		default:
-			useFileButton.setSelection(true);
-			useWorkspaceButton.setSelection(false);
-			useClipboardButton.setSelection(false);
-			break;
+				useClipboardButton.setSelection(true);
+				useFileButton.setSelection(false);
+				useWorkspaceButton.setSelection(false);
+				break;
+			default:
+				useFileButton.setSelection(true);
+				useWorkspaceButton.setSelection(false);
+				useClipboardButton.setSelection(false);
+				break;
 		}
 		updateWidgetEnablements();
 	}
@@ -568,20 +557,20 @@ public class AttachmentSourcePage extends WizardPage {
 
 	public String getAbsoluteAttachmentPath() {
 		switch (getInputMethod()) {
-		case CLIPBOARD:
-			return Messages.AttachmentSourcePage__Clipboard_;
-		case SCREENSHOT:
-			return Messages.AttachmentSourcePage__Screenshot_;
-		case WORKSPACE:
-			IResource[] resources = getResources(treeViewer.getSelection());
-			if (resources.length > 0 && resources[0].getRawLocation() != null) {
-				return resources[0].getRawLocation().toOSString();
-			} else {
-				return null;
-			}
-		case FILE:
-		default:
-			return getAttachmentFilePath();
+			case CLIPBOARD:
+				return Messages.AttachmentSourcePage__Clipboard_;
+			case SCREENSHOT:
+				return Messages.AttachmentSourcePage__Screenshot_;
+			case WORKSPACE:
+				IResource[] resources = getResources(treeViewer.getSelection());
+				if (resources.length > 0 && resources[0].getRawLocation() != null) {
+					return resources[0].getRawLocation().toOSString();
+				} else {
+					return null;
+				}
+			case FILE:
+			default:
+				return getAttachmentFilePath();
 		}
 	}
 
@@ -592,7 +581,7 @@ public class AttachmentSourcePage extends WizardPage {
 	 * given selection. Never returns null.
 	 */
 	public static IResource[] getResources(ISelection selection) {
-		ArrayList<IResource> tmp = new ArrayList<IResource>();
+		ArrayList<IResource> tmp = new ArrayList<>();
 		Class<?> type = IResource.class;
 		if (selection instanceof IStructuredSelection) {
 			Object[] s = ((IStructuredSelection) selection).toArray();
@@ -619,8 +608,7 @@ public class AttachmentSourcePage extends WizardPage {
 					} catch (CoreException ex) {
 						// TODO handle error
 					}
-				} else if (o instanceof IAdaptable) {
-					IAdaptable a = (IAdaptable) o;
+				} else if (o instanceof IAdaptable a) {
 					Object adapter = a.getAdapter(IResource.class);
 					if (type.isInstance(adapter)) {
 						resource = (IResource) adapter;
@@ -676,17 +664,17 @@ public class AttachmentSourcePage extends WizardPage {
 
 	public AbstractTaskAttachmentSource getSource() {
 		switch (getInputMethod()) {
-		case CLIPBOARD:
-			return new TaskAttachmentWizard.ClipboardTaskAttachmentSource();
-		case WORKSPACE:
-			IResource[] resources = getResources(treeViewer.getSelection());
-			if (resources.length > 0) {
-				return new FileTaskAttachmentSource(resources[0].getLocation().toFile());
-			} else {
-				return null;
-			}
-		default: // FILE
-			return new FileTaskAttachmentSource(new File(getAttachmentFilePath()));
+			case CLIPBOARD:
+				return new TaskAttachmentWizard.ClipboardTaskAttachmentSource();
+			case WORKSPACE:
+				IResource[] resources = getResources(treeViewer.getSelection());
+				if (resources.length > 0) {
+					return new FileTaskAttachmentSource(resources[0].getLocation().toFile());
+				} else {
+					return null;
+				}
+			default: // FILE
+				return new FileTaskAttachmentSource(new File(getAttachmentFilePath()));
 		}
 	}
 

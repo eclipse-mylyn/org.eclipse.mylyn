@@ -28,13 +28,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewSubTaskHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
-		if (site instanceof IViewSite) {
-			IViewSite viewSite = (IViewSite) site;
+		if (site instanceof IViewSite viewSite) {
 			IWorkbenchPart part = viewSite.getPart();
-			if (part instanceof TaskListView) {
-				TaskListView taskListView = (TaskListView) part;
+			if (part instanceof TaskListView taskListView) {
 				NewSubTaskAction action = new NewSubTaskAction();
 				action.selectionChanged(action, taskListView.getViewer().getSelection());
 				if (action.isEnabled()) {

@@ -155,8 +155,7 @@ public class TaskDataStoreTest {
 		List<Throwable> failures = new ArrayList<>();
 		ExecutorService executor = Executors.newFixedThreadPool(4);
 
-		List<Thread> threads = new ArrayList<>();
-		threads.addAll(Collections.nCopies(3, thread(getTaskDataState(file), store, Optional.empty(), failures).get()));
+		List<Thread> threads = new ArrayList<>(Collections.nCopies(3, thread(getTaskDataState(file), store, Optional.empty(), failures).get()));
 		threads.addAll(Collections.nCopies(3, thread(discardEdits(file), store, Optional.empty(), failures).get()));
 		threads.addAll(Collections.nCopies(3, thread(putEdits(file), store, Optional.empty(), failures).get()));
 		threads.addAll(Collections.nCopies(3, thread(putTaskData(file), store, Optional.empty(), failures).get()));
@@ -184,7 +183,7 @@ public class TaskDataStoreTest {
 				// pretend that reading state takes more than the blink of an eye
 				sleep();
 				return TEST_STATE;
-			};
+			}
 
 			@Override
 			public void writeState(OutputStream out, ITaskDataWorkingCopy state) throws IOException {
@@ -225,7 +224,7 @@ public class TaskDataStoreTest {
 
 	@FunctionalInterface
 	public interface ConsumerWithCoreException<T> {
-		public void accept(T t) throws CoreException;
+		void accept(T t) throws CoreException;
 	}
 
 	private ConsumerWithCoreException<TaskDataStore> getTaskDataState(File file) {
@@ -296,30 +295,20 @@ public class TaskDataStoreTest {
 
 	private static Supplier<Thread> thread(ConsumerWithCoreException<TaskDataStore> consumer, TaskDataStore store,
 			Optional<CyclicBarrier> barrier, List<Throwable> failures) {
-		return new Supplier<Thread>() {
-
-			@Override
-			public Thread get() {
-				return new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							barrier.ifPresent(b -> {
-								try {
-									b.await();
-								} catch (InterruptedException | BrokenBarrierException e) {
-									throw new RuntimeException(e);
-								}
-							});
-							consumer.accept(store);
-						} catch (Throwable e) {
-							failures.add(e);
-						}
+		return () -> new Thread(() -> {
+			try {
+				barrier.ifPresent(b -> {
+					try {
+						b.await();
+					} catch (InterruptedException | BrokenBarrierException e) {
+						throw new RuntimeException(e);
 					}
 				});
+				consumer.accept(store);
+			} catch (Throwable e) {
+				failures.add(e);
 			}
-		};
+		});
 	}
 
 	private static void assertNoFailures(List<Throwable> failures) {

@@ -45,6 +45,6 @@ public class FilterMyTasksAction extends Action {
 		} else {
 			view.removeFilter(view.getMyTasksFilter());
 		}
-		this.view.refresh();
+		view.refresh();
 	}
 }

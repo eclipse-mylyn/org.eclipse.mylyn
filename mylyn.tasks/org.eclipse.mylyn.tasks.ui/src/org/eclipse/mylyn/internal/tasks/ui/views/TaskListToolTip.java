@@ -95,7 +95,7 @@ import com.ibm.icu.text.SimpleDateFormat;
  */
 public class TaskListToolTip extends GradientToolTip {
 
-	public static interface TaskListToolTipListener {
+	public interface TaskListToolTipListener {
 
 		void toolTipHidden(Event event);
 
@@ -160,7 +160,7 @@ public class TaskListToolTip extends GradientToolTip {
 				if (data instanceof ITaskContainer) {
 					return (IRepositoryElement) data;
 				} else if (data instanceof IAdaptable) {
-					return (IRepositoryElement) ((IAdaptable) data).getAdapter(AbstractTaskContainer.class);
+					return ((IAdaptable) data).getAdapter(AbstractTaskContainer.class);
 				}
 			}
 		}
@@ -489,7 +489,7 @@ public class TaskListToolTip extends GradientToolTip {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
 				Rectangle bounds = getBounds(tipWidget);
-				if ((tipWidget instanceof ScalingHyperlink) || (bounds != null && contains(bounds.x, bounds.y))) {
+				if (tipWidget instanceof ScalingHyperlink || bounds != null && contains(bounds.x, bounds.y)) {
 					currentTipElement = getTaskListElement(tipWidget);
 				}
 			}

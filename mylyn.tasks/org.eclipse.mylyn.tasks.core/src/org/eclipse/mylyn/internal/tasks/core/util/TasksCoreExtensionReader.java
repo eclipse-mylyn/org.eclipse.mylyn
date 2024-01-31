@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 public class TasksCoreExtensionReader {
 
 	public static AbstractTaskContextStore loadTaskContextStore() {
-		ExtensionPointReader<AbstractTaskContextStore> reader = new ExtensionPointReader<AbstractTaskContextStore>(
+		ExtensionPointReader<AbstractTaskContextStore> reader = new ExtensionPointReader<>(
 				ITasksCoreConstants.ID_PLUGIN, "contextStore", "contextStore", AbstractTaskContextStore.class); //$NON-NLS-1$ //$NON-NLS-2$
 		reader.read();
 		AbstractTaskContextStore contextStore = reader.getItem();
@@ -34,7 +34,7 @@ public class TasksCoreExtensionReader {
 	}
 
 	public static AbstractTaskActivityMonitor loadTaskActivityMonitor() {
-		ExtensionPointReader<AbstractTaskActivityMonitor> reader = new ExtensionPointReader<AbstractTaskActivityMonitor>(
+		ExtensionPointReader<AbstractTaskActivityMonitor> reader = new ExtensionPointReader<>(
 				ITasksCoreConstants.ID_PLUGIN, "activityMonitor", "activityMonitor", AbstractTaskActivityMonitor.class); //$NON-NLS-1$ //$NON-NLS-2$
 		reader.read();
 		AbstractTaskActivityMonitor activityMonitor = reader.getItem();

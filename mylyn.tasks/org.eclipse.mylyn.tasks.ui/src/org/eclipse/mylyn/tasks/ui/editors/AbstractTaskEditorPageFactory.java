@@ -72,6 +72,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	@Nullable
 	public final String getLocalId() {
 		return getId();
@@ -83,6 +84,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * @since 3.2
 	 * @see #setPluginId(String)
 	 */
+	@Override
 	@Nullable
 	public final String getPluginId() {
 		return pluginId;
@@ -97,8 +99,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	}
 
 	/**
-	 * Clients should override to provide an image for <code>page</code>. Invokes {@link #getPageImage()} for backwards
-	 * compatibility.
+	 * Clients should override to provide an image for <code>page</code>. Invokes {@link #getPageImage()} for backwards compatibility.
 	 * 
 	 * @param editor
 	 *            the task editor instance
@@ -113,8 +114,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	}
 
 	/**
-	 * Clients should override to provide a label for <code>page</code>. Invokes {@link #getPageText()} for backwards
-	 * compatibility.
+	 * Clients should override to provide a label for <code>page</code>. Invokes {@link #getPageText()} for backwards compatibility.
 	 * 
 	 * @param editor
 	 *            the task editor instance

@@ -36,6 +36,7 @@ public class NotificationsLinkPreferencesPage extends PreferencePage implements 
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 

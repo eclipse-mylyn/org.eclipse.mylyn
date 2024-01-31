@@ -22,7 +22,7 @@ public interface IExternalizationContext {
 		SAVE, SNAPSHOT, LOAD;
 	}
 
-	public abstract Kind getKind();
+	Kind getKind();
 
-	public abstract String getRootPath();
+	String getRootPath();
 }

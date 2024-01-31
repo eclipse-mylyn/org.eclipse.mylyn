@@ -73,7 +73,7 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals(task2, tasks[0]);
 
 		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
-		sorter.getTaskComparator().getSortCriterion(0).setDirection((-1));
+		sorter.getTaskComparator().getSortCriterion(0).setDirection(-1);
 		sorter.sort(new EmptyViewer(), tasks);
 		assertEquals(task1, tasks[0]);
 		assertEquals(task2, tasks[1]);
@@ -304,7 +304,7 @@ public class TaskListSorterTest extends TestCase {
 		task3.setCreationDate(new Date(start.getTime() - 2));
 		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
-		sorter.getTaskComparator().getSortCriterion(0).setDirection((-1));
+		sorter.getTaskComparator().getSortCriterion(0).setDirection(-1);
 		sorter.sort(new EmptyViewer(), tasks);
 	}
 

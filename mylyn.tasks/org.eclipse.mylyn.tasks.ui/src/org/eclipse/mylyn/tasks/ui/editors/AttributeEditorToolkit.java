@@ -46,8 +46,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
@@ -96,7 +94,7 @@ public class AttributeEditorToolkit {
 			}
 		} else if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
 				|| editor instanceof PersonAttributeEditor) {
-			Control control = (editor instanceof PersonAttributeEditor)
+			Control control = editor instanceof PersonAttributeEditor
 					? ((PersonAttributeEditor) editor).getText()
 					: editor.getControl();
 			if (control == null) {
@@ -116,8 +114,7 @@ public class AttributeEditorToolkit {
 					}
 				}
 			}
-		} else if (editor instanceof RichTextAttributeEditor) {
-			RichTextAttributeEditor richTextEditor = (RichTextAttributeEditor) editor;
+		} else if (editor instanceof RichTextAttributeEditor richTextEditor) {
 			boolean spellCheck = hasSpellChecking(editor.getTaskAttribute());
 			final SourceViewer viewer = richTextEditor.getViewer();
 			textSupport.install(viewer, spellCheck);
@@ -157,11 +154,7 @@ public class AttributeEditorToolkit {
 	private void installMenu(final Control control) {
 		if (menu != null) {
 			control.setMenu(menu);
-			control.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					control.setMenu(null);
-				}
-			});
+			control.addDisposeListener(e -> control.setMenu(null));
 		}
 	}
 
@@ -175,12 +168,12 @@ public class AttributeEditorToolkit {
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	private ControlDecoration installContentAssistControlDecoration(Control control) {
-		ControlDecoration controlDecoration = new ControlDecoration(control, (SWT.TOP | SWT.LEFT));
+		ControlDecoration controlDecoration = new ControlDecoration(control, SWT.TOP | SWT.LEFT);
 		controlDecoration.setShowOnlyOnFocus(true);
 		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault()
 				.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		controlDecoration.setImage(contentProposalImage.getImage());
-		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		IBindingService bindingService = PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind(Messages.AttributeEditorToolkit_Content_Assist_Available__X_,
 				bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
 		return controlDecoration;
@@ -221,8 +214,8 @@ public class AttributeEditorToolkit {
 	}
 
 	/**
-	 * Subclasses that support HTML preview of ticket description and comments override this method to return an
-	 * instance of AbstractRenderingEngine
+	 * Subclasses that support HTML preview of ticket description and comments override this method to return an instance of
+	 * AbstractRenderingEngine
 	 *
 	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
 	 * @since 2.1
@@ -295,11 +288,9 @@ public class AttributeEditorToolkit {
 			}
 		};
 		attributeEditor.getModel().addModelListener(validationListener);
-		control.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				decoration.dispose();
-				attributeEditor.getModel().removeModelListener(validationListener);
-			}
+		control.addDisposeListener(e -> {
+			decoration.dispose();
+			attributeEditor.getModel().removeModelListener(validationListener);
 		});
 		validationListener.attributeChanged(new TaskDataModelEvent(attributeEditor.getModel(), EventKind.CHANGED,
 				attributeEditor.getTaskAttribute()));

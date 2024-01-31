@@ -50,9 +50,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * An abstract base class for repository settings page that supports the <code>taskRepositoryPageContribution</code>
- * extension point. {@link ITaskRepositoryPage} implementations are encouraged to extend
- * {@link AbstractRepositorySettingsPage} if possible as it provides a standard UI for managing server settings.
+ * An abstract base class for repository settings page that supports the <code>taskRepositoryPageContribution</code> extension point.
+ * {@link ITaskRepositoryPage} implementations are encouraged to extend {@link AbstractRepositorySettingsPage} if possible as it provides a
+ * standard UI for managing server settings.
  * 
  * @see AbstractRepositorySettingsPage
  * @author David Green
@@ -79,11 +79,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	FormToolkit toolkit;
 
-	private final AbstractTaskRepositoryPageContribution.Listener contributionListener = new AbstractTaskRepositoryPageContribution.Listener() {
-		public void validationRequired(AbstractTaskRepositoryPageContribution contribution) {
-			validatePageSettings();
-		}
-	};
+	private final AbstractTaskRepositoryPageContribution.Listener contributionListener = contribution -> validatePageSettings();
 
 	/**
 	 * @since 3.1
@@ -91,7 +87,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	public AbstractTaskRepositoryPage(String title, String description, TaskRepository repository) {
 		super(title);
 		this.repository = repository;
-		this.contributions = new ArrayList<AbstractTaskRepositoryPageContribution>();
+		contributions = new ArrayList<>();
 		setTitle(title);
 		setDescription(description);
 	}
@@ -114,11 +110,11 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
-	 * Creates the contents of the page. Subclasses may override this method to change where the contributions are
-	 * added.
+	 * Creates the contents of the page. Subclasses may override this method to change where the contributions are added.
 	 * 
 	 * @since 2.0
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
@@ -186,9 +182,10 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		contributions.addAll(findApplicableContributors());
 
 		if (!contributions.isEmpty()) {
-			final List<AbstractTaskRepositoryPageContribution> badContributions = new ArrayList<AbstractTaskRepositoryPageContribution>();
+			final List<AbstractTaskRepositoryPageContribution> badContributions = new ArrayList<>();
 			for (final AbstractTaskRepositoryPageContribution contribution : contributions) {
 				SafeRunnable.run(new SafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						contribution.init(getConnectorKind(), repository);
 						contribution.addListener(contributionListener);
@@ -211,6 +208,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 				section.setToolTipText(contribution.getDescription());
 
 				SafeRunnable.run(new SafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						Control control = contribution.createControl(section);
 						section.setClient(control);
@@ -251,8 +249,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
-	 * Validate the settings of this page, not including contributions. This method should not be called directly by
-	 * page implementations. Always run on a UI thread.
+	 * Validate the settings of this page, not including contributions. This method should not be called directly by page implementations.
+	 * Always run on a UI thread.
 	 * 
 	 * @return the status, or null if there are no messages.
 	 * @see #validatePageSettings()
@@ -265,6 +263,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * 
 	 * @since 3.1
 	 */
+	@Override
 	public void applyTo(TaskRepository repository) {
 		applyContributionSettingsTo(repository);
 	}
@@ -282,6 +281,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * 
 	 * @since 3.6
 	 */
+	@Override
 	public void performFinish(TaskRepository repository) {
 		applyTo(repository);
 	}
@@ -292,9 +292,9 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * Invokes {@link #applyTo(TaskRepository)} by default. Client may override.
 	 * 
 	 * @since 3.7
-	 * @return true to indicate the finish request was accepted, and false to indicate that the finish request was
-	 *         refused
+	 * @return true to indicate the finish request was accepted, and false to indicate that the finish request was refused
 	 */
+	@Override
 	public boolean preFinish(TaskRepository repository) {
 		return true;
 	}
@@ -315,6 +315,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		// validate contributions
 		for (final AbstractTaskRepositoryPageContribution contribution : contributions) {
 			SafeRunnable.run(new SafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					IStatus result = contribution.validate();
 					if (result != null) {
@@ -335,8 +336,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
-	 * Validate all settings in the page including contributions. This method should be called whenever a setting is
-	 * changed on the page. The results of validation are applied and the buttons of the page are updated.
+	 * Validate all settings in the page including contributions. This method should be called whenever a setting is changed on the page.
+	 * The results of validation are applied and the buttons of the page are updated.
 	 * 
 	 * @see #validate(IProgressMonitor)
 	 * @see #applyValidationResult(IStatus[])
@@ -348,8 +349,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
-	 * Apply the results of validation to the page. The implementation finds the most {@link IStatus#getSeverity()
-	 * severe} status and {@link #setMessage(String, int) applies the message} to the page.
+	 * Apply the results of validation to the page. The implementation finds the most {@link IStatus#getSeverity() severe} status and
+	 * {@link #setMessage(String, int) applies the message} to the page.
 	 * 
 	 * @param status
 	 *            the status of the validation, or null
@@ -360,27 +361,19 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 			setErrorMessage(null);
 		} else {
 			// find the most severe status
-			int messageType;
-			switch (status.getSeverity()) {
-			case IStatus.OK:
-			case IStatus.INFO:
-				messageType = IMessageProvider.INFORMATION;
-				break;
-			case IStatus.WARNING:
-				messageType = IMessageProvider.WARNING;
-				break;
-			case IStatus.ERROR:
-			default:
-				messageType = IMessageProvider.ERROR;
-				break;
-			}
+			int messageType = switch (status.getSeverity()) {
+				case IStatus.OK, IStatus.INFO -> IMessageProvider.INFORMATION;
+				case IStatus.WARNING -> IMessageProvider.WARNING;
+				case IStatus.ERROR -> IMessageProvider.ERROR;
+				default -> IMessageProvider.ERROR;
+			};
 			setErrorMessage(null);
 			setMessage(status.getMessage(), messageType);
 		}
 	}
 
 	private List<AbstractTaskRepositoryPageContribution> findApplicableContributors() {
-		List<AbstractTaskRepositoryPageContribution> contributors = new ArrayList<AbstractTaskRepositoryPageContribution>();
+		List<AbstractTaskRepositoryPageContribution> contributors = new ArrayList<>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -419,6 +412,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	private static class ContributionComparator implements Comparator<AbstractTaskRepositoryPageContribution> {
 
+		@Override
 		public int compare(AbstractTaskRepositoryPageContribution o1, AbstractTaskRepositoryPageContribution o2) {
 			if (o1 == o2) {
 				return 0;

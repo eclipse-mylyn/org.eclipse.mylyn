@@ -22,14 +22,14 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
  */
 public interface IExternalizationParticipant {
 
-	public abstract boolean isDirty();
+	boolean isDirty();
 
-	public boolean isDirty(boolean full);
+	boolean isDirty(boolean full);
 
-	public abstract ISchedulingRule getSchedulingRule();
+	ISchedulingRule getSchedulingRule();
 
-	public abstract void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException;
+	void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException;
 
-	public abstract String getDescription();
+	String getDescription();
 
 }

@@ -53,7 +53,7 @@ public class TaskMigrator {
 
 	public TaskMigrator(ITask oldTask) {
 		this.oldTask = oldTask;
-		this.openEditors = true;
+		openEditors = true;
 	}
 
 	public void setMigrateDueDate(boolean migrateDueDate) {
@@ -96,12 +96,14 @@ public class TaskMigrator {
 		if (connector != null) {
 			final TaskMigrationEvent event = new TaskMigrationEvent(oldTask, newTask);
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(
 							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error in task migrator: " //$NON-NLS-1$
 									+ connector.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					connector.migrateTask(event);
 				}

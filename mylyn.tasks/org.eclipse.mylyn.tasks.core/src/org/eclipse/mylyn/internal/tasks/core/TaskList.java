@@ -52,7 +52,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	private Map<String, AbstractTaskCategory> categories;
 
-	private final Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
+	private final Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<>();
 
 	private UncategorizedTaskContainer defaultCategory;
 
@@ -74,6 +74,7 @@ public class TaskList implements ITaskList, ITransferList {
 		reset();
 	}
 
+	@Override
 	public void addCategory(TaskCategory category) {
 		Assert.isNotNull(category);
 		try {
@@ -89,6 +90,7 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public void addChangeListener(ITaskListChangeListener listener) {
 		changeListeners.add(listener);
 	}
@@ -110,6 +112,7 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public void addQuery(RepositoryQuery query) throws IllegalArgumentException {
 		Assert.isNotNull(query);
 		try {
@@ -139,10 +142,12 @@ public class TaskList implements ITaskList, ITransferList {
 	/**
 	 * Add orphaned task to the task list
 	 */
+	@Override
 	public void addTask(ITask task) {
 		addTask(task, null);
 	}
 
+	@Override
 	public boolean addTask(ITask itask, AbstractTaskContainer container) {
 		AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
@@ -168,12 +173,8 @@ public class TaskList implements ITaskList, ITransferList {
 			}
 
 			// ensure parent is valid and does not contain task already
-			if (container == null || task.equals(container) || task.getParentContainers().contains(container)) {
-				return false;
-			}
-
 			// ensure that we don't create cycles
-			if ((task).contains(container.getHandleIdentifier())) {
+			if (container == null || task.equals(container) || task.getParentContainers().contains(container) || task.contains(container.getHandleIdentifier())) {
 				return false;
 			}
 
@@ -210,6 +211,7 @@ public class TaskList implements ITaskList, ITransferList {
 				orphanedTasksContainer.getConnectorKind(), orphanedTasksContainer.getRepositoryUrl()));
 	}
 
+	@Override
 	public void deleteCategory(AbstractTaskCategory category) {
 		try {
 			lock();
@@ -225,6 +227,7 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public void deleteQuery(RepositoryQuery query) {
 		try {
 			lock();
@@ -241,9 +244,9 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	/**
-	 * Task is removed from all containers. Currently subtasks are not deleted but rather are rather potentially
-	 * orphaned.
+	 * Task is removed from all containers. Currently subtasks are not deleted but rather are rather potentially orphaned.
 	 */
+	@Override
 	public void deleteTask(ITask itask) {
 		Assert.isNotNull(itask);
 		AbstractTask task = (AbstractTask) itask;
@@ -280,12 +283,14 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public Collection<AbstractTask> getAllTasks() {
 		return Collections.unmodifiableCollection(tasks.values());
 	}
 
+	@Override
 	public Set<AbstractTaskCategory> getCategories() {
-		return Collections.unmodifiableSet(new HashSet<AbstractTaskCategory>(categories.values()));
+		return Collections.unmodifiableSet(new HashSet<>(categories.values()));
 	}
 
 	/**
@@ -297,6 +302,7 @@ public class TaskList implements ITaskList, ITransferList {
 		return Collections.unmodifiableSet(changeListeners);
 	}
 
+	@Override
 	public AbstractTaskCategory getContainerForHandle(String categoryHandle) {
 		Assert.isNotNull(categoryHandle);
 		for (AbstractTaskCategory cat : categories.values()) {
@@ -341,8 +347,9 @@ public class TaskList implements ITaskList, ITransferList {
 		return task;
 	}
 
+	@Override
 	public Set<RepositoryQuery> getQueries() {
-		return Collections.unmodifiableSet(new HashSet<RepositoryQuery>(queries.values()));
+		return Collections.unmodifiableSet(new HashSet<>(queries.values()));
 	}
 
 	/**
@@ -351,7 +358,7 @@ public class TaskList implements ITaskList, ITransferList {
 	public Set<RepositoryQuery> getRepositoryQueries(String repositoryUrl) {
 		Assert.isNotNull(repositoryUrl);
 
-		Set<RepositoryQuery> repositoryQueries = new HashSet<RepositoryQuery>();
+		Set<RepositoryQuery> repositoryQueries = new HashSet<>();
 		for (RepositoryQuery query : queries.values()) {
 			if (query.getRepositoryUrl().equals(repositoryUrl)) {
 				repositoryQueries.add(query);
@@ -361,20 +368,12 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public Set<AbstractTaskContainer> getRootElements() {
-		Set<AbstractTaskContainer> roots = new HashSet<AbstractTaskContainer>();
+		Set<AbstractTaskContainer> roots = new HashSet<>();
 		roots.add(defaultCategory);
-		for (AbstractTaskCategory cat : categories.values()) {
-			roots.add(cat);
-		}
-		for (RepositoryQuery query : queries.values()) {
-			roots.add(query);
-		}
-		for (UnmatchedTaskContainer orphanContainer : unmatchedMap.values()) {
-			roots.add(orphanContainer);
-		}
-		for (UnsubmittedTaskContainer unsubmitedTaskContainer : unsubmittedTasksMap.values()) {
-			roots.add(unsubmitedTaskContainer);
-		}
+		roots.addAll(categories.values());
+		roots.addAll(queries.values());
+		roots.addAll(unmatchedMap.values());
+		roots.addAll(unsubmittedTasksMap.values());
 		return roots;
 	}
 
@@ -383,6 +382,7 @@ public class TaskList implements ITaskList, ITransferList {
 	 *
 	 * @return null if no such task.
 	 */
+	@Override
 	public AbstractTask getTask(String handleIdentifier) {
 		if (handleIdentifier == null) {
 			return null;
@@ -391,6 +391,7 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public ITask getTask(String repositoryUrl, String taskId) {
 		if (!RepositoryTaskHandleUtil.isValidTaskId(taskId)) {
 			return null;
@@ -412,7 +413,7 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public Set<AbstractTaskCategory> getTaskCategories() {
-		Set<AbstractTaskCategory> containers = new HashSet<AbstractTaskCategory>();
+		Set<AbstractTaskCategory> containers = new HashSet<>();
 		for (AbstractTaskCategory container : categories.values()) {
 			if (container instanceof TaskCategory) {
 				containers.add(container);
@@ -425,7 +426,7 @@ public class TaskList implements ITaskList, ITransferList {
 	 * Returns all tasks for the given repository url.
 	 */
 	public Set<ITask> getTasks(String repositoryUrl) {
-		Set<ITask> repositoryTasks = new HashSet<ITask>();
+		Set<ITask> repositoryTasks = new HashSet<>();
 		if (repositoryUrl != null) {
 			for (ITask task : tasks.values()) {
 				if (task.getRepositoryUrl().equals(repositoryUrl)) {
@@ -450,7 +451,7 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public Set<UnmatchedTaskContainer> getUnmatchedContainers() {
-		return Collections.unmodifiableSet(new HashSet<UnmatchedTaskContainer>(unmatchedMap.values()));
+		return Collections.unmodifiableSet(new HashSet<>(unmatchedMap.values()));
 	}
 
 	/**
@@ -485,7 +486,7 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public void notifyElementsChanged(Set<? extends IRepositoryElement> elements) {
-		HashSet<TaskContainerDelta> deltas = new HashSet<TaskContainerDelta>();
+		HashSet<TaskContainerDelta> deltas = new HashSet<>();
 		if (elements == null) {
 			deltas.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
 		} else {
@@ -499,7 +500,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state
 	public void notifySynchronizationStateChanged(Set<? extends IRepositoryElement> elements) {
-		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
+		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<>();
 		for (IRepositoryElement abstractTaskContainer : elements) {
 			TaskContainerDelta delta = new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CONTENT);
 			delta.setTransient(true);
@@ -510,10 +511,12 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state
+	@Override
 	public void notifySynchronizationStateChanged(IRepositoryElement element) {
 		notifySynchronizationStateChanged(Collections.singleton(element));
 	}
 
+	@Override
 	public void notifyElementChanged(IRepositoryElement element) {
 		notifyElementsChanged(Collections.singleton(element));
 	}
@@ -583,8 +586,7 @@ public class TaskList implements ITaskList, ITransferList {
 		newTask.setOwnerId(oldTask.getOwnerId());
 		newTask.setOwner(oldTask.getOwner());
 		newTask.setTaskKey(oldTask.getTaskKey());
-		if (oldTask instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) oldTask;
+		if (oldTask instanceof AbstractTask task) {
 			newTask.setSynchronizing(task.isSynchronizing());
 			newTask.setMarkReadPending(task.isMarkReadPending());
 			newTask.setNotified(task.isNotified());
@@ -608,7 +610,7 @@ public class TaskList implements ITaskList, ITransferList {
 	private void addTaskContainers(AbstractTask oldTask, AbstractTask newTask) {
 		Set<AbstractTaskContainer> containers = oldTask.getParentContainers();
 		if (containers.isEmpty()
-				|| (containers.size() == 1 && containers.iterator().next() instanceof UnmatchedTaskContainer)) {
+				|| containers.size() == 1 && containers.iterator().next() instanceof UnmatchedTaskContainer) {
 			addTask(newTask);
 		} else {
 			for (AbstractTaskContainer container : containers) {
@@ -620,10 +622,12 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	@Override
 	public void removeChangeListener(ITaskListChangeListener listener) {
 		changeListeners.remove(listener);
 	}
 
+	@Override
 	public void removeFromContainer(AbstractTaskContainer container, ITask task) {
 		Assert.isNotNull(container);
 		Assert.isNotNull(task);
@@ -698,12 +702,12 @@ public class TaskList implements ITaskList, ITransferList {
 	public void reset() {
 		try {
 			lock();
-			tasks = new ConcurrentHashMap<String, AbstractTask>();
+			tasks = new ConcurrentHashMap<>();
 
-			unmatchedMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
-			unsubmittedTasksMap = new ConcurrentHashMap<String, UnsubmittedTaskContainer>();
-			categories = new ConcurrentHashMap<String, AbstractTaskCategory>();
-			queries = new ConcurrentHashMap<String, RepositoryQuery>();
+			unmatchedMap = new ConcurrentHashMap<>();
+			unsubmittedTasksMap = new ConcurrentHashMap<>();
+			categories = new ConcurrentHashMap<>();
+			queries = new ConcurrentHashMap<>();
 
 			defaultCategory = new UncategorizedTaskContainer();
 
@@ -738,7 +742,7 @@ public class TaskList implements ITaskList, ITransferList {
 	private void lock() {
 		lock.acquire();
 		if (lock.getDepth() == 1) {
-			delta = new HashSet<TaskContainerDelta>();
+			delta = new HashSet<>();
 		}
 	}
 
@@ -747,7 +751,7 @@ public class TaskList implements ITaskList, ITransferList {
 			try {
 				if (lock.acquire(3000)) {
 					if (lock.getDepth() == 1) {
-						delta = new HashSet<TaskContainerDelta>();
+						delta = new HashSet<>();
 					}
 					// success
 					return;
@@ -768,7 +772,7 @@ public class TaskList implements ITaskList, ITransferList {
 		HashSet<TaskContainerDelta> toFire = null;
 		try {
 			if (lock.getDepth() == 1) {
-				toFire = new HashSet<TaskContainerDelta>(delta);
+				toFire = new HashSet<>(delta);
 			}
 		} finally {
 			lock.release();

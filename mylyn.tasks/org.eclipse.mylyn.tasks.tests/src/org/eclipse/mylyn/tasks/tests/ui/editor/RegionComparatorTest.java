@@ -13,10 +13,10 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.Region;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractHyperlinkTextPresentationManager.RegionComparator;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

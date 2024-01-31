@@ -32,6 +32,7 @@ public class OpenTaskSearchAction extends Action implements IViewActionDelegate 
 	public OpenTaskSearchAction() {
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -44,10 +45,12 @@ public class OpenTaskSearchAction extends Action implements IViewActionDelegate 
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

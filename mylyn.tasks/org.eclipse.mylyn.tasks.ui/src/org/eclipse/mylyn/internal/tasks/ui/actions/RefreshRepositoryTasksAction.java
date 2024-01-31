@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
@@ -44,10 +43,8 @@ public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction i
 	@Override
 	public void run() {
 		IStructuredSelection selection = getStructuredSelection();
-		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-			Object selectedObject = iter.next();
-			if (selectedObject instanceof TaskRepository) {
-				TaskRepository repository = (TaskRepository) selectedObject;
+		for (Object selectedObject : selection) {
+			if (selectedObject instanceof TaskRepository repository) {
 				synchronizeAllTasks(repository);
 			}
 		}
@@ -62,13 +59,16 @@ public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction i
 		}
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		selectionChanged((IStructuredSelection) selection);
 	}

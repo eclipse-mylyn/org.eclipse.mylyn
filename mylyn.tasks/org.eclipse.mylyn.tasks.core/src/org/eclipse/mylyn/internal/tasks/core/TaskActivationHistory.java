@@ -25,8 +25,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
- * Maintains a list of tasks that have been activated in the past. Each task only occurs once in the list. The list is
- * sorted by most recent activation, i.e. the task with the highest index is the task that was most recently activated.
+ * Maintains a list of tasks that have been activated in the past. Each task only occurs once in the list. The list is sorted by most recent
+ * activation, i.e. the task with the highest index is the task that was most recently activated.
  * 
  * @author Wesley Coelho (Added persistent tasks)
  * @author Mik Kersten (hardening)
@@ -38,7 +38,7 @@ public class TaskActivationHistory {
 	/**
 	 * The most recently activated task has the highest index in the list.
 	 */
-	private final List<AbstractTask> history = new ArrayList<AbstractTask>();
+	private final List<AbstractTask> history = new ArrayList<>();
 
 	/**
 	 * Index pointing to the task that was previously active.
@@ -89,7 +89,7 @@ public class TaskActivationHistory {
 	}
 
 	public synchronized List<AbstractTask> getPreviousTasks() {
-		return Collections.unmodifiableList(new ArrayList<AbstractTask>(history));
+		return Collections.unmodifiableList(new ArrayList<>(history));
 	}
 
 	/**
@@ -99,11 +99,11 @@ public class TaskActivationHistory {
 		if (containers.isEmpty()) {
 			return getPreviousTasks();
 		}
-		Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
+		Set<ITask> allWorkingSetTasks = new HashSet<>();
 		for (ITaskContainer container : containers) {
 			allWorkingSetTasks.addAll(container.getChildren());
 		}
-		List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(getPreviousTasks());
+		List<AbstractTask> allScopedTasks = new ArrayList<>(getPreviousTasks());
 		for (Iterator<AbstractTask> it = allScopedTasks.iterator(); it.hasNext();) {
 			AbstractTask task = it.next();
 			if (!allWorkingSetTasks.contains(task)) {

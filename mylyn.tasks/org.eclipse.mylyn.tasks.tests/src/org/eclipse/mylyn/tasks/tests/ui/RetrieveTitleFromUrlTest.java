@@ -16,10 +16,10 @@ package org.eclipse.mylyn.tasks.tests.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RetrieveTitleFromUrlTest extends TestCase {
 
-	private final AtomicReference<String> retrievedTitle = new AtomicReference<String>();
+	private final AtomicReference<String> retrievedTitle = new AtomicReference<>();
 
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
 		final String url = "http://eclipse.org/mylyn";

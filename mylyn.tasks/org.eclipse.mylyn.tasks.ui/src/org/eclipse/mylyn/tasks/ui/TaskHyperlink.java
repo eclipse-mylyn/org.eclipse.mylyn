@@ -15,6 +15,7 @@
 package org.eclipse.mylyn.tasks.ui;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
@@ -48,6 +49,7 @@ public final class TaskHyperlink implements IHyperlink {
 		this.taskId = taskId;
 	}
 
+	@Override
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
@@ -56,6 +58,7 @@ public final class TaskHyperlink implements IHyperlink {
 		return taskId;
 	}
 
+	@Override
 	public String getTypeLabel() {
 		return null;
 	}
@@ -68,10 +71,12 @@ public final class TaskHyperlink implements IHyperlink {
 		return repository;
 	}
 
+	@Override
 	public String getHyperlinkText() {
 		return MessageFormat.format(Messages.TaskHyperlink_Open_Task_X_in_X, taskId, repository.getRepositoryLabel());
 	}
 
+	@Override
 	public void open() {
 		if (repository != null) {
 			TasksUiInternal.openTask(repository, taskId, new TaskOpenListener() {
@@ -118,13 +123,7 @@ public final class TaskHyperlink implements IHyperlink {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((region == null) ? 0 : region.hashCode());
-		result = prime * result + ((repository == null) ? 0 : repository.hashCode());
-		result = prime * result + ((selection == null) ? 0 : selection.hashCode());
-		result = prime * result + ((taskId == null) ? 0 : taskId.hashCode());
-		return result;
+		return Objects.hash(region, repository, selection, taskId);
 	}
 
 	@Override
@@ -132,39 +131,20 @@ public final class TaskHyperlink implements IHyperlink {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskHyperlink other = (TaskHyperlink) obj;
-		if (region == null) {
-			if (other.region != null) {
-				return false;
-			}
-		} else if (!region.equals(other.region)) {
+		if (!Objects.equals(region, other.region)) {
 			return false;
 		}
-		if (repository == null) {
-			if (other.repository != null) {
-				return false;
-			}
-		} else if (!repository.equals(other.repository)) {
+		if (!Objects.equals(repository, other.repository)) {
 			return false;
 		}
-		if (selection == null) {
-			if (other.selection != null) {
-				return false;
-			}
-		} else if (!selection.equals(other.selection)) {
+		if (!Objects.equals(selection, other.selection)) {
 			return false;
 		}
-		if (taskId == null) {
-			if (other.taskId != null) {
-				return false;
-			}
-		} else if (!taskId.equals(other.taskId)) {
+		if (!Objects.equals(taskId, other.taskId)) {
 			return false;
 		}
 		return true;

@@ -30,7 +30,6 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -45,14 +44,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -126,8 +119,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
@@ -215,9 +206,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
 			PriorityLevel.P5.getDescription() };
 
-	private static List<AbstractTaskListPresentation> presentationsPrimary = new ArrayList<AbstractTaskListPresentation>();
+	private static List<AbstractTaskListPresentation> presentationsPrimary = new ArrayList<>();
 
-	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<AbstractTaskListPresentation>();
+	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<>();
 
 	private boolean focusedMode;
 
@@ -276,11 +267,11 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	private TaskWorkingSetFilter filterWorkingSet;
 
-	private final Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
+	private final Set<AbstractTaskListFilter> filters = new HashSet<>();
 
-	protected String[] columnNames = new String[] { Messages.TaskListView_Summary };
+	protected String[] columnNames = { Messages.TaskListView_Summary };
 
-	protected int[] columnWidths = new int[] { 200 };
+	protected int[] columnWidths = { 200 };
 
 	private TreeColumn[] columns;
 
@@ -301,21 +292,24 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	private long lastExpansionTime;
 
 	private final IPageListener PAGE_LISTENER = new IPageListener() {
+		@Override
 		public void pageActivated(IWorkbenchPage page) {
 			filteredTree.indicateActiveTaskWorkingSet();
 		}
 
+		@Override
 		public void pageClosed(IWorkbenchPage page) {
 			// ignore
 
 		}
 
+		@Override
 		public void pageOpened(IWorkbenchPage page) {
 			// ignore
 		}
 	};
 
-	private final LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
+	private final LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<>(
 			SIZE_MAX_SELECTION_HISTORY);
 
 	/**
@@ -326,11 +320,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 		@Override
 		public void activityReset() {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refreshJob.refresh();
-				}
-			});
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> refreshJob.refresh());
 		}
 	};
 
@@ -339,25 +329,21 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		@Override
 		public void taskActivated(final ITask task) {
 			if (task != null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						updateDescription();
-						refresh(task);
-						selectedAndFocusTask(task);
-						filteredTree.indicateActiveTask(task);
-					}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					updateDescription();
+					refresh(task);
+					selectedAndFocusTask(task);
+					filteredTree.indicateActiveTask(task);
 				});
 			}
 		}
 
 		@Override
 		public void taskDeactivated(final ITask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(task);
-					updateDescription();
-					filteredTree.indicateNoActiveTask();
-				}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+				refresh(task);
+				updateDescription();
+				filteredTree.indicateNoActiveTask();
 			});
 		}
 
@@ -371,34 +357,30 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	};
 
-	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| CommonThemes.isCommonTheme(event.getProperty())) {
-				taskListTableLabelProvider.setCategoryBackgroundColor(
-						themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_CATEGORY));
-				getViewer().refresh();
-			}
+	private final IPropertyChangeListener THEME_CHANGE_LISTENER = event -> {
+		if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
+				|| CommonThemes.isCommonTheme(event.getProperty())) {
+			taskListTableLabelProvider.setCategoryBackgroundColor(
+					themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_CATEGORY));
+			getViewer().refresh();
 		}
 	};
 
-	private final IPropertyChangeListener tasksUiPreferenceListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED.equals(event.getProperty())) {
-				updateTooltipEnablement();
-			}
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT)) {
-				refreshJob.refresh();
-			}
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_HIDDEN)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_NON_MATCHING)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.GROUP_SUBTASKS)) {
-				filterPresentation.updateSettings();
-				refresh(true);
-				if (showNonMatchingSubtasksAction != null) {
-					showNonMatchingSubtasksAction.update();
-				}
+	private final IPropertyChangeListener tasksUiPreferenceListener = event -> {
+		if (ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED.equals(event.getProperty())) {
+			updateTooltipEnablement();
+		}
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)
+				|| event.getProperty().equals(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT)) {
+			this.refreshJob.refresh();
+		}
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_HIDDEN)
+				|| event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_NON_MATCHING)
+				|| event.getProperty().equals(ITasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+			filterPresentation.updateSettings();
+			refresh(true);
+			if (showNonMatchingSubtasksAction != null) {
+				showNonMatchingSubtasksAction.update();
 			}
 		}
 	};
@@ -497,7 +479,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		init(site);
-		this.taskListMemento = memento;
+		taskListMemento = memento;
 	}
 
 	@Override
@@ -571,14 +553,13 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		layout.numColumns = 1;
 		body.setLayout(layout);
 
-		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite()
-				.getAdapter(IWorkbenchSiteProgressService.class);
+		IWorkbenchSiteProgressService progress = getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (progress != null) {
 			// show indicator for all running query synchronizations
 			progress.showBusyForFamily(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 		}
 
-		this.selectionProvider = new org.eclipse.mylyn.commons.ui.SelectionProviderAdapter();
+		selectionProvider = new org.eclipse.mylyn.commons.ui.SelectionProviderAdapter();
 		getSite().setSelectionProvider(selectionProvider);
 
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -598,7 +579,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				selectionProvider);
 		filteredTree.setActiveTaskSelectionProvider(selectionProvider);
 
-		getViewer().addSelectionChangedListener(this.selectionProvider);
+		getViewer().addSelectionChangedListener(selectionProvider);
 		getViewer().getControl().addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -606,11 +587,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			}
 		});
 
-		filteredTree.getFilterControl().addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateFilterEnablement();
-			}
-		});
+		filteredTree.getFilterControl().addModifyListener(e -> updateFilterEnablement());
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
@@ -647,11 +624,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 
-		Listener expandListener = new Listener() {
-			public void handleEvent(Event event) {
-				lastExpansionTime = System.currentTimeMillis();
-			}
-		};
+		Listener expandListener = event -> lastExpansionTime = System.currentTimeMillis();
 		getViewer().getTree().addListener(SWT.Expand, expandListener);
 		getViewer().getTree().addListener(SWT.Collapse, expandListener);
 
@@ -660,10 +633,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			public void mouseUp(MouseEvent event) {
 				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion
 				long currentTime = System.currentTimeMillis();
-				if (currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) {
-					return;
-				}
-				if (event.button == 3) {
+				if ((currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) || (event.button == 3)) {
 					// button3 is used for the context menu so we ignore the mouseDown Event
 					return;
 				}
@@ -684,6 +654,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		// TODO make these proper commands and move code into TaskListViewCommands
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (actionGroup.getRenameAction().isEnabled()) {
@@ -697,7 +668,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					filteredTree.getFilterControl().setFocus();
 				} else if (e.stateMask == 0) {
 					if (Character.isLetter((char) e.keyCode) || Character.isDigit((char) e.keyCode)) {
-						String string = Character.valueOf((char) e.keyCode).toString();
+						String string = Character.toString((char) e.keyCode);
 						filteredTree.getFilterControl().setFocus();
 						filteredTree.getFilterControl().setText(string);
 						filteredTree.getFilterControl().setSelection(1, 1);
@@ -705,17 +676,14 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 			}
 
 		});
 
 		// update tooltip contents
-		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateToolTip(true);
-			}
-		});
+		getViewer().addSelectionChangedListener(event -> updateToolTip(true));
 
 		getViewer().getTree().addFocusListener(new FocusAdapter() {
 			@Override
@@ -744,7 +712,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 		updateDescription();
 
-		IContextService contextSupport = (IContextService) getSite().getService(IContextService.class);
+		IContextService contextSupport = getSite().getService(IContextService.class);
 		if (contextSupport != null) {
 			contextSupport.activateContext(ITasksUiConstants.ID_VIEW_TASKS);
 		}
@@ -788,18 +756,14 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 		ServiceMessageManager serviceMessageManager = TasksUiPlugin.getDefault().getServiceMessageManager();
 		if (serviceMessageManager == null) {
-			Display.getDefault().asyncExec(new Runnable() {
+			Display.getDefault().asyncExec(() -> {
+				ServiceMessageManager serviceMessageManager1 = TasksUiPlugin.getDefault().getServiceMessageManager();
+				if (serviceMessageManager1 != null) {
+					serviceMessageManager1.addServiceMessageListener(serviceMessageControl);
+				} else {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Could not add Listener for serviceMessageControl")); //$NON-NLS-1$
 
-				@Override
-				public void run() {
-					ServiceMessageManager serviceMessageManager = TasksUiPlugin.getDefault().getServiceMessageManager();
-					if (serviceMessageManager != null) {
-						serviceMessageManager.addServiceMessageListener(serviceMessageControl);
-					} else {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not add Listener for serviceMessageControl")); //$NON-NLS-1$
-
-					}
 				}
 			});
 		} else {
@@ -811,7 +775,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	private void initHandlers() {
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		IHandlerService handlerService = getSite().getService(IHandlerService.class);
 		handlerService.activateHandler(CollapseAllHandler.COMMAND_ID, new CollapseAllHandler(getViewer()));
 	}
 
@@ -892,6 +856,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			}
 
 			columns[i].addControlListener(new ControlListener() {
+				@Override
 				public void controlResized(ControlEvent e) {
 					for (int j = 0; j < columnWidths.length; j++) {
 						if (columns[j].equals(e.getSource())) {
@@ -900,6 +865,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					}
 				}
 
+				@Override
 				public void controlMoved(ControlEvent e) {
 					// don't care if the control is moved
 				}
@@ -919,6 +885,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			jumpToEditorTask((IEditorPart) part);
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPart part) {
 			if (part == TaskListView.this) {
 				updateDescription();
@@ -927,12 +894,15 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			}
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPart part) {
 			if (part == TaskListView.this) {
 				IViewReference reference = getSite().getPage().findViewReference(ITasksUiConstants.ID_VIEW_TASKS);
@@ -943,13 +913,14 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			}
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPart part) {
 		}
 	};
 
 	private void initDragAndDrop(Composite parent) {
-		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
-		Transfer[] dropTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
+		Transfer[] dragTypes = { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
+		Transfer[] dropTypes = { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
 				TextTransfer.getInstance(), RTFTransfer.getInstance(), URLTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
@@ -961,14 +932,12 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	@Override
 	protected void expandToActiveTasks() {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				ITask task = TasksUi.getTaskActivityManager().getActiveTask();
-				if (task != null) {
-					TreeViewer viewer = getViewer();
-					if (!viewer.getControl().isDisposed()) {
-						viewer.expandToLevel(task, 0);
-					}
+		workbench.getDisplay().asyncExec(() -> {
+			ITask task = TasksUi.getTaskActivityManager().getActiveTask();
+			if (task != null) {
+				TreeViewer viewer = getViewer();
+				if (!viewer.getControl().isDisposed()) {
+					viewer.expandToLevel(task, 0);
 				}
 			}
 		});
@@ -977,11 +946,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				actionGroup.fillContextMenu(manager);
-			}
-		});
+		menuManager.addMenuListener(manager -> actionGroup.fillContextMenu(manager));
 		Menu menu = menuManager.createContextMenu(getViewer().getControl());
 		getViewer().getControl().setMenu(menu);
 		getSite().registerContextMenu(menuManager, getViewer());
@@ -1017,11 +982,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		manager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				filterOnPriorityAction.updateCheckedState();
-			}
-		});
+		manager.addMenuListener(manager1 -> filterOnPriorityAction.updateCheckedState());
 
 		manager.add(linkWithEditorAction);
 		manager.add(new Separator());
@@ -1057,8 +1018,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	public List<IRepositoryElement> getSelectedTaskContainers() {
-		List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
-		for (Object object : ((IStructuredSelection) getViewer().getSelection())) {
+		List<IRepositoryElement> selectedElements = new ArrayList<>();
+		for (Object object : (IStructuredSelection) getViewer().getSelection()) {
 			if (object instanceof ITaskContainer) {
 				selectedElements.add((IRepositoryElement) object);
 			}
@@ -1086,21 +1047,15 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	private void hookOpenAction() {
-		getViewer().addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				actionGroup.getOpenAction().run();
-			}
-		});
+		getViewer().addOpenListener(event -> actionGroup.getOpenAction().run());
 
-		getViewer().addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				if (TasksUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getBoolean(ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
-					AbstractTask selectedTask = getSelectedTask();
-					if (selectedTask != null && !selectedTask.isActive()) {
-						TasksUiInternal.activateTaskThroughCommand(selectedTask);
-					}
+		getViewer().addDoubleClickListener(event -> {
+			if (TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
+				AbstractTask selectedTask = getSelectedTask();
+				if (selectedTask != null && !selectedTask.isActive()) {
+					TasksUiInternal.activateTaskThroughCommand(selectedTask);
 				}
 			}
 		});
@@ -1157,7 +1112,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	public Set<AbstractTaskListFilter> clearFilters() {
-		HashSet<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>(getFilters());
+		HashSet<AbstractTaskListFilter> previousFilters = new HashSet<>(getFilters());
 		previousFilters.remove(filterMyTasks);// this filter is always available for users to toggle
 		filters.clear();
 		filters.add(filterArchive);
@@ -1194,8 +1149,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	public void goIntoCategory() {
 		ISelection selection = getViewer().getSelection();
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
+		if (selection instanceof StructuredSelection structuredSelection) {
 			Object element = structuredSelection.getFirstElement();
 			if (element instanceof ITaskContainer) {
 				drilledIntoCategory = (AbstractTaskContainer) element;
@@ -1223,8 +1177,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		if (selection.isEmpty()) {
 			return null;
 		}
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
+		if (selection instanceof StructuredSelection structuredSelection) {
 			Object element = structuredSelection.getFirstElement();
 			if (element instanceof ITask) {
 				return (AbstractTask) structuredSelection.getFirstElement();
@@ -1234,8 +1187,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	public static AbstractTask getSelectedTask(ISelection selection) {
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
+		if (selection instanceof StructuredSelection structuredSelection) {
 			if (structuredSelection.size() != 1) {
 				return null;
 			}
@@ -1311,8 +1263,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	/**
-	 * If <code>task</code> was previously selected, a tree selection is returned that references the same path that was
-	 * previously selected.
+	 * If <code>task</code> was previously selected, a tree selection is returned that references the same path that was previously
+	 * selected.
 	 */
 	private IStructuredSelection restoreSelection(ITask task) {
 		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
@@ -1422,6 +1374,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		getViewer().refresh();
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
@@ -1445,11 +1398,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				}
 			}
 
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					filteredTree.indicateActiveTaskWorkingSet();
-				}
-			});
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> filteredTree.indicateActiveTaskWorkingSet());
 		}
 	}
 
@@ -1491,12 +1440,11 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	}
 
 	/**
-	 * This can be used for experimentally adding additional presentations, but note that this convention is extremely
-	 * likely to change in the Mylyn 3.0 cycle.
+	 * This can be used for experimentally adding additional presentations, but note that this convention is extremely likely to change in
+	 * the Mylyn 3.0 cycle.
 	 */
 	public static List<AbstractTaskListPresentation> getPresentations() {
-		List<AbstractTaskListPresentation> presentations = new ArrayList<AbstractTaskListPresentation>();
-		presentations.addAll(presentationsPrimary);
+		List<AbstractTaskListPresentation> presentations = new ArrayList<>(presentationsPrimary);
 		presentations.addAll(presentationsSecondary);
 		return presentations;
 	}
@@ -1513,6 +1461,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		return tableSorter;
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
 		if (selection instanceof IStructuredSelection) {
@@ -1532,7 +1481,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					.getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED);
 			taskListToolTip.setEnabled(enabled);
 			if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
-				getViewer().getTree().setToolTipText((enabled) ? "" : null); //$NON-NLS-1$
+				getViewer().getTree().setToolTipText(enabled ? "" : null); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1542,6 +1491,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	public Object getAdapter(Class adapter) {
 		if (adapter == ISizeProvider.class) {
 			return new ISizeProvider() {
+				@Override
 				public int getSizeFlags(boolean width) {
 					if (width) {
 						return SWT.MIN;
@@ -1549,6 +1499,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					return 0;
 				}
 
+				@Override
 				public int computePreferredSize(boolean width, int availableParallel, int availablePerpendicular,
 						int preferredResult) {
 					if (width) {
@@ -1564,17 +1515,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				}
 			};
 		} else if (adapter == IShowInTargetList.class) {
-			return new IShowInTargetList() {
-				public String[] getShowInTargetIds() {
-					return new String[] { "org.eclipse.team.ui.GenericHistoryView" }; //$NON-NLS-1$
-				}
-			};
+			return (IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" };
 		} else if (adapter == IShowInSource.class) {
-			return new IShowInSource() {
-				public ShowInContext getShowInContext() {
-					return new ShowInContext(getViewer().getInput(), getViewer().getSelection());
-				}
-			};
+			return (IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection());
 		}
 		return super.getAdapter(adapter);
 	}

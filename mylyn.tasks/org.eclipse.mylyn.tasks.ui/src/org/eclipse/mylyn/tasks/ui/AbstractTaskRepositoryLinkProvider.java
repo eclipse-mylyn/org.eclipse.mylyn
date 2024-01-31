@@ -35,6 +35,7 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 
 	private int order;
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
 		id = config.getAttribute("id"); //$NON-NLS-1$
 		name = config.getAttribute("name"); //$NON-NLS-1$
@@ -46,9 +47,8 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 	}
 
 	/**
-	 * This operation is invoked frequently by hyperlink detectors and needs to be fast (i.e. cannot do network access
-	 * or invoke long-running refreshes). Return null if the repository cannot be resolved without excessive file
-	 * I/O.@since 3.0
+	 * This operation is invoked frequently by hyperlink detectors and needs to be fast (i.e. cannot do network access or invoke
+	 * long-running refreshes). Return null if the repository cannot be resolved without excessive file I/O.@since 3.0
 	 * 
 	 * @since 3.0
 	 */

@@ -85,7 +85,7 @@ public class SaxTaskListWriter {
 		}
 
 		public ITransferList getTaskList() {
-			return this.taskList;
+			return taskList;
 		}
 
 		public Document getOrphans() {
@@ -100,56 +100,67 @@ public class SaxTaskListWriter {
 
 		private ErrorHandler errorHandler;
 
+		@Override
 		public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return false;
 		}
 
+		@Override
 		public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		}
 
+		@Override
 		public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return null;
 		}
 
+		@Override
 		public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		}
 
+		@Override
 		public void setEntityResolver(EntityResolver resolver) {
 		}
 
+		@Override
 		public EntityResolver getEntityResolver() {
 			return null;
 		}
 
+		@Override
 		public void setDTDHandler(DTDHandler handler) {
 		}
 
+		@Override
 		public DTDHandler getDTDHandler() {
 			return null;
 		}
 
+		@Override
 		public void setContentHandler(ContentHandler handler) {
 			this.handler = new ContentHandlerWrapper(handler);
 		}
 
+		@Override
 		public ContentHandler getContentHandler() {
 			return handler.getHandler();
 		}
 
+		@Override
 		public void setErrorHandler(ErrorHandler handler) {
-			this.errorHandler = handler;
+			errorHandler = handler;
 		}
 
+		@Override
 		public ErrorHandler getErrorHandler() {
 			return errorHandler;
 		}
 
+		@Override
 		public void parse(InputSource input) throws IOException, SAXException {
-			if (!(input instanceof TaskListInputSource)) {
+			if (!(input instanceof TaskListInputSource taskListInputSource)) {
 				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 			}
-			TaskListInputSource taskListInputSource = (TaskListInputSource) input;
-
 			handler.getHandler().startDocument();
 			writeTaskList(taskListInputSource.getTaskList(), taskListInputSource.getOrphans());
 			handler.getHandler().endDocument();
@@ -189,6 +200,7 @@ public class SaxTaskListWriter {
 			}
 		}
 
+		@Override
 		public void parse(String systemId) throws IOException, SAXException {
 			throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 		}

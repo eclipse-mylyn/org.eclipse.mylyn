@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * A contribution to a {@link ITaskRepositoryPage}, which enables plug-ins to contribute UI to the task repository
- * settings. subclasses must have a default public constructor.
+ * A contribution to a {@link ITaskRepositoryPage}, which enables plug-ins to contribute UI to the task repository settings. subclasses must
+ * have a default public constructor.
  * 
  * @author David Green
  * @since 3.1
@@ -35,8 +35,7 @@ import org.eclipse.swt.widgets.Control;
 public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
-	 * A listener interface that should be implemented by classes wishing to be notified of changes that occur within
-	 * the contribution.
+	 * A listener interface that should be implemented by classes wishing to be notified of changes that occur within the contribution.
 	 * 
 	 * @since 3.1
 	 */
@@ -49,11 +48,11 @@ public abstract class AbstractTaskRepositoryPageContribution {
 		 *            the contribution that changed
 		 * @see ITaskRepositoryPageContribution#validate(IProgressMonitor)
 		 */
-		public void validationRequired(AbstractTaskRepositoryPageContribution contribution);
+		void validationRequired(AbstractTaskRepositoryPageContribution contribution);
 
 	}
 
-	private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+	private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
 	private final String title;
 
@@ -75,7 +74,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	protected AbstractTaskRepositoryPageContribution(String title, String description) {
 		this.title = title;
 		this.description = description;
-		this.id = ""; //$NON-NLS-1$
+		id = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -93,8 +92,8 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	}
 
 	/**
-	 * Add a listener to this contribution. The contribution must notify the listener at the appropriate times, for
-	 * example when a setting has changed in the UI.
+	 * Add a listener to this contribution. The contribution must notify the listener at the appropriate times, for example when a setting
+	 * has changed in the UI.
 	 * 
 	 * @see #removeListener(Listener)
 	 * @since 3.1
@@ -148,11 +147,11 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	public abstract boolean canFlipToNextPage();
 
 	/**
-	 * Validate the settings of the contribution. Contributions should expect this method to be called often and should
-	 * thus return quickly. Always called on the UI thread.
+	 * Validate the settings of the contribution. Contributions should expect this method to be called often and should thus return quickly.
+	 * Always called on the UI thread.
 	 * 
-	 * @return the status (errors) on the contribution, or null if there are none. A MultiStatus should be used to
-	 *         return multiple error messages or warnings.
+	 * @return the status (errors) on the contribution, or null if there are none. A MultiStatus should be used to return multiple error
+	 *         messages or warnings.
 	 * @since 3.1
 	 */
 	public abstract IStatus validate();
@@ -210,9 +209,8 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	}
 
 	/**
-	 * Indicate if this contribution is enabled. Subclasses may override to programatically disable the contribution
-	 * when needed. This method is called early in the contributor's lifecycle, before any controls are created. the
-	 * default implementation returns true.
+	 * Indicate if this contribution is enabled. Subclasses may override to programatically disable the contribution when needed. This
+	 * method is called early in the contributor's lifecycle, before any controls are created. the default implementation returns true.
 	 */
 	public boolean isEnabled() {
 		return true;

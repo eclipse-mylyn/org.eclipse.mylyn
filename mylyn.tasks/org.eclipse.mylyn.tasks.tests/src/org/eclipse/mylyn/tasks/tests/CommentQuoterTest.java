@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+
+import junit.framework.TestCase;
 
 /**
  * Test many quoting scenarios

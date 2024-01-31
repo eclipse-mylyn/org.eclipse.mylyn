@@ -20,7 +20,7 @@ public class AttributesWrapper {
 	private final AttributesImpl attributes;
 
 	public AttributesWrapper() {
-		this.attributes = new AttributesImpl();
+		attributes = new AttributesImpl();
 	}
 
 	public void addAttribute(String key, String value) {

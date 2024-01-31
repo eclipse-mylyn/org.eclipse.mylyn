@@ -40,9 +40,8 @@ public class RenameAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
-		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
-		if (selectedObject instanceof IRepositoryElement) {
-			IRepositoryElement element = (IRepositoryElement) selectedObject;
+		Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+		if (selectedObject instanceof IRepositoryElement element) {
 			view.setInRenameAction(true);
 			view.getViewer().editElement(element, 0);
 			view.setInRenameAction(false);
@@ -52,12 +51,11 @@ public class RenameAction extends BaseSelectionListenerAction {
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		Object selectedObject = selection.getFirstElement();
-		if (selectedObject instanceof AbstractTaskCategory) {
-			AbstractTaskCategory container = (AbstractTaskCategory) selectedObject;
+		if (selectedObject instanceof AbstractTaskCategory container) {
 			return container.isUserManaged();
 		} else if (selectedObject instanceof IRepositoryQuery) {
 			return true;
 		}
-		return (selectedObject instanceof LocalTask);
+		return selectedObject instanceof LocalTask;
 	}
 }

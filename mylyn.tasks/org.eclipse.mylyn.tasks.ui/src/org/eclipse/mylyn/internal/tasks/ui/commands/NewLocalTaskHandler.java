@@ -29,13 +29,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewLocalTaskHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
-		if (site instanceof IViewSite) {
-			IViewSite viewSite = (IViewSite) site;
+		if (site instanceof IViewSite viewSite) {
 			IWorkbenchPart part = viewSite.getPart();
-			if (part instanceof TaskListView) {
-				TaskListView taskListView = (TaskListView) part;
+			if (part instanceof TaskListView taskListView) {
 				NewTaskAction action = new NewTaskAction();
 				try {
 					action.setInitializationData(null, null, "local"); //$NON-NLS-1$

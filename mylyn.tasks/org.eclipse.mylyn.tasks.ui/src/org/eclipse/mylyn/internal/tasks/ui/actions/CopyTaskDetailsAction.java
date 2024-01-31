@@ -18,6 +18,7 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
+import org.eclipse.mylyn.commons.ui.ClipboardCopier.TextProvider;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -57,7 +58,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 		private String message;
 
-		private Mode(String message) {
+		Mode(String message) {
 			this.message = message;
 		}
 	}
@@ -81,12 +82,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
-		ClipboardCopier.getDefault().copy(getStructuredSelection(), new ClipboardCopier.TextProvider() {
-			@Override
-			public String getTextForElement(Object element) {
-				return getTextForTask(element, getMode());
-			}
-		});
+		ClipboardCopier.getDefault().copy(getStructuredSelection(), (TextProvider) element -> getTextForTask(element, getMode()));
 	}
 
 	public static String getTextForTask(Object object) {

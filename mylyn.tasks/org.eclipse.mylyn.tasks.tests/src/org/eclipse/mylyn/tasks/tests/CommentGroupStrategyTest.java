@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CommentGroupStrategy;
@@ -29,6 +27,8 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * @author Jingwen Ou
@@ -55,7 +55,7 @@ public class CommentGroupStrategyTest extends TestCase {
 		repository = TaskTestUtil.createMockRepository();
 		task = TaskTestUtil.createMockTask("1");
 		taskData = TaskTestUtil.createMockTaskData("1");
-		comments = new ArrayList<ITaskComment>();
+		comments = new ArrayList<>();
 		strategy = new CommentGroupStrategy();
 	}
 
@@ -204,7 +204,7 @@ public class CommentGroupStrategyTest extends TestCase {
 	}
 
 	// 2: current person - system generated, e.g. mylyn/context/zip
-	// 1: current person 
+	// 1: current person
 	public void testIsCurrentAuthoredPreviousCommentButSystemGenerated() {
 		comments.add(mockComment(2, MOCK_CURRENT_PERSON_ID, new Date(2), AttachmentUtil.CONTEXT_DESCRIPTION));
 		boolean isCurrent = strategy.isCurrent(comments, mockComment(1, MOCK_CURRENT_PERSON_ID, new Date(1)),

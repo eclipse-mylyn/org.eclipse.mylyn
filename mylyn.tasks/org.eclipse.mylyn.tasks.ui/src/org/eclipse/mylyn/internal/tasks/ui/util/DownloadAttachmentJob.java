@@ -49,11 +49,10 @@ public class DownloadAttachmentJob extends Job {
 			try {
 				boolean exceptionThrown = true;
 				OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
-				try {
+				try (out) {
 					AttachmentUtil.downloadAttachment(attachment, out, monitor);
 					exceptionThrown = false;
 				} finally {
-					out.close();
 					if (exceptionThrown) {
 						targetFile.delete();
 					}

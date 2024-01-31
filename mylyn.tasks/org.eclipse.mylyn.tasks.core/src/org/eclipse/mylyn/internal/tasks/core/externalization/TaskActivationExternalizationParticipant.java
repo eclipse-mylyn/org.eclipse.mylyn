@@ -52,7 +52,7 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 			TaskActivationHistory history, File file) {
 		this.externalizationManager = externalizationManager;
 		this.taskList = taskList;
-		this.activationHistory = history;
+		activationHistory = history;
 		this.file = file;
 	}
 
@@ -84,7 +84,7 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 			activationHistory.clear();
 			if (file.exists()) {
 				FileReader reader = new FileReader(file);
-				try {
+				try (reader) {
 					XmlMemento memento = XmlMemento.createReadRoot(reader);
 					XmlMemento[] items = memento.getChildren("task"); //$NON-NLS-1$
 					for (XmlMemento child : items) {
@@ -96,14 +96,9 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 							}
 						}
 					}
-				} finally {
-					reader.close();
 				}
 			}
-		} catch (InvocationTargetException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to load task activation history", e)); //$NON-NLS-1$
-		} catch (IOException e) {
+		} catch (InvocationTargetException | IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Failed to load task activation history", e)); //$NON-NLS-1$
 		}
@@ -124,10 +119,8 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 		try {
 			file.getParentFile().mkdirs();
 			FileWriter writer = new FileWriter(file);
-			try {
+			try (writer) {
 				memento.save(writer);
-			} finally {
-				writer.close();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -145,19 +138,23 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 		return file;
 	}
 
+	@Override
 	public void preTaskActivated(ITask task) {
 		// ignore
 	}
 
+	@Override
 	public void preTaskDeactivated(ITask task) {
 		// ignore
 	}
 
+	@Override
 	public void taskActivated(ITask task) {
 		activationHistory.addTask((AbstractTask) task);
 		requestSave();
 	}
 
+	@Override
 	public void taskDeactivated(ITask task) {
 		// ignore
 	}

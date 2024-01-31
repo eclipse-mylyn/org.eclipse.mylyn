@@ -31,18 +31,18 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskDataDiff implements ITaskDataDiff {
 
-	private final String[] ATTRIBUTES_IDS = new String[] { TaskAttribute.SUMMARY, TaskAttribute.DESCRIPTION,
-			TaskAttribute.PRODUCT, TaskAttribute.PRIORITY, TaskAttribute.USER_ASSIGNED, TaskAttribute.STATUS, };
+	private final String[] ATTRIBUTES_IDS = { TaskAttribute.SUMMARY, TaskAttribute.DESCRIPTION, TaskAttribute.PRODUCT,
+			TaskAttribute.PRIORITY, TaskAttribute.USER_ASSIGNED, TaskAttribute.STATUS, };
 
 	private final TaskData newTaskData;
 
 	private final TaskData oldTaskData;
 
-	private final Set<ITaskComment> newComments = new LinkedHashSet<ITaskComment>();
+	private final Set<ITaskComment> newComments = new LinkedHashSet<>();
 
-	private final Set<TaskAttribute> newAttachments = new LinkedHashSet<TaskAttribute>();
+	private final Set<TaskAttribute> newAttachments = new LinkedHashSet<>();
 
-	private final Set<ITaskAttributeDiff> changedAttributes = new LinkedHashSet<ITaskAttributeDiff>();
+	private final Set<ITaskAttributeDiff> changedAttributes = new LinkedHashSet<>();
 
 	private final RepositoryModel repositoryModel;
 
@@ -52,21 +52,24 @@ public class TaskDataDiff implements ITaskDataDiff {
 		Assert.isNotNull(repositoryModel);
 		Assert.isNotNull(newTaskData);
 		this.repositoryModel = repositoryModel;
-		this.repository = newTaskData.getAttributeMapper().getTaskRepository();
+		repository = newTaskData.getAttributeMapper().getTaskRepository();
 		this.newTaskData = newTaskData;
 		this.oldTaskData = oldTaskData;
 		parse();
 	}
 
+	@Override
 	public boolean hasChanged() {
 		return !changedAttributes.isEmpty() || !newComments.isEmpty() || !newAttachments.isEmpty();
 	}
 
+	@Override
 	@Deprecated
 	public void setHasChanged(boolean hasChanged) {
 
 	}
 
+	@Override
 	public TaskRepository getRepository() {
 		return repository;
 	}
@@ -79,6 +82,7 @@ public class TaskDataDiff implements ITaskDataDiff {
 		return newTaskData;
 	}
 
+	@Override
 	public Collection<ITaskComment> getNewComments() {
 		return newComments;
 	}
@@ -87,6 +91,7 @@ public class TaskDataDiff implements ITaskDataDiff {
 		return newAttachments;
 	}
 
+	@Override
 	public Collection<ITaskAttributeDiff> getChangedAttributes() {
 		return changedAttributes;
 	}

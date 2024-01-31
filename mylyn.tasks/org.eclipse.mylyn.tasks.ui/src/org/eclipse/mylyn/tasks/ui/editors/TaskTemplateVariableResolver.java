@@ -49,11 +49,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * 
  * You have to define/change the:
  * <ul>
- * <li><b>contextTypeId</b> - you should define an resolver for the "java" and the "javadoc" context and maybe more
- * contexts.</li>
+ * <li><b>contextTypeId</b> - you should define an resolver for the "java" and the "javadoc" context and maybe more contexts.</li>
  * <li><b>type</b> - this is the property which can be used by users in there templates</li>
- * <li><b>description</b> - this is the localized description for the resolver, have a look into
- * <code>plugin.properties</code></li>
+ * <li><b>description</b> - this is the localized description for the resolver, have a look into <code>plugin.properties</code></li>
  * <li><b>name</b> - the display name of the resolver (for internal usage only)</li>
  * </ul>
  * </p>
@@ -61,8 +59,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * The you must put your resolver code here.
  * <ol>
  * <li>add a new constant for the resolver-<b>type</b> ("activeTaskKey")</li>
- * <li>check your type in {@link #resolve(TemplateContext)} and resolve the type, return <code>null</code> if nothing
- * can resolved, always <b>trim</b> your result</li>
+ * <li>check your type in {@link #resolve(TemplateContext)} and resolve the type, return <code>null</code> if nothing can resolved, always
+ * <b>trim</b> your result</li>
  * </ol>
  * </p>
  * <p>

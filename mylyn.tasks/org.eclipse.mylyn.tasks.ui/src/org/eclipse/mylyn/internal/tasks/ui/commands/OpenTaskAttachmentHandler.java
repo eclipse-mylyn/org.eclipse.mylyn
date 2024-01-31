@@ -39,6 +39,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class OpenTaskAttachmentHandler extends AbstractHandler implements IHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 		if (window != null) {

@@ -55,13 +55,13 @@ public class TaskDataModel {
 		Assert.isNotNull(taskDataState);
 		this.task = task;
 		this.taskRepository = taskRepository;
-		this.workingCopy = taskDataState;
-		this.unsavedChangedAttributes = new HashSet<TaskAttribute>();
+		workingCopy = taskDataState;
+		unsavedChangedAttributes = new HashSet<>();
 	}
 
 	public void addModelListener(TaskDataModelListener listener) {
 		if (listeners == null) {
-			listeners = new ArrayList<TaskDataModelListener>();
+			listeners = new ArrayList<>();
 		}
 		listeners.add(listener);
 	}
@@ -74,17 +74,19 @@ public class TaskDataModel {
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
 		unsavedChangedAttributes.add(attribute);
-		if (this.listeners != null) {
+		if (listeners != null) {
 			final TaskDataModelEvent event = new TaskDataModelEvent(this, EventKind.CHANGED, attribute);
 			TaskDataModelListener[] listeners = this.listeners.toArray(new TaskDataModelListener[0]);
 
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler
 								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
+					@Override
 					public void run() throws Exception {
 						listener.attributeChanged(event);
 					}
@@ -110,15 +112,14 @@ public class TaskDataModel {
 	}
 
 	public Set<TaskAttribute> getChangedAttributes() {
-		Set<TaskAttribute> changedAttributes = new LinkedHashSet<TaskAttribute>();
-		changedAttributes.addAll(workingCopy.getEditsData().getRoot().getAttributes().values());
+		Set<TaskAttribute> changedAttributes = new LinkedHashSet<>(workingCopy.getEditsData().getRoot().getAttributes().values());
 		changedAttributes.addAll(unsavedChangedAttributes);
 		return changedAttributes;
 	}
 
 	public Set<TaskAttribute> getChangedOldAttributes() {
 		Set<TaskAttribute> newChangedAttributes = getChangedAttributes();
-		Set<TaskAttribute> oldAttributes = new LinkedHashSet<TaskAttribute>();
+		Set<TaskAttribute> oldAttributes = new LinkedHashSet<>();
 		TaskData repositoryReadData = workingCopy.getRepositoryData();
 		if (repositoryReadData != null) {
 			for (TaskAttribute taskAttribute : newChangedAttributes) {
@@ -175,14 +176,16 @@ public class TaskDataModel {
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
 		workingCopy.refresh(monitor);
-		if (this.listeners != null) {
+		if (listeners != null) {
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler
 								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
+					@Override
 					public void run() throws Exception {
 						listener.modelRefreshed();
 					}

@@ -52,6 +52,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -59,9 +60,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 	@Override
 	public void run() {
 		for (Object selectedObject : getStructuredSelection().toList()) {
-			if (selectedObject instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) selectedObject;
-
+			if (selectedObject instanceof AbstractTask task) {
 				String description = Messages.CloneTaskAction_Cloned_from_ + CopyTaskDetailsAction.getTextForTask(task);
 				if (task instanceof LocalTask) {
 					String notes = task.getNotes();
@@ -115,10 +114,12 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			super.selectionChanged((IStructuredSelection) selection);
@@ -128,7 +129,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (!selection.isEmpty()) {
-			for (Object element : (selection).toList()) {
+			for (Object element : selection.toList()) {
 				if (!(element instanceof AbstractTask)) {
 					return false;
 				}

@@ -24,6 +24,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 // TODO 4.0 replace by platform contribution mechanism
 public interface IDynamicSubMenuContributor {
 
-	public abstract MenuManager getSubMenuManager(List<IRepositoryElement> selectedElements);
+	MenuManager getSubMenuManager(List<IRepositoryElement> selectedElements);
 
 }

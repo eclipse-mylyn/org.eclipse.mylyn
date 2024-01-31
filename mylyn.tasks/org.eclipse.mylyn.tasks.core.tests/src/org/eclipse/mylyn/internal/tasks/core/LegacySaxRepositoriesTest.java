@@ -34,7 +34,7 @@ public class LegacySaxRepositoriesTest {
 
 	private class SaxRepositoriesContentHandlerVersion1 extends DefaultHandler {
 
-		private final Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();
+		private final Set<TaskRepository> taskRepositories = new HashSet<>();
 
 		@SuppressWarnings({ "deprecation", "restriction" })
 		@Override
@@ -81,11 +81,12 @@ public class LegacySaxRepositoriesTest {
 
 	private static final String labelPropertyKey = "label";
 
-	private final String repositoryXmlVersion2 = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-			+ "<TaskRepositories OutputVersion=\"2\">" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-			+ "</TaskRepositories>", //
+	private final String repositoryXmlVersion2 = String.format("""
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="2">\
+			<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			</TaskRepositories>""", //
 			firstUrl, kind, labelPropertyKey, labelPropertyValue, labelPropertyKey, labelPropertyValueAlternate,
 			secondUrl, kind, labelPropertyKey, labelPropertyValue, labelPropertyKey, labelPropertyValueAlternate);
 

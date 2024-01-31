@@ -22,7 +22,7 @@ public class TaskRepositoryDelta {
 
 	public enum Type {
 		ALL, CREDENTIALS, PROPERTY, PROYX, OFFLINE
-	};
+	}
 
 	private final Type type;
 

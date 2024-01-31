@@ -36,6 +36,7 @@ import org.eclipse.ui.menus.UIElement;
  */
 public class TaskHistoryHandler extends AbstractHandler implements IElementUpdater {
 
+	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		if (TasksUi.getTaskActivityManager().getActiveTask() != null) {
 			TasksUi.getTaskActivityManager().deactivateActiveTask();
@@ -58,6 +59,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public void updateElement(UIElement element, Map parameters) {
 		if (TasksUi.getTaskActivityManager().getActiveTask() == null) {

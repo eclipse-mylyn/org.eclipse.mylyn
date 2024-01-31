@@ -69,8 +69,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 	}
 
 	private void synchronizeSelected(IStructuredSelection selection) {
-		Map<AbstractRepositoryConnector, List<RepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<RepositoryQuery>>();
-		Map<AbstractRepositoryConnector, List<ITask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<ITask>>();
+		Map<AbstractRepositoryConnector, List<RepositoryQuery>> queriesToSyncMap = new LinkedHashMap<>();
+		Map<AbstractRepositoryConnector, List<ITask>> tasksToSyncMap = new LinkedHashMap<>();
 
 		// collect queries and tasks
 		for (Object obj : selection.toList()) {
@@ -81,13 +81,12 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				if (client != null) {
 					List<RepositoryQuery> queriesToSync = queriesToSyncMap.get(client);
 					if (queriesToSync == null) {
-						queriesToSync = new ArrayList<RepositoryQuery>();
+						queriesToSync = new ArrayList<>();
 						queriesToSyncMap.put(client, queriesToSync);
 					}
 					queriesToSync.add(repositoryQuery);
 				}
-			} else if (obj instanceof TaskCategory) {
-				TaskCategory cat = (TaskCategory) obj;
+			} else if (obj instanceof TaskCategory cat) {
 				for (ITask task : cat.getChildren()) {
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(task.getConnectorKind());
@@ -98,22 +97,19 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 						.getRepositoryConnector(repositoryTask.getConnectorKind());
 				addTaskToSync(client, repositoryTask, tasksToSyncMap);
-			} else if (obj instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer scheduledContainer = (ScheduledTaskContainer) obj;
+			} else if (obj instanceof ScheduledTaskContainer scheduledContainer) {
 				for (ITask task : scheduledContainer.getChildren()) {
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
-			} else if (obj instanceof Person) {
-				Person person = (Person) obj;
+			} else if (obj instanceof Person person) {
 				for (ITask task : person.getChildren()) {
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
 				}
-			} else if (obj instanceof TaskGroup) {
-				TaskGroup group = (TaskGroup) obj;
+			} else if (obj instanceof TaskGroup group) {
 				for (ITask task : group.getChildren()) {
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(task.getConnectorKind());
@@ -125,7 +121,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 		// update queries
 		if (!queriesToSyncMap.isEmpty()) {
 			// determine which repositories to synch changed tasks for
-			HashMap<TaskRepository, Set<RepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<RepositoryQuery>>();
+			HashMap<TaskRepository, Set<RepositoryQuery>> repositoriesToSync = new HashMap<>();
 			for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
 				List<RepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
 				if (queriesToSync == null || queriesToSync.isEmpty()) {
@@ -144,7 +140,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 					Set<RepositoryQuery> queries = repositoriesToSync.get(repos);
 					if (queries == null) {
-						queries = new HashSet<RepositoryQuery>();
+						queries = new HashSet<>();
 						repositoriesToSync.put(repos, queries);
 					}
 					queries.add(query);
@@ -164,7 +160,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
 				List<ITask> tasksToSync = tasksToSyncMap.get(connector);
 				if (tasksToSync != null && tasksToSync.size() > 0) {
-					TasksUiInternal.synchronizeTasks(connector, new HashSet<ITask>(tasksToSync), true, null);
+					TasksUiInternal.synchronizeTasks(connector, new HashSet<>(tasksToSync), true, null);
 				}
 			}
 		}
@@ -180,7 +176,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 		List<ITask> tasksToSync = tasksToSyncMap.get(connector);
 		if (tasksToSync == null) {
-			tasksToSync = new ArrayList<ITask>();
+			tasksToSync = new ArrayList<>();
 			tasksToSyncMap.put(connector, tasksToSync);
 		}
 		tasksToSync.add(task);
@@ -193,6 +189,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 		this.action = action;
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		IActionBars actionBars = view.getViewSite().getActionBars();
 		actionBars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), action);

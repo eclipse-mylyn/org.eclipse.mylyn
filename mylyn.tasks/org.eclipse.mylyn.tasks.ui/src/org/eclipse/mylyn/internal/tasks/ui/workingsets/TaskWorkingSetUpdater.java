@@ -10,7 +10,7 @@
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
  *     Tasktop Technologies - initial API and implementation
- *     Yatta Solutions - fix for bug 327262 
+ *     Yatta Solutions - fix for bug 327262
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
@@ -57,7 +57,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet"; //$NON-NLS-1$
 
-	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
+	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<>();
 
 	private static class TaskWorkingSetDelta {
 
@@ -69,7 +69,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 		public TaskWorkingSetDelta(IWorkingSet workingSet) {
 			this.workingSet = workingSet;
-			this.elements = new ArrayList<Object>(Arrays.asList(workingSet.getElements()));
+			elements = new ArrayList<>(Arrays.asList(workingSet.getElements()));
 		}
 
 		public int indexOf(Object element) {
@@ -114,10 +114,12 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		return enabled;
 	}
 
+	@Override
 	public void dispose() {
 		TasksUiInternal.getTaskList().removeChangeListener(this);
 	}
 
+	@Override
 	public void add(IWorkingSet workingSet) {
 		checkElementExistence(workingSet);
 		synchronized (workingSets) {
@@ -126,7 +128,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	private void checkElementExistence(IWorkingSet workingSet) {
-		ArrayList<IAdaptable> list = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+		ArrayList<IAdaptable> list = new ArrayList<>(Arrays.asList(workingSet.getElements()));
 		boolean changed = false;
 		for (Iterator<IAdaptable> iter = list.iterator(); iter.hasNext();) {
 			IAdaptable adaptable = iter.next();
@@ -158,18 +160,21 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
+	@Override
 	public boolean contains(IWorkingSet workingSet) {
 		synchronized (workingSets) {
 			return workingSets.contains(workingSet);
 		}
 	}
 
+	@Override
 	public boolean remove(IWorkingSet workingSet) {
 		synchronized (workingSets) {
 			return workingSets.remove(workingSet);
 		}
 	}
 
+	@Override
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		if (!isEnabled()) {
 			return;
@@ -179,24 +184,24 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 					|| taskContainerDelta.getElement() instanceof IRepositoryQuery) {
 				synchronized (workingSets) {
 					switch (taskContainerDelta.getKind()) {
-					case REMOVED:
-						// Remove from all
-						for (IWorkingSet workingSet : workingSets) {
-							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
-									Arrays.asList(workingSet.getElements()));
-							elements.remove(taskContainerDelta.getElement());
-							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
-						}
-						break;
-					case ADDED:
-						// Add to the active working set
-						for (IWorkingSet workingSet : TaskWorkingSetUpdater.getEnabledSets()) {
-							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
-									Arrays.asList(workingSet.getElements()));
-							elements.add(taskContainerDelta.getElement());
-							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
-						}
-						break;
+						case REMOVED:
+							// Remove from all
+							for (IWorkingSet workingSet : workingSets) {
+								ArrayList<IAdaptable> elements = new ArrayList<>(
+										Arrays.asList(workingSet.getElements()));
+								elements.remove(taskContainerDelta.getElement());
+								workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+							}
+							break;
+						case ADDED:
+							// Add to the active working set
+							for (IWorkingSet workingSet : TaskWorkingSetUpdater.getEnabledSets()) {
+								ArrayList<IAdaptable> elements = new ArrayList<>(
+										Arrays.asList(workingSet.getElements()));
+								elements.add(taskContainerDelta.getElement());
+								workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+							}
+							break;
 					}
 				}
 			}
@@ -245,14 +250,14 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 //
 //			if (matchingWorkingSet != null) {
 //				new ToggleWorkingSetAction(matchingWorkingSet).run();
-//			} else { 
+//			} else {
 //				new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
 //			}
 //		}
 //	}
 
 	public static IWorkingSet[] getEnabledSets() {
-		Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>();
+		Set<IWorkingSet> workingSets = new HashSet<>();
 		Set<IWorkbenchWindow> windows = MonitorUi.getMonitoredWindows();
 		for (IWorkbenchWindow iWorkbenchWindow : windows) {
 			IWorkbenchPage page = iWorkbenchWindow.getActivePage();
@@ -295,9 +300,9 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 
 		IWorkingSet[] enabledSets = TaskWorkingSetUpdater.getEnabledSets();
-		for (int i = 0; i < enabledSets.length; i++) {
-			if (!enabledSets[i].equals(set)
-					&& enabledSets[i].getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+		for (IWorkingSet enabledSet : enabledSets) {
+			if (!enabledSet.equals(set)
+					&& enabledSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				return false;
 			}
 		}
@@ -339,6 +344,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 				&& (flags & IResourceDelta.OPEN) != 0;
 	}
 
+	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		for (IWorkingSet workingSet : workingSets) {
 			TaskWorkingSetDelta workingSetDelta = new TaskWorkingSetDelta(workingSet);
@@ -363,8 +369,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public static Set<IWorkingSet> getActiveWorkingSets(IWorkbenchWindow window) {
 		if (window != null && window.getActivePage() != null) {
-			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(window.getActivePage().getWorkingSets()));
-			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
+			Set<IWorkingSet> allSets = new HashSet<>(Arrays.asList(window.getActivePage().getWorkingSets()));
+			Set<IWorkingSet> tasksSets = new HashSet<>(allSets);
 			for (IWorkingSet workingSet : allSets) {
 				if (workingSet.getId() == null
 						|| !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {

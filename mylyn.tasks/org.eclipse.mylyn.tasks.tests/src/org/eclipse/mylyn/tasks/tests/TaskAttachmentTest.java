@@ -16,8 +16,6 @@ package org.eclipse.mylyn.tasks.tests;
 import java.io.File;
 import java.io.RandomAccessFile;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
@@ -35,6 +33,8 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * Test task attachment jobs.

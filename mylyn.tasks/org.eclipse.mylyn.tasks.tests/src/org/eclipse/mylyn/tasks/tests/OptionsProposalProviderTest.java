@@ -38,7 +38,7 @@ public class OptionsProposalProviderTest extends TestCase {
 
 	@Test
 	public void testEmptyProposals() {
-		OptionsProposalProvider provider = new OptionsProposalProvider(new HashMap<String, String>(), true);
+		OptionsProposalProvider provider = new OptionsProposalProvider(new HashMap<>(), true);
 		assertEquals(0, provider.getProposals("", 0).length);
 		assertEquals(0, provider.getProposals("", 10).length);
 		assertEquals(0, provider.getProposals("test", 0).length);

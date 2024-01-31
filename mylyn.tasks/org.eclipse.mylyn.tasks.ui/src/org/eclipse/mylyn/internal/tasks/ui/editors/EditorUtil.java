@@ -40,12 +40,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseWheelListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -57,7 +51,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Scrollable;
@@ -229,14 +222,10 @@ public class EditorUtil {
 		TaskAttribute attribute = mapper.createTaskAttachment(page.getModel().getTaskData());
 		final NewAttachmentWizardDialog dialog = TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(),
 				page.getTaskRepository(), page.getTask(), attribute, mode, source);
-		dialog.getShell().addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				if (dialog.getReturnCode() == Window.OK) {
-					page.getTaskEditor().refreshPages();
-				}
+		dialog.getShell().addDisposeListener(e -> {
+			if (dialog.getReturnCode() == Window.OK) {
+				page.getTaskEditor().refreshPages();
 			}
-
 		});
 		return dialog;
 	}
@@ -253,8 +242,7 @@ public class EditorUtil {
 		Control control = findControl(form.getBody(), key);
 		if (control != null) {
 			// expand all children
-			if (control instanceof ExpandableComposite) {
-				ExpandableComposite ex = (ExpandableComposite) control;
+			if (control instanceof ExpandableComposite ex) {
 				if (!ex.isExpanded()) {
 					CommonFormUtil.setExpanded(ex, true);
 				}
@@ -267,8 +255,7 @@ public class EditorUtil {
 					if (!((Section) comp).isExpanded()) {
 						((Section) comp).setExpanded(true);
 					}
-				} else if (comp instanceof ExpandableComposite) {
-					ExpandableComposite ex = (ExpandableComposite) comp;
+				} else if (comp instanceof ExpandableComposite ex) {
 					if (!ex.isExpanded()) {
 						CommonFormUtil.setExpanded(ex, true);
 					}
@@ -309,8 +296,7 @@ public class EditorUtil {
 	}
 
 	/**
-	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
-	 * bug#70358)
+	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see bug#70358)
 	 *
 	 * @param comp
 	 * @deprecated Use {@link CommonFormUtil#setExpanded(ExpandableComposite,boolean)} instead
@@ -401,12 +387,10 @@ public class EditorUtil {
 		// create composite to hold rounded border
 		final Composite roundedBorder = toolkit.createComposite(composite);
 		if (paintBorder) {
-			roundedBorder.addPaintListener(new PaintListener() {
-				public void paintControl(PaintEvent e) {
-					e.gc.setForeground(toolkit.getColors().getBorderColor());
-					Point size = roundedBorder.getSize();
-					e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
-				}
+			roundedBorder.addPaintListener(e -> {
+				e.gc.setForeground(toolkit.getColors().getBorderColor());
+				Point size = roundedBorder.getSize();
+				e.gc.drawRoundRectangle(0, 2, size.x - 1, size.y - 5, 5, 5);
 			});
 			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(4, 6).create());
 		} else {
@@ -437,11 +421,7 @@ public class EditorUtil {
 		}
 		final Font textFont = new Font(text.getDisplay(), fontData);
 		text.setFont(textFont);
-		text.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				textFont.dispose();
-			}
-		});
+		text.addDisposeListener(e -> textFont.dispose());
 		Color color = PlatformUI.getWorkbench()
 				.getThemeManager()
 				.getCurrentTheme()
@@ -531,7 +511,7 @@ public class EditorUtil {
 
 	public static String removeColon(String label) {
 		label = label.trim();
-		return (label.endsWith(":")) ? label.substring(0, label.length() - 1) : label; //$NON-NLS-1$
+		return label.endsWith(":") ? label.substring(0, label.length() - 1) : label; //$NON-NLS-1$
 	}
 
 	public static void scroll(ScrolledComposite scomp, int xoffset, int yoffset) {
@@ -547,23 +527,19 @@ public class EditorUtil {
 	}
 
 	public static void addScrollListener(final Scrollable textWidget) {
-		textWidget.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseScrolled(MouseEvent event) {
-				ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
-				if (form != null) {
-					ScrollBar verticalBar = textWidget.getVerticalBar();
-					if (event.count < 0) {
-						// scroll form down
-						if (verticalBar == null
-								|| verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
-							EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
-						}
-					} else {
-						// scroll form up
-						if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
-							EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
-						}
+		textWidget.addMouseWheelListener(event -> {
+			ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
+			if (form != null) {
+				ScrollBar verticalBar = textWidget.getVerticalBar();
+				if (event.count < 0) {
+					// scroll form down
+					if (verticalBar == null
+							|| verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
+						EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
 					}
+				} else // scroll form up
+				if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
+					EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
 				}
 			}
 		});
@@ -571,24 +547,19 @@ public class EditorUtil {
 
 	public static void addScrollListener(final CCombo combo) {
 		if (PlatformUiUtil.usesMouseWheelEventsForScrolling()) {
-			combo.addListener(SWT.MouseWheel, new Listener() {
-				public void handleEvent(Event event) {
-					if (event.count > 0) {
-						EditorUtil.handleScrollUp(combo, event);
-					} else if (event.count < 0) {
-						EditorUtil.handleScrollDown(combo, event);
-					}
+			combo.addListener(SWT.MouseWheel, event -> {
+				if (event.count > 0) {
+					EditorUtil.handleScrollUp(combo, event);
+				} else if (event.count < 0) {
+					EditorUtil.handleScrollDown(combo, event);
 				}
-
 			});
 		} else {
-			combo.addListener(SWT.KeyDown, new Listener() {
-				public void handleEvent(Event event) {
-					if (event.keyCode == SWT.ARROW_UP) {
-						EditorUtil.handleScrollUp(combo, event);
-					} else if (event.keyCode == SWT.ARROW_DOWN) {
-						EditorUtil.handleScrollDown(combo, event);
-					}
+			combo.addListener(SWT.KeyDown, event -> {
+				if (event.keyCode == SWT.ARROW_UP) {
+					EditorUtil.handleScrollUp(combo, event);
+				} else if (event.keyCode == SWT.ARROW_DOWN) {
+					EditorUtil.handleScrollDown(combo, event);
 				}
 			});
 		}

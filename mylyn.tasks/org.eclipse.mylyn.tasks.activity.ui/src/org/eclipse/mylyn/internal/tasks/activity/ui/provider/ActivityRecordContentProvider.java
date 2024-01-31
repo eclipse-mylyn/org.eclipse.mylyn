@@ -26,34 +26,39 @@ import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
 public class ActivityRecordContentProvider implements ITreeContentProvider {
 	private static final String PLUGIN_ID = "org.eclipse.mylyn.tasks.activity.ui"; //$NON-NLS-1$
 
-	private static final Object[] NO_ELEMENTS = new Object[0];
+	private static final Object[] NO_ELEMENTS = {};
 
 	private IActivityStream activityStream;
 
+	@Override
 	public void dispose() {
 		activityStream = null;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (newInput instanceof IActivityStream) {
-			IActivityStream activityStream = (IActivityStream) newInput;
+		if (newInput instanceof IActivityStream activityStream) {
 			querryProvider(activityStream);
 			this.activityStream = activityStream;
 		}
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return activityStream.getEvents().toArray();
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		return NO_ELEMENTS;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return false;
 	}

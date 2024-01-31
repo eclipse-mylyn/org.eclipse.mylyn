@@ -23,8 +23,7 @@ package org.eclipse.mylyn.internal.tasks.core;
  * <ol>
  * <li>A substring of {@link lineSize} characters is extracted and examined
  * <li>If the next character after the substring is a blank space, the substring is quoted
- * <li>If don't, the substring is searched backwards for a blank space; if one is found, the substring until the blank
- * space is quoted
+ * <li>If don't, the substring is searched backwards for a blank space; if one is found, the substring until the blank space is quoted
  * <li>If no blank space is found, the entire substring is quoted
  * <li>The remaining of substring + line are reevaluated on step 1
  * </ol>

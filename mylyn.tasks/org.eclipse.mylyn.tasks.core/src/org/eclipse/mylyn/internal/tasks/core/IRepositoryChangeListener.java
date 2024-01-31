@@ -18,6 +18,6 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public interface IRepositoryChangeListener {
 
-	public abstract void repositoryChanged(TaskRepositoryChangeEvent event);
+	void repositoryChanged(TaskRepositoryChangeEvent event);
 
 }

@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.osgi.util.NLS;
 
@@ -36,11 +38,7 @@ public class ConnectorBrand {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((brandId == null) ? 0 : brandId.hashCode());
-		result = prime * result + ((connector == null) ? 0 : connector.hashCode());
-		return result;
+		return Objects.hash(brandId, connector);
 	}
 
 	@Override
@@ -48,25 +46,13 @@ public class ConnectorBrand {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || !(obj instanceof ConnectorBrand other)) {
 			return false;
 		}
-		if (!(obj instanceof ConnectorBrand)) {
+		if (!Objects.equals(brandId, other.brandId)) {
 			return false;
 		}
-		ConnectorBrand other = (ConnectorBrand) obj;
-		if (brandId == null) {
-			if (other.brandId != null) {
-				return false;
-			}
-		} else if (!brandId.equals(other.brandId)) {
-			return false;
-		}
-		if (connector == null) {
-			if (other.connector != null) {
-				return false;
-			}
-		} else if (!connector.equals(other.connector)) {
+		if (!Objects.equals(connector, other.connector)) {
 			return false;
 		}
 		return true;

@@ -44,7 +44,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
@@ -92,29 +91,26 @@ public class ConnectorMigrationUi {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			if (!finishedCompleteMigrationWizard) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						if (taskListView != null && taskListView.getServiceMessageControl() != null) {
-							ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					if (taskListView != null && taskListView.getServiceMessageControl() != null) {
+						ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
 
-								@Override
-								public boolean openLink(String link) {
-									if (link.equals(COMLETE_MIGRATION)) {
-										if (createCompleteMigrationWizard(migrator).open() == Window.OK) {
-											finishedCompleteMigrationWizard = true;
-											return true;
-										}
+							@Override
+							public boolean openLink(String link) {
+								if (link.equals(COMLETE_MIGRATION)) {
+									if (createCompleteMigrationWizard(migrator).open() == Window.OK) {
+										finishedCompleteMigrationWizard = true;
+										return true;
 									}
-									return false;
 								}
-							};
-							message.setTitle(Messages.ConnectorMigrationUi_Connector_Migration);
-							message.setDescription(NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_title,
-									COMLETE_MIGRATION));
-							message.setImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-							taskListView.getServiceMessageControl().setMessage(message);
-						}
+								return false;
+							}
+						};
+						message.setTitle(Messages.ConnectorMigrationUi_Connector_Migration);
+						message.setDescription(NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_title,
+								COMLETE_MIGRATION));
+						message.setImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+						taskListView.getServiceMessageControl().setMessage(message);
 					}
 				});
 				schedule(TimeUnit.MILLISECONDS.convert(getCompletionPromptFrequency(), TimeUnit.SECONDS));
@@ -128,29 +124,26 @@ public class ConnectorMigrationUi {
 	}
 
 	public void promptToMigrate(final ConnectorMigrator migrator) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (taskListView != null && taskListView.getServiceMessageControl() != null) {
-					ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
-						@Override
-						public boolean openLink(String link) {
-							if (link.equals(MIGRATE)) {
-								if (createMigrationWizard(migrator).open() == Window.OK) {
-									createPromptToCompleteMigrationJob(migrator).schedule();
-									return true;
-								}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			if (taskListView != null && taskListView.getServiceMessageControl() != null) {
+				ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
+					@Override
+					public boolean openLink(String link) {
+						if (link.equals(MIGRATE)) {
+							if (createMigrationWizard(migrator).open() == Window.OK) {
+								createPromptToCompleteMigrationJob(migrator).schedule();
+								return true;
 							}
-							return false;
 						}
+						return false;
+					}
 
-					};
-					message.setTitle(Messages.ConnectorMigrationUi_End_of_Connector_Support);
-					message.setDescription(
-							NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_message, MIGRATE));
-					message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
-					taskListView.getServiceMessageControl().setMessage(message);
-				}
+				};
+				message.setTitle(Messages.ConnectorMigrationUi_End_of_Connector_Support);
+				message.setDescription(
+						NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_message, MIGRATE));
+				message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
+				taskListView.getServiceMessageControl().setMessage(message);
 			}
 		});
 	}
@@ -185,26 +178,18 @@ public class ConnectorMigrationUi {
 	}
 
 	public void warnOfValidationFailure(final List<TaskRepository> failedValidation) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				String repositoryList = failedValidation.stream()
-						.map(repositoryToLabel())
-						.collect(Collectors.joining("\n")); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			String repositoryList = failedValidation.stream()
+					.map(repositoryToLabel())
+					.collect(Collectors.joining("\n")); //$NON-NLS-1$
 
-				MessageDialog.openWarning(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Validation_Failed,
-						NLS.bind(Messages.ConnectorMigrationWizard_validation_failed, repositoryList));
-			}
+			MessageDialog.openWarning(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Validation_Failed,
+					NLS.bind(Messages.ConnectorMigrationWizard_validation_failed, repositoryList));
 		});
 	}
 
 	private static Function<TaskRepository, String> repositoryToLabel() {
-		return new Function<TaskRepository, String>() {
-			@Override
-			public String apply(TaskRepository repository) {
-				return repository.getRepositoryLabel();
-			}
-		};
+		return TaskRepository::getRepositoryLabel;
 	}
 
 	protected void backupTaskList(final IProgressMonitor monitor) throws IOException {
@@ -215,12 +200,7 @@ public class ConnectorMigrationUi {
 			String fileName = getBackupFileName(new Date());
 			new TaskDataSnapshotOperation(backupFolder, fileName).run(new SubProgressMonitor(monitor, 1));
 			// also take a snapshot because user might try to restore from snapshot
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					backupManager.backupNow(true);
-				}
-			});
+			PlatformUI.getWorkbench().getDisplay().syncExec(() -> backupManager.backupNow(true));
 			monitor.worked(1);
 		} catch (InvocationTargetException e) {
 			throw (IOException) e.getCause();
@@ -234,8 +214,8 @@ public class ConnectorMigrationUi {
 	}
 
 	/**
-	 * Deletes the given tasks and repository, and all queries associated with the repository, while preserving the
-	 * credentials of <code>newRepository</code>.
+	 * Deletes the given tasks and repository, and all queries associated with the repository, while preserving the credentials of
+	 * <code>newRepository</code>.
 	 *
 	 * @param newRepository
 	 */
@@ -259,30 +239,27 @@ public class ConnectorMigrationUi {
 			} catch (Exception e) {// in case an error happens closing editors, we still want to delete
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 			}
-			tasksState.getTaskList().run(new ITaskListRunnable() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					for (ITask task : tasks) {
+			tasksState.getTaskList().run(monitor1 -> {
+				for (ITask task : tasks) {
+					delete(task);
+				}
+				if (unsubmitted != null) {
+					for (ITask task : unsubmitted.getChildren()) {
 						delete(task);
 					}
-					if (unsubmitted != null) {
-						for (ITask task : unsubmitted.getChildren()) {
-							delete(task);
-						}
+				}
+				DeleteAction.performDeletion(queries);
+				Map<AuthenticationType, AuthenticationCredentials> credentialsMap = new HashMap<>();
+				for (AuthenticationType type : AuthenticationType.values()) {
+					AuthenticationCredentials credentials = repository.getCredentials(type);
+					if (credentials != null) {
+						credentialsMap.put(type, credentials);
 					}
-					DeleteAction.performDeletion(queries);
-					Map<AuthenticationType, AuthenticationCredentials> credentialsMap = new HashMap<>();
-					for (AuthenticationType type : AuthenticationType.values()) {
-						AuthenticationCredentials credentials = repository.getCredentials(type);
-						if (credentials != null) {
-							credentialsMap.put(type, credentials);
-						}
-					}
-					tasksState.getRepositoryManager().removeRepository(repository);
-					for (AuthenticationType type : credentialsMap.keySet()) {
-						newRepository.setCredentials(type, credentialsMap.get(type),
-								newRepository.getSavePassword(type));
-					}
+				}
+				tasksState.getRepositoryManager().removeRepository(repository);
+				for (AuthenticationType type : credentialsMap.keySet()) {
+					newRepository.setCredentials(type, credentialsMap.get(type),
+							newRepository.getSavePassword(type));
 				}
 			}, monitor);
 			tasksState.getRepositoryModel().clear();
@@ -305,14 +282,9 @@ public class ConnectorMigrationUi {
 	}
 
 	public void notifyMigrationComplete() {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				MessageDialog.openInformation(WorkbenchUtil.getShell(),
-						Messages.ConnectorMigrationUi_Connector_Migration_Complete,
-						Messages.ConnectorMigrationUi_Connector_migration_completed_successfully_You_may_resume_using_the_task_list);
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> MessageDialog.openInformation(WorkbenchUtil.getShell(),
+				Messages.ConnectorMigrationUi_Connector_Migration_Complete,
+				Messages.ConnectorMigrationUi_Connector_migration_completed_successfully_You_may_resume_using_the_task_list));
 	}
 
 }

@@ -62,66 +62,82 @@ public class TaskAttachment implements ITaskAttachment {
 		this.taskAttribute = taskAttribute;
 	}
 
+	@Override
 	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
+	@Override
 	public String getComment() {
 		return comment;
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return taskRepository.getConnectorKind();
 	}
 
+	@Override
 	public String getContentType() {
 		return contentType;
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
+	@Override
 	public long getLength() {
 		return length;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return taskRepository.getRepositoryUrl();
 	}
 
+	@Override
 	public ITask getTask() {
 		return task;
 	}
 
+	@Override
 	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
+	@Override
 	public String getUrl() {
 		return url;
 	}
 
+	@Override
 	public boolean isDeprecated() {
 		return deprecated;
 	}
 
+	@Override
 	public boolean isPatch() {
 		return patch;
 	}
 
+	@Override
 	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
@@ -130,34 +146,42 @@ public class TaskAttachment implements ITaskAttachment {
 		this.comment = comment;
 	}
 
+	@Override
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public void setDeprecated(boolean deprecated) {
 		this.deprecated = deprecated;
 	}
 
+	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	@Override
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
+	@Override
 	public void setLength(long length) {
 		this.length = length;
 	}
 
+	@Override
 	public void setPatch(boolean patch) {
 		this.patch = patch;
 	}
 
+	@Override
 	public void setUrl(String url) {
 		this.url = url;
 	}

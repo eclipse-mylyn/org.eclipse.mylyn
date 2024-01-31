@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 Tasktop Technologies and others. 
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -69,15 +69,13 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 						// ignore
 					}
 
-				} else {
-					if (TasksUiInternal.isTaskUrl(urlString)) {
-						link = createTaskUrlHyperlink(contentOffset, m, urlString);
-					}
+				} else if (TasksUiInternal.isTaskUrl(urlString)) {
+					link = createTaskUrlHyperlink(contentOffset, m, urlString);
 				}
 
 				if (link != null) {
 					if (links == null) {
-						links = new ArrayList<IHyperlink>();
+						links = new ArrayList<>();
 					}
 					links.add(link);
 				}
@@ -88,7 +86,7 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
 	private String getUrlString(String content, Matcher m) {
 		String urlString = m.group(1);
-		// check if the urlString has more opening parenthesis than closing 
+		// check if the urlString has more opening parenthesis than closing
 		int parenthesisDiff = urlString.replaceAll(OPEN_PARENTHESIS_PATTERN, EMPTY_STRING).length()
 				- urlString.replaceAll(CLOSED_PARENTHESIS_PATTERN, EMPTY_STRING).length();
 
@@ -105,7 +103,7 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	}
 
 	private static boolean isInRegion(int offsetInText, Matcher m) {
-		return (offsetInText == -1) || (offsetInText >= m.start() && offsetInText <= m.end());
+		return offsetInText == -1 || offsetInText >= m.start() && offsetInText <= m.end();
 	}
 
 	private static IHyperlink createTaskUrlHyperlink(int textOffset, Matcher m, String urlString) {

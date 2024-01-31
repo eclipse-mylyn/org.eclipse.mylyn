@@ -16,12 +16,12 @@ package org.eclipse.mylyn.tasks.tests.data;
 import java.util.Arrays;
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla

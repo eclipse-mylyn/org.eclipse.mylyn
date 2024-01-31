@@ -15,7 +15,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
@@ -59,32 +58,28 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylyn.tasklist.repositories."; //$NON-NLS-1$
 
-	private final Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
+	private final Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<>();
 
 	// connector kinds to corresponding repositories
-	private final Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
+	private final Map<String, Set<TaskRepository>> repositoryMap = new HashMap<>();
 
-	private final Set<IRepositoryListener> listeners = new CopyOnWriteArraySet<IRepositoryListener>();
+	private final Set<IRepositoryListener> listeners = new CopyOnWriteArraySet<>();
 
-	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
+	private final Set<TaskRepository> orphanedRepositories = new HashSet<>();
 
 	public static final String PREFIX_LOCAL = "local-"; //$NON-NLS-1$
 
-	private static final Map<String, Category> repositoryCategories = new HashMap<String, Category>();
+	private static final Map<String, Category> repositoryCategories = new HashMap<>();
 
-	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-			TaskRepositoryManager.this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource(),
-					new TaskRepositoryDelta(Type.PROPERTY, evt.getPropertyName()));
-		}
-	};
+	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = evt -> this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource(),
+			new TaskRepositoryDelta(Type.PROPERTY, evt.getPropertyName()));
 
 	private final TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
 	private List<AbstractRepositoryMigrator> migrators;
 
 	public TaskRepositoryManager() {
-		this.migrators = Collections.emptyList();
+		migrators = Collections.emptyList();
 		Category catTasks = new Category(TaskRepository.CATEGORY_TASKS, "Tasks", 0); //$NON-NLS-1$
 		repositoryCategories.put(catTasks.getId(), catTasks);
 		Category catBugs = new Category(TaskRepository.CATEGORY_BUGS, "Bugs", 100); //$NON-NLS-1$
@@ -97,10 +92,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		repositoryCategories.put(catOther.getId(), catOther);
 	}
 
+	@Override
 	public synchronized Collection<AbstractRepositoryConnector> getRepositoryConnectors() {
-		return new ArrayList<AbstractRepositoryConnector>(repositoryConnectors.values());
+		return new ArrayList<>(repositoryConnectors.values());
 	}
 
+	@Override
 	public synchronized AbstractRepositoryConnector getRepositoryConnector(String connectorKind) {
 		return repositoryConnectors.get(connectorKind);
 	}
@@ -110,7 +107,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public synchronized void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
-		if (!repositoryConnectors.values().contains(repositoryConnector)) {
+		if (!repositoryConnectors.containsValue(repositoryConnector)) {
 			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
 		}
 	}
@@ -124,12 +121,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return false;
 	}
 
+	@Override
 	public void addRepository(final TaskRepository repository) {
 		synchronized (this) {
 			Set<TaskRepository> repositories;
 			repositories = repositoryMap.get(repository.getConnectorKind());
 			if (repositories == null) {
-				repositories = new HashSet<TaskRepository>();
+				repositories = new HashSet<>();
 				repositoryMap.put(repository.getConnectorKind(), repositories);
 			}
 
@@ -143,11 +141,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.repositoryAdded(repository);
 				}
@@ -172,11 +172,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.repositoryRemoved(repository);
 				}
@@ -184,10 +186,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		}
 	}
 
+	@Override
 	public void addListener(IRepositoryListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
 	public void removeListener(IRepositoryListener listener) {
 		listeners.remove(listener);
 	}
@@ -215,6 +219,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return Collections.unmodifiableCollection(repositoryCategories.values());
 	}
 
+	@Override
 	public TaskRepository getRepository(String kind, String urlString) {
 		Assert.isNotNull(kind);
 		Assert.isNotNull(urlString);
@@ -267,6 +272,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return null;
 	}
 
+	@Override
 	public Set<TaskRepository> getRepositories(String connectorKind) {
 		Assert.isNotNull(connectorKind);
 		Set<TaskRepository> result;
@@ -276,11 +282,12 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		if (result == null) {
 			return Collections.emptySet();
 		}
-		return new HashSet<TaskRepository>(result);
+		return new HashSet<>(result);
 	}
 
+	@Override
 	public List<TaskRepository> getAllRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		List<TaskRepository> repositories = new ArrayList<>();
 		synchronized (this) {
 			for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 				if (repositoryMap.containsKey(repositoryConnector.getConnectorKind())) {
@@ -334,7 +341,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 		// Will only load repositories for which a connector exists
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-			repositoryMap.put(repositoryConnector.getConnectorKind(), new HashSet<TaskRepository>());
+			repositoryMap.put(repositoryConnector.getConnectorKind(), new HashSet<>());
 		}
 		if (repositoriesFile.exists()) {
 			Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);
@@ -371,11 +378,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 				result[0] = false;
 				SafeRunner.run(new ISafeRunnable() {
 
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
 								"Repository migration failed for repository \"" + repository.getUrl() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
+					@Override
 					public void run() throws Exception {
 						if (finalRepositoryMigrator.migrateRepository(repository)) {
 							result[0] = true;
@@ -408,7 +417,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 //		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
 //			return false;
 //		}
-		Set<TaskRepository> repositoriesToWrite = new HashSet<TaskRepository>(getAllRepositories());
+		Set<TaskRepository> repositoriesToWrite = new HashSet<>(getAllRepositories());
 		// if for some reason a repository is added/changed to equal one in the
 		// orphaned set the orphan is discarded
 		for (TaskRepository repository : orphanedRepositories) {
@@ -458,11 +467,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		final TaskRepositoryChangeEvent event = new TaskRepositoryChangeEvent(this, repository, delta);
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					if (listener instanceof IRepositoryChangeListener) {
 						((IRepositoryChangeListener) listener).repositoryChanged(event);
@@ -506,11 +517,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public void notifyRepositoryUrlChanged(final TaskRepository repository, final String oldUrl) {
 		for (final IRepositoryListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.repositoryUrlChanged(repository, oldUrl);
 				}
@@ -523,7 +536,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public void initialize(List<AbstractRepositoryMigrator> repositoryMigrators) {
-		this.migrators = repositoryMigrators;
+		migrators = repositoryMigrators;
 
 	}
 }

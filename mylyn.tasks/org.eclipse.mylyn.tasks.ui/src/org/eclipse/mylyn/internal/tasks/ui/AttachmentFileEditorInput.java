@@ -42,31 +42,38 @@ class AttachmentFileEditorInput extends PlatformObject implements IPathEditorInp
 		this.tooltipText = tooltipText;
 	}
 
+	@Override
 	public IPath getPath() {
 		return Path.fromOSString(file.getAbsolutePath());
 	}
 
+	@Override
 	public boolean exists() {
 		return file.exists();
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public String getToolTipText() {
 		return tooltipText;
 	}
 
+	@Override
 	public IStorage getStorage() throws CoreException {
 		return new AttachmentFileStorage(file, name);
 	}
@@ -78,11 +85,10 @@ class AttachmentFileEditorInput extends PlatformObject implements IPathEditorInp
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof AttachmentFileEditorInput)) {
+		if (!(obj instanceof AttachmentFileEditorInput other)) {
 			return false;
 		}
 
-		AttachmentFileEditorInput other = (AttachmentFileEditorInput) obj;
 		return name.equals(other.name) && file.equals(other.file);
 	}
 }

@@ -71,7 +71,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	public TaskScheduleContentProvider(AbstractTaskListView taskListView) {
 		super(taskListView);
-		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
+		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.addActivityListener(this);
 		END_OF_TIME = TaskActivityUtil.getCalendar();
 		END_OF_TIME.add(Calendar.YEAR, 5000);
@@ -96,8 +96,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 	@Override
 	public Object[] getElements(Object parent) {
 
-		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
-			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+		if (parent != null && parent.equals(taskListView.getViewSite())) {
+			Set<AbstractTaskContainer> containers = new HashSet<>();
 			WeekDateRange week = TaskActivityUtil.getCurrentWeek();
 			WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
 
@@ -186,7 +186,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		} else if (parent instanceof ScheduledTaskContainer) {
 			// always apply working set filter
 			Collection<ITask> children = ((ScheduledTaskContainer) parent).getChildren();
-			List<IRepositoryElement> result = new ArrayList<IRepositoryElement>(children.size());
+			List<IRepositoryElement> result = new ArrayList<>(children.size());
 			for (ITask child : children) {
 				if (!filter(parent, child)) {
 					result.add(child);
@@ -222,11 +222,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private void refresh() {
 		if (Platform.isRunning() && PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					taskListView.refresh();
-				}
-			});
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> taskListView.refresh());
 		}
 	}
 
@@ -241,18 +237,20 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		super.dispose();
 	}
 
+	@Override
 	public void activityReset() {
 		refresh();
 	}
 
+	@Override
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		// ignore
 	}
 
 	private static boolean notScheduled(ITask task) {
 		SynchronizationState state = task.getSynchronizationState();
-		return state == SynchronizationState.SYNCHRONIZED || (state == SynchronizationState.INCOMING
-				&& Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
+		return state == SynchronizationState.SYNCHRONIZED || state == SynchronizationState.INCOMING
+				&& Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 	}
 
 	public class Unscheduled extends StateTaskContainer {
@@ -278,7 +276,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 		@Override
 		public Collection<ITask> getChildren() {
-			Set<ITask> children = new HashSet<ITask>();
+			Set<ITask> children = new HashSet<>();
 			for (ITask task : TasksUiPlugin.getTaskList().getAllTasks()) {
 				if (select(task) && include(task)) {
 					children.add(task);
@@ -343,8 +341,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		@Override
 		protected boolean select(ITask task) {
 			SynchronizationState state = task.getSynchronizationState();
-			return state == SynchronizationState.INCOMING_NEW || (state == SynchronizationState.INCOMING
-					&& !Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
+			return state == SynchronizationState.INCOMING_NEW || state == SynchronizationState.INCOMING
+					&& !Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 		}
 	}
 

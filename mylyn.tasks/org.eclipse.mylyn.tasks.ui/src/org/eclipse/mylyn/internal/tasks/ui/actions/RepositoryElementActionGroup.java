@@ -14,7 +14,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +112,7 @@ public class RepositoryElementActionGroup {
 	private final CloneTaskAction cloneTaskAction;
 
 	public RepositoryElementActionGroup() {
-		actions = new ArrayList<ISelectionChangedListener>();
+		actions = new ArrayList<>();
 
 		newSubTaskAction = add(new NewSubTaskAction());
 
@@ -275,11 +274,13 @@ public class RepositoryElementActionGroup {
 		for (final String menuPath : dynamicMenuMap.keySet()) {
 			for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
 				SafeRunnable.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler
 								.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Menu contributor failed")); //$NON-NLS-1$
 					}
 
+					@Override
 					public void run() throws Exception {
 						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 						if (subMenuManager != null) {
@@ -292,11 +293,11 @@ public class RepositoryElementActionGroup {
 	}
 
 	private boolean isInTaskList() {
-		return (this instanceof TaskListViewActionGroup);
+		return this instanceof TaskListViewActionGroup;
 	}
 
 	private IStructuredSelection getSelection() {
-		ISelection selection = (selectionProvider != null) ? selectionProvider.getSelection() : null;
+		ISelection selection = selectionProvider != null ? selectionProvider.getSelection() : null;
 		if (selection instanceof IStructuredSelection) {
 			return (IStructuredSelection) selection;
 		}
@@ -304,7 +305,7 @@ public class RepositoryElementActionGroup {
 	}
 
 	private boolean isInEditor() {
-		return (this instanceof TaskEditorActionGroup);
+		return this instanceof TaskEditorActionGroup;
 	}
 
 	private boolean isRemoveFromCategoryEnabled(final List<IRepositoryElement> selectedElements) {
@@ -370,8 +371,7 @@ public class RepositoryElementActionGroup {
 			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (element instanceof AbstractTaskCategory) {
-					AbstractTaskCategory container = (AbstractTaskCategory) element;
+				if (element instanceof AbstractTaskCategory container) {
 					action.setEnabled(container.isUserManaged());
 				} else if (element instanceof IRepositoryQuery) {
 					action.setEnabled(true);
@@ -383,9 +383,8 @@ public class RepositoryElementActionGroup {
 	}
 
 	public List<IRepositoryElement> getSelectedTaskContainers(IStructuredSelection selection) {
-		List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
-		for (Iterator<?> i = selection.iterator(); i.hasNext();) {
-			Object object = i.next();
+		List<IRepositoryElement> selectedElements = new ArrayList<>();
+		for (Object object : selection) {
 			if (object instanceof ITaskContainer) {
 				selectedElements.add((IRepositoryElement) object);
 			}

@@ -37,18 +37,15 @@ public class DoubleAttributeEditor extends TextAttributeEditor {
 	}
 
 	IInputValidator getAttributeTypeValidator() {
-		return new IInputValidator() {
-			@Override
-			public String isValid(String newText) {
-				if (StringUtils.isNotBlank(newText)) {
-					try {
-						Double.parseDouble(newText);
-					} catch (NumberFormatException e) {
-						return Messages.DoubleAttributeEditor_this_field_requires_double_value;
-					}
+		return newText -> {
+			if (StringUtils.isNotBlank(newText)) {
+				try {
+					Double.parseDouble(newText);
+				} catch (NumberFormatException e) {
+					return Messages.DoubleAttributeEditor_this_field_requires_double_value;
 				}
-				return null;
 			}
+			return null;
 		};
 	}
 }

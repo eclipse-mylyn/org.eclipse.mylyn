@@ -46,7 +46,7 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 			latch.countDown();
 			try {
 				if (!mainLatch.await(10, TimeUnit.SECONDS)) {
-					this.e = new AssertionFailedError("Timed out waiting for main latch");
+					e = new AssertionFailedError("Timed out waiting for main latch");
 				}
 			} catch (InterruptedException e) {
 				this.e = e;

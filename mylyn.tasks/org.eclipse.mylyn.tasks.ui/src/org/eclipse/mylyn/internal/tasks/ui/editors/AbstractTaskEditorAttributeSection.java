@@ -43,9 +43,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -102,8 +100,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 
 	@Override
 	public boolean setFormInput(Object input) {
-		if (input instanceof String) {
-			String text = (String) input;
+		if (input instanceof String text) {
 			Collection<TaskAttribute> attributes = getAttributes();
 			for (TaskAttribute attribute : attributes) {
 				if (text.equals(attribute.getId())) {
@@ -118,7 +115,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 		int currentColumn = 1;
 		int currentPriority = 0;
 		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
-			int priority = (attributeEditor.getLayoutHint() != null)
+			int priority = attributeEditor.getLayoutHint() != null
 					? attributeEditor.getLayoutHint().getPriority()
 					: LayoutHint.DEFAULT_PRIORITY;
 			if (priority != currentPriority) {
@@ -156,8 +153,8 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 			attributeEditor.createControl(attributesComposite, toolkit);
 			LayoutHint layoutHint = attributeEditor.getLayoutHint();
 			GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-			RowSpan rowSpan = (layoutHint != null && layoutHint.rowSpan != null) ? layoutHint.rowSpan : RowSpan.SINGLE;
-			ColumnSpan columnSpan = (layoutHint != null && layoutHint.columnSpan != null)
+			RowSpan rowSpan = layoutHint != null && layoutHint.rowSpan != null ? layoutHint.rowSpan : RowSpan.SINGLE;
+			ColumnSpan columnSpan = layoutHint != null && layoutHint.columnSpan != null
 					? layoutHint.columnSpan
 					: ColumnSpan.SINGLE;
 			gd.horizontalIndent = 1;// prevent clipping of decorators on Windows
@@ -186,7 +183,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 	}
 
 	private void initialize() {
-		attributeEditors = new ArrayList<AbstractAttributeEditor>();
+		attributeEditors = new ArrayList<>();
 		hasIncoming = false;
 
 		Collection<TaskAttribute> attributes = getAttributes();
@@ -207,30 +204,26 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 	}
 
 	/**
-	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout
-	 * hint priority. Subclasses may override this method to sort attribute editors in a custom way.
+	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout hint priority.
+	 * Subclasses may override this method to sort attribute editors in a custom way.
 	 *
 	 * @return comparator for {@link AbstractAttributeEditor} objects
 	 */
 	protected Comparator<AbstractAttributeEditor> createAttributeEditorSorter() {
-		return new Comparator<AbstractAttributeEditor>() {
-			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
-				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				return p1 - p2;
-			}
+		return (o1, o2) -> {
+			int p1 = o1.getLayoutHint() != null ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+			int p2 = o2.getLayoutHint() != null ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+			return p1 - p2;
 		};
 	}
 
 	@Override
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		attributesComposite = toolkit.createComposite(parent);
-		attributesComposite.addListener(SWT.MouseDown, new Listener() {
-			public void handleEvent(Event event) {
-				Control focus = event.display.getFocusControl();
-				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
-					getManagedForm().getForm().setFocus();
-				}
+		attributesComposite.addListener(SWT.MouseDown, event -> {
+			Control focus = event.display.getFocusControl();
+			if (focus instanceof Text && !((Text) focus).getEditable()) {
+				getManagedForm().getForm().setFocus();
 			}
 		});
 
@@ -262,17 +255,15 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								getTaskEditorPage().showEditorBusy(false);
-								if (job.getStatus() != null) {
-									getTaskEditorPage().getTaskEditor()
-											.setStatus(
-													Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
-													Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
-								} else {
-									getTaskEditorPage().refresh();
-								}
+						PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+							getTaskEditorPage().showEditorBusy(false);
+							if (job.getStatus() != null) {
+								getTaskEditorPage().getTaskEditor()
+										.setStatus(
+												Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
+												Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
+							} else {
+								getTaskEditorPage().refresh();
 							}
 						});
 					}
@@ -282,7 +273,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 				job.setPriority(Job.INTERACTIVE);
 				job.schedule();
-			};
+			}
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
@@ -316,7 +307,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 			}
 			sb.append(label);
 		}
-		return (sb.length() > 0) ? sb.toString() : null;
+		return sb.length() > 0 ? sb.toString() : null;
 	}
 
 	/**

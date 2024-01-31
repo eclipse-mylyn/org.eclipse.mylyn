@@ -196,31 +196,29 @@ public class TaskAttachmentMapper {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TaskAttachmentMapper)) {
+		if (!(obj instanceof TaskAttachmentMapper other)) {
 			return false;
 		}
-		TaskAttachmentMapper other = (TaskAttachmentMapper) obj;
-		if ((other.attachmentId != null && this.attachmentId != null)
-				&& !other.attachmentId.equals(this.attachmentId)) {
+		if (other.attachmentId != null && attachmentId != null && !other.attachmentId.equals(attachmentId)) {
 			return false;
 		}
-		if ((other.deprecated != null && this.deprecated != null) && !(other.deprecated == this.deprecated)) {
+		if (other.deprecated != null && deprecated != null && !(other.deprecated == deprecated)) {
 			return false;
 		}
-		if ((other.patch != null && this.patch != null) && !(other.patch == this.patch)) {
+		if (other.patch != null && patch != null && !(other.patch == patch)) {
 			return false;
 		}
-		if ((other.description != null && this.description != null) && !other.description.equals(this.description)) {
+		if (other.description != null && description != null && !other.description.equals(description)) {
 			return false;
 		}
-		if ((other.contentType != null && this.contentType != null) && !other.contentType.equals(this.contentType)) {
+		if (other.contentType != null && contentType != null && !other.contentType.equals(contentType)) {
 			return false;
 		}
-		if ((other.fileName != null && this.fileName != null) && !other.fileName.equals(this.fileName)) {
+		if (other.fileName != null && fileName != null && !other.fileName.equals(fileName)) {
 			return false;
 		}
-		if ((other.replaceExisting != null && this.replaceExisting != null)
-				&& !other.replaceExisting.equals(this.replaceExisting)) {
+		if (other.replaceExisting != null && replaceExisting != null
+				&& !other.replaceExisting.equals(replaceExisting)) {
 			return false;
 		}
 		return true;

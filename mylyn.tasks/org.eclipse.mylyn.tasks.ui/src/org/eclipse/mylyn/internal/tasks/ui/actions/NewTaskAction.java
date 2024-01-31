@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -92,36 +91,39 @@ public class NewTaskAction extends BaseSelectionListenerAction
 		if (shell != null && !shell.isDisposed()) {
 			if (localTask) {
 				TasksUiUtil.openNewLocalTaskEditor(shell, null);
+			} else if (skipRepositoryPage) {
+				TasksUiUtil.openNewTaskEditor(shell, null, TasksUiUtil.getSelectedRepository());
 			} else {
-				if (skipRepositoryPage) {
-					TasksUiUtil.openNewTaskEditor(shell, null, TasksUiUtil.getSelectedRepository());
-				} else {
-					TasksUiUtil.openNewTaskEditor(shell, null, null);
-				}
+				TasksUiUtil.openNewTaskEditor(shell, null, null);
 			}
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		if ("skipFirstPage".equals(data)) { //$NON-NLS-1$
-			this.skipRepositoryPage = true;
+			skipRepositoryPage = true;
 		}
 		if ("local".equals(data)) { //$NON-NLS-1$
-			this.localTask = true;
+			localTask = true;
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -129,6 +131,7 @@ public class NewTaskAction extends BaseSelectionListenerAction
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -138,6 +141,7 @@ public class NewTaskAction extends BaseSelectionListenerAction
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -153,7 +157,7 @@ public class NewTaskAction extends BaseSelectionListenerAction
 		new ActionContributionItem(newTaskAction).fill(dropDownMenu, -1);
 		new Separator().fill(dropDownMenu, -1);
 
-		Set<TaskRepository> includedRepositories = new HashSet<TaskRepository>();
+		Set<TaskRepository> includedRepositories = new HashSet<>();
 		TaskRepository localRepository = TasksUi.getRepositoryManager()
 				.getRepository(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 
@@ -164,7 +168,7 @@ public class NewTaskAction extends BaseSelectionListenerAction
 				.getActivePage()
 				.getAggregateWorkingSet();
 		if (workingSet != null && !workingSet.isEmpty()) {
-			// only add repositories in working set 
+			// only add repositories in working set
 			for (IAdaptable iterable_element : workingSet.getElements()) {
 				if (iterable_element instanceof RepositoryQuery) {
 					String repositoryUrl = ((RepositoryQuery) iterable_element).getRepositoryUrl();
@@ -186,14 +190,9 @@ public class NewTaskAction extends BaseSelectionListenerAction
 
 		if (!includedRepositories.isEmpty()) {
 			//new Separator().fill(dropDownMenu, -1);
-			ArrayList<TaskRepository> listOfRepositories = new ArrayList<TaskRepository>(includedRepositories);
+			ArrayList<TaskRepository> listOfRepositories = new ArrayList<>(includedRepositories);
 			final TaskRepositoriesSorter comparator = new TaskRepositoriesSorter();
-			Collections.sort(listOfRepositories, new Comparator<TaskRepository>() {
-
-				public int compare(TaskRepository arg0, TaskRepository arg1) {
-					return comparator.compare(null, arg0, arg1);
-				}
-			});
+			Collections.sort(listOfRepositories, (arg0, arg1) -> comparator.compare(null, arg0, arg1));
 			for (TaskRepository taskRepository : listOfRepositories) {
 				addRepositoryAction(taskRepository);
 			}

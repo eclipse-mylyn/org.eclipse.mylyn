@@ -48,7 +48,7 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			protected void valueChanged(String value) {
 				setValue(value);
-			};
+			}
 		};
 		editor.setReadOnly(isReadOnly());
 		editor.createControl(parent, toolkit);

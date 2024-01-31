@@ -18,7 +18,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -84,8 +83,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Image;
@@ -205,7 +202,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	@Override
 	protected Composite createPageContainer(Composite parent) {
-		this.editorParent = parent;
+		editorParent = parent;
 		Composite composite = super.createPageContainer(parent);
 
 		EditorUtil.initializeScrollbars(getHeaderForm().getForm());
@@ -265,7 +262,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 				}
 			});
 
-			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+			IHandlerService handlerService = getSite().getService(IHandlerService.class);
 			if (handlerService != null) {
 				textSupport = new CommonTextSupport(handlerService);
 				textSupport.install(titleViewer, false);
@@ -324,11 +321,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 				}
 			});
 			// the busy label may get disposed if it has no image
-			busyLabel.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					busyLabel.setMenu(null);
-					busyLabel = null;
-				}
+			busyLabel.addDisposeListener(e -> {
+				busyLabel.setMenu(null);
+				busyLabel = null;
 			});
 
 			if (leftToolBar != null) {
@@ -385,8 +380,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		initialize();
 
 		// determine factories
-		Set<String> conflictingIds = new HashSet<String>();
-		ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<AbstractTaskEditorPageFactory>();
+		Set<String> conflictingIds = new HashSet<>();
+		ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<>();
 		for (AbstractTaskEditorPageFactory pageFactory : TasksUiPlugin.getDefault().getTaskEditorPageFactories()) {
 			if (pageFactory.canCreatePageFor(getTaskEditorInput()) && WorkbenchUtil.allowUseOf(pageFactory)) {
 				pageFactories.add(pageFactory);
@@ -404,11 +399,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		}
 
 		// sort by priority
-		Collections.sort(pageFactories, new Comparator<AbstractTaskEditorPageFactory>() {
-			public int compare(AbstractTaskEditorPageFactory o1, AbstractTaskEditorPageFactory o2) {
-				return o1.getPriority() - o2.getPriority();
-			}
-		});
+		Collections.sort(pageFactories, (o1, o2) -> o1.getPriority() - o2.getPriority());
 
 		// create pages
 		for (AbstractTaskEditorPageFactory factory : pageFactories) {
@@ -439,10 +430,12 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	private void initialize() {
 		editorBusyIndicator = new BusyAnimator(new IBusyClient() {
+			@Override
 			public Image getImage() {
 				return TaskEditor.this.getTitleImage();
 			}
 
+			@Override
 			public void setImage(Image image) {
 				TaskEditor.this.setTitleImage(image);
 			}
@@ -469,11 +462,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		if (manager == null) {
 			return;
 		}
-		IMenuListener listener = new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				contextMenuAboutToShow(manager);
-			}
-		};
+		IMenuListener listener = this::contextMenuAboutToShow;
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(listener);
 	}
@@ -573,7 +562,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 	}
 
 	IFormPage[] getPages() {
-		List<IFormPage> formPages = new ArrayList<IFormPage>();
+		List<IFormPage> formPages = new ArrayList<>();
 		if (pages != null) {
 			for (Object page : pages) {
 				if (page instanceof IFormPage) {
@@ -608,7 +597,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	@Deprecated
 	public Form getTopForm() {
-		return this.getHeaderForm().getForm().getForm();
+		return getHeaderForm().getForm().getForm();
 	}
 
 	@Override
@@ -619,8 +608,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 		super.init(site, input);
 
-		this.taskEditorInput = (TaskEditorInput) input;
-		this.task = taskEditorInput.getTask();
+		taskEditorInput = (TaskEditorInput) input;
+		task = taskEditorInput.getTask();
 
 		// initialize selection
 		site.getSelectionProvider().setSelection(new StructuredSelection(task));
@@ -628,7 +617,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		setPartName(input.getName());
 
 		// activate context
-		IContextService contextSupport = (IContextService) site.getService(IContextService.class);
+		IContextService contextSupport = site.getService(IContextService.class);
 		if (contextSupport != null) {
 			contextSupport.activateContext(ID_EDITOR);
 		}
@@ -715,8 +704,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	@Deprecated
 	public void setFocusOfActivePage() {
-		if (this.getActivePage() > -1) {
-			IFormPage page = this.getPages()[this.getActivePage()];
+		if (getActivePage() > -1) {
+			IFormPage page = getPages()[getActivePage()];
 			if (page != null) {
 				page.setFocus();
 			}
@@ -785,11 +774,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		size.y = Math.max(titleSize.y, size.y);
 
 		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error
-		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
-		final Rectangle imageBounds = (image != null) ? image.getBounds() : new Rectangle(0, 0, 0, 0);
-		int tempHeight = (image != null) ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
+		final int padding = size.x > 0 && !noExtraPadding ? 10 : 1;
+		final Rectangle imageBounds = image != null ? image.getBounds() : new Rectangle(0, 0, 0, 0);
+		int tempHeight = image != null ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
 		// avoid extra padding due to margin added by TitleRegion.VMARGIN
-		final int height = (tempHeight > imageBounds.height + 5) ? tempHeight - 5 : tempHeight;
+		final int height = tempHeight > imageBounds.height + 5 ? tempHeight - 5 : tempHeight;
 
 		CompositeImageDescriptor descriptor = new CompositeImageDescriptor() {
 			@Override
@@ -857,11 +846,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	/**
 	 * @since 3.18
-	 * @return Returns true if this editor supports scheduling affordances, otherwise returns false. If this returns
-	 *         false, then no scheduling is available to the UI.
+	 * @return Returns true if this editor supports scheduling affordances, otherwise returns false. If this returns false, then no
+	 *         scheduling is available to the UI.
 	 */
 	public boolean needsScheduling() {
-		return this.needsScheduling;
+		return needsScheduling;
 	}
 
 	/**
@@ -874,11 +863,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 	}
 
 	/**
-	 * @since 3.18 Returns true if this editor supports displaying context information, otherwise returns false. If this
-	 *        returns false, no context information will be available to the UI.
+	 * @since 3.18 Returns true if this editor supports displaying context information, otherwise returns false. If this returns false, no
+	 *        context information will be available to the UI.
 	 */
 	public boolean needsContext() {
-		return this.needsContext;
+		return needsContext;
 	}
 
 	@Override
@@ -914,8 +903,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 				CommonUiUtil.setEnabled(form.getBody(), !busy);
 				for (IFormPage page : getPages()) {
-					if (page instanceof WorkbenchPart) {
-						WorkbenchPart part = (WorkbenchPart) page;
+					if (page instanceof WorkbenchPart part) {
 						part.showBusy(busy);
 					}
 				}
@@ -945,7 +933,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		toolBarManager.removeAll();
 
 		TaskRepository outgoingNewRepository = getOutgoingRepository();
-		final TaskRepository taskRepository = (outgoingNewRepository != null)
+		final TaskRepository taskRepository = outgoingNewRepository != null
 				? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
@@ -963,7 +951,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 				composite.setBackground(null);
 				String label = taskRepository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) { //$NON-NLS-1$
-					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+					label = label.substring(taskRepository.getRepositoryUrl().indexOf("//") + 2); //$NON-NLS-1$
 				}
 
 				ImageHyperlink link = new ImageHyperlink(composite, SWT.NONE);
@@ -1022,8 +1010,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 		toolBarManager.add(new GroupMarker("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
-			if (page instanceof TaskFormPage) {
-				TaskFormPage taskEditorPage = (TaskFormPage) page;
+			if (page instanceof TaskFormPage taskEditorPage) {
 				taskEditorPage.fillToolBar(toolBarManager);
 			}
 		}
@@ -1031,7 +1018,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 
 		// add external contributions
-		menuService = (IMenuService) getSite().getService(IMenuService.class);
+		menuService = getSite().getService(IMenuService.class);
 		if (menuService != null && toolBarManager instanceof ContributionManager) {
 			menuService.populateContributionManager((ContributionManager) toolBarManager, "toolbar:" //$NON-NLS-1$
 					+ ID_TOOLBAR_HEADER + "." + taskRepository.getConnectorKind()); //$NON-NLS-1$
@@ -1060,10 +1047,10 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		leftToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
 		// add external contributions
-		menuService = (IMenuService) getSite().getService(IMenuService.class);
+		menuService = getSite().getService(IMenuService.class);
 		if (menuService != null && leftToolBarManager instanceof ContributionManager) {
 			TaskRepository outgoingNewRepository = getOutgoingRepository();
-			TaskRepository taskRepository = (outgoingNewRepository != null)
+			TaskRepository taskRepository = outgoingNewRepository != null
 					? outgoingNewRepository
 					: taskEditorInput.getTaskRepository();
 			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
@@ -1134,7 +1121,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 	private void updateHeaderLabel() {
 		TaskRepository outgoingNewRepository = getOutgoingRepository();
-		TaskRepository taskRepository = (outgoingNewRepository != null)
+		TaskRepository taskRepository = outgoingNewRepository != null
 				? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 

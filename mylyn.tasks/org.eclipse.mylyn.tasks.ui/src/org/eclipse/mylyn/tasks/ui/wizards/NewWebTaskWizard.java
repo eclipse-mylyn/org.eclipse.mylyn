@@ -57,6 +57,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 

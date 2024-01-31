@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskRepositoriesNavigatorContentProvider implements ITreeContentProvider {
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	private final TaskRepositoryManager manager;
 
@@ -52,11 +52,9 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 
 		protected void refresh(TaskRepository repository) {
 			if (viewer != null) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-							viewer.refresh();
-						}
+				Display.getDefault().asyncExec(() -> {
+					if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+						viewer.refresh();
 					}
 				});
 			}
@@ -72,6 +70,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 			refresh(repository);
 		}
 
+		@Override
 		public void repositoryChanged(TaskRepositoryChangeEvent event) {
 			Type type = event.getDelta().getType();
 			if (type == TaskRepositoryDelta.Type.ALL || type == TaskRepositoryDelta.Type.PROPERTY
@@ -83,9 +82,10 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 	}
 
 	public TaskRepositoriesNavigatorContentProvider() {
-		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
+		manager = (TaskRepositoryManager) TasksUi.getRepositoryManager();
 	}
 
+	@Override
 	public void dispose() {
 		if (listener != null) {
 			manager.removeListener(listener);
@@ -93,6 +93,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 		}
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof RepositoryCategory) {
 			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
@@ -100,7 +101,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 			if (RepositoryCategory.ID_CATEGORY_ALL.equals(category.getId())) {
 				return repositories.toArray();
 			} else if (RepositoryCategory.ID_CATEGORY_OTHER.equals(category.getId())) {
-				Set<Object> items = new HashSet<Object>();
+				Set<Object> items = new HashSet<>();
 				for (TaskRepository repository : repositories) {
 					if (repository.getCategory() == null) {
 						items.add(repository);
@@ -108,7 +109,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 				}
 				return items.toArray();
 			} else {
-				Set<Object> items = new HashSet<Object>();
+				Set<Object> items = new HashSet<>();
 				for (TaskRepository repository : repositories) {
 					if (category.getId().equals(repository.getCategory())) {
 						items.add(repository);
@@ -120,18 +121,22 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (listener != null) {
 			manager.removeListener(listener);

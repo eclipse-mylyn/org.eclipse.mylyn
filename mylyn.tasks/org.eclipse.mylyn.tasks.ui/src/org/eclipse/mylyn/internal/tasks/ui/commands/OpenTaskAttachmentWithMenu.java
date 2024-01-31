@@ -143,7 +143,7 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 
 		RunAssociatedViewer(ITaskAttachmentViewer handler, List<ITaskAttachment> attachments) {
 			this.attachments = attachments;
-			this.viewer = handler;
+			viewer = handler;
 		}
 
 		@Override

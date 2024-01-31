@@ -45,13 +45,12 @@ public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler 
 
 	private TreePath getUnreadItem(TreeViewer treeViewer, Tree tree) {
 		TreeItem[] selection = tree.getSelection();
-		TreeItem selectedItem = (selection.length > 0) ? selection[0] : null;
+		TreeItem selectedItem = selection.length > 0 ? selection[0] : null;
 
 		TreeVisitor visitor = new TreeVisitor() {
 			@Override
 			public boolean visit(Object object) {
-				if (object instanceof ITask) {
-					ITask task = (ITask) object;
+				if (object instanceof ITask task) {
 					if (TasksUiInternal.shouldShowIncoming(task)) { // task.getSynchronizationState().isIncoming()
 						return true;
 					}

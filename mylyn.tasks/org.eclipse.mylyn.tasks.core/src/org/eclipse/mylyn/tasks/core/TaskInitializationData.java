@@ -26,10 +26,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
- * TaskInitialzationData should be used as alternative to implementing {@link ITaskMapping} when passing initialization
- * data into {@link AbstractTaskDataHandler#initializeTaskData()}. It provides common accessors and mutators for a set
- * of fields used during task data initialization. Only attributes of type {@link String} are supported, other accessors
- * throw {@link UnsupportedOperationException} as documented for each method.
+ * TaskInitialzationData should be used as alternative to implementing {@link ITaskMapping} when passing initialization data into
+ * {@link AbstractTaskDataHandler#initializeTaskData()}. It provides common accessors and mutators for a set of fields used during task data
+ * initialization. Only attributes of type {@link String} are supported, other accessors throw {@link UnsupportedOperationException} as
+ * documented for each method.
  *
  * @author Benjamin Muskalla
  * @since 3.10
@@ -47,6 +47,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public List<String> getCc() {
 		return null;
@@ -55,11 +56,13 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public Date getCompletionDate() {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getComponent() {
 		return attributesById.getAttribute(TaskAttribute.COMPONENT);
@@ -68,11 +71,13 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public Date getCreationDate() {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getDescription() {
 		return attributesById.getAttribute(TaskAttribute.DESCRIPTION);
@@ -81,6 +86,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public Date getDueDate() {
 		return null;
@@ -89,6 +95,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public List<String> getKeywords() {
 		return null;
@@ -97,6 +104,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public Date getModificationDate() {
 		return null;
@@ -105,6 +113,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public String getOwner() {
 		return null;
@@ -116,12 +125,14 @@ public class TaskInitializationData implements ITaskMapping {
 	 *
 	 * @since 3.15
 	 */
+	@Override
 	@Nullable
 	public String getOwnerId() {
 		return null;
 
 	}
 
+	@Override
 	@Nullable
 	public String getPriority() {
 		return attributesById.getAttribute(TaskAttribute.PRIORITY);
@@ -130,36 +141,43 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public PriorityLevel getPriorityLevel() {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getProduct() {
 		return attributesById.getAttribute(TaskAttribute.PRODUCT);
 	}
 
+	@Override
 	@Nullable
 	public String getReporter() {
 		return attributesById.getAttribute(TaskAttribute.USER_REPORTER);
 	}
 
+	@Override
 	@Nullable
 	public String getResolution() {
 		return attributesById.getAttribute(TaskAttribute.RESOLUTION);
 	}
 
+	@Override
 	@Nullable
 	public String getSeverity() {
 		return attributesById.getAttribute(TaskAttribute.SEVERITY);
 	}
 
+	@Override
 	@Nullable
 	public String getStatus() {
 		return attributesById.getAttribute(TaskAttribute.STATUS);
 	}
 
+	@Override
 	@Nullable
 	public String getSummary() {
 		return attributesById.getAttribute(TaskAttribute.SUMMARY);
@@ -168,16 +186,19 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public TaskData getTaskData() {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getTaskKey() {
 		return attributesById.getAttribute(TaskAttribute.TASK_KEY);
 	}
 
+	@Override
 	@Nullable
 	public String getTaskKind() {
 		return attributesById.getAttribute(TaskAttribute.TASK_KIND);
@@ -186,16 +207,19 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Does not map to a common attribute and hence Returns <code>null</code>.
 	 */
+	@Override
 	@Nullable
 	public String getTaskStatus() {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getTaskUrl() {
 		return attributesById.getAttribute(TaskAttribute.TASK_URL);
 	}
 
+	@Override
 	@Nullable
 	public String getVersion() {
 		return attributesById.getAttribute(TaskAttribute.VERSION);
@@ -204,6 +228,7 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Throws {@link UnsupportedOperationException}.
 	 */
+	@Override
 	public void merge(ITaskMapping source) {
 		throw new UnsupportedOperationException();
 	}

@@ -23,8 +23,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataConstants;
 import org.xml.sax.ErrorHandler;
@@ -34,6 +32,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -101,14 +101,17 @@ public class XmlExternalizationTest extends TestCase {
 			parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {
+				@Override
 				public void warning(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}
 
+				@Override
 				public void fatalError(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}
 
+				@Override
 				public void error(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}
@@ -141,14 +144,17 @@ public class XmlExternalizationTest extends TestCase {
 			parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {
+				@Override
 				public void warning(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}
 
+				@Override
 				public void fatalError(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}
 
+				@Override
 				public void error(SAXParseException exception) throws SAXException {
 					System.err.println(exception.getMessage());
 				}

@@ -47,6 +47,7 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	public AbstractTaskHandler() {
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getActiveMenuSelection(event);
 		if (selection == null || selection.isEmpty()) {
@@ -89,7 +90,7 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	}
 
 	private ITask[] collectTasks(Object[] items, boolean recurse) {
-		Set<ITask> result = new HashSet<ITask>(items.length);
+		Set<ITask> result = new HashSet<>(items.length);
 		for (int i = 0; i < items.length; i++) {
 			if (!(items[i] instanceof IRepositoryElement)) {
 				items[i] = Platform.getAdapterManager().getAdapter(items[i], ITask.class);

@@ -19,8 +19,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -38,17 +36,15 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
+import junit.framework.TestCase;
+
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
 public class PersonProposalProviderTest extends TestCase {
 
-	final private static Comparator<IContentProposal> CONTENT_COMPARATOR = new Comparator<IContentProposal>() {
-		public int compare(IContentProposal o1, IContentProposal o2) {
-			return o1.getContent().compareTo(o2.getContent());
-		}
-	};
+	final private static Comparator<IContentProposal> CONTENT_COMPARATOR = Comparator.comparing(IContentProposal::getContent);
 
 	@Override
 	protected void setUp() throws Exception {
@@ -287,7 +283,7 @@ public class PersonProposalProviderTest extends TestCase {
 	}
 
 	public void testGetProposalByPrettyName() throws Exception {
-		Map<String, String> users = new HashMap<String, String>();
+		Map<String, String> users = new HashMap<>();
 		users.put("11", "foo");
 		users.put("22", "bar");
 		users.put("33", "far");

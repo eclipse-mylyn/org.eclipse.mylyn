@@ -64,14 +64,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 		ImageDescriptor overlayKind;
 
-	};
+	}
 
 	public TaskElementLabelProvider() {
 		this(false);
 	}
 
 	public TaskElementLabelProvider(boolean wideImages) {
-		super();
 		this.wideImages = wideImages;
 	}
 
@@ -109,8 +108,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			IRepositoryElement element = (IRepositoryElement) object;
 
 			AbstractRepositoryConnectorUi connectorUi = null;
-			if (element instanceof ITask) {
-				ITask repositoryTask = (ITask) element;
+			if (element instanceof ITask repositoryTask) {
 				connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
@@ -131,8 +129,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							: TasksUiImages.QUERY_OFFLINE;
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
-				} else if (element instanceof ScheduledTaskContainer) {
-					ScheduledTaskContainer scheduledTaskContainer = (ScheduledTaskContainer) element;
+				} else if (element instanceof ScheduledTaskContainer scheduledTaskContainer) {
 					if (scheduledTaskContainer.getDateRange() instanceof DayDateRange) {
 						if (scheduledTaskContainer.isPresent()) {
 							compositeDescriptor.icon = CommonImages.SCHEDULE_DAY;
@@ -150,8 +147,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					TaskRepository repository = TasksUi.getRepositoryManager()
 							.getRepository(person.getConnectorKind(), person.getRepositoryUrl());
 
-					if (repository != null && !repository.isAnonymous() && (repository.getUserName() != null
-							&& repository.getUserName().equalsIgnoreCase(element.getHandleIdentifier()))) {
+					if (repository != null && !repository.isAnonymous() && repository.getUserName() != null
+							&& repository.getUserName().equalsIgnoreCase(element.getHandleIdentifier())) {
 						compositeDescriptor.icon = CommonImages.PERSON_ME;
 					}
 				}
@@ -163,8 +160,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof ITask) {
-			ITask task = (ITask) object;
+		if (object instanceof ITask task) {
 			String summary = task.getSummary();
 			if (summary == null) {
 				summary = Messages.TaskElementLabelProvider__no_summary_available_;
@@ -175,17 +171,16 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				return summary;
 			}
-		} else if (object instanceof IRepositoryElement) {
-			IRepositoryElement element = (IRepositoryElement) object;
+		} else if (object instanceof IRepositoryElement element) {
 			return element.getSummary();
 		} else {
 			return super.getText(object);
 		}
 	}
 
+	@Override
 	public Color getForeground(Object object) {
-		if (object instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) object;
+		if (object instanceof AbstractTask task) {
 			if (task != null) {
 				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY);
@@ -216,7 +211,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				for (ITask child : ((ITaskContainer) object).getChildren()) {
 					if (child.isActive()
-							|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+							|| child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child)) {
 						return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_TASK_ACTIVE);
 					} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 						return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
@@ -227,10 +222,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 
+	@Override
 	public Color getBackground(Object element) {
 		return null;
 	}
 
+	@Override
 	public Font getFont(Object element) {
 		if (element instanceof AbstractTask) {
 			if (((AbstractTask) element).isSynchronizing()) {
@@ -250,8 +247,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 		if (element instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
-				if (child.isActive()
-						|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+				if (child.isActive() || child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child)) {
 					return CommonFonts.BOLD;
 				}
 			}
@@ -270,8 +266,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			}
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
-				if (child.isActive()
-						|| (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
+				if (child.isActive() || child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child)) {
 					return CommonFonts.BOLD;
 				}
 			}
@@ -284,7 +279,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		return showHasActiveChildHelper(container, new HashSet<IRepositoryElement>());
+		return showHasActiveChildHelper(container, new HashSet<>());
 	}
 
 	private boolean showHasActiveChildHelper(ITaskContainer container, Set<IRepositoryElement> visitedContainers) {

@@ -28,121 +28,121 @@ public interface ITaskAttachment {
 	/**
 	 * @since 3.0
 	 */
-	public abstract IRepositoryPerson getAuthor();
+	IRepositoryPerson getAuthor();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getComment();
+	String getComment();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	String getConnectorKind();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getContentType();
+	String getContentType();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract Date getCreationDate();
+	Date getCreationDate();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getDescription();
+	String getDescription();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getFileName();
+	String getFileName();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract long getLength();
+	long getLength();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getRepositoryUrl();
+	String getRepositoryUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITask getTask();
+	ITask getTask();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskAttribute getTaskAttribute();
+	TaskAttribute getTaskAttribute();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskRepository getTaskRepository();
+	TaskRepository getTaskRepository();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getUrl();
+	String getUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isDeprecated();
+	boolean isDeprecated();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isPatch();
+	boolean isPatch();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setAuthor(IRepositoryPerson author);
+	void setAuthor(IRepositoryPerson author);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setContentType(String contentType);
+	void setContentType(String contentType);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setCreationDate(Date creationDate);
+	void setCreationDate(Date creationDate);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setDeprecated(boolean deprecated);
+	void setDeprecated(boolean deprecated);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setDescription(String description);
+	void setDescription(String description);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setFileName(String fileName);
+	void setFileName(String fileName);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setLength(long length);
+	void setLength(long length);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setPatch(boolean patch);
+	void setPatch(boolean patch);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setUrl(String url);
+	void setUrl(String url);
 
 }

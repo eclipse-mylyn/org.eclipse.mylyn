@@ -34,6 +34,7 @@ import org.eclipse.ui.views.markers.internal.MarkerTypesModel;
 @SuppressWarnings("restriction")
 public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IMarker[] markers = getSelectedMarkers(event);
 		if (markers.length == 0 || markers[0] == null) {

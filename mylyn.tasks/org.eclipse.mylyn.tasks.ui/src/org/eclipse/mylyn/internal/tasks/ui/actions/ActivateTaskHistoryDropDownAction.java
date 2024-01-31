@@ -47,8 +47,8 @@ public class ActivateTaskHistoryDropDownAction extends Action
 	private final TaskHistoryDropDown taskHistoryDropDown;
 
 	public ActivateTaskHistoryDropDownAction() {
-		this.taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
-		this.taskHistoryDropDown = new TaskHistoryDropDown(null, taskHistory);
+		taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
+		taskHistoryDropDown = new TaskHistoryDropDown(null, taskHistory);
 		setText(Messages.ActivateTaskHistoryDropDownAction_Activate_Previous_Task);
 		setToolTipText(Messages.ActivateTaskHistoryDropDownAction_Activate_Previous_Task);
 		setId(ID);
@@ -56,10 +56,12 @@ public class ActivateTaskHistoryDropDownAction extends Action
 		setImageDescriptor(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -69,6 +71,7 @@ public class ActivateTaskHistoryDropDownAction extends Action
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -78,6 +81,7 @@ public class ActivateTaskHistoryDropDownAction extends Action
 		return dropDownMenu;
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		// ignore
 	}
@@ -96,10 +100,12 @@ public class ActivateTaskHistoryDropDownAction extends Action
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

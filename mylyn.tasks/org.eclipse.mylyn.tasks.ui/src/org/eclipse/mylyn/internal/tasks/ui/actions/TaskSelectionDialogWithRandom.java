@@ -58,26 +58,28 @@ public class TaskSelectionDialogWithRandom extends TaskSelectionDialog {
 		randomTaskButton.setToolTipText(Messages.TaskSelectionDialogWithRandom_Feeling_Lazy_Tooltip);
 		randomTaskButton.addSelectionListener(new SelectionListener() {
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent se) {
 
 				try {
-					Set<ITask> selectedTasks = new HashSet<ITask>();
+					Set<ITask> selectedTasks = new HashSet<>();
 					Set<ITask> allScheduled = ((TaskActivityManager) TasksUi.getTaskActivityManager())
 							.getAllScheduledTasks();
 					if (!allScheduled.isEmpty()) {
 						selectedTasks.addAll(allScheduled);
-						// XXX bug 280939 make sure all scheduled tasks actually exist 
+						// XXX bug 280939 make sure all scheduled tasks actually exist
 						selectedTasks.retainAll(TasksUiPlugin.getTaskList().getAllTasks());
 					}
 					if (selectedTasks.isEmpty()) {
 						selectedTasks.addAll(TasksUiPlugin.getTaskList().getAllTasks());
 					}
 
-					Set<ITask> potentialTasks = new HashSet<ITask>();
+					Set<ITask> potentialTasks = new HashSet<>();
 					addLowEnergyTasks(selectedTasks, potentialTasks, PriorityLevel.P5);
 					addLowEnergyTasks(selectedTasks, potentialTasks, PriorityLevel.P4);
 

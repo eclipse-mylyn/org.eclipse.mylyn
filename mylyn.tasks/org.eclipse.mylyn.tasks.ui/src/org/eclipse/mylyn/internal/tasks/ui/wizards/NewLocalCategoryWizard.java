@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public class NewLocalCategoryWizard extends Wizard implements INewWizard {
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setForcePreviousAndNextButtons(false);
 	}

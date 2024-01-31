@@ -103,7 +103,7 @@ public class TaskMapper implements ITaskMapping {
 	@Nullable
 	private String getPriorityLevelString() {
 		PriorityLevel priorityLevel = getPriorityLevel();
-		return (priorityLevel != null) ? priorityLevel.toString() : PriorityLevel.getDefault().toString();
+		return priorityLevel != null ? priorityLevel.toString() : PriorityLevel.getDefault().toString();
 	}
 
 	private boolean hasChanges(@Nullable Object existingValue, @Nullable Object newValue, @NonNull String attributeId) {
@@ -115,7 +115,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private boolean areNotEquals(@Nullable Object existingProperty, @Nullable Object newProperty) {
-		return (existingProperty != null) ? !existingProperty.equals(newProperty) : newProperty != null;
+		return existingProperty != null ? !existingProperty.equals(newProperty) : newProperty != null;
 	}
 
 	private void copyAttributeValue(@NonNull TaskAttribute sourceAttribute, @Nullable TaskAttribute targetAttribute) {
@@ -141,8 +141,8 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	/**
-	 * TODO update comment Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets
-	 * the following attributes:
+	 * TODO update comment Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets the following
+	 * attributes:
 	 * <ul>
 	 * <li>summary
 	 * <li>description
@@ -150,19 +150,19 @@ public class TaskMapper implements ITaskMapping {
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
 	 *
 	 * @param sourceTaskData
-	 *            the source task data values are copied from, the connector kind of repository of
-	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
+	 *            the source task data values are copied from, the connector kind of repository of <code>sourceTaskData</code> can be
+	 *            different from <code>targetTaskData</code>
 	 * @param targetTaskData
-	 *            the target task data values are copied to, the connector kind matches the one of this task data
-	 *            handler
+	 *            the target task data values are copied to, the connector kind matches the one of this task data handler
 	 * @since 2.2
 	 */
+	@Override
 	public void merge(@NonNull ITaskMapping source) {
-		if (source.getTaskData() != null && this.getTaskData() != null
-				&& source.getTaskData().getConnectorKind().equals(this.getTaskData().getConnectorKind())) {
+		if (source.getTaskData() != null && getTaskData() != null
+				&& source.getTaskData().getConnectorKind().equals(getTaskData().getConnectorKind())) {
 			// task data objects are from the same connector, copy all attributes
 			for (TaskAttribute sourceAttribute : source.getTaskData().getRoot().getAttributes().values()) {
-				copyAttributeValue(sourceAttribute, this.getTaskData().getRoot().getAttribute(sourceAttribute.getId()));
+				copyAttributeValue(sourceAttribute, getTaskData().getRoot().getAttribute(sourceAttribute.getId()));
 			}
 		} else {
 			if (source.getCc() != null) {
@@ -211,21 +211,25 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
+	@Override
 	@Nullable
 	public List<String> getCc() {
 		return getValues(TaskAttribute.USER_CC);
 	}
 
+	@Override
 	@Nullable
 	public Date getCompletionDate() {
 		return getDateValue(TaskAttribute.DATE_COMPLETION);
 	}
 
+	@Override
 	@Nullable
 	public String getComponent() {
 		return getValue(TaskAttribute.COMPONENT);
 	}
 
+	@Override
 	@Nullable
 	public Date getCreationDate() {
 		return getDateValue(TaskAttribute.DATE_CREATION);
@@ -240,16 +244,19 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getDescription() {
 		return getValue(TaskAttribute.DESCRIPTION);
 	}
 
+	@Override
 	@Nullable
 	public Date getDueDate() {
 		return getDateValue(TaskAttribute.DATE_DUE);
 	}
 
+	@Override
 	@Nullable
 	public List<String> getKeywords() {
 		return getValues(TaskAttribute.KEYWORDS);
@@ -268,11 +275,13 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
+	@Override
 	@Nullable
 	public Date getModificationDate() {
 		return getDateValue(TaskAttribute.DATE_MODIFICATION);
 	}
 
+	@Override
 	@Nullable
 	public String getOwner() {
 		return getValue(TaskAttribute.USER_ASSIGNED);
@@ -281,20 +290,23 @@ public class TaskMapper implements ITaskMapping {
 	/**
 	 * @since 3.15
 	 */
+	@Override
 	@Nullable
 	public String getOwnerId() {
 		return getValueId(TaskAttribute.USER_ASSIGNED);
 	}
 
+	@Override
 	@Nullable
 	public String getPriority() {
 		return getValue(TaskAttribute.PRIORITY);
 	}
 
 	/**
-	 * Connectors should override {@link TaskAttributeMapper#getPriorityLevel(TaskAttribute, String)} to customize how
-	 * priority options are mapped to {@link PriorityLevel}
+	 * Connectors should override {@link TaskAttributeMapper#getPriorityLevel(TaskAttribute, String)} to customize how priority options are
+	 * mapped to {@link PriorityLevel}
 	 */
+	@Override
 	@Nullable
 	public PriorityLevel getPriorityLevel() {
 		String valueLabel = getPriority();
@@ -308,16 +320,19 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getProduct() {
 		return getValue(TaskAttribute.PRODUCT);
 	}
 
+	@Override
 	@Nullable
 	public String getReporter() {
 		return getValue(TaskAttribute.USER_REPORTER);
 	}
 
+	@Override
 	@Nullable
 	public String getResolution() {
 		return getValue(TaskAttribute.RESOLUTION);
@@ -326,41 +341,49 @@ public class TaskMapper implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Override
 	@Nullable
 	public String getSeverity() {
 		return getValue(TaskAttribute.SEVERITY);
 	}
 
+	@Override
 	@Nullable
 	public String getSummary() {
 		return getValue(TaskAttribute.SUMMARY);
 	}
 
+	@Override
 	@Nullable
 	public String getStatus() {
 		return getValue(TaskAttribute.STATUS);
 	}
 
+	@Override
 	@NonNull
 	public TaskData getTaskData() {
 		return taskData;
 	}
 
+	@Override
 	@Nullable
 	public String getTaskKey() {
 		return getValue(TaskAttribute.TASK_KEY);
 	}
 
+	@Override
 	@Nullable
 	public String getTaskKind() {
 		return getValue(TaskAttribute.TASK_KIND);
 	}
 
+	@Override
 	@Nullable
 	public String getTaskStatus() {
 		return getValue(TaskAttribute.STATUS);
 	}
 
+	@Override
 	@Nullable
 	public String getTaskUrl() {
 		return getValue(TaskAttribute.TASK_URL);
@@ -402,6 +425,7 @@ public class TaskMapper implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Override
 	@Nullable
 	public String getVersion() {
 		return getValue(TaskAttribute.VERSION);

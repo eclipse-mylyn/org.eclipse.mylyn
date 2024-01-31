@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
@@ -36,12 +35,10 @@ public class ToggleAllWorkingSetsAction extends Action {
 
 	@Override
 	public void run() {
-		Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
+		Set<IWorkingSet> newList = new HashSet<>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
 
-		Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-		Iterator<IWorkingSet> iter = newList.iterator();
-		while (iter.hasNext()) {
-			IWorkingSet workingSet = iter.next();
+		Set<IWorkingSet> tempList = new HashSet<>();
+		for (IWorkingSet workingSet : newList) {
 			if (workingSet != null && workingSet.getId() != null
 					&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				tempList.add(workingSet);

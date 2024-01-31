@@ -25,11 +25,11 @@ import java.util.Collection;
 public interface ITaskContainer {
 
 	/**
-	 * Returns the children of this task, as defined by a containment hierarchy such as the Task List's categories,
-	 * queries and substasks. Never returns null.
+	 * Returns the children of this task, as defined by a containment hierarchy such as the Task List's categories, queries and substasks.
+	 * Never returns null.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract Collection<ITask> getChildren();
+	Collection<ITask> getChildren();
 
 }

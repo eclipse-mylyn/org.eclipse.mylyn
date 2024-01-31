@@ -108,7 +108,7 @@ public class AttributeEditorFactory {
 		} else if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type)) {
 			RichTextAttributeEditor editor = null;
 			if (serviceLocator != null) {
-				IContextService contextService = (IContextService) serviceLocator.getService(IContextService.class);
+				IContextService contextService = serviceLocator.getService(IContextService.class);
 				if (contextService != null) {
 					AbstractTaskEditorExtension extension = TaskEditorExtensions
 							.getTaskEditorExtension(model.getTaskRepository(), taskAttribute);

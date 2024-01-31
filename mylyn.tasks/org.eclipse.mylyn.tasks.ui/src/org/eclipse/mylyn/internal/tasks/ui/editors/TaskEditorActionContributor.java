@@ -66,12 +66,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		@Override
 		public boolean canPerformAction(String actionId, Control control) {
 			IFormPage activePage = getActivePage();
-			if (activePage instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
+			if (activePage instanceof AbstractTaskEditorPage page) {
 				return page.canPerformAction(actionId);
 			} else if (activePage != null) {
-				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage
-						.getAdapter(WorkbenchActionCallback.class);
+				WorkbenchActionCallback callback = activePage.getAdapter(WorkbenchActionCallback.class);
 				if (callback != null) {
 					return callback.canPerformAction(actionId, control);
 				}
@@ -82,13 +80,11 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		@Override
 		public void doAction(String actionId, Control control) {
 			IFormPage activePage = getActivePage();
-			if (activePage instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
+			if (activePage instanceof AbstractTaskEditorPage page) {
 				page.doAction(actionId);
 				return;
 			} else if (activePage != null) {
-				WorkbenchActionCallback callback = (WorkbenchActionCallback) activePage
-						.getAdapter(WorkbenchActionCallback.class);
+				WorkbenchActionCallback callback = activePage.getAdapter(WorkbenchActionCallback.class);
 				if (callback != null) {
 					callback.doAction(actionId, control);
 					return;
@@ -100,7 +96,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		@Override
 		public Control getFocusControl() {
 			IFormPage page = getActivePage();
-			return (page != null) ? EditorUtil.getFocusControl(page) : null;
+			return page != null ? EditorUtil.getFocusControl(page) : null;
 		}
 
 		@Override
@@ -119,15 +115,15 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private final TaskEditorActionGroup actionGroup;
 
 	public TaskEditorActionContributor() {
-		this.actionSupport = new WorkbenchActionSupport();
-		this.actionSupport.setCallback(new EditorPageCallback());
-		this.selectionProvider = new SelectionProviderAdapterExtension();
-		this.actionGroup = new TaskEditorActionGroup(actionSupport);
+		actionSupport = new WorkbenchActionSupport();
+		actionSupport.setCallback(new EditorPageCallback());
+		selectionProvider = new SelectionProviderAdapterExtension();
+		actionGroup = new TaskEditorActionGroup(actionSupport);
 	}
 
 	public void contextMenuAboutToShow(IMenuManager mng) {
 		IFormPage page = getActivePage();
-		boolean addClipboard = (page instanceof TaskPlanningEditor || page instanceof AbstractTaskEditorPage);
+		boolean addClipboard = page instanceof TaskPlanningEditor || page instanceof AbstractTaskEditorPage;
 		contextMenuAboutToShow(mng, addClipboard);
 	}
 
@@ -161,7 +157,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	}
 
 	private IFormPage getActivePage() {
-		return (editor != null) ? editor.getActivePageInstance() : null;
+		return editor != null ? editor.getActivePageInstance() : null;
 	}
 
 	public TaskEditor getEditor() {
@@ -175,6 +171,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), actionGroup.getSynchronizeEditorAction());
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		actionSupport.selectionChanged(event);
 		actionGroup.getNewTaskFromSelectionAction().selectionChanged(event.getSelection());
@@ -182,18 +179,18 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	@Override
 	public void setActiveEditor(IEditorPart activeEditor) {
-		if (this.editor != null) {
-			this.editor.getSite().getSelectionProvider().removeSelectionChangedListener(selectionProvider);
+		if (editor != null) {
+			editor.getSite().getSelectionProvider().removeSelectionChangedListener(selectionProvider);
 		}
 
 		if (activeEditor instanceof TaskEditor) {
-			this.editor = (TaskEditor) activeEditor;
-			this.editor.getSite().getSelectionProvider().addSelectionChangedListener(selectionProvider);
-			actionGroup.getSynchronizeEditorAction().selectionChanged(new StructuredSelection(this.editor));
+			editor = (TaskEditor) activeEditor;
+			editor.getSite().getSelectionProvider().addSelectionChangedListener(selectionProvider);
+			actionGroup.getSynchronizeEditorAction().selectionChanged(new StructuredSelection(editor));
 			updateSelectableActions(selectionProvider.getSelection());
 		} else {
 			actionGroup.getSynchronizeEditorAction().selectionChanged(StructuredSelection.EMPTY);
-			this.editor = null;
+			editor = null;
 		}
 	}
 

@@ -20,7 +20,7 @@ public class QueryPageFilter {
 
 	private final String key;
 
-	private final List<String> values = new ArrayList<String>();
+	private final List<String> values = new ArrayList<>();
 
 	public QueryPageFilter(String key, String value) {
 		this.key = key;

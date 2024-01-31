@@ -104,20 +104,18 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * An index on a task list, provides a way to {@link #find(String, TaskCollector, int) search for tasks}, and a way to
  * {@link #matches(ITask, String) match tasks}. Tasks are matched against a search query.
  * <p>
- * The task list has a configurable delay before it updates, meaning that there is a period of time where the index will
- * be out of date with respect to task changes. The idea is that updates to the index can be "batched" for greater
- * efficiency. Additionally, it's possible for a task to be updated either before or after the index is added to the
- * task list as a listener, thus opening the possibility of changes without updates to the index. In either of these
- * cases, the index can be out of date with respect to the current state of tasks. If the index is used in such a state,
- * the result could be either false matches, no match where there should be a match, or incorrect prioritization of
- * index "hits".
+ * The task list has a configurable delay before it updates, meaning that there is a period of time where the index will be out of date with
+ * respect to task changes. The idea is that updates to the index can be "batched" for greater efficiency. Additionally, it's possible for a
+ * task to be updated either before or after the index is added to the task list as a listener, thus opening the possibility of changes
+ * without updates to the index. In either of these cases, the index can be out of date with respect to the current state of tasks. If the
+ * index is used in such a state, the result could be either false matches, no match where there should be a match, or incorrect
+ * prioritization of index "hits".
  * </p>
  * <p>
- * The index has the option of reindexing all tasks via API. This will bring the index up to date and is useful for
- * cases where it's known that the index may not be up to date. In its current form this reindex operation can be
- * triggered by the user by including "index:reset" in the search string. Reindexing is potentially an expensive, IO
- * intensive long-running operation. With about 20,000 tasks in my task list and an SSD, reindexing takes about 90
- * seconds.
+ * The index has the option of reindexing all tasks via API. This will bring the index up to date and is useful for cases where it's known
+ * that the index may not be up to date. In its current form this reindex operation can be triggered by the user by including "index:reset"
+ * in the search string. Reindexing is potentially an expensive, IO intensive long-running operation. With about 20,000 tasks in my task
+ * list and an SSD, reindexing takes about 90 seconds.
  * </p>
  *
  * @author David Green
@@ -202,12 +200,11 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	/**
-	 * keeps track of fields that are handled specially in the code so that we don't use the generalized field handling
-	 * for indexing them.
+	 * keeps track of fields that are handled specially in the code so that we don't use the generalized field handling for indexing them.
 	 */
-	private final Set<AbstractTaskSchema.Field> specialFields = new HashSet<AbstractTaskSchema.Field>();
+	private final Set<AbstractTaskSchema.Field> specialFields = new HashSet<>();
 
-	private final Set<AbstractTaskSchema.Field> indexedFields = new LinkedHashSet<AbstractTaskSchema.Field>();
+	private final Set<AbstractTaskSchema.Field> indexedFields = new LinkedHashSet<>();
 
 	{
 		specialFields.add(FIELD_IDENTIFIER);
@@ -245,7 +242,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		addIndexedField(FIELD_NOTES);
 	}
 
-	private static enum MaintainIndexType {
+	private enum MaintainIndexType {
 		STARTUP, REINDEX
 	}
 
@@ -256,11 +253,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	/**
 	 * must be synchronized before accessing or modifying
 	 */
-	private final Map<ITask, TaskData> reindexQueue = new HashMap<ITask, TaskData>();
+	private final Map<ITask, TaskData> reindexQueue = new HashMap<>();
 
 	/**
-	 * do not access directly, instead use {@link #getIndexReader()}. 'this' must be synchronized before accessing or
-	 * modifying
+	 * do not access directly, instead use {@link #getIndexReader()}. 'this' must be synchronized before accessing or modifying
 	 */
 	private IndexReader indexReader;
 
@@ -294,8 +290,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	private int maxMatchSearchHits = 1500;
 
 	/**
-	 * must hold this lock as a read lock when accessing the index, and must hold this lock as a write lock when closing
-	 * or reassigning {@link #indexReader}.
+	 * must hold this lock as a read lock when accessing the index, and must hold this lock as a write lock when closing or reassigning
+	 * {@link #indexReader}.
 	 */
 	private final ReadWriteLock indexReaderLock = new ReentrantReadWriteLock(true);
 
@@ -370,7 +366,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	public TaskListIndex(TaskList taskList, TaskDataManager dataManager, IRepositoryManager repositoryManager,
 			File indexLocation, long startupDelay) {
 		this(taskList, dataManager, repositoryManager);
-		Assert.isTrue(startupDelay >= 0L && startupDelay <= (1000L * 60));
+		Assert.isTrue(startupDelay >= 0L && startupDelay <= 1000L * 60);
 		Assert.isNotNull(indexLocation);
 
 		this.startupDelay = startupDelay;
@@ -538,13 +534,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	private void scheduleIndexMaintenance(MaintainIndexType type) {
 		long delay = 0L;
-		switch (type) {
-		case STARTUP:
-			delay = startupDelay;
-			break;
-		case REINDEX:
-			delay = reindexDelay;
-		}
+		delay = switch (type) {
+			case STARTUP -> startupDelay;
+			case REINDEX -> reindexDelay;
+		};
 
 		if (delay == 0L) {
 			// primarily for testing purposes
@@ -569,11 +562,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	/**
-	 * Indicates if the given task matches the given pattern string. Uses the backing index to detect a match by looking
-	 * for tasks that match the given pattern string. The results of the search are cached such that future calls to
-	 * this method using the same pattern string do not require use of the backing index, making this method very
-	 * efficient for multiple calls with the same pattern string. Cached results for a given pattern string are
-	 * discarded if this method is called with a different pattern string.
+	 * Indicates if the given task matches the given pattern string. Uses the backing index to detect a match by looking for tasks that
+	 * match the given pattern string. The results of the search are cached such that future calls to this method using the same pattern
+	 * string do not require use of the backing index, making this method very efficient for multiple calls with the same pattern string.
+	 * Cached results for a given pattern string are discarded if this method is called with a different pattern string.
 	 *
 	 * @param task
 	 *            the task to match
@@ -594,13 +586,13 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 				final boolean needIndexHit;
 				synchronized (this) {
-					needIndexHit = lastResults == null
-							|| (lastPatternString == null || !lastPatternString.equals(patternString));
+					needIndexHit = lastResults == null || lastPatternString == null
+							|| !lastPatternString.equals(patternString);
 				}
 				if (needIndexHit) {
-					this.lastPatternString = patternString;
+					lastPatternString = patternString;
 
-					hits = new HashSet<String>();
+					hits = new HashSet<>();
 
 					IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 					try {
@@ -620,8 +612,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 				}
 				synchronized (this) {
 					if (this.indexReader == indexReader) {
-						this.lastPatternString = patternString;
-						this.lastResults = hits;
+						lastPatternString = patternString;
+						lastResults = hits;
 					}
 				}
 				String taskIdentifier = task.getHandleIdentifier();
@@ -661,9 +653,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 * @param collector
 	 *            the collector that receives tasks
 	 * @param resultsLimit
-	 *            the maximum number of tasks to find. Specifying a limit enables the index to be more efficient since
-	 *            it can skip over matching tasks that do not score highly enough. Specify {@link Integer#MAX_VALUE} if
-	 *            there should be no limit.
+	 *            the maximum number of tasks to find. Specifying a limit enables the index to be more efficient since it can skip over
+	 *            matching tasks that do not score highly enough. Specify {@link Integer#MAX_VALUE} if there should be no limit.
 	 */
 	public void find(String patternString, TaskCollector collector, int resultsLimit) {
 		Assert.isNotNull(patternString);
@@ -812,34 +803,35 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		return null;
 	}
 
+	@Override
 	public void taskDataUpdated(TaskDataManagerEvent event) {
 		reindex(event.getTask(), event.getTaskData());
 	}
 
+	@Override
 	public void editsDiscarded(TaskDataManagerEvent event) {
 		reindex(event.getTask(), event.getTaskData());
 	}
 
+	@Override
 	public void containersChanged(Set<TaskContainerDelta> containers) {
 		for (TaskContainerDelta delta : containers) {
 			switch (delta.getKind()) {
-			case ADDED:
-			case REMOVED:
-			case CONTENT:
-				IRepositoryElement element = delta.getElement();
-				if (element instanceof ITask) {
-					ITask task = (ITask) element;
-					if ("local".equals(((AbstractTask) task).getConnectorKind())) { //$NON-NLS-1$
-						reindex(task, null);
+				case ADDED:
+				case REMOVED:
+				case CONTENT:
+					IRepositoryElement element = delta.getElement();
+					if (element instanceof ITask task) {
+						if ("local".equals(((AbstractTask) task).getConnectorKind())) { //$NON-NLS-1$
+							reindex(task, null);
+						}
 					}
-				}
 			}
 		}
 	}
 
 	/**
-	 * advanced usage: cause the given task to be reindexed using {@link MaintainIndexType#REINDEX reindex scheduling
-	 * rule}.
+	 * advanced usage: cause the given task to be reindexed using {@link MaintainIndexType#REINDEX reindex scheduling rule}.
 	 *
 	 * @param task
 	 *            the task
@@ -847,11 +839,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 *            the task data, or nul if it's not available
 	 */
 	protected void reindex(ITask task, TaskData taskData) {
-		if (task == null) {
-			// this can happen when edits are discarded
-			return;
-		}
-		if (!taskIsIndexable(task, taskData)) {
+		if ((task == null) || !taskIsIndexable(task, taskData)) {
 			return;
 		}
 		synchronized (reindexQueue) {
@@ -905,7 +893,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (repository != null) {
 			List<TaskAttribute> attachmentAttributes = taskData.getAttributeMapper()
 					.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
-			Set<String> attachmentNames = new HashSet<String>();
+			Set<String> attachmentNames = new HashSet<>();
 			for (TaskAttribute attribute : attachmentAttributes) {
 				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);
 				taskData.getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
@@ -928,7 +916,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 * compute attributes that should be indexed as {@link IndexField#CONTENT}
 	 */
 	private Collection<TaskAttribute> computeContentAttributes(TaskAttribute root) {
-		Set<TaskAttribute> attributes = new LinkedHashSet<TaskAttribute>();
+		Set<TaskAttribute> attributes = new LinkedHashSet<>();
 
 		// add default content attributes
 		{
@@ -1057,11 +1045,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	/**
-	 * Indicates if the given task is indexable. The default implementation returns true, subclasses may override to
-	 * filter some tasks from the task list. This method may be called more than once per task, with some calls omitting
-	 * the task data. In this way implementations can avoid loading task data if the decision to filter tasks can be
-	 * based on the ITask alone. Implementations that must read the task data in order to determine eligibility for
-	 * indexing should return true for tasks where the provided task data is null.
+	 * Indicates if the given task is indexable. The default implementation returns true, subclasses may override to filter some tasks from
+	 * the task list. This method may be called more than once per task, with some calls omitting the task data. In this way implementations
+	 * can avoid loading task data if the decision to filter tasks can be based on the ITask alone. Implementations that must read the task
+	 * data in order to determine eligibility for indexing should return true for tasks where the provided task data is null.
 	 *
 	 * @param task
 	 *            the task
@@ -1074,8 +1061,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	/**
-	 * Escapes special characters in the given literal value so that they are not interpreted as special characters in a
-	 * query.
+	 * Escapes special characters in the given literal value so that they are not interpreted as special characters in a query.
 	 *
 	 * @param value
 	 *            the value to escape
@@ -1157,7 +1143,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		try {
 			IndexWriter writer = null;
 			try {
-				Map<ITask, TaskData> workingQueue = new HashMap<ITask, TaskData>();
+				Map<ITask, TaskData> workingQueue = new HashMap<>();
 
 				// reindex tasks that are in the reindexQueue, making multiple passes so that we catch anything
 				// added/changed while we were reindexing
@@ -1212,9 +1198,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	private class TaskListState implements ITaskListRunnable {
 		List<ITask> indexableTasks;
 
+		@Override
 		public void execute(IProgressMonitor monitor) throws CoreException {
 			Collection<AbstractTask> tasks = taskList.getAllTasks();
-			indexableTasks = new ArrayList<ITask>(tasks.size());
+			indexableTasks = new ArrayList<>(tasks.size());
 
 			for (ITask task : tasks) {
 				if (taskIsIndexable(task, null)) {
@@ -1324,18 +1311,22 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		writer.addDocument(document);
 	}
 
+	@Override
 	public void repositoryAdded(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositoryRemoved(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositorySettingsChanged(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		reindex();
 	}

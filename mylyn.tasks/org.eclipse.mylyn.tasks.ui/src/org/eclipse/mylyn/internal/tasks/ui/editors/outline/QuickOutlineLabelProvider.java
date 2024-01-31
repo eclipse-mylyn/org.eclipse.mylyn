@@ -28,24 +28,20 @@ public class QuickOutlineLabelProvider extends TaskEditorOutlineNodeLabelProvide
 	@Override
 	public String getText(Object element) {
 		String result = ""; //$NON-NLS-1$
-		if (element instanceof TaskData) {
-			TaskData node = (TaskData) element;
+		if (element instanceof TaskData node) {
 			result = node.getTaskId();
-		} else if (element instanceof TaskAttribute) {
-			TaskAttribute node = (TaskAttribute) element;
+		} else if (element instanceof TaskAttribute node) {
 			TaskAttributeMetaData meta = node.getMetaData();
 			if (meta != null) {
 				String lable = meta.getLabel();
 				if (lable != null) {
 					result = lable + " (" + node.getId() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				} else if (TaskAttribute.TYPE_ATTACHMENT.equals(meta.getType())) {
+					result = "Attachment: " + node.getValue(); //$NON-NLS-1$
+				} else if (TaskAttribute.TYPE_COMMENT.equals(meta.getType())) {
+					result = "Comment: " + node.getValue(); //$NON-NLS-1$
 				} else {
-					if (TaskAttribute.TYPE_ATTACHMENT.equals(meta.getType())) {
-						result = "Attachment: " + node.getValue(); //$NON-NLS-1$
-					} else if (TaskAttribute.TYPE_COMMENT.equals(meta.getType())) {
-						result = "Comment: " + node.getValue(); //$NON-NLS-1$
-					} else {
-						result = "<" + node.getId() + ">"; //$NON-NLS-1$//$NON-NLS-2$
-					}
+					result = "<" + node.getId() + ">"; //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 		} else if (element instanceof TaskEditorOutlineNode) {
