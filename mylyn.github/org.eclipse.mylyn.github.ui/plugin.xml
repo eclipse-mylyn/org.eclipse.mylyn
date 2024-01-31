@@ -312,4 +312,70 @@
             class="org.eclipse.mylyn.internal.github.ui.RepositorySearchWizardPage">
       </repositorySearchPage>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <mapping
+            namespace="org.eclipse.mylyn"
+            productId="org.eclipse.mylyn">
+         <repository
+               kind="github"
+               url="https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/">
+         </repository>
+      </mapping>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="true"
+            characterEncoding="UTF-8"
+            label="Eclipse Mylyn GutHub Issues"
+            repositoryKind="github"
+            urlRepository="https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/">
+      </repository>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <product
+            description="The Plug-in Development Environment (PDE) provides tools to create, develop, test, debug, build and deploy Eclipse plug-ins, fragments, features, update sites and RCP products."
+            featureId="org.eclipse.pde"
+            icon="platform:/plugin/org.eclipse.platform/$nl$/eclipse16.png"
+            id="org.eclipse.pde"
+            name="Eclipse PDE"
+            providerId="org.eclipse"
+            url="https://eclipse.dev/pde/">
+      </product>
+      <mapping
+            namespace="org.eclipse.platform"
+            productId="org.eclipse.platform">
+         <repository
+               kind="github"
+               url="https://github.com/eclipse-platform/eclipse.platform/issues/">
+         </repository>
+      </mapping>
+      <mapping
+            namespace="org.eclipse.pde"
+            productId="org.eclipse.pde">
+         <repository
+               kind="github"
+               url="https://github.com/eclipse-pde/eclipse.pde/issues/">
+         </repository>
+      </mapping>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="true"
+            characterEncoding="UTF-8"
+            label="Eclipse Platform GutHub Issues"
+            repositoryKind="github"
+            urlRepository="https://github.com/eclipse-platform/eclipse.platform/issues/">
+      </repository>
+      <repository
+            addAutomatically="true"
+            characterEncoding="UTF-8"
+            label="Eclipse PDE GutHub Issues"
+            repositoryKind="github"
+            urlRepository="https://github.com/eclipse-pde/eclipse.pde/issues/">
+      </repository>
+   </extension>
 </plugin>

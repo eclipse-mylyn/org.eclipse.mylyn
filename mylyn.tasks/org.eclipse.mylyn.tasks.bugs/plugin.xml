@@ -140,5 +140,37 @@
             label="%BugReporter.label">
       </errorReporter>
    </extension>
+
+   <extension
+         point="org.eclipse.mylyn.tasks.bugs.support">
+      <category
+            description="Commercial support"
+            id="org.eclipse.mylyn.tasks.bugs.commercial"
+            name="Commercial Support"
+            weight="500">
+      </category>
+      <category
+            description="Community supported open source projects"
+            id="org.eclipse.mylyn.tasks.bugs.opensource"
+            name="Open Source Community"
+            weight="900">
+      </category>
+      <provider
+            categoryId="org.eclipse.mylyn.tasks.bugs.opensource"
+            icon="platform:/plugin/org.eclipse.platform/$nl$/eclipse16.png"
+            id="org.eclipse"
+            name="Eclipse Foundation"
+            url="https://www.eclipse.org">
+      </provider>
+      <product
+            description="Application Lifecycle Tools"
+            icon="platform:/plugin/org.eclipse.mylyn.commons.core/$nl$/mylyn.png"
+            id="org.eclipse.mylyn"
+            name="Eclipse Mylyn"
+            pluginId="org.eclipse.mylyn.commons.core"
+            providerId="org.eclipse"
+            url="https://eclipse.org/mylyn/support/">
+      </product>
+   </extension>
   
 </plugin>
