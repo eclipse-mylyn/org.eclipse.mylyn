@@ -10,14 +10,14 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.tasks.index.core;x-internal:=true
-Import-Package: org.apache.lucene.analysis;version="9.5.0",
- org.apache.lucene.analysis.core;version="9.5.0",
- org.apache.lucene.analysis.miscellaneous;version="9.5.0",
- org.apache.lucene.analysis.standard;version="9.5.0",
- org.apache.lucene.document;version="9.5.0",
- org.apache.lucene.index;version="9.5.0",
- org.apache.lucene.queryparser.classic;version="9.5.0",
- org.apache.lucene.search;version="9.5.0",
- org.apache.lucene.store;version="9.5.0",
- org.apache.lucene.util;version="9.5.0"
+Import-Package: org.apache.lucene.analysis;version="0.0.0",
+ org.apache.lucene.analysis.core;version="0.0.0",
+ org.apache.lucene.analysis.miscellaneous;version="0.0.0",
+ org.apache.lucene.analysis.standard;version="0.0.0",
+ org.apache.lucene.document;version="0.0.0",
+ org.apache.lucene.index;version="0.0.0",
+ org.apache.lucene.queryparser.classic;version="0.0.0",
+ org.apache.lucene.search;version="0.0.0",
+ org.apache.lucene.store;version="0.0.0",
+ org.apache.lucene.util;version="0.0.0"
 
