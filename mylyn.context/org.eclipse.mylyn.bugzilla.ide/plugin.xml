@@ -33,105 +33,12 @@
         </repository>
 	</extension>
 	<extension point="org.eclipse.mylyn.tasks.bugs.support">
-	    <category
-	          description="Commercial support"
-	          id="org.eclipse.mylyn.tasks.bugs.commercial"
-	          name="Commercial Support"
-	          weight="500"/>
-		<category description="Community supported open source projects"
-			id="org.eclipse.mylyn.tasks.bugs.openSource" name="Open Source Community"
-			weight="900" />
 		<!-- Eclipse -->
-		<provider categoryId="org.eclipse.mylyn.tasks.bugs.openSource"
-			description="Eclipse open source community bug tracker" icon="icons/branding32/eclipse.png"
-			id="org.eclipse" name="Eclipse.org" url="https://eclipse.org/" />
 		<mapping namespace="org.eclipse">
 			<repository kind="bugzilla" url="https://bugs.eclipse.org/bugs">
 			</repository>
 		</mapping>
-		<!-- Mylyn -->
-		<product
-	        description="Application Lifecycle Tools"
-	        icon="icons/branding32/mylyn.gif"
-	        id="org.eclipse.mylyn"
-	        name="Mylyn"
-	        pluginId="org.eclipse.mylyn.commons.core"
-	        providerId="org.eclipse"
-	        url="http://eclipse.org/mylyn/support/"/>
-		<mapping namespace="org.eclipse.mylyn" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn"/>
-		</mapping>
-		<!-- Mylyn Builds -->
-		<mapping namespace="org.eclipse.mylyn.builds" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Builds"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.jenkins" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Builds"/>
-			<property name="component" value="Jenkins Connector"/>
-		</mapping>
-		<!-- Mylyn Commons -->
-		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Commons"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.monitor" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Commons"/>
-			<property name="component" value="Monitor"/>
-		</mapping>
-		<!-- Mylyn Docs -->
-		<mapping namespace="org.eclipse.mylyn.wikitext" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Docs"/>
-			<property name="component" value="Wikitext"/>
-		</mapping>
-		<!-- Mylyn Context -->
-		<mapping namespace="org.eclipse.cdt.mylyn" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Context"/>
-			<property name="component" value="C/C++"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.context" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Context"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.java" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Context"/>
-			<property name="component" value="Java"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.team" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Context"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<!-- Mylyn Reviews -->
-		<mapping namespace="org.eclipse.mylyn.reviews" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Reviews"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.gerrit" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Reviews"/>
-			<property name="component" value="Gerrit Connector"/>
-		</mapping>
-		<!-- Mylyn Tasks -->
-		<mapping namespace="org.eclipse.mylyn.bugzilla" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Tasks"/>
-			<property name="component" value="Bugzilla"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.tasks" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Tasks"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.trac" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Tasks"/>
-			<property name="component" value="Trac"/>
-		</mapping>
-		<!-- Mylyn Versions -->		
-		<mapping namespace="org.eclipse.mylyn.versions" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn Versions"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<mapping namespace="org.eclipse.mylyn.git" productId="org.eclipse.mylyn">
-			<property name="product" value="Git Connector"/>
-			<property name="component" value="Framework"/>
-		</mapping>
-		<!-- PDE -->
+		<!-- EGit -->
 		<product featureId="org.eclipse.egit" id="org.eclipse.egit"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.jgit" productId="org.eclipse.egit">
@@ -139,20 +46,6 @@
 		</mapping>
 		<mapping namespace="org.eclipse.egit" productId="org.eclipse.egit">
 			<property name="product" value="EGit"/>
-		</mapping>
-		<!-- PDE -->
-		<product featureId="org.eclipse.pde" id="org.eclipse.pde"
-			providerId="org.eclipse" />
-		<mapping namespace="org.eclipse.pde" productId="org.eclipse.pde">
-			<property name="product" value="PDE">
-			</property>
-		</mapping>
-		<!-- Platform -->
-		<product featureId="org.eclipse.platform" id="org.eclipse.platform"
-			providerId="org.eclipse" />
-		<mapping namespace="org.eclipse.platform" productId="org.eclipse.platform">
-			<property name="product" value="Platform">
-			</property>
 		</mapping>
 		<!-- JDT -->
 		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"
