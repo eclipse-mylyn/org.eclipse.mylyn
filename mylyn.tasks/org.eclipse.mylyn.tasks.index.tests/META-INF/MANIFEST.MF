@@ -17,4 +17,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
 Export-Package: org.eclipse.mylyn.internal.tasks.index.tests;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.index.tests.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.index.tests.util;x-internal:=true
+Import-Package: org.apache.lucene.store;version="9.5.0"
 
