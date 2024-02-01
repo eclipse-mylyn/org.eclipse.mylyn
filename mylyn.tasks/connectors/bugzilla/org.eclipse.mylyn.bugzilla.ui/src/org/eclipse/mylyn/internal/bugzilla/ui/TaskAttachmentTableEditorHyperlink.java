@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -50,18 +51,22 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 		this.attachmentId = attachmentId;
 	}
 
+	@Override
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
 
+	@Override
 	public String getHyperlinkText() {
 		return MessageFormat.format(Messages.TaskAttachmentTableEditorHyperlink_Show_Attachment_X_in_Y, attachmentId);
 	}
 
+	@Override
 	public String getTypeLabel() {
 		return null;
 	}
 
+	@Override
 	public void open() {
 		AbstractTaskEditorPage page = getTaskEditorPage();
 		if (page != null) {
@@ -78,12 +83,7 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attachmentId == null) ? 0 : attachmentId.hashCode());
-		result = prime * result + ((region == null) ? 0 : region.hashCode());
-		result = prime * result + ((repository == null) ? 0 : repository.hashCode());
-		return result;
+		return Objects.hash(attachmentId, region, repository);
 	}
 
 	@Override
@@ -91,32 +91,17 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskAttachmentTableEditorHyperlink other = (TaskAttachmentTableEditorHyperlink) obj;
-		if (attachmentId == null) {
-			if (other.attachmentId != null) {
-				return false;
-			}
-		} else if (!attachmentId.equals(other.attachmentId)) {
+		if (!Objects.equals(attachmentId, other.attachmentId)) {
 			return false;
 		}
-		if (region == null) {
-			if (other.region != null) {
-				return false;
-			}
-		} else if (!region.equals(other.region)) {
+		if (!Objects.equals(region, other.region)) {
 			return false;
 		}
-		if (repository == null) {
-			if (other.repository != null) {
-				return false;
-			}
-		} else if (!repository.equals(other.repository)) {
+		if (!Objects.equals(repository, other.repository)) {
 			return false;
 		}
 		return true;
@@ -135,8 +120,7 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 		}
 		IEditorPart editorPart = activePage.getActiveEditor();
 		AbstractTaskEditorPage taskEditorPage = null;
-		if (editorPart instanceof TaskEditor) {
-			TaskEditor taskEditor = (TaskEditor) editorPart;
+		if (editorPart instanceof TaskEditor taskEditor) {
 			IFormPage formPage = taskEditor.getActivePageInstance();
 			if (formPage instanceof AbstractTaskEditorPage) {
 				taskEditorPage = (AbstractTaskEditorPage) formPage;

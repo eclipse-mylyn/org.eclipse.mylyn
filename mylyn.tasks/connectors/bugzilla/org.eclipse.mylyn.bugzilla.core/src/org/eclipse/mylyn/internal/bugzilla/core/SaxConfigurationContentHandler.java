@@ -191,23 +191,23 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private final RepositoryConfiguration configuration;
 
-	private final Map<String, List<String>> components = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> components = new HashMap<>();
 
-	private final Map<String, List<String>> versions = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> versions = new HashMap<>();
 
-	private final Map<String, List<String>> milestones = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> milestones = new HashMap<>();
 
-	private final Map<String, String> componentNames = new HashMap<String, String>();
+	private final Map<String, String> componentNames = new HashMap<>();
 
-	private final Map<String, String> versionNames = new HashMap<String, String>();
+	private final Map<String, String> versionNames = new HashMap<>();
 
-	private final Map<String, String> milestoneNames = new HashMap<String, String>();
+	private final Map<String, String> milestoneNames = new HashMap<>();
 
-	private final Map<String, List<String>> customOption = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> customOption = new HashMap<>();
 
-	private final Map<String, Map<String, List<String>>> flagsInComponent = new HashMap<String, Map<String, List<String>>>();
+	private final Map<String, Map<String, List<String>>> flagsInComponent = new HashMap<>();
 
-	private final Map<String, Integer> flagIds = new HashMap<String, Integer>();
+	private final Map<String, Integer> flagIds = new HashMap<>();
 
 	private String currentComponent = ""; //$NON-NLS-1$
 
@@ -231,10 +231,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		characters = new StringBuffer();
 		if (localName.equals(ELEMENT_STATUS)) {
 			state = state | IN_STATUS;
-		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI) == IN_LI)) {
+		} else if (localName.equals(ELEMENT_LI) && (state & IN_LI) == IN_LI) {
 			state = state | IN_LI_LI;
 			parseResource(attributes);
-		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI) != IN_LI)) {
+		} else if (localName.equals(ELEMENT_LI) && (state & IN_LI) != IN_LI) {
 			state = state | IN_LI;
 		} else if (localName.equals(ELEMENT_PLATFORM)) {
 			state = state | IN_PLATFORM;
@@ -307,38 +307,38 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 		if (localName.equals(ELEMENT_STATUS)) {
 			state = state & ~IN_STATUS;
-		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI_LI) == IN_LI_LI)) {
+		} else if (localName.equals(ELEMENT_LI) && (state & IN_LI_LI) == IN_LI_LI) {
 			state = state & ~IN_LI_LI;
-		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI_LI) != IN_LI_LI)) {
+		} else if (localName.equals(ELEMENT_LI) && (state & IN_LI_LI) != IN_LI_LI) {
 			state = state & ~IN_LI;
 			if (characters.length() == 0) {
 				return;
 			}
-			if (state == (IN_STATUS)) {
+			if (state == IN_STATUS) {
 				configuration.addItem(BugzillaAttribute.BUG_STATUS, characters.toString());
-			} else if (state == (IN_STATUS_OPEN)) {
+			} else if (state == IN_STATUS_OPEN) {
 				configuration.addOpenStatusValue(characters.toString());
-			} else if (state == (IN_STATUS_CLOSED)) {
+			} else if (state == IN_STATUS_CLOSED) {
 				configuration.addClosedStatusValue(characters.toString());
-			} else if (state == (IN_RESOLUTION)) {
+			} else if (state == IN_RESOLUTION) {
 				configuration.addItem(BugzillaAttribute.RESOLUTION, characters.toString());
-			} else if (state == (IN_KEYWORD)) {
+			} else if (state == IN_KEYWORD) {
 				configuration.addItem(BugzillaAttribute.KEYWORDS, characters.toString());
-			} else if (state == (IN_PLATFORM)) {
+			} else if (state == IN_PLATFORM) {
 				configuration.addItem(BugzillaAttribute.REP_PLATFORM, characters.toString());
-			} else if (state == (IN_OP_SYS)) {
+			} else if (state == IN_OP_SYS) {
 				configuration.addItem(BugzillaAttribute.OP_SYS, characters.toString());
-			} else if (state == (IN_PRIORITY)) {
+			} else if (state == IN_PRIORITY) {
 				configuration.addItem(BugzillaAttribute.PRIORITY, characters.toString());
-			} else if (state == (IN_SEVERITY)) {
+			} else if (state == IN_SEVERITY) {
 				configuration.addItem(BugzillaAttribute.BUG_SEVERITY, characters.toString());
-			} else if (state == (IN_CUSTOM_OPTION)) {
+			} else if (state == IN_CUSTOM_OPTION) {
 				// Option for CutstomFields
 				if (currentCustomOptionName != null) {
 					if (characters.length() > 0) {
 						List<String> customOptionList = customOption.get(currentCustomOptionName);
 						if (customOptionList == null) {
-							customOptionList = new ArrayList<String>();
+							customOptionList = new ArrayList<>();
 							customOption.put(currentCustomOptionName, customOptionList);
 						}
 						customOptionList.add(characters.toString());
@@ -484,96 +484,96 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private void parseResource(Attributes attributes) {
 
 		switch (state) {
-		case IN_PRODUCTS | IN_LI | IN_COMPONENTS | IN_LI_LI:
-			if (attributes != null) {
-				String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (compURI != null && currentProduct.length() > 0) {
-					List<String> compURIs = components.get(currentProduct);
-					if (compURIs == null) {
-						compURIs = new ArrayList<String>();
-						components.put(currentProduct, compURIs);
+			case IN_PRODUCTS | IN_LI | IN_COMPONENTS | IN_LI_LI:
+				if (attributes != null) {
+					String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
+					if (compURI != null && currentProduct.length() > 0) {
+						List<String> compURIs = components.get(currentProduct);
+						if (compURIs == null) {
+							compURIs = new ArrayList<>();
+							components.put(currentProduct, compURIs);
+						}
+						compURIs.add(compURI);
 					}
-					compURIs.add(compURI);
 				}
-			}
-			break;
-		case IN_PRODUCTS | IN_LI | IN_VERSIONS | IN_LI_LI:
-			if (attributes != null) {
-				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (resourceURI != null && currentProduct.length() > 0) {
-					List<String> versionUris = versions.get(currentProduct);
-					if (versionUris == null) {
-						versionUris = new ArrayList<String>();
-						versions.put(currentProduct, versionUris);
+				break;
+			case IN_PRODUCTS | IN_LI | IN_VERSIONS | IN_LI_LI:
+				if (attributes != null) {
+					String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
+					if (resourceURI != null && currentProduct.length() > 0) {
+						List<String> versionUris = versions.get(currentProduct);
+						if (versionUris == null) {
+							versionUris = new ArrayList<>();
+							versions.put(currentProduct, versionUris);
+						}
+						versionUris.add(resourceURI);
 					}
-					versionUris.add(resourceURI);
 				}
-			}
-			break;
-		case IN_PRODUCTS | IN_LI | IN_TARGET_MILESTONES | IN_LI_LI:
-			if (attributes != null) {
-				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (resourceURI != null) {
-					List<String> milestoneUris = milestones.get(currentProduct);
-					if (milestoneUris == null) {
-						milestoneUris = new ArrayList<String>();
-						milestones.put(currentProduct, milestoneUris);
+				break;
+			case IN_PRODUCTS | IN_LI | IN_TARGET_MILESTONES | IN_LI_LI:
+				if (attributes != null) {
+					String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
+					if (resourceURI != null) {
+						List<String> milestoneUris = milestones.get(currentProduct);
+						if (milestoneUris == null) {
+							milestoneUris = new ArrayList<>();
+							milestones.put(currentProduct, milestoneUris);
+						}
+						milestoneUris.add(resourceURI);
 					}
-					milestoneUris.add(resourceURI);
 				}
-			}
-			break;
-		case IN_COMPONENTS | IN_LI | IN_COMPONENT | IN_FLAG_TYPES | IN_LI_LI:
-			if (attributes != null) {
-				String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (compURI != null && currentComponent.length() > 0 && currentProduct.length() > 0
-						&& compURI.length() > 0) {
+				break;
+			case IN_COMPONENTS | IN_LI | IN_COMPONENT | IN_FLAG_TYPES | IN_LI_LI:
+				if (attributes != null) {
+					String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
+					if (compURI != null && currentComponent.length() > 0 && currentProduct.length() > 0
+							&& compURI.length() > 0) {
 
-					Map<String, List<String>> flagComponentList = flagsInComponent.get(currentProduct);
-					if (flagComponentList == null) {
-						flagComponentList = new HashMap<String, List<String>>();
-						flagsInComponent.put(currentProduct, flagComponentList);
+						Map<String, List<String>> flagComponentList = flagsInComponent.get(currentProduct);
+						if (flagComponentList == null) {
+							flagComponentList = new HashMap<>();
+							flagsInComponent.put(currentProduct, flagComponentList);
+						}
+						List<String> flagsForComponent = flagComponentList.get(currentComponent);
+						if (flagsForComponent == null) {
+							flagsForComponent = new ArrayList<>();
+							flagComponentList.put(currentComponent, flagsForComponent);
+						}
+						flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id=")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					List<String> flagsForComponent = flagComponentList.get(currentComponent);
-					if (flagsForComponent == null) {
-						flagsForComponent = new ArrayList<String>();
-						flagComponentList.put(currentComponent, flagsForComponent);
+				}
+				break;
+			case IN_COMPONENTS | IN_LI | IN_COMPONENT:
+				if (attributes != null) {
+					about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+					int idx = about.indexOf("&product="); //$NON-NLS-1$
+					if (idx != -1) {
+						currentProduct = about.substring(idx + 9);
+						currentProduct = currentProduct.replace("%20", " "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id=")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			}
-			break;
-		case IN_COMPONENTS | IN_LI | IN_COMPONENT:
-			if (attributes != null) {
-				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-				int idx = about.indexOf("&product="); //$NON-NLS-1$
-				if (idx != -1) {
-					currentProduct = about.substring(idx + 9);
-					currentProduct = currentProduct.replaceAll("%20", " "); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case IN_VERSIONS | IN_LI | IN_VERSION:
+				if (attributes != null) {
+					about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
 				}
-			}
-			break;
-		case IN_VERSIONS | IN_LI | IN_VERSION:
-			if (attributes != null) {
-				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-			}
-			break;
+				break;
 
-		case IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE:
-			if (attributes != null) {
-				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-			}
-			break;
-		case IN_FIELDS | IN_LI | IN_FIELD:
-			if (attributes != null) {
-				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-			}
-			break;
-		case IN_FLAG_TYPES | IN_LI | IN_FLAG_TYPE:
-			if (attributes != null) {
-				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-			}
-			break;
+			case IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE:
+				if (attributes != null) {
+					about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+				}
+				break;
+			case IN_FIELDS | IN_LI | IN_FIELD:
+				if (attributes != null) {
+					about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+				}
+				break;
+			case IN_FLAG_TYPES | IN_LI | IN_FLAG_TYPE:
+				if (attributes != null) {
+					about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+				}
+				break;
 
 		}
 	}

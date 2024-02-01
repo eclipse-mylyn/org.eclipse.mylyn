@@ -41,7 +41,7 @@ public class BugzillaFlag implements Serializable {
 
 	private final int flagId;
 
-	private final Map<String, List<String>> used = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> used = new HashMap<>();
 
 	public BugzillaFlag(String name, String description, String type, String requestable,
 			String specifically_requestable, String multiplicable, int flagId) {
@@ -100,7 +100,7 @@ public class BugzillaFlag implements Serializable {
 	public void addUsed(String product, String component) {
 		List<String> componentList = used.get(product);
 		if (componentList == null) {
-			componentList = new ArrayList<String>();
+			componentList = new ArrayList<>();
 			used.put(product, componentList);
 		}
 		if (!componentList.contains(component)) {

@@ -201,13 +201,13 @@ public class BugzillaClient {
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
 			throws MalformedURLException {
-		this.repositoryUrl = new URL(location.getUrl());
+		repositoryUrl = new URL(location.getUrl());
 		this.location = location;
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
-		this.bugzillaLanguageSettings = languageSettings;
+		bugzillaLanguageSettings = languageSettings;
 		this.connector = connector;
-		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
+		proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
@@ -266,12 +266,12 @@ public class BugzillaClient {
 
 	protected boolean hasAuthenticationCredentials() {
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-		return (credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0);
+		return credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0;
 	}
 
 	protected boolean hasHTTPAuthenticationCredentials() {
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
-		return (credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0);
+		return credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0;
 	}
 
 	private GzipGetMethod getConnect(String serverURL, IProgressMonitor monitor) throws IOException, CoreException {
@@ -286,14 +286,13 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
-	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
+	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must be reduced. By
+	 * using a cached version of the config.cgi this can reduce traffic considerably:
 	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
 	 *
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
-	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
-	 *         getResponseBodyAsUnzippedStream().
+	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method getResponseBodyAsUnzippedStream().
 	 * @throws IOException
 	 * @throws CoreException
 	 */
@@ -343,36 +342,36 @@ public class BugzillaClient {
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
 			switch (code) {
-			case HttpURLConnection.HTTP_OK:
-				return getMethod;
-			case HttpURLConnection.HTTP_NOT_MODIFIED:
-				WebUtil.releaseConnection(getMethod, monitor);
-				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
-			case HttpURLConnection.HTTP_UNAUTHORIZED:
-			case HttpURLConnection.HTTP_FORBIDDEN:
-				// login or reauthenticate due to an expired session
-				loggedIn = false;
-				WebUtil.releaseConnection(getMethod, monitor);
-				authenticate(monitor);
-				break;
-			case HttpURLConnection.HTTP_PROXY_AUTH:
-				loggedIn = false;
-				WebUtil.releaseConnection(getMethod, monitor);
-				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-						"Proxy authentication required")); //$NON-NLS-1$
-			case HttpURLConnection.HTTP_INTERNAL_ERROR:
-				loggedIn = false;
-				InputStream stream = getResponseStream(getMethod, monitor);
-				ByteArrayOutputStream ou = new ByteArrayOutputStream(1024);
-				transferData(stream, ou);
-				WebUtil.releaseConnection(getMethod, monitor);
-				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Error = 500")); //$NON-NLS-1$
-			default:
-				WebUtil.releaseConnection(getMethod, monitor);
-				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
+				case HttpURLConnection.HTTP_OK:
+					return getMethod;
+				case HttpURLConnection.HTTP_NOT_MODIFIED:
+					WebUtil.releaseConnection(getMethod, monitor);
+					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
+				case HttpURLConnection.HTTP_UNAUTHORIZED:
+				case HttpURLConnection.HTTP_FORBIDDEN:
+					// login or reauthenticate due to an expired session
+					loggedIn = false;
+					WebUtil.releaseConnection(getMethod, monitor);
+					authenticate(monitor);
+					break;
+				case HttpURLConnection.HTTP_PROXY_AUTH:
+					loggedIn = false;
+					WebUtil.releaseConnection(getMethod, monitor);
+					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+							"Proxy authentication required")); //$NON-NLS-1$
+				case HttpURLConnection.HTTP_INTERNAL_ERROR:
+					loggedIn = false;
+					InputStream stream = getResponseStream(getMethod, monitor);
+					ByteArrayOutputStream ou = new ByteArrayOutputStream(1024);
+					transferData(stream, ou);
+					WebUtil.releaseConnection(getMethod, monitor);
+					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Error = 500")); //$NON-NLS-1$
+				default:
+					WebUtil.releaseConnection(getMethod, monitor);
+					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
 			}
 
 		}
@@ -409,14 +408,14 @@ public class BugzillaClient {
 	private boolean isZippedReply(HttpMethodBase method) {
 		// content-encoding:gzip can be set by a dedicated perl script or
 		// mod_gzip
-		boolean zipped = (null != method.getResponseHeader("Content-encoding") && method.getResponseHeader( //$NON-NLS-1$
-				"Content-encoding").getValue().equals(IBugzillaConstants.CONTENT_ENCODING_GZIP)) //$NON-NLS-1$
+		boolean zipped = null != method.getResponseHeader("Content-encoding") && method.getResponseHeader( //$NON-NLS-1$
+				"Content-encoding").getValue().equals(IBugzillaConstants.CONTENT_ENCODING_GZIP) //$NON-NLS-1$
 				||
 				// content-type: application/x-gzip can be set by any apache
 				// after 302 redirect, based on .gz suffix
-				(null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type") //$NON-NLS-1$ //$NON-NLS-2$
+				null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type") //$NON-NLS-1$ //$NON-NLS-2$
 						.getValue()
-						.equals("application/x-gzip")); //$NON-NLS-1$
+						.equals("application/x-gzip"); //$NON-NLS-1$
 		return zipped;
 	}
 
@@ -491,7 +490,7 @@ public class BugzillaClient {
 	}
 
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
-		if (loggedIn || (!hasAuthenticationCredentials() && !hasHTTPAuthenticationCredentials())) {
+		if (loggedIn || !hasAuthenticationCredentials() && !hasHTTPAuthenticationCredentials()) {
 			return;
 		}
 
@@ -610,10 +609,8 @@ public class BugzillaClient {
 
 				if (!loggedIn) {
 					InputStream input = getResponseStream(postMethod, monitor);
-					try {
+					try (input) {
 						throw new CoreException(parseHtmlError(input));
-					} finally {
-						input.close();
 					}
 				}
 			} else {
@@ -665,9 +662,9 @@ public class BugzillaClient {
 	}
 
 	private boolean isErrorMessageToken(Token token) {
-		if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-				&& !((HtmlTag) (token.getValue())).isEndTag()) {
-			HtmlTag ta = ((HtmlTag) token.getValue());
+		if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TD
+				&& !((HtmlTag) token.getValue()).isEndTag()) {
+			HtmlTag ta = (HtmlTag) token.getValue();
 			String st = ta.getAttribute("id"); //$NON-NLS-1$
 			if (st != null && st.equals("error_msg")) { //$NON-NLS-1$
 				return true;
@@ -686,7 +683,7 @@ public class BugzillaClient {
 			String queryUrl = query.getUrl();
 			int start = queryUrl.indexOf('?');
 
-			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			List<NameValuePair> pairs = new ArrayList<>();
 			if (start != -1) {
 				queryUrl = queryUrl.substring(start + 1);
 				String[] result = queryUrl.split("&"); //$NON-NLS-1$
@@ -731,12 +728,10 @@ public class BugzillaClient {
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						InputStream stream = getResponseStream(postMethod, monitor);
-						try {
+						try (stream) {
 							RepositoryQueryResultsFactory queryFactory = getQueryResultsFactory(stream);
 							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper);
 							return count > 0;
-						} finally {
-							stream.close();
 						}
 					}
 				}
@@ -849,7 +844,7 @@ public class BugzillaClient {
 				}
 
 				InputStream stream = getResponseStream(method, monitor);
-				try {
+				try (stream) {
 					if (method.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
 						Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -892,17 +887,15 @@ public class BugzillaClient {
 
 									if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
 										return repositoryConfiguration;
+									} else if (attempt == 0) {
+										// empty configuration, retry
+										// authenticate
+										loggedIn = false;
+										break;
 									} else {
-										if (attempt == 0) {
-											// empty configuration, retry
-											// authenticate
-											loggedIn = false;
-											break;
-										} else {
-											throw new CoreException(new Status(IStatus.WARNING,
-													BugzillaCorePlugin.ID_PLUGIN,
-													"No products found in repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
-										}
+										throw new CoreException(new Status(IStatus.WARNING,
+												BugzillaCorePlugin.ID_PLUGIN,
+												"No products found in repository configuration. Ensure credentials are valid.")); //$NON-NLS-1$
 									}
 								}
 							}
@@ -912,8 +905,6 @@ public class BugzillaClient {
 					if (loggedIn) {
 						throw new CoreException(parseHtmlError(stream));
 					}
-				} finally {
-					stream.close();
 				}
 			} finally {
 				attempt++;
@@ -1011,7 +1002,7 @@ public class BugzillaClient {
 			// with the server to see if it will in fact receive the post before
 			// actually sending the contents.
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
-			List<PartBase> parts = new ArrayList<PartBase>();
+			List<PartBase> parts = new ArrayList<>();
 			parts.add(
 					new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, getCharacterEncoding()));
 
@@ -1033,9 +1024,7 @@ public class BugzillaClient {
 			}
 			if (attachmentAttribute != null) {
 				Collection<TaskAttribute> attributes = attachmentAttribute.getAttributes().values();
-				Iterator<TaskAttribute> itr = attributes.iterator();
-				while (itr.hasNext()) {
-					TaskAttribute a = itr.next();
+				for (TaskAttribute a : attributes) {
 					if (a.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE) && repositoryConfiguration != null) {
 						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
 						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
@@ -1099,10 +1088,8 @@ public class BugzillaClient {
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (status == HttpStatus.SC_OK) {
 				InputStream input = getResponseStream(postMethod, monitor);
-				try {
+				try (input) {
 					parsePostResponse(bugReportID, input);
-				} finally {
-					input.close();
 				}
 
 			} else {
@@ -1166,16 +1153,14 @@ public class BugzillaClient {
 
 	public void postUpdateAttachment(TaskAttribute taskAttribute, String action, IProgressMonitor monitor)
 			throws IOException, CoreException {
-		List<NameValuePair> formData = new ArrayList<NameValuePair>(5);
+		List<NameValuePair> formData = new ArrayList<>(5);
 
 		formData.add(new NameValuePair("action", action)); //$NON-NLS-1$
 		formData.add(new NameValuePair("contenttypemethod", "manual")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		formData.add(new NameValuePair("id", taskAttribute.getValue())); //$NON-NLS-1$
 		Collection<TaskAttribute> attributes = taskAttribute.getAttributes().values();
-		Iterator<TaskAttribute> itr = attributes.iterator();
-		while (itr.hasNext()) {
-			TaskAttribute attrib = itr.next();
+		for (TaskAttribute attrib : attributes) {
 			String id = attrib.getId();
 			if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 				continue;
@@ -1374,8 +1359,8 @@ public class BugzillaClient {
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(
 						new BufferedReader(new InputStreamReader(inStream, getCharacterEncoding())), null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
-							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.INPUT
+							&& !((HtmlTag) token.getValue()).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						String name = tag.getAttribute("name"); //$NON-NLS-1$
 						String value = tag.getAttribute("value"); //$NON-NLS-1$
@@ -1470,7 +1455,7 @@ public class BugzillaClient {
 	}
 
 	private NameValuePair[] getPairsForNew(TaskData taskData, String token) {
-		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+		Map<String, NameValuePair> fields = new HashMap<>();
 		if (token != null) {
 			fields.put(BugzillaAttribute.TOKEN.getKey(), new NameValuePair(BugzillaAttribute.TOKEN.getKey(), token));
 		}
@@ -1483,11 +1468,9 @@ public class BugzillaClient {
 
 		// go through all of the attributes and add them to
 		// the bug post
-		Collection<TaskAttribute> attributes = new ArrayList<TaskAttribute>(
+		Collection<TaskAttribute> attributes = new ArrayList<>(
 				taskData.getRoot().getAttributes().values());
-		Iterator<TaskAttribute> itr = attributes.iterator();
-		while (itr.hasNext()) {
-			TaskAttribute a = itr.next();
+		for (TaskAttribute a : attributes) {
 			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) { //$NON-NLS-1$
 				String value = null;
 				value = a.getValue();
@@ -1578,11 +1561,10 @@ public class BugzillaClient {
 
 	private NameValuePair[] getPairsForExisting(TaskData model, IProgressMonitor monitor) throws CoreException {
 		boolean groupSecurityEnabled = false;
-		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+		Map<String, NameValuePair> fields = new HashMap<>();
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
 		Collection<TaskAttribute> attributes = model.getRoot().getAttributes().values();
-		Iterator<TaskAttribute> itr = attributes.iterator();
 		boolean tokenFound = false;
 		boolean tokenRequired = false;
 		BugzillaVersion bugzillaVersion = null;
@@ -1591,9 +1573,7 @@ public class BugzillaClient {
 		} else {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
-		while (itr.hasNext()) {
-			TaskAttribute a = itr.next();
-
+		for (TaskAttribute a : attributes) {
 			if (a == null) {
 				continue;
 			} else {
@@ -1630,7 +1610,7 @@ public class BugzillaClient {
 					String value = a.getValue();
 					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 						if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_4_7) < 0
-								|| (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_5) >= 0)
+								|| bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_5) >= 0
 										&& bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) < 0) {
 							value = stripTimeZone(value);
 						}
@@ -1891,7 +1871,7 @@ public class BugzillaClient {
 		// check for security token (required for successful submit on Bugzilla
 		// 3.2.1 and greater but not in xml until Bugzilla 3.2.3 bug#263318)
 
-		if (groupSecurityEnabled || (!tokenFound && tokenRequired)) {
+		if (groupSecurityEnabled || !tokenFound && tokenRequired) {
 			// get security and token if exists from html and include in post
 			HtmlInformation htmlInfo = getHtmlOnlyInformation(model, monitor);
 
@@ -1935,12 +1915,12 @@ public class BugzillaClient {
 						new BufferedReader(new InputStreamReader(inStream, getCharacterEncoding())), null);
 				String formName = null;
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.FORM
-							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.FORM
+							&& !((HtmlTag) token.getValue()).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						formName = tag.getAttribute("name"); //$NON-NLS-1$
-					} else if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
-							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.INPUT
+							&& !((HtmlTag) token.getValue()).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						// String name = tag.getAttribute("name");
 						String id = tag.getAttribute("id"); //$NON-NLS-1$
@@ -1986,14 +1966,8 @@ public class BugzillaClient {
 	}
 
 	private static String toCommaSeparatedList(String[] strings) {
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < strings.length; i++) {
-			buffer.append(strings[i]);
-			if (i != strings.length - 1) {
-				buffer.append(","); //$NON-NLS-1$
-			}
-		}
-		return buffer.toString();
+		String buffer = String.join(",", strings);
+		return buffer;
 	}
 
 	/**
@@ -2038,8 +2012,8 @@ public class BugzillaClient {
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				body += token.toString();
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
+						&& !((HtmlTag) token.getValue()).isEndTag()) {
 					isTitle = true;
 					continue;
 				}
@@ -2094,7 +2068,7 @@ public class BugzillaClient {
 										int startIndex = title.indexOf(value);
 										if (startIndex > -1) {
 											startIndex = startIndex + value.length();
-											String result = (title.substring(startIndex, stopIndex)).trim();
+											String result = title.substring(startIndex, stopIndex).trim();
 											response = new BugzillaRepositoryResponse(ResponseKind.TASK_CREATED,
 													result);
 											parseResultOK(tokenizer, response);
@@ -2213,11 +2187,9 @@ public class BugzillaClient {
 						}
 						isTitle = false;
 					}
-				} else {
-					if (isErrorMessageToken(token)) {
-						errorMessage = computeErrorMessage(tokenizer, token);
-						break;
-					}
+				} else if (isErrorMessageToken(token)) {
+					errorMessage = computeErrorMessage(tokenizer, token);
+					break;
 				}
 			}
 
@@ -2274,15 +2246,15 @@ public class BugzillaClient {
 		}
 
 		GzipPostMethod method = null;
-		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
+		HashMap<String, TaskData> taskDataMap = new HashMap<>();
 		// make a copy to modify set
-		taskIds = new HashSet<String>(taskIds);
+		taskIds = new HashSet<>(taskIds);
 		int authenticationAttempt = 0;
 		while (taskIds.size() > 0) {
 
 			try {
 
-				Set<String> idsToRetrieve = new HashSet<String>();
+				Set<String> idsToRetrieve = new HashSet<>();
 				Iterator<String> itr = taskIds.iterator();
 				for (int x = 0; itr.hasNext() && x < MAX_RETRIEVED_PER_QUERY; x++) {
 					String taskId = itr.next();
@@ -2328,10 +2300,10 @@ public class BugzillaClient {
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							InputStream input = getResponseStream(method, monitor);
-							try {
+							try (input) {
 								MultiBugReportFactory factory = new MultiBugReportFactory(input, getCharacterEncoding(),
 										connector);
-								List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+								List<BugzillaCustomField> customFields = new ArrayList<>();
 								if (repositoryConfiguration != null) {
 									customFields = repositoryConfiguration.getCustomFields();
 								}
@@ -2340,8 +2312,6 @@ public class BugzillaClient {
 								taskDataMap.clear();
 								parseable = true;
 								break;
-							} finally {
-								input.close();
 							}
 						}
 					}
@@ -2495,9 +2465,9 @@ public class BugzillaClient {
 						}
 						newText = newText + origText.substring(0, spaceIndex) + "\n"; //$NON-NLS-1$
 						if (origText.charAt(spaceIndex) == ' ' || origText.charAt(spaceIndex) == '\n') {
-							origText = origText.substring(spaceIndex + 1, origText.length());
+							origText = origText.substring(spaceIndex + 1);
 						} else {
-							origText = origText.substring(spaceIndex, origText.length());
+							origText = origText.substring(spaceIndex);
 						}
 					} else {
 						newText = newText + origText;
@@ -2505,7 +2475,7 @@ public class BugzillaClient {
 					}
 				} else {
 					newText = newText + origText.substring(0, newLine + 1);
-					origText = origText.substring(newLine + 1, origText.length());
+					origText = origText.substring(newLine + 1);
 				}
 			}
 			return newText;
@@ -2518,7 +2488,7 @@ public class BugzillaClient {
 		private String token;
 
 		public HtmlInformation() {
-			groups = new HashMap<String, String>();
+			groups = new HashMap<>();
 		}
 
 		public Map<String, String> getGroups() {
@@ -2547,8 +2517,8 @@ public class BugzillaClient {
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV) {
-					String idValue = ((HtmlTag) (token.getValue())).getAttribute(KEY_ID);
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.DIV) {
+					String idValue = ((HtmlTag) token.getValue()).getAttribute(KEY_ID);
 					if (idValue != null) {
 						inBugzillaBody = idValue.equals("bugzilla-body"); //$NON-NLS-1$
 					} else {
@@ -2557,14 +2527,14 @@ public class BugzillaClient {
 				}
 				if (inBugzillaBody) {
 					if (token.getType() == Token.TAG) {
-						if (((HtmlTag) (token.getValue())).getTagType() == Tag.DL) {
-							if (((HtmlTag) (token.getValue())).isEndTag()) {
+						if (((HtmlTag) token.getValue()).getTagType() == Tag.DL) {
+							if (((HtmlTag) token.getValue()).isEndTag()) {
 								dlLevel--;
 							} else {
 								dlLevel++;
 							}
-						} else if (((HtmlTag) (token.getValue())).getTagType() == Tag.DT) {
-							isDT = !((HtmlTag) (token.getValue())).isEndTag();
+						} else if (((HtmlTag) token.getValue()).getTagType() == Tag.DT) {
+							isDT = !((HtmlTag) token.getValue()).isEndTag();
 							if (isDT) {
 								if (dlLevel == 1) {
 									dt1 = " "; //$NON-NLS-1$
@@ -2572,7 +2542,7 @@ public class BugzillaClient {
 									dt2 = " "; //$NON-NLS-1$
 								}
 							}
-						} else if (((HtmlTag) (token.getValue())).getTagType() == Tag.CODE) {
+						} else if (((HtmlTag) token.getValue()).getTagType() == Tag.CODE) {
 							if (isCODE) {
 								if (codeString.length() > 0) {
 									codeString = codeString.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2580,18 +2550,16 @@ public class BugzillaClient {
 								}
 								codeString = ""; //$NON-NLS-1$
 							}
-							isCODE = !((HtmlTag) (token.getValue())).isEndTag();
+							isCODE = !((HtmlTag) token.getValue()).isEndTag();
 						}
-					} else {
-						if (isDT) {
-							if (dlLevel == 1) {
-								dt1 += (" " + token.getValue()); //$NON-NLS-1$
-							} else if (dlLevel == 2) {
-								dt2 += (" " + token.getValue()); //$NON-NLS-1$
-							}
-						} else if (isCODE) {
-							codeString += ("" + token.getValue()); //$NON-NLS-1$
+					} else if (isDT) {
+						if (dlLevel == 1) {
+							dt1 += " " + token.getValue(); //$NON-NLS-1$
+						} else if (dlLevel == 2) {
+							dt2 += " " + token.getValue(); //$NON-NLS-1$
 						}
+					} else if (isCODE) {
+						codeString += "" + token.getValue(); //$NON-NLS-1$
 					}
 				}
 			}
@@ -2615,7 +2583,7 @@ public class BugzillaClient {
 	private BugzillaXmlRpcClient getXmlRpcClient() {
 		boolean useXMLRPC = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
 		if (useXMLRPC && xmlRpcClient == null) {
-			WebLocation webLocation = new WebLocation(this.repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
+			WebLocation webLocation = new WebLocation(repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
 			String username = ""; //$NON-NLS-1$
 			String password = ""; //$NON-NLS-1$
 			if (location.getCredentials(AuthenticationType.REPOSITORY) != null) {
@@ -2665,8 +2633,7 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * Returns the given file path with its separator character changed from the given old separator to the given new
-	 * separator.
+	 * Returns the given file path with its separator character changed from the given old separator to the given new separator.
 	 *
 	 * @param path
 	 *            a file path
@@ -2674,8 +2641,7 @@ public class BugzillaClient {
 	 *            a path separator character
 	 * @param newSeparator
 	 *            a path separator character
-	 * @return the file path with its separator character changed from the given old separator to the given new
-	 *         separator
+	 * @return the file path with its separator character changed from the given old separator to the given new separator
 	 */
 	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);

@@ -24,12 +24,11 @@ import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 public class BugzillaSeveritySearchSorter extends ViewerSorter {
 
 	/**
-	 * Returns a negative, zero, or positive number depending on whether the first bug's severity goes before, is the
-	 * same as, or goes after the second element's severity.
+	 * Returns a negative, zero, or positive number depending on whether the first bug's severity goes before, is the same as, or goes after
+	 * the second element's severity.
 	 * <p>
 	 * 
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-	 *      java.lang.Object)
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
@@ -55,9 +54,8 @@ public class BugzillaSeveritySearchSorter extends ViewerSorter {
 	}
 
 	/**
-	 * Returns the category of the given element. The category is a number used to allocate elements to bins; the bins
-	 * are arranged in ascending numeric order. The elements within a bin are arranged via a second level sort
-	 * criterion.
+	 * Returns the category of the given element. The category is a number used to allocate elements to bins; the bins are arranged in
+	 * ascending numeric order. The elements within a bin are arranged via a second level sort criterion.
 	 * <p>
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(Object)
@@ -69,7 +67,7 @@ public class BugzillaSeveritySearchSorter extends ViewerSorter {
 
 			// return the bugs id
 			if (marker.getType().equals(BugzillaUiPlugin.HIT_MARKER_ID)) {
-				return ((Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID)).intValue();
+				return ((Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID));
 			}
 		} catch (Exception ignored) {
 			// ignore if there is a problem

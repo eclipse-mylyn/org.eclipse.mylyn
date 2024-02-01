@@ -18,14 +18,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * Tests should be run against Bugzilla 3.2.4 or greater
@@ -108,7 +108,7 @@ public class BugzillaFlagsTest extends TestCase {
 		assertEquals(true, optionD.containsKey("?"));
 		assertEquals(true, optionD.containsKey("+"));
 		assertEquals(true, optionD.containsKey("-"));
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		stateA.setValue("+");
 		stateB.setValue("?");
 		stateC.setValue("?");
@@ -144,7 +144,7 @@ public class BugzillaFlagsTest extends TestCase {
 		assertEquals(true, optionD.containsKey("?"));
 		assertEquals(true, optionD.containsKey("+"));
 		assertEquals(true, optionD.containsKey("-"));
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		stateA.setValue(" ");
 		stateB.setValue(" ");
 		stateC.setValue(" ");

@@ -55,8 +55,8 @@ public class EncodingTest extends AbstractBugzillaTest {
 	}
 
 	/**
-	 * This test just shows that when the encoding is changed on the repository, synchronization does in fact return in
-	 * a different encoding (though it may not be legible)
+	 * This test just shows that when the encoding is changed on the repository, synchronization does in fact return in a different encoding
+	 * (though it may not be legible)
 	 */
 	public void testDifferentReportEncoding() throws Exception {
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "\u00E6", null);
@@ -78,7 +78,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		assertNotNull(data);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, data.getTaskId());
 		TasksUiPlugin.getTaskList().addTask(task);
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
 		String priority = null;

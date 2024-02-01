@@ -521,7 +521,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			boolean isObsolete, ITask task) {
 		TaskAttachment taskAttachment = new TaskAttachment(BugzillaFixture.current().repository(), task, taskAttribute);
 		data.getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
-		return (taskAttachment.isPatch() == isPatch) && (taskAttachment.isDeprecated() == isObsolete);
+		return taskAttachment.isPatch() == isPatch && taskAttachment.isDeprecated() == isObsolete;
 	}
 
 	public void testContextAttachFailure() throws Exception {

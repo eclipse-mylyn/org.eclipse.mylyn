@@ -27,9 +27,8 @@ import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.core.HtmlTag;
 
 /**
- * This is in place to escape & characters within the resource and rdf:about attributes. Currently the values are not
- * escaped which causes sax parser errors. This bug has been filed and can be found here:
- * https://bugzilla.mozilla.org/show_bug.cgi?id=264785
+ * This is in place to escape & characters within the resource and rdf:about attributes. Currently the values are not escaped which causes
+ * sax parser errors. This bug has been filed and can be found here: https://bugzilla.mozilla.org/show_bug.cgi?id=264785
  * 
  * @author Rob Elves
  */
@@ -62,9 +61,7 @@ public class XmlCleaner {
 			content.flush();
 			content.close();
 			return new BufferedReader(new FileReader(tempFile));
-		} catch (IOException e) {
-
-		} catch (ParseException e) {
+		} catch (IOException | ParseException e) {
 
 		}
 		return null;

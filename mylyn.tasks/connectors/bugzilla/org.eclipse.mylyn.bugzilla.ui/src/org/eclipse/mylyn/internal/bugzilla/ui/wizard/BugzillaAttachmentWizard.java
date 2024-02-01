@@ -15,10 +15,8 @@ package org.eclipse.mylyn.internal.bugzilla.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.action.ChangeAttachmentJob;
@@ -53,7 +51,6 @@ public class BugzillaAttachmentWizard extends Wizard {
 	public BugzillaAttachmentWizard(Shell parentShell, AttributeEditorFactory factory,
 			TaskAttribute attachmentAttribute, TaskEditor taskEditor, ITaskAttachment attachment,
 			String repositoryLabel) {
-		super();
 		this.factory = factory;
 		this.attachmentAttribute = attachmentAttribute;
 		this.parentShell = parentShell;
@@ -115,11 +112,7 @@ public class BugzillaAttachmentWizard extends Wizard {
 
 	private boolean runInWizard(final ChangeAttachmentJob job) {
 		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					job.run(monitor);
-				}
-			});
+			getContainer().run(true, true, monitor -> job.run(monitor));
 			return true;
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()

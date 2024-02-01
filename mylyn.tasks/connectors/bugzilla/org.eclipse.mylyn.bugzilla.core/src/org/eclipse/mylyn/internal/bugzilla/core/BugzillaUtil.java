@@ -30,8 +30,8 @@ public class BugzillaUtil {
 		boolean result;
 		String useParam = taskRepository.getProperty(propertyName);
 		result = trueIfUndefined
-				? (useParam == null || (useParam != null && useParam.equals("true"))) //$NON-NLS-1$
-				: (useParam != null && useParam.equals("true")); //$NON-NLS-1$
+				? useParam == null || useParam != null && useParam.equals("true") //$NON-NLS-1$
+				: useParam != null && useParam.equals("true"); //$NON-NLS-1$
 		return result;
 	}
 
@@ -54,13 +54,11 @@ public class BugzillaUtil {
 		}
 		if (BugzillaAttribute.QA_CONTACT.equals(tag)) {
 			attribute.getMetaData().setKind(null);
+		} else if (getParamValue(repositoryTaskData.getAttributeMapper().getTaskRepository(), propertyName,
+				defaultWhenNull)) {
+			attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 		} else {
-			if (getParamValue(repositoryTaskData.getAttributeMapper().getTaskRepository(), propertyName,
-					defaultWhenNull)) {
-				attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-			} else {
-				attribute.getMetaData().setKind(null);
-			}
+			attribute.getMetaData().setKind(null);
 		}
 	}
 
@@ -73,7 +71,7 @@ public class BugzillaUtil {
 	 */
 	public static boolean getTaskPropertyWithDefaultTrue(TaskRepository taskRepository, String property) {
 		String useParam = taskRepository.getProperty(property);
-		return (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
+		return useParam == null || useParam != null && useParam.equals("true"); //$NON-NLS-1$
 	}
 
 	private static final Pattern TIME_STAMP_PATTERN = Pattern

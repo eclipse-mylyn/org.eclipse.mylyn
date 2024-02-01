@@ -68,7 +68,7 @@ public class BugHistory {
 		private Revision(Date when, String who) {
 			this.when = when;
 			this.who = who;
-			this.changes = new ArrayList<Change>();
+			changes = new ArrayList<>();
 		}
 
 		public void addChange(String fieldName, String added, String removed, int attachmentId) {
@@ -95,7 +95,7 @@ public class BugHistory {
 
 	public BugHistory(int bugId) {
 		this.bugId = bugId;
-		this.revisions = new ArrayList<BugHistory.Revision>();
+		revisions = new ArrayList<>();
 	}
 
 	public Revision createRevision(Date when, String who) {

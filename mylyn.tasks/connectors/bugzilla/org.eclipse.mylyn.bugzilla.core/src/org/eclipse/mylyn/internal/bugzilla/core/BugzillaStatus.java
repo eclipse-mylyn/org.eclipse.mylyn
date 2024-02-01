@@ -36,32 +36,32 @@ public class BugzillaStatus extends Status {
 
 	public BugzillaStatus(int severity, String pluginId, int code) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
-		this.errorMessage = null;
-		this.htmlMessage = null;
-		this.userMatchResponse = null;
+		errorMessage = null;
+		htmlMessage = null;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String errorMessage) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
-		this.htmlMessage = null;
-		this.userMatchResponse = null;
+		htmlMessage = null;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
 		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.repositoryUrl = repositoryUrl;
-		this.errorMessage = e.getMessage();
-		this.htmlMessage = null;
-		this.userMatchResponse = null;
+		errorMessage = e.getMessage();
+		htmlMessage = null;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
-		this.htmlMessage = null;
-		this.userMatchResponse = null;
+		htmlMessage = null;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
@@ -69,8 +69,8 @@ public class BugzillaStatus extends Status {
 		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
-		this.htmlMessage = null;
-		this.userMatchResponse = null;
+		htmlMessage = null;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
@@ -78,8 +78,8 @@ public class BugzillaStatus extends Status {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
-		this.htmlMessage = body;
-		this.userMatchResponse = null;
+		htmlMessage = body;
+		userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
@@ -87,7 +87,7 @@ public class BugzillaStatus extends Status {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
-		this.htmlMessage = body;
+		htmlMessage = body;
 		this.userMatchResponse = userMatchResponse;
 	}
 
@@ -98,37 +98,37 @@ public class BugzillaStatus extends Status {
 	public String getMessage() {
 
 		switch (getCode()) {
-		case RepositoryStatus.ERROR_EMPTY_PASSWORD:
-			return NLS.bind(Messages.BugzillaStatus_emptyPassword, this.getRepositoryUrl(), this.errorMessage);
-		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
-			return NLS.bind(Messages.BugzillaStatus_repositoryLoginFailure, this.getRepositoryUrl(), this.errorMessage);
-		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
-			return NLS.bind(Messages.BugzillaStatus_repositoryNotFound, this.errorMessage);
-		case RepositoryStatus.ERROR_REPOSITORY:
-			return NLS.bind(Messages.BugzillaStatus_errorRepository, this.getRepositoryUrl(), this.errorMessage);
-		case RepositoryStatus.ERROR_IO:
-			String string1 = "Unknown IO error occurred"; //$NON-NLS-1$
-			String string2 = "No message provided"; //$NON-NLS-1$
-			if (getException() != null) {
-				string1 = getException().getClass().getSimpleName();
-				string2 = getException().getMessage();
-			}
-			Object[] strings = { getRepositoryUrl(), string1, string2 };
-			return NLS.bind(Messages.BugzillaStatus_errorIo, strings);
-		case RepositoryStatus.ERROR_INTERNAL:
-			return NLS.bind(Messages.BugzillaStatus_errorInternal, this.errorMessage);
-		case RepositoryStatus.OPERATION_CANCELLED:
-			return NLS.bind(Messages.BugzillaStatus_operationCancelled, this.errorMessage);
-		case RepositoryStatus.REPOSITORY_COLLISION:
-			return NLS.bind(Messages.BugzillaStatus_repositoryCollision, this.errorMessage);
-		case IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION:
-			return NLS.bind(Messages.BugzillaStatus_suspiciousAction, this.getRepositoryUrl(), this.errorMessage);
-		case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
-			if (errorMessage == null) {
-				return Messages.BugzillaStatus_repositoryCommentRequired;
-			} else {
-				return errorMessage;
-			}
+			case RepositoryStatus.ERROR_EMPTY_PASSWORD:
+				return NLS.bind(Messages.BugzillaStatus_emptyPassword, getRepositoryUrl(), errorMessage);
+			case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
+				return NLS.bind(Messages.BugzillaStatus_repositoryLoginFailure, getRepositoryUrl(), errorMessage);
+			case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
+				return NLS.bind(Messages.BugzillaStatus_repositoryNotFound, errorMessage);
+			case RepositoryStatus.ERROR_REPOSITORY:
+				return NLS.bind(Messages.BugzillaStatus_errorRepository, getRepositoryUrl(), errorMessage);
+			case RepositoryStatus.ERROR_IO:
+				String string1 = "Unknown IO error occurred"; //$NON-NLS-1$
+				String string2 = "No message provided"; //$NON-NLS-1$
+				if (getException() != null) {
+					string1 = getException().getClass().getSimpleName();
+					string2 = getException().getMessage();
+				}
+				Object[] strings = { getRepositoryUrl(), string1, string2 };
+				return NLS.bind(Messages.BugzillaStatus_errorIo, strings);
+			case RepositoryStatus.ERROR_INTERNAL:
+				return NLS.bind(Messages.BugzillaStatus_errorInternal, errorMessage);
+			case RepositoryStatus.OPERATION_CANCELLED:
+				return NLS.bind(Messages.BugzillaStatus_operationCancelled, errorMessage);
+			case RepositoryStatus.REPOSITORY_COLLISION:
+				return NLS.bind(Messages.BugzillaStatus_repositoryCollision, errorMessage);
+			case IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION:
+				return NLS.bind(Messages.BugzillaStatus_suspiciousAction, getRepositoryUrl(), errorMessage);
+			case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
+				if (errorMessage == null) {
+					return Messages.BugzillaStatus_repositoryCommentRequired;
+				} else {
+					return errorMessage;
+				}
 		}
 		if (errorMessage != null) {
 			return errorMessage;

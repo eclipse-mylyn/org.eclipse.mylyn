@@ -22,8 +22,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -49,6 +47,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+
+import junit.framework.TestCase;
 
 /**
  * Tests should be run against Bugzilla 3.2.4 or greater
@@ -133,9 +133,8 @@ public class BugzillaCustomFieldsTest extends TestCase {
 				blue_new = true;
 			}
 		}
-		assertTrue("wrong change",
-				(!red && green && !yellow && !blue && red_new && green_new && !yellow_new && !blue_new)
-						|| (red && green && !yellow && !blue && !red_new && green_new && !yellow_new && !blue_new));
+		assertTrue("wrong change", !red && green && !yellow && !blue && red_new && green_new && !yellow_new && !blue_new
+				|| red && green && !yellow && !blue && !red_new && green_new && !yellow_new && !blue_new);
 		changeCollorAndSubmit(taskData, colorAttribute, red_new, green_new, yellow_new, blue_new);
 
 	}
@@ -143,19 +142,19 @@ public class BugzillaCustomFieldsTest extends TestCase {
 	private void changeCollorAndSubmit(TaskData taskData, TaskAttribute colorAttribute, boolean red, boolean green,
 			boolean yellow, boolean blue) throws Exception {
 		if (!red && green && !yellow && !blue) {
-			List<String> newValue = new ArrayList<String>(2);
+			List<String> newValue = new ArrayList<>(2);
 			newValue.add("Red");
 			newValue.add("Green");
 			colorAttribute.setValues(newValue);
-			Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+			Set<TaskAttribute> changed = new HashSet<>();
 			changed.add(colorAttribute);
 			// Submit changes
 			BugzillaFixture.current().submitTask(taskData, BugzillaFixture.current().client());
 		} else if (red && green && !yellow && !blue) {
-			List<String> newValue = new ArrayList<String>(2);
+			List<String> newValue = new ArrayList<>(2);
 			newValue.add("Green");
 			colorAttribute.setValues(newValue);
-			Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+			Set<TaskAttribute> changed = new HashSet<>();
 			changed.add(colorAttribute);
 			// Submit changes
 			BugzillaFixture.current().submitTask(taskData, BugzillaFixture.current().client());
@@ -215,7 +214,7 @@ public class BugzillaCustomFieldsTest extends TestCase {
 	}
 
 	private void setFruitValueTo(String newValue) throws Exception {
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskAttribute cf_fruit = fruitTaskData.getRoot().getAttribute("cf_dropdown");
 		cf_fruit.setValue(newValue);
 		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue());
@@ -252,7 +251,7 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		RepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().repository().getConnectorKind(),
 				"handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -265,7 +264,7 @@ public class BugzillaCustomFieldsTest extends TestCase {
 						new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;

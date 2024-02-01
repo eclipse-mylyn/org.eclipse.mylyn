@@ -70,7 +70,7 @@ public class BugzillaFixture extends TestFixture {
 
 	private final Map<String, String> properties;
 
-	private final Map<String, String> defaultproperties = new HashMap<String, String>() {
+	private final Map<String, String> defaultproperties = new HashMap<>() {
 		private static final long serialVersionUID = 6995247925138693239L;
 
 		{
@@ -82,18 +82,18 @@ public class BugzillaFixture extends TestFixture {
 
 	public BugzillaFixture(FixtureConfiguration config) {
 		super(BugzillaCorePlugin.CONNECTOR_KIND, config.getUrl());
-		this.version = config.getVersion();
-		this.bugzillaVersion = new BugzillaVersion(version);
+		version = config.getVersion();
+		bugzillaVersion = new BugzillaVersion(version);
 		setInfo("Bugzilla", version, config.getInfo());
-		this.properties = config.getProperties();
+		properties = config.getProperties();
 	}
 
 	public BugzillaFixture(String url, String version, String info) {
 		super(BugzillaCorePlugin.CONNECTOR_KIND, url);
 		this.version = version;
-		this.bugzillaVersion = new BugzillaVersion(version);
+		bugzillaVersion = new BugzillaVersion(version);
 		setInfo("Bugzilla", version, info);
-		this.properties = null;
+		properties = null;
 	}
 
 	public BugzillaVersion getBugzillaVersion() {
@@ -151,9 +151,7 @@ public class BugzillaFixture extends TestFixture {
 				if (file != null) {
 					taskRepository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, file.getCanonicalPath());
 				}
-			} catch (AssertionFailedError a) {
-				// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
-			} catch (IOException e) {
+			} catch (AssertionFailedError | IOException e) {
 				// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
 			}
 		}

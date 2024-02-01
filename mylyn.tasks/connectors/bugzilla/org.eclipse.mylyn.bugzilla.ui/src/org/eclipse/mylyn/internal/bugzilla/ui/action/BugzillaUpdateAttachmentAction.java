@@ -48,17 +48,18 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 		this.obsolete = obsolete;
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = window.getActivePage();
 		IEditorPart activeEditor = page.getActiveEditor();
-		if (activeEditor instanceof TaskEditor) {
-			final TaskEditor taskEditor = (TaskEditor) activeEditor;
+		if (activeEditor instanceof final TaskEditor taskEditor) {
 			IStructuredSelection selection = null;
 			if (currentSelection instanceof IStructuredSelection) {
 				selection = (IStructuredSelection) currentSelection;
@@ -76,14 +77,9 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 					public void done(IJobChangeEvent event) {
 						if (job.getError() != null) {
 							IFormPage formPage = taskEditor.getActivePageInstance();
-							if (formPage instanceof BugzillaTaskEditorPage) {
-								final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										bugzillaPage.getTaskEditor()
-												.setMessage(job.getError().getMessage(), IMessageProvider.ERROR);
-									}
-								});
+							if (formPage instanceof final BugzillaTaskEditorPage bugzillaPage) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(() -> bugzillaPage.getTaskEditor()
+										.setMessage(job.getError().getMessage(), IMessageProvider.ERROR));
 							}
 						}
 					}
@@ -93,9 +89,10 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.currentSelection = selection;
+		currentSelection = selection;
 		IStructuredSelection sructuredSelection = null;
 		if (selection instanceof IStructuredSelection) {
 			sructuredSelection = (IStructuredSelection) currentSelection;

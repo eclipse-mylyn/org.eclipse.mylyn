@@ -16,8 +16,6 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -28,6 +26,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -42,8 +42,8 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		BugzillaFixture.current().client();
-		this.repository = BugzillaFixture.current().repository();
-		this.connector = BugzillaFixture.current().connector();
+		repository = BugzillaFixture.current().repository();
+		connector = BugzillaFixture.current().connector();
 //		this.connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 //				BugzillaCorePlugin.CONNECTOR_KIND);
 //		this.repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,

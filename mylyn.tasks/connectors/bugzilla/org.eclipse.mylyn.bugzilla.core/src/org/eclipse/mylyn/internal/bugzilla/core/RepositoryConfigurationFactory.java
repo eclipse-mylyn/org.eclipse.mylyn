@@ -47,15 +47,18 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	class SaxErrorHandler implements ErrorHandler {
 
+		@Override
 		public void error(SAXParseException exception) throws SAXException {
 			throw exception;
 		}
 
+		@Override
 		public void fatalError(SAXParseException exception) throws SAXException {
 			throw exception;
 
 		}
 
+		@Override
 		public void warning(SAXParseException exception) throws SAXException {
 			// ignore
 		}

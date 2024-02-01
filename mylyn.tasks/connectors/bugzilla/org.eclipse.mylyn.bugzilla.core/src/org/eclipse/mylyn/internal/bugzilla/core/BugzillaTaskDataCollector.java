@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaTaskDataCollector extends TaskDataCollector {
 
-	final Set<TaskData> taskDataCollected = new HashSet<TaskData>();
+	final Set<TaskData> taskDataCollected = new HashSet<>();
 
 	String queryTimestamp = null;
 

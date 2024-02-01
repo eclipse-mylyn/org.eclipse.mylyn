@@ -90,7 +90,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public List<LegendElement> getLegendElements() {
-		List<LegendElement> legendItems = new ArrayList<LegendElement>();
+		List<LegendElement> legendItems = new ArrayList<>();
 		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
 		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
@@ -112,7 +112,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 				return BugzillaImages.OVERLAY_MAJOR;
 			} else if ("enhancement".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_ENHANCEMENT;
-			} else if ("trivial".equals(severity)) { //$NON-NLS-1$ 
+			} else if ("trivial".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_TRIVIAL;
 			} else {
 				return null;
@@ -146,12 +146,10 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
 		if (query == null) {
 			wizard.addPage(new BugzillaQueryTypeWizardPage(repository));
+		} else if (isCustomQuery(query)) {
+			wizard.addPage(new BugzillaCustomQueryWizardPage(repository, query));
 		} else {
-			if (isCustomQuery(query)) {
-				wizard.addPage(new BugzillaCustomQueryWizardPage(repository, query));
-			} else {
-				wizard.addPage(new BugzillaSearchPage(repository, query));
-			}
+			wizard.addPage(new BugzillaSearchPage(repository, query));
 		}
 		return wizard;
 	}
@@ -187,7 +185,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		ArrayList<IHyperlink> hyperlinksFound = null;
 		Matcher mb = PATTERN_BUG.matcher(text);
 		while (mb.find()) {
-			if (index == -1 || (index >= mb.start() && index <= mb.end())) {
+			if (index == -1 || index >= mb.start() && index <= mb.end()) {
 				TaskHyperlink link = null;
 				if (mb.group(1) != null) {
 					// bug comment
@@ -205,7 +203,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 				if (link != null) {
 					if (hyperlinksFound == null) {
-						hyperlinksFound = new ArrayList<IHyperlink>();
+						hyperlinksFound = new ArrayList<>();
 					}
 					hyperlinksFound.add(link);
 				}
@@ -213,12 +211,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		}
 		Matcher ma = PATTERN_ATTACHMENT.matcher(text);
 		while (ma.find()) {
-			if (index == -1 || (index >= ma.start() && index <= ma.end())) {
+			if (index == -1 || index >= ma.start() && index <= ma.end()) {
 				// attachment
 				Region region = new Region(textOffset + ma.start(), ma.end() - ma.start());
 				TaskAttachmentHyperlink link0 = new TaskAttachmentHyperlink(region, repository, ma.group(1));
 				if (hyperlinksFound == null) {
-					hyperlinksFound = new ArrayList<IHyperlink>();
+					hyperlinksFound = new ArrayList<>();
 				}
 				hyperlinksFound.add(link0);
 				if (doAttachmentTableEditorHyperlink) {
@@ -227,7 +225,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			}
 		}
 
-		return (hyperlinksFound != null) ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
+		return hyperlinksFound != null ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
 	}
 
 }

@@ -43,7 +43,7 @@ public class BugzillaPeoplePart extends TaskEditorPeoplePart {
 	@Override
 	protected Collection<TaskAttribute> getAttributes() {
 		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
-		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		List<TaskAttribute> attributes = new ArrayList<>(allAttributes.size());
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
 		TaskAttribute assignee = getTaskData().getRoot().getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
 		if (assignee != null) {
@@ -76,12 +76,12 @@ public class BugzillaPeoplePart extends TaskEditorPeoplePart {
 	}
 
 	/**
-	 * Adds ADD_SELF_CC attribute. Does nothing if the repository does not have a valid username, the repository user is
-	 * the assignee, reporter or already on the the cc list.
+	 * Adds ADD_SELF_CC attribute. Does nothing if the repository does not have a valid username, the repository user is the assignee,
+	 * reporter or already on the the cc list.
 	 */
 	protected void addSelfToCC(Collection<TaskAttribute> attributes) {
 
-		TaskRepository repository = this.getTaskEditorPage().getTaskRepository();
+		TaskRepository repository = getTaskEditorPage().getTaskRepository();
 
 		if (repository.getUserName() == null) {
 			return;

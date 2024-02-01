@@ -13,19 +13,19 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+
+import junit.framework.TestCase;
 
 /**
  * @author Frank Becker
  */
-// TODO 3.5 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released 
+// TODO 3.5 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released
 public class BugzillaRepositoryConnectorConfigurationTest extends TestCase {
 
 	private TaskRepository repository;

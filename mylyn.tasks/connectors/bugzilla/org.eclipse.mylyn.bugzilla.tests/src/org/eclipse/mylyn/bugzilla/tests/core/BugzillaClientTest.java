@@ -211,7 +211,7 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 			query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=CONFIRMED&");
 		}
 
-		final Set<TaskData> returnedData = new HashSet<TaskData>();
+		final Set<TaskData> returnedData = new HashSet<>();
 
 		TaskDataCollector collector = new TaskDataCollector() {
 
@@ -242,7 +242,7 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
 		query.setUrl(urlBuilder.toString());
 
-		final Set<TaskData> returnedData = new HashSet<TaskData>();
+		final Set<TaskData> returnedData = new HashSet<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 
 			@Override

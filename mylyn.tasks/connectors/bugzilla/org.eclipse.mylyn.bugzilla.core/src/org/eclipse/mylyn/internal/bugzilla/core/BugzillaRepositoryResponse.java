@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
  */
 public class BugzillaRepositoryResponse extends RepositoryResponse {
 
-	private Map<String, Map<String, List<String>>> responseData = new LinkedHashMap<String, Map<String, List<String>>>();
+	private Map<String, Map<String, List<String>>> responseData = new LinkedHashMap<>();
 
 	public BugzillaRepositoryResponse(ResponseKind reposonseKind, String taskId) {
 		super(reposonseKind, taskId);
@@ -48,12 +48,12 @@ public class BugzillaRepositoryResponse extends RepositoryResponse {
 		Map<String, List<String>> responseMap = responseData.get(dt1);
 
 		if (responseMap == null) {
-			responseMap = new LinkedHashMap<String, List<String>>();
+			responseMap = new LinkedHashMap<>();
 			responseData.put(dt1, responseMap);
 		}
 		List<String> responseList = responseMap.get(dt2);
 		if (responseList == null) {
-			responseList = new LinkedList<String>();
+			responseList = new LinkedList<>();
 			responseMap.put(dt2, responseList);
 		}
 

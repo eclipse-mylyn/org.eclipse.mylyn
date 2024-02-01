@@ -37,11 +37,11 @@ public class BugzillaTaskEditorNewCommentPart extends TaskEditorNewCommentPart {
 
 				private void updateActionState(String newValue) {
 					if (newValue.equals("1")) { //$NON-NLS-1$
-						this.setImageDescriptor(TasksUiImages.LOCK_CLOSE);
-						this.setToolTipText(Messages.BugzillaTaskEditorNewCommentPart_privateComment);
+						setImageDescriptor(TasksUiImages.LOCK_CLOSE);
+						setToolTipText(Messages.BugzillaTaskEditorNewCommentPart_privateComment);
 					} else {
-						this.setImageDescriptor(TasksUiImages.LOCK_OPEN);
-						this.setToolTipText(Messages.BugzillaTaskEditorNewCommentPart_publicComment);
+						setImageDescriptor(TasksUiImages.LOCK_OPEN);
+						setToolTipText(Messages.BugzillaTaskEditorNewCommentPart_publicComment);
 					}
 
 				}

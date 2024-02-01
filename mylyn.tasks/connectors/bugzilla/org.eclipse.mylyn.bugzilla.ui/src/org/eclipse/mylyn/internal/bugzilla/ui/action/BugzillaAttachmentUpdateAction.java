@@ -65,10 +65,12 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 		super("BugzillaAttachmentDetailAction"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		IStructuredSelection selection = null;
 		if (currentSelection instanceof IStructuredSelection) {
@@ -83,12 +85,9 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 		IEditorPart activeEditor = page.getActiveEditor();
 		IWorkbenchPartSite site = activeEditor.getSite();
 		Shell shell = site.getShell();
-		if (activeEditor instanceof TaskEditor) {
-			final TaskEditor taskEditor = (TaskEditor) activeEditor;
+		if (activeEditor instanceof final TaskEditor taskEditor) {
 			IFormPage taskEditorPage = taskEditor.findPage("id"); //$NON-NLS-1$
-			if (taskEditorPage instanceof BugzillaTaskEditorPage) {
-				BugzillaTaskEditorPage bugzillaTaskEditorPage = (BugzillaTaskEditorPage) taskEditorPage;
-
+			if (taskEditorPage instanceof BugzillaTaskEditorPage bugzillaTaskEditorPage) {
 				ITask attachmentTask = attachment.getTask();
 				ITask nTask = new TaskTask(attachmentTask.getConnectorKind(), attachmentTask.getRepositoryUrl(),
 						attachmentTask.getTaskId() + "attachment"); //$NON-NLS-1$
@@ -168,9 +167,10 @@ public class BugzillaAttachmentUpdateAction extends BaseSelectionListenerAction 
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.currentSelection = selection;
+		currentSelection = selection;
 		IStructuredSelection sructuredSelection = null;
 		if (selection instanceof IStructuredSelection) {
 			sructuredSelection = (IStructuredSelection) currentSelection;

@@ -44,7 +44,7 @@ public class AbstractReportFactory {
 
 	public AbstractReportFactory(InputStream inStream, String encoding) {
 		this.inStream = inStream;
-		this.characterEncoding = encoding;
+		characterEncoding = encoding;
 	}
 
 	/**
@@ -93,31 +93,31 @@ public class AbstractReportFactory {
 			reader.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 			reader.setContentHandler(contentHandler);
 
-			EntityResolver resolver = new EntityResolver() {
-
-				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-					// The default resolver will try to resolve the dtd via
-					// URLConnection. Since we
-					// don't have need of entity resolving
-					// currently, we just supply a dummy (empty) resource for
-					// each request...
-					InputSource source = new InputSource();
-					source.setCharacterStream(new StringReader("")); //$NON-NLS-1$
-					return source;
-				}
+			EntityResolver resolver = (publicId, systemId) -> {
+				// The default resolver will try to resolve the dtd via
+				// URLConnection. Since we
+				// don't have need of entity resolving
+				// currently, we just supply a dummy (empty) resource for
+				// each request...
+				InputSource source = new InputSource();
+				source.setCharacterStream(new StringReader("")); //$NON-NLS-1$
+				return source;
 			};
 
 			reader.setEntityResolver(resolver);
 			reader.setErrorHandler(new ErrorHandler() {
 
+				@Override
 				public void error(SAXParseException exception) throws SAXException {
 					throw exception;
 				}
 
+				@Override
 				public void fatalError(SAXParseException exception) throws SAXException {
 					throw exception;
 				}
 
+				@Override
 				public void warning(SAXParseException exception) throws SAXException {
 					throw exception;
 				}

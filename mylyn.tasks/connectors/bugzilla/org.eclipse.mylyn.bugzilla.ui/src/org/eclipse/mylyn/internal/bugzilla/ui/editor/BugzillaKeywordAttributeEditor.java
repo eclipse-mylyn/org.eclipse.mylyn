@@ -34,7 +34,7 @@ public class BugzillaKeywordAttributeEditor extends CheckboxMultiSelectAttribute
 
 	@Override
 	public List<String> getValues() {
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList<>();
 		String selectedKeywords = getAttributeMapper().getValue(getTaskAttribute());
 		StringTokenizer st = new StringTokenizer(selectedKeywords, ",", false); //$NON-NLS-1$
 		while (st.hasMoreTokens()) {

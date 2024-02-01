@@ -16,8 +16,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -108,6 +106,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 
 		seeAlsoViewer.setContentProvider(ArrayContentProvider.getInstance());
 		seeAlsoViewer.addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				openseeAlso(event);
 			}
@@ -138,16 +137,13 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 
 			public String getColumnText(Object element, int columnIndex) {
 				String value = (String) element;
-				switch (columnIndex) {
-				case 0:
-					return null;
-				case 1:
-					return attrRemoveSeeAlso.getValues().contains(value)
-							? Messages.BugzillaSeeAlsoAttributeEditor_Yes
-							: Messages.BugzillaSeeAlsoAttributeEditor_No;
-				default:
-					return value;
-				}
+				return switch (columnIndex) {
+					case 0 -> null;
+					case 1 -> attrRemoveSeeAlso.getValues().contains(value)
+													? Messages.BugzillaSeeAlsoAttributeEditor_Yes
+													: Messages.BugzillaSeeAlsoAttributeEditor_No;
+					default -> value;
+				};
 			}
 
 			@Override
@@ -177,12 +173,10 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 		seeAlsoTable.getColumn(2).setWidth(maxSize);
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(openAction);
-				manager.add(copyURLToClipAction);
-				manager.add(toggelRemoveStateAction);
-			}
+		menuManager.addMenuListener(manager -> {
+			manager.add(openAction);
+			manager.add(copyURLToClipAction);
+			manager.add(toggelRemoveStateAction);
 		});
 		Menu menu = menuManager.createContextMenu(seeAlsoTable);
 		seeAlsoTable.setMenu(menu);
@@ -191,7 +185,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 	final Action copyURLToClipAction = new Action(Messages.BugzillaSeeAlsoAttributeEditor_CopyURL) {
 		@Override
 		public void run() {
-			StructuredSelection selection = ((StructuredSelection) seeAlsoViewer.getSelection());
+			StructuredSelection selection = (StructuredSelection) seeAlsoViewer.getSelection();
 			if (selection != null) {
 				Object firstElement = selection.getFirstElement();
 				if (firstElement != null) {
@@ -207,7 +201,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 	final Action openAction = new Action(Messages.BugzillaSeeAlsoAttributeEditor_Open) {
 		@Override
 		public void run() {
-			StructuredSelection selection = ((StructuredSelection) seeAlsoViewer.getSelection());
+			StructuredSelection selection = (StructuredSelection) seeAlsoViewer.getSelection();
 			if (selection != null) {
 				for (String url : (List<String>) selection.toList()) {
 					BrowserUtil.openUrl(url);
@@ -219,7 +213,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 	final Action toggelRemoveStateAction = new Action(Messages.BugzillaSeeAlsoAttributeEditor_ToggelRemoveState) {
 		@Override
 		public void run() {
-			StructuredSelection selection = ((StructuredSelection) seeAlsoViewer.getSelection());
+			StructuredSelection selection = (StructuredSelection) seeAlsoViewer.getSelection();
 			boolean changed = false;
 			if (selection != null) {
 				for (String url : (List<String>) selection.toList()) {

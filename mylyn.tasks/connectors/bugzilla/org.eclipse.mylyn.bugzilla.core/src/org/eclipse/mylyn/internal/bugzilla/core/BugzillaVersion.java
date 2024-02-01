@@ -110,6 +110,7 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 		return compareTo(v) < 0;
 	}
 
+	@Override
 	public int compareTo(BugzillaVersion v) {
 		if (major < v.major) {
 			return -1;

@@ -14,8 +14,6 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
@@ -34,6 +32,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -161,6 +161,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		repository2 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url2");
 		task = TasksUi.getRepositoryModel().createTask(repository1, "123");
 		detector.setContext(new IAdaptable() {
+			@Override
 			@SuppressWarnings("rawtypes")
 			public Object getAdapter(Class adapter) {
 				if (adapter == TaskRepository.class) {
@@ -192,7 +193,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 	}
 
 	private void setRepository(final TaskRepository repository) {
-		this.activeRepository = repository;
+		activeRepository = repository;
 	}
 
 	@Override

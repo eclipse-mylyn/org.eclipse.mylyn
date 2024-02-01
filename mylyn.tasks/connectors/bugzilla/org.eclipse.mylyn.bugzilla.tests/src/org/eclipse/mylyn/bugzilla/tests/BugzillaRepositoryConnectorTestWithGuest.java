@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -35,7 +36,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTest {
 
@@ -46,9 +46,9 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
-		this.client = BugzillaFixture.current().client(PrivilegeLevel.GUEST);
-		this.connector = BugzillaFixture.current().connector();
-		this.repository = BugzillaFixture.current().repository();
+		client = BugzillaFixture.current().client(PrivilegeLevel.GUEST);
+		connector = BugzillaFixture.current().connector();
+		repository = BugzillaFixture.current().repository();
 		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
@@ -92,7 +92,7 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -125,10 +125,10 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 			isPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 		}
 		definedIsPrivate.setValue("1"); //$NON-NLS-1$
-		isPrivate.setValue("1"); //$NON-NLS-1$ 
+		isPrivate.setValue("1"); //$NON-NLS-1$
 
 		model.attributeChanged(description);
-		changed = new HashSet<TaskAttribute>();
+		changed = new HashSet<>();
 		changed.clear();
 		changed.add(description);
 		workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);

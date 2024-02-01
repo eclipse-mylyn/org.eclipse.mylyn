@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -50,8 +49,6 @@ import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -195,38 +192,30 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				if (autodetectPlatformOS.isEnabled() && repositoryConfiguration == null
 						&& !autodetectPlatformOS.getSelection()) {
 					try {
-						getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+						getWizard().getContainer().run(true, false, monitor -> {
+try {
+						monitor.beginTask(
+								Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration,
+								IProgressMonitor.UNKNOWN);
+						BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+								.getRepositoryConnector(repository.getConnectorKind());
+						repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
+								monitor);
+						if (repositoryConfiguration != null) {
+							platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+							os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+							PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+								populatePlatformCombo();
+								populateOsCombo();
+							});
+						}
+} catch (CoreException e1) {
+						throw new InvocationTargetException(e1);
+} finally {
+						monitor.done();
+}
 
-							public void run(IProgressMonitor monitor)
-									throws InvocationTargetException, InterruptedException {
-								try {
-									monitor.beginTask(
-											Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration,
-											IProgressMonitor.UNKNOWN);
-									BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
-											.getRepositoryConnector(repository.getConnectorKind());
-									repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
-											monitor);
-									if (repositoryConfiguration != null) {
-										platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
-										os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
-										PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-											public void run() {
-												populatePlatformCombo();
-												populateOsCombo();
-											}
-										});
-									}
-								} catch (CoreException e) {
-									throw new InvocationTargetException(e);
-								} finally {
-									monitor.done();
-								}
-
-							}
-
-						});
+});
 					} catch (InvocationTargetException e1) {
 						if (e1.getCause() != null) {
 							setErrorMessage(e1.getCause().getMessage());
@@ -300,6 +289,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		Button browseDescriptor = new Button(descriptorComposite, SWT.PUSH);
 		browseDescriptor.setText(Messages.BugzillaRepositorySettingsPage_Browse_descriptor);
 		browseDescriptor.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(new Shell());
 				fd.setText(Messages.BugzillaRepositorySettingsPage_SelectDescriptorFile);
@@ -310,6 +300,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				}
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 
 			}
@@ -323,37 +314,31 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			public void widgetSelected(SelectionEvent e) {
 				final String[] fileName = new String[1];
 				try {
-					getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException {
-							if (monitor == null) {
-								monitor = new NullProgressMonitor();
-							}
-							String transFile = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
-									+ "/.metadata/.mylyn/bugzillaTrans/" + repository.getRepositoryLabel(); //$NON-NLS-1$
-							try {
-								BugzillaClient client = null;
+					getWizard().getContainer().run(true, true, monitor -> {
+if (monitor == null) {
+					monitor = new NullProgressMonitor();
+}
+String transFile = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
+						+ "/.metadata/.mylyn/bugzillaTrans/" + repository.getRepositoryLabel(); //$NON-NLS-1$
+try {
+					BugzillaClient client = null;
 
-								BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
-										.getRepositoryConnector(repository.getConnectorKind());
-								client = BugzillaClientFactory.createClient(repository, connector);
-								client.downloadXMLTransFile(transFile, monitor);
-								fileName[0] = transFile;
-							} catch (MalformedURLException e) {
-								fileName[0] = null;
-							} catch (IOException e) {
-								fileName[0] = null;
-							} catch (CoreException e) {
-								fileName[0] = null;
-							} finally {
-								monitor.done();
-							}
-						}
-
-					});
-				} catch (InvocationTargetException e1) {
+					BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+							.getRepositoryConnector(repository.getConnectorKind());
+					client = BugzillaClientFactory.createClient(repository, connector);
+					client.downloadXMLTransFile(transFile, monitor);
+					fileName[0] = transFile;
+} catch (MalformedURLException e1) {
 					fileName[0] = null;
-				} catch (InterruptedException e1) {
+} catch (IOException e2) {
+					fileName[0] = null;
+} catch (CoreException e3) {
+					fileName[0] = null;
+} finally {
+					monitor.done();
+}
+});
+				} catch (InvocationTargetException | InterruptedException e1) {
 					fileName[0] = null;
 				}
 				if (fileName[0] != null) {
@@ -364,12 +349,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(browseDescriptor);
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).grab(true, false).applyTo(autodetectXMLRPCFile);
 
-		descriptorFile.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				if (getWizard() != null) {
-					getWizard().getContainer().updateButtons();
-				}
+		descriptorFile.addModifyListener(e -> {
+			if (getWizard() != null) {
+				getWizard().getContainer().updateButtons();
 			}
 		});
 
@@ -382,7 +364,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 			//Set descriptor file
 			if (descriptorFile != null) {
-				String file = repository.getProperty((IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+				String file = repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
 				if (file != null) {
 					descriptorFile.setText(file);
 				}

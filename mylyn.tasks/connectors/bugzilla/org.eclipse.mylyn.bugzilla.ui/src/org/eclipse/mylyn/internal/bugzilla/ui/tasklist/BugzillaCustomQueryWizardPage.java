@@ -24,7 +24,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -60,16 +59,13 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		this(repository, null);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		setControl(composite);
 
-		ModifyListener modifyListener = new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				setPageComplete(isPageComplete());
-			}
-		};
+		ModifyListener modifyListener = e -> setPageComplete(isPageComplete());
 
 		final Label queryTitleLabel = new Label(composite, SWT.NONE);
 		queryTitleLabel.setText(Messages.BugzillaCustomQueryWizardPage_Query_Title);
@@ -124,7 +120,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		query.setSummary(this.getQueryTitle());
+		query.setSummary(getQueryTitle());
 		query.setUrl(queryText.getText());
 		query.setAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM, Boolean.TRUE.toString());
 	}

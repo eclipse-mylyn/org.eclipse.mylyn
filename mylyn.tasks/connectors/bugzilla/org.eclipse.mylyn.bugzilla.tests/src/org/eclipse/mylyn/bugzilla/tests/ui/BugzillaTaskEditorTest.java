@@ -14,8 +14,6 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -27,6 +25,8 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Jeff Pound

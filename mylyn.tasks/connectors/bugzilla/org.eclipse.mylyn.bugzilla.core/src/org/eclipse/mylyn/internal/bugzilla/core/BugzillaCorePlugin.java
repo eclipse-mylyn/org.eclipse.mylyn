@@ -33,7 +33,6 @@ public class BugzillaCorePlugin extends Plugin {
 	private BugzillaRepositoryConnector connector;
 
 	public BugzillaCorePlugin() {
-		super();
 	}
 
 	public static BugzillaCorePlugin getDefault() {
