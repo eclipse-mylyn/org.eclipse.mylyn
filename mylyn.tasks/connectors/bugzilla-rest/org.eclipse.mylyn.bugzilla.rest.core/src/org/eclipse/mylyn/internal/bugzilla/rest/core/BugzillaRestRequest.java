@@ -160,7 +160,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode == HttpStatus.SC_FORBIDDEN) {
-			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<>(
 					getClient().getLocation(), AuthenticationType.REPOSITORY);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request, true);
 		}
@@ -196,7 +196,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected ErrorResponse parseErrorResponseFromJson(InputStreamReader in) throws BugzillaRestException {
 
-		TypeToken<ErrorResponse> a = new TypeToken<ErrorResponse>() {
+		TypeToken<ErrorResponse> a = new TypeToken<>() {
 		};
 		return new Gson().fromJson(in, a.getType());
 	}

@@ -131,7 +131,7 @@ public class BugzillaRestHarness {
 	}
 
 	public TaskData getTaskFromServer(String taskId) throws BugzillaRestException, CoreException {
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskId);
 		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
 		connector().getClient(repository()).getTaskData(taskIds, repository(), singleTaskDataCollector, null);
@@ -171,7 +171,7 @@ public class BugzillaRestHarness {
 		String queryUrlString = repository().getRepositoryUrl() + "/bug?" + "short_desc=" + summary;
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -181,7 +181,7 @@ public class BugzillaRestHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		} else {
 			final TaskMapping taskMappingInit = new TaskMapping() {
@@ -217,7 +217,7 @@ public class BugzillaRestHarness {
 	}
 
 	public String[] getRelationTasks() throws BugzillaRestException, CoreException {
-		List<String> result = new ArrayList<String>(3);
+		List<String> result = new ArrayList<>(3);
 		result.add(getTaksId4RelationTask1());
 		result.add(getTaksId4RelationTask2());
 		result.add(getTaksId4RelationTask3());

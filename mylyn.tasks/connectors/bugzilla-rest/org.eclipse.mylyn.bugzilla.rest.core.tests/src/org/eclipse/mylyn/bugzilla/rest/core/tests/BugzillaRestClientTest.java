@@ -109,7 +109,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	private BugzillaRestHarness harness;
 
 	public BugzillaRestClientTest(BugzillaRestTestFixture fixture) {
-		this.actualFixture = fixture;
+		actualFixture = fixture;
 	}
 
 	@Before
@@ -118,6 +118,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		harness = actualFixture.createHarness();
 	}
 
+	@Override
 	public AbstractTestFixture getActualFixture() {
 		return actualFixture;
 	}
@@ -256,7 +257,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {
-		List<String> fieldNameList = new ArrayList<String>(fields.size());
+		List<String> fieldNameList = new ArrayList<>(fields.size());
 		for (Field field : fields) {
 			fieldNameList.add(field.getName());
 		}
@@ -579,7 +580,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
@@ -637,7 +638,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey());
@@ -806,7 +807,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 	private TaskData getTaskData(final String taskId) throws CoreException, BugzillaRestException {
 		BugzillaRestClient client = connector.getClient(actualFixture.repository());
-		final Map<String, TaskData> results = new HashMap<String, TaskData>();
+		final Map<String, TaskData> results = new HashMap<>();
 		client.getTaskData(new HashSet<String>() {
 			private static final long serialVersionUID = 1L;
 
@@ -989,7 +990,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().ADD_CC.getKey());
@@ -1038,7 +1039,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
@@ -1085,7 +1086,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
@@ -1135,7 +1136,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
@@ -1183,7 +1184,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
@@ -1233,35 +1234,33 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 		for (TaskAttribute attribute : taskDataGet.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
 				boolean found;
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
-					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						state.setValue("-");
-						found = true;
-						break;
-					case "BugFlag2":
-						state.setValue("?");
-						found = true;
-						break;
-					case "BugFlag3":
-						state.setValue("+");
-						found = true;
-						break;
-					case "BugFlag4":
-						state.setValue("?");
-						attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
-						found = true;
-						break;
-					default:
-						found = false;
-						break;
-					}
+					found = switch (state.getMetaData().getLabel()) {
+						case "BugFlag1" -> {
+							state.setValue("-");
+							yield true;
+						}
+						case "BugFlag2" -> {
+							state.setValue("?");
+							yield true;
+						}
+						case "BugFlag3" -> {
+							state.setValue("+");
+							yield true;
+						}
+						case "BugFlag4" -> {
+							state.setValue("?");
+							attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
+							yield true;
+						}
+						default -> false;
+					};
 					if (found) {
 						changed.add(taskDataOld.getRoot().getAttribute(attribute.getId()));
 					}
@@ -1284,60 +1283,60 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
 					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						assertEquals("-", state.getValue());
-						assertEquals("[, -, +]", state.getOptions().values().toString());
-						assertEquals("1", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						break;
-					case "BugFlag2":
-						assertEquals("?", state.getValue());
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("2", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						break;
-					case "BugFlag3":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("+", state.getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertEquals(attribute.getAttribute("creationDate").getValue(),
-									attribute.getAttribute("modificationDate").getValue());
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("5", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						break;
-					case "BugFlag4":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
+						case "BugFlag1":
+							assertEquals("-", state.getValue());
+							assertEquals("[, -, +]", state.getOptions().values().toString());
+							assertEquals("1", attribute.getAttribute("typeId").getValue());
 							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("?", state.getValue());
 							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
 							assertEquals(attribute.getAttribute("creationDate").getValue(),
 									attribute.getAttribute("modificationDate").getValue());
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("6", attribute.getAttribute("typeId").getValue());
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						break;
+							break;
+						case "BugFlag2":
+							assertEquals("?", state.getValue());
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("2", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							assertEquals(attribute.getAttribute("creationDate").getValue(),
+									attribute.getAttribute("modificationDate").getValue());
+							break;
+						case "BugFlag3":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("+", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("5", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							break;
+						case "BugFlag4":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("?", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("6", attribute.getAttribute("typeId").getValue());
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							break;
 					}
 				}
 			}
@@ -1351,35 +1350,33 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 		for (TaskAttribute attribute : taskDataGet.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
 				boolean found;
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
-					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						state.setValue("-");
-						found = true;
-						break;
-					case "BugFlag2":
-						state.setValue("?");
-						found = true;
-						break;
-					case "BugFlag3":
-						state.setValue("+");
-						found = true;
-						break;
-					case "BugFlag4":
-						state.setValue("?");
-						attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
-						found = true;
-						break;
-					default:
-						found = false;
-						break;
-					}
+					found = switch (state.getMetaData().getLabel()) {
+						case "BugFlag1" -> {
+							state.setValue("-");
+							yield true;
+						}
+						case "BugFlag2" -> {
+							state.setValue("?");
+							yield true;
+						}
+						case "BugFlag3" -> {
+							state.setValue("+");
+							yield true;
+						}
+						case "BugFlag4" -> {
+							state.setValue("?");
+							attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
+							yield true;
+						}
+						default -> false;
+					};
 					if (found) {
 						changed.add(taskDataOld.getRoot().getAttribute(attribute.getId()));
 					}
@@ -1393,7 +1390,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
 		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
-		Set<TaskAttribute> changedUpdate = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changedUpdate = new HashSet<>();
 		TaskData taskDataOldUpdate = TaskDataState.createCopy(taskDataUpdate);
 		for (TaskAttribute attribute : taskDataUpdate.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG)) {
@@ -1401,69 +1398,69 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				if (state != null) {
 					boolean found;
 					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						assertEquals("-", state.getValue());
-						assertEquals("[, -, +]", state.getOptions().values().toString());
-						assertEquals("1", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						state.setValue(" ");
-						found = true;
-						break;
-					case "BugFlag2":
-						assertEquals("?", state.getValue());
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("2", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						state.setValue(" ");
-						found = true;
-						break;
-					case "BugFlag3":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("+", state.getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertEquals(attribute.getAttribute("creationDate").getValue(),
-									attribute.getAttribute("modificationDate").getValue());
-							state.setValue(" ");
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("5", attribute.getAttribute("typeId").getValue());
-						found = true;
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						break;
-					case "BugFlag4":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
+						case "BugFlag1":
+							assertEquals("-", state.getValue());
+							assertEquals("[, -, +]", state.getOptions().values().toString());
+							assertEquals("1", attribute.getAttribute("typeId").getValue());
 							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("?", state.getValue());
 							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
 							assertEquals(attribute.getAttribute("creationDate").getValue(),
 									attribute.getAttribute("modificationDate").getValue());
 							state.setValue(" ");
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("6", attribute.getAttribute("typeId").getValue());
-						found = true;
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						found = false;
-						break;
+							found = true;
+							break;
+						case "BugFlag2":
+							assertEquals("?", state.getValue());
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("2", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							assertEquals(attribute.getAttribute("creationDate").getValue(),
+									attribute.getAttribute("modificationDate").getValue());
+							state.setValue(" ");
+							found = true;
+							break;
+						case "BugFlag3":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("+", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+								state.setValue(" ");
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("5", attribute.getAttribute("typeId").getValue());
+							found = true;
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							break;
+						case "BugFlag4":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("?", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+								state.setValue(" ");
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("6", attribute.getAttribute("typeId").getValue());
+							found = true;
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							found = false;
+							break;
 					}
 					if (found) {
 						changedUpdate.add(taskDataOldUpdate.getRoot().getAttribute(attribute.getId()));
@@ -1485,49 +1482,49 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
 					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "1", attribute.getId());
-						assertEquals(" ", state.getValue());
-						assertEquals("[, -, +]", state.getOptions().values().toString());
-						assertEquals("1", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("", attribute.getAttribute("setter").getValue());
-						assertNull(attribute.getAttribute("creationDate"));
-						assertNull(attribute.getAttribute("modificationDate"));
-						break;
-					case "BugFlag2":
-						assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "2", attribute.getId());
-						assertEquals(" ", state.getValue());
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("2", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("", attribute.getAttribute("setter").getValue());
-						assertNull(attribute.getAttribute("creationDate"));
-						assertNull(attribute.getAttribute("modificationDate"));
-						break;
-					case "BugFlag3":
-						assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "5", attribute.getId());
-						assertEquals(" ", state.getValue());
-						assertEquals("", attribute.getAttribute("setter").getValue());
-						assertNull(attribute.getAttribute("creationDate"));
-						assertNull(attribute.getAttribute("modificationDate"));
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("5", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						break;
-					case "BugFlag4":
-						assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "6", attribute.getId());
-						assertEquals(" ", state.getValue());
-						assertEquals("", attribute.getAttribute("setter").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertNull(attribute.getAttribute("creationDate"));
-						assertNull(attribute.getAttribute("modificationDate"));
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("6", attribute.getAttribute("typeId").getValue());
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						break;
+						case "BugFlag1":
+							assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "1", attribute.getId());
+							assertEquals(" ", state.getValue());
+							assertEquals("[, -, +]", state.getOptions().values().toString());
+							assertEquals("1", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("", attribute.getAttribute("setter").getValue());
+							assertNull(attribute.getAttribute("creationDate"));
+							assertNull(attribute.getAttribute("modificationDate"));
+							break;
+						case "BugFlag2":
+							assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "2", attribute.getId());
+							assertEquals(" ", state.getValue());
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("2", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("", attribute.getAttribute("setter").getValue());
+							assertNull(attribute.getAttribute("creationDate"));
+							assertNull(attribute.getAttribute("modificationDate"));
+							break;
+						case "BugFlag3":
+							assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "5", attribute.getId());
+							assertEquals(" ", state.getValue());
+							assertEquals("", attribute.getAttribute("setter").getValue());
+							assertNull(attribute.getAttribute("creationDate"));
+							assertNull(attribute.getAttribute("modificationDate"));
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("5", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							break;
+						case "BugFlag4":
+							assertEquals(IBugzillaRestConstants.KIND_FLAG_TYPE + "6", attribute.getId());
+							assertEquals(" ", state.getValue());
+							assertEquals("", attribute.getAttribute("setter").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertNull(attribute.getAttribute("creationDate"));
+							assertNull(attribute.getAttribute("modificationDate"));
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("6", attribute.getAttribute("typeId").getValue());
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							break;
 					}
 				}
 			}
@@ -1541,35 +1538,33 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 		for (TaskAttribute attribute : taskDataGet.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
 				boolean found;
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
-					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						state.setValue("-");
-						found = true;
-						break;
-					case "BugFlag2":
-						state.setValue("?");
-						found = true;
-						break;
-					case "BugFlag3":
-						state.setValue("+");
-						found = true;
-						break;
-					case "BugFlag4":
-						state.setValue("?");
-						attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
-						found = true;
-						break;
-					default:
-						found = false;
-						break;
-					}
+					found = switch (state.getMetaData().getLabel()) {
+						case "BugFlag1" -> {
+							state.setValue("-");
+							yield true;
+						}
+						case "BugFlag2" -> {
+							state.setValue("?");
+							yield true;
+						}
+						case "BugFlag3" -> {
+							state.setValue("+");
+							yield true;
+						}
+						case "BugFlag4" -> {
+							state.setValue("?");
+							attribute.getAttribute("requestee").setValue("admin@mylyn.eclipse.org");
+							yield true;
+						}
+						default -> false;
+					};
 					if (found) {
 						changed.add(taskDataOld.getRoot().getAttribute(attribute.getId()));
 					}
@@ -1583,7 +1578,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
 		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
-		Set<TaskAttribute> changedUpdate = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changedUpdate = new HashSet<>();
 		TaskData taskDataOldUpdate = TaskDataState.createCopy(taskDataUpdate);
 		for (TaskAttribute attribute : taskDataUpdate.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG)) {
@@ -1591,69 +1586,69 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				if (state != null) {
 					boolean found;
 					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						assertEquals("-", state.getValue());
-						assertEquals("[, -, +]", state.getOptions().values().toString());
-						assertEquals("1", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						state.setValue("+");
-						found = true;
-						break;
-					case "BugFlag2":
-						assertEquals("?", state.getValue());
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("2", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertEquals(attribute.getAttribute("creationDate").getValue(),
-								attribute.getAttribute("modificationDate").getValue());
-						state.setValue("-");
-						found = true;
-						break;
-					case "BugFlag3":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("+", state.getValue());
+						case "BugFlag1":
+							assertEquals("-", state.getValue());
+							assertEquals("[, -, +]", state.getOptions().values().toString());
+							assertEquals("1", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							assertEquals(attribute.getAttribute("creationDate").getValue(),
+									attribute.getAttribute("modificationDate").getValue());
+							state.setValue("+");
+							found = true;
+							break;
+						case "BugFlag2":
+							assertEquals("?", state.getValue());
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("2", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
 							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
 							assertEquals(attribute.getAttribute("creationDate").getValue(),
 									attribute.getAttribute("modificationDate").getValue());
 							state.setValue("-");
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("5", attribute.getAttribute("typeId").getValue());
-						found = true;
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						break;
-					case "BugFlag4":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
+							found = true;
+							break;
+						case "BugFlag3":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("+", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+								state.setValue("-");
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("5", attribute.getAttribute("typeId").getValue());
+							found = true;
 							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("?", state.getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
-							assertEquals(attribute.getAttribute("creationDate").getValue(),
-									attribute.getAttribute("modificationDate").getValue());
-							state.setValue("+");
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("6", attribute.getAttribute("typeId").getValue());
-						found = true;
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						found = false;
-						break;
+							break;
+						case "BugFlag4":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("?", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals("admin@mylyn.eclipse.org", attribute.getAttribute("requestee").getValue());
+								assertEquals(attribute.getAttribute("creationDate").getValue(),
+										attribute.getAttribute("modificationDate").getValue());
+								state.setValue("+");
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("6", attribute.getAttribute("typeId").getValue());
+							found = true;
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							found = false;
+							break;
 					}
 					if (found) {
 						changedUpdate.add(taskDataOldUpdate.getRoot().getAttribute(attribute.getId()));
@@ -1675,60 +1670,60 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
 					switch (state.getMetaData().getLabel()) {
-					case "BugFlag1":
-						assertEquals("+", state.getValue());
-						assertEquals("[, -, +]", state.getOptions().values().toString());
-						assertEquals("1", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertThat(attribute.getAttribute("modificationDate").getValue(),
-								greaterThan(attribute.getAttribute("creationDate").getValue()));
-						break;
-					case "BugFlag2":
-						assertEquals("-", state.getValue());
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("2", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						assertThat(attribute.getAttribute("modificationDate").getValue(),
-								greaterThan(attribute.getAttribute("creationDate").getValue()));
-						break;
-					case "BugFlag3":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
-							assertEquals("-", state.getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-							assertThat(attribute.getAttribute("modificationDate").getValue(),
-									greaterThan(attribute.getAttribute("creationDate").getValue()));
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("5", attribute.getAttribute("typeId").getValue());
-						assertEquals("", attribute.getAttribute("requestee").getValue());
-						break;
-					case "BugFlag4":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("", attribute.getAttribute("setter").getValue());
-							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertNull(attribute.getAttribute("creationDate"));
-							assertNull(attribute.getAttribute("modificationDate"));
-						} else {
+						case "BugFlag1":
 							assertEquals("+", state.getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							assertEquals("[, -, +]", state.getOptions().values().toString());
+							assertEquals("1", attribute.getAttribute("typeId").getValue());
 							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
 							assertThat(attribute.getAttribute("modificationDate").getValue(),
 									greaterThan(attribute.getAttribute("creationDate").getValue()));
-						}
-						assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-						assertEquals("6", attribute.getAttribute("typeId").getValue());
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						break;
+							break;
+						case "BugFlag2":
+							assertEquals("-", state.getValue());
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("2", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							assertThat(attribute.getAttribute("modificationDate").getValue(),
+									greaterThan(attribute.getAttribute("creationDate").getValue()));
+							break;
+						case "BugFlag3":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("-", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertThat(attribute.getAttribute("modificationDate").getValue(),
+										greaterThan(attribute.getAttribute("creationDate").getValue()));
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("5", attribute.getAttribute("typeId").getValue());
+							assertEquals("", attribute.getAttribute("requestee").getValue());
+							break;
+						case "BugFlag4":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("", attribute.getAttribute("setter").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertNull(attribute.getAttribute("creationDate"));
+								assertNull(attribute.getAttribute("modificationDate"));
+							} else {
+								assertEquals("+", state.getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertThat(attribute.getAttribute("modificationDate").getValue(),
+										greaterThan(attribute.getAttribute("creationDate").getValue()));
+							}
+							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+							assertEquals("6", attribute.getAttribute("typeId").getValue());
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							break;
 					}
 				}
 			}
@@ -1827,37 +1822,37 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				TaskAttribute state = attribute.getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
 				if (state != null) {
 					switch (state.getMetaData().getLabel()) {
-					case "AttachmentFlag1":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-							assertEquals("3", attribute.getAttribute("typeId").getValue());
-							assertEquals("", attribute.getAttribute("requestee").getValue());
-						} else {
-							assertEquals("+", state.getValue());
-							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-							assertEquals("3", attribute.getAttribute("typeId").getValue());
-							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						}
-						break;
-					case "AttachmentFlag2":
-						if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
-							assertEquals(" ", state.getValue());
-							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-							assertEquals("4", attribute.getAttribute("typeId").getValue());
-							assertEquals("", attribute.getAttribute("requestee").getValue());
-						} else {
-							assertEquals("-", state.getValue());
-							assertEquals("[, ?, -, +]", state.getOptions().values().toString());
-							assertEquals("4", attribute.getAttribute("typeId").getValue());
-							assertEquals("", attribute.getAttribute("requestee").getValue());
-							assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
-						}
-						break;
-					default:
-						fail("No flag with name " + state.getMetaData().getLabel());
-						break;
+						case "AttachmentFlag1":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+								assertEquals("3", attribute.getAttribute("typeId").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+							} else {
+								assertEquals("+", state.getValue());
+								assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+								assertEquals("3", attribute.getAttribute("typeId").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							}
+							break;
+						case "AttachmentFlag2":
+							if (attribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+								assertEquals(" ", state.getValue());
+								assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+								assertEquals("4", attribute.getAttribute("typeId").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+							} else {
+								assertEquals("-", state.getValue());
+								assertEquals("[, ?, -, +]", state.getOptions().values().toString());
+								assertEquals("4", attribute.getAttribute("typeId").getValue());
+								assertEquals("", attribute.getAttribute("requestee").getValue());
+								assertEquals("tests@mylyn.eclipse.org", attribute.getAttribute("setter").getValue());
+							}
+							break;
+						default:
+							fail("No flag with name " + state.getMetaData().getLabel());
+							break;
 					}
 				}
 			}

@@ -213,27 +213,28 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	private String getAttributeTypFromFieldTyp(int fieldTyp) throws CoreException {
-		switch (fieldTyp) {
-		case 1://Free Text
-			return TaskAttribute.TYPE_SHORT_TEXT;
-		case 2: //DropDown
-			return TaskAttribute.TYPE_SINGLE_SELECT;
-		case 3: //Multiple-Selection Box
-			return TaskAttribute.TYPE_MULTI_SELECT;
-		case 4: //Large Text Box
-			return TaskAttribute.TYPE_LONG_TEXT;
-		case 5: //Date/Time
-			return TaskAttribute.TYPE_DATETIME;
-		case 6: //Bug Id
-			return TaskAttribute.TYPE_INTEGER;
-		case 7: //Bug URLs
-			return TaskAttribute.TYPE_URL;
-		default:
-			Status status = new Status(IStatus.INFO, BugzillaRestCore.ID_PLUGIN,
-					"unknown custom field type " + fieldTyp);
-			StatusHandler.log(status);
-			throw new CoreException(status);
-		}
+		return switch (fieldTyp) {
+			case 1://Free Text
+				yield TaskAttribute.TYPE_SHORT_TEXT;
+			case 2: //DropDown
+				yield TaskAttribute.TYPE_SINGLE_SELECT;
+			case 3: //Multiple-Selection Box
+				yield TaskAttribute.TYPE_MULTI_SELECT;
+			case 4: //Large Text Box
+				yield TaskAttribute.TYPE_LONG_TEXT;
+			case 5: //Date/Time
+				yield TaskAttribute.TYPE_DATETIME;
+			case 6: //Bug Id
+				yield TaskAttribute.TYPE_INTEGER;
+			case 7: //Bug URLs
+				yield TaskAttribute.TYPE_URL;
+			default: {
+				Status status = new Status(IStatus.INFO, BugzillaRestCore.ID_PLUGIN,
+						"unknown custom field type " + fieldTyp);
+				StatusHandler.log(status);
+				throw new CoreException(status);
+			}
+		};
 	}
 
 	private String mapTaskAttributeKey2ConfigurationFields(String taskAttributeKey) {
@@ -305,7 +306,7 @@ public class BugzillaRestConfiguration implements Serializable {
 	public boolean setProductOptions(@NonNull TaskData taskData) {
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
 		if (attributeProduct != null) {
-			SortedSet<String> products = new TreeSet<String>();
+			SortedSet<String> products = new TreeSet<>();
 			Field configFieldComponent = getFieldWithName("component"); //$NON-NLS-1$
 			FieldValues[] val = configFieldComponent.getValues();
 			if (val != null && val.length > 0) {
@@ -401,8 +402,8 @@ public class BugzillaRestConfiguration implements Serializable {
 		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
 		Field status = getFieldWithName("bug_status");
 		for (FieldValues fieldValues : status.getValues()) {
-			if (((attributeStatusValue == null || attributeStatusValue.isEmpty()) && fieldValues.getName() == null)
-					|| (attributeStatusValue != null && attributeStatusValue.equals(fieldValues.getName()))) {
+			if ((attributeStatusValue == null || attributeStatusValue.isEmpty()) && fieldValues.getName() == null
+					|| attributeStatusValue != null && attributeStatusValue.equals(fieldValues.getName())) {
 				for (StatusTransition statusTransition : fieldValues.getCanChangeTo()) {
 					attribute = bugReport.getRoot()
 							.createAttribute(TaskAttribute.PREFIX_OPERATION + statusTransition.name);
@@ -438,7 +439,7 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	public boolean updateFlags(@NonNull TaskData taskData) {
-		List<String> existingFlags = new ArrayList<String>();
+		List<String> existingFlags = new ArrayList<>();
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
 		TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
 		Product actualProduct = getProductWithName(attributeProduct.getValue());
@@ -448,7 +449,7 @@ public class BugzillaRestConfiguration implements Serializable {
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
 			if (attribute.getId().startsWith(TaskAttribute.PREFIX_ATTACHMENT)
 					|| attribute.getId().equals(TaskAttribute.NEW_ATTACHMENT)) {
-				List<String> existingAttachmentFlags = new ArrayList<String>();
+				List<String> existingAttachmentFlags = new ArrayList<>();
 				for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
 					updateFlag(flagTypes.getAttachment(), existingAttachmentFlags, attachmentAttribute);
 				}
@@ -485,7 +486,7 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	public void addMissingFlags(TaskData taskData) {
-		List<String> existingFlags = new ArrayList<String>();
+		List<String> existingFlags = new ArrayList<>();
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
 		TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
 		if (attributeProduct.getValue().equals("") || attributeComponent.getValue().equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -543,7 +544,7 @@ public class BugzillaRestConfiguration implements Serializable {
 		Component actualComponent = getProductComponentWithName(actualProduct, attributeComponent.getValue());
 		FlagTypes flagTypes = actualComponent.getFlagTypes();
 
-		List<String> existingAttachmentFlags = new ArrayList<String>();
+		List<String> existingAttachmentFlags = new ArrayList<>();
 		for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
 			updateFlag(flagTypes.getAttachment(), existingAttachmentFlags, attachmentAttribute);
 		}

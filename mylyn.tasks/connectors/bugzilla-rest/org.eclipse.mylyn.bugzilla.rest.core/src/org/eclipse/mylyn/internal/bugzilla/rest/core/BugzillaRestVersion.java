@@ -84,6 +84,7 @@ public class BugzillaRestVersion implements Comparable<BugzillaRestVersion>, Ser
 		return compareTo(v) < 0;
 	}
 
+	@Override
 	public int compareTo(BugzillaRestVersion v) {
 		if (major < v.major) {
 			return -1;

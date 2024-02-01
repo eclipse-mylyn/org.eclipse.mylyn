@@ -65,7 +65,7 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 
 	@Override
 	protected List<TaskData> parseFromJson(InputStreamReader in) throws BugzillaRestException {
-		TypeToken<List<TaskData>> type = new TypeToken<List<TaskData>>() {
+		TypeToken<List<TaskData>> type = new TypeToken<>() {
 		};
 		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
 				.create()
@@ -102,7 +102,7 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 		@Override
 		public ArrayList<TaskData> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
-			ArrayList<TaskData> response = new ArrayList<TaskData>();
+			ArrayList<TaskData> response = new ArrayList<>();
 			BugzillaRestTaskDataHandler dataHandler = (BugzillaRestTaskDataHandler) connector.getTaskDataHandler();
 			TaskAttributeMapper mapper = dataHandler.getAttributeMapper(taskRepository);
 			for (JsonElement bug : json.getAsJsonObject().get("bugs").getAsJsonArray()) { //$NON-NLS-1$

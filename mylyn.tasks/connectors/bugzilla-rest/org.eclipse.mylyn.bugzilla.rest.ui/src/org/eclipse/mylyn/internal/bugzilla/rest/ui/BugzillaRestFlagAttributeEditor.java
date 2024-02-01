@@ -33,8 +33,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.MouseTrackListener;
@@ -201,16 +199,14 @@ public class BugzillaRestFlagAttributeEditor extends AbstractAttributeEditor {
 					@Override
 					public void mouseExit(MouseEvent e) {
 						final int lastVersion = version;
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								if (version != lastVersion || selfLink.isDisposed()) {
-									return;
-								}
-								selfLink.setImage(null);
-								selfLink.redraw();
-								((GridData) selfLink.getLayoutData()).exclude = true;
-								requesteeComposite.layout();
+						Display.getDefault().asyncExec(() -> {
+							if (version != lastVersion || selfLink.isDisposed()) {
+								return;
 							}
+							selfLink.setImage(null);
+							selfLink.redraw();
+							((GridData) selfLink.getLayoutData()).exclude = true;
+							requesteeComposite.layout();
 						});
 					}
 				};
@@ -223,6 +219,7 @@ public class BugzillaRestFlagAttributeEditor extends AbstractAttributeEditor {
 
 				requesteeText.addKeyListener(new KeyListener() {
 
+					@Override
 					public void keyReleased(KeyEvent e) {
 						try {
 							suppressRefresh = true;
@@ -232,18 +229,16 @@ public class BugzillaRestFlagAttributeEditor extends AbstractAttributeEditor {
 						}
 					}
 
+					@Override
 					public void keyPressed(KeyEvent e) {
 					}
 				});
-				requesteeText.addModifyListener(new ModifyListener() {
-
-					public void modifyText(ModifyEvent e) {
-						try {
-							suppressRefresh = true;
-							setRequestee(requesteeText.getText());
-						} finally {
-							suppressRefresh = false;
-						}
+				requesteeText.addModifyListener(e -> {
+					try {
+						suppressRefresh = true;
+						setRequestee(requesteeText.getText());
+					} finally {
+						suppressRefresh = false;
 					}
 				});
 				toolkit.adapt(requesteeText, false, false);

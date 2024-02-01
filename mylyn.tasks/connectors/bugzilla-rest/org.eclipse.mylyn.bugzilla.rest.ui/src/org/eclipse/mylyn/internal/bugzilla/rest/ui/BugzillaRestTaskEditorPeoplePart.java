@@ -34,7 +34,7 @@ public class BugzillaRestTaskEditorPeoplePart extends TaskEditorPeoplePart {
 	@Override
 	protected Collection<TaskAttribute> getAttributes() {
 		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
-		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		List<TaskAttribute> attributes = new ArrayList<>(allAttributes.size());
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
 		attributes.add(getTaskData().getRoot()
 				.getMappedAttribute(BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey()));
@@ -56,7 +56,7 @@ public class BugzillaRestTaskEditorPeoplePart extends TaskEditorPeoplePart {
 		if (getTaskData().isNew()) {
 			return;
 		}
-		TaskRepository repository = this.getTaskEditorPage().getTaskRepository();
+		TaskRepository repository = getTaskEditorPage().getTaskRepository();
 
 		if (repository.getUserName() == null) {
 			return;

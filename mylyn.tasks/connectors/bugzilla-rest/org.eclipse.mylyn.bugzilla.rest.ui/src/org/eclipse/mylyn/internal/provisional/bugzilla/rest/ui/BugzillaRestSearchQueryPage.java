@@ -122,8 +122,8 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 				if (string != null && !string.equals("")) { //$NON-NLS-1$
 					try {
 						appendToBuffer(sb, mapUrlKey(entry.getKey()) + "=", //$NON-NLS-1$
-								URLEncoder.encode(string.replaceAll(" ", "%20"), //$NON-NLS-1$//$NON-NLS-2$
-										getTaskRepository().getCharacterEncoding()).replaceAll("%2520", "%20")); //$NON-NLS-1$ //$NON-NLS-2$
+								URLEncoder.encode(string.replace(" ", "%20"), //$NON-NLS-1$//$NON-NLS-2$
+										getTaskRepository().getCharacterEncoding()).replace("%2520", "%20")); //$NON-NLS-1$ //$NON-NLS-2$
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

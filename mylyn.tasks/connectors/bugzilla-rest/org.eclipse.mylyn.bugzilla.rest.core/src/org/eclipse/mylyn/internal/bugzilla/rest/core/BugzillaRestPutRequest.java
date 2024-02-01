@@ -42,7 +42,6 @@ public abstract class BugzillaRestPutRequest<T> extends BugzillaRestRequest<T> {
 		private final Set<TaskAttribute> taskAttributes;
 
 		public TaskAttributes(Set<TaskAttribute> taskAttributes) {
-			super();
 			this.taskAttributes = taskAttributes;
 		}
 
@@ -58,19 +57,12 @@ public abstract class BugzillaRestPutRequest<T> extends BugzillaRestRequest<T> {
 
 	protected TaskAttributes taskAttributes;
 
-	protected final Function<String, String> function = new Function<String, String>() {
-
-		@Override
-		public String apply(String input) {
-			return BugzillaRestGsonUtil.convertString2GSonString(input);
-		}
-	};
+	protected final Function<String, String> function = BugzillaRestGsonUtil::convertString2GSonString;
 
 	class TaskAttributesTypeAdapter extends TypeAdapter<TaskAttributes> {
 		RepositoryLocation location;
 
 		public TaskAttributesTypeAdapter(RepositoryLocation location) {
-			super();
 			this.location = location;
 		}
 

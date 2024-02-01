@@ -61,14 +61,12 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 
 		if (query == null) {
 			wizard.addPage(new BugzillaRestQueryTypeWizardPage(repository, connector));
+		} else if (isCustomQuery(query)) {
+			wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(true, true, taskData, connectorREST,
+					repository, query));
 		} else {
-			if (isCustomQuery(query)) {
-				wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(true, true, taskData, connectorREST,
-						repository, query));
-			} else {
-				wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(false, true, taskData, connectorREST,
-						repository, query));
-			}
+			wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(false, true, taskData, connectorREST,
+					repository, query));
 		}
 		return wizard;
 	}

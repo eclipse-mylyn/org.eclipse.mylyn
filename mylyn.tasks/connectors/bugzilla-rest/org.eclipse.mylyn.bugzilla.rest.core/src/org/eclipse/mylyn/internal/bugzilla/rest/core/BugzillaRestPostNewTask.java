@@ -58,7 +58,6 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 		RepositoryLocation location;
 
 		public TaskAttributeTypeAdapter(RepositoryLocation location) {
-			super();
 			this.location = location;
 		}
 
@@ -73,16 +72,16 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 				if (legalCreateAttributes.contains(id) || id.startsWith("cf_")) { //$NON-NLS-1$
 					id = BugzillaRestCreateTaskSchema.getFieldNameFromAttributeName(id);
 					if (id.equals("cc")) { //$NON-NLS-1$
-						HashSet<String> setNew = new HashSet<String>(
+						HashSet<String> setNew = new HashSet<>(
 								Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, false);
 					} else if (id.equals(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
 							|| id.equals(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())) {
 						if (taskAttribute.getValues().size() > 1) {
-							HashSet<String> setNew = new HashSet<String>(taskAttribute.getValues());
+							HashSet<String> setNew = new HashSet<>(taskAttribute.getValues());
 							BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, true);
 						} else {
-							HashSet<String> setNew = new HashSet<String>(
+							HashSet<String> setNew = new HashSet<>(
 									Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 							BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, true);
 						}
@@ -100,15 +99,15 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 							attributValue = ""; //$NON-NLS-1$
 							for (String string : values) {
 								string = BugzillaRestGsonUtil.convertString2GSonString(string);
-								attributValue += ((ii++ == 0 ? "" : ",") + string); //$NON-NLS-1$ //$NON-NLS-2$
+								attributValue += (ii++ == 0 ? "" : ",") + string; //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 						out.name(id).value(attributValue);
 						if (id.equals("description")) { //$NON-NLS-1$
 							TaskAttribute descriptionpri = taskAttribute.getAttribute(
 									BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION_IS_PRIVATE.getKey());
-							Boolean descriptionprivalue = (descriptionpri != null)
-									? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
+							Boolean descriptionprivalue = descriptionpri != null
+									? descriptionpri.getValue().equals("1") //$NON-NLS-1$
 									: false;
 							out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
 						}
@@ -143,13 +142,13 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 
 	@Override
 	protected BugzillaRestIdResult parseFromJson(InputStreamReader in) {
-		TypeToken<BugzillaRestIdResult> type = new TypeToken<BugzillaRestIdResult>() {
+		TypeToken<BugzillaRestIdResult> type = new TypeToken<>() {
 		};
 		return new Gson().fromJson(in, type.getType());
 	}
 
 	protected BugzillaRestStatus parseErrorFromJson(InputStreamReader in) {
-		TypeToken<BugzillaRestStatus> type = new TypeToken<BugzillaRestStatus>() {
+		TypeToken<BugzillaRestStatus> type = new TypeToken<>() {
 		};
 		return new Gson().fromJson(in, type.getType());
 	}
@@ -192,14 +191,14 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 			throws IOException, BugzillaRestException {
 		InputStream is = response.getResponseEntityAsStream();
 		InputStreamReader in = new InputStreamReader(is);
-		switch (response.getStatusCode()) {
-		case HttpURLConnection.HTTP_OK:
-			return parseFromJson(in);
-		default:
-			BugzillaRestStatus status = parseErrorFromJson(in);
-			throw new BugzillaRestException(
-					NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(), //$NON-NLS-1$
-							HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
-		}
+		return switch (response.getStatusCode()) {
+			case HttpURLConnection.HTTP_OK -> parseFromJson(in);
+			default -> {
+				BugzillaRestStatus status = parseErrorFromJson(in);
+				throw new BugzillaRestException(
+						NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(), //$NON-NLS-1$
+								HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
+			}
+		};
 	}
 }

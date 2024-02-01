@@ -19,7 +19,6 @@ public class RepositoryKey {
 	private final TaskRepository repository;
 
 	public RepositoryKey(@NonNull TaskRepository repository) {
-		super();
 		this.repository = repository;
 	}
 
@@ -40,6 +39,6 @@ public class RepositoryKey {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		return this.repository.equals(((RepositoryKey) obj).getRepository());
+		return repository.equals(((RepositoryKey) obj).getRepository());
 	}
 }

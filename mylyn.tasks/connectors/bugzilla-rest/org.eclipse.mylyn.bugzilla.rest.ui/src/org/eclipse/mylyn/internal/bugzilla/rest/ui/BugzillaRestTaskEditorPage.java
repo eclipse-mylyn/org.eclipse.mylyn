@@ -75,7 +75,7 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		// remove unnecessary default editor parts
-		ArrayList<TaskEditorPartDescriptor> descriptorsToRemove = new ArrayList<TaskEditorPartDescriptor>(2);
+		ArrayList<TaskEditorPartDescriptor> descriptorsToRemove = new ArrayList<>(2);
 		boolean hasAttachmentPart = false;
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)

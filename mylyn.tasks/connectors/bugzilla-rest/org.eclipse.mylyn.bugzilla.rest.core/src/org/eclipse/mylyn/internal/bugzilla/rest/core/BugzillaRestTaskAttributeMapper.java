@@ -45,7 +45,7 @@ public class BugzillaRestTaskAttributeMapper extends TaskAttributeMapper {
 					.getAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
 			BugzillaRestConfiguration repositoryConfiguration;
 			try {
-				repositoryConfiguration = connector.getRepositoryConfiguration(this.getTaskRepository());
+				repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository());
 				// TODO: change this when we have offline cache for the repository configuration so we build the options in an temp var
 				if (repositoryConfiguration != null) {
 					if (!productAttribute.getValue().equals("")) { //$NON-NLS-1$
@@ -103,7 +103,7 @@ public class BugzillaRestTaskAttributeMapper extends TaskAttributeMapper {
 	public void updateNewAttachmentAttribute(TaskAttribute attachmentAttribute) {
 		BugzillaRestConfiguration repositoryConfiguration;
 		try {
-			repositoryConfiguration = connector.getRepositoryConfiguration(this.getTaskRepository());
+			repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository());
 			repositoryConfiguration.updateAttachmentFlags(attachmentAttribute);
 		} catch (CoreException e) {
 			StatusHandler.log(

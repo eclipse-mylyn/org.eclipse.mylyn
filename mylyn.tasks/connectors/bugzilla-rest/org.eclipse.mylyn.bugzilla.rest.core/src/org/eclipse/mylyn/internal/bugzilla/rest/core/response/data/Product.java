@@ -39,6 +39,7 @@ public class Product implements Named {
 		return id;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

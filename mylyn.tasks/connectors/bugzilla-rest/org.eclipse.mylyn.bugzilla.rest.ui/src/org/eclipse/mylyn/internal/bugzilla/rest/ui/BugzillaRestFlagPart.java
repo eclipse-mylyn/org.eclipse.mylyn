@@ -109,7 +109,7 @@ public class BugzillaRestFlagPart extends AbstractTaskEditorPart {
 
 	private void initialize() {
 		hasIncoming = false;
-		flagEditors = new ArrayList<AbstractAttributeEditor>();
+		flagEditors = new ArrayList<>();
 		int used = 0;
 		int unused = 0;
 		String usedDetail = ""; //$NON-NLS-1$
@@ -167,18 +167,16 @@ public class BugzillaRestFlagPart extends AbstractTaskEditorPart {
 	}
 
 	/**
-	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout
-	 * hint priority. Subclasses may override this method to sort attribute editors in a custom way.
+	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout hint priority.
+	 * Subclasses may override this method to sort attribute editors in a custom way.
 	 *
 	 * @return comparator for {@link AbstractAttributeEditor} objects
 	 */
 	protected Comparator<AbstractAttributeEditor> createAttributeEditorSorter() {
-		return new Comparator<AbstractAttributeEditor>() {
-			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
-				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				return p1 - p2;
-			}
+		return (o1, o2) -> {
+			int p1 = o1.getLayoutHint() != null ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+			int p2 = o2.getLayoutHint() != null ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+			return p1 - p2;
 		};
 	}
 
@@ -186,7 +184,7 @@ public class BugzillaRestFlagPart extends AbstractTaskEditorPart {
 		int currentColumn = 1;
 		int currentPriority = 0;
 		for (AbstractAttributeEditor attributeEditor : flagEditors) {
-			int priority = (attributeEditor.getLayoutHint() != null)
+			int priority = attributeEditor.getLayoutHint() != null
 					? attributeEditor.getLayoutHint().getPriority()
 					: LayoutHint.DEFAULT_PRIORITY;
 			if (priority != currentPriority) {

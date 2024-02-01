@@ -26,36 +26,36 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	private static final BugzillaRestTaskSchema instance = new BugzillaRestTaskSchema();
 
 	private static Map<String, String> field2AttributeFieldMapper = Map.ofEntries(
-			new AbstractMap.SimpleEntry<String, String>("summary", getDefault().SUMMARY.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("description", getDefault().DESCRIPTION.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("status", getDefault().STATUS.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("product", getDefault().PRODUCT.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("component", getDefault().COMPONENT.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("cc", getDefault().CC.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("severity", getDefault().SEVERITY.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("priority", getDefault().PRIORITY.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("assigned_to", getDefault().ASSIGNED_TO.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("op_sys", getDefault().OS.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("resolution", getDefault().RESOLUTION.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("version", getDefault().VERSION.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("dup_id", getDefault().DUPE_OF.getKey()), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("last_change_time", getDefault().DATE_MODIFICATION.getKey())); //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("summary", getDefault().SUMMARY.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("description", getDefault().DESCRIPTION.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("status", getDefault().STATUS.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("product", getDefault().PRODUCT.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("component", getDefault().COMPONENT.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("cc", getDefault().CC.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("severity", getDefault().SEVERITY.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("priority", getDefault().PRIORITY.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("assigned_to", getDefault().ASSIGNED_TO.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("op_sys", getDefault().OS.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("resolution", getDefault().RESOLUTION.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("version", getDefault().VERSION.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("dup_id", getDefault().DUPE_OF.getKey()), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("last_change_time", getDefault().DATE_MODIFICATION.getKey())); //$NON-NLS-1$
 
 	private static Map<String, String> attribute2FieldMapper = Map.ofEntries(
-			new AbstractMap.SimpleEntry<String, String>(getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().OPERATION.getKey(), "status"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().PRODUCT.getKey(), "product"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().COMPONENT.getKey(), "component"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().CC.getKey(), "cc"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().SEVERITY.getKey(), "severity"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().PRIORITY.getKey(), "priority"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().VERSION.getKey(), "version"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().RESOLUTION.getKey(), "resolution"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().DUPE_OF.getKey(), "dup_id"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>("resolutionInput", "resolution"), //$NON-NLS-1$  //$NON-NLS-2$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().DATE_MODIFICATION.getKey(), "last_change_time") //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().OPERATION.getKey(), "status"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().PRODUCT.getKey(), "product"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().COMPONENT.getKey(), "component"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().CC.getKey(), "cc"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().SEVERITY.getKey(), "severity"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().PRIORITY.getKey(), "priority"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().VERSION.getKey(), "version"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().RESOLUTION.getKey(), "resolution"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().DUPE_OF.getKey(), "dup_id"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>("resolutionInput", "resolution"), //$NON-NLS-1$  //$NON-NLS-2$
+			new AbstractMap.SimpleEntry<>(getDefault().DATE_MODIFICATION.getKey(), "last_change_time") //$NON-NLS-1$
 	);
 
 	public static String getAttributeNameFromFieldName(String fieldName) {
