@@ -44,6 +44,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		valueChanged(action, action.isChecked());
 	}
@@ -60,27 +61,32 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		// don't care when the active editor changes
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// don't care when the selection changes
 	}
 
+	@Override
 	public void init(IAction action) {
-		this.parentAction = action;
+		parentAction = action;
 		valueChanged(action,
 				JavaUiBridgePlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED));
 	}
 
+	@Override
 	public void dispose() {
 		// don't need to do anything
 
 	}
 
+	@Override
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 }

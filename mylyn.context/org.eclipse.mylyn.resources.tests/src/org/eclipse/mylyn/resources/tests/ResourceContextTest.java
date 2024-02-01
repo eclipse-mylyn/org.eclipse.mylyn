@@ -90,7 +90,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 	public void testFileNotAddedIfExcluded() throws CoreException {
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-		Set<String> exclude = new HashSet<String>();
+		Set<String> exclude = new HashSet<>();
 		exclude.add("boring");
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
 
@@ -106,7 +106,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 	public void testPatternNotAddedIfExcluded() throws CoreException {
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-		Set<String> exclude = new HashSet<String>();
+		Set<String> exclude = new HashSet<>();
 		exclude.add("b*.txt");
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
 
@@ -123,7 +123,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	public void testPatternNotAddedMatching() throws CoreException {
 
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-		Set<String> exclude = new HashSet<String>();
+		Set<String> exclude = new HashSet<>();
 		exclude.add("**/.*");
 		exclude.add(".*");
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(exclude);
@@ -240,7 +240,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	@SuppressWarnings("deprecation")
 	private void createRealFiles(IProject project) throws CoreException, UnsupportedEncodingException {
 		// we need to have contents for the file to be local
-		StringBuffer fileContents = new StringBuffer("FileContents");
+		StringBuilder fileContents = new StringBuilder("FileContents");
 		ByteArrayInputStream fileInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
 		IFile file = project.getFile("test.txt");
 		file.create(fileInput, true, null);

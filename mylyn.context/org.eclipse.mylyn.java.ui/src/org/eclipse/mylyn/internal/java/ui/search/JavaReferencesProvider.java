@@ -35,8 +35,7 @@ public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 		if (element instanceof IImportDeclaration) {
 			return false;
 		}
-		if (element instanceof IMethod) {
-			IMethod method = (IMethod) element;
+		if (element instanceof IMethod method) {
 			if (method.getElementName().startsWith("test")) { //$NON-NLS-1$
 				return false; // HACK
 			} else {

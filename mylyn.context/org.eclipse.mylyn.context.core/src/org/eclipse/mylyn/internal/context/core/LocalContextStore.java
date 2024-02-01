@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,15 +51,15 @@ public class LocalContextStore implements IContextStore {
 
 	private final IInteractionContextScaling commonContextScaling;
 
-	private final List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
+	private final List<IContextStoreListener> listeners = new ArrayList<>();
 
 	public LocalContextStore(IInteractionContextScaling commonContextScaling) {
 		this.commonContextScaling = commonContextScaling;
 	}
 
 	public synchronized void setContextDirectory(File directory) {
-		this.contextDirectory = directory;
-		this.contextFiles = null;
+		contextDirectory = directory;
+		contextFiles = null;
 		for (IContextStoreListener listener : listeners) {
 			listener.contextStoreMoved(directory);
 		}
@@ -90,6 +91,7 @@ public class LocalContextStore implements IContextStore {
 		return externalizer.getAdditionalInformation(fileForContext, identifier);
 	}
 
+	@Override
 	public IInteractionContext importContext(String handleIdentifier, File fromFile) throws CoreException {
 		InteractionContext context;
 		String handleToImportFrom;
@@ -171,11 +173,9 @@ public class LocalContextStore implements IContextStore {
 
 	private void initCache() {
 		if (contextFiles == null) {
-			contextFiles = new HashSet<File>();
+			contextFiles = new HashSet<>();
 			File[] files = contextDirectory.listFiles();
-			for (File file : files) {
-				contextFiles.add(file);
-			}
+			Collections.addAll(contextFiles, files);
 		}
 	}
 
@@ -199,6 +199,7 @@ public class LocalContextStore implements IContextStore {
 		}
 	}
 
+	@Override
 	public IInteractionContext cloneContext(String sourceContextHandle, String destinationContextHandle) {
 
 		InteractionContext readContext = (InteractionContext) externalizer.readContextFromXml(sourceContextHandle,
@@ -221,6 +222,7 @@ public class LocalContextStore implements IContextStore {
 		return readContext;
 	}
 
+	@Override
 	public boolean hasContext(String handleIdentifier) {
 		Assert.isNotNull(handleIdentifier);
 		File file = getFileForContext(handleIdentifier);

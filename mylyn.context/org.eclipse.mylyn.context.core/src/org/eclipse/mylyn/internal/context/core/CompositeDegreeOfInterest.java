@@ -26,7 +26,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 
-	private final Set<IDegreeOfInterest> composed = new HashSet<IDegreeOfInterest>();
+	private final Set<IDegreeOfInterest> composed = new HashSet<>();
 
 	protected IInteractionContextScaling contextScaling;
 
@@ -40,14 +40,16 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		}
 	}
 
+	@Override
 	public List<InteractionEvent> getEvents() {
-		Set<InteractionEvent> events = new HashSet<InteractionEvent>();
+		Set<InteractionEvent> events = new HashSet<>();
 		for (IDegreeOfInterest info : composed) {
 			events.addAll(info.getEvents());
 		}
-		return new ArrayList<InteractionEvent>(events);
+		return new ArrayList<>(events);
 	}
 
+	@Override
 	public float getValue() {
 		float value = 0;
 		for (IDegreeOfInterest info : composed) {
@@ -56,6 +58,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		return value;
 	}
 
+	@Override
 	public float getDecayValue() {
 		float value = 0;
 		for (IDegreeOfInterest info : composed) {
@@ -64,6 +67,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		return value;
 	}
 
+	@Override
 	public float getEncodedValue() {
 		float value = 0;
 		for (IDegreeOfInterest info : composed) {
@@ -75,6 +79,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * @return true if one is interesting
 	 */
+	@Override
 	public boolean isInteresting() {
 		boolean isInteresting = false;
 		for (IDegreeOfInterest info : composed) {
@@ -88,6 +93,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * @return true if all are predicted
 	 */
+	@Override
 	public boolean isPropagated() {
 		if (composed.isEmpty()) {
 			return false;
@@ -101,6 +107,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		return allPropagated;
 	}
 
+	@Override
 	public boolean isPredicted() {
 		if (composed.isEmpty()) {
 			return false;
@@ -114,6 +121,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		return allPredicted;
 	}
 
+	@Override
 	public boolean isLandmark() {
 		return getValue() >= contextScaling.getLandmark();
 	}
@@ -124,7 +132,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 
 	@Override
 	public String toString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append("composite("); //$NON-NLS-1$
 		for (IDegreeOfInterest info : composed) {
 			result.append(info.toString());

@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.cdt.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.ICElement;
@@ -39,7 +37,6 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 	protected StructuredSelection currentSelection = null;
 
 	public CDTEditorMonitor() {
-		super();
 	}
 
 	/**
@@ -49,9 +46,7 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		try {
 			ICElement selectedElement = null;
-			if (selection instanceof StructuredSelection) {
-				StructuredSelection structuredSelection = (StructuredSelection) selection;
-
+			if (selection instanceof StructuredSelection structuredSelection) {
 				if (structuredSelection.equals(currentSelection)) {
 					return;
 				}
@@ -59,8 +54,7 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 
 				// Object selectedObject =
 				// structuredSelection.getFirstElement();
-				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-					Object selectedObject = iterator.next();
+				for (Object selectedObject : structuredSelection) {
 					if (selectedObject instanceof ICElement) {
 						ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((ICElement) selectedObject);
 						if (checkedElement == null) {
@@ -73,28 +67,26 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
 				}
-			} else {
-				if (part instanceof CEditor) {
-					currentEditor = (CEditor) part;
-					selectedElement = SelectionConverter.getElementAtOffset(currentEditor);
-					if (selectedElement == null) {
-						return; // nothing selected
-					}
+			} else if (part instanceof CEditor) {
+				currentEditor = (CEditor) part;
+				selectedElement = SelectionConverter.getElementAtOffset(currentEditor);
+				if (selectedElement == null) {
+					return; // nothing selected
+				}
 
-					if (selectedElement != null) {
-						if (selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement, contributeToContext);
-						} else if (!selectedElement.equals(lastSelectedElement)) {
-							super.handleElementSelection(part, selectedElement, contributeToContext);
-						}
+				if (selectedElement != null) {
+					if (selectedElement.equals(lastSelectedElement)) {
+						super.handleElementEdit(part, selectedElement, contributeToContext);
+					} else if (!selectedElement.equals(lastSelectedElement)) {
+						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
+				}
 
-					ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(selectedElement);
-					if (checkedElement == null) {
-						return;
-					} else {
-						selectedElement = checkedElement;
-					}
+				ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(selectedElement);
+				if (checkedElement == null) {
+					return;
+				} else {
+					selectedElement = checkedElement;
 				}
 			}
 			if (selectedElement != null) {

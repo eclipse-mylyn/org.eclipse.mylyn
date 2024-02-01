@@ -26,19 +26,19 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public interface IDegreeOfInterest {
 
-	public abstract boolean isPropagated();
+	boolean isPropagated();
 
-	public boolean isPredicted();
+	boolean isPredicted();
 
-	public abstract boolean isLandmark();
+	boolean isLandmark();
 
-	public abstract boolean isInteresting();
+	boolean isInteresting();
 
-	public abstract float getEncodedValue();
+	float getEncodedValue();
 
-	public float getDecayValue();
+	float getDecayValue();
 
-	public abstract float getValue();
+	float getValue();
 
-	public abstract List<InteractionEvent> getEvents();
+	List<InteractionEvent> getEvents();
 }

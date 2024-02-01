@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * A strategy for computing context of a task. Implementations take a task data and from it derive a list of objects
- * that can be added to the context.
+ * A strategy for computing context of a task. Implementations take a task data and from it derive a list of objects that can be added to
+ * the context.
  * 
  * @author David Green
  * @since 3.6

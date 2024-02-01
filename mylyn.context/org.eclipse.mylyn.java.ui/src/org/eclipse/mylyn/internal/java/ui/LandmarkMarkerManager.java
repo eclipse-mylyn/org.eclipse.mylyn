@@ -48,45 +48,44 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; //$NON-NLS-1$
 
-	private final Map<IInteractionElement, Long> markerMap = new ConcurrentHashMap<IInteractionElement, Long>();
+	private final Map<IInteractionElement, Long> markerMap = new ConcurrentHashMap<>();
 
 	private final LandmarkUpdateJob updateJob = new LandmarkUpdateJob(
 			Messages.LandmarkMarkerManager_Updating_Landmark_Markers);
 
 	public LandmarkMarkerManager() {
-		super();
 	}
 
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
-		LinkedHashSet<LandmarkUpdateOperation> runnables = new LinkedHashSet<LandmarkUpdateOperation>();
+		LinkedHashSet<LandmarkUpdateOperation> runnables = new LinkedHashSet<>();
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-		case DEACTIVATED:
-			modelUpdated();
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
+			case ACTIVATED:
+			case DEACTIVATED:
 				modelUpdated();
-			}
-			break;
-		case LANDMARKS_ADDED:
-			for (IInteractionElement element : event.getElements()) {
-				LandmarkUpdateOperation runnable = createAddLandmarkMarkerOperation(element);
-				if (runnable != null) {
-					runnables.add(runnable);
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					modelUpdated();
 				}
-			}
-			break;
-		case ELEMENTS_DELETED:
-		case LANDMARKS_REMOVED:
-			for (IInteractionElement element : event.getElements()) {
-				LandmarkUpdateOperation runnable = createRemoveLandmarkMarkerOperation(element);
-				if (runnable != null) {
-					runnables.add(runnable);
+				break;
+			case LANDMARKS_ADDED:
+				for (IInteractionElement element : event.getElements()) {
+					LandmarkUpdateOperation runnable = createAddLandmarkMarkerOperation(element);
+					if (runnable != null) {
+						runnables.add(runnable);
+					}
 				}
-			}
-			break;
+				break;
+			case ELEMENTS_DELETED:
+			case LANDMARKS_REMOVED:
+				for (IInteractionElement element : event.getElements()) {
+					LandmarkUpdateOperation runnable = createRemoveLandmarkMarkerOperation(element);
+					if (runnable != null) {
+						runnables.add(runnable);
+					}
+				}
+				break;
 
 		}
 		updateJob.updateMarkers(runnables);
@@ -95,7 +94,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 	private void modelUpdated() {
 		try {
 			// remove all known landmark markers
-			LinkedHashSet<LandmarkUpdateOperation> runnables = new LinkedHashSet<LandmarkUpdateOperation>();
+			LinkedHashSet<LandmarkUpdateOperation> runnables = new LinkedHashSet<>();
 			for (IInteractionElement node : markerMap.keySet()) {
 				LandmarkUpdateOperation runnable = createRemoveLandmarkMarkerOperation(node);
 				if (runnable != null) {
@@ -132,6 +131,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 					IResource resource = element.getUnderlyingResource();
 					if (resource instanceof IFile) {
 						LandmarkUpdateOperation runnable = new LandmarkUpdateOperation(resource) {
+							@Override
 							public void run(IProgressMonitor monitor) throws CoreException {
 								IMarker marker = getResource().createMarker(ID_MARKER_LANDMARK);
 								if (marker != null && range != null) {
@@ -169,6 +169,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 				try {
 					IResource resource = element.getUnderlyingResource();
 					LandmarkUpdateOperation runnable = new LandmarkUpdateOperation(resource) {
+						@Override
 						public void run(IProgressMonitor monitor) throws CoreException {
 							if (getResource() != null) {
 								try {
@@ -221,7 +222,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 
 		private static final int NOT_SCHEDULED = -1;
 
-		private final LinkedHashSet<LandmarkUpdateOperation> queue = new LinkedHashSet<LandmarkUpdateOperation>();
+		private final LinkedHashSet<LandmarkUpdateOperation> queue = new LinkedHashSet<>();
 
 		private long scheduleTime = NOT_SCHEDULED;
 
@@ -248,7 +249,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 			}
 			LinkedHashSet<LandmarkUpdateOperation> operations = null;
 			synchronized (this) {
-				operations = new LinkedHashSet<LandmarkUpdateOperation>(queue);
+				operations = new LinkedHashSet<>(queue);
 				queue.clear();
 				scheduleTime = NOT_SCHEDULED;
 			}

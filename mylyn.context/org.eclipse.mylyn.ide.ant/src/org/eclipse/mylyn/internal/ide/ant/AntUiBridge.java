@@ -90,7 +90,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 			// // get the offsets for the element
 			// int startOffset = d.getLineOffset(start);
 			// int length = 0;
-			//                
+			//
 			// // set the selection if the selection provider is not null
 			// ISelectionProvider selectionProvider =
 			// editor.getEditorSite().getSelectionProvider();
@@ -133,7 +133,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	public void close(IInteractionElement node) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
-			List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+			List<IEditorReference> toClose = new ArrayList<>();
 			for (IEditorReference reference : page.getEditorReferences()) {
 				try {
 					if (reference.getEditorInput() instanceof IFileEditorInput) {
@@ -162,16 +162,16 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	 */
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
-		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		List<TreeViewer> viewers = new ArrayList<>();
 		if (editor instanceof AntEditor) {
 			try {
 				AntEditor ae = (AntEditor) editor;
 				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae
 						.getAdapter(IContentOutlinePage.class);
 				Class<?> clazz = ContentOutlinePage.class;
-				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {}); //$NON-NLS-1$
+				Method method = clazz.getDeclaredMethod("getTreeViewer"); //$NON-NLS-1$
 				method.setAccessible(true);
-				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));
+				viewers.add((TreeViewer) method.invoke(outline));
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get outline", e)); //$NON-NLS-1$
 			}

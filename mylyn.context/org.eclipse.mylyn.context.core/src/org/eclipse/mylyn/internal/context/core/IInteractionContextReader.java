@@ -20,6 +20,6 @@ import java.io.File;
  */
 public interface IInteractionContextReader {
 
-	public abstract InteractionContext readContext(String handleIdentifier, File file);
+	InteractionContext readContext(String handleIdentifier, File file);
 
 }

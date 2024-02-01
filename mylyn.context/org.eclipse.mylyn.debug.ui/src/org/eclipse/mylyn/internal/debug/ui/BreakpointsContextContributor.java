@@ -44,6 +44,7 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 	private final AbstractContextStructureBridge structureBridge = ContextCore
 			.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
+	@Override
 	public InputStream getDataAsStream(IInteractionContext context) {
 		List<IBreakpoint> breakpoints = getContextBreakpoints(context);
 		if (breakpoints.size() == 0) {
@@ -52,10 +53,12 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 		return BreakpointsContextUtil.exportBreakpoints(breakpoints, new NullProgressMonitor());
 	}
 
+	@Override
 	public String getIdentifier() {
 		return DebugUiPlugin.CONTRIBUTOR_ID;
 	}
 
+	@Override
 	public void contextChanged(final ContextChangeEvent event) {
 		if (!DebugUiPlugin.getDefault().getPreferenceStore().getBoolean(AUTO_MANAGE_BREAKPOINTS)) {
 			if (event.getEventKind() == ContextChangeKind.DEACTIVATED && breakpointsListener != null) {
@@ -99,7 +102,7 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 	}
 
 	private List<IBreakpoint> getContextBreakpoints(IInteractionContext context) {
-		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
+		List<IBreakpoint> breakpoints = new ArrayList<>();
 		for (InteractionEvent element : context.getInteractionHistory()) {
 			Object object = structureBridge.getObjectForHandle(element.getStructureHandle());
 			if (object != null && object instanceof IBreakpoint) {

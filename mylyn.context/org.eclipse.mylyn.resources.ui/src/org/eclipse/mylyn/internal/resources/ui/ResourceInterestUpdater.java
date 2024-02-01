@@ -48,11 +48,8 @@ public class ResourceInterestUpdater {
 				} else {
 					final IWorkbench workbench = PlatformUI.getWorkbench();
 					if (!workbench.isClosing() && !workbench.getDisplay().isDisposed()) {
-						workbench.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								internalAddResourceToContext(resources, interactionKind);
-							}
-						});
+						workbench.getDisplay()
+								.asyncExec(() -> internalAddResourceToContext(resources, interactionKind));
 					}
 				}
 			}
@@ -64,7 +61,7 @@ public class ResourceInterestUpdater {
 
 	@SuppressWarnings("restriction")
 	private void internalAddResourceToContext(Set<IResource> resources, InteractionEvent.Kind interactionKind) {
-		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
+		List<InteractionEvent> interactionEvents = new ArrayList<>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
 				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(resource);

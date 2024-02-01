@@ -14,8 +14,6 @@ package org.eclipse.mylyn.java.tests.tasks;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.internal.corext.template.java.JavaContextType;
 import org.eclipse.jdt.internal.corext.template.java.JavaDocContextType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -36,6 +34,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.osgi.util.NLS;
+
+import junit.framework.TestCase;
 
 /**
  * @author Andreas Hoehmann

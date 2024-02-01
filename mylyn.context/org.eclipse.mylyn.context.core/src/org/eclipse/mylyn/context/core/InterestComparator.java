@@ -22,10 +22,9 @@ import java.util.Comparator;
  */
 public class InterestComparator<T> implements Comparator<T> {
 
+	@Override
 	public int compare(T e1, T e2) {
-		if (e1 instanceof IInteractionElement && e2 instanceof IInteractionElement) {
-			IInteractionElement info1 = (IInteractionElement) e1;
-			IInteractionElement info2 = (IInteractionElement) e2;
+		if (e1 instanceof IInteractionElement info1 && e2 instanceof IInteractionElement info2) {
 			float v1 = info1.getInterest().getValue();
 			float v2 = info2.getInterest().getValue();
 			if (v1 >= v2) {

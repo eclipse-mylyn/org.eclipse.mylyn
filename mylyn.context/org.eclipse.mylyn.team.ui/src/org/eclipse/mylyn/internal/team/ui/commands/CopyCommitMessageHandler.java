@@ -41,8 +41,7 @@ public class CopyCommitMessageHandler extends AbstractHandler {
 	}
 
 	private Optional<ITask> getTask(ISelection selection) {
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
+		if (selection instanceof StructuredSelection structuredSelection) {
 			if (structuredSelection.getFirstElement() instanceof ITask) {
 				return Optional.of((ITask) structuredSelection.getFirstElement());
 			}

@@ -26,10 +26,12 @@ public class TaskHistoryPageSource extends HistoryPageSource {
 		return instance;
 	}
 
+	@Override
 	public boolean canShowHistoryFor(Object object) {
 		return TaskHistoryPage.canShowHistoryFor(object);
 	}
 
+	@Override
 	public Page createPage(Object object) {
 		TaskHistoryPage page = new TaskHistoryPage();
 		page.setInput(object);

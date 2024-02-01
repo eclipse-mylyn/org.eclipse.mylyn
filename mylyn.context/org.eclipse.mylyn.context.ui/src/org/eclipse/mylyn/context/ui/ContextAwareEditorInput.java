@@ -25,8 +25,7 @@ import org.eclipse.ui.IEditorInput;
 public abstract class ContextAwareEditorInput {
 
 	/**
-	 * Returns true, if the editor is not tracked as part of the task context and a close is forced on context
-	 * deactivation.
+	 * Returns true, if the editor is not tracked as part of the task context and a close is forced on context deactivation.
 	 * 
 	 * @param contextHandle
 	 *            handle of the context that is being deactivated or cleared

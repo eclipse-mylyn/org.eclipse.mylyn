@@ -27,7 +27,6 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 public class FocusedDOMCompletionProposalComputer extends DOMCompletionProposalComputer {
 
 	public FocusedDOMCompletionProposalComputer() {
-		super();
 		FocusedCProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 

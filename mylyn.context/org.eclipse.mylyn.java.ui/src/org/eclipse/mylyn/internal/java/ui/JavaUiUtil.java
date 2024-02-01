@@ -47,7 +47,7 @@ public class JavaUiUtil {
 	public static boolean isDefaultAssistActive(String computerId) {
 		if (JavaUiUtil.ASSIST_JDT_ALL.equals(computerId)) {
 			CompletionProposalCategory category = getProposalCategory(computerId);
-			return (category != null) ? category.isEnabled() && category.isIncluded() : false;
+			return category != null ? category.isEnabled() && category.isIncluded() : false;
 		}
 		Set<String> disabledIds = getDisabledIds(JavaPlugin.getDefault().getPreferenceStore());
 		return !disabledIds.contains(computerId);
@@ -57,7 +57,7 @@ public class JavaUiUtil {
 		List<?> computers = CompletionProposalComputerRegistry.getDefault().getProposalCategories();
 		for (Object object : computers) {
 			CompletionProposalCategory proposalCategory = (CompletionProposalCategory) object;
-			if (computerId.equals((proposalCategory).getId())) {
+			if (computerId.equals(proposalCategory.getId())) {
 				return proposalCategory;
 			}
 		}
@@ -78,7 +78,7 @@ public class JavaUiUtil {
 			disabledIds.add(ASSIST_JDT_ALL);
 			disabledIds.add(ASSIST_JDT_TYPE);
 			disabledIds.add(ASSIST_JDT_NOTYPE);
-			// re-enable, Mylyn versions <3.1 had a focused template computer that has been removed  
+			// re-enable, Mylyn versions <3.1 had a focused template computer that has been removed
 			disabledIds.remove(ASSIST_JDT_TEMPLATE);
 			disabledIds.remove(ASSIST_MYLYN_ALL);
 			//disabledIds.remove(ASSIST_MYLYN_NOTYPE);
@@ -98,7 +98,7 @@ public class JavaUiUtil {
 	public static Set<String> getDisabledIds(IPreferenceStore javaPrefs) {
 		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
-		Set<String> disabledIds = new HashSet<String>();
+		Set<String> disabledIds = new HashSet<>();
 		while (tokenizer.hasMoreTokens()) {
 			disabledIds.add((String) tokenizer.nextElement());
 		}

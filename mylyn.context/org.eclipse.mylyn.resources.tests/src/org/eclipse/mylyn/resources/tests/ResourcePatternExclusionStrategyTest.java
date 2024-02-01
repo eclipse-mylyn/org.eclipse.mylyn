@@ -17,12 +17,12 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.internal.resources.ui.ResourcePatternExclusionStrategy;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
+
+import junit.framework.TestCase;
 
 /**
  * @author Shawn Minto
@@ -50,9 +50,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 	public void testSnapshotExclusionPattern() {
 		// .*
 
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(".*"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern(".*"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.foo/test"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.foo"), null, patterns));
@@ -71,9 +69,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 	public void testFileExclusionPattern() {
 		// *.doc
 
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*.doc"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("*.doc"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc/test"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc"), null, patterns));
@@ -92,9 +88,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testAllExclusionPattern() {
 		// *
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("*"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
@@ -106,9 +100,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testAllFileExclusionPattern() {
 		// *.*
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("*.*"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("*.*"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/.doc2/test"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
@@ -121,9 +113,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testWildcardExclusionPattern() {
 		// ~*
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("~*"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("~*"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/~.doc2/test"), null, patterns));
@@ -137,9 +127,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testNoWildcardExclusionPattern() {
 		// folder
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("folder"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("folder"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/.doc2/test"), null, patterns));
@@ -156,7 +144,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testPathPrefixExclusionPattern() {
 		// test/**
-		Set<String> patterns = new HashSet<String>();
+		Set<String> patterns = new HashSet<>();
 		patterns.add("/folder/**");
 
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/"), null, patterns));
@@ -170,7 +158,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testPathPostfixExclusionPattern() {
 		// **/test/
-		Set<String> patterns = new HashSet<String>();
+		Set<String> patterns = new HashSet<>();
 		patterns.add("**/folder");
 
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder"), null, patterns));
@@ -186,9 +174,7 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testComplexExclusionPattern() {
 		// **/folder/***.doc
-		Set<String> patterns = new HashSet<String>();
-		patterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern("**/folder/***.doc"));
-
+		Set<String> patterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern("**/folder/***.doc"));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/test.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder/folder2/test.doc"), null, patterns));
 		assertTrue(ResourcePatternExclusionStrategy.isExcluded(new Path("/folder1/folder/folder2/test.doc"), null,
@@ -202,6 +188,6 @@ public class ResourcePatternExclusionStrategyTest extends TestCase {
 
 	public void testInclusion() {
 		IPath path4 = new Path("bla/bla");
-		assertFalse(ResourcePatternExclusionStrategy.isExcluded(path4, null, new HashSet<String>()));
+		assertFalse(ResourcePatternExclusionStrategy.isExcluded(path4, null, new HashSet<>()));
 	}
 }

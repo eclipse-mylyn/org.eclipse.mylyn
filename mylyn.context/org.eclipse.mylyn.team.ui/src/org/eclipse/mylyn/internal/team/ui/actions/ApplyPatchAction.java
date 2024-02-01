@@ -63,16 +63,16 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 
 	private ISelection currentSelection;
 
+	@Override
 	public void init(IViewPart view) {
-		this.viewPart = view;
+		viewPart = view;
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (currentSelection instanceof StructuredSelection) {
 			Object object = ((StructuredSelection) currentSelection).getFirstElement();
-			if (object instanceof ITaskAttachment) {
-				final ITaskAttachment attachment = (ITaskAttachment) object;
-
+			if (object instanceof final ITaskAttachment attachment) {
 				IWorkbenchPart vp = viewPart;
 				if (vp == null) {
 					vp = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
@@ -90,8 +90,9 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.currentSelection = selection;
+		currentSelection = selection;
 	}
 
 	private static class DownloadAndApplyPatch implements ICoreRunnable {
@@ -107,6 +108,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 			this.wbPart = wbPart;
 		}
 
+		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 			try {
@@ -180,13 +182,10 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 
 			final AttachmentFileStorage fileStorage = new AttachmentFileStorage(file, attachmentFilename);
 
-			disp.asyncExec(new Runnable() {
-				public void run() {
-					ApplyPatchOperation op = new ApplyPatchOperation(wbPart, fileStorage, null,
-							new CompareConfiguration());
+			disp.asyncExec(() -> {
+				ApplyPatchOperation op = new ApplyPatchOperation(wbPart, fileStorage, null, new CompareConfiguration());
 
-					BusyIndicator.showWhile(disp, op);
-				}
+				BusyIndicator.showWhile(disp, op);
 			});
 
 			return Status.OK_STATUS;

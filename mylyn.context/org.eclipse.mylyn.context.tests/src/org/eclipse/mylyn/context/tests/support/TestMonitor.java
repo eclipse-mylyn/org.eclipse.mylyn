@@ -28,10 +28,9 @@ import org.eclipse.ui.IWorkbenchPart;
 @Deprecated
 public class TestMonitor extends AbstractUserInteractionMonitor {
 
-	List<IJavaElement> selections = new ArrayList<IJavaElement>();
+	List<IJavaElement> selections = new ArrayList<>();
 
 	public TestMonitor() {
-		super();
 	}
 
 	public void handleElementSelection(IJavaElement selected) {

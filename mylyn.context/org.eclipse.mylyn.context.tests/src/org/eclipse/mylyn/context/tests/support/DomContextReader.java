@@ -40,6 +40,7 @@ import org.w3c.dom.NodeList;
  */
 public class DomContextReader implements IInteractionContextReader {
 
+	@Override
 	public InteractionContext readContext(String handle, File file) {
 		if (!file.exists()) {
 			return null;

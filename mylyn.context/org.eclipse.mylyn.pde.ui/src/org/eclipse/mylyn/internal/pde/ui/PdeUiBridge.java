@@ -98,16 +98,16 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 			// get the contents and create a new document so that we can get
 			// the offsets to highlight
 			// String content = XmlNodeHelper.getContents(f.getContents());
-			//            
+			//
 			// IDocument d = new Document(content);
 
 			// if(first != -1){
 			// int start = Integer.parseInt(handle.substring(first + 1));
-			//                
+			//
 			// // get the offsets for the element
 			// int startOffset = d.getLineOffset(start);
 			// int length = 0;
-			//                
+			//
 			// // set the selection if the selection provider is not null
 			// ISelectionProvider selectionProvider =
 			// editor.getEditorSite().getSelectionProvider();
@@ -177,7 +177,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
 		if (editor instanceof PDEFormEditor) {
 			PDESourcePage sp = null;
-			List<TreeViewer> viewers = new ArrayList<TreeViewer>(2);
+			List<TreeViewer> viewers = new ArrayList<>(2);
 			if ((sp = (PDESourcePage) ((PDEFormEditor) editor).findPage(PluginInputContext.CONTEXT_ID)) != null) {
 				ISortableContentOutlinePage page = sp.getContentOutline();
 				if (page != null && page.getControl() != null) {
@@ -222,8 +222,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					}
 					field2.setAccessible(true);
 					Object f2 = field2.get(f);
-					if (f2 != null && f2 instanceof TreeViewer) {
-						TreeViewer treeViewer = (TreeViewer) f2;
+					if (f2 != null && f2 instanceof TreeViewer treeViewer) {
 						viewers.add(treeViewer);
 					}
 				}
@@ -268,12 +267,12 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	}
 
 	/**
-	 * Class to listen to the tree views to attempt to refresh them more frequently to keep the ui model consistant with
-	 * the user selections
+	 * Class to listen to the tree views to attempt to refresh them more frequently to keep the ui model consistant with the user selections
 	 * 
 	 * @author Shawn Minto
 	 */
 	private class TreeViewerListener implements ISelectionChangedListener, ITreeViewerListener {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			Object o = event.getSource();
 			if (o instanceof TreeViewer) {
@@ -282,6 +281,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 			}
 		}
 
+		@Override
 		public void treeCollapsed(TreeExpansionEvent event) {
 			Object o = event.getSource();
 			if (o instanceof TreeViewer) {
@@ -290,6 +290,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 		}
 
+		@Override
 		public void treeExpanded(TreeExpansionEvent event) {
 			Object o = event.getSource();
 			if (o instanceof TreeViewer) {

@@ -23,6 +23,7 @@ public class RemoveFromContextCommandHandler extends AbstractHandler {
 
 	private final InterestDecrementAction action = new InterestDecrementAction();
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		action.selectionChanged(null, HandlerUtil.getCurrentSelection(event));
 		action.run(null);

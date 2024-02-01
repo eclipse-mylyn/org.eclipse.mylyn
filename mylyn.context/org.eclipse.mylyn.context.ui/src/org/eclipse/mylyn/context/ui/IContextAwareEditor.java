@@ -13,8 +13,8 @@
 package org.eclipse.mylyn.context.ui;
 
 /**
- * Tag interface for editors that do not get closed when a context is deactivated. The editor can specify whether or not
- * it should closed based on its input.
+ * Tag interface for editors that do not get closed when a context is deactivated. The editor can specify whether or not it should closed
+ * based on its input.
  * 
  * @author Mik Kersten
  * @since 3.0
@@ -22,6 +22,6 @@ package org.eclipse.mylyn.context.ui;
 // TODO 4.0 consider making this be based on editor inputs, not editors. See bug 208625.
 public interface IContextAwareEditor {
 
-	public boolean canClose();
+	boolean canClose();
 
 }

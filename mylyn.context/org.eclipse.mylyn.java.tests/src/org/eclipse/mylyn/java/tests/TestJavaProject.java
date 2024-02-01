@@ -88,7 +88,7 @@ public class TestJavaProject {
 			@Override
 			protected void execute(IProgressMonitor monitor) throws CoreException {
 				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-			};
+			}
 		};
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		service.run(true, true, op);
@@ -102,7 +102,7 @@ public class TestJavaProject {
 	}
 
 	public IType createType(IPackageFragment pack, String cuName, String source) throws JavaModelException {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("package " + pack.getElementName() + ";\n");
 		buf.append("\n");
 		buf.append(source);

@@ -57,10 +57,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		try {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
-		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
-		} catch (JavaModelException e) {
+		} catch (PartInitException | JavaModelException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
 		}
@@ -71,10 +68,10 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
+				List<IEditorReference> toClose = new ArrayList<>(4);
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
-						IJavaElement input = (IJavaElement) reference.getEditorInput().getAdapter(IJavaElement.class);
+						IJavaElement input = reference.getEditorInput().getAdapter(IJavaElement.class);
 						if (input != null && node.getHandleIdentifier().equals(input.getHandleIdentifier())) {
 							toClose.add(reference);
 						}
@@ -100,8 +97,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	@Override
 	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IJavaElement.class);
-		if (adapter instanceof IJavaElement) {
-			IJavaElement javaElement = (IJavaElement) adapter;
+		if (adapter instanceof IJavaElement javaElement) {
 			String handle = ContextCore.getStructureBridge(javaElement).getHandleIdentifier(javaElement);
 			return ContextCore.getContextManager().getElement(handle);
 		} else {
@@ -114,10 +110,9 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		if (editorPart == null) {
 			return null;
 		}
-		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		List<TreeViewer> viewers = new ArrayList<>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
-		if (out instanceof Page) {
-			Page page = (Page) out;
+		if (out instanceof Page page) {
 			if (page.getControl() != null) {
 				IWorkbenchSite site = page.getSite();
 				if (site != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others. 
+ * Copyright (c) 2004, 2011 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -39,8 +39,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.internal.WorkingSet;
 
 /**
- * A generic degree-of-interest viewer filter that can be applied to any StructuredViewer. It figures out whether an
- * object is interesting by getting it's handle from the corresponding structure bridge.
+ * A generic degree-of-interest viewer filter that can be applied to any StructuredViewer. It figures out whether an object is interesting
+ * by getting it's handle from the corresponding structure bridge.
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -110,8 +110,8 @@ public class InterestFilter extends ViewerFilter {
 					}
 
 					// if we can't find the element, check the parent bridge
-					if (element == null || (element instanceof CompositeContextElement
-							&& ((CompositeContextElement) element).getNodes().isEmpty())) {
+					if (element == null || element instanceof CompositeContextElement
+							&& ((CompositeContextElement) element).getNodes().isEmpty()) {
 						String parentContentType = bridge.getParentContentType();
 						AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 						if (parentBridge != null) {
@@ -125,7 +125,7 @@ public class InterestFilter extends ViewerFilter {
 							if (parentElement != null && isInteresting(parentElement)) {
 								// do a sanity check to make sure that we are trying to display the element
 								// and not some other representation
-								// If this is removed, you can see the undesired behavior of the parent default 
+								// If this is removed, you can see the undesired behavior of the parent default
 								// packages showing up in the package explorer
 								Object objectForHandle = parentBridge.getObjectForHandle(parentHandle);
 								return objectForHandle != null && objectForHandle.equals(object);
@@ -171,8 +171,7 @@ public class InterestFilter extends ViewerFilter {
 	 * @since 3.5
 	 */
 	public boolean isTemporarilyUnfiltered(Object parent) {
-		if (parent instanceof TreePath) {
-			TreePath treePath = (TreePath) parent;
+		if (parent instanceof TreePath treePath) {
 			parent = treePath.getLastSegment();
 		}
 		return temporarilyUnfiltered != null && temporarilyUnfiltered.contains(parent);
@@ -189,16 +188,16 @@ public class InterestFilter extends ViewerFilter {
 	 */
 	public void addTemporarilyUnfiltered(Object temporarilyUnfilteredObject) {
 		if (temporarilyUnfiltered == null) {
-			temporarilyUnfiltered = new HashSet<Object>();
+			temporarilyUnfiltered = new HashSet<>();
 		}
 		if (temporarilyUnfilteredObject instanceof Tree) {
-			this.temporarilyUnfiltered.add(Tree.class);
+			temporarilyUnfiltered.add(Tree.class);
 		} else {
 			// make sure to remove the tree so that we dont have weird performance issues
-			this.temporarilyUnfiltered.remove(Tree.class);
-			this.temporarilyUnfiltered.add(temporarilyUnfilteredObject);
+			temporarilyUnfiltered.remove(Tree.class);
+			temporarilyUnfiltered.add(temporarilyUnfilteredObject);
 		}
-		this.lastTemporarilyUnfiltered = temporarilyUnfilteredObject;
+		lastTemporarilyUnfiltered = temporarilyUnfilteredObject;
 	}
 
 	/**
@@ -206,8 +205,8 @@ public class InterestFilter extends ViewerFilter {
 	 */
 	public boolean resetTemporarilyUnfiltered() {
 		if (temporarilyUnfiltered != null || lastTemporarilyUnfiltered != null) {
-			this.temporarilyUnfiltered = null;
-			this.lastTemporarilyUnfiltered = null;
+			temporarilyUnfiltered = null;
+			lastTemporarilyUnfiltered = null;
 			return true;
 		} else {
 			return false;

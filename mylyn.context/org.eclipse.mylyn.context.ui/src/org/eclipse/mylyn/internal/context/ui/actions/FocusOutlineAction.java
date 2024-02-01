@@ -69,7 +69,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 	 */
 	private void configureDecorator(TreeViewer viewer) {
 		if (viewer != null) {
-			if ((viewer.getLabelProvider() instanceof ILabelProvider)
+			if (viewer.getLabelProvider() instanceof ILabelProvider
 					&& !(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
 				viewer.setLabelProvider(new DecoratingLabelProvider((ILabelProvider) viewer.getLabelProvider(),
 						PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
@@ -79,7 +79,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return viewers;
 		}

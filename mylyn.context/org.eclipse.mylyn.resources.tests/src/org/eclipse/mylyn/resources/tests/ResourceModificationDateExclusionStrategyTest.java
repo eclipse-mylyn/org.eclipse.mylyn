@@ -52,7 +52,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		long oldDate = new Date().getTime() - 5000;
 
 		// we need to have contents for teh file to be local
-		StringBuffer fileContents = new StringBuffer("FileContents");
+		StringBuilder fileContents = new StringBuilder("FileContents");
 		ByteArrayInputStream fileInput = new ByteArrayInputStream(fileContents.toString().getBytes("UTF-8"));
 		file = project.getProject().getFile("test.txt");
 		file.create(fileInput, true, null);

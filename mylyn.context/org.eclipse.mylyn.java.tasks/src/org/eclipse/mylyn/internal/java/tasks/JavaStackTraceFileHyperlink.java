@@ -58,20 +58,24 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 		this.highlightingRegion = highlightingRegion;
 	}
 
+	@Override
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
 
+	@Override
 	public String getHyperlinkText() {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public String getTypeLabel() {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public void open() {
 
 		try {
@@ -184,8 +188,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 							.getActiveWorkbenchWindow()
 							.getActivePage()
 							.openEditor(editorInput, editorId);
-					if (editorPart instanceof ITextEditor && lineNumber >= 0) {
-						ITextEditor textEditor = (ITextEditor) editorPart;
+					if (editorPart instanceof ITextEditor textEditor && lineNumber >= 0) {
 						IDocumentProvider provider = textEditor.getDocumentProvider();
 						provider.connect(editorInput);
 						IDocument document = provider.getDocument(editorInput);
@@ -225,7 +228,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 
 			if (start >= 0) {
 				// remove the class name
-				start = (qualifier.subSequence(0, start).toString()).lastIndexOf('.');
+				start = qualifier.subSequence(0, start).toString().lastIndexOf('.');
 				if (start == -1) {
 					start = 0; // default package
 				}
@@ -263,8 +266,9 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 		throw new CoreException(null);
 	}
 
+	@Override
 	public IRegion getHighlightingRegion() {
-		return (highlightingRegion != null) ? highlightingRegion : region;
+		return highlightingRegion != null ? highlightingRegion : region;
 	}
 
 }

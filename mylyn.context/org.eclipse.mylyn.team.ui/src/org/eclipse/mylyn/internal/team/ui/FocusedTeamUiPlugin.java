@@ -40,9 +40,9 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	private static FocusedTeamUiPlugin INSTANCE;
 
-	private final Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<AbstractContextChangeSetManager>();
+	private final Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<>();
 
-	private final Map<ActiveChangeSetManager, AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashMap<ActiveChangeSetManager, AbstractActiveChangeSetProvider>();
+	private final Map<ActiveChangeSetManager, AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashMap<>();
 
 	private CommitTemplateManager commitTemplateManager;
 
@@ -62,21 +62,19 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 		initPreferenceDefaults();
 		commitTemplateManager = new CommitTemplateManager();
 
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					FocusedTeamExtensionPointReader extensionPointReader = new FocusedTeamExtensionPointReader();
-					extensionPointReader.readExtensions();
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			try {
+				FocusedTeamExtensionPointReader extensionPointReader = new FocusedTeamExtensionPointReader();
+				extensionPointReader.readExtensions();
 
-					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
-						for (AbstractContextChangeSetManager changeSetManager : changeSetManagers) {
-							changeSetManager.enable();
-						}
+				if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
+					for (AbstractContextChangeSetManager changeSetManager : changeSetManagers) {
+						changeSetManager.enable();
 					}
-				} catch (Exception e) {
-					StatusHandler.log(
-							new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Mylyn Team start failed", e)); //$NON-NLS-1$
 				}
+			} catch (Exception e) {
+				StatusHandler.log(
+						new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Mylyn Team start failed", e)); //$NON-NLS-1$
 			}
 		});
 	}

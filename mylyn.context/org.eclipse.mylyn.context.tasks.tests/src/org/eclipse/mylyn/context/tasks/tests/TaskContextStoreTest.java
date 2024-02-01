@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.tasks.ui.TaskContextStore;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
@@ -27,6 +25,8 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

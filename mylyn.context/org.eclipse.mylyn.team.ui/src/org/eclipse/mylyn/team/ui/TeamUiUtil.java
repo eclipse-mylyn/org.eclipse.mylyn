@@ -36,14 +36,14 @@ import org.eclipse.swt.widgets.Display;
 public class TeamUiUtil {
 
 	/**
-	 * Returns a commit comment specific to <code>task</code> and <code>resources</code>. If <code>resources</code> is
-	 * null or the associated projects do not specify a custom commit comment template the global template is used.
+	 * Returns a commit comment specific to <code>task</code> and <code>resources</code>. If <code>resources</code> is null or the
+	 * associated projects do not specify a custom commit comment template the global template is used.
 	 * <p>
 	 * This method must be invoked on the UI thread.
 	 * 
 	 * @param checkTaskRepository
-	 *            if true, a warning dialog is displayed in case <code>task</code> is associated with a different
-	 *            repository than any of the <code>resources</code>
+	 *            if true, a warning dialog is displayed in case <code>task</code> is associated with a different repository than any of the
+	 *            <code>resources</code>
 	 * @param task
 	 *            the task to generate the commit comment for
 	 * @param resources
@@ -54,7 +54,7 @@ public class TeamUiUtil {
 	public static String getComment(boolean checkTaskRepository, ITask task, IResource[] resources) {
 		// lookup project specific template
 		String template = null;
-		Set<IProject> projects = new HashSet<IProject>();
+		Set<IProject> projects = new HashSet<>();
 		if (resources != null) {
 			for (IResource resource : resources) {
 				IProject project = resource.getProject();

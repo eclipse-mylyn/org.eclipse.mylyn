@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IImportContainer;
@@ -48,27 +46,23 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 	protected StructuredSelection currentSelection = null;
 
 	public JavaEditingMonitor() {
-		super();
 	}
 
 	/**
-	 * Only public for testing. Note: Two sequential selections on the same element are deemed to be an edit of the
-	 * selection as this is the best guess that can be made. See bug 252306.
+	 * Only public for testing. Note: Two sequential selections on the same element are deemed to be an edit of the selection as this is the
+	 * best guess that can be made. See bug 252306.
 	 */
 	@Override
 	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		try {
 			IJavaElement selectedElement = null;
-			if (selection instanceof StructuredSelection) {
-				StructuredSelection structuredSelection = (StructuredSelection) selection;
-
+			if (selection instanceof StructuredSelection structuredSelection) {
 				if (structuredSelection.equals(currentSelection)) {
 					return;
 				}
 				currentSelection = structuredSelection;
 
-				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-					Object selectedObject = iterator.next();
+				for (Object selectedObject : structuredSelection) {
 					if (selectedObject instanceof IJavaElement) {
 						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(
 								(IJavaElement) selectedObject);
@@ -82,65 +76,61 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
 				}
-			} else {
-				if (selection instanceof TextSelection && part instanceof JavaEditor) {
-					currentEditor = (JavaEditor) part;
-					TextSelection textSelection = (TextSelection) selection;
-					selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
-					if (selectedElement instanceof IPackageDeclaration) {
-						// HACK: ignoring these selections
-						return;
-					}
-					IJavaElement[] resolved = SelectionConverter.codeResolve(currentEditor);
-					if (resolved != null && resolved.length == 1 && !resolved[0].equals(selectedElement)) {
-						lastResolvedElement = resolved[0];
-					}
+			} else if (selection instanceof TextSelection && part instanceof JavaEditor) {
+				currentEditor = (JavaEditor) part;
+				TextSelection textSelection = (TextSelection) selection;
+				selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
+				if (selectedElement instanceof IPackageDeclaration) {
+					// HACK: ignoring these selections
+					return;
+				}
+				IJavaElement[] resolved = SelectionConverter.codeResolve(currentEditor);
+				if (resolved != null && resolved.length == 1 && !resolved[0].equals(selectedElement)) {
+					lastResolvedElement = resolved[0];
+				}
 
-					boolean selectionResolved = false;
-					if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
-						// navigation between two elements
-						if (lastResolvedElement != null && lastSelectedElement != null
-								&& lastResolvedElement.equals(selectedElement)
-								&& !lastSelectedElement.equals(lastResolvedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID,
-									contributeToContext);
-							selectionResolved = true;
-						} else if (lastSelectedElement != null && lastSelectedElement.equals(lastResolvedElement)
-								&& !lastSelectedElement.equals(selectedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID,
-									contributeToContext);
-							selectionResolved = true;
-						}
-					} else if (selectedElement != null && lastSelectedElement != null
+				boolean selectionResolved = false;
+				if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
+					// navigation between two elements
+					if (lastResolvedElement != null && lastSelectedElement != null
+							&& lastResolvedElement.equals(selectedElement)
+							&& !lastSelectedElement.equals(lastResolvedElement)) {
+						super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
+						selectionResolved = true;
+					} else if (lastSelectedElement != null && lastSelectedElement.equals(lastResolvedElement)
 							&& !lastSelectedElement.equals(selectedElement)) {
-						if (lastSelectedElement.getElementName().equals(selectedElement.getElementName())) {
-							// navigation between two elements
-							if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
-										contributeToContext);
-								selectionResolved = true;
-							} else if (selectedElement instanceof IType && lastSelectedElement instanceof IType) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
-										contributeToContext);
-								selectionResolved = true;
-							}
+						super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
+						selectionResolved = true;
+					}
+				} else if (selectedElement != null && lastSelectedElement != null
+						&& !lastSelectedElement.equals(selectedElement)) {
+					if (lastSelectedElement.getElementName().equals(selectedElement.getElementName())) {
+						// navigation between two elements
+						if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
+							super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
+									contributeToContext);
+							selectionResolved = true;
+						} else if (selectedElement instanceof IType && lastSelectedElement instanceof IType) {
+							super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
+									contributeToContext);
+							selectionResolved = true;
 						}
 					}
-					if (selectedElement != null) {
-						// selection of an element
-						if (!selectionResolved && selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement, contributeToContext);
-						} else if (!selectedElement.equals(lastSelectedElement)) {
-							super.handleElementSelection(part, selectedElement, contributeToContext);
-						}
+				}
+				if (selectedElement != null) {
+					// selection of an element
+					if (!selectionResolved && selectedElement.equals(lastSelectedElement)) {
+						super.handleElementEdit(part, selectedElement, contributeToContext);
+					} else if (!selectedElement.equals(lastSelectedElement)) {
+						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
+				}
 
-					IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(selectedElement);
-					if (checkedElement == null) {
-						return;
-					} else {
-						selectedElement = checkedElement;
-					}
+				IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(selectedElement);
+				if (checkedElement == null) {
+					return;
+				} else {
+					selectedElement = checkedElement;
 				}
 			}
 			if (selectedElement != null) {

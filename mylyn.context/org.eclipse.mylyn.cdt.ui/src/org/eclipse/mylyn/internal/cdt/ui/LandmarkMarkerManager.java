@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -45,40 +44,39 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; //$NON-NLS-1$
 
-	private final Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
+	private final Map<IInteractionElement, Long> markerMap = new HashMap<>();
 
 	public LandmarkMarkerManager() {
-		super();
 	}
 
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case PRE_ACTIVATED:
-			break;
-		case ACTIVATED:
-			modelUpdated();
-			break;
-		case DEACTIVATED:
-			modelUpdated();
-			break;
-		case CLEARED:
-			modelUpdated();
-			break;
-		case INTEREST_CHANGED:
-			break;
-		case LANDMARKS_ADDED:
-			for (IInteractionElement element : event.getElements()) {
-				addedLandmark(element);
-			}
-			break;
-		case LANDMARKS_REMOVED:
-			for (IInteractionElement element : event.getElements()) {
-				removedLandmark(element);
-			}
-			break;
-		case ELEMENTS_DELETED:
-			break;
+			case PRE_ACTIVATED:
+				break;
+			case ACTIVATED:
+				modelUpdated();
+				break;
+			case DEACTIVATED:
+				modelUpdated();
+				break;
+			case CLEARED:
+				modelUpdated();
+				break;
+			case INTEREST_CHANGED:
+				break;
+			case LANDMARKS_ADDED:
+				for (IInteractionElement element : event.getElements()) {
+					addedLandmark(element);
+				}
+				break;
+			case LANDMARKS_REMOVED:
+				for (IInteractionElement element : event.getElements()) {
+					removedLandmark(element);
+				}
+				break;
+			case ELEMENTS_DELETED:
+				break;
 		}
 	}
 
@@ -106,23 +104,18 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 					final ISourceRange range = ((ISourceReference) element).getSourceRange();
 					final IResource resource = element.getUnderlyingResource();
 					if (resource instanceof IFile) {
-						IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-							public void run(IProgressMonitor monitor) throws CoreException {
-								IMarker marker = resource.createMarker(ID_MARKER_LANDMARK);
-								if (marker != null && range != null) {
-									marker.setAttribute(IMarker.CHAR_START, range.getStartPos());
-									marker.setAttribute(IMarker.CHAR_END, range.getStartPos() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, Messages.LandmarkMarkerManager_Mylyn_Landmark);
-									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-									markerMap.put(node, marker.getId());
-								}
+						IWorkspaceRunnable runnable = monitor -> {
+							IMarker marker = resource.createMarker(ID_MARKER_LANDMARK);
+							if (marker != null && range != null) {
+								marker.setAttribute(IMarker.CHAR_START, range.getStartPos());
+								marker.setAttribute(IMarker.CHAR_END, range.getStartPos() + range.getLength());
+								marker.setAttribute(IMarker.MESSAGE, Messages.LandmarkMarkerManager_Mylyn_Landmark);
+								marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+								markerMap.put(node, marker.getId());
 							}
 						};
 						resource.getWorkspace().run(runnable, null);
 					}
-				} catch (CModelException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-							"Unexpected error while updating landmark markers", e)); //$NON-NLS-1$
 				} catch (CoreException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
 							"Unexpected error while updating landmark markers", e)); //$NON-NLS-1$
@@ -147,21 +140,19 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 					&& element instanceof ISourceReference) {
 				try {
 					final IResource resource = element.getUnderlyingResource();
-					IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-						public void run(IProgressMonitor monitor) throws CoreException {
-							if (resource != null) {
-								try {
-									if (markerMap.containsKey(node)) {
-										long id = markerMap.get(node);
-										IMarker marker = resource.getMarker(id);
-										if (marker != null) {
-											marker.delete();
-										}
+					IWorkspaceRunnable runnable = monitor -> {
+						if (resource != null) {
+							try {
+								if (markerMap.containsKey(node)) {
+									long id = markerMap.get(node);
+									IMarker marker = resource.getMarker(id);
+									if (marker != null) {
+										marker.delete();
 									}
-								} catch (NullPointerException e) {
-									StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-											"Could not update markers.", e)); //$NON-NLS-1$
 								}
+							} catch (NullPointerException e) {
+								StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+										"Could not update markers.", e)); //$NON-NLS-1$
 							}
 						}
 					};

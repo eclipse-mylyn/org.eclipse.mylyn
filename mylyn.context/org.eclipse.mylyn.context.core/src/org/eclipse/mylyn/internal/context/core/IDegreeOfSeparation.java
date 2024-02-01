@@ -20,8 +20,8 @@ package org.eclipse.mylyn.internal.context.core;
  */
 public interface IDegreeOfSeparation {
 
-	public abstract String getLabel();
+	String getLabel();
 
-	public abstract int getDegree();
+	int getDegree();
 
 }

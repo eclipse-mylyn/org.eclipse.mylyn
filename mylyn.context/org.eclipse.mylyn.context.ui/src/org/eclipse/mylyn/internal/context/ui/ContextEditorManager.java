@@ -34,16 +34,16 @@ public class ContextEditorManager {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case INTEREST_CHANGED:
-				for (IInteractionElement element : event.getElements()) {
-					closeEditor(element, false);
-				}
-				break;
-			case ELEMENTS_DELETED:
-				for (IInteractionElement element : event.getElements()) {
-					closeEditor(element, true);
-				}
-				break;
+				case INTEREST_CHANGED:
+					for (IInteractionElement element : event.getElements()) {
+						closeEditor(element, false);
+					}
+					break;
+				case ELEMENTS_DELETED:
+					for (IInteractionElement element : event.getElements()) {
+						closeEditor(element, true);
+					}
+					break;
 			}
 		}
 	};

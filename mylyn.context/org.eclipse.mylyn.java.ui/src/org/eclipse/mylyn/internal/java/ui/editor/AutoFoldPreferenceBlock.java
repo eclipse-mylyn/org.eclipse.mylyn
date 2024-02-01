@@ -34,6 +34,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 		// never used
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 		Composite inner = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
@@ -55,7 +56,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 		// FoldingKeys.COLLAPSE_INNER_TYPES, 0); //$NON-NLS-1$
 		// addCheckBox(inner, "collapse.static_initializers",
 		// FoldingKeys.COLLAPSE_STATICS, 0); //$NON-NLS-1$
-		//				
+		//
 		// addCheckBox(inner, "collapse.comment_blocks",
 		// FoldingKeys.COLLAPSE_COMMENT_BLOCKS, 0); //$NON-NLS-1$
 		// addCheckBox(inner, "collapse.javadocs",
@@ -63,7 +64,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 
 		// Label label2 = new Label(inner, SWT.LEFT);
 		// label2.setText( "minSize.title");
-		//		
+		//
 		// minimumLines = new Text(inner, SWT.BORDER | SWT.SINGLE);
 		// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		// gd.horizontalSpan= 1;
@@ -78,6 +79,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 	 * 
 	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock#initialize()
 	 */
+	@Override
 	public void initialize() {
 
 		// Iterator it= checkBoxes.keySet().iterator();
@@ -96,6 +98,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 	 * 
 	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock#performOk()
 	 */
+	@Override
 	public void performOk() {
 		// Iterator it = checkBoxes.keySet().iterator();
 		// while(it.hasNext()) {
@@ -103,7 +106,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 		// String key = (String) checkBoxes.get(b);
 		// preferences.setValue(key, b.getSelection());
 		// }
-		//		
+		//
 		// int minLines = Integer.parseInt(minimumLines.getText());
 		// preferences.setValue(FoldingKeys.MINIMUM_SIZE, minLines);
 
@@ -113,22 +116,24 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 	// int indentation) {
 	// Button checkBox= new Button(parent, SWT.CHECK);
 	// checkBox.setText(label);
-	//		
+	//
 	// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 	// gd.horizontalIndent= indentation;
 	// gd.horizontalSpan= 1;
 	// gd.grabExcessVerticalSpace= false;
 	// checkBox.setLayoutData(gd);
-	//				
+	//
 	// checkBoxes.put(checkBox, key);
-	//		
+	//
 	// return checkBox;
 	// }
 
+	@Override
 	public void performDefaults() {
 		initialize();
 	}
 
+	@Override
 	public void dispose() {
 		// don't care if we are disposed
 

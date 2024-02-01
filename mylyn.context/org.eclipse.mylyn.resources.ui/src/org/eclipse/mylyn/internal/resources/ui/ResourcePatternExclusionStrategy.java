@@ -29,18 +29,21 @@ public class ResourcePatternExclusionStrategy implements IResourceExclusionStrat
 
 	private static final String LEADING_PATH_WILDCARD = "**/"; //$NON-NLS-1$
 
-	private Set<String> excludedPatterns = new HashSet<String>();;
+	private Set<String> excludedPatterns = new HashSet<>();
 
+	@Override
 	public void init() {
 		// ignore
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void update() {
-		Set<String> excludedPatterns = new HashSet<String>();
+		Set<String> excludedPatterns = new HashSet<>();
 		Set<String> excludedResourcePatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		excludedResourcePatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
 		for (String pattern : excludedResourcePatterns) {
@@ -52,6 +55,7 @@ public class ResourcePatternExclusionStrategy implements IResourceExclusionStrat
 		this.excludedPatterns = excludedPatterns;
 	}
 
+	@Override
 	public boolean isExcluded(IResource resource) {
 		return isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns);
 	}
@@ -93,10 +97,10 @@ public class ResourcePatternExclusionStrategy implements IResourceExclusionStrat
 	}
 
 	public static Collection<String> convertToAntPattern(String basicPattern) {
-		Set<String> patterns = new HashSet<String>();
+		Set<String> patterns = new HashSet<>();
 		patterns.add(basicPattern);
 		if (!basicPattern.contains(LEADING_PATH_WILDCARD) && !basicPattern.contains(TRAILING_PATH_WILDCARD)) {
-			// we don't want to migrate patterns that are already ant-style paterns 
+			// we don't want to migrate patterns that are already ant-style paterns
 			patterns.add(LEADING_PATH_WILDCARD + basicPattern + TRAILING_PATH_WILDCARD);
 			patterns.add(LEADING_PATH_WILDCARD + basicPattern);
 			patterns.add(basicPattern + TRAILING_PATH_WILDCARD);

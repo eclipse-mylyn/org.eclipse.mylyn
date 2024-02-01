@@ -36,16 +36,18 @@ public class InteractionContextRelation implements IInteractionRelation {
 	public InteractionContextRelation(String kind, String edgeKind, IInteractionElement source,
 			IInteractionElement target, InteractionContext context) {
 		interest = new DegreeOfInterest(context, context.getScaling());
-		this.structureKind = kind;
-		this.relationshipHandle = edgeKind;
+		structureKind = kind;
+		relationshipHandle = edgeKind;
 		this.target = target;
 		this.source = source;
 	}
 
+	@Override
 	public IInteractionElement getTarget() {
 		return target;
 	}
 
+	@Override
 	public IDegreeOfInterest getInterest() {
 		return interest;
 	}
@@ -56,18 +58,22 @@ public class InteractionContextRelation implements IInteractionRelation {
 				+ target.getHandleIdentifier() + ")"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getLabel() {
 		return toString();
 	}
 
+	@Override
 	public String getRelationshipHandle() {
 		return relationshipHandle;
 	}
 
+	@Override
 	public String getContentType() {
 		return structureKind;
 	}
 
+	@Override
 	public IInteractionElement getSource() {
 		return source;
 	}

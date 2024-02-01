@@ -51,6 +51,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing"; //$NON-NLS-1$
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		initWindow = window;
 		IWorkbenchPage activePage = initWindow.getActivePage();
@@ -59,7 +60,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		for (int i = 0; i < viewNames.length; i++) {
 			StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
 			if (viewer != null) {

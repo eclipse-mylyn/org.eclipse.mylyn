@@ -59,8 +59,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Extending this class makes it possible to apply Mylyn management to a structured view (e.g. to provide interest-based
- * filtering).
+ * Extending this class makes it possible to apply Mylyn management to a structured view (e.g. to provide interest-based filtering).
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -70,7 +69,7 @@ public abstract class AbstractFocusViewAction extends Action
 
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter."; //$NON-NLS-1$
 
-	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
+	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<>();
 
 	protected String globalPrefId;
 
@@ -80,7 +79,7 @@ public abstract class AbstractFocusViewAction extends Action
 
 	protected IViewPart viewPart;
 
-	protected Map<StructuredViewer, List<ViewerFilter>> previousFilters = new WeakHashMap<StructuredViewer, List<ViewerFilter>>();
+	protected Map<StructuredViewer, List<ViewerFilter>> previousFilters = new WeakHashMap<>();
 
 	private final boolean manageViewer;
 
@@ -105,7 +104,7 @@ public abstract class AbstractFocusViewAction extends Action
 	 */
 	protected boolean showEmptyViewMessage = false;
 
-	private final Map<StructuredViewer, EmptyContextDrawer> viewerToDrawerMap = new HashMap<StructuredViewer, EmptyContextDrawer>();
+	private final Map<StructuredViewer, EmptyContextDrawer> viewerToDrawerMap = new HashMap<>();
 
 	private class EmptyContextDrawer implements Listener {
 
@@ -119,15 +118,16 @@ public abstract class AbstractFocusViewAction extends Action
 			this.tree = tree;
 		}
 
+		@Override
 		public void handleEvent(Event event) {
 			if (tree != null && tree.getItemCount() == 0) {
 				switch (event.type) {
-				case SWT.Paint: {
-					int offset = 7;
-					event.gc.drawImage(IMAGE, offset, offset);
-					event.gc.drawText(LABEL, offset + IMAGE.getBounds().width + 5, offset);
-					break;
-				}
+					case SWT.Paint: {
+						int offset = 7;
+						event.gc.drawImage(IMAGE, offset, offset);
+						event.gc.drawText(LABEL, offset + IMAGE.getBounds().width + 5, offset);
+						break;
+					}
 				}
 			}
 		}
@@ -138,23 +138,24 @@ public abstract class AbstractFocusViewAction extends Action
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case ACTIVATED:
-				if (updateEnablementWithContextActivation()) {
-					updateEnablement(initAction);
-				}
-				break;
-			case DEACTIVATED:
-				if (updateEnablementWithContextActivation()) {
-					updateEnablement(initAction);
-					update(false);
-				}
-				break;
+				case ACTIVATED:
+					if (updateEnablementWithContextActivation()) {
+						updateEnablement(initAction);
+					}
+					break;
+				case DEACTIVATED:
+					if (updateEnablementWithContextActivation()) {
+						updateEnablement(initAction);
+						update(false);
+					}
+					break;
 			}
 		};
 	};
 
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
+		@Override
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
 			// restore the viewers' previous state
 			if (wasRun && manageLinking) {
@@ -183,6 +184,7 @@ public abstract class AbstractFocusViewAction extends Action
 			return true;
 		}
 
+		@Override
 		public void postShutdown(IWorkbench workbench) {
 			// ignore
 		}
@@ -210,7 +212,6 @@ public abstract class AbstractFocusViewAction extends Action
 
 	public AbstractFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
-		super();
 		this.interestFilter = interestFilter;
 		this.manageViewer = manageViewer;
 		this.manageFilters = manageFilters;
@@ -222,6 +223,7 @@ public abstract class AbstractFocusViewAction extends Action
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
+	@Override
 	public void dispose() {
 		partMap.remove(getPartForAction());
 		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
@@ -235,11 +237,13 @@ public abstract class AbstractFocusViewAction extends Action
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
 	}
 
+	@Override
 	public void init(IAction action) {
 		initAction = action;
 		initAction.setChecked(action.isChecked());
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		String id = view.getSite().getId();
 		globalPrefId = PREF_ID_PREFIX + id;
@@ -252,12 +256,14 @@ public abstract class AbstractFocusViewAction extends Action
 		return true;
 	}
 
+	@Override
 	public void run(IAction action) {
 		setChecked(action.isChecked());
 		valueChanged(action, action.isChecked(), true);
 		wasRun = true;
 	}
 
+	@Override
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
 	}
@@ -337,6 +343,7 @@ public abstract class AbstractFocusViewAction extends Action
 		}
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (manageLinking && selection instanceof ITextSelection && part instanceof IEditorPart) {
 			try {
@@ -398,6 +405,7 @@ public abstract class AbstractFocusViewAction extends Action
 		// ignore
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		updateEnablement(action);
 	}
@@ -484,7 +492,7 @@ public abstract class AbstractFocusViewAction extends Action
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
 
 			if (viewPart != null && manageFilters) {
-				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
+				Set<ViewerFilter> toAdd = new HashSet<>();
 				Set<String> preservedFilterClasses = getPreservedFilterClasses(true);
 
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
@@ -549,7 +557,7 @@ public abstract class AbstractFocusViewAction extends Action
 			List<ViewerFilter> restoreFilters = previousFilters.remove(viewer);
 			if (restoreFilters != null && viewPart != null && manageFilters) {
 				// install all previous filters and all current filters
-				Set<ViewerFilter> filters = new HashSet<ViewerFilter>(restoreFilters);
+				Set<ViewerFilter> filters = new HashSet<>(restoreFilters);
 				filters.addAll(Arrays.asList(viewer.getFilters()));
 				// ensure that all interest filters are removed
 				for (Iterator<ViewerFilter> it = filters.iterator(); it.hasNext();) {

@@ -218,10 +218,8 @@ public class ContextMementoMigrator {
 		try {
 			if (!storable.exists("context-state.xml")) { //$NON-NLS-1$
 				OutputStream out = storable.write("context-state.xml", null); //$NON-NLS-1$
-				try {
+				try (out) {
 					stateManager.write(out, state);
-				} finally {
-					out.close();
 				}
 			}
 		} finally {

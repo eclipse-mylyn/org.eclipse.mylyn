@@ -25,7 +25,6 @@ public class ToggleDecorateInterestLevelAction extends Action {
 	public static final String PREF_INTERSECTION_MODE = "org.eclipse.mylyn.ui.interest.intersection"; //$NON-NLS-1$
 
 	public ToggleDecorateInterestLevelAction() {
-		super();
 		setText(Messages.ToggleDecorateInterestLevelAction_Decorate_Interest);
 		setToolTipText(Messages.ToggleDecorateInterestLevelAction_Toggle_Interest_Level_Decorator);
 

@@ -57,7 +57,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 	 */
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		if (cachedViewer == null) {
 			try {
 				IViewPart viewPart = super.getPartForAction();

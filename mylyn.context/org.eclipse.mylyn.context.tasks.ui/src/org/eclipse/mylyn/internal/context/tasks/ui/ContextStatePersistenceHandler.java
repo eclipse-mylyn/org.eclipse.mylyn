@@ -75,7 +75,7 @@ public class ContextStatePersistenceHandler {
 			}
 		} else {
 //			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
-//					"Context restore failed: No corresponding task for {0} found.", context.getHandleIdentifier()))); //$NON-NLS-1$			
+//					"Context restore failed: No corresponding task for {0} found.", context.getHandleIdentifier()))); //$NON-NLS-1$
 		}
 	}
 
@@ -138,10 +138,8 @@ public class ContextStatePersistenceHandler {
 		if (storable != null) {
 			try {
 				OutputStream out = storable.write(FILE_NAME, null);
-				try {
+				try (out) {
 					getStateManager().saveState(context, out, allowModifications);
-				} finally {
-					out.close();
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
@@ -152,7 +150,7 @@ public class ContextStatePersistenceHandler {
 			}
 		} else {
 //			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
-//					"Context save failed: No corresponding task for {0} found.", context.getHandleIdentifier()))); //$NON-NLS-1$			
+//					"Context save failed: No corresponding task for {0} found.", context.getHandleIdentifier()))); //$NON-NLS-1$
 		}
 	}
 
@@ -190,9 +188,9 @@ public class ContextStatePersistenceHandler {
 	private void copyStateFile(ICommonStorable sourceStorable, ICommonStorable targetStorable, String handle)
 			throws CoreException, IOException {
 		BufferedInputStream in = new BufferedInputStream(sourceStorable.read(handle, null));
-		try {
+		try (in) {
 			BufferedOutputStream out = new BufferedOutputStream(targetStorable.write(handle, null));
-			try {
+			try (out) {
 				byte[] buffer = new byte[4096];
 				while (true) {
 					int count = in.read(buffer);
@@ -201,11 +199,7 @@ public class ContextStatePersistenceHandler {
 					}
 					out.write(buffer, 0, count);
 				}
-			} finally {
-				out.close();
 			}
-		} finally {
-			in.close();
 		}
 	}
 
@@ -219,7 +213,7 @@ public class ContextStatePersistenceHandler {
 
 	private ICommonStorable getStorable(String contextHandle) {
 		ITask task = TasksUi.getRepositoryModel().getTask(contextHandle);
-		return (task != null) ? getStorable(task) : null;
+		return task != null ? getStorable(task) : null;
 	}
 
 	private boolean isOnUiThread() {

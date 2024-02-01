@@ -25,7 +25,7 @@ public class ColorMap {
 
 	public static final Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255);
 
-	public static final Color DEFAULT = null;//Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);//new Color(Display.getDefault(), 255, 255, 255); 
+	public static final Color DEFAULT = null;//Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);//new Color(Display.getDefault(), 255, 255, 255);
 
 	public static final Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70);
 
@@ -108,14 +108,12 @@ public class ColorMap {
 				} else {
 					return 0;
 				}
+			} else if (gs2 == LIGHTEN) {
+				return -2;
+			} else if (gs2 == STANDARD) {
+				return -1;
 			} else {
-				if (gs2 == LIGHTEN) {
-					return -2;
-				} else if (gs2 == STANDARD) {
-					return -1;
-				} else {
-					return 0;
-				}
+				return 0;
 			}
 		}
 	}

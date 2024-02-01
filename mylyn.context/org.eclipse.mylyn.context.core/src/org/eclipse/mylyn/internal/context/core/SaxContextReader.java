@@ -46,15 +46,16 @@ public class SaxContextReader implements IInteractionContextReader {
 	/**
 	 * Reads the first entry in the zip file if an entry matching the handleIdentifier is not found.
 	 */
+	@Override
 	public InteractionContext readContext(String handleIdentifier, File file) {
 		if (!file.exists()) {
 			return null;
 		}
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
-			try {
+			try (fileInputStream) {
 				ZipInputStream zipInputStream = new ZipInputStream(fileInputStream);
-				try {
+				try (zipInputStream) {
 					// search for context entry
 					String encoded = URLEncoder.encode(handleIdentifier,
 							InteractionContextManager.CONTEXT_FILENAME_ENCODING);
@@ -77,11 +78,7 @@ public class SaxContextReader implements IInteractionContextReader {
 					reader.setContentHandler(contentHandler);
 					reader.parse(new InputSource(zipInputStream));
 					return contentHandler.getContext();
-				} finally {
-					zipInputStream.close();
 				}
-			} finally {
-				fileInputStream.close();
 			}
 		} catch (Exception e) {
 			File saveFile = new File(file.getAbsolutePath() + "-save"); //$NON-NLS-1$

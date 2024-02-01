@@ -12,9 +12,9 @@
 
 package org.eclipse.mylyn.team.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

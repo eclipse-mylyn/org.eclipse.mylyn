@@ -26,10 +26,12 @@ public class DegreeOfSeparation implements IDegreeOfSeparation {
 		this.degree = degree;
 	}
 
+	@Override
 	public String getLabel() {
 		return label;
 	}
 
+	@Override
 	public int getDegree() {
 		return degree;
 	}

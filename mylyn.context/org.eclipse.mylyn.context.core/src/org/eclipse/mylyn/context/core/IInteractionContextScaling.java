@@ -22,14 +22,14 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public interface IInteractionContextScaling {
 
-	public abstract float get(InteractionEvent.Kind kind);
+	float get(InteractionEvent.Kind kind);
 
-	public abstract float getDecay();
+	float getDecay();
 
-	public abstract float getInteresting();
+	float getInteresting();
 
-	public abstract float getLandmark();
+	float getLandmark();
 
-	public abstract float getForcedLandmark();
+	float getForcedLandmark();
 
 }

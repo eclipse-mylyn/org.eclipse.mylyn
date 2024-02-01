@@ -63,7 +63,7 @@ public class CDTContentAssistUtils {
 	public static Set<String> getDisableContentAssistIds(IPreferenceStore cdtPrefs) {
 		String oldValue = cdtPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
-		Set<String> disabledIds = new HashSet<String>();
+		Set<String> disabledIds = new HashSet<>();
 		while (tokenizer.hasMoreTokens()) {
 			disabledIds.add((String) tokenizer.nextElement());
 		}
@@ -71,7 +71,7 @@ public class CDTContentAssistUtils {
 	}
 
 	public static void updateDefaultPreference(IPreferenceStore cdtPrefs) {
-		// the Task-Focused category should be disabled if the user reverts to the default 
+		// the Task-Focused category should be disabled if the user reverts to the default
 		String defaultValue = cdtPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		cdtPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
 				defaultValue + ASSIST_MYLYN_TYPE + SEPARATOR_CODEASSIST);

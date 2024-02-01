@@ -28,7 +28,7 @@ public class TaskContextStoreEvent {
 
 	private final ITask targetTask;
 
-	private final Kind kind;;
+	private final Kind kind;
 
 	public TaskContextStoreEvent(Kind kind, ITask sourceTask, ITask targetTask) {
 		Assert.isNotNull(kind);

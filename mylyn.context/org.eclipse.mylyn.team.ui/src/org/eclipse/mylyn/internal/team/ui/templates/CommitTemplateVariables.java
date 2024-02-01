@@ -329,7 +329,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			java.util.Date date = getDate(task);
-			return (date != null) ? formatDate(date) : null;
+			return date != null ? formatDate(date) : null;
 		}
 
 		protected String formatDate(java.util.Date date) {

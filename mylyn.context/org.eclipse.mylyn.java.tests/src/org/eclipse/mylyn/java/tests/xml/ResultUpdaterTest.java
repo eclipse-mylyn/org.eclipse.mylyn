@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -34,6 +32,8 @@ import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider;
 import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -118,9 +118,10 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		Collection<InteractionContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());
-		;
+
 	}
 
+	@Override
 	public List<?> search(int dos, IInteractionElement node) throws IOException, CoreException {
 		if (node == null) {
 			return null;

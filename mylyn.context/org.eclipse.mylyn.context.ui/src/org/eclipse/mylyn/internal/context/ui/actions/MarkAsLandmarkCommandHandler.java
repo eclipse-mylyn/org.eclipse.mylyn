@@ -23,6 +23,7 @@ public class MarkAsLandmarkCommandHandler extends AbstractHandler {
 
 	private final InterestIncrementAction action = new InterestIncrementAction();
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		action.selectionChanged(null, HandlerUtil.getCurrentSelection(event));
 		action.run(null);

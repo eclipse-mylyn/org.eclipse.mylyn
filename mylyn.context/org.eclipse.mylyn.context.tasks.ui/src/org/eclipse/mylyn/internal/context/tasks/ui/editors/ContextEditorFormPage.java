@@ -124,8 +124,7 @@ public class ContextEditorFormPage extends FormPage {
 					commonViewer.getTree().setRedraw(false);
 					if (/*!mouseDown && */item == null) {
 						commonViewer.expandAll();
-					} else if (item != null && item instanceof IInteractionElement) {
-						IInteractionElement node = (IInteractionElement) item;
+					} else if (item != null && item instanceof IInteractionElement node) {
 						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
 								.getStructureBridge(node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
@@ -146,34 +145,34 @@ public class ContextEditorFormPage extends FormPage {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case ACTIVATED:
-				if (isActiveTask()) {
-					context.setWrappedContext(ContextCorePlugin.getContextManager().getActiveContext());
-					refresh();// in case activation was caused by a retrieve context
-				}
-				break;
-			case DEACTIVATED:
-				if (context.isForSameTaskAs(event.getContext())) {
-					context.setWrappedContext(
-							ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
-				}
-				break;
-			case CLEARED:
-				if (context.isForSameTaskAs(event.getContextHandle())) {// context may be null so check handle
-					context.setWrappedContext(
-							ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
-					refresh();//in this case the context has actually changed so refresh
-				}
-				break;
-			case ELEMENTS_DELETED:
-			case INTEREST_CHANGED:
-			case LANDMARKS_ADDED:
-			case LANDMARKS_REMOVED:
-				if (context.isForSameTaskAs(event.getContext())) {
-					context.setWrappedContext(event.getContext());
-					refresh(event.getElements());
-				}
-				break;
+				case ACTIVATED:
+					if (isActiveTask()) {
+						context.setWrappedContext(ContextCorePlugin.getContextManager().getActiveContext());
+						refresh();// in case activation was caused by a retrieve context
+					}
+					break;
+				case DEACTIVATED:
+					if (context.isForSameTaskAs(event.getContext())) {
+						context.setWrappedContext(
+								ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
+					}
+					break;
+				case CLEARED:
+					if (context.isForSameTaskAs(event.getContextHandle())) {// context may be null so check handle
+						context.setWrappedContext(
+								ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
+						refresh();//in this case the context has actually changed so refresh
+					}
+					break;
+				case ELEMENTS_DELETED:
+				case INTEREST_CHANGED:
+				case LANDMARKS_ADDED:
+				case LANDMARKS_REMOVED:
+					if (context.isForSameTaskAs(event.getContext())) {
+						context.setWrappedContext(event.getContext());
+						refresh(event.getElements());
+					}
+					break;
 			}
 		}
 	};
@@ -251,16 +250,19 @@ public class ContextEditorFormPage extends FormPage {
 		filterImage.setToolTipText(Messages.ContextEditorFormPage_Show_All_Elements);
 		filterImage.addHyperlinkListener(new IHyperlinkListener() {
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				doiScale.setSelection(0);
 				interestFilter.setThreshold(Integer.MIN_VALUE);
 				refresh();
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
@@ -276,10 +278,12 @@ public class ContextEditorFormPage extends FormPage {
 		doiScale.setSelection(SCALE_STEPS / 2);
 		doiScale.setMaximum(SCALE_STEPS);
 		doiScale.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateFilterThreshold();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// don't care about default selection
 			}
@@ -378,7 +382,7 @@ public class ContextEditorFormPage extends FormPage {
 		} else if (doiScale.getSelection() == SCALE_STEPS) {
 			interestFilter.setThreshold(Integer.MAX_VALUE);
 		} else {
-			double setting = doiScale.getSelection() - (SCALE_STEPS / 2);
+			double setting = doiScale.getSelection() - SCALE_STEPS / 2;
 			double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
 			interestFilter.setThreshold(threshold);
 		}
@@ -494,11 +498,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager("#PopupMenu") { //$NON-NLS-1$
-			private final IMenuListener listener = new IMenuListener() {
-				public void menuAboutToShow(IMenuManager manager) {
-					fillContextMenu(manager);
-				}
-			};
+			private final IMenuListener listener = manager -> fillContextMenu(manager);
 			{
 				addMenuListener(listener);
 			}

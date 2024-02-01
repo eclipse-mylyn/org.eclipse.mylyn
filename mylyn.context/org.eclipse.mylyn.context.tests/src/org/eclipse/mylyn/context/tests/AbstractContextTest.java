@@ -12,12 +12,12 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+
+import junit.framework.TestCase;
 
 /**
  * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractContextTest} instead

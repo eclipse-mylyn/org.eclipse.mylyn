@@ -36,13 +36,11 @@ public class TaskContextJUnitLaunchConfiguration extends JUnitLaunchConfiguratio
 		InteractionContextTestUtil.setupTestConfiguration(contextTestCases, configuration, monitor);
 
 		if (contextTestCases.isEmpty()) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+			PlatformUI.getWorkbench()
+					.getDisplay()
+					.asyncExec(() -> MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							Messages.TaskContextJUnitLaunchConfiguration_Context_Test_Suite,
-							Messages.TaskContextJUnitLaunchConfiguration_No_test_types_found_in_the_active_task_context);
-				}
-			});
+							Messages.TaskContextJUnitLaunchConfiguration_No_test_types_found_in_the_active_task_context));
 		}
 		return contextTestCases.toArray(new IMember[contextTestCases.size()]);
 	}

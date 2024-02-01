@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.context.tasks.ui.tests;
 
+import org.eclipse.mylyn.internal.context.tasks.ui.ContextTaskActivationListenerTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.mylyn.internal.context.tasks.ui.ContextTaskActivationListenerTest;
 
 public class AllContextTasksUiTests {
 

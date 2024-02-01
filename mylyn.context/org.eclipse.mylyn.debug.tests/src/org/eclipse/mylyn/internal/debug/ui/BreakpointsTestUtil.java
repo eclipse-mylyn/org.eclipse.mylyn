@@ -34,11 +34,11 @@ public class BreakpointsTestUtil {
 
 	public static IBreakpoint createTestBreakpoint() throws DebugException {
 		IResource testClass = ResourcesPlugin.getWorkspace().getRoot().findMember("/test/src/test.java"); //$NON-NLS-1$
-		return new JavaLineBreakpoint(testClass, "test", 2, 1, 5, 0, true, new HashMap<String, Object>()); //$NON-NLS-1$
+		return new JavaLineBreakpoint(testClass, "test", 2, 1, 5, 0, true, new HashMap<>()); //$NON-NLS-1$
 	}
 
 	public static List<IBreakpoint> createTestBreakpoints() throws DebugException {
-		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
+		List<IBreakpoint> breakpoints = new ArrayList<>();
 		breakpoints.add(createTestBreakpoint());
 		return breakpoints;
 	}

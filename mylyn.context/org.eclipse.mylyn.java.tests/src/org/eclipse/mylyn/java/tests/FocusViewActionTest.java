@@ -79,7 +79,7 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 		JavaUI.openInEditor(m1);
 
 //		FocusOutlineAction.getDefault().update(true);
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		IEditorReference[] refrences = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()

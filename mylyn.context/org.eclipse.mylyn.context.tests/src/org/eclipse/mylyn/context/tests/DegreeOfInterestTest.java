@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

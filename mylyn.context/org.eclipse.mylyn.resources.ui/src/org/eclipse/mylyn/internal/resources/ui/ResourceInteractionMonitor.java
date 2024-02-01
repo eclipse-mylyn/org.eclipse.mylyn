@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.internal.resources.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -41,12 +39,9 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 		if (ID_SYNCHRONIZE_VIEW.equals(part.getSite().getId())) {
 			return;
 		}
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
-
-//			Object selectedObject = structuredSelection.getFirstElement();
-			for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-				Object selectedObject = iterator.next();
+		if (selection instanceof StructuredSelection structuredSelection) {
+			//			Object selectedObject = structuredSelection.getFirstElement();
+			for (Object selectedObject : structuredSelection) {
 				IResource resource;
 				if (selectedObject instanceof IResource) {
 					resource = (IResource) selectedObject;
@@ -58,8 +53,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 			if (part instanceof EditorPart) {
 				try {
 					Object object = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
-					if (object instanceof IFile) {
-						IFile file = (IFile) object;
+					if (object instanceof IFile file) {
 						if (file.getFileExtension() != null
 								&& !ContextCore.getContentTypes().contains(file.getFileExtension())) {
 							super.handleElementEdit(part, object, contributeToContext);

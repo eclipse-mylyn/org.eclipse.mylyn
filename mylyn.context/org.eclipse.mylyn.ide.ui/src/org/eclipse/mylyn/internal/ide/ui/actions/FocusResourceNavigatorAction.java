@@ -42,10 +42,9 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		IViewPart part = super.getPartForAction();
-		if (part instanceof ProjectExplorer) {
-			ProjectExplorer explorer = (ProjectExplorer) part;
+		if (part instanceof ProjectExplorer explorer) {
 			viewers.add(explorer.getCommonViewer());
 		}
 		return viewers;
@@ -73,8 +72,7 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 					.getActionBars()
 					.getToolBarManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					if (actionItem.getAction() instanceof org.eclipse.ui.internal.navigator.actions.LinkEditorAction) {
 						actionItem.getAction().setEnabled(on);
 					}
@@ -84,8 +82,7 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 					.getActionBars()
 					.getMenuManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					// TODO: consider filing bug asking for extensibility
 					if (actionItem
 							.getAction() instanceof org.eclipse.ui.internal.navigator.filters.SelectFiltersAction) {

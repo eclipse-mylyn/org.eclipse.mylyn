@@ -36,6 +36,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object object, Class adapterType) {
 		if (!AbstractTaskReference.class.equals(adapterType)) {
@@ -51,6 +52,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		return adaptFromComment(object);
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
@@ -112,8 +114,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 				return resources[0];
 			}
 		}
-		if (element instanceof SynchronizeModelElement) {
-			SynchronizeModelElement modelElement = (SynchronizeModelElement) element;
+		if (element instanceof SynchronizeModelElement modelElement) {
 			IResource resource = modelElement.getResource();
 			if (resource != null) {
 				return resource;

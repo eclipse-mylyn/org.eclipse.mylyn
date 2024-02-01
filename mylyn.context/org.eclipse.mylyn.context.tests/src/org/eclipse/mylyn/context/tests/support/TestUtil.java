@@ -17,13 +17,13 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import junit.framework.AssertionFailedError;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -36,7 +36,7 @@ public class TestUtil {
 
 	public enum PrivilegeLevel {
 		ANONYMOUS, GUEST, USER, ADMIN
-	};
+	}
 
 	public static class Credentials {
 
@@ -84,19 +84,16 @@ public class TestUtil {
 
 		String defaultPassword = properties.getProperty("pass");
 
-		realm = (realm != null) ? realm + "." : "";
-		switch (level) {
-		case ANONYMOUS:
-			return createCredentials(properties, realm + "anon.", "", "");
-		case GUEST:
-			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
-		case USER:
-			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
-		case ADMIN:
-			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
-		}
+		realm = realm != null ? realm + "." : "";
+		return switch (level) {
+			case ANONYMOUS -> createCredentials(properties, realm + "anon.", "", "");
+			case GUEST -> createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
+			case USER -> createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
+			case ADMIN -> createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
+			default -> throw new AssertionFailedError("invalid privilege level");
+		};
 
-		throw new AssertionFailedError("invalid privilege level");
+
 	}
 
 	private static Credentials createCredentials(Properties properties, String prefix, String defaultUsername,

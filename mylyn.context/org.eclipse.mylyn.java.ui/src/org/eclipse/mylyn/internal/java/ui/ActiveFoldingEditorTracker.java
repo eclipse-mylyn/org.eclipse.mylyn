@@ -25,7 +25,7 @@ import org.eclipse.ui.IEditorPart;
  */
 public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
-	protected Map<JavaEditor, ActiveFoldingListener> editorListenerMap = new HashMap<JavaEditor, ActiveFoldingListener>();
+	protected Map<JavaEditor, ActiveFoldingListener> editorListenerMap = new HashMap<>();
 
 	@Override
 	public void editorOpened(IEditorPart part) {

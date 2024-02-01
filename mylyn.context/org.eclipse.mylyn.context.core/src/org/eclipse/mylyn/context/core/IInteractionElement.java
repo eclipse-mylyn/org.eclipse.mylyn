@@ -26,18 +26,18 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
  */
 public interface IInteractionElement extends IInteractionObject {
 
-	public abstract String getHandleIdentifier();
+	String getHandleIdentifier();
 
-	public abstract void setHandleIdentifier(String handle);
+	void setHandleIdentifier(String handle);
 
-	public abstract IInteractionContext getContext();
+	IInteractionContext getContext();
 
-	public abstract Collection<InteractionContextRelation> getRelations();
+	Collection<InteractionContextRelation> getRelations();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract IInteractionRelation getRelation(String targetHandle);
+	IInteractionRelation getRelation(String targetHandle);
 
-	public abstract void clearRelations();
+	void clearRelations();
 }

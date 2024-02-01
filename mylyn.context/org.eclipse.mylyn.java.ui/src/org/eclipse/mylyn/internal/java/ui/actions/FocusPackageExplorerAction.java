@@ -51,8 +51,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 	protected ISelection resolveSelection(IEditorPart part, ITextSelection changedSelection, StructuredViewer viewer)
 			throws CoreException {
 		Object elementToSelect = null;
-		if (changedSelection instanceof TextSelection && part instanceof JavaEditor) {
-			TextSelection textSelection = (TextSelection) changedSelection;
+		if (changedSelection instanceof TextSelection textSelection && part instanceof JavaEditor) {
 			IJavaElement javaElement = SelectionConverter.resolveEnclosingElement((JavaEditor) part, textSelection);
 			if (javaElement != null) {
 				elementToSelect = javaElement;
@@ -93,8 +92,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 					.getActionBars()
 					.getToolBarManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					if (actionItem.getAction() instanceof ToggleLinkingAction) {
 						actionItem.getAction().setEnabled(enabled);
 					}
@@ -104,8 +102,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 					.getActionBars()
 					.getMenuManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					// TODO: file bug asking for extensibility
 					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { //$NON-NLS-1$
 						actionItem.getAction().setEnabled(enabled);
@@ -114,7 +111,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 				// NOTE: turning off dynamically contributed filter items is not currently feasible
 //				else if (item instanceof ContributionItem) {
 //					ContributionItem contributionItem = (ContributionItem) item;
-//					
+//
 //					if (contributionItem.getClass().getSimpleName().equals("FilterActionMenuContributionItem")) {
 //						try {
 //							Class<?> clazz = contributionItem.getClass();
@@ -153,7 +150,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		// TODO: get from super
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {

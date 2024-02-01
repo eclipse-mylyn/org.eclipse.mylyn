@@ -32,19 +32,18 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { IInteractionContext.class };
 
+	@Override
 	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
 		if (adapterType == IInteractionContext.class) {
 			if (adaptableObject == TasksUi.getTaskActivityManager().getActiveTask()) {
 				return ContextCore.getContextManager().getActiveContext();
-			} else if (adaptableObject instanceof TaskEditorInput) {
-				TaskEditorInput editorInput = (TaskEditorInput) adaptableObject;
+			} else if (adaptableObject instanceof TaskEditorInput editorInput) {
 				ITask task = editorInput.getTask();
 				return ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());
 			}
 		} else if (adapterType == ContextAwareEditorInput.class) {
-			if (adaptableObject instanceof TaskEditorInput) {
+			if (adaptableObject instanceof final TaskEditorInput input) {
 				// forces closing of task editors that do not show the active task
-				final TaskEditorInput input = (TaskEditorInput) adaptableObject;
 				return new ContextAwareEditorInput() {
 					@Override
 					public boolean forceClose(String contextHandle) {
@@ -56,6 +55,7 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_LIST;

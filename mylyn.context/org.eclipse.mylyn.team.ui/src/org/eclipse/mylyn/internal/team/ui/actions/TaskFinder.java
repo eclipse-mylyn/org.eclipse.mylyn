@@ -94,7 +94,7 @@ public class TaskFinder {
 		if (idStart != -1) {
 			int idEnd;
 			for (idEnd = idStart; idEnd < comment.length() && !Character.isWhitespace(comment.charAt(idEnd)); idEnd++) {
-				;
+
 			}
 			return comment.substring(idStart, idEnd);
 		}
@@ -102,8 +102,7 @@ public class TaskFinder {
 	}
 
 	/**
-	 * Reconcile <code>ILinkedTaskInfo</code> data. This is used in order to keep LinkedTaskInfo lightweight with
-	 * minimal dependencies.
+	 * Reconcile <code>ILinkedTaskInfo</code> data. This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
 	 */
 	private static AbstractTaskReference reconcile(AbstractTaskReference info) {
 		ITask task;
@@ -211,7 +210,7 @@ public class TaskFinder {
 	private long timestamp;
 
 	public TaskFinder(Object element) {
-		this.reference = initialize(element);
+		reference = initialize(element);
 	}
 
 	public AbstractTaskReference getReference() {
@@ -227,11 +226,10 @@ public class TaskFinder {
 		if (element instanceof AbstractTaskReference) {
 			info = (AbstractTaskReference) element;
 		} else if (element instanceof IAdaptable) {
-			info = (AbstractTaskReference) ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
+			info = ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
 		}
 		if (info == null) {
-			info = (AbstractTaskReference) Platform.getAdapterManager()
-					.getAdapter(element, AbstractTaskReference.class);
+			info = Platform.getAdapterManager().getAdapter(element, AbstractTaskReference.class);
 		}
 
 		if (info != null) {
@@ -257,11 +255,7 @@ public class TaskFinder {
 	public IStatus open() {
 		if (reference != null) {
 			if (task != null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						TasksUiUtil.openTask(task);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiUtil.openTask(task));
 				return Status.OK_STATUS;
 			}
 
@@ -283,26 +277,20 @@ public class TaskFinder {
 			final String taskFullUrl = reference.getTaskUrl();
 			if (taskFullUrl != null) {
 				if (!openTaskByKey(getActivePage(), taskFullUrl)) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiUtil.openUrl(taskFullUrl);
-						}
-					});
+					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiUtil.openUrl(taskFullUrl));
 				}
 				return Status.OK_STATUS;
 			}
 		}
 
 		// task not found
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				boolean openDialog = MessageDialog.openQuestion(window.getShell(),
-						Messages.OpenCorrespondingTaskAction_Open_Task,
-						Messages.OpenCorrespondingTaskAction_Unable_to_match_task);
-				if (openDialog) {
-					new OpenRepositoryTaskAction().run(null);
-				}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			boolean openDialog = MessageDialog.openQuestion(window.getShell(),
+					Messages.OpenCorrespondingTaskAction_Open_Task,
+					Messages.OpenCorrespondingTaskAction_Unable_to_match_task);
+			if (openDialog) {
+				new OpenRepositoryTaskAction().run(null);
 			}
 		});
 		return Status.OK_STATUS;

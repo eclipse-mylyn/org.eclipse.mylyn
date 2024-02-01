@@ -118,8 +118,8 @@ public class BreakpointsContextUtilTest {
 
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
 		// XXX this fails unless a breakpoint is hit at the line above because getContextBreakpoints doesn't return all breakpoints
-		// in the context. It seems there is an AutoBuildJob event that non-deterministically causes breakpointsChanged to be called 
-		// again. 
+		// in the context. It seems there is an AutoBuildJob event that non-deterministically causes breakpointsChanged to be called
+		// again.
 //		assertEquals(0, breakpointManager.getBreakpoints().length);
 	}
 
@@ -187,7 +187,7 @@ public class BreakpointsContextUtilTest {
 
 		IBreakpoint breakpoint = BreakpointsTestUtil.createTestBreakpoint();
 		breakpointManager.addBreakpoint(breakpoint);
-		List<IBreakpoint> breakpointsToRemove = new ArrayList<IBreakpoint>();
+		List<IBreakpoint> breakpointsToRemove = new ArrayList<>();
 		breakpointsToRemove.add(breakpoint);
 
 		breakpointManager.addBreakpoint(breakpoint);

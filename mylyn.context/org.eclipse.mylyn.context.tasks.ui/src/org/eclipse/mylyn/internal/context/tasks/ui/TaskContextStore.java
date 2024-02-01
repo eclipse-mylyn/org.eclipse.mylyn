@@ -62,8 +62,8 @@ public class TaskContextStore extends AbstractTaskContextStore {
 	private final ContextStatePersistenceHandler stateHandler;
 
 	public TaskContextStore() {
-		this.listeners = new CommonListenerList<TaskContextStoreListener>(TasksUiPlugin.ID_PLUGIN);
-		this.stateHandler = new ContextStatePersistenceHandler();
+		listeners = new CommonListenerList<>(TasksUiPlugin.ID_PLUGIN);
+		stateHandler = new ContextStatePersistenceHandler();
 	}
 
 	public void addListener(TaskContextStoreListener listener) {

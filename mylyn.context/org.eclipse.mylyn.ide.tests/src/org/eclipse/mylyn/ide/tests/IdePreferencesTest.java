@@ -15,9 +15,9 @@ package org.eclipse.mylyn.ide.tests;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -25,10 +25,10 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 public class IdePreferencesTest extends TestCase {
 
 	public void testExclusionPatterns() {
-		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(new HashSet<String>());
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(new HashSet<>());
 		assertEquals(0, ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().size());
 
-		Set<String> ignored = new HashSet<String>();
+		Set<String> ignored = new HashSet<>();
 		ignored.add("one*");
 		ignored.add(".two");
 

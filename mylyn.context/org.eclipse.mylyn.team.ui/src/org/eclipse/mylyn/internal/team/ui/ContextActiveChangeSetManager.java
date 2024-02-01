@@ -42,11 +42,11 @@ import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
  */
 public class ContextActiveChangeSetManager extends AbstractContextChangeSetManager {
 
-	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
+	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<>();
 
-	private final List<IContextChangeSet> activeChangeSets = new ArrayList<IContextChangeSet>();
+	private final List<IContextChangeSet> activeChangeSets = new ArrayList<>();
 
-	private final Map<ActiveChangeSetManager, ChangeSetChangeListener> listenerByManager = new HashMap<ActiveChangeSetManager, ChangeSetChangeListener>();
+	private final Map<ActiveChangeSetManager, ChangeSetChangeListener> listenerByManager = new HashMap<>();
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
@@ -59,9 +59,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			this.manager = manager;
 		}
 
+		@Override
 		public void setRemoved(ChangeSet set) {
-			if (set instanceof IContextChangeSet) {
-				IContextChangeSet contextChangeSet = (IContextChangeSet) set;
+			if (set instanceof IContextChangeSet contextChangeSet) {
 				// never matches the noTask change set: its task is never active
 				if (contextChangeSet.getTask() != null && contextChangeSet.getTask().isActive()) {
 					// put it back
@@ -70,23 +70,27 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			}
 		}
 
+		@Override
 		public void setAdded(ChangeSet set) {
 			// ignore
 		}
 
+		@Override
 		public void defaultSetChanged(ChangeSet previousDefault, ChangeSet set) {
 			// ignore
 		}
 
+		@Override
 		public void nameChanged(ChangeSet set) {
 			// ignore
 		}
 
+		@Override
 		public void resourcesChanged(ChangeSet set, IPath[] paths) {
 			// ignore
 		}
 
-	};
+	}
 
 	public ContextActiveChangeSetManager() {
 		Collection<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault()
@@ -104,8 +108,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
-				if (set instanceof IContextChangeSet) {
-					IContextChangeSet contextChangeSet = (IContextChangeSet) set;
+				if (set instanceof IContextChangeSet contextChangeSet) {
 					if (contextChangeSet.getTask().equals(task)) {
 						contextChangeSet.updateLabel();
 					}
@@ -178,8 +181,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
-				if (set instanceof IContextChangeSet) {
-					IContextChangeSet contextChangeSet = (IContextChangeSet) set;
+				if (set instanceof IContextChangeSet contextChangeSet) {
 					if (contextChangeSet.getTask().equals(task) && contextChangeSet instanceof ActiveChangeSet) {
 						return ((ActiveChangeSet) contextChangeSet).getResources();
 					}
@@ -198,14 +200,13 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null) {
 				for (ActiveChangeSetManager manager : changeSetManagers) {
 					IContextChangeSet contextChangeSet = getOrCreateSet(manager, task);
-					if (contextChangeSet instanceof ActiveChangeSet) {
-						ActiveChangeSet activeChangeSet = (ActiveChangeSet) contextChangeSet;
-//						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
+					if (contextChangeSet instanceof ActiveChangeSet activeChangeSet) {
+						//						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
 //								.getInterestingResources(context);
 //						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 						activeChangeSets.add(contextChangeSet);
 
-						// makeDefault() will add the change set 
+						// makeDefault() will add the change set
 //						if (!manager.contains(activeChangeSet)) {
 //							manager.add(activeChangeSet);
 //						}
@@ -294,7 +295,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	public List<IContextChangeSet> getActiveChangeSets() {
-		return new ArrayList<IContextChangeSet>(activeChangeSets);
+		return new ArrayList<>(activeChangeSets);
 	}
 
 	private ITask getTask(IInteractionContext context) {

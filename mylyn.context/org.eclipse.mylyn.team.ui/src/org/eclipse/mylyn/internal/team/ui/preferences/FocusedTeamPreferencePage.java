@@ -43,7 +43,6 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 	private Text commitTemplate = null;
 
 	public FocusedTeamPreferencePage() {
-		super();
 		setPreferenceStore(FocusedTeamUiPlugin.getDefault().getPreferenceStore());
 	}
 
@@ -59,6 +58,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		return container;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
