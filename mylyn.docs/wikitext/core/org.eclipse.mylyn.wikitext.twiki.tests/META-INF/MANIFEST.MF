@@ -5,7 +5,7 @@ Bundle-Version: 4.2.0.qualifier
 Bundle-Name: Mylyn WikiText Twiki Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.twiki
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
 Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",

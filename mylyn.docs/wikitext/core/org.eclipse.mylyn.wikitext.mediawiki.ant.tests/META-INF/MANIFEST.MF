@@ -5,7 +5,7 @@ Bundle-Version: 4.2.0.qualifier
 Bundle-Name: Mylyn WikiText MediaWiki Ant
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.mediawiki.ant
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
 Require-Bundle: org.eclipse.mylyn.wikitext.mediawiki;bundle-version="4.2.0"
 Import-Package: javax.xml.parsers,

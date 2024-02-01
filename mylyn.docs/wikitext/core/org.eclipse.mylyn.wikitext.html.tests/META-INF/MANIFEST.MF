@@ -5,7 +5,7 @@ Bundle-Version: 4.2.0.qualifier
 Bundle-Name: Mylyn WikiText HTML Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.html
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
 Import-Package: com.google.common.base;version="[33.0,34.0)",
  com.google.common.collect;version="[33.0,34.0)",

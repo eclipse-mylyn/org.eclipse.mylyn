@@ -4,7 +4,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.creole
 Bundle-Version: 4.2.0.qualifier
 Bundle-Name: Mylyn WikiText Creole
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
 Import-Package: com.google.common.base;version="[33.0,34.0)",
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
