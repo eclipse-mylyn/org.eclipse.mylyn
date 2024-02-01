@@ -121,7 +121,7 @@ public class StackTrace {
 
 		boolean inStackTrace = false;
 		List<String> stackTrace = null;
-		List<StackTrace> stackTraces = new ArrayList<StackTrace>();
+		List<StackTrace> stackTraces = new ArrayList<>();
 
 		// go through each of the lines of the string
 		for (int i = 0; i < lines.length; i++) {
@@ -141,7 +141,7 @@ public class StackTrace {
 				}
 
 				// prepare for a new stack trace
-				stackTrace = new ArrayList<String>();
+				stackTrace = new ArrayList<>();
 				inStackTrace = true;
 
 				// the current line is the start of our stack trace
@@ -203,8 +203,8 @@ public class StackTrace {
 	 * @param charPos
 	 *            The current character position in the original string
 	 * @return The next at clause, or <code>null</code><br>
-	 *         If an at line is matched, but the end isn't within the 4 lines, only the first line is returned. Also,
-	 *         charPos is updated as well as i
+	 *         If an at line is matched, but the end isn't within the 4 lines, only the first line is returned. Also, charPos is updated as
+	 *         well as i
 	 */
 	private static String getNextAt(String[] lines, int[] i, int[] charPos) {
 		String regexAtString = "^at.*"; //$NON-NLS-1$
@@ -354,20 +354,20 @@ public class StackTrace {
 		String sFixed = s;
 
 		// replace all special regex characters
-		sFixed = sFixed.replaceAll("\\\\", "\\\\\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\$", "\\\\\\$"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\.", "\\\\."); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\?", "\\\\?"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\{", "\\\\{"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\}", "\\\\}"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\(", "\\\\("); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\)", "\\\\)"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\[", "\\\\["); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\]", "\\\\]"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\+", "\\\\+"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\*", "\\\\*"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\|", "\\\\|"); //$NON-NLS-1$ //$NON-NLS-2$
-		sFixed = sFixed.replaceAll("\\^", "\\\\^"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("$", "\\$"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace(".", "\\."); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("?", "\\?"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("{", "\\{"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("}", "\\}"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("(", "\\("); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace(")", "\\)"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("[", "\\["); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("]", "\\]"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("+", "\\+"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("*", "\\*"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("|", "\\|"); //$NON-NLS-1$ //$NON-NLS-2$
+		sFixed = sFixed.replace("^", "\\^"); //$NON-NLS-1$ //$NON-NLS-2$
 		sFixed = sFixed.replaceAll("\\/", "\\\\/"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return sFixed;

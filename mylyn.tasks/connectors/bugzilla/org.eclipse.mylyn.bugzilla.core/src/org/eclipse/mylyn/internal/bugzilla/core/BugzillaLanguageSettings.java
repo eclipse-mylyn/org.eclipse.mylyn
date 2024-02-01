@@ -17,10 +17,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * Class describing the html response of Bugzilla requests which are used within Mylyn. Strings should be in the
- * language which is the default for an Bugzilla instance.
+ * Class describing the html response of Bugzilla requests which are used within Mylyn. Strings should be in the language which is the
+ * default for an Bugzilla instance.
  * 
  * @author Frank Becker
  */
@@ -52,10 +53,9 @@ public class BugzillaLanguageSettings {
 
 	public static final String COMMAND_ERROR_MATCH_FAILED = "error_match_failed"; //$NON-NLS-1$
 
-	private final Map<String, List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
+	private final Map<String, List<String>> languageAttributes = new LinkedHashMap<>();
 
 	public BugzillaLanguageSettings(String languageName) {
-		super();
 		this.languageName = languageName;
 	}
 
@@ -65,10 +65,7 @@ public class BugzillaLanguageSettings {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((languageName == null) ? 0 : languageName.hashCode());
-		return result;
+		return Objects.hash(languageName);
 	}
 
 	@Override
@@ -76,18 +73,11 @@ public class BugzillaLanguageSettings {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		BugzillaLanguageSettings other = (BugzillaLanguageSettings) obj;
-		if (languageName == null) {
-			if (other.languageName != null) {
-				return false;
-			}
-		} else if (!languageName.equals(other.languageName)) {
+		if (!Objects.equals(languageName, other.languageName)) {
 			return false;
 		}
 		return true;
@@ -100,7 +90,7 @@ public class BugzillaLanguageSettings {
 	public void addLanguageAttribute(String command, String response) {
 		List<String> commandList = languageAttributes.get(command);
 		if (commandList == null) {
-			commandList = new LinkedList<String>();
+			commandList = new LinkedList<>();
 			languageAttributes.put(command.toLowerCase(), commandList);
 		}
 		commandList.add(response);

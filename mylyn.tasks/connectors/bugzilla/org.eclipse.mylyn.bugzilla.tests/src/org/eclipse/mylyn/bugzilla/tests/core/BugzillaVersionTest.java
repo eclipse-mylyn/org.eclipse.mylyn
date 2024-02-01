@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
+
+import junit.framework.TestCase;
 
 /**
  * @author Frank Becker

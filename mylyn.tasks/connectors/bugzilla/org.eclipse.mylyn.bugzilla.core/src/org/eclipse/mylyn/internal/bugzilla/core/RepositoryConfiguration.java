@@ -118,8 +118,7 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of component that exist for a given product or <code>null</code> if the product does
-	 * not exist.
+	 * Returns an array of names of component that exist for a given product or <code>null</code> if the product does not exist.
 	 */
 	public List<String> getComponents(String product) {
 		ProductEntry entry = products.get(product);
@@ -131,8 +130,7 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
-	 * exist.
+	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not exist.
 	 */
 	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
@@ -354,8 +352,7 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Create a custom transition manager. If fileName is invalid, the resulting transition manager will also be
-	 * invalid.
+	 * Create a custom transition manager. If fileName is invalid, the resulting transition manager will also be invalid.
 	 *
 	 * @param fileName
 	 * @throws CoreException
@@ -529,13 +526,7 @@ public class RepositoryConfiguration implements Serializable {
 		TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
 		TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 		for (BugzillaFlag bugzillaFlag : flags) {
-			if (bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
-				continue;
-			}
-			if (!bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
-				continue;
-			}
-			if (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
+			if (bugzillaFlag.getType().equals("attachment") || !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue()) || (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable())) {
 				continue;
 			}
 			BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
@@ -676,13 +667,15 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion == null) {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
-		if ((bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) || (!getOptionValues(BugzillaAttribute.BUG_STATUS)
-				.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) && !getOptionValues(BugzillaAttribute.BUG_STATUS)
-		.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))) {
+		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
+				|| !getOptionValues(BugzillaAttribute.BUG_STATUS)
+						.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+						&& !getOptionValues(BugzillaAttribute.BUG_STATUS)
+								.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 			addValidOperationsBefore4(bugReport);
 		} else {
-addValidOperationsAfter4(bugReport);
-}
+			addValidOperationsAfter4(bugReport);
+		}
 	}
 
 	public void addValidOperationsAfter4(TaskData bugReport) {
@@ -709,7 +702,8 @@ addValidOperationsAfter4(bugReport);
 					//Special case: the CLOSED status needs a Resolution input.
 					//This happens automatically if current status is RESOLVED, else we need to supply one
 					if (b.toString().equals(BugzillaOperation.close.toString())) {
-						if ((attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) || (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null)) { //$NON-NLS-1$
+						if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null //$NON-NLS-1$
+								|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
 							//Do not add close with resolution operation if status is RESOLVED
 							continue;
 						}
@@ -782,11 +776,11 @@ addValidOperationsAfter4(bugReport);
 		if (operationAttribute == null) {
 			operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 			operationAttribute.getMetaData()
-			.defaults()
-			.setReadOnly(key.isReadOnly())
-			.setKind(key.getKind())
-			.setLabel(key.toString())
-			.setType(key.getType());
+					.defaults()
+					.setReadOnly(key.isReadOnly())
+					.setKind(key.getKind())
+					.setLabel(key.toString())
+					.setType(key.getType());
 			operationAttribute.setValue("0"); //$NON-NLS-1$
 		}
 		operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -819,7 +813,8 @@ addValidOperationsAfter4(bugReport);
 				//Special case: the CLOSED status needs a Resolution input.
 				//This happens automatically if current status is RESOLVED, else we need to supply one
 				if (b.toString().equals(BugzillaOperation.close.toString())) {
-					if ((attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) || (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null)) { //$NON-NLS-1$
+					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null //$NON-NLS-1$
+							|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
 						//Do not add close with resolution operation if status is RESOLVED
 						continue;
 					}
@@ -921,11 +916,11 @@ addValidOperationsAfter4(bugReport);
 			if (operationAttribute == null) {
 				operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 				operationAttribute.getMetaData()
-				.defaults()
-				.setReadOnly(key.isReadOnly())
-				.setKind(key.getKind())
-				.setLabel(key.toString())
-				.setType(key.getType());
+						.defaults()
+						.setReadOnly(key.isReadOnly())
+						.setKind(key.getKind())
+						.setLabel(key.toString())
+						.setType(key.getType());
 				operationAttribute.setValue("0"); //$NON-NLS-1$
 			}
 			operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -1035,44 +1030,44 @@ addValidOperationsAfter4(bugReport);
 		//set the Tooltip
 		if (op.toString().equals(BugzillaOperation.none.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_none);
+					.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_none);
 		} else if (op.toString().equals(BugzillaOperation.new_default.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_new_default);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_new_default);
 		} else if (op.toString().equals(BugzillaOperation.unconfirmed.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_unconfirmed);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_unconfirmed);
 		} else if (op.toString().equals(BugzillaOperation.confirmed.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_confirmed);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_confirmed);
 		} else if (op.toString().equals(BugzillaOperation.in_progress.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_in_progress);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_in_progress);
 		} else if (op.toString().equals(BugzillaOperation.resolve.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_resolve);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_resolve);
 		} else if (op.toString().equals(BugzillaOperation.verify.toString())
 				|| op.toString().equals(BugzillaOperation.verify_with_resolution.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_veryfy);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_veryfy);
 		} else if (op.toString().equals(BugzillaOperation.duplicate.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_duplicate);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_duplicate);
 		} else if (op.toString().equals(BugzillaOperation.reopen.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION,
-					Messages.RepositoryConfiguration_Operation_Tooltip_reopen);
+					.putValue(TaskAttribute.META_DESCRIPTION,
+							Messages.RepositoryConfiguration_Operation_Tooltip_reopen);
 		} else if (op.toString().equals(BugzillaOperation.close.toString())
 				|| op.toString().equals(BugzillaOperation.close_with_resolution.toString())) {
 			attribute.getMetaData()
-			.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_close);
+					.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_close);
 		}
 
 	}
@@ -1176,13 +1171,7 @@ addValidOperationsAfter4(bugReport);
 			TaskAttribute componentAttribute = taskData.getRoot()
 					.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 			for (BugzillaFlag bugzillaFlag : flags) {
-				if (!bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
-					continue;
-				}
-				if (!bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
-					continue;
-				}
-				if (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
+				if (!bugzillaFlag.getType().equals("attachment") || !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue()) || (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable())) {
 					continue;
 				}
 				BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
@@ -1210,7 +1199,7 @@ addValidOperationsAfter4(bugReport);
 	public String getDuplicateStatus() {
 		return validTransitions == null
 				? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
-						: validTransitions.getDuplicateStatus();
+				: validTransitions.getDuplicateStatus();
 	}
 
 	public String getStartStatus() {
@@ -1219,9 +1208,9 @@ addValidOperationsAfter4(bugReport);
 					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS)
 							.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
 							|| getOptionValues(BugzillaAttribute.BUG_STATUS)
-							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
-					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
-							: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
+									.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
+											? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
+											: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
 			return validTransitions.getStartStatus();
 		}

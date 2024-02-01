@@ -25,11 +25,10 @@ public class Chart implements Serializable {
 	private boolean negate;
 
 	public Chart() {
-		super();
 		ChartExpression expression = new ChartExpression(0, 0, ""); //$NON-NLS-1$
-		ArrayList<ChartExpression> column = new ArrayList<ChartExpression>(1);
+		ArrayList<ChartExpression> column = new ArrayList<>(1);
 		column.add(expression);
-		expressions = new ArrayList<ArrayList<ChartExpression>>(1);
+		expressions = new ArrayList<>(1);
 		expressions.add(column);
 		negate = false;
 	}
@@ -53,7 +52,7 @@ public class Chart implements Serializable {
 		}
 		ArrayList<ChartExpression> row;
 		if (rowIndex == size) {
-			row = new ArrayList<ChartExpression>();
+			row = new ArrayList<>();
 			expressions.add(rowIndex, row);
 		} else {
 			row = expressions.get(rowIndex);

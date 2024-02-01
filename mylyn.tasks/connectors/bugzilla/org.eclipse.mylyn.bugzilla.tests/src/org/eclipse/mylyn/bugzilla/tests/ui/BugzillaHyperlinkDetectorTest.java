@@ -15,8 +15,6 @@ package org.eclipse.mylyn.bugzilla.tests.ui;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
@@ -28,6 +26,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -43,7 +43,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	private void assertHyperlinks(String string, IHyperlink... expected) {
 		IHyperlink[] links = connector.findHyperlinks(repository, task, string, -1, 0);
 		if (expected.length == 0) {
-			assertNull("Expected no hyperlinks, but got: " + ((links != null) ? Arrays.asList(links).toString() : ""),
+			assertNull("Expected no hyperlinks, but got: " + (links != null ? Arrays.asList(links).toString() : ""),
 					links);
 			return;
 		}

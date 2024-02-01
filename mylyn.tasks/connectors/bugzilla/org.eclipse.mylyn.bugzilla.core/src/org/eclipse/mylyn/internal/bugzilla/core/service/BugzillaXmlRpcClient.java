@@ -159,7 +159,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public String getVersion(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<String>(this) {
+		return new BugzillaXmlRpcOperation<String>(this) {
 			@Override
 			public String execute() throws XmlRpcException {
 				String result = ""; //$NON-NLS-1$
@@ -167,11 +167,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				result = response2String(response, XML_RESPONSE_VERSION);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Date getDBTime(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Date>(this) {
+		return new BugzillaXmlRpcOperation<Date>(this) {
 			@Override
 			public Date execute() throws XmlRpcException {
 				Date result = null;
@@ -179,11 +179,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				result = response2Date(response, XML_RESPONSE_DB_TIME);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Date getWebTime(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Date>(this) {
+		return new BugzillaXmlRpcOperation<Date>(this) {
 			@Override
 			public Date execute() throws XmlRpcException {
 				Date result = null;
@@ -191,11 +191,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				result = response2Date(response, XML_RESPONSE_WEB_TIME);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public HashMap<?, ?> getTime(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<HashMap<?, ?>>(this) {
+		return new BugzillaXmlRpcOperation<HashMap<?, ?>>(this) {
 			@Override
 			public HashMap<?, ?> execute() throws XmlRpcException {
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUGZILLA_TIME, (Object[]) null);
@@ -206,30 +206,30 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				}
 				return response;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public int login(final IProgressMonitor monitor) throws XmlRpcException {
 		userID = -1;
-		final AuthenticationCredentials credentials = this.getLocation().getCredentials(AuthenticationType.REPOSITORY);
+		final AuthenticationCredentials credentials = getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
 			String user = credentials.getUserName();
 			String password = credentials.getPassword();
 			if ("".equals(user) || "".equals(password)) { //$NON-NLS-1$//$NON-NLS-2$
 				return userID;
 			}
-			userID = (new BugzillaXmlRpcOperation<Integer>(this) {
+			userID = new BugzillaXmlRpcOperation<Integer>(this) {
 				@SuppressWarnings("serial")
 				@Override
 				public Integer execute() throws XmlRpcException {
 					HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_USER_LOGIN,
-							new Object[] { new HashMap<String, Object>() {
+							new HashMap<String, Object>() {
 								{
 									put(XML_PARAMETER_LOGIN, credentials.getUserName());
 									put(XML_PARAMETER_PASSWORD, credentials.getPassword());
 									put(XML_PARAMETER_REMEMBER, true);
 								}
-							} });
+							});
 					if (response != null) {
 						Integer result = response2Integer(response, XML_RESPONSE_ID);
 						if (response.get(XML_RESPONSE_TOKEN) != null) {
@@ -241,20 +241,20 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					}
 					return null;
 				}
-			}).execute();
+			}.execute();
 		}
 		return userID;
 	}
 
 	public void logout(final IProgressMonitor monitor) throws XmlRpcException {
 		try {
-			(new BugzillaXmlRpcOperation<Integer>(this) {
+			new BugzillaXmlRpcOperation<Integer>(this) {
 				@Override
 				public Integer execute() throws XmlRpcException {
 					call(monitor, XML_USER_LOGOUT);
 					return -1;
 				}
-			}).execute();
+			}.execute();
 		} finally {
 			userID = -1;
 			token = null;
@@ -264,7 +264,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	private Object[] getUserInfoInternal(final IProgressMonitor monitor, final Object[] callParm)
 			throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
@@ -272,7 +272,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				result = response2ObjectArray(response, XML_RESPONSE_USERS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	@SuppressWarnings("serial")
@@ -300,14 +300,14 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public Object[] getUserInfoWithMatch(final IProgressMonitor monitor, String[] matchs) throws XmlRpcException {
-		HashMap<String, Object[]> parmArray = new HashMap<String, Object[]>();
-		Object[] callParm = new Object[] { parmArray };
+		HashMap<String, Object[]> parmArray = new HashMap<>();
+		Object[] callParm = { parmArray };
 		parmArray.put(XML_PARAMETER_MATCH, matchs);
 		return getUserInfoInternal(monitor, callParm);
 	}
 
 	private Object[] getFieldsInternal(final IProgressMonitor monitor, final Object[] callParm) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
@@ -315,7 +315,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				result = response2ObjectArray(response, XML_RESPONSE_FIELDS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Object[] getAllFields(final IProgressMonitor monitor) throws XmlRpcException {
@@ -349,63 +349,62 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public Object[] getSelectableProducts(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_SELECTABLE,
-						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+						token == null ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Object[] getEnterableProducts(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ENTERABLE,
-						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+						token == null ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Object[] getAccessibleProducts(final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ACCESSIBLE,
-						(token == null) ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
+						token == null ? null : new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public Object[] getProducts(final IProgressMonitor monitor, final Object[] ids) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@SuppressWarnings("serial")
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET,
-						new Object[] { new HashMap<String, Object>() {
-							{
-								put(XML_PARAMETER_IDS, ids);
-								if (token != null) {
-									put(XML_PARAMETER_TOKEN, token);
-								}
-							}
-						} });
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET, new HashMap<String, Object>() {
+					{
+						put(XML_PARAMETER_IDS, ids);
+						if (token != null) {
+							put(XML_PARAMETER_TOKEN, token);
+						}
+					}
+				});
 				result = response2ObjectArray(response, XML_RESPONSE_PRODUCTS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	private Object[] response2ObjectArray(HashMap<?, ?> response, String name) throws XmlRpcException {
@@ -517,14 +516,14 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public List<BugHistory> getHistory(final Integer[] ids, final IProgressMonitor monitor) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<List<BugHistory>>(this) {
+		return new BugzillaXmlRpcOperation<List<BugHistory>>(this) {
 			@Override
 			public List<BugHistory> execute() throws XmlRpcException {
-				Map<String, Object> params = new HashMap<String, Object>();
+				Map<String, Object> params = new HashMap<>();
 				params.put("ids", ids); //$NON-NLS-1$
 				Map<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_HISTORY, params);
 				if (response != null) {
-					List<BugHistory> result = new ArrayList<BugHistory>(ids.length);
+					List<BugHistory> result = new ArrayList<>(ids.length);
 					for (Object item : (Object[]) response.get("bugs")) { //$NON-NLS-1$
 						Map<?, ?> map = (Map<?, ?>) item;
 						Integer id = (Integer) map.get("id"); //$NON-NLS-1$
@@ -557,7 +556,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				}
 				return null;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -596,60 +595,59 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public Object[] getBugs(final IProgressMonitor monitor, final Object[] ids) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<Object[]>(this) {
+		return new BugzillaXmlRpcOperation<Object[]>(this) {
 			@SuppressWarnings("serial")
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_GET,
-						new Object[] { new HashMap<String, Object[]>() {
-							{
-								put(XML_PARAMETER_IDS, ids);
-							}
-						} });
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_GET, new HashMap<String, Object[]>() {
+					{
+						put(XML_PARAMETER_IDS, ids);
+					}
+				});
 				result = response2ObjectArray(response, XML_RESPONSE_BUGS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public HashMap<String, HashMap<String, Object[]>> getCommentsInternal(final IProgressMonitor monitor,
 			final Object[] ids) throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<HashMap<String, HashMap<String, Object[]>>>(this) {
+		return new BugzillaXmlRpcOperation<HashMap<String, HashMap<String, Object[]>>>(this) {
 			@SuppressWarnings("serial")
 			@Override
 			public HashMap<String, HashMap<String, Object[]>> execute() throws XmlRpcException {
 				HashMap<String, HashMap<String, Object[]>> result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_COMMENTS,
-						new Object[] { new HashMap<String, Object[]>() {
+						new HashMap<String, Object[]>() {
 							{
 								put(XML_PARAMETER_IDS, ids);
 							}
-						} });
+						});
 				result = response2HashMapHashMap(response, XML_RESPONSE_BUGS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	public HashMap<String, Object[]> getAttachmentsInternal(final IProgressMonitor monitor, final Object[] ids)
 			throws XmlRpcException {
-		return (new BugzillaXmlRpcOperation<HashMap<String, Object[]>>(this) {
+		return new BugzillaXmlRpcOperation<HashMap<String, Object[]>>(this) {
 			@SuppressWarnings("serial")
 			@Override
 			public HashMap<String, Object[]> execute() throws XmlRpcException {
 				HashMap<String, Object[]> result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_ATTACHMENTS,
-						new Object[] { new HashMap<String, Object[]>() {
+						new HashMap<String, Object[]>() {
 							{
 								put(XML_PARAMETER_IDS, ids);
 								put(XML_PARAMETER_EXCLUDE_FIELDS, new String[] { "data" }); //$NON-NLS-1$
 							}
-						} });
+						});
 				result = response2HashMap(response, XML_RESPONSE_BUGS);
 				return result;
 			}
-		}).execute();
+		}.execute();
 	}
 
 	private String getMappedBugzillaAttribute(String xmlrpcName) {
@@ -709,12 +707,12 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public void getTaskData(Set<String> taskIds, final TaskDataCollector collector, final TaskAttributeMapper mapper,
 			final IProgressMonitor monitor) throws IOException, CoreException {
-		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
+		HashMap<String, TaskData> taskDataMap = new HashMap<>();
 
-		taskIds = new HashSet<String>(taskIds);
+		taskIds = new HashSet<>(taskIds);
 		while (taskIds.size() > 0) {
 
-			Set<String> idsToRetrieve = new HashSet<String>();
+			Set<String> idsToRetrieve = new HashSet<>();
 			Iterator<String> itr = taskIds.iterator();
 			for (int x = 0; itr.hasNext() && x < BugzillaClient.MAX_RETRIEVED_PER_QUERY; x++) {
 				String taskId = itr.next();
@@ -742,7 +740,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				repositoryConfiguration = bugzillaClient.getRepositoryConfiguration(new SubProgressMonitor(monitor, 1),
 						null);
 			}
-			List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+			List<BugzillaCustomField> customFields = new ArrayList<>();
 			if (repositoryConfiguration != null) {
 				customFields = repositoryConfiguration.getCustomFields();
 			}
@@ -764,8 +762,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				HashMap<String, Object[]> resultAttachments = getAttachmentsInternal(monitor, formData);
 				HashMap<String, HashMap<String, Object[]>> resultComments = getCommentsInternal(monitor, formData);
 				for (Object resultMap : result) {
-					if (resultMap instanceof Map<?, ?>) {
-						Map<?, ?> taskDataResultMap = (Map<?, ?>) resultMap;
+					if (resultMap instanceof Map<?, ?> taskDataResultMap) {
 						Integer id = (Integer) taskDataResultMap.get("id"); //$NON-NLS-1$
 						TaskData taskData = taskDataMap.get(id.toString());
 						HashMap<String, Object[]> comments = resultComments.get(id.toString());
@@ -825,11 +822,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				throw e;
 			}
 			switch (tag) {
-			case UNKNOWN:
-				continue;
-			default:
-				createAttrribute(taskData, mapper, value, tag, true);
-				break;
+				case UNKNOWN:
+					continue;
+				default:
+					createAttrribute(taskData, mapper, value, tag, true);
+					break;
 			}
 		}
 	}
@@ -921,7 +918,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		if (comments != null) {
 			TaskRepository taskRepository = mapper.getTaskRepository();
 			String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP);
-			boolean useIsPrivate = (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
+			boolean useIsPrivate = useParam == null || useParam != null && useParam.equals("true"); //$NON-NLS-1$
 			Object[] commentArray = comments.get("comments"); //$NON-NLS-1$
 			if (commentArray != null) {
 				int commentNum = 0;
@@ -1055,11 +1052,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 								|| object instanceof Date) {
 							valueList = getValueStringFromObject(object, true);
 						}
-					} else {
-						if (object instanceof String || object instanceof Boolean || object instanceof Integer
-								|| object instanceof Date) {
-							valueList += ", " + getValueStringFromObject(object, true); //$NON-NLS-1$
-						}
+					} else if (object instanceof String || object instanceof Boolean || object instanceof Integer
+							|| object instanceof Date) {
+						valueList += ", " + getValueStringFromObject(object, true); //$NON-NLS-1$
 					}
 				}
 				attribute.setValue(valueList);
@@ -1096,29 +1091,29 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 
 					switch (bugzillaCustomField.getFieldType()) {
-					case FreeText:
-						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-						break;
-					case DropDown:
-						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-						break;
-					case MultipleSelection:
-						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
-						break;
-					case LargeText:
-						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
-						break;
-					case DateTime:
-						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
-						break;
-
-					default:
-						List<String> options = bugzillaCustomField.getOptions();
-						if (options.size() > 0) {
-							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-						} else {
+						case FreeText:
 							atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-						}
+							break;
+						case DropDown:
+							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+							break;
+						case MultipleSelection:
+							atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+							break;
+						case LargeText:
+							atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+							break;
+						case DateTime:
+							atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+							break;
+
+						default:
+							List<String> options = bugzillaCustomField.getOptions();
+							if (options.size() > 0) {
+								atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+							} else {
+								atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+							}
 					}
 					atr.getMetaData().setReadOnly(false);
 				}

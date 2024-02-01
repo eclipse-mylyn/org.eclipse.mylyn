@@ -31,11 +31,11 @@ import org.eclipse.mylyn.commons.core.HtmlTag;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 
 public class BugzillaUserMatchResponse {
-	private final Map<String, List<String>> newCCProposals = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> newCCProposals = new HashMap<>();
 
-	private final List<String> assignedToProposals = new LinkedList<String>();
+	private final List<String> assignedToProposals = new LinkedList<>();
 
-	private final List<String> qaContactProposals = new LinkedList<String>();
+	private final List<String> qaContactProposals = new LinkedList<>();
 
 	private String newCCMsg;
 
@@ -83,8 +83,8 @@ public class BugzillaUserMatchResponse {
 		String divString = ""; //$NON-NLS-1$
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TD
+						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					isDT = false;
 					if (!dtString.equals("")) { //$NON-NLS-1$
 						lastDTValue = dtString;
@@ -92,8 +92,8 @@ public class BugzillaUserMatchResponse {
 					dtString = ""; //$NON-NLS-1$
 					continue;
 				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.DIV
+						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					isDiv = false;
 					if (divString.length() > 4) {
 						if (lastDTValue.equals("CC:")) { //$NON-NLS-1$
@@ -126,7 +126,7 @@ public class BugzillaUserMatchResponse {
 							if (lastDTValue.equals("newcc")) { //$NON-NLS-1$
 								List<String> proposalList = newCCProposals.get(name);
 								if (proposalList == null) {
-									proposalList = new ArrayList<String>();
+									proposalList = new ArrayList<>();
 									newCCProposals.put(name, proposalList);
 								}
 								proposalList.add(value);
@@ -143,7 +143,7 @@ public class BugzillaUserMatchResponse {
 								if (lastDTValue.equals("newcc")) { //$NON-NLS-1$
 									List<String> proposalList = newCCProposals.get(name);
 									if (proposalList == null) {
-										proposalList = new ArrayList<String>();
+										proposalList = new ArrayList<>();
 										newCCProposals.put(name, proposalList);
 									}
 									proposalList.add(value);
@@ -161,19 +161,19 @@ public class BugzillaUserMatchResponse {
 					continue;
 				}
 				if (isDiv) {
-					divString += (" " + token.getValue()); //$NON-NLS-1$
+					divString += " " + token.getValue(); //$NON-NLS-1$
 				}
 				if (isDT) {
-					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV
-							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.DIV
+							&& !((HtmlTag) token.getValue()).isEndTag()) {
 						isDiv = true;
 						divString = ""; //$NON-NLS-1$
 					} else {
 						dtString += token.getValue();
 					}
 				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TD
+						&& !((HtmlTag) token.getValue()).isEndTag()) {
 					isDT = true;
 					continue;
 				}
@@ -194,8 +194,8 @@ public class BugzillaUserMatchResponse {
 		String divString = ""; //$NON-NLS-1$
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TD
+						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					isDT = false;
 					if (!dtString.equals("")) { //$NON-NLS-1$
 						lastDTValue = dtString;
@@ -203,8 +203,8 @@ public class BugzillaUserMatchResponse {
 					dtString = ""; //$NON-NLS-1$
 					continue;
 				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV
-						&& ((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.DIV
+						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					isDiv = false;
 					if (divString.length() > 4) {
 						if (lastDTValue.equals("CC:")) { //$NON-NLS-1$
@@ -243,7 +243,7 @@ public class BugzillaUserMatchResponse {
 								if (lastDTValue.equals("newcc")) { //$NON-NLS-1$
 									List<String> proposalList = newCCProposals.get(name);
 									if (proposalList == null) {
-										proposalList = new ArrayList<String>();
+										proposalList = new ArrayList<>();
 										newCCProposals.put(name, proposalList);
 									}
 									proposalList.add(value);
@@ -261,19 +261,19 @@ public class BugzillaUserMatchResponse {
 					continue;
 				}
 				if (isDiv) {
-					divString += (" " + token.getValue()); //$NON-NLS-1$
+					divString += " " + token.getValue(); //$NON-NLS-1$
 				}
 				if (isDT) {
-					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.DIV
-							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.DIV
+							&& !((HtmlTag) token.getValue()).isEndTag()) {
 						isDiv = true;
 						divString = ""; //$NON-NLS-1$
 					} else {
 						dtString += token.getValue();
 					}
 				}
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+				if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TD
+						&& !((HtmlTag) token.getValue()).isEndTag()) {
 					isDT = true;
 					continue;
 				}

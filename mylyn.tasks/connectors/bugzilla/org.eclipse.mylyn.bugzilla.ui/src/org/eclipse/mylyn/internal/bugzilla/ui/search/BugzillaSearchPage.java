@@ -40,8 +40,6 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractInPlaceDialog;
-import org.eclipse.mylyn.commons.ui.dialogs.IInPlaceDialogListener;
-import org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.commons.workbench.InPlaceCheckBoxTreeDialog;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
@@ -93,17 +91,17 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;
 
-	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<>(20);
 
-	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<>(20);
 
-	private static ArrayList<BugzillaSearchData> previousEmailPatterns2 = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousEmailPatterns2 = new ArrayList<>(20);
 
-	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<>(20);
 
-	private static ArrayList<BugzillaSearchData> previousKeywords = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousKeywords = new ArrayList<>(20);
 
-	private static ArrayList<BugzillaSearchData> previousWhiteboardPatterns = new ArrayList<BugzillaSearchData>(20);
+	private static ArrayList<BugzillaSearchData> previousWhiteboardPatterns = new ArrayList<>(20);
 
 	private boolean firstTime = true;
 
@@ -130,13 +128,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
-	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"emaillongdesc1", "emailqa_contact1" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"emaillongdesc2", "emailqa_contact2" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final ArrayList<String> chartFieldTextDefault = new ArrayList<String>() {
+	private static final ArrayList<String> chartFieldTextDefault = new ArrayList<>() {
 		private static final long serialVersionUID = 1974092160992399001L;
 		{
 			add(Messages.BugzillaSearchPage_Field_Noop);
@@ -193,7 +191,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	};
 
-	private static final ArrayList<String> chartFieldValuesDefault = new ArrayList<String>() {
+	private static final ArrayList<String> chartFieldValuesDefault = new ArrayList<>() {
 		private static final long serialVersionUID = 9135403539678279982L;
 		{
 			add("noop"); //$NON-NLS-1$
@@ -356,9 +354,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private SectionComposite scrolledComposite;
 
-	private final ArrayList<Chart> charts = new ArrayList<Chart>(1);
+	private final ArrayList<Chart> charts = new ArrayList<>(1);
 
-	private final ArrayList<ControlDecoration> errorDecorations = new ArrayList<ControlDecoration>();
+	private final ArrayList<ControlDecoration> errorDecorations = new ArrayList<>();
 
 	private class ChartControls {
 		private final Combo field;
@@ -368,7 +366,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		private final Combo value;
 
 		public ChartControls(Combo field, Combo operation, Combo value) {
-			super();
 			this.field = field;
 			this.operation = operation;
 			this.value = value;
@@ -387,9 +384,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	}
 
-	private final ArrayList<ArrayList<ArrayList<ChartControls>>> chartControls = new ArrayList<ArrayList<ArrayList<ChartControls>>>();
+	private final ArrayList<ArrayList<ArrayList<ChartControls>>> chartControls = new ArrayList<>();
 
-	private final ArrayList<Button> negateButtons = new ArrayList<Button>();
+	private final ArrayList<Button> negateButtons = new ArrayList<>();
 
 	private final SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
@@ -401,6 +398,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	};
 
 	private final class ModifyListenerImplementation implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			if (isControlCreated()) {
 				setPageComplete(isPageComplete());
@@ -477,7 +475,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@Override
 	protected void createPageContent(SectionComposite parent) {
-		this.scrolledComposite = parent;
+		scrolledComposite = parent;
 
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
 		GridLayout layout = new GridLayout();
@@ -905,12 +903,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				final java.util.List<String> values = new ArrayList<String>();
+				final java.util.List<String> values = new ArrayList<>();
 				for (String string : keywords.getText().split(",")) { //$NON-NLS-1$
 					values.add(string.trim());
 				}
 
-				Map<String, String> validValues = new HashMap<String, String>();
+				Map<String, String> validValues = new HashMap<>();
 				if (getRepositoryConfiguration() != null) {
 					for (String string : getRepositoryConfiguration().getOptionValues(BugzillaAttribute.KEYWORDS)) {
 						validValues.put(string, string);
@@ -918,25 +916,22 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 				}
 				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
 						WorkbenchUtil.getShell(), keywordsSelectButton, values, validValues, ""); //$NON-NLS-1$
-				selectionDialog.addEventListener(new IInPlaceDialogListener() {
-
-					public void buttonPressed(InPlaceDialogEvent event) {
-						if (event.getReturnCode() == Window.OK) {
-							Set<String> newValues = selectionDialog.getSelectedValues();
-							if (!new HashSet<String>(values).equals(newValues)) {
-								String erg = ""; //$NON-NLS-1$
-								for (String string : newValues) {
-									if (erg.equals("")) { //$NON-NLS-1$
-										erg = string;
-									} else {
-										erg += (", " + string); //$NON-NLS-1$
-									}
+				selectionDialog.addEventListener(event -> {
+					if (event.getReturnCode() == Window.OK) {
+						Set<String> newValues = selectionDialog.getSelectedValues();
+						if (!new HashSet<String>(values).equals(newValues)) {
+							String erg = ""; //$NON-NLS-1$
+							for (String string : newValues) {
+								if (erg.equals("")) { //$NON-NLS-1$
+									erg = string;
+								} else {
+									erg += ", " + string; //$NON-NLS-1$
 								}
-								keywords.setText(erg);
 							}
-						} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
-							keywords.setText(""); //$NON-NLS-1$
+							keywords.setText(erg);
 						}
+					} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+						keywords.setText(""); //$NON-NLS-1$
 					}
 				});
 				selectionDialog.open();
@@ -1300,8 +1295,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	/**
-	 * Return search pattern data and update search history list. An existing entry will be updated or a new one
-	 * created.
+	 * Return search pattern data and update search history list. An existing entry will be updated or a new one created.
 	 */
 	private BugzillaSearchData getPatternData(Combo widget, Combo operation,
 			ArrayList<BugzillaSearchData> previousSearchQueryData) {
@@ -1336,7 +1330,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		int size = patternHistory.size();
 		String[] patterns = new String[size];
 		for (int i = 0; i < size; i++) {
-			patterns[i] = (patternHistory.get(size - 1 - i)).pattern;
+			patterns[i] = patternHistory.get(size - 1 - i).pattern;
 		}
 		return patterns;
 	}
@@ -1370,9 +1364,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	/**
-	 * Goes through the query form and builds up the query parameters. Example:
-	 * short_desc_type=substring&amp;short_desc=bla&amp; ... TODO: The encoding here should match
-	 * TaskRepository.getCharacterEncoding()
+	 * Goes through the query form and builds up the query parameters. Example: short_desc_type=substring&amp;short_desc=bla&amp; ... TODO:
+	 * The encoding here should match TaskRepository.getCharacterEncoding()
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
@@ -1627,6 +1620,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		return false;
 	}
 
+	@Override
 	public void handleEvent(Event event) {
 		if (getWizard() != null) {
 			getWizard().getContainer().updateButtons();
@@ -1643,7 +1637,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			String value = entry.value;
 			String[] sel = product.getSelection();
 			java.util.List<String> selList = Arrays.asList(sel);
-			selList = new ArrayList<String>(selList);
+			selList = new ArrayList<>(selList);
 			selList.add(value);
 			sel = new String[selList.size()];
 			product.setSelection(selList.toArray(sel));
@@ -1674,28 +1668,28 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			} else if (key.equals("component")) { //$NON-NLS-1$
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				component.setSelection(selList.toArray(sel));
 			} else if (key.equals("version")) { //$NON-NLS-1$
 				String[] sel = version.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
 			} else if (key.equals("target_milestone")) { // XXX //$NON-NLS-1$
 				String[] sel = target.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				target.setSelection(selList.toArray(sel));
 			} else if (key.equals("version")) { //$NON-NLS-1$
 				String[] sel = version.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
@@ -1715,42 +1709,42 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			} else if (key.equals("bug_status")) { //$NON-NLS-1$
 				String[] sel = status.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				status.setSelection(selList.toArray(sel));
 			} else if (key.equals("resolution")) { //$NON-NLS-1$
 				String[] sel = resolution.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				resolution.setSelection(selList.toArray(sel));
 			} else if (key.equals("bug_severity")) { //$NON-NLS-1$
 				String[] sel = severity.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				severity.setSelection(selList.toArray(sel));
 			} else if (key.equals("priority")) { //$NON-NLS-1$
 				String[] sel = priority.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				priority.setSelection(selList.toArray(sel));
 			} else if (key.equals("rep_platform")) { //$NON-NLS-1$
 				String[] sel = hardware.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				hardware.setSelection(selList.toArray(sel));
 			} else if (key.equals("op_sys")) { //$NON-NLS-1$
 				String[] sel = os.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
+				selList = new ArrayList<>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				os.setSelection(selList.toArray(sel));
@@ -2109,15 +2103,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					gd = new GridData(GridData.FILL, GridData.CENTER, true, false);
 					gd.widthHint = 150;
 					comboValue.setLayoutData(gd);
-					comboValue.addModifyListener(new ModifyListener() {
-
-						public void modifyText(ModifyEvent e) {
-							ChartExpression chartExpression = charts.get(chartNum)
-									.getChartExpression(chartRow, chartColumn);
-							chartExpression.setValue(comboValue.getText());
-							if (isControlCreated()) {
-								setPageComplete(isPageComplete());
-							}
+					comboValue.addModifyListener(e -> {
+						ChartExpression chartExpression = charts.get(chartNum)
+								.getChartExpression(chartRow, chartColumn);
+						chartExpression.setValue(comboValue.getText());
+						if (isControlCreated()) {
+							setPageComplete(isPageComplete());
 						}
 					});
 					Button orButton = new Button(chartGroup1, SWT.PUSH);
@@ -2148,11 +2139,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					ChartControls chartControl = new ChartControls(comboField, comboOperation, comboValue);
 					int chart1 = chartControls.size();
 					if (chart1 < chartNum + 1) {
-						chartControls.add(new ArrayList<ArrayList<ChartControls>>());
+						chartControls.add(new ArrayList<>());
 					}
 					int chart2 = chartControls.get(chartNum).size();
 					if (chart2 < chartRow + 1) {
-						chartControls.get(chartNum).add(new ArrayList<BugzillaSearchPage.ChartControls>());
+						chartControls.get(chartNum).add(new ArrayList<>());
 					}
 					chartControls.get(chartNum).get(chartRow).add(chartControl);
 				}
@@ -2215,7 +2206,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
-		this.originalQuery = origQuery;
+		originalQuery = origQuery;
 
 		setNeedsClear(true);
 		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);

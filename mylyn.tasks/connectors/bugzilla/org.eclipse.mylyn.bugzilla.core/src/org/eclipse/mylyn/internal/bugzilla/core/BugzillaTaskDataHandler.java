@@ -62,7 +62,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			@Override
 			void migrate(TaskRepository repository, TaskData data, BugzillaRepositoryConnector connector) {
 				// 1: the value was stored in the attribute rather than the key
-				for (TaskAttribute attribute : new ArrayList<TaskAttribute>(data.getRoot().getAttributes().values())) {
+				for (TaskAttribute attribute : new ArrayList<>(data.getRoot().getAttributes().values())) {
 					if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
 						TaskAttribute attrLongDesc = createAttribute(data, BugzillaAttribute.LONG_DESC);
 						attrLongDesc.setValue(attribute.getValue());
@@ -71,11 +71,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				}
 				// Old actions not saved so recreate them upon migration
 				// delete legacy operations:
-				Set<TaskAttribute> operationsToRemove = new HashSet<TaskAttribute>();
-				for (TaskAttribute attribute : data.getAttributeMapper()
-						.getAttributesByType(data, TaskAttribute.TYPE_OPERATION)) {
-					operationsToRemove.add(attribute);
-				}
+				Set<TaskAttribute> operationsToRemove = new HashSet<>(data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_OPERATION));
 				for (TaskAttribute taskAttribute : operationsToRemove) {
 					data.getRoot().removeAttribute(taskAttribute.getId());
 				}
@@ -180,29 +176,29 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 							attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
 							switch (customField.getFieldType()) {
-							case FreeText:
-								attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-								break;
-							case DropDown:
-								attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-								break;
-							case MultipleSelection:
-								attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
-								break;
-							case LargeText:
-								attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
-								break;
-							case DateTime:
-								attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
-								break;
-
-							default:
-								List<String> options = customField.getOptions();
-								if (options.size() > 0) {
-									attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-								} else {
+								case FreeText:
 									attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-								}
+									break;
+								case DropDown:
+									attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+									break;
+								case MultipleSelection:
+									attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+									break;
+								case LargeText:
+									attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+									break;
+								case DateTime:
+									attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+									break;
+
+								default:
+									List<String> options = customField.getOptions();
+									if (options.size() > 0) {
+										attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+									} else {
+										attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+									}
 							}
 							attribute.getMetaData().setReadOnly(false);
 						}
@@ -282,7 +278,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskId);
 		final TaskData[] retrievedData = new TaskData[1];
 		TaskDataCollector collector = new TaskDataCollector() {
@@ -355,7 +351,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
 							if (updateConfig[0] == null) {
-								updateConfig[0] = Boolean.valueOf(true);
+								updateConfig[0] = true;
 							}
 						} else if (collectionException[0] == null) {
 							collectionException[0] = e;
@@ -535,17 +531,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
-		} else {
-			if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
-					.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-					|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
-							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+		} else if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+				.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+				|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+						.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 
-				attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
-				repositoryConfiguration.addValidOperations(taskData);
-			} else {
-				attributeStatus.setValue(repositoryConfiguration.getStartStatus());
-			}
+			attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
+			repositoryConfiguration.addValidOperations(taskData);
+		} else {
+			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 		}
 
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
@@ -594,10 +588,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 							attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
 						}
 					}
-				} else {
-					if (optionValues.contains("---")) { //$NON-NLS-1$
-						attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
-					}
+				} else if (optionValues.contains("---")) { //$NON-NLS-1$
+					attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -628,7 +620,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		if (optionValues.size() > 0) {
 			// choose middle priority
-			attributePriority.setValue(optionValues.get((optionValues.size() / 2)));
+			attributePriority.setValue(optionValues.get(optionValues.size() / 2));
 		}
 
 		TaskAttribute attributeSeverity = createAttribute(taskData, BugzillaAttribute.BUG_SEVERITY);
@@ -638,7 +630,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		if (optionValues.size() > 0) {
 			// choose middle severity
-			attributeSeverity.setValue(optionValues.get((optionValues.size() / 2)));
+			attributeSeverity.setValue(optionValues.get(optionValues.size() / 2));
 		}
 
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
@@ -675,7 +667,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attrAddSelfToCc.getMetaData().setKind(null);
 		}
 
-		List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+		List<BugzillaCustomField> customFields = new ArrayList<>();
 		if (repositoryConfiguration != null) {
 			customFields = repositoryConfiguration.getCustomFields();
 		}
@@ -693,28 +685,28 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 
 					switch (bugzillaCustomField.getFieldType()) {
-					case FreeText:
-						attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-						break;
-					case DropDown:
-						attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-						break;
-					case MultipleSelection:
-						attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
-						break;
-					case LargeText:
-						attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
-						break;
-					case DateTime:
-						attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
-						break;
-
-					default:
-						if (options.size() > 0) {
-							attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-						} else {
+						case FreeText:
 							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-						}
+							break;
+						case DropDown:
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+							break;
+						case MultipleSelection:
+							attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+							break;
+						case LargeText:
+							attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+							break;
+						case DateTime:
+							attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+							break;
+
+						default:
+							if (options.size() > 0) {
+								attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+							} else {
+								attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+							}
 					}
 					attribute.getMetaData().setReadOnly(false);
 

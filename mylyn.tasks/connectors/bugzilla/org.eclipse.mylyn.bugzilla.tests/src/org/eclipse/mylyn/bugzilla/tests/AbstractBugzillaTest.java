@@ -15,8 +15,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
@@ -36,6 +34,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -59,7 +59,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected BugzillaHarness harness;
 
 	public AbstractBugzillaTest() {
-		super();
 	}
 
 	@Override
@@ -70,9 +69,9 @@ public abstract class AbstractBugzillaTest extends TestCase {
 				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
-		this.client = BugzillaFixture.current().client();
-		this.connector = BugzillaFixture.current().connector();
-		this.repository = BugzillaFixture.current().repository();
+		client = BugzillaFixture.current().client();
+		connector = BugzillaFixture.current().connector();
+		repository = BugzillaFixture.current().repository();
 		TasksUi.getRepositoryManager().addRepository(repository);
 		harness = BugzillaFixture.current().createHarness();
 	}

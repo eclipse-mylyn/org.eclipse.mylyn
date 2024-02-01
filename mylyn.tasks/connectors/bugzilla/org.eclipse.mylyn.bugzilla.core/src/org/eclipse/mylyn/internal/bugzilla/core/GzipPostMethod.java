@@ -22,8 +22,8 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
- * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing repositories
- * that can supply gzipped responses.<br />
+ * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing repositories that can supply
+ * gzipped responses.<br />
  * <br>
  * References:
  * <ul>
@@ -59,8 +59,7 @@ public class GzipPostMethod extends PostMethod {
 	}
 
 	/**
-	 * getResponseBodyNoop is meant for clearing the response body in case of error. The result is never used so no need
-	 * to unzip it first.
+	 * getResponseBodyNoop is meant for clearing the response body in case of error. The result is never used so no need to unzip it first.
 	 * 
 	 * @throws IOException
 	 * @deprecated this is handled in {@link org.apache.commons.httpclient.HttpClient} connection release

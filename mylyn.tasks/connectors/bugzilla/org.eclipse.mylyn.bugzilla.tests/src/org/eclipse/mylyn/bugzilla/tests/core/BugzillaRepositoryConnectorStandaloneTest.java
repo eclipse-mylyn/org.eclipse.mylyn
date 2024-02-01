@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -46,6 +44,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Nathan Hapke
@@ -155,9 +155,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	public void testGetTaskData() throws Exception {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskData.getTaskId());
-		final Set<TaskData> results = new HashSet<TaskData>();
+		final Set<TaskData> results = new HashSet<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -181,11 +181,11 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		TaskData taskData2 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		TaskData taskData3 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskData.getTaskId());
 		taskIds.add(taskData2.getTaskId());
 		taskIds.add(taskData3.getTaskId());
-		final Map<String, TaskData> results = new HashMap<String, TaskData>();
+		final Map<String, TaskData> results = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -273,7 +273,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		// run query
 		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<String, TaskData> changedTaskData = new HashMap<String, TaskData>();
+		final Map<String, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -295,7 +295,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		TaskData taskDataNew = BugzillaFixture.current().getTask(response.getTaskId(), client);
 
 		// run query again
-		final Map<String, TaskData> changedTaskData2 = new HashMap<String, TaskData>();
+		final Map<String, TaskData> changedTaskData2 = new HashMap<>();
 		TaskDataCollector collector2 = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {

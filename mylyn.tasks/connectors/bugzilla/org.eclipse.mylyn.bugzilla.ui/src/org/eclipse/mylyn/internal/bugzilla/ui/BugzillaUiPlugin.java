@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -141,7 +142,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static String[] getQueryOptions(String prefId, String[] selectedProducts,
 			RepositoryConfiguration repositoryConfiguration) {
-		List<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION)
 				|| prefId.equals(IBugzillaConstants.VALUES_TARGET)) && selectedProducts != null) {
 			for (String product : selectedProducts) {
@@ -206,9 +207,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			return origText;
 		} else {
 			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-			for (int i = 0; i < textArray.length; i++) {
-				textArray[i] = null;
-			}
+			Arrays.fill(textArray, null);
 			int j = 0;
 			while (true) {
 				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5); //$NON-NLS-1$
@@ -217,7 +216,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 					break;
 				}
 				textArray[j] = origText.substring(0, spaceIndex);
-				origText = origText.substring(spaceIndex + 1, origText.length());
+				origText = origText.substring(spaceIndex + 1);
 				j++;
 			}
 

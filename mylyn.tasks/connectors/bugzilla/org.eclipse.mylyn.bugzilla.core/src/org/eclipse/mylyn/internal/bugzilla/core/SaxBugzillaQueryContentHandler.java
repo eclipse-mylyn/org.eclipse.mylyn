@@ -77,35 +77,35 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				}
 			}
 			switch (tag) {
-			case QUERY_TIMESTAMP:
-				if (collector instanceof BugzillaTaskDataCollector) {
-					if (parsedText != null && parsedText.length() > 0) {
-						BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) collector;
-						bCollector.setQueryTimestamp(parsedText);
+				case QUERY_TIMESTAMP:
+					if (collector instanceof BugzillaTaskDataCollector) {
+						if (parsedText != null && parsedText.length() > 0) {
+							BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) collector;
+							bCollector.setQueryTimestamp(parsedText);
+						}
 					}
-				}
-				break;
-			case ID:
-				taskData = new TaskData(mapper, getConnectorKind(), repositoryUrl, parsedText);
-				taskData.setPartial(true);
-				break;
-			case SHORT_SHORT_DESC:
-				if (taskData != null) {
-					BugzillaTaskDataHandler.createAttribute(taskData, BugzillaAttribute.SHORT_DESC)
-							.setValue(parsedText);
-				}
-				break;
-			case LI:
-				if (taskData != null) {
-					collector.accept(taskData);
-				}
-				resultCount++;
-				break;
-			default:
-				if (taskData != null) {
-					BugzillaTaskDataHandler.createAttribute(taskData, tag).setValue(parsedText);
-				}
-				break;
+					break;
+				case ID:
+					taskData = new TaskData(mapper, getConnectorKind(), repositoryUrl, parsedText);
+					taskData.setPartial(true);
+					break;
+				case SHORT_SHORT_DESC:
+					if (taskData != null) {
+						BugzillaTaskDataHandler.createAttribute(taskData, BugzillaAttribute.SHORT_DESC)
+								.setValue(parsedText);
+					}
+					break;
+				case LI:
+					if (taskData != null) {
+						collector.accept(taskData);
+					}
+					resultCount++;
+					break;
+				default:
+					if (taskData != null) {
+						BugzillaTaskDataHandler.createAttribute(taskData, tag).setValue(parsedText);
+					}
+					break;
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {

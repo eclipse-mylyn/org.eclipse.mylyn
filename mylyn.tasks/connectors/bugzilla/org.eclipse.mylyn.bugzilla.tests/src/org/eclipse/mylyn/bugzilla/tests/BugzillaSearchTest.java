@@ -16,18 +16,18 @@ package org.eclipse.mylyn.bugzilla.tests;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -48,8 +48,8 @@ public class BugzillaSearchTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		BugzillaFixture.current().client();
-		this.connector = BugzillaFixture.current().connector();
-		this.repository = BugzillaFixture.current().repository();
+		connector = BugzillaFixture.current().connector();
+		repository = BugzillaFixture.current().repository();
 	}
 
 	public void testSummarySearching() throws Exception {
@@ -71,7 +71,7 @@ public class BugzillaSearchTest extends TestCase {
 		repositoryQuery.setUrl(repository.getRepositoryUrl() + requestUrl + queryString);
 		repositoryQuery.setSummary(QUERY_NAME);
 
-		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		final Set<TaskData> changedTaskData = new HashSet<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 
 			@Override

@@ -113,6 +113,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		return null;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
 		final Composite pageArea = new Composite(parent, SWT.NONE);
@@ -162,8 +163,8 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			} else {
 				editor.setReadOnly(false);
 			}
-			if (editor.hasLabel() && (!TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())
-					&& !TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId()))) {
+			if (editor.hasLabel() && !TaskAttribute.ATTACHMENT_IS_PATCH.equals(attribute.getId())
+					&& !TaskAttribute.ATTACHMENT_IS_DEPRECATED.equals(attribute.getId())) {
 				editor.createLabelControl(attributeArea, toolkit);
 				Label label = editor.getLabelControl();
 				label.setBackground(attributeArea.getBackground());
@@ -253,7 +254,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gd.heightHint = MULTI_ROW_HEIGHT;
 			gd.widthHint = MULTI_COLUMN_WIDTH;
-			gd.horizontalSpan = (commentEditor.getLabelControl() != null) ? 3 : 4;
+			gd.horizontalSpan = commentEditor.getLabelControl() != null ? 3 : 4;
 			gd.verticalIndent = 10;
 			commentEditor.getControl().setLayoutData(gd);
 			commentEditor.getControl().setForeground(attributeArea.getForeground());
@@ -317,7 +318,7 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 
 					GridData gd = GridDataFactory.fillDefaults()
 							.align(SWT.RIGHT, SWT.CENTER)
-							.hint(LABEL_WIDTH - (4 * COLUMN_GAP), SWT.DEFAULT)
+							.hint(LABEL_WIDTH - 4 * COLUMN_GAP, SWT.DEFAULT)
 							.create();
 					if (currentFlagColumn > 1) {
 						gd.horizontalIndent = COLUMN_GAP;

@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
@@ -40,19 +41,23 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 		this.attachmentId = attachmentId;
 	}
 
+	@Override
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
 
+	@Override
 	public String getHyperlinkText() {
 		return MessageFormat.format(Messages.TaskAttachmentHyperlink_Open_Attachment_X_in_Y, attachmentId,
 				repository.getRepositoryLabel());
 	}
 
+	@Override
 	public String getTypeLabel() {
 		return null;
 	}
 
+	@Override
 	public void open() {
 		String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
 		TasksUiUtil.openUrl(url);
@@ -60,12 +65,7 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attachmentId == null) ? 0 : attachmentId.hashCode());
-		result = prime * result + ((region == null) ? 0 : region.hashCode());
-		result = prime * result + ((repository == null) ? 0 : repository.hashCode());
-		return result;
+		return Objects.hash(attachmentId, region, repository);
 	}
 
 	@Override
@@ -73,32 +73,17 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskAttachmentHyperlink other = (TaskAttachmentHyperlink) obj;
-		if (attachmentId == null) {
-			if (other.attachmentId != null) {
-				return false;
-			}
-		} else if (!attachmentId.equals(other.attachmentId)) {
+		if (!Objects.equals(attachmentId, other.attachmentId)) {
 			return false;
 		}
-		if (region == null) {
-			if (other.region != null) {
-				return false;
-			}
-		} else if (!region.equals(other.region)) {
+		if (!Objects.equals(region, other.region)) {
 			return false;
 		}
-		if (repository == null) {
-			if (other.repository != null) {
-				return false;
-			}
-		} else if (!repository.equals(other.repository)) {
+		if (!Objects.equals(repository, other.repository)) {
 			return false;
 		}
 		return true;

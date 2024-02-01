@@ -70,8 +70,8 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 			}
 		}
 
-		final AtomicReference<String> product = new AtomicReference<String>();
-		final AtomicReference<String> component = new AtomicReference<String>();
+		final AtomicReference<String> product = new AtomicReference<>();
+		final AtomicReference<String> component = new AtomicReference<>();
 
 		if (selection == null || selection.isEmpty()) {
 			product.set(getTaskRepository().getProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION));
@@ -99,8 +99,7 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 	}
 
 	private void extractMapping(Object element, AtomicReference<String> product, AtomicReference<String> component) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task) {
 			product.set(task.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 		} else {
 			IRepositoryQuery query = null;
@@ -134,13 +133,10 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 						}
 					}
 				}
-			} else {
-				if (element instanceof IAdaptable) {
-					IAdaptable adaptable = (IAdaptable) element;
-					ITask task = (ITask) adaptable.getAdapter(ITask.class);
-					if (task != null) {
-						product.set(task.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
-					}
+			} else if (element instanceof IAdaptable adaptable) {
+				ITask task = adaptable.getAdapter(ITask.class);
+				if (task != null) {
+					product.set(task.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 				}
 			}
 		}

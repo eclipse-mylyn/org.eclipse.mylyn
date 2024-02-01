@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class BugzillaClientManager implements IRepositoryListener {
 
-	private final Map<String, BugzillaClient> clientByUrl = new HashMap<String, BugzillaClient>();
+	private final Map<String, BugzillaClient> clientByUrl = new HashMap<>();
 
 	private final BugzillaRepositoryConnector connector;
 
@@ -65,11 +65,13 @@ public class BugzillaClientManager implements IRepositoryListener {
 		return BugzillaClientFactory.createClient(taskRepository, connector);
 	}
 
+	@Override
 	public void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
 		removeClient(repository);
 	}
 
+	@Override
 	public void repositoryRemoved(TaskRepository repository) {
 		removeClient(repository);
 	}
@@ -80,10 +82,12 @@ public class BugzillaClientManager implements IRepositoryListener {
 		}
 	}
 
+	@Override
 	public void repositorySettingsChanged(TaskRepository repository) {
 		removeClient(repository);
 	}
 
+	@Override
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		// ignore
 	}

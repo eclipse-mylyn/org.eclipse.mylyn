@@ -13,11 +13,11 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaUtil;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class BugzillaUtilTest extends TestCase {
 

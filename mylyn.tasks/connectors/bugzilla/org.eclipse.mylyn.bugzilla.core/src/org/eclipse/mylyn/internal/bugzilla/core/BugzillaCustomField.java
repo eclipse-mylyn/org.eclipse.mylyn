@@ -32,7 +32,7 @@ public class BugzillaCustomField implements Serializable {
 
 	public static final String CUSTOM_FIELD_PREFIX = "cf_"; //$NON-NLS-1$
 
-	public static enum FieldType {
+	public enum FieldType {
 		UNKNOWN, FreeText, DropDown, MultipleSelection, LargeText, DateTime, BugId;
 
 		private static int parseInt(String type) {
@@ -45,41 +45,27 @@ public class BugzillaCustomField implements Serializable {
 
 		@Override
 		public String toString() {
-			switch (this.ordinal()) {
-			case 1:
-				return "Free Text"; //$NON-NLS-1$
-			case 2:
-				return "Drop Down"; //$NON-NLS-1$
-			case 3:
-				return "Multiple-Selection Box"; //$NON-NLS-1$
-			case 4:
-				return "Large Text Box"; //$NON-NLS-1$
-			case 5:
-				return "Date/Time"; //$NON-NLS-1$
-			case 6:
-				return "Bug ID"; //$NON-NLS-1$
-			default:
-				return super.toString();
-			}
+			return switch (ordinal()) {
+				case 1 -> "Free Text"; //$NON-NLS-1$
+				case 2 -> "Drop Down"; //$NON-NLS-1$
+				case 3 -> "Multiple-Selection Box"; //$NON-NLS-1$
+				case 4 -> "Large Text Box"; //$NON-NLS-1$
+				case 5 -> "Date/Time"; //$NON-NLS-1$
+				case 6 -> "Bug ID"; //$NON-NLS-1$
+				default -> super.toString();
+			};
 		}
 
 		public static FieldType convert(String change) {
-			switch (parseInt(change)) {
-			case 1:
-				return FreeText;
-			case 2:
-				return DropDown;
-			case 3:
-				return MultipleSelection;
-			case 4:
-				return LargeText;
-			case 5:
-				return DateTime;
-			case 6:
-				return BugId;
-			default:
-				return UNKNOWN;
-			}
+			return switch (parseInt(change)) {
+				case 1 -> FreeText;
+				case 2 -> DropDown;
+				case 3 -> MultipleSelection;
+				case 4 -> LargeText;
+				case 5 -> DateTime;
+				case 6 -> BugId;
+				default -> UNKNOWN;
+			};
 		}
 	}
 
@@ -87,7 +73,7 @@ public class BugzillaCustomField implements Serializable {
 
 	private final String description;
 
-	private List<String> options = new ArrayList<String>();
+	private List<String> options = new ArrayList<>();
 
 	final private int type;
 
@@ -99,7 +85,7 @@ public class BugzillaCustomField implements Serializable {
 		this.description = description;
 		this.name = name;
 		this.type = parseInt(type);
-		this.fieldType = FieldType.convert(type);
+		fieldType = FieldType.convert(type);
 		this.enterBug = "1".equals(enterBug); //$NON-NLS-1$
 	}
 
@@ -128,7 +114,7 @@ public class BugzillaCustomField implements Serializable {
 	}
 
 	public void addOption(String option) {
-		this.options.add(option);
+		options.add(option);
 	}
 
 	/**

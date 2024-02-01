@@ -24,16 +24,15 @@ public class BugzillaTaskEditorDescriptionPart extends TaskEditorDescriptionPart
 	private class LockAction extends Action {
 
 		public LockAction() {
-			super();
 			updateActionState();
 		}
 
 		private void updateActionState() {
 			TaskAttribute isPrivate = getAttribute().getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
 			if ("1".compareTo(isPrivate.getValue()) == 0) { //$NON-NLS-1$
-				this.setImageDescriptor(TasksUiImages.LOCK_CLOSE);
+				setImageDescriptor(TasksUiImages.LOCK_CLOSE);
 			} else {
-				this.setImageDescriptor(TasksUiImages.LOCK_OPEN);
+				setImageDescriptor(TasksUiImages.LOCK_OPEN);
 			}
 		}
 

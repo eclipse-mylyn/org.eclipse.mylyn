@@ -135,12 +135,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (taskId == null) {
 			taskId = harness.createAliasTask2();
 		}
-		Set<String> taskIds = new HashSet<String>();
+		Set<String> taskIds = new HashSet<>();
 		taskIds.add("Hugo");
 		taskIds.add("Fritz");
 		taskIds.add(taskId);
-		final Map<String, TaskData> results = new HashMap<String, TaskData>();
-		final Map<String, IStatus> failed = new HashMap<String, IStatus>();
+		final Map<String, TaskData> results = new HashMap<>();
+		final Map<String, IStatus> failed = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -176,7 +176,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskList().addTask(taskX);
 		TasksUiPlugin.getTaskList().addTask(task2);
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(task1);
 		tasks.add(taskX);
 		tasks.add(task2);
@@ -483,7 +483,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -653,7 +653,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskAttribute selectedOperationAttribute = taskDataNew[0].getRoot().getMappedAttribute(TaskAttribute.OPERATION);
 		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.unconfirmed.toString(),
 				BugzillaOperation.unconfirmed.getLabel());
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		changed.add(selectedOperationAttribute);
 		workingCopy.save(changed, null);
 
@@ -733,7 +733,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		}
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -907,10 +907,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskData taskData = workingCopy.getLocalData();
 		assertNotNull(taskData);
 
-		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
+		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + new Date().toString();
 		TaskAttribute attrNewComment = data.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		attrNewComment.setValue(newCommentText);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		changed.add(attrNewComment);
 		RepositoryResponse response = BugzillaFixture.current().submitTask(data, client);
 
@@ -918,10 +918,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		taskData = workingCopy.getLocalData();
 		assertNotNull(taskData);
 
-		newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test #### " + (new Date()).toString();
+		newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test #### " + new Date().toString();
 		attrNewComment = data.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		attrNewComment.setValue(newCommentText);
-		changed = new HashSet<TaskAttribute>();
+		changed = new HashSet<>();
 		changed.add(attrNewComment);
 		TaskAttribute attrDeltaTs = data.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		attrDeltaTs.setValue("2007-01-01 00:00:00");
@@ -991,7 +991,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //				.size();
 
 		// Modify it
-		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
+		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + new Date().toString();
 		TaskAttribute attrNewComment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		attrNewComment.setValue(newCommentText);
 		model.attributeChanged(attrNewComment);
@@ -1115,7 +1115,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// test anonymous task retrieval
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(data);
-		ITask task = this.generateLocalTaskAndDownload(data.getTaskId());
+		ITask task = generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task);
 
 		// test anonymous update of configuration
@@ -1144,7 +1144,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 
 		synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
@@ -1185,7 +1185,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		taskData.getRoot()
 				.getAttribute(BugzillaAttribute.NEW_COMMENT.getKey())
 				.setValue("New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()));
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()));
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.WORK_TIME.getKey()));
@@ -1216,16 +1216,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		int year = 2006;
 		int month = (int) (Math.random() * 12 + 1);
 		int day = (int) (Math.random() * 28 + 1);
-		return "" + year + "-" + ((month <= 9) ? "0" : "") + month + "-" + ((day <= 9) ? "0" : "") + day;
+		return "" + year + "-" + (month <= 9 ? "0" : "") + month + "-" + (day <= 9 ? "0" : "") + day;
 	}
 
 	public void testSynchChangedReports() throws Exception {
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		if (BugzillaVersion.BUGZILLA_HEAD.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
 				&& BugzillaFixture.current().getRepositoryUrl().contains("mylyn.eclipse.org")) {
-			//FIXME:  for some actual unknown reason 
+			//FIXME:  for some actual unknown reason
 			// connector.preSynchronization(event, null);
-			// did not include task5 
+			// did not include task5
 			// but in my local bugzilla installation this works perfect.
 			//
 			// Until we found the reason we disable this test for the 4.1 bugzilla on mylyn.eclipse.org
@@ -1254,7 +1254,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(taskData5);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task5.getSynchronizationState());
 
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(task4);
 		tasks.add(task5);
 
@@ -1300,8 +1300,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			priority5 = priority1;
 			taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority5);
 		}
-		Set<TaskAttribute> changed4 = new HashSet<TaskAttribute>();
-		Set<TaskAttribute> changed5 = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed4 = new HashSet<>();
+		Set<TaskAttribute> changed5 = new HashSet<>();
 
 		changed4.add(taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()));
 		changed5.add(taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()));
@@ -1670,7 +1670,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -1738,7 +1738,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -1771,7 +1771,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			isPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 		}
 		definedIsPrivate.setValue("1"); //$NON-NLS-1$
-		isPrivate.setValue("1"); //$NON-NLS-1$ 
+		isPrivate.setValue("1"); //$NON-NLS-1$
 
 		model.attributeChanged(description);
 		changed.clear();
@@ -1825,7 +1825,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
@@ -1871,7 +1871,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			isPrivate = comment1.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
 		}
 		definedIsPrivate.setValue("1"); //$NON-NLS-1$
-		isPrivate.setValue("1"); //$NON-NLS-1$ 
+		isPrivate.setValue("1"); //$NON-NLS-1$
 
 		model.attributeChanged(comment1);
 		changed.clear();

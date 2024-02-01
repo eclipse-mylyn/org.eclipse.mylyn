@@ -66,18 +66,17 @@ public class CustomTransitionManager implements Serializable {
 	private String startStatus;
 
 	public CustomTransitionManager() {
-		operationMapByCurrentStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
-		operationMapByEndStatus = new HashMap<String, List<AbstractBugzillaOperation>>();
-		closedStatuses = new ArrayList<String>();
-		this.valid = false;
-		this.filePath = ""; //$NON-NLS-1$
+		operationMapByCurrentStatus = new HashMap<>();
+		operationMapByEndStatus = new HashMap<>();
+		closedStatuses = new ArrayList<>();
+		valid = false;
+		filePath = ""; //$NON-NLS-1$
 		duplicateStatus = DEFAULT_DUPLICATE_STATUS;
 		startStatus = DEFAULT_START_STATUS;
 	}
 
 	/**
-	 * Searches for a valid transition description file. Returns true if a file exists and was sucessfully parsed, false
-	 * otherwise
+	 * Searches for a valid transition description file. Returns true if a file exists and was sucessfully parsed, false otherwise
 	 *
 	 * @param filePath
 	 * @return true if anything was changed, false otherwise.
@@ -184,39 +183,39 @@ public class CustomTransitionManager implements Serializable {
 		//This is necessary so we can add verifiers to these operations later
 		if (operationMapByEndStatus.size() == 0) {
 
-			ArrayList<AbstractBugzillaOperation> list = new ArrayList<AbstractBugzillaOperation>();
+			ArrayList<AbstractBugzillaOperation> list = new ArrayList<>();
 
 			//NONE is currently not used from the map, included for completeness
 			list.add(BugzillaOperation.none);
 			operationMapByEndStatus.put("NONE", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.accept);
 			operationMapByEndStatus.put("ASSIGNED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.resolve);
 			if (duplicateStatus.equals("RESOLVED")) { //$NON-NLS-1$
 				list.add(BugzillaOperation.duplicate);
 			}
 			operationMapByEndStatus.put("RESOLVED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.reopen);
 			operationMapByEndStatus.put("REOPENED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.unconfirmed);
 			operationMapByEndStatus.put("UNCONFIRMED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.verify);
 			if (duplicateStatus.equals("VERIFIED")) { //$NON-NLS-1$
 				list.add(BugzillaOperation.duplicate);
 			}
 			operationMapByEndStatus.put("VERIFIED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.close);
 			list.add(BugzillaOperation.close_with_resolution);
 			if (duplicateStatus.equals("CLOSED")) { //$NON-NLS-1$
@@ -224,7 +223,7 @@ public class CustomTransitionManager implements Serializable {
 			}
 			operationMapByEndStatus.put("CLOSED", list); //$NON-NLS-1$
 
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 			list.add(BugzillaOperation.markNew);
 			operationMapByEndStatus.put("NEW", list); //$NON-NLS-1$
 		}
@@ -240,25 +239,24 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	/**
-	 * Sets whether or not this class is valid. If set to false, the filePath will be set to "" so that subsequent calls
-	 * to parse(filePath) will work.
+	 * Sets whether or not this class is valid. If set to false, the filePath will be set to "" so that subsequent calls to parse(filePath)
+	 * will work.
 	 *
 	 * @param val
 	 */
 	public void setValid(boolean val) {
-		if (val == false) {
-			this.filePath = ""; //$NON-NLS-1$
+		if (!val) {
+			filePath = ""; //$NON-NLS-1$
 		}
-		this.valid = val;
+		valid = val;
 	}
 
 	public boolean isValid() {
-		return this.valid;
+		return valid;
 	}
 
 	/**
-	 * Returns the duplicate status. Standard Bugzilla installations will have a duplicate status of RESOLVED, VERIFIED
-	 * or CLOSED. <br>
+	 * Returns the duplicate status. Standard Bugzilla installations will have a duplicate status of RESOLVED, VERIFIED or CLOSED. <br>
 	 * By default, the duplicate status will be RESOLVED.
 	 *
 	 * @return The status to send if a bug is set to Duplicate
@@ -271,10 +269,10 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	/**
-	 * Returns the start status. Standard Bugzilla installations have 2 available start statuses, UNCONFIRMED and NEW.
-	 * Each user has a permissions setting that determines whether their new bugs start as UNCONFIRMED or NEW. This
-	 * permissions setting currently cannot be accessed, so this function does not try to guess and returns either the
-	 * default status (NEW) or whichever status was set by a transition file. <br>
+	 * Returns the start status. Standard Bugzilla installations have 2 available start statuses, UNCONFIRMED and NEW. Each user has a
+	 * permissions setting that determines whether their new bugs start as UNCONFIRMED or NEW. This permissions setting currently cannot be
+	 * accessed, so this function does not try to guess and returns either the default status (NEW) or whichever status was set by a
+	 * transition file. <br>
 	 * Fix for bug #318128, set startStatus to NEW if startStatus is somehow null at this point.
 	 *
 	 * @return The valid start status. Default value is NEW.
@@ -287,14 +285,14 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	private void addTransition(String start, String endStatus) {
-		if (!customNames
-				&& (start.equals("REOPENED") && (endStatus.equals("UNCONFIRMED") || endStatus.equals("REOPENED")))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (!customNames && start.equals("REOPENED") //$NON-NLS-1$
+				&& (endStatus.equals("UNCONFIRMED") || endStatus.equals("REOPENED"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			//REOPENED should not retransition to REOPENED
 			return;
 		}
 		List<AbstractBugzillaOperation> list = operationMapByCurrentStatus.get(start);
 		if (list == null) {
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 		}
 		list.addAll(operationMapByEndStatus.get(endStatus));
 		operationMapByCurrentStatus.put(start, list);
@@ -305,17 +303,15 @@ public class CustomTransitionManager implements Serializable {
 
 		//Find valid transitions
 		for (Object o : transitions) {
-			if ((o instanceof HashMap<?, ?>)) {
+			if (o instanceof HashMap<?, ?> tran) {
 				//Used for XMLRPC
-				HashMap<?, ?> tran = (HashMap<?, ?>) o;
 				String endStatus = (String) tran.get("name"); //$NON-NLS-1$
 				addNewStatus(endStatus);
 				if (!endStatus.equals(start)) {
 					addTransition(start, endStatus);
 				}
-			} else if (o instanceof String) {
+			} else if (o instanceof String endStatus) {
 				//Used for files
-				String endStatus = (String) o;
 				addNewStatus(endStatus);
 				if (!endStatus.equals(start)) {
 					addTransition(start, endStatus);
@@ -325,7 +321,7 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	public void parse(IProgressMonitor monitor, BugzillaXmlRpcClient xmlClient) throws CoreException {
-		this.filePath = ""; //$NON-NLS-1$
+		filePath = ""; //$NON-NLS-1$
 		operationMapByCurrentStatus.clear();
 		operationMapByEndStatus.clear();
 		closedStatuses.clear();
@@ -347,9 +343,8 @@ public class CustomTransitionManager implements Serializable {
 						continue;
 					}
 					for (Object status : values) {
-						if (status instanceof HashMap<?, ?>) {
+						if (status instanceof HashMap<?, ?> map) {
 							//Get name
-							HashMap<?, ?> map = (HashMap<?, ?>) status;
 							String start = (String) map.get("name"); //$NON-NLS-1$
 							//Get is_open
 							Object is_open = map.get("is_open"); //$NON-NLS-1$
@@ -382,15 +377,15 @@ public class CustomTransitionManager implements Serializable {
 	}
 
 	/**
-	 * Creates a new status with a single operation with the same name as the status itself. Does nothing if a status of
-	 * that name already exists.
+	 * Creates a new status with a single operation with the same name as the status itself. Does nothing if a status of that name already
+	 * exists.
 	 *
 	 * @param status
 	 */
 	private void addNewStatus(String status) {
 		List<AbstractBugzillaOperation> list = operationMapByEndStatus.get(status);
 		if (list == null) {
-			list = new ArrayList<AbstractBugzillaOperation>();
+			list = new ArrayList<>();
 		} else {
 			return;
 		}

@@ -124,7 +124,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -134,7 +134,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -315,7 +315,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -325,7 +325,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -503,7 +503,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -513,7 +513,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -565,14 +565,14 @@ public class BugzillaHarness {
 	}
 
 	public ArrayList<String> taskMissingHitsExists() {
-		ArrayList<String> taskIDs = new ArrayList<String>();
+		ArrayList<String> taskIDs = new ArrayList<>();
 
 		String queryUrlString = repository().getRepositoryUrl() + "/buglist.cgi?"
 				+ "short_desc=test%20Missing%20Hits&resolution=---&query_format=advanced"
 				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -582,7 +582,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			for (Integer integer : sks) {
 				taskIDs.add("" + integer);
 			}
@@ -668,7 +668,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -678,7 +678,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -727,7 +727,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -737,7 +737,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -783,7 +783,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -793,7 +793,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -837,7 +837,7 @@ public class BugzillaHarness {
 				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
 		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
-		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
@@ -847,7 +847,7 @@ public class BugzillaHarness {
 		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
-			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			SortedSet<Integer> sks = new TreeSet<>(ks);
 			taskID = sks.last().toString();
 		}
 		return taskID;
@@ -885,7 +885,7 @@ public class BugzillaHarness {
 				taskDataNew[0].getRepositoryUrl());
 
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
-		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], priviledgedClient());
 		((AbstractTask) taskNew).setSubmitting(true);

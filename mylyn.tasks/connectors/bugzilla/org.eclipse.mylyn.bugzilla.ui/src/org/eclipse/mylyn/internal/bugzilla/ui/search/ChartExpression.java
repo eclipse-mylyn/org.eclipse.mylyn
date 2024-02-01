@@ -26,7 +26,6 @@ public class ChartExpression implements Serializable {
 	private String value;
 
 	public ChartExpression(int fieldName, int operation, String value) {
-		super();
 		this.fieldName = fieldName;
 		this.operation = operation;
 		this.value = value;

@@ -42,7 +42,7 @@ public class BugzillaSearch {
 	private final List<Entry> parameters;
 
 	public BugzillaSearch(TaskRepository repository, String queryUrl) throws UnsupportedEncodingException {
-		parameters = new ArrayList<Entry>();
+		parameters = new ArrayList<>();
 
 		queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1); //$NON-NLS-1$
 		String[] options = queryUrl.split("&"); //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class BugzillaSearch {
 	}
 
 	public List<Entry> getParameters(String key) {
-		List<Entry> result = new ArrayList<Entry>();
+		List<Entry> result = new ArrayList<>();
 		for (Entry entry : parameters) {
 			if (entry.key.equals(key)) {
 				result.add(entry);

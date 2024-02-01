@@ -44,9 +44,9 @@ public class BugzillaCustomQueryDialog extends Dialog {
 
 	public BugzillaCustomQueryDialog(Shell parentShell, String queryString, String description, String maxHits) {
 		super(parentShell);
-		this.startingUrl = queryString;
+		startingUrl = queryString;
 		this.maxHits = maxHits;
-		this.name = description;
+		name = description;
 	}
 
 	public String getName() {

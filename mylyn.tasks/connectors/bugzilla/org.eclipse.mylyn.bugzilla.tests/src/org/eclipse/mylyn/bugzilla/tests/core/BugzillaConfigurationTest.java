@@ -18,8 +18,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -32,6 +30,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
+
+import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
@@ -108,8 +108,8 @@ public class BugzillaConfigurationTest extends TestCase {
 //	}
 
 	/**
-	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though. The file
-	 * included (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
+	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though. The file included
+	 * (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
 		BufferedReader inCleaned = null;
@@ -119,27 +119,28 @@ public class BugzillaConfigurationTest extends TestCase {
 
 			InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
 			BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-			try {
+			try (in) {
 				inCleaned = XmlCleaner.clean(in, tempFile);
 				if (tempFile != null) {
 					tempFile.delete();
 				}
-			} finally {
-				in.close();
 			}
 
 			SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 			final XMLReader reader = CoreUtil.newXmlReader();
 			reader.setContentHandler(contentHandler);
 			reader.setErrorHandler(new ErrorHandler() {
+				@Override
 				public void error(SAXParseException exception) throws SAXException {
 					throw exception;
 				}
 
+				@Override
 				public void fatalError(SAXParseException exception) throws SAXException {
 					throw exception;
 				}
 
+				@Override
 				public void warning(SAXParseException exception) throws SAXException {
 					throw exception;
 				}

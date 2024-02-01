@@ -34,11 +34,11 @@ public class BugzillaTaskEditorCommentPart extends TaskEditorCommentPart {
 		private void updateActionState() {
 			if (taskComment.getIsPrivate() != null) {
 				if (taskComment.getIsPrivate()) {
-					this.setImageDescriptor(TasksUiImages.LOCK_CLOSE);
-					this.setToolTipText(Messages.BugzillaTaskEditorCommentPart_privateComment);
+					setImageDescriptor(TasksUiImages.LOCK_CLOSE);
+					setToolTipText(Messages.BugzillaTaskEditorCommentPart_privateComment);
 				} else {
-					this.setImageDescriptor(TasksUiImages.LOCK_OPEN);
-					this.setToolTipText(Messages.BugzillaTaskEditorCommentPart_publicComment);
+					setImageDescriptor(TasksUiImages.LOCK_OPEN);
+					setToolTipText(Messages.BugzillaTaskEditorCommentPart_publicComment);
 				}
 			}
 		}

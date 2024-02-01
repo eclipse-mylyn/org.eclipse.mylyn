@@ -64,7 +64,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 	private BugzillaXmlRpcClient bugzillaClient;
 
 	@SuppressWarnings("serial")
-	private final Map<String, Map<String, ArrayList<String>>> fixtureTransitionsMap = new HashMap<String, Map<String, ArrayList<String>>>() {
+	private final Map<String, Map<String, ArrayList<String>>> fixtureTransitionsMap = new HashMap<>() {
 		{
 			put(BUGZILLA_LE_4_0, new HashMap<String, ArrayList<String>>() {
 				{
@@ -323,33 +323,33 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			Object[] userList0 = bugzillaClient.getUserInfoFromIDs(monitor, new Integer[] { 1, 2 });
 			assertNotNull(userList0);
 			assertEquals(2, userList0.length);
-			assertEquals(((Integer) 1), ((HashMap<String, Integer>) userList0[0]).get("id"));
+			assertEquals((Integer) 1, ((HashMap<String, Integer>) userList0[0]).get("id"));
 			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
 				assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("email"));
 			}
 			assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("name"));
 			assertEquals("Mylyn Admin", ((HashMap<String, String>) userList0[0]).get("real_name"));
-			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList0[0]).get("can_login"));
+			assertEquals((Boolean) true, ((HashMap<String, Boolean>) userList0[0]).get("can_login"));
 
-			assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList0[1]).get("id"));
+			assertEquals((Integer) 2, ((HashMap<String, Integer>) userList0[1]).get("id"));
 			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
 				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("email"));
 			}
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("name"));
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList0[1]).get("real_name"));
-			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList0[1]).get("can_login"));
+			assertEquals((Boolean) true, ((HashMap<String, Boolean>) userList0[1]).get("can_login"));
 
 			Object[] userList1 = bugzillaClient.getUserInfoFromNames(monitor,
 					new String[] { "tests@mylyn.eclipse.org" });
 			assertNotNull(userList1);
 			assertEquals(1, userList1.length);
-			assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList1[0]).get("id"));
+			assertEquals((Integer) 2, ((HashMap<String, Integer>) userList1[0]).get("id"));
 			if (version.compareTo(BugzillaVersion.BUGZILLA_5_1) < 0) {
 				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("email"));
 			}
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("name"));
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList1[0]).get("real_name"));
-			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList1[0]).get("can_login"));
+			assertEquals((Boolean) true, ((HashMap<String, Boolean>) userList1[0]).get("can_login"));
 		}
 	}
 
@@ -379,12 +379,12 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 					|| ((HashMap<String, Integer>) productDetails[1]).get("id") == 3);
 			int idx = ((HashMap<String, Integer>) productDetails[0]).get("id") == 1 ? 0 : 1;
 
-			assertEquals(((Integer) 1), ((HashMap<String, Integer>) productDetails[idx]).get("id"));
+			assertEquals((Integer) 1, ((HashMap<String, Integer>) productDetails[idx]).get("id"));
 			assertEquals(
 					"This is a test product. This ought to be blown away and replaced with real stuff in a finished installation of bugzilla.",
 					((HashMap<String, String>) productDetails[idx]).get("description"));
 			idx = (idx + 1) % 2;
-			assertEquals(((Integer) 3), ((HashMap<String, Integer>) productDetails[idx]).get("id"));
+			assertEquals((Integer) 3, ((HashMap<String, Integer>) productDetails[idx]).get("id"));
 			assertEquals("Product for manual testing",
 					((HashMap<String, String>) productDetails[idx]).get("description"));
 
@@ -418,7 +418,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			CustomTransitionManager ctm = new CustomTransitionManager();
 			ctm.parse(new NullProgressMonitor(), bugzillaClient);
 
-			ArrayList<String> transitions = new ArrayList<String>();
+			ArrayList<String> transitions = new ArrayList<>();
 			Map<String, ArrayList<String>> expectTransitions;
 
 			/*
@@ -458,15 +458,15 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
-			Set<String> taskIds = new HashSet<String>();
+			Set<String> taskIds = new HashSet<>();
 			String taskId = harness.taskXmlRpcExists();
 			if (taskId == null) {
 				taskId = harness.createXmlRpcTask();
 			}
 
 			taskIds.add(taskId);
-			final Map<String, TaskData> results = new HashMap<String, TaskData>();
-			final Map<String, TaskData> resultsXMLRPC = new HashMap<String, TaskData>();
+			final Map<String, TaskData> results = new HashMap<>();
+			final Map<String, TaskData> resultsXMLRPC = new HashMap<>();
 			TaskDataCollector collector = new TaskDataCollector() {
 				@Override
 				public void accept(TaskData taskData) {
@@ -509,7 +509,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
 							if (updateConfig[0] == null) {
-								updateConfig[0] = Boolean.valueOf(true);
+								updateConfig[0] = true;
 							}
 						} else if (collectionException[0] == null) {
 							collectionException[0] = e;
@@ -569,49 +569,49 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			TaskAttribute attributeHTML = attributesHTML.get(attributeNameHTML);
 			TaskAttribute attributeXMLRPC = attributesXMLRPC.get(attributeNameHTML);
 			if (attributeXMLRPC == null) {
-				div += (prefix + attributeNameHTML + " not in XMLRPC\n");
+				div += prefix + attributeNameHTML + " not in XMLRPC\n";
 				continue;
 			}
 			if (attributeHTML.getValues().size() > 1) {
 				List<String> i1 = attributeHTML.getValues();
 				List<String> i2 = attributeXMLRPC.getValues();
 				if (i1.size() != i2.size()) {
-					div += (prefix + attributeNameHTML + " has size " + i1.size() + " but got " + i2.size() + "\n");
+					div += prefix + attributeNameHTML + " has size " + i1.size() + " but got " + i2.size() + "\n";
 				}
 				for (String string : i1) {
 					if (!i2.contains(string)) {
-						div += (prefix + attributeNameHTML + " did not have " + string + "\n");
+						div += prefix + attributeNameHTML + " did not have " + string + "\n";
 					}
 				}
 			}
 			if (attributeHTML.getValue().compareTo(attributeXMLRPC.getValue()) != 0) {
-				div += (prefix + attributeNameHTML + " value not equal HTML = \'" + attributeHTML.getValue()
-						+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n");
+				div += prefix + attributeNameHTML + " value not equal HTML = \'" + attributeHTML.getValue()
+						+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n";
 			}
 			TaskAttributeMetaData metaHTML = attributeHTML.getMetaData();
 			TaskAttributeMetaData metaXMLRPC = attributeXMLRPC.getMetaData();
 			if (metaHTML != null && metaXMLRPC == null) {
-				div += (prefix + attributeNameHTML + " MetaData not in XMLRPC\n");
+				div += prefix + attributeNameHTML + " MetaData not in XMLRPC\n";
 			}
 
 			if (metaHTML != null && metaXMLRPC != null) {
 				if (metaHTML.getKind() != null && metaXMLRPC.getKind() == null) {
-					div += (prefix + attributeNameHTML + " MetaData Kind not in XMLRPC\n");
+					div += prefix + attributeNameHTML + " MetaData Kind not in XMLRPC\n";
 				} else if (metaHTML.getKind() != null && metaHTML.getKind().compareTo(metaXMLRPC.getKind()) != 0) {
-					div += (prefix + attributeNameHTML + " Meta Kind not equal HTML = \'" + metaHTML.getKind()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getKind() + "\'\n");
+					div += prefix + attributeNameHTML + " Meta Kind not equal HTML = \'" + metaHTML.getKind()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getKind() + "\'\n";
 				}
 				if (metaHTML.getType() != null && metaXMLRPC.getType() == null) {
-					div += (prefix + attributeNameHTML + " MetaData Type not in XMLRPC\n");
+					div += prefix + attributeNameHTML + " MetaData Type not in XMLRPC\n";
 				} else if (metaHTML.getType() != null && metaHTML.getType().compareTo(metaXMLRPC.getType()) != 0) {
-					div += (prefix + attributeNameHTML + " Meta Type not equal HTML = \'" + metaHTML.getType()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getType() + "\'\n");
+					div += prefix + attributeNameHTML + " Meta Type not equal HTML = \'" + metaHTML.getType()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getType() + "\'\n";
 				}
 				if (metaHTML.getLabel() != null && metaXMLRPC.getLabel() == null) {
-					div += (prefix + attributeNameHTML + " MetaData Label not in XMLRPC\n");
+					div += prefix + attributeNameHTML + " MetaData Label not in XMLRPC\n";
 				} else if (metaHTML.getLabel() != null && metaHTML.getLabel().compareTo(metaXMLRPC.getLabel()) != 0) {
-					div += (prefix + attributeNameHTML + " Meta Label not equal HTML = \'" + metaHTML.getLabel()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getLabel() + "\'\n");
+					div += prefix + attributeNameHTML + " Meta Label not equal HTML = \'" + metaHTML.getLabel()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getLabel() + "\'\n";
 				}
 			}
 			Map<String, TaskAttribute> subAttribHTML = attributeHTML.getAttributes();

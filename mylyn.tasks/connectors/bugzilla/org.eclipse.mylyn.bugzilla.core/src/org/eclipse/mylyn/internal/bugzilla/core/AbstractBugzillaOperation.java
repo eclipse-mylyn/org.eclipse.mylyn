@@ -39,7 +39,7 @@ public abstract class AbstractBugzillaOperation implements Serializable {
 	AbstractBugzillaOperation(String label, String inputId, String type) {
 		this.label = label;
 		this.inputId = inputId;
-		this.inputType = type;
+		inputType = type;
 	}
 
 	public String getLabel() {

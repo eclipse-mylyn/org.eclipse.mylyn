@@ -233,7 +233,7 @@ public enum BugzillaAttribute {
 
 	BugzillaAttribute(String prettyName, String idKey, String type, Flag... flags) {
 		this.prettyName = prettyName;
-		this.keyString = idKey;
+		keyString = idKey;
 		this.type = type;
 		if (flags == null || flags.length == 0) {
 			this.flags = EnumSet.noneOf(Flag.class);

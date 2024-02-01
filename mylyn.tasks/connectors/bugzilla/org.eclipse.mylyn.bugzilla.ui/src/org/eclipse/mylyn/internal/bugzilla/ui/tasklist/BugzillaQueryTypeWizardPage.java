@@ -58,6 +58,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 		searchPage.setRestoreQueryOptions(false);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -80,10 +81,10 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (buttonForm.getSelection()) {
-			searchPage.setWizard(this.getWizard());
+			searchPage.setWizard(getWizard());
 			return searchPage;
 		}
-		customPage.setWizard(this.getWizard());
+		customPage.setWizard(getWizard());
 		return customPage;
 	}
 

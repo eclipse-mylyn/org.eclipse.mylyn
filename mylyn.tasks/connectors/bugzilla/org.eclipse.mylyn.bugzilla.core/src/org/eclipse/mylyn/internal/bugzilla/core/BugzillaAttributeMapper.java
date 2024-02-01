@@ -95,8 +95,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			try {
 				SimpleDateFormat simpleFormatter = new SimpleDateFormat(format);
 				return simpleFormatter.parse(dateString);
-			} catch (ParseException e) {
-			} catch (NumberFormatException e) {
+			} catch (ParseException | NumberFormatException e) {
 			}
 		}
 		return null;
@@ -289,7 +288,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 					options.remove("DUPLICATE"); //$NON-NLS-1$
 					options.remove("MOVED"); //$NON-NLS-1$
 				}
-				Map<String, String> newOptions = new LinkedHashMap<String, String>();
+				Map<String, String> newOptions = new LinkedHashMap<>();
 				for (String option : options) {
 					newOptions.put(option, option);
 				}
@@ -328,7 +327,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		}
 		boolean result = super.equals(newAttribute, oldAttribute);
 		// bug 367861: avoid showing incomings for fields that were previously not part of the schema when empty
-		if (!result // 
+		if (!result //
 				&& (BugzillaAttribute.RESOLUTION.getKey().equals(id)
 						|| BugzillaAttribute.BUG_FILE_LOC.getKey().equals(id)
 						|| BugzillaAttribute.STATUS_WHITEBOARD.getKey().equals(id) //

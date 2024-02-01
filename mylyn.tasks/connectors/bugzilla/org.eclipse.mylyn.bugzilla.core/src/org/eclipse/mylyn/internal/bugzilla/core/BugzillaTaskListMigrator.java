@@ -39,7 +39,7 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public Set<String> getQueryElementNames() {
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add(IBugzillaConstants.TAG_BUGZILLA_QUERY);
 		names.add(IBugzillaConstants.TAG_BUGZILLA_CUSTOM_QUERY);
 		return names;

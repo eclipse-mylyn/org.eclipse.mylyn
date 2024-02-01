@@ -95,7 +95,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	protected static BugzillaLanguageSettings enSetting;
 
-	protected static final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+	protected static final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<>();
 
 	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file."; //$NON-NLS-1$
 
@@ -105,10 +105,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private File repositoryConfigurationFile;
 
-	private final Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
+	private final Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<>();
 
 	// A Map from Java's  Platform to Buzilla's
-	private static final Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
+	private static final Map<String, String> java2buzillaPlatformMap = new HashMap<>();
 
 	static {
 		enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
@@ -151,7 +151,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (BugzillaCorePlugin.getDefault() != null) {
 			BugzillaCorePlugin.getDefault().setConnector(this);
 			IPath path = BugzillaCorePlugin.getDefault().getConfigurationCachePath();
-			this.repositoryConfigurationFile = path.toFile();
+			repositoryConfigurationFile = path.toFile();
 		}
 	}
 
@@ -199,10 +199,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				if (task.getCompletionDate() == null) {
 					task.setCompletionDate(new Date(0));
 				}
-			} else {
-				if (task.getCompletionDate() != null) {
-					task.setCompletionDate(null);
-				}
+			} else if (task.getCompletionDate() != null) {
+				task.setCompletionDate(null);
 			}
 		} else {
 			// Completion Date
@@ -302,10 +300,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			StringBuilder urlQueryString = new StringBuilder(Math.min(30 + 9 * session.getTasks().size(), 7009));
 			urlQueryString.append(urlQueryBase + BUG_ID);
 
-			Set<ITask> changedTasks = new HashSet<ITask>();
+			Set<ITask> changedTasks = new HashSet<>();
 			Iterator<ITask> itr = session.getTasks().iterator();
 			int queryCounter = 0;
-			Set<ITask> checking = new HashSet<ITask>();
+			Set<ITask> checking = new HashSet<>();
 			while (itr.hasNext()) {
 				ITask task = itr.next();
 				checking.add(task);
@@ -346,7 +344,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			ISynchronizationSession syncSession, IProgressMonitor monitor)
 			throws UnsupportedEncodingException, CoreException {
 
-		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
+		HashMap<String, ITask> taskById = new HashMap<>();
 		for (ITask task : syncSession.getTasks()) {
 			taskById.put(task.getTaskId(), task);
 		}
@@ -578,7 +576,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					return !lastKnownMod.equals(attrModification.getValue());
 				}
 
-				if ((cachedHasTZ && !repoHasTZ) || (!cachedHasTZ && repoHasTZ)) { // State 2 (unlikely) || Sate 3
+				if (cachedHasTZ && !repoHasTZ || !cachedHasTZ && repoHasTZ) { // State 2 (unlikely) || Sate 3
 					long delta = Math.abs(newModDate.getTime() - oldModDate.getTime());
 					if (delta == 0) {
 						return false;
@@ -601,13 +599,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return false;
 		}
 		String[] parts = dateString.split(" "); //$NON-NLS-1$
-		boolean hasTimeZone = (parts != null && parts.length == 3);
+		boolean hasTimeZone = parts != null && parts.length == 3;
 		return hasTimeZone;
 	}
 
 	@Override
 	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
-		List<TaskRelation> relations = new ArrayList<TaskRelation>();
+		List<TaskRelation> relations = new ArrayList<>();
 		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaAttribute.DEPENDSON.getKey());
 		if (attribute != null && attribute.getValue().length() > 0) {
 			for (String taskId : attribute.getValue().split(",")) { //$NON-NLS-1$
@@ -828,7 +826,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				Set<RepositoryConfiguration> tempConfigs;
 				synchronized (repositoryConfigurations) {
-					tempConfigs = new HashSet<RepositoryConfiguration>(repositoryConfigurations.values());
+					tempConfigs = new HashSet<>(repositoryConfigurations.values());
 				}
 
 				if (tempConfigs.size() > 0) {
@@ -902,10 +900,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				char first = ws.charAt(0);
 				char firstLower = Character.toLowerCase(first);
 				char firstUpper = Character.toUpperCase(first);
-				String[] wsExtentionsTemp = { " - " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
-						" - " + firstLower + ws.substring(1, ws.length()), //$NON-NLS-1$
-						" " + firstUpper + ws.substring(1, ws.length()), //$NON-NLS-1$
-						" " + firstLower + ws.substring(1, ws.length()), "" }; //$NON-NLS-1$//$NON-NLS-2$
+				String[] wsExtentionsTemp = { " - " + firstUpper + ws.substring(1), //$NON-NLS-1$
+						" - " + firstLower + ws.substring(1), //$NON-NLS-1$
+						" " + firstUpper + ws.substring(1), //$NON-NLS-1$
+						" " + firstLower + ws.substring(1), "" }; //$NON-NLS-1$//$NON-NLS-2$
 				wsExtentions = wsExtentionsTemp;
 			} else if (ws.length() == 1) {
 				char first = ws.charAt(0);
@@ -1023,42 +1021,28 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		public PriorityLevel toPriorityLevel() {
-			switch (this) {
-			case HIGHEST:
-				return PriorityLevel.P1;
-			case HIGH:
-				return PriorityLevel.P2;
-			case NORMAL:
-				return PriorityLevel.P3;
-			case LOW:
-				return PriorityLevel.P4;
-			case LOWEST:
-				return PriorityLevel.P5;
-			case NONE:
-				return PriorityLevel.P3;
-			default:
-				return null;
-			}
+			return switch (this) {
+				case HIGHEST -> PriorityLevel.P1;
+				case HIGH -> PriorityLevel.P2;
+				case NORMAL -> PriorityLevel.P3;
+				case LOW -> PriorityLevel.P4;
+				case LOWEST -> PriorityLevel.P5;
+				case NONE -> PriorityLevel.P3;
+				default -> null;
+			};
 		}
 
 		@Override
 		public String toString() {
-			switch (this) {
-			case HIGHEST:
-				return "Highest"; //$NON-NLS-1$
-			case HIGH:
-				return "High"; //$NON-NLS-1$
-			case NORMAL:
-				return "Normal"; //$NON-NLS-1$
-			case LOW:
-				return "Low"; //$NON-NLS-1$
-			case LOWEST:
-				return "Lowest"; //$NON-NLS-1$
-			case NONE:
-				return "---"; //$NON-NLS-1$
-			default:
-				return null;
-			}
+			return switch (this) {
+				case HIGHEST -> "Highest"; //$NON-NLS-1$
+				case HIGH -> "High"; //$NON-NLS-1$
+				case NORMAL -> "Normal"; //$NON-NLS-1$
+				case LOW -> "Low"; //$NON-NLS-1$
+				case LOWEST -> "Lowest"; //$NON-NLS-1$
+				case NONE -> "---"; //$NON-NLS-1$
+				default -> null;
+			};
 		}
 	}
 

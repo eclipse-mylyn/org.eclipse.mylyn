@@ -111,29 +111,25 @@ public class UpdateAttachmentJob extends Job {
 					TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 						@Override
 						public void done(IJobChangeEvent event) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									try {
-										if (editor != null) {
-											editor.refreshPages();
-											editor.getEditorSite().getPage().activate(editor);
-											IFormPage formPage = editor.getActivePageInstance();
-											if (formPage instanceof BugzillaTaskEditorPage) {
-												BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-												Control control = bugzillaPage
-														.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS)
-														.getControl();
-												if (control instanceof Section) {
-													Section section = (Section) control;
-													CommonFormUtil.setExpanded(section, true);
-												}
+							PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+								try {
+									if (editor != null) {
+										editor.refreshPages();
+										editor.getEditorSite().getPage().activate(editor);
+										IFormPage formPage = editor.getActivePageInstance();
+										if (formPage instanceof BugzillaTaskEditorPage bugzillaPage) {
+											Control control = bugzillaPage
+													.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS)
+													.getControl();
+											if (control instanceof Section section) {
+												CommonFormUtil.setExpanded(section, true);
 											}
+										}
 
-										}
-									} finally {
-										if (editor != null) {
-											editor.showBusy(false);
-										}
+									}
+								} finally {
+									if (editor != null) {
+										editor.showBusy(false);
 									}
 								}
 							});
@@ -141,11 +137,9 @@ public class UpdateAttachmentJob extends Job {
 					});
 				}
 				monitor.worked(10);
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (editor != null) {
-							editor.showBusy(true);
-						}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					if (editor != null) {
+						editor.showBusy(true);
 					}
 				});
 			}

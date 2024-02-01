@@ -70,7 +70,7 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 			"in_progress"); //$NON-NLS-1$
 
 	public static final BugzillaOperation verify_with_resolution = new BugzillaOperation(
-			Messages.BugzillaOperation_verified, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "verify"); //$NON-NLS-1$//$NON-NLS-2$ 
+			Messages.BugzillaOperation_verified, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "verify"); //$NON-NLS-1$//$NON-NLS-2$
 
 	public static final BugzillaOperation new_default = new BugzillaOperation(Messages.BugzillaOperation_default,
 			"{Start}"); //$NON-NLS-1$
@@ -79,7 +79,7 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 
 	BugzillaOperation(String label) {
 		super(label);
-		this.value = label.replaceAll(DEFAULT_LABEL_PREFIX, ""); //$NON-NLS-1$
+		value = label.replace(DEFAULT_LABEL_PREFIX, ""); //$NON-NLS-1$
 	}
 
 	BugzillaOperation(String label, String inputId, String type, String value) {
@@ -94,6 +94,6 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 
 	@Override
 	public String toString() {
-		return this.value;
+		return value;
 	}
 }
