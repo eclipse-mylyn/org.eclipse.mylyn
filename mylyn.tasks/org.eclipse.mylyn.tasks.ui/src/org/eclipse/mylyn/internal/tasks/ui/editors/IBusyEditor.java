@@ -22,8 +22,8 @@ import org.eclipse.swt.graphics.Image;
 @Deprecated
 public interface IBusyEditor {
 
-	public void setTitleImage(Image image);
+	void setTitleImage(Image image);
 
-	public Image getTitleImage();
+	Image getTitleImage();
 
 }

@@ -55,7 +55,7 @@ public class WebBrowserDialog extends MessageDialog {
 		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
 				defaultIndex);
 		this.data = data;
-		this.setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
+		setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
 	}
 
 	public static int openAcceptAgreement(Shell parent, String title, String message, String data) {
@@ -70,10 +70,8 @@ public class WebBrowserDialog extends MessageDialog {
 				file = File.createTempFile("mylyn-error", ".html"); //$NON-NLS-1$ //$NON-NLS-2$
 				file.deleteOnExit();
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				try {
+				try (writer) {
 					writer.write(message);
-				} finally {
-					writer.close();
 				}
 			} catch (IOException e) {
 				if (file != null) {

@@ -38,8 +38,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -139,7 +137,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button taskListServiceMessageEnabledButton;
 
 	public TasksUiPreferencePage() {
-		super();
 		setPreferenceStore(TasksUiPlugin.getDefault().getPreferenceStore());
 		toolkit = new FormToolkit(Display.getCurrent());
 
@@ -185,15 +182,18 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		link.setText(Messages.TasksUiPreferencePage_Use_the_Restore_dialog_to_recover_missing_tasks);
 		link.addHyperlinkListener(new IHyperlinkListener() {
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				getShell().close();
 				new RestoreTaskListAction().run();
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
@@ -222,6 +222,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		return advanced;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
@@ -259,7 +260,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
 		MonitorUiPlugin.getDefault()
 				.getPreferenceStore()
-				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60 * 1000));
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * 60 * 1000);
 
 		MonitorUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -423,10 +424,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		enableFullTaskListSynch.setSelection(
 				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableFullTaskListSynch.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -445,10 +448,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		enableRelevantTasksSynch.setSelection(
 				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED));
 		enableRelevantTasksSynch.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -477,11 +482,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		text.setLayoutData(gridDataRepo);
 		long querySyncMilliseconds = getPreferenceStore().getLong(preferenceKey);
 		text.setText(toMinutesString(querySyncMilliseconds));
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateRefreshGroupEnablements();
-			}
-		});
+		text.addModifyListener(e -> updateRefreshGroupEnablements());
 		return text;
 	}
 

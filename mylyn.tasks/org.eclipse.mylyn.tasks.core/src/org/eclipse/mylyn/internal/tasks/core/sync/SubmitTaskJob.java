@@ -81,7 +81,7 @@ public class SubmitTaskJob extends SubmitJob {
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.task = task;
-		this.originalTask = task;
+		originalTask = task;
 		this.taskData = taskData;
 		this.oldAttributes = oldAttributes;
 		this.taskJobListeners = taskJobListeners;
@@ -130,7 +130,7 @@ public class SubmitTaskJob extends SubmitJob {
 				monitor.done();
 			}
 			fireDone();
-			return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
+			return errorStatus == Status.CANCEL_STATUS ? Status.CANCEL_STATUS : Status.OK_STATUS;
 		} finally {
 			monitor.detach(jobMonitor);
 		}
@@ -139,10 +139,12 @@ public class SubmitTaskJob extends SubmitJob {
 	protected void fireTaskAboutToSubmit() {
 		for (final TaskJobListener listener : taskJobListeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					listener.aboutToSubmit(new TaskJobEvent(originalTask, task, taskData));
 				}
 
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Error thrown by TaskJobListener", e)); //$NON-NLS-1$
@@ -154,10 +156,12 @@ public class SubmitTaskJob extends SubmitJob {
 	protected void fireTaskSubmissionComplete(final TaskData updatedTaskData) {
 		for (final TaskJobListener listener : taskJobListeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					listener.taskSubmitted(new TaskJobEvent(originalTask, task, updatedTaskData));
 				}
 
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Error thrown by TaskJobListener", e)); //$NON-NLS-1$

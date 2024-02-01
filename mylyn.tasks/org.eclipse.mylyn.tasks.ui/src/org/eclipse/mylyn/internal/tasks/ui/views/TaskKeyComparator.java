@@ -35,6 +35,7 @@ public class TaskKeyComparator implements Comparator<String[]> {
 		return compare(a1, a2);
 	}
 
+	@Override
 	public int compare(String a1[], String a2[]) {
 		if (a1[0] == null && a1[1] == null) {
 			a1 = split(a1[2]);

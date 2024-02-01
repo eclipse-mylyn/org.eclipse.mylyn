@@ -39,7 +39,7 @@ public class TaskAttachmentViewerManager {
 	}
 
 	public List<ITaskAttachmentViewer> getWorkbenchViewers(ITaskAttachment attachment) {
-		List<ITaskAttachmentViewer> result = new ArrayList<ITaskAttachmentViewer>();
+		List<ITaskAttachmentViewer> result = new ArrayList<>();
 		IEditorRegistry registry = PlatformUI.getWorkbench().getEditorRegistry();
 
 		IEditorDescriptor defaultEditor = registry.getDefaultEditor(AttachmentUtil.getAttachmentFilename(attachment));
@@ -64,7 +64,7 @@ public class TaskAttachmentViewerManager {
 	}
 
 	public List<ITaskAttachmentViewer> getSystemViewers(ITaskAttachment attachment) {
-		List<ITaskAttachmentViewer> result = new ArrayList<ITaskAttachmentViewer>();
+		List<ITaskAttachmentViewer> result = new ArrayList<>();
 		IEditorRegistry registry = PlatformUI.getWorkbench().getEditorRegistry();
 
 		// Don't check whether system external editor is available (IEditorRegistry.isSystemExternalEditorAvailable) ...
@@ -81,7 +81,7 @@ public class TaskAttachmentViewerManager {
 	}
 
 	public List<ITaskAttachmentViewer> getTaskAttachmentViewers(ITaskAttachment attachment) {
-		List<ITaskAttachmentViewer> result = new ArrayList<ITaskAttachmentViewer>();
+		List<ITaskAttachmentViewer> result = new ArrayList<>();
 		ITaskAttachmentViewer browserViewer = getBrowserViewer(attachment);
 		if (browserViewer != null) {
 			result.add(browserViewer);
@@ -103,7 +103,7 @@ public class TaskAttachmentViewerManager {
 		ITaskAttachmentViewer defaultViewer = null;
 		String preferred = getPreferredViewerID(attachment);
 		for (ITaskAttachmentViewer viewer : viewers) {
-			if ((preferred != null && preferred.equals(viewer.getId()))) {
+			if (preferred != null && preferred.equals(viewer.getId())) {
 				return viewer;
 			} else if (viewer.isWorkbenchDefault()) {
 				defaultViewer = viewer;

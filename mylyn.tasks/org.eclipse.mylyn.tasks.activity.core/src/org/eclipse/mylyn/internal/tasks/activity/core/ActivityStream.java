@@ -40,7 +40,7 @@ public class ActivityStream implements IActivityStream {
 		Assert.isNotNull(scope);
 		this.manager = manager;
 		this.scope = scope;
-		this.events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
+		events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
 		initialize();
 	}
 
@@ -48,6 +48,7 @@ public class ActivityStream implements IActivityStream {
 		events.addAll(manager.getEvents(scope));
 	}
 
+	@Override
 	public void query(IProgressMonitor monitor) throws CoreException {
 		TaskActivityProvider reviewTaskProvider = new TaskActivityProvider();
 		reviewTaskProvider.open(manager);
@@ -60,6 +61,7 @@ public class ActivityStream implements IActivityStream {
 		events.add(event);
 	}
 
+	@Override
 	public Set<ActivityEvent> getEvents() {
 		return events;
 	}
@@ -68,6 +70,7 @@ public class ActivityStream implements IActivityStream {
 		return manager;
 	}
 
+	@Override
 	public ActivityScope getScope() {
 		return scope;
 	}

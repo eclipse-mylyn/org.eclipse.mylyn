@@ -46,7 +46,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 				part.getControl().setFocus();
 			}
 		}
-	};
+	}
 
 	private final PlanningPart part;
 

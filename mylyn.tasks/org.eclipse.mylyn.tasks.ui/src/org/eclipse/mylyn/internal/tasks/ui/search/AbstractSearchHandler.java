@@ -28,10 +28,10 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public abstract class AbstractSearchHandler {
 
 	public interface IFilterChangeListener {
-		public void filterChanged();
+		void filterChanged();
 	}
 
-	private final List<IFilterChangeListener> listeners = new ArrayList<IFilterChangeListener>();
+	private final List<IFilterChangeListener> listeners = new ArrayList<>();
 
 	public void addFilterChangeListener(IFilterChangeListener listener) {
 		listeners.add(listener);
@@ -51,8 +51,7 @@ public abstract class AbstractSearchHandler {
 	}
 
 	/**
-	 * Called when UI is being created for the tasks list, gives the search handler an opportunity to contribute
-	 * additional search controls.
+	 * Called when UI is being created for the tasks list, gives the search handler an opportunity to contribute additional search controls.
 	 * 
 	 * @param container
 	 *            the container in which the search controls should be created
@@ -68,8 +67,8 @@ public abstract class AbstractSearchHandler {
 	public abstract PatternFilter createFilter();
 
 	/**
-	 * Disposes of any resources that should be explicitly released when no longer needed. After calling this method,
-	 * the search handler is no longer usable and its behaviour is undefined.
+	 * Disposes of any resources that should be explicitly released when no longer needed. After calling this method, the search handler is
+	 * no longer usable and its behaviour is undefined.
 	 */
 	public abstract void dispose();
 

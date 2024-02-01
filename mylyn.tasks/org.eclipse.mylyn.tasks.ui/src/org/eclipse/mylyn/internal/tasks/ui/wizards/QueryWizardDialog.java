@@ -93,7 +93,7 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 	protected HashMap<String, Boolean> saveAndSetEnabledStateMylyn() {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
-			savedEnabledState = new HashMap<String, Boolean>();
+			savedEnabledState = new HashMap<>();
 			if (refreshButton != null && refreshButton.getShell() == getShell()) {
 				savedEnabledState.put(REFRESH_BUTTON_KEY, refreshButton.getEnabled());
 				refreshButton.setEnabled(false);
@@ -107,9 +107,8 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 	}
 
 	/**
-	 * Modeled after WizardDialog.restoreEnabledState() and WizardDialog.restoreUIState() -- couldn't override those
-	 * since they are private, so create our own. Currently only single button to work with, so don't create two
-	 * separate methods
+	 * Modeled after WizardDialog.restoreEnabledState() and WizardDialog.restoreUIState() -- couldn't override those since they are private,
+	 * so create our own. Currently only single button to work with, so don't create two separate methods
 	 */
 	@Override
 	protected void restoreEnabledStateMylyn(HashMap<String, Boolean> savedEnabledState) {

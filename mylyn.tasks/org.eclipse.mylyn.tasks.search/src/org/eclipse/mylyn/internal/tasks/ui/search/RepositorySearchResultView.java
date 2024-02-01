@@ -18,7 +18,6 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -143,7 +142,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final Action refineSearchAction;
 
-	private static final String[] SHOW_IN_TARGETS = new String[] { ITasksUiConstants.ID_VIEW_TASKS };
+	private static final String[] SHOW_IN_TARGETS = { ITasksUiConstants.ID_VIEW_TASKS };
 
 	private TaskListToolTip toolTip;
 
@@ -159,11 +158,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private DecoratingPatternStyledCellLabelProvider styledLabelProvider;
 
-	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
-		public String[] getShowInTargetIds() {
-			return SHOW_IN_TARGETS;
-		}
-	};
+	private static final IShowInTargetList SHOW_IN_TARGET_LIST = () -> SHOW_IN_TARGETS;
 
 	public RepositorySearchResultView() {
 		// Only use the table layout.
@@ -177,21 +172,20 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		openSearchWithBrowserAction = new OpenWithBrowserAction();
 		openSearchWithBrowserAction.setText(Messages.RepositorySearchResultView_Open_Search_with_Browser_Label);
 
-		groupingActions = new ArrayList<GroupingAction>();
+		groupingActions = new ArrayList<>();
 		GroupingAction groupByOwnerAction = new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner,
 				GroupBy.OWNER);
 		groupByOwnerAction.setImageDescriptor(CommonImages.PRESENTATION);
 //		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Complete, GroupBy.COMPLETION);
 
-		filterActions = new ArrayList<FilteringAction>();
+		filterActions = new ArrayList<>();
 		FilteringAction filterCompleteAction = new FilteringAction(
 				Messages.RepositorySearchResultView_Filter_Completed_Tasks, new ViewerFilter() {
 					@Override
 					public boolean select(Viewer viewer, Object parentElement, Object element) {
 						if (element instanceof ITask) {
 							return !((ITask) element).isCompleted();
-						} else if (element instanceof TaskGroup) {
-							TaskGroup taskGroup = (TaskGroup) element;
+						} else if (element instanceof TaskGroup taskGroup) {
 							return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete"); //$NON-NLS-1$
 						}
 						return true;
@@ -237,7 +231,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		viewer.setLabelProvider(styledLabelProvider);
 		viewer.setSorter(searchResultSorter);
 
-		Transfer[] dragTypes = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
+		Transfer[] dragTypes = { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
 				new TaskDragSourceListener(getViewer()));
@@ -322,6 +316,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.dispose();
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		return getAdapterDelegate(adapter);
@@ -352,7 +347,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// HACK: this should be a contribution
 		final MenuManager subMenuManager = new MenuManager(
 				MessageFormat.format(Messages.RepositorySearchResultView_Add_to_X_Category, TaskListView.LABEL_VIEW));
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
+		List<AbstractTaskCategory> categories = new ArrayList<>(
 				TasksUiInternal.getTaskList().getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
@@ -382,11 +377,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	}
 
 	private void moveToCategory(AbstractTaskCategory category) {
-		StructuredSelection selection = (StructuredSelection) this.getViewer().getSelection();
-		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
-			Object selectedObject = iterator.next();
-			if (selectedObject instanceof ITask) {
-				ITask task = (ITask) selectedObject;
+		StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
+		for (Object selectedObject : selection) {
+			if (selectedObject instanceof ITask task) {
 				TasksUiInternal.getTaskList().addTask(task, category);
 			}
 		}

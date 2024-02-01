@@ -49,22 +49,23 @@ class TaskListCellModifier implements ICellModifier {
 		}
 	}
 
+	@Override
 	public boolean canModify(Object element, String property) {
 		return taskListView.isInRenameAction;
 	}
 
+	@Override
 	public Object getValue(Object element, String property) {
 		try {
-			int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (element instanceof IRepositoryElement) {
-				final IRepositoryElement taskListElement = (IRepositoryElement) element;
+			int columnIndex = Arrays.asList(taskListView.columnNames).indexOf(property);
+			if (element instanceof final IRepositoryElement taskListElement) {
 				switch (columnIndex) {
-				case 0:
-					return taskListElement.getSummary();
-				case 1:
-					return ""; //$NON-NLS-1$
-				case 2:
-					return ""; //$NON-NLS-1$
+					case 0:
+						return taskListElement.getSummary();
+					case 1:
+						return ""; //$NON-NLS-1$
+					case 2:
+						return ""; //$NON-NLS-1$
 				}
 			}
 		} catch (Exception e) {
@@ -73,42 +74,42 @@ class TaskListCellModifier implements ICellModifier {
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	public void modify(Object element, String property, Object value) {
 		if (element instanceof TreeItem && ((TreeItem) element).isDisposed()) {
 			return;
 		}
 
-		int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
+		int columnIndex = Arrays.asList(taskListView.columnNames).indexOf(property);
 		Object data = ((TreeItem) element).getData();
-		if (data instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) data;
+		if (data instanceof AbstractTask task) {
 			switch (columnIndex) {
-			case 0:
-				if (task != null) {
-					task.setSummary(((String) value).trim());
-					TasksUiPlugin.getTaskList().notifyElementChanged(task);
-				}
-				break;
-			case 1:
-				break;
-			case 2:
-				toggleTaskActivation((TreeItem) element, null);
-				break;
+				case 0:
+					if (task != null) {
+						task.setSummary(((String) value).trim());
+						TasksUiPlugin.getTaskList().notifyElementChanged(task);
+					}
+					break;
+				case 1:
+					break;
+				case 2:
+					toggleTaskActivation((TreeItem) element, null);
+					break;
 			}
 		} else if (data instanceof AbstractTaskCategory || data instanceof IRepositoryQuery) {
 			AbstractTaskContainer container = (AbstractTaskContainer) data;
 			switch (columnIndex) {
-			case 0:
-				TasksUiPlugin.getTaskList().renameContainer(container, ((String) value).trim());
-			case 1:
-				break;
-			case 2:
-				break;
+				case 0:
+					TasksUiPlugin.getTaskList().renameContainer(container, ((String) value).trim());
+				case 1:
+					break;
+				case 2:
+					break;
 			}
 		}
 
 		// XXX trigger a full refresh to ensure correct sorting
-		this.taskListView.refresh();
+		taskListView.refresh();
 	}
 
 	public void toggleTaskActivation(TreeItem element, MouseEvent event) {
@@ -117,7 +118,7 @@ class TaskListCellModifier implements ICellModifier {
 			task = (AbstractTask) element.getData();
 
 			if (disableActivateForParentTasks) {
-				// check if activation column overlaps with tree expander control: element is on second hierarchy level and has children  
+				// check if activation column overlaps with tree expander control: element is on second hierarchy level and has children
 				TreeItem parent = element.getParentItem();
 				if (parent != null && (parent.getData() instanceof IRepositoryQuery
 						|| parent.getData() instanceof AbstractTaskCategory) && element.getItemCount() > 0) {

@@ -40,6 +40,7 @@ public class AttachmentFileStorage extends PlatformObject implements IStorage {
 		this.name = name;
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		try {
 			return new FileInputStream(file);
@@ -49,14 +50,17 @@ public class AttachmentFileStorage extends PlatformObject implements IStorage {
 		}
 	}
 
+	@Override
 	public IPath getFullPath() {
 		return Path.fromOSString(file.getAbsolutePath());
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}

@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.ITaskAttributeDiff;
@@ -41,16 +42,16 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 		this.oldAttribute = oldAttribute;
 		this.newAttribute = newAttribute;
 		if (oldAttribute != null) {
-			this.oldValues = oldAttribute.getTaskData().getAttributeMapper().getValueLabels(oldAttribute);
-			this.attributeId = oldAttribute.getId();
+			oldValues = oldAttribute.getTaskData().getAttributeMapper().getValueLabels(oldAttribute);
+			attributeId = oldAttribute.getId();
 		} else {
-			this.oldValues = Collections.emptyList();
+			oldValues = Collections.emptyList();
 		}
 		if (newAttribute != null) {
-			this.newValues = newAttribute.getTaskData().getAttributeMapper().getValueLabels(newAttribute);
-			this.attributeId = newAttribute.getId();
+			newValues = newAttribute.getTaskData().getAttributeMapper().getValueLabels(newAttribute);
+			attributeId = newAttribute.getId();
 		} else {
-			this.newValues = Collections.emptyList();
+			newValues = Collections.emptyList();
 		}
 	}
 
@@ -59,25 +60,18 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskAttributeDiff other = (TaskAttributeDiff) obj;
-		if (attributeId == null) {
-			if (other.attributeId != null) {
-				return false;
-			}
-		} else if (!attributeId.equals(other.attributeId)) {
+		if (!Objects.equals(attributeId, other.attributeId)) {
 			return false;
 		}
 		return true;
 	}
 
 	public List<String> getAddedValues() {
-		List<String> result = new ArrayList<String>(getNewValues());
+		List<String> result = new ArrayList<>(getNewValues());
 		if (getOldValues() != null) {
 			result.removeAll(getOldValues());
 		}
@@ -101,7 +95,7 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 	}
 
 	public List<String> getRemovedValues() {
-		List<String> result = new ArrayList<String>(getOldValues());
+		List<String> result = new ArrayList<>(getOldValues());
 		if (getNewValues() != null) {
 			result.removeAll(getNewValues());
 		}
@@ -114,10 +108,7 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attributeId == null) ? 0 : attributeId.hashCode());
-		return result;
+		return Objects.hash(attributeId);
 	}
 
 	public String getLabel() {
@@ -128,6 +119,7 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 		}
 	}
 
+	@Override
 	public String getAttributeId() {
 		return attributeId;
 	}

@@ -233,7 +233,7 @@ public class TaskEditorOutlineNode {
 	public void addChild(TaskEditorOutlineNode node) {
 		Assert.isNotNull(node);
 		if (children == null) {
-			children = new ArrayList<TaskEditorOutlineNode>();
+			children = new ArrayList<>();
 		}
 		node.parent = this;
 		children.add(node);
@@ -255,15 +255,14 @@ public class TaskEditorOutlineNode {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof TaskEditorOutlineNode) {
-			TaskEditorOutlineNode node = (TaskEditorOutlineNode) o;
+		if (o instanceof TaskEditorOutlineNode node) {
 			return getLabel().equals(node.getLabel());
 		}
 		return false;
 	}
 
 	public TaskEditorOutlineNode[] getChildren() {
-		return (children == null)
+		return children == null
 				? new TaskEditorOutlineNode[0]
 				: children.toArray(new TaskEditorOutlineNode[children.size()]);
 	}

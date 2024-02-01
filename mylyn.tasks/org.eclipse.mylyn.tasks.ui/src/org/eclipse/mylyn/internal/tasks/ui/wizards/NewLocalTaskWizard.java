@@ -41,6 +41,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 		this(null);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setForcePreviousAndNextButtons(false);
 	}

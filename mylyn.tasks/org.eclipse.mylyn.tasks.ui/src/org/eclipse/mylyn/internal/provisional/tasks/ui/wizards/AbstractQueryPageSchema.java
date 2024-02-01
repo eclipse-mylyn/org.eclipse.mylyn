@@ -21,6 +21,7 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -56,13 +57,11 @@ public class AbstractQueryPageSchema {
 
 		/**
 		 * @param key
-		 *            the task attribute key, which may be a common task attribute key defined in defined in
-		 *            {@link TaskAttribute}
+		 *            the task attribute key, which may be a common task attribute key defined in defined in {@link TaskAttribute}
 		 * @param label
 		 *            the user-visible label that is used by the user to identify this field
 		 * @param type
-		 *            the type of the field, should be one of the constants defined in TaskAttribute (
-		 *            <code>TaskAttribute.TYPE_*</code>)
+		 *            the type of the field, should be one of the constants defined in TaskAttribute ( <code>TaskAttribute.TYPE_*</code>)
 		 * @param indexKey
 		 *            the index key, or null if this should not be indexed
 		 * @param flags
@@ -74,13 +73,11 @@ public class AbstractQueryPageSchema {
 
 		/**
 		 * @param key
-		 *            the task attribute key, which may be a common task attribute key defined in defined in
-		 *            {@link TaskAttribute}
+		 *            the task attribute key, which may be a common task attribute key defined in defined in {@link TaskAttribute}
 		 * @param label
 		 *            the user-visible label that is used by the user to identify this field
 		 * @param type
-		 *            the type of the field, should be one of the constants defined in TaskAttribute (
-		 *            <code>TaskAttribute.TYPE_*</code>)
+		 *            the type of the field, should be one of the constants defined in TaskAttribute ( <code>TaskAttribute.TYPE_*</code>)
 		 * @param indexKey
 		 *            the index key, or null if this should not be indexed
 		 * @param layoutPriority
@@ -180,11 +177,7 @@ public class AbstractQueryPageSchema {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((indexKey == null) ? 0 : indexKey.hashCode());
-			result = prime * result + ((key == null) ? 0 : key.hashCode());
-			return result;
+			return Objects.hash(indexKey, key);
 		}
 
 		@Override
@@ -192,25 +185,14 @@ public class AbstractQueryPageSchema {
 			if (this == obj) {
 				return true;
 			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
+			if ((obj == null) || (getClass() != obj.getClass())) {
 				return false;
 			}
 			Field other = (Field) obj;
-			if (indexKey == null) {
-				if (other.indexKey != null) {
-					return false;
-				}
-			} else if (!indexKey.equals(other.indexKey)) {
+			if (!Objects.equals(indexKey, other.indexKey)) {
 				return false;
 			}
-			if (key == null) {
-				if (other.key != null) {
-					return false;
-				}
-			} else if (!key.equals(other.key)) {
+			if (!Objects.equals(key, other.key)) {
 				return false;
 			}
 			return true;
@@ -256,7 +238,7 @@ public class AbstractQueryPageSchema {
 		 */
 		QUERY_REQUIRED
 
-	};
+	}
 
 	protected class FieldFactory {
 
@@ -273,19 +255,19 @@ public class AbstractQueryPageSchema {
 		private String dependsOn;
 
 		public FieldFactory(Field source) {
-			this.flags = EnumSet.copyOf(source.flags);
-			this.key = source.key;
-			this.label = source.label;
-			this.type = source.type;
-			this.dependsOn = source.dependsOn;
+			flags = EnumSet.copyOf(source.flags);
+			key = source.key;
+			label = source.label;
+			type = source.type;
+			dependsOn = source.dependsOn;
 		}
 
 		public FieldFactory(org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field source) {
-			this.flags = EnumSet.noneOf(Flag.class);
-			this.key = source.getKey();
-			this.label = source.getLabel();
-			this.type = source.getType();
-			this.dependsOn = source.getDependsOn();
+			flags = EnumSet.noneOf(Flag.class);
+			key = source.getKey();
+			label = source.getLabel();
+			type = source.getType();
+			dependsOn = source.getDependsOn();
 		}
 
 		public FieldFactory addFlags(Flag... flags) {
@@ -295,7 +277,7 @@ public class AbstractQueryPageSchema {
 
 		public Field create() {
 			return createField(key, label, type, null, layoutPriority, dependsOn,
-					(!flags.isEmpty()) ? flags.toArray(new Flag[0]) : null);
+					!flags.isEmpty() ? flags.toArray(new Flag[0]) : null);
 		}
 
 		public FieldFactory flags(Flag... flags) {
@@ -335,7 +317,7 @@ public class AbstractQueryPageSchema {
 
 	}
 
-	private final Map<String, Field> fieldByKey = new LinkedHashMap<String, Field>();
+	private final Map<String, Field> fieldByKey = new LinkedHashMap<>();
 
 	/**
 	 * Returns the specified field for the given key.
@@ -354,13 +336,13 @@ public class AbstractQueryPageSchema {
 	}
 
 	/**
-	 * Provides an iterator for all fields within the schema. Subsequent modifications to the returned collection are
-	 * not reflected to schema.
+	 * Provides an iterator for all fields within the schema. Subsequent modifications to the returned collection are not reflected to
+	 * schema.
 	 *
 	 * @return all fields within the schema
 	 */
 	public Collection<Field> getFields() {
-		return new ArrayList<Field>(fieldByKey.values());
+		return new ArrayList<>(fieldByKey.values());
 	}
 
 	protected Field createField(String key, String label, String type) {

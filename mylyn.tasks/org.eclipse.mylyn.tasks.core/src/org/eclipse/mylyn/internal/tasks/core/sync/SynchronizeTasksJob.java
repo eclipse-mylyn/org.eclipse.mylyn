@@ -90,12 +90,12 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			AbstractRepositoryConnector connector, IRepositoryManager repositoryManager, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskList = taskList;
-		this.taskDataManager = synchronizationManager;
+		taskDataManager = synchronizationManager;
 		this.tasksModel = tasksModel;
 		this.connector = connector;
 		this.repositoryManager = repositoryManager;
-		this.allTasks = tasks;
-		this.statuses = new ArrayList<IStatus>();
+		allTasks = tasks;
+		statuses = new ArrayList<>();
 		setRule(new MutexSchedulingRule());
 	}
 
@@ -109,13 +109,13 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					try {
 						monitor.beginTask(Messages.SynchronizeTasksJob_Processing, allTasks.size() * 100);
 						// group tasks by repository
-						Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
+						Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<>();
 						for (ITask task : allTasks) {
 							TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 									task.getRepositoryUrl());
 							Set<ITask> tasks = tasksByRepository.get(repository);
 							if (tasks == null) {
-								tasks = new HashSet<ITask>();
+								tasks = new HashSet<>();
 								tasksByRepository.put(repository, tasks);
 							}
 							tasks.add(task);
@@ -148,7 +148,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void run(Set<ITask> tasks, IProgressMonitor monitor) {
-		relationsByTaskId = new HashMap<String, TaskRelation[]>();
+		relationsByTaskId = new HashMap<>();
 		updateRelations = true;
 		runInternal(tasks, monitor);
 		synchronizedTaskRelations(monitor, relationsByTaskId);
@@ -159,7 +159,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		for (String taskId : relationsByTaskId.keySet()) {
 			ITask parentTask = taskList.getTask(taskRepository.getRepositoryUrl(), taskId);
 			if (parentTask instanceof ITaskContainer) {
-				Set<ITask> removedChildTasks = new HashSet<ITask>(((ITaskContainer) parentTask).getChildren());
+				Set<ITask> removedChildTasks = new HashSet<>(((ITaskContainer) parentTask).getChildren());
 
 				TaskRelation[] relations = relationsByTaskId.get(taskId);
 				for (TaskRelation relation : relations) {
@@ -277,7 +277,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		monitor.subTask(MessageFormat.format(Messages.SynchronizeTasksJob_Receiving_X_tasks_from_X, tasks.size(),
 				repository.getRepositoryLabel()));
 
-		final Map<String, ITask> idToTask = new HashMap<String, ITask>();
+		final Map<String, ITask> idToTask = new HashMap<>();
 		for (ITask task : tasks) {
 			idToTask.put(task.getTaskId(), task);
 		}
@@ -300,7 +300,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			}
 		};
 
-		Set<String> taskIds = Collections.unmodifiableSet(new HashSet<String>(idToTask.keySet()));
+		Set<String> taskIds = Collections.unmodifiableSet(new HashSet<>(idToTask.keySet()));
 		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, monitor);
 	}
 

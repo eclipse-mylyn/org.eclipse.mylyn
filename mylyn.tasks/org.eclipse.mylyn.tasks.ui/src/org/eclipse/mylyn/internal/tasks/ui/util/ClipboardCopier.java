@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
@@ -32,7 +30,7 @@ public class ClipboardCopier {
 
 	public interface TextProvider {
 
-		public abstract String getTextForElement(Object element);
+		String getTextForElement(Object element);
 
 	}
 
@@ -52,8 +50,7 @@ public class ClipboardCopier {
 	public void copy(IStructuredSelection selection, TextProvider provider) {
 		if (!selection.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
-			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-				Object item = it.next();
+			for (Object item : selection) {
 				String textForElement = provider.getTextForElement(item);
 				if (textForElement != null) {
 					if (sb.length() > 0) {

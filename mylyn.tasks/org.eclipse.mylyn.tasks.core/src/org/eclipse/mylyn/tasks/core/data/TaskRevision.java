@@ -101,7 +101,7 @@ public class TaskRevision {
 		this.id = id;
 		this.date = date;
 		this.author = author;
-		this.changes = new ArrayList<TaskRevision.Change>();
+		changes = new ArrayList<>();
 	}
 
 	public void add(TaskRevision.Change change) {
@@ -113,7 +113,7 @@ public class TaskRevision {
 	}
 
 	public List<TaskRevision.Change> getChanges() {
-		return new ArrayList<TaskRevision.Change>(changes);
+		return new ArrayList<>(changes);
 	}
 
 	public Date getDate() {

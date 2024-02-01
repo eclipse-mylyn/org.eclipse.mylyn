@@ -19,11 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -90,8 +90,8 @@ public class TaskListSaveManagerTest extends TestCase {
 
 	public void testAddTaskDuringSave() {
 		// add task
-		// save 
-		// try to add task during save 
+		// save
+		// try to add task during save
 	}
 
 	// test cancellation

@@ -66,12 +66,11 @@ class ProgressContainer implements IRunnableContext {
 	}
 
 	/**
-	 * About to start a long running operation triggered through the wizard. Shows the progress monitor and disables the
-	 * wizard's buttons and controls.
+	 * About to start a long running operation triggered through the wizard. Shows the progress monitor and disables the wizard's buttons
+	 * and controls.
 	 * 
 	 * @param enableCancelButton
-	 *            <code>true</code> if the Cancel button should be enabled, and <code>false</code> if it should be
-	 *            disabled
+	 *            <code>true</code> if the Cancel button should be enabled, and <code>false</code> if it should be disabled
 	 * @return the saved UI state
 	 */
 	private Object aboutToStart(boolean enableCancelButton) {
@@ -91,7 +90,7 @@ class ProgressContainer implements IRunnableContext {
 			arrowCursor = new Cursor(d, SWT.CURSOR_ARROW);
 			cancelButton.setCursor(arrowCursor);
 			// Deactivate shell
-			savedState = new HashMap<Object, Object>(10);
+			savedState = new HashMap<>(10);
 			saveUiState(savedState);
 			if (focusControl != null) {
 				savedState.put(FOCUS_CONTROL, focusControl);
@@ -129,14 +128,14 @@ class ProgressContainer implements IRunnableContext {
 	}
 
 	/**
-	 * This implementation of IRunnableContext#run(boolean, boolean, IRunnableWithProgress) blocks until the runnable
-	 * has been run, regardless of the value of <code>fork</code>. It is recommended that <code>fork</code> is set to
-	 * true in most cases. If <code>fork</code> is set to <code>false</code>, the runnable will run in the UI thread and
-	 * it is the runnable's responsibility to call <code>Display.readAndDispatch()</code> to ensure UI responsiveness.
-	 * UI state is saved prior to executing the long-running operation and is restored after the long-running operation
-	 * completes executing. Any attempt to change the UI state of the wizard in the long-running operation will be
-	 * nullified when original UI state is restored.
+	 * This implementation of IRunnableContext#run(boolean, boolean, IRunnableWithProgress) blocks until the runnable has been run,
+	 * regardless of the value of <code>fork</code>. It is recommended that <code>fork</code> is set to true in most cases. If
+	 * <code>fork</code> is set to <code>false</code>, the runnable will run in the UI thread and it is the runnable's responsibility to
+	 * call <code>Display.readAndDispatch()</code> to ensure UI responsiveness. UI state is saved prior to executing the long-running
+	 * operation and is restored after the long-running operation completes executing. Any attempt to change the UI state of the wizard in
+	 * the long-running operation will be nullified when original UI state is restored.
 	 */
+	@Override
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
 			throws InvocationTargetException, InterruptedException {
 		// The operation can only be canceled if it is executed in a separate
@@ -185,8 +184,8 @@ class ProgressContainer implements IRunnableContext {
 	}
 
 	/**
-	 * A long running operation triggered through the wizard was stopped either by user input or by normal end. Hides
-	 * the progress monitor and restores the enable state wizard's buttons and controls.
+	 * A long running operation triggered through the wizard was stopped either by user input or by normal end. Hides the progress monitor
+	 * and restores the enable state wizard's buttons and controls.
 	 * 
 	 * @param savedState
 	 *            the saved UI state as returned by <code>aboutToStart</code>

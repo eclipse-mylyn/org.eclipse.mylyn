@@ -29,7 +29,7 @@ public abstract class SaxTaskListElementBuilder<T extends IRepositoryElement> {
 	private final MultiStatus errors;
 
 	protected SaxTaskListElementBuilder() {
-		this.errors = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.OK, null, null);
+		errors = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.OK, null, null);
 	}
 
 	public abstract void beginItem(Attributes elementAttributes);

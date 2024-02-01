@@ -57,8 +57,7 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 		TaskRepository taskRepository = null;
 		if (selectedObject instanceof TaskRepository) {
 			taskRepository = (TaskRepository) selectedObject;
-		} else if (selectedObject instanceof IRepositoryQuery) {
-			IRepositoryQuery query = (IRepositoryQuery) selectedObject;
+		} else if (selectedObject instanceof IRepositoryQuery query) {
 			taskRepository = TasksUi.getRepositoryManager()
 					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 		}

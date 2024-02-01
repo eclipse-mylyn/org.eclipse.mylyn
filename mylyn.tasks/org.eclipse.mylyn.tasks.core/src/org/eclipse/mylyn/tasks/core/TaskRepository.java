@@ -39,15 +39,13 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 
 /**
- * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
- * problems:
+ * Note that task repositories use Strings for storing time stamps because using Date objects led to the following problems:
  * <ul>
- * <li>Often we are unable to get the time zone of the repository so interpreting the date string correctly doesn't
- * work.</li>
- * <li>Even if we do know the time zone information the local clock may be wrong. This can cause lost incoming when
- * asking the repository for all changes since date X.</li>
- * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use
- * the date string given to us by the repository itself.</li>
+ * <li>Often we are unable to get the time zone of the repository so interpreting the date string correctly doesn't work.</li>
+ * <li>Even if we do know the time zone information the local clock may be wrong. This can cause lost incoming when asking the repository
+ * for all changes since date X.</li>
+ * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use the date string given
+ * to us by the repository itself.</li>
  * </ul>
  *
  * @author Mik Kersten
@@ -73,15 +71,13 @@ public final class TaskRepository extends PlatformObject {
 	private IStatus errorStatus = null;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
@@ -94,15 +90,13 @@ public final class TaskRepository extends PlatformObject {
 	private static final String AUTH_CERT = "org.eclipse.mylyn.tasklist.repositories.certauth"; //$NON-NLS-1$
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
@@ -120,15 +114,13 @@ public final class TaskRepository extends PlatformObject {
 	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy"; //$NON-NLS-1$
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
 	 */
 	@Deprecated
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
@@ -167,35 +159,31 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public static final String CATEGORY_REVIEW = "org.eclipse.mylyn.category.review"; //$NON-NLS-1$
 
-	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<PropertyChangeListener>();
+	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<>();
 
 	private static String CREATED_FROM_TEMPLATE = "org.eclipse.mylyn.tasklist.repositories.template"; //$NON-NLS-1$
 
 	private static String getKeyPrefix(AuthenticationType type) {
-		switch (type) {
-		case HTTP:
-			return AUTH_HTTP;
-		case CERTIFICATE:
-			return AUTH_CERT;
-		case PROXY:
-			return AUTH_PROXY;
-		case REPOSITORY:
-			return AUTH_REPOSITORY;
-		}
-		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
+		return switch (type) {
+			case HTTP -> AUTH_HTTP;
+			case CERTIFICATE -> AUTH_CERT;
+			case PROXY -> AUTH_PROXY;
+			case REPOSITORY -> AUTH_REPOSITORY;
+			default -> throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
+		};
+
 	}
 
 	private boolean isCachedUserName;
 
 	private String cachedUserName;
 
-	private final Map<String, String> properties = new LinkedHashMap<String, String>();
+	private final Map<String, String> properties = new LinkedHashMap<>();
 
 	/**
-	 * Stores properties that are not persisted. Note that this map is currently cleared when flushCredentials() is
-	 * invoked.
+	 * Stores properties that are not persisted. Note that this map is currently cleared when flushCredentials() is invoked.
 	 */
-	private final Map<String, String> transientProperties = new ConcurrentHashMap<String, String>();
+	private final Map<String, String> transientProperties = new ConcurrentHashMap<>();
 
 	/*
 	 * TODO: should be externalized and added to extension point, see bug 183606
@@ -221,12 +209,11 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
 		// use platform proxy by default (headless will need to set this to false)
-		this.setProperty(TaskRepository.PROXY_USEDEFAULT, Boolean.valueOf(true).toString());
+		setProperty(TaskRepository.PROXY_USEDEFAULT, Boolean.toString(true));
 	}
 
 	/**
-	 * for testing purposes sets repository time zone to local default time zone sets character encoding to
-	 * DEFAULT_CHARACTER_ENCODING
+	 * for testing purposes sets repository time zone to local default time zone sets character encoding to DEFAULT_CHARACTER_ENCODING
 	 */
 	@Deprecated
 	public TaskRepository(String kind, String serverUrl, String version) {
@@ -263,7 +250,7 @@ public final class TaskRepository extends PlatformObject {
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
 		ICredentialsStore credentialsStore = getCredentialsStore();
 		if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-			this.setProperty(userProperty, username);
+			setProperty(userProperty, username);
 		} else {
 			String oldUserValue = credentialsStore.get(userProperty, ""); //$NON-NLS-1$
 			credentialsStore.put(userProperty, username, false);
@@ -290,8 +277,7 @@ public final class TaskRepository extends PlatformObject {
 		if (object == this) {
 			return true;
 		}
-		if (object instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) object;
+		if (object instanceof TaskRepository repository) {
 			return getConnectorKind().equals(repository.getConnectorKind())
 					&& getRepositoryUrl().equals(repository.getRepositoryUrl());
 		}
@@ -308,7 +294,7 @@ public final class TaskRepository extends PlatformObject {
 		isCachedUserName = false;
 
 		getCredentialsStore().clear();
-		this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
+		setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
 	}
 
 	private String getAuthInfo(String property) {
@@ -329,8 +315,8 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	/**
-	 * Toggles the flag for persisting credentials. If {@code shouldPersistCredentials} is {@code false} credentials
-	 * will not be persisted in the platform keystore.
+	 * Toggles the flag for persisting credentials. If {@code shouldPersistCredentials} is {@code false} credentials will not be persisted
+	 * in the platform keystore.
 	 * <p>
 	 * This flag does not have any effect if not running in an OSGi environment.
 	 *
@@ -353,9 +339,9 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public Date getConfigurationDate() {
 		Date configDate = null;
-		String value = this.getProperty(PROPERTY_CONFIG_TIMESTAMP);
+		String value = getProperty(PROPERTY_CONFIG_TIMESTAMP);
 		try {
-			configDate = new Date(Long.valueOf(value).longValue());
+			configDate = new Date(Long.parseLong(value));
 
 		} catch (Exception e) {
 
@@ -437,15 +423,15 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	private String getPassword(AuthenticationType authType) {
 		AuthenticationCredentials credentials = getCredentials(authType);
-		return (credentials != null) ? credentials.getPassword() : null;
+		return credentials != null ? credentials.getPassword() : null;
 	}
 
 	public Map<String, String> getProperties() {
-		return new LinkedHashMap<String, String>(this.properties);
+		return new LinkedHashMap<>(properties);
 	}
 
 	public String getProperty(String name) {
-		return this.properties.get(name);
+		return properties.get(name);
 	}
 
 	private boolean getBooleanProperty(String name) {
@@ -489,7 +475,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public String getSynchronizationTimeStamp() {
-		return this.properties.get(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP);
+		return properties.get(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP);
 	}
 
 	public String getTimeZoneId() {
@@ -526,7 +512,7 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	private String getUserName(AuthenticationType authType) {
 		AuthenticationCredentials credentials = getCredentials(authType);
-		return (credentials != null) ? credentials.getUserName() : null;
+		return credentials != null ? credentials.getUserName() : null;
 	}
 
 	public String getVersion() {
@@ -581,7 +567,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void removeProperty(String key) {
-		this.properties.remove(key);
+		properties.remove(key);
 	}
 
 	/**
@@ -607,8 +593,8 @@ public final class TaskRepository extends PlatformObject {
 	 * @param configuration
 	 *            date {@link {@link Date}
 	 */
-	final public void setConfigurationDate(final Date date) {
-		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
+	public void setConfigurationDate(final Date date) {
+		setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
 		//  should persist here, but that can only be done by the TaskRepositoryManager
 		// However this is also included when persisting ordinary sync time
 	}
@@ -621,8 +607,7 @@ public final class TaskRepository extends PlatformObject {
 	 * @param credentials
 	 *            the credentials, if null, the credentials for <code>authType</code> will be flushed
 	 * @param savePassword
-	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in
-	 *            memory only
+	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in memory only
 	 * @since 3.0
 	 */
 	public void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
@@ -648,11 +633,11 @@ public final class TaskRepository extends PlatformObject {
 
 		if (authType == AuthenticationType.REPOSITORY) {
 			if (credentials == null) {
-				this.cachedUserName = null;
-				this.isCachedUserName = false;
+				cachedUserName = null;
+				isCachedUserName = false;
 			} else {
-				this.cachedUserName = credentials.getUserName();
-				this.isCachedUserName = true;
+				cachedUserName = credentials.getUserName();
+				isCachedUserName = true;
 			}
 		}
 	}
@@ -694,8 +679,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	/**
-	 * ONLY for use by IRepositoryConstants. To set the sync time call IRepositoryConstants.setSyncTime(repository,
-	 * date);
+	 * ONLY for use by IRepositoryConstants. To set the sync time call IRepositoryConstants.setSyncTime(repository, date);
 	 */
 	public void setSynchronizationTimeStamp(String syncTime) {
 		setProperty(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
@@ -703,9 +687,9 @@ public final class TaskRepository extends PlatformObject {
 
 	public void setProperty(String key, String newValue) {
 		Assert.isLegal(!key.matches(".*\\s.*")); //$NON-NLS-1$
-		String oldValue = this.properties.get(key);
-		if ((oldValue != null && !oldValue.equals(newValue)) || (oldValue == null && newValue != null)) {
-			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
+		String oldValue = properties.get(key);
+		if (oldValue != null && !oldValue.equals(newValue) || oldValue == null && newValue != null) {
+			properties.put(key.intern(), newValue != null ? newValue.intern() : null);
 			notifyChangeListeners(key, oldValue, newValue);
 		}
 	}

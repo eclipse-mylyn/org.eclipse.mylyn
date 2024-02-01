@@ -93,7 +93,7 @@ public class TaskListExternalizer {
 			SaxTaskListHandler handler = new SaxTaskListHandler(taskList, repositoryModel, repositoryManager);
 			reader.setContentHandler(handler);
 			reader.parse(new InputSource(taskListFile));
-			this.orphanDocument = handler.getOrphans();
+			orphanDocument = handler.getOrphans();
 		} catch (SAXException | IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, e.getMessage(), e));
 		}

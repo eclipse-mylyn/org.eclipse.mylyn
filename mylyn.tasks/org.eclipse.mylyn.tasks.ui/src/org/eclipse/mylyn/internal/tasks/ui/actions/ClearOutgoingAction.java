@@ -47,7 +47,7 @@ public class ClearOutgoingAction extends Action {
 		setToolTipText(Messages.ClearOutgoingAction_Clear_outgoing);
 		setImageDescriptor(CommonImages.CLEAR);
 		setId(ID);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
+		if (selectedElements.size() == 1 && selectedElements.get(0) instanceof ITask) {
 			ITask task = (ITask) selectedElements.get(0);
 			setEnabled(hasOutgoingChanges(task));
 		} else {
@@ -70,10 +70,10 @@ public class ClearOutgoingAction extends Action {
 
 	@Override
 	public void run() {
-		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
+		ArrayList<AbstractTask> toClear = new ArrayList<>();
 		for (Object selectedObject : selectedElements) {
 			if (selectedObject instanceof ITask && hasOutgoingChanges((ITask) selectedObject)) {
-				toClear.add(((AbstractTask) selectedObject));
+				toClear.add((AbstractTask) selectedObject);
 			}
 		}
 		if (toClear.size() > 0) {

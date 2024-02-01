@@ -84,7 +84,7 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 
 	@Override
 	public void mergeContext(ITask sourceTask, ITask targetTask) {
-		// ignore		
+		// ignore
 	}
 
 	@Override

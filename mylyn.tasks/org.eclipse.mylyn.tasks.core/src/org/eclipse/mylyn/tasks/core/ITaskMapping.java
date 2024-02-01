@@ -27,63 +27,63 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public interface ITaskMapping {
 
-	public void merge(@NonNull ITaskMapping source);
+	void merge(@NonNull ITaskMapping source);
 
-	public abstract List<String> getCc();
+	List<String> getCc();
 
-	public abstract Date getCompletionDate();
+	Date getCompletionDate();
 
-	public abstract String getComponent();
+	String getComponent();
 
-	public abstract Date getCreationDate();
+	Date getCreationDate();
 
-	public abstract String getDescription();
+	String getDescription();
 
-	public abstract Date getDueDate();
+	Date getDueDate();
 
-	public abstract List<String> getKeywords();
+	List<String> getKeywords();
 
-	public abstract Date getModificationDate();
+	Date getModificationDate();
 
-	public abstract String getOwner();
+	String getOwner();
 
 	/**
 	 * @since 3.15
 	 */
-	public abstract String getOwnerId();
+	String getOwnerId();
 
-	public abstract String getPriority();
+	String getPriority();
 
-	public abstract PriorityLevel getPriorityLevel();
+	PriorityLevel getPriorityLevel();
 
-	public abstract String getProduct();
+	String getProduct();
 
-	public abstract String getReporter();
+	String getReporter();
 
-	public abstract String getResolution();
-
-	/**
-	 * @since 3.2
-	 */
-	public abstract String getSeverity();
-
-	public abstract String getSummary();
-
-	public abstract String getStatus();
-
-	public abstract TaskData getTaskData();
-
-	public abstract String getTaskKey();
-
-	public abstract String getTaskKind();
-
-	public abstract String getTaskStatus();
-
-	public abstract String getTaskUrl();
+	String getResolution();
 
 	/**
 	 * @since 3.2
 	 */
-	public abstract String getVersion();
+	String getSeverity();
+
+	String getSummary();
+
+	String getStatus();
+
+	TaskData getTaskData();
+
+	String getTaskKey();
+
+	String getTaskKind();
+
+	String getTaskStatus();
+
+	String getTaskUrl();
+
+	/**
+	 * @since 3.2
+	 */
+	String getVersion();
 
 }

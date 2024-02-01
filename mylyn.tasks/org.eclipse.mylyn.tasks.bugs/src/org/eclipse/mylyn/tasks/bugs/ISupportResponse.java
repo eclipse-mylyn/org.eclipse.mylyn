@@ -24,10 +24,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public interface ISupportResponse {
 
-	public IProduct getProduct();
+	IProduct getProduct();
 
-	public IStatus getStatus();
+	IStatus getStatus();
 
-	public TaskData getTaskData();
+	TaskData getTaskData();
 
 }

@@ -21,6 +21,6 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public interface IRepositoryModelListener {
 
-	public void loaded();
+	void loaded();
 
 }

@@ -55,7 +55,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
 			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT);
-			// the actual attachment id is stored in a child node an correctly set in end() 
+			// the actual attachment id is stored in a child node an correctly set in end()
 			attribute.setValue(id + ""); //$NON-NLS-1$
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
@@ -116,7 +116,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			boolean hidden = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HIDDEN));
 			boolean readOnly = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_READONLY));
 			attribute = parentAttribute.createAttribute(id);
-			String kind = (hidden) ? null : TaskAttribute.KIND_DEFAULT;
+			String kind = hidden ? null : TaskAttribute.KIND_DEFAULT;
 			attribute.getMetaData().defaults().setLabel(label).setReadOnly(readOnly).setKind(kind);
 
 			addElementHandler(new OptionHandler10(this, attribute));
@@ -260,7 +260,7 @@ public class TaskDataStateReader extends DefaultHandler {
 		public OperationHandler10(ElementHandler parent, TaskAttribute parentAttribute) {
 			super(parent, ITaskDataConstants.ELEMENT_OPERATION);
 			this.parentAttribute = parentAttribute;
-			this.operationAttribute = createAttribute(parentAttribute, TaskAttribute.OPERATION);
+			operationAttribute = createAttribute(parentAttribute, TaskAttribute.OPERATION);
 		}
 
 		@Override
@@ -420,8 +420,7 @@ public class TaskDataStateReader extends DefaultHandler {
 		@Override
 		public void done(ElementHandler elementHandler) {
 			TaskData taskData;
-			if (elementHandler instanceof TaskDataHandler10) {
-				TaskDataHandler10 taskDataHandler = (TaskDataHandler10) elementHandler;
+			if (elementHandler instanceof TaskDataHandler10 taskDataHandler) {
 				TaskData data = taskDataHandler.getTaskData();
 				if (state == null) {
 					state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());

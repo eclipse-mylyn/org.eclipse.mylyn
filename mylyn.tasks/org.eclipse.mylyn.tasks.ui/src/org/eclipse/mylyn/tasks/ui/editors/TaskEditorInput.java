@@ -71,10 +71,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskEditorInput other = (TaskEditorInput) obj;
@@ -84,6 +81,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean exists() {
 		return task != null;
 	}
@@ -103,6 +101,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public String getFactoryId() {
 		return TaskEditorInputFactory.ID_FACTORY;
 	}
@@ -110,6 +109,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
@@ -126,6 +126,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public String getName() {
 		String toolTipText = getToolTipText();
 		if (toolTipText == null) {
@@ -144,6 +145,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public IPersistableElement getPersistable() {
 		if (task != null && TasksUiPlugin.getTaskList().getTask(task.getHandleIdentifier()) != null) {
 			return this;
@@ -170,6 +172,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public String getToolTipText() {
 		return task.getSummary();
 	}
@@ -193,6 +196,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		TaskEditorInputFactory.saveState(memento, this);
 	}

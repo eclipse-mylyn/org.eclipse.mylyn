@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.activity.core;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.core.CoreUtil;
@@ -66,10 +67,7 @@ public class ActivityEvent implements Comparable<ActivityEvent> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((handle == null) ? 0 : handle.hashCode());
-		return result;
+		return Objects.hash(handle);
 	}
 
 	@Override
@@ -77,23 +75,17 @@ public class ActivityEvent implements Comparable<ActivityEvent> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		ActivityEvent other = (ActivityEvent) obj;
-		if (handle == null) {
-			if (other.handle != null) {
-				return false;
-			}
-		} else if (!handle.equals(other.handle)) {
+		if (!Objects.equals(handle, other.handle)) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	public int compareTo(ActivityEvent object) {
 		return CoreUtil.compare(date, object.getDate());
 	}

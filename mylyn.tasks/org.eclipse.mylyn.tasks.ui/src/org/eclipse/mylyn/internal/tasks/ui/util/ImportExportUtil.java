@@ -14,7 +14,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,7 +36,7 @@ public class ImportExportUtil {
 
 	public static void configureFilter(FileDialog dialog) {
 		dialog.setFilterExtensions(
-				PlatformUiUtil.getFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION })); //$NON-NLS-1$
+				PlatformUiUtil.getFilterExtensions("*" + ITasksCoreConstants.FILE_EXTENSION)); //$NON-NLS-1$
 		dialog.setFilterNames(new String[] {
 				NLS.bind(Messages.ImportExportUtil_Tasks_and_queries_Filter0, ITasksCoreConstants.FILE_EXTENSION) });
 	}
@@ -45,8 +44,7 @@ public class ImportExportUtil {
 	public static void export(File file, IStructuredSelection selection) throws CoreException {
 		// extract queries and tasks from selection
 		TransferList list = new TransferList();
-		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-			Object element = it.next();
+		for (Object element : selection) {
 			if (element instanceof TaskCategory) {
 				list.addCategory((TaskCategory) element);
 			} else if (element instanceof RepositoryQuery) {

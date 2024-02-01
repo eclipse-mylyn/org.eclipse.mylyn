@@ -14,9 +14,9 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * Implement a connector specific repository migrator to perform connector specific migration procedures on task
- * repositories of the same connector kind upon startup. Override and contribute by the
- * org.eclipse.mylyn.tasks.ui.repositories extension point's taskListMigrator element.
+ * Implement a connector specific repository migrator to perform connector specific migration procedures on task repositories of the same
+ * connector kind upon startup. Override and contribute by the org.eclipse.mylyn.tasks.ui.repositories extension point's taskListMigrator
+ * element.
  * 
  * @author Robert Elves
  * @since 3.4

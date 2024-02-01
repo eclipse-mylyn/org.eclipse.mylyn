@@ -36,8 +36,7 @@ public class ContextRetrieveWizard extends Wizard {
 
 	public ContextRetrieveWizard(ITask task) {
 		this.task = task;
-		this.repository = TasksUi.getRepositoryManager()
-				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+		repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		setWindowTitle(Messages.ContextRetrieveWizard_Retrieve_Context);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);
 		setNeedsProgressMonitor(true);

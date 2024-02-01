@@ -28,7 +28,7 @@ public final class TaskDataModelEvent {
 
 	private final TaskDataModel model;
 
-	private final TaskAttribute taskAttribute;;
+	private final TaskAttribute taskAttribute;
 
 	public TaskDataModelEvent(TaskDataModel model, EventKind kind, TaskAttribute taskAttribute) {
 		this.model = model;

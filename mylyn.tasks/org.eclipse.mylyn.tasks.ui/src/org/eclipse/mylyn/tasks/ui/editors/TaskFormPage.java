@@ -45,8 +45,7 @@ public class TaskFormPage extends FormPage {
 	}
 
 	/**
-	 * Invoked when the task opened in the editor is opened while the editor was already open or if a synchronization
-	 * completes.
+	 * Invoked when the task opened in the editor is opened while the editor was already open or if a synchronization completes.
 	 * <p>
 	 * Clients may override.
 	 * 

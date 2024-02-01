@@ -22,6 +22,6 @@ import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
  */
 public interface ITaskListNotificationProvider {
 
-	public Set<AbstractUiNotification> getNotifications();
+	Set<AbstractUiNotification> getNotifications();
 
 }

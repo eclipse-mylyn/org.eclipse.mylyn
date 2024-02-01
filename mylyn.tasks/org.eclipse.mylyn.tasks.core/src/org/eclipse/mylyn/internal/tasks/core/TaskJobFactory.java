@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -72,7 +71,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	protected static synchronized List<TaskJobListener> getTaskJobListeners(AbstractRepositoryConnector connector) {
 		if (taskJobListeners == null) {
-			taskJobListeners = new HashMap<String, List<TaskJobListener>>();
+			taskJobListeners = new HashMap<>();
 			List<TaskJobListener> listeners = loadTaskJobListeners(""); //$NON-NLS-1$
 			taskJobListeners.put(ALL_CONNECTORS, listeners);
 		}
@@ -80,14 +79,13 @@ public class TaskJobFactory implements ITaskJobFactory {
 			List<TaskJobListener> listeners = loadTaskJobListeners(connector.getConnectorKind());
 			taskJobListeners.put(connector.getConnectorKind(), listeners);
 		}
-		List<TaskJobListener> listeners = new ArrayList<TaskJobListener>();
-		listeners.addAll(taskJobListeners.get(ALL_CONNECTORS));
+		List<TaskJobListener> listeners = new ArrayList<>(taskJobListeners.get(ALL_CONNECTORS));
 		listeners.addAll(taskJobListeners.get(connector.getConnectorKind()));
 		return listeners;
 	}
 
 	protected static List<TaskJobListener> loadTaskJobListeners(String connectorKind) {
-		ExtensionPointReader<TaskJobListener> reader = new ExtensionPointReader<TaskJobListener>(
+		ExtensionPointReader<TaskJobListener> reader = new ExtensionPointReader<>(
 				ITasksCoreConstants.ID_PLUGIN, "taskJobListeners", "listener", TaskJobListener.class, "connectorKind", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 				connectorKind);
 		reader.read();
@@ -110,6 +108,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, Set<ITask> tasks) {
 		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
@@ -119,6 +118,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
 			TaskRepository repository, Set<RepositoryQuery> queries) {
 		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector, repository,
@@ -128,6 +128,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
 		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, taskDataManager, tasksModel,
 				repositoryManager);
@@ -145,6 +146,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			final ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
 		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, oldAttributes,
@@ -152,11 +154,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		job.setPriority(Job.INTERACTIVE);
 		job.setUser(true);
 		try {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					((AbstractTask) task).setSynchronizing(true);
-				}
-			});
+			taskList.run(monitor -> ((AbstractTask) task).setSynchronizing(true));
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
 		}
@@ -164,6 +162,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
 			final TaskRepository taskRepository, final ITask task) {
 		UpdateRepositoryConfigurationJob updateJob = new UpdateRepositoryConfigurationJob(
@@ -174,23 +173,21 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return updateJob;
 	}
 
+	@Override
 	@Deprecated
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
 			final TaskRepository taskRepository) {
 		return createUpdateRepositoryConfigurationJob(connector, taskRepository, null);
 	}
 
+	@Override
 	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			final ITask task, AbstractTaskAttachmentSource source, String comment, TaskAttribute attachmentAttribute) {
 		SubmitJob job = new SubmitTaskAttachmentJob(taskDataManager, connector, taskRepository, task, source, comment,
 				attachmentAttribute);
 		job.setPriority(Job.INTERACTIVE);
 		try {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					((AbstractTask) task).setSynchronizing(true);
-				}
-			});
+			taskList.run(monitor -> ((AbstractTask) task).setSynchronizing(true));
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
 		}
@@ -199,10 +196,12 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
+	@Override
 	public void setFetchSubtasks(boolean fetchSubtasks) {
 		this.fetchSubtasks = fetchSubtasks;
 	}
 
+	@Override
 	public boolean getFetchSubtasks() {
 		return fetchSubtasks;
 	}

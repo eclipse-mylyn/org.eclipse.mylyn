@@ -42,7 +42,7 @@ public class DefaultTaskActivityMonitor extends AbstractTaskActivityMonitor {
 
 	@Override
 	public void reloadActivityTime() {
-		// ignore		
+		// ignore
 	}
 
 	@Override

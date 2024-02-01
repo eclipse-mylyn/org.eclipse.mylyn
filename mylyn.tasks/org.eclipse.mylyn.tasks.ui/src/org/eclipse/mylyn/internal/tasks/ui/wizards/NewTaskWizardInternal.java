@@ -32,8 +32,8 @@ public class NewTaskWizardInternal extends MultiRepositoryAwareWizard implements
 	}
 
 	/**
-	 * Constructs a new task wizard with an empty selection. This constructor is used by the
-	 * <code>org.eclipse.ui.newWizards</code> extension.
+	 * Constructs a new task wizard with an empty selection. This constructor is used by the <code>org.eclipse.ui.newWizards</code>
+	 * extension.
 	 */
 	public NewTaskWizardInternal() {
 		this(null);

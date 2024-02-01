@@ -43,7 +43,7 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 
 	}
 
-	private static final Class<?>[] ADAPTER_LIST = new Class<?>[] { AbstractRepositoryConnector.class };
+	private static final Class<?>[] ADAPTER_LIST = { AbstractRepositoryConnector.class };
 
 	@Override
 	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
@@ -65,7 +65,7 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 
 					@Override
 					public List<String> getBrands() {
-						ArrayList<String> brands = new ArrayList<String>(
+						ArrayList<String> brands = new ArrayList<>(
 								List.of("org.mylyn", "org.eclipse", "exceptional"));
 						brands.add(1, null);
 						return brands;

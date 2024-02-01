@@ -34,6 +34,7 @@ public class TaskAttachmentPartSource implements PartSource {
 		this.filename = filename;
 	}
 
+	@Override
 	public InputStream createInputStream() throws IOException {
 		try {
 			return attachment.createInputStream(null);
@@ -44,10 +45,12 @@ public class TaskAttachmentPartSource implements PartSource {
 		}
 	}
 
+	@Override
 	public String getFileName() {
 		return filename;
 	}
 
+	@Override
 	public long getLength() {
 		return attachment.getLength();
 	}

@@ -14,14 +14,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.workbench.GradientDrawer;
@@ -81,44 +78,23 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 	}
 
-	private final IRepositoryModelListener MODEL_LISTENER = new IRepositoryModelListener() {
-
-		public void loaded() {
-			asyncExec(new Runnable() {
-				public void run() {
-					refresh();
-				}
-			});
-		}
-	};
+	private final IRepositoryModelListener MODEL_LISTENER = () -> asyncExec(() -> refresh());
 
 	private final IRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryAdapter() {
 
 		@Override
 		public void repositoryAdded(TaskRepository repository) {
-			asyncExec(new Runnable() {
-				public void run() {
-					refresh();
-				}
-			});
+			asyncExec(() -> refresh());
 		}
 
 		@Override
 		public void repositoryRemoved(TaskRepository repository) {
-			asyncExec(new Runnable() {
-				public void run() {
-					refresh();
-				}
-			});
+			asyncExec(() -> refresh());
 		}
 
 		@Override
 		public void repositorySettingsChanged(TaskRepository repository) {
-			asyncExec(new Runnable() {
-				public void run() {
-					refresh();
-				}
-			});
+			asyncExec(() -> refresh());
 		}
 	};
 
@@ -127,7 +103,7 @@ public class TaskRepositoriesView extends ViewPart {
 	private TaskRepositoriesContentProvider contentProvider;
 
 	public TaskRepositoriesView() {
-		manager = ((TaskRepositoryManager) TasksUi.getRepositoryManager());
+		manager = (TaskRepositoryManager) TasksUi.getRepositoryManager();
 		manager.addListener(REPOSITORY_LISTENER);
 		TasksUiPlugin.getDefault().addModelListener(MODEL_LISTENER);
 	}
@@ -178,11 +154,7 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.setSorter(new TaskRepositoriesViewSorter());
 
 		viewer.setInput(getViewSite());
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				WorkbenchUtil.openProperties(getSite());
-			}
-		});
+		viewer.addDoubleClickListener(event -> WorkbenchUtil.openProperties(getSite()));
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		new GradientDrawer(themeManager, getViewer()) {
@@ -221,11 +193,7 @@ public class TaskRepositoriesView extends ViewPart {
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				TaskRepositoriesView.this.fillContextMenu(manager);
-			}
-		});
+		menuMgr.addMenuListener(TaskRepositoriesView.this::fillContextMenu);
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, viewer);

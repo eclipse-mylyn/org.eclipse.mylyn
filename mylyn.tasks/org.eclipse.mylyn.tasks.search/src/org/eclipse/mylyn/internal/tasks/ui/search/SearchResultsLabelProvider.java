@@ -54,10 +54,10 @@ public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 				}
 			}
 			if (filtered > 0) {
-				return super.getText(object) + " (" //$NON-NLS-1$ 
-						+ MessageFormat.format(Messages.SearchResultsLabelProvider_OF, (children.length - filtered),
+				return super.getText(object) + " (" //$NON-NLS-1$
+						+ MessageFormat.format(Messages.SearchResultsLabelProvider_OF, children.length - filtered,
 								children.length)
-						+ ")"; //$NON-NLS-1$ 
+						+ ")"; //$NON-NLS-1$
 			} else {
 				return super.getText(object) + " (" + children.length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}

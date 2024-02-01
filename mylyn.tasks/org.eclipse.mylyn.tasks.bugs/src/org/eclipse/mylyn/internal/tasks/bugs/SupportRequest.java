@@ -42,10 +42,10 @@ public class SupportRequest implements ISupportRequest {
 	public SupportRequest(SupportProviderManager providerManager, IStatus status, IProduct product) {
 		this.providerManager = providerManager;
 		this.status = status;
-		this.contributionByProductId = new HashMap<String, ITaskContribution>();
+		contributionByProductId = new HashMap<>();
 		if (product != null) {
 			this.product = product;
-			this.defaultContribution = process(getNamespace(), (SupportProduct) product);
+			defaultContribution = process(getNamespace(), (SupportProduct) product);
 		} else {
 			this.product = null;
 			process();
@@ -56,6 +56,7 @@ public class SupportRequest implements ISupportRequest {
 		this(providerManager, status, null);
 	}
 
+	@Override
 	public ITaskContribution getOrCreateContribution(IProduct product) {
 		ITaskContribution contribution = contributionByProductId.get(product.getId());
 		if (contribution == null) {
@@ -75,6 +76,7 @@ public class SupportRequest implements ISupportRequest {
 //		return contribution;
 	}
 
+	@Override
 	public ITaskContribution getDefaultContribution() {
 		if (defaultContribution == null) {
 			String namespace = getNamespace();
@@ -90,6 +92,7 @@ public class SupportRequest implements ISupportRequest {
 		return product;
 	}
 
+	@Override
 	public IStatus getStatus() {
 		return status;
 	}
@@ -105,7 +108,7 @@ public class SupportRequest implements ISupportRequest {
 	private AttributeTaskMapper process(String namespace, SupportProduct product) {
 		Map<String, String> productAttributes = product.getAllAttributes(namespace);
 		if (!productAttributes.isEmpty()) {
-			// merge global and more specific product attributes 
+			// merge global and more specific product attributes
 			Map<String, String> attributes = providerManager.getDefaultProduct().getAllAttributes(namespace);
 			attributes.putAll(productAttributes);
 
@@ -121,7 +124,7 @@ public class SupportRequest implements ISupportRequest {
 	}
 
 	public List<ITaskContribution> getContributions() {
-		return new ArrayList<ITaskContribution>(contributionByProductId.values());
+		return new ArrayList<>(contributionByProductId.values());
 	}
 
 }

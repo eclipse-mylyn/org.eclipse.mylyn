@@ -24,8 +24,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -77,6 +75,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		setTitle(Messages.TaskDataImportWizardPage_Restore_tasks_from_history);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(3, false);
@@ -94,6 +93,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private void addRadioListeners() {
 		SelectionListener radioListener = new SelectionListener() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				browseButtonZip.setEnabled(importViaZipButton.getSelection());
 				backupFilesTable.setEnabled(importViaBackupButton.getSelection());
@@ -101,6 +101,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 				controlChanged();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 
@@ -122,11 +123,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		sourceZipText = new Text(parent, SWT.BORDER);
 		sourceZipText.setEditable(true);
 		GridDataFactory.fillDefaults().grab(true, false).hint(250, SWT.DEFAULT).applyTo(sourceZipText);
-		sourceZipText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				controlChanged();
-			}
-		});
+		sourceZipText.addModifyListener(e -> controlChanged());
 
 		browseButtonZip = new Button(parent, SWT.PUSH);
 		browseButtonZip.setText(Messages.TaskDataImportWizardPage_Browse_);
@@ -235,10 +232,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	/** Returns true if the information entered by the user is valid */
 	protected boolean validate() {
-		if (importViaZipButton.getSelection() && sourceZipText.getText().equals("")) { //$NON-NLS-1$
-			return false;
-		}
-		if (importViaBackupButton.getSelection() && backupFilesTable.getSelection().length == 0) {
+		if ((importViaZipButton.getSelection() && sourceZipText.getText().equals("")) || (importViaBackupButton.getSelection() && backupFilesTable.getSelection().length == 0)) {
 			return false;
 		}
 		return true;
@@ -247,10 +241,8 @@ public class TaskDataImportWizardPage extends WizardPage {
 	public String getSourceZipFile() {
 		if (importViaZipButton.getSelection()) {
 			return sourceZipText.getText();
-		} else {
-			if (backupFilesTable.getSelectionIndex() != -1) {
-				return (String) (backupFilesTable.getSelection()[0].getData());
-			}
+		} else if (backupFilesTable.getSelectionIndex() != -1) {
+			return (String) backupFilesTable.getSelection()[0].getData();
 		}
 		return Messages.TaskDataImportWizardPage__unspecified_;
 	}

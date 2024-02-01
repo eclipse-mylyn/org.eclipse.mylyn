@@ -57,9 +57,9 @@ public class ExternalizationManager {
 
 	public ExternalizationManager(String rootFolderPath) {
 		Assert.isNotNull(rootFolderPath);
-		this.externalizationParticipants = new CopyOnWriteArrayList<IExternalizationParticipant>();
-		this.forceSave = false;
-		this.saveJob = createJob();
+		externalizationParticipants = new CopyOnWriteArrayList<>();
+		forceSave = false;
+		saveJob = createJob();
 		setRootFolderPath(rootFolderPath);
 	}
 
@@ -80,7 +80,7 @@ public class ExternalizationManager {
 			saveDisabled = true;
 			loadStatus = null;
 
-			List<IStatus> statusList = new ArrayList<IStatus>();
+			List<IStatus> statusList = new ArrayList<>();
 			IProgressMonitor monitor = Policy.monitorFor(null);
 			for (IExternalizationParticipant participant : externalizationParticipants) {
 				IStatus status = load(participant, monitor);
@@ -106,6 +106,7 @@ public class ExternalizationManager {
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					if (e instanceof CoreException) {
 						result[0] = ((CoreException) e).getStatus();
@@ -115,6 +116,7 @@ public class ExternalizationManager {
 					}
 				}
 
+				@Override
 				public void run() throws Exception {
 					participant.execute(context, monitor);
 				}
@@ -200,44 +202,45 @@ public class ExternalizationManager {
 		}
 
 		public void setContext(IExternalizationContext saveContext) {
-			this.context = saveContext;
+			context = saveContext;
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			IExternalizationContext context = this.context;
 			switch (context.getKind()) {
-			case SAVE:
-				try {
-					monitor.beginTask(Messages.ExternalizationManager_Saving_, externalizationParticipants.size());
+				case SAVE:
+					try {
+						monitor.beginTask(Messages.ExternalizationManager_Saving_, externalizationParticipants.size());
 
-					boolean fullSave = isFullSavePending;
-					isFullSavePending = false;
+						boolean fullSave = isFullSavePending;
+						isFullSavePending = false;
 
-					for (IExternalizationParticipant participant : externalizationParticipants) {
-						ISchedulingRule rule = participant.getSchedulingRule();
-						if (forceSave || participant.isDirty(fullSave)) {
-							try {
-								Job.getJobManager().beginRule(rule, monitor);
-								monitor.setTaskName(MessageFormat.format(Messages.ExternalizationManager_Saving_X,
-										participant.getDescription()));
-								participant.execute(context, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-							} catch (CoreException e) {
-								StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-										"Save failed for " + participant.getDescription(), e)); //$NON-NLS-1$
-							} finally {
-								Job.getJobManager().endRule(rule);
+						for (IExternalizationParticipant participant : externalizationParticipants) {
+							ISchedulingRule rule = participant.getSchedulingRule();
+							if (forceSave || participant.isDirty(fullSave)) {
+								try {
+									Job.getJobManager().beginRule(rule, monitor);
+									monitor.setTaskName(MessageFormat.format(Messages.ExternalizationManager_Saving_X,
+											participant.getDescription()));
+									participant.execute(context,
+											new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+								} catch (CoreException e) {
+									StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+											"Save failed for " + participant.getDescription(), e)); //$NON-NLS-1$
+								} finally {
+									Job.getJobManager().endRule(rule);
+								}
 							}
+							monitor.worked(1);
 						}
-						monitor.worked(1);
+					} finally {
+						monitor.done();
 					}
-				} finally {
-					monitor.done();
-				}
-				break;
-			default:
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Unsupported externalization kind: " + context.getKind())); //$NON-NLS-1$
+					break;
+				default:
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Unsupported externalization kind: " + context.getKind())); //$NON-NLS-1$
 			}
 			return Status.OK_STATUS;
 		}
@@ -254,10 +257,12 @@ public class ExternalizationManager {
 			this.rootPath = rootPath;
 		}
 
+		@Override
 		public Kind getKind() {
 			return kind;
 		}
 
+		@Override
 		public String getRootPath() {
 			return rootPath;
 		}

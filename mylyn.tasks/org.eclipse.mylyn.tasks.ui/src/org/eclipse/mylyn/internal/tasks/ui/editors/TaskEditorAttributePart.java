@@ -34,7 +34,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorAttributeSection 
 	@Override
 	protected Collection<TaskAttribute> getAttributes() {
 		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
-		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		List<TaskAttribute> attributes = new ArrayList<>(allAttributes.size());
 		for (TaskAttribute attribute : allAttributes.values()) {
 			TaskAttributeMetaData properties = attribute.getMetaData();
 			if (TaskAttribute.KIND_DEFAULT.equals(properties.getKind())) {
@@ -47,7 +47,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorAttributeSection 
 	@Override
 	protected List<TaskAttribute> getOverlayAttributes() {
 		TaskAttribute product = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
-		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(2);
+		List<TaskAttribute> attributes = new ArrayList<>(2);
 		if (product != null) {
 			attributes.add(product);
 		}

@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.tasks.tests.bugs;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,6 +31,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorWithTaskDataHandler;
+
+import junit.framework.TestCase;
 
 /**
  * @author Frank Becker
@@ -73,7 +73,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		IProgressMonitor monitor = new NullOperationMonitor();
 		handlerManager.process(request.getDefaultContribution(), monitor);
 		assertNotNull(request.getDefaultContribution());
-		AttributeTaskMapper mapper = ((AttributeTaskMapper) request.getDefaultContribution());
+		AttributeTaskMapper mapper = (AttributeTaskMapper) request.getDefaultContribution();
 		assertTrue(!mapper.isHandled());
 		TaskData taskData = null;
 		taskData = mapper.createTaskData(monitor);
@@ -95,7 +95,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		IProgressMonitor monitor = new NullOperationMonitor();
 		handlerManager.process(request.getDefaultContribution(), monitor);
 		assertNotNull(request.getDefaultContribution());
-		AttributeTaskMapper mapper = ((AttributeTaskMapper) request.getDefaultContribution());
+		AttributeTaskMapper mapper = (AttributeTaskMapper) request.getDefaultContribution();
 		assertTrue(!mapper.isHandled());
 		TaskData taskData = null;
 		taskData = mapper.createTaskData(monitor);

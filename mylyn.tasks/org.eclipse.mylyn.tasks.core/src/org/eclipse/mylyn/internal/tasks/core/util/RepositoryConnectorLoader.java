@@ -32,7 +32,7 @@ public class RepositoryConnectorLoader {
 	 */
 	private final ContributorBlackList blackList = new ContributorBlackList();
 
-	private final Set<RepositoryConnectorDescriptor> descriptors = new HashSet<RepositoryConnectorDescriptor>();
+	private final Set<RepositoryConnectorDescriptor> descriptors = new HashSet<>();
 
 	public ContributorBlackList getBlackList() {
 		return blackList;

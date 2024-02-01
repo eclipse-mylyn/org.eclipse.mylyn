@@ -48,7 +48,7 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 	}
 
 	public AbstractLocalEditorPart(String sectionName) {
-		this.sectionStyle = ExpandableComposite.TWISTIE;
+		sectionStyle = ExpandableComposite.TWISTIE;
 		this.sectionName = sectionName;
 	}
 

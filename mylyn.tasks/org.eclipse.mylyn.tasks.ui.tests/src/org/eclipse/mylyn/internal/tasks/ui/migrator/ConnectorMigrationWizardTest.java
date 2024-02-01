@@ -65,12 +65,7 @@ public class ConnectorMigrationWizardTest {
 		protected CheckboxTreeViewer createConnectorList(Composite parent, List<String> kinds) {
 			return new CheckboxTreeViewer(parent) {
 				{
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							fireCheckStateChanged(null);
-						}
-					});
+					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> fireCheckStateChanged(null));
 				}
 
 				@Override
@@ -124,10 +119,11 @@ public class ConnectorMigrationWizardTest {
 		IWizardPage secondPage = firstPage.getNextPage();
 		assertEquals("Select Connectors", secondPage.getTitle());
 		assertEquals(
-				"Select the connectors to migrate. Your task list and repositories will be backed up before migration; you can "
-						+ "undo the migration by selecting \"Restore Tasks from History\" in the Task List view "
-						+ "menu and choosing the "
-						+ "connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup.",
+				"""
+						Select the connectors to migrate. Your task list and repositories will be backed up before migration; you can\s\
+						undo the migration by selecting "Restore Tasks from History" in the Task List view\s\
+						menu and choosing the\s\
+						connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup.""",
 				secondPage.getDescription());
 		assertTrue(secondPage.getControl() instanceof Composite);
 		Composite control = (Composite) secondPage.getControl();

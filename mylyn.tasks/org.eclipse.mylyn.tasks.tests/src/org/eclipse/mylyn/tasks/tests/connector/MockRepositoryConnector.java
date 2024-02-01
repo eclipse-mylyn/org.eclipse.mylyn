@@ -213,7 +213,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void migrateTask(TaskMigrationEvent event) {
-		this.taskMigrationEvent = event;
+		taskMigrationEvent = event;
 	}
 
 	public TaskMigrationEvent getTaskMigrationEvent() {

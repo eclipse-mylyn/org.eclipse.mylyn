@@ -20,27 +20,24 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
 
 /**
- * Implements a {@link IAdapterFactory} for {@link ISearchPageScoreComputer}s which ranks {@link AbstractTaskContainer}s
- * high for the task search page
+ * Implements a {@link IAdapterFactory} for {@link ISearchPageScoreComputer}s which ranks {@link AbstractTaskContainer}s high for the task
+ * search page
  * 
  * @author Willian Mitsuda
  */
 public class SearchScoreComputerAdapterFactory implements IAdapterFactory {
 
-	private final ISearchPageScoreComputer computer = new ISearchPageScoreComputer() {
-
-		public int computeScore(String pageId, Object input) {
-			if (!TaskSearchPage.ID.equals(pageId)) {
-				return ISearchPageScoreComputer.UNKNOWN;
-			}
-			if (input instanceof IRepositoryElement) {
-				return 100;
-			}
-			return ISearchPageScoreComputer.LOWEST;
+	private final ISearchPageScoreComputer computer = (pageId, input) -> {
+		if (!TaskSearchPage.ID.equals(pageId)) {
+			return ISearchPageScoreComputer.UNKNOWN;
 		}
-
+		if (input instanceof IRepositoryElement) {
+			return 100;
+		}
+		return ISearchPageScoreComputer.LOWEST;
 	};
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (ISearchPageScoreComputer.class.equals(adapterType)) {
@@ -49,6 +46,7 @@ public class SearchScoreComputerAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return new Class[] { ISearchPageScoreComputer.class };

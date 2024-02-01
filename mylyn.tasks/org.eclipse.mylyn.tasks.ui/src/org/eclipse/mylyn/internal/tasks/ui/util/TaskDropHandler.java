@@ -40,7 +40,7 @@ public class TaskDropHandler {
 
 	public void loadTaskDropListeners() {
 		if (taskDropListeners == null) {
-			ExtensionPointReader<TaskDropListener> reader = new ExtensionPointReader<TaskDropListener>(
+			ExtensionPointReader<TaskDropListener> reader = new ExtensionPointReader<>(
 					TasksUiPlugin.ID_PLUGIN, "taskDropListener", "listener", TaskDropListener.class); //$NON-NLS-1$//$NON-NLS-2$
 			reader.read();
 			taskDropListeners = reader.getItems();
@@ -52,10 +52,12 @@ public class TaskDropHandler {
 		final TaskDropEvent event = new TaskDropEvent(tasksToMove, currentTarget, operation);
 		for (final TaskDropListener listener : taskDropListeners) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					listener.tasksDropped(event);
 				}
 
+				@Override
 				public void handleException(Throwable exception) {
 					StatusHandler
 							.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, exception.getMessage(), exception));

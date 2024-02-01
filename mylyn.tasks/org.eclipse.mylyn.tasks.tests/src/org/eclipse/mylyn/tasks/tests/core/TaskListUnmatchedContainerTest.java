@@ -15,8 +15,6 @@ package org.eclipse.mylyn.tasks.tests.core;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -26,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -262,8 +262,8 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	}
 
 	/**
-	 * If a task with subtasks falls out of a query, if its subtasks are subtasks of another task that is still around,
-	 * they shouldn't be in the archive.
+	 * If a task with subtasks falls out of a query, if its subtasks are subtasks of another task that is still around, they shouldn't be in
+	 * the archive.
 	 */
 	public void testOrphanedSubtaskWithOtherParent() {
 		MockTask mockTask = new MockTask("1");

@@ -58,10 +58,12 @@ public class SynchronizationSession implements ISynchronizationSession {
 		this.taskDataManager = taskDataManager;
 	}
 
+	@Override
 	public Set<ITask> getChangedTasks() {
 		return changedTasks;
 	}
 
+	@Override
 	public Object getData() {
 		return data;
 	}
@@ -74,41 +76,50 @@ public class SynchronizationSession implements ISynchronizationSession {
 		}
 	}
 
+	@Override
 	public IStatus getStatus() {
 		return status;
 	}
 
+	@Override
 	public TaskDataManager getTaskDataManager() {
 		return taskDataManager;
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
+	@Override
 	public Set<ITask> getTasks() {
 		return tasks;
 	}
 
+	@Override
 	public boolean isFullSynchronization() {
 		return fullSynchronization;
 	}
 
+	@Override
 	public boolean isUser() {
 		return user;
 	}
 
+	@Override
 	public void markStale(ITask task) {
 		if (staleTasks == null) {
-			staleTasks = new HashSet<ITask>();
+			staleTasks = new HashSet<>();
 		}
 		staleTasks.add(task);
 	}
 
+	@Override
 	public boolean needsPerformQueries() {
 		return performQueries;
 	}
 
+	@Override
 	public void putTaskData(ITask task, TaskData taskData) throws CoreException {
 		if (taskDataManager != null) {
 			taskDataManager.putUpdatedTaskData(task, taskData, false);
@@ -119,6 +130,7 @@ public class SynchronizationSession implements ISynchronizationSession {
 		this.changedTasks = changedTasks;
 	}
 
+	@Override
 	public void setData(Object data) {
 		this.data = data;
 	}
@@ -127,6 +139,7 @@ public class SynchronizationSession implements ISynchronizationSession {
 		this.fullSynchronization = fullSynchronization;
 	}
 
+	@Override
 	public void setNeedsPerformQueries(boolean performQueries) {
 		this.performQueries = performQueries;
 	}

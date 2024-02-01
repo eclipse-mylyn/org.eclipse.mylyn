@@ -38,16 +38,18 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 
 	public abstract void save(File targetFile, IProgressMonitor monitor) throws CoreException;
 
+	@Override
 	public abstract String getDescription();
 
+	@Override
 	public abstract ISchedulingRule getSchedulingRule();
 
+	@Override
 	public abstract boolean isDirty();
 
 	public abstract String getFileName();
 
 	public AbstractExternalizationParticipant() {
-		super();
 	}
 
 	protected boolean takeSnapshot(File file) {
@@ -60,22 +62,23 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 		return false;
 	}
 
+	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		monitor = Policy.monitorFor(monitor);
 		final File dataFile = getFile(context.getRootPath());
 		switch (context.getKind()) {
-		case SAVE:
-			if (dataFile != null) {
-				takeSnapshot(dataFile);
-			}
-			save(dataFile, monitor);
-			break;
-		case LOAD:
-			performLoad(dataFile, monitor);
-			break;
-		case SNAPSHOT:
-			break;
+			case SAVE:
+				if (dataFile != null) {
+					takeSnapshot(dataFile);
+				}
+				save(dataFile, monitor);
+				break;
+			case LOAD:
+				performLoad(dataFile, monitor);
+				break;
+			case SNAPSHOT:
+				break;
 		}
 
 	}
@@ -112,6 +115,7 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 	 * @param full
 	 *            true when the workbench is shutting down and any time-based dirty states should be ignore
 	 */
+	@Override
 	public boolean isDirty(boolean full) {
 		return isDirty();
 	}

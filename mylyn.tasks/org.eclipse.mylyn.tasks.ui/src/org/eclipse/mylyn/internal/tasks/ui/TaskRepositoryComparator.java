@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Mik Kersten
  */
 public class TaskRepositoryComparator implements Comparator<TaskRepository> {
+	@Override
 	public int compare(TaskRepository t1, TaskRepository t2) {
 		if (t1.getRepositoryLabel() != null && t2.getRepositoryLabel() != null) {
 			return t1.getRepositoryLabel().compareTo(t2.getRepositoryLabel());

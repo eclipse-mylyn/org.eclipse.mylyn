@@ -47,8 +47,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -89,9 +87,9 @@ public class QuickOutlineDialog extends PopupDialog
 
 	public final class TaskEditorOutlineLabelDecorator implements ILabelDecorator {
 
+		@Override
 		public String decorateText(String text, Object element) {
-			if (element instanceof TaskEditorOutlineNode) {
-				TaskEditorOutlineNode node = (TaskEditorOutlineNode) element;
+			if (element instanceof TaskEditorOutlineNode node) {
 				if (node.getTaskRelation() != null) {
 					return NLS.bind(Messages.QuickOutlineDialog_Node_Label_Decoration, text,
 							node.getTaskRelation().toString());
@@ -100,22 +98,27 @@ public class QuickOutlineDialog extends PopupDialog
 			return null;
 		}
 
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 			// ignore
 		}
 
+		@Override
 		public void dispose() {
 			// ignore
 		}
 
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			return false;
 		}
 
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 			// ignore
 		}
 
+		@Override
 		public Image decorateImage(Image image, Object element) {
 			return null;
 		}
@@ -130,23 +133,28 @@ public class QuickOutlineDialog extends PopupDialog
 			this.viewer = viewer;
 		}
 
+		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 			setSelection(e);
 		}
 
+		@Override
 		public void mouseDown(MouseEvent e) {
 			setSelection(e);
 		}
 
+		@Override
 		public void mouseUp(MouseEvent e) {
 			// ignore
 
 		}
 
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			open(null);
 		}
 
+		@Override
 		public void open(OpenEvent event) {
 			AbstractTaskEditorPage taskEditorPage = getTaskEditorPage();
 			if (taskEditorPage == null) {
@@ -154,7 +162,7 @@ public class QuickOutlineDialog extends PopupDialog
 			}
 
 			StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-			Object select = (selection).getFirstElement();
+			Object select = selection.getFirstElement();
 			taskEditorPage.selectReveal(select);
 		}
 
@@ -252,6 +260,7 @@ public class QuickOutlineDialog extends PopupDialog
 	private void createUIListenersTreeViewer() {
 		final Tree tree = viewer.getTree();
 		tree.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == 0x1B) {
 					// Dispose on ESC key press
@@ -259,6 +268,7 @@ public class QuickOutlineDialog extends PopupDialog
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// ignore
 			}
@@ -272,10 +282,12 @@ public class QuickOutlineDialog extends PopupDialog
 		});
 
 		tree.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				gotoSelectedElement();
 			}
@@ -283,7 +295,7 @@ public class QuickOutlineDialog extends PopupDialog
 	}
 
 	private void handleTreeViewerMouseUp(final Tree tree, MouseEvent e) {
-		if ((tree.getSelectionCount() < 1) || (e.button != 1) || (tree.equals(e.getSource()) == false)) {
+		if (tree.getSelectionCount() < 1 || e.button != 1 || !tree.equals(e.getSource())) {
 			return;
 		}
 		// Selection is made in the selection changed listener
@@ -301,19 +313,23 @@ public class QuickOutlineDialog extends PopupDialog
 		return ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 	}
 
+	@Override
 	public void addDisposeListener(DisposeListener listener) {
 		getShell().addDisposeListener(listener);
 	}
 
+	@Override
 	public void addFocusListener(FocusListener listener) {
 		getShell().addFocusListener(listener);
 	}
 
+	@Override
 	public Point computeSizeHint() {
 		// Note that it already has the persisted size if persisting is enabled.
 		return getShell().getSize();
 	}
 
+	@Override
 	public void dispose() {
 		close();
 	}
@@ -323,6 +339,7 @@ public class QuickOutlineDialog extends PopupDialog
 		return new Point(400, 300);
 	}
 
+	@Override
 	public boolean isFocusControl() {
 		if (viewer.getControl().isFocusControl() || filterText.isFocusControl()) {
 			return true;
@@ -330,56 +347,66 @@ public class QuickOutlineDialog extends PopupDialog
 		return false;
 	}
 
+	@Override
 	public void removeDisposeListener(DisposeListener listener) {
 		getShell().removeDisposeListener(listener);
 	}
 
+	@Override
 	public void removeFocusListener(FocusListener listener) {
 		getShell().removeFocusListener(listener);
 	}
 
+	@Override
 	public void setBackgroundColor(Color background) {
 		applyBackgroundColor(background, getContents());
 	}
 
+	@Override
 	public void setFocus() {
 		getShell().forceFocus();
 		filterText.setFocus();
 	}
 
+	@Override
 	public void setForegroundColor(Color foreground) {
 		applyForegroundColor(foreground, getContents());
 	}
 
+	@Override
 	public void setInformation(String information) {
 		// See IInformationControlExtension2
 	}
 
+	@Override
 	public void setLocation(Point location) {
 		/*
 		 * If the location is persisted, it gets managed by PopupDialog - fine. Otherwise, the location is
 		 * computed in Window#getInitialLocation, which will center it in the parent shell / main
 		 * monitor, which is wrong for two reasons:
 		 * - we want to center over the editor / subject control, not the parent shell
-		 * - the center is computed via the initalSize, which may be also wrong since the size may 
+		 * - the center is computed via the initalSize, which may be also wrong since the size may
 		 *   have been updated since via min/max sizing of AbstractInformationControlManager.
 		 * In that case, override the location with the one computed by the manager. Note that
 		 * the call to constrainShellSize in PopupDialog.open will still ensure that the shell is
 		 * entirely visible.
 		 */
-		if (getPersistLocation() == false || getDialogSettings() == null) {
+		if (!getPersistLocation() || getDialogSettings() == null) {
 			getShell().setLocation(location);
 		}
 	}
 
+	@Override
 	public void setSize(int width, int height) {
 		getShell().setSize(width, height);
 	}
 
+	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		// Ignore
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			open();
@@ -389,19 +416,22 @@ public class QuickOutlineDialog extends PopupDialog
 		}
 	}
 
+	@Override
 	public boolean hasContents() {
-		if ((viewer == null) || (viewer.getInput() == null)) {
+		if (viewer == null || viewer.getInput() == null) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	public void setInput(Object input) {
 		if (input != null) {
 			viewer.setSelection(new StructuredSelection(input));
 		}
 	}
 
+	@Override
 	public void widgetDisposed(DisposeEvent e) {
 		// Note: We do not reuse the dialog
 		viewer = null;
@@ -428,7 +458,7 @@ public class QuickOutlineDialog extends PopupDialog
 	private void createUIWidgetFilterText(Composite parent) {
 		// Create the widget
 		filterText = new Text(parent, SWT.NONE);
-		// Set the font 
+		// Set the font
 		GC gc = new GC(parent);
 		gc.setFont(parent.getFont());
 		FontMetrics fontMetrics = gc.getFontMetrics();
@@ -454,6 +484,7 @@ public class QuickOutlineDialog extends PopupDialog
 
 	private void createUIListenersFilterText() {
 		filterText.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
@@ -470,30 +501,29 @@ public class QuickOutlineDialog extends PopupDialog
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// NO-OP
 			}
 		});
 		// Handle text modify events
-		filterText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String text = ((Text) e.widget).getText();
-				int length = text.length();
-				if (length > 0) {
-					// Append a '*' pattern to the end of the text value if it
-					// does not have one already
-					if (text.charAt(length - 1) != '*') {
-						text = text + '*';
-					}
-					// Prepend a '*' pattern to the beginning of the text value
-					// if it does not have one already
-					if (text.charAt(0) != '*') {
-						text = '*' + text;
-					}
+		filterText.addModifyListener(e -> {
+			String text = ((Text) e.widget).getText();
+			int length = text.length();
+			if (length > 0) {
+				// Append a '*' pattern to the end of the text value if it
+				// does not have one already
+				if (text.charAt(length - 1) != '*') {
+					text = text + '*';
 				}
-				// Set and update the pattern
-				setMatcherString(text, true);
+				// Prepend a '*' pattern to the beginning of the text value
+				// if it does not have one already
+				if (text.charAt(0) != '*') {
+					text = '*' + text;
+				}
 			}
+			// Set and update the pattern
+			setMatcherString(text, true);
 		});
 	}
 
@@ -516,8 +546,7 @@ public class QuickOutlineDialog extends PopupDialog
 	}
 
 	/**
-	 * The string matcher has been modified. The default implementation refreshes the view and selects the first matched
-	 * element
+	 * The string matcher has been modified. The default implementation refreshes the view and selects the first matched element
 	 */
 	private void stringMatcherUpdated() {
 		// Refresh the tree viewer to re-filter
@@ -535,8 +564,7 @@ public class QuickOutlineDialog extends PopupDialog
 		}
 		IEditorPart editorPart = activePage.getActiveEditor();
 		AbstractTaskEditorPage taskEditorPage = null;
-		if (editorPart instanceof TaskEditor) {
-			TaskEditor taskEditor = (TaskEditor) editorPart;
+		if (editorPart instanceof TaskEditor taskEditor) {
 			IFormPage formPage = taskEditor.getActivePageInstance();
 			if (formPage instanceof AbstractTaskEditorPage) {
 				taskEditorPage = (AbstractTaskEditorPage) formPage;

@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
@@ -49,7 +48,7 @@ public class ToggleWorkingSetAction extends Action {
 
 	@Override
 	public void runWithEvent(Event event) {
-		Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
+		Set<IWorkingSet> newList = new HashSet<>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
 
 		boolean modified = false;
 		if (event != null) {
@@ -58,10 +57,8 @@ public class ToggleWorkingSetAction extends Action {
 
 		if (!modified) {
 			// Default behavior is to act as a radio button.
-			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-			Iterator<IWorkingSet> iter = newList.iterator();
-			while (iter.hasNext()) {
-				IWorkingSet workingSet = iter.next();
+			Set<IWorkingSet> tempList = new HashSet<>();
+			for (IWorkingSet workingSet : newList) {
 				if (workingSet != null && workingSet.getId() != null
 						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
@@ -77,13 +74,11 @@ public class ToggleWorkingSetAction extends Action {
 					newList.add(workingSet);
 				}
 			}
+		} else // If modifier key is pressed, de/selections are additive.
+		if (isChecked()) {
+			newList.add(workingSet);
 		} else {
-			// If modifier key is pressed, de/selections are additive.
-			if (isChecked()) {
-				newList.add(workingSet);
-			} else {
-				newList.remove(workingSet);
-			}
+			newList.remove(workingSet);
 		}
 
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(newList);

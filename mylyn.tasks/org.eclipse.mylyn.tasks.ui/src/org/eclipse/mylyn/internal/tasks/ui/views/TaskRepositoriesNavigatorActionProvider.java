@@ -33,7 +33,7 @@ public class TaskRepositoriesNavigatorActionProvider extends CommonActionProvide
 	public void init(ICommonActionExtensionSite aSite) {
 		super.init(aSite);
 
-		this.propertiesAction = new PropertiesAction();
+		propertiesAction = new PropertiesAction();
 	}
 
 	@Override

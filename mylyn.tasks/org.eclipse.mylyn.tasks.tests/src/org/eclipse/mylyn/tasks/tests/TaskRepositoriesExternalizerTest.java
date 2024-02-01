@@ -18,17 +18,17 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
  */
 public class TaskRepositoriesExternalizerTest extends TestCase {
 
-	private Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();
+	private Set<TaskRepository> taskRepositories = new HashSet<>();
 
 	private static final String REP_TYPE = "bugzilla";
 

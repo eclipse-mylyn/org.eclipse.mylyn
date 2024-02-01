@@ -56,70 +56,87 @@ public class TaskComment implements ITaskComment {
 		this.taskAttribute = taskAttribute;
 	}
 
+	@Override
 	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return taskRepository.getConnectorKind();
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+	@Override
 	public int getNumber() {
 		return number;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return taskRepository.getRepositoryUrl();
 	}
 
+	@Override
 	public ITask getTask() {
 		return task;
 	}
 
+	@Override
 	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
+	@Override
 	public String getText() {
 		return text;
 	}
 
+	@Override
 	public String getUrl() {
 		return url;
 	}
 
+	@Override
 	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public void setNumber(int number) {
 		this.number = number;
 	}
 
+	@Override
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	@Override
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	@Override
 	public Boolean getIsPrivate() {
 		return isPrivate;
 	}
 
+	@Override
 	public void setIsPrivate(Boolean isPrivate) {
 		this.isPrivate = isPrivate;
 	}

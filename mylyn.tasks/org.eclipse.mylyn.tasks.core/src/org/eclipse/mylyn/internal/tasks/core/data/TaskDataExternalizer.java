@@ -62,7 +62,7 @@ public class TaskDataExternalizer {
 
 		public Xml11InputStream(InputStream in) throws IOException {
 			super(in);
-			header = new String("<?xml version=\"1.1\" encoding=\"UTF-8\"?>").getBytes("US-ASCII"); //$NON-NLS-1$ //$NON-NLS-2$
+			header = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>".getBytes("US-ASCII"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override
@@ -166,10 +166,12 @@ public class TaskDataExternalizer {
 		if (taskData != null) {
 			SafeRunner.run(new ISafeRunnable() {
 
+				@Override
 				public void handleException(Throwable exception) {
 					// ignore
 				}
 
+				@Override
 				public void run() throws Exception {
 					taskDataHandler.migrateTaskData(taskRepository, taskData);
 				}

@@ -24,7 +24,6 @@ public class TasksTestsPlugin extends Plugin {
 	private static TasksTestsPlugin plugin;
 
 	public TasksTestsPlugin() {
-		super();
 		plugin = this;
 	}
 

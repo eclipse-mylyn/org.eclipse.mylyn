@@ -20,8 +20,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -49,8 +47,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -113,19 +109,17 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
-				if (TaskEditorCommentPart.this.commentAttributes.size() >= CommentGroupStrategy.MAX_CURRENT) {
+				if (commentAttributes.size() >= CommentGroupStrategy.MAX_CURRENT) {
 					// show a separator before current comments
 					Canvas separator = new Canvas(parent, SWT.NONE) {
 						@Override
 						public Point computeSize(int wHint, int hHint, boolean changed) {
-							return new Point((wHint == SWT.DEFAULT) ? 1 : wHint, 1);
+							return new Point(wHint == SWT.DEFAULT ? 1 : wHint, 1);
 						}
 					};
-					separator.addPaintListener(new PaintListener() {
-						public void paintControl(PaintEvent e) {
-							e.gc.setForeground(separator.getForeground());
-							e.gc.drawLine(0, 0, separator.getSize().x, 0);
-						}
+					separator.addPaintListener(e -> {
+						e.gc.setForeground(separator.getForeground());
+						e.gc.drawLine(0, 0, separator.getSize().x, 0);
 					});
 					separator.setForeground(toolkit.getColors().getColor(IFormColors.TB_BORDER));
 					GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(separator);
@@ -186,7 +180,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				return commentViewers;
 			}
 
-			commentViewers = new ArrayList<CommentViewer>(comments.size());
+			commentViewers = new ArrayList<>(comments.size());
 			for (TaskAttribute commentAttribute : comments) {
 				CommentViewer commentViewer = createCommentViewer(commentAttribute);
 				commentViewers.add(commentViewer);
@@ -305,7 +299,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		public CommentViewer(TaskAttribute commentAttribute) {
 			this.commentAttribute = commentAttribute;
-			this.taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(), commentAttribute);
+			taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(), commentAttribute);
 		}
 
 		public Control createControl(Composite composite, FormToolkit toolkit) {
@@ -313,7 +307,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
 					| ExpandableComposite.COMPACT;
-			if (hasIncomingChanges || (expandAllInProgress && !suppressExpandViewers)) {
+			if (hasIncomingChanges || expandAllInProgress && !suppressExpandViewers) {
 				style |= ExpandableComposite.EXPANDED;
 			}
 			commentComposite = toolkit.createExpandableComposite(composite, style);
@@ -545,7 +539,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		public void suppressSelectionChanged(boolean value) {
-			this.suppressSelectionChanged = value;
+			suppressSelectionChanged = value;
 		}
 
 		public String getReplyToText() {
@@ -603,7 +597,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		private final CommentViewer commentViewer;
 
 		public ReplyToCommentAction(CommentViewer commentViewer) {
-			super(TaskEditorCommentPart.this.getTaskEditorPage(), commentViewer.getTaskComment());
+			super(getTaskEditorPage(), commentViewer.getTaskComment());
 			this.commentViewer = commentViewer;
 		}
 
@@ -628,12 +622,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			setMenuCreator(this);
 		}
 
+		@Override
 		public Menu getMenu(Control parent) {
 			setCurrentViewer(getCommentViewer());
 			selectionProvider.setSelection(new StructuredSelection(getCurrentViewer().getTaskComment()));
 			return getCommentMenu();
 		}
 
+		@Override
 		public Menu getMenu(Menu parent) {
 			selectionProvider.setSelection(new StructuredSelection(getCommentViewer().getTaskComment()));
 			return getCommentMenu();
@@ -657,8 +653,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private boolean hasIncoming;
 
 	/**
-	 * We can't use the reflow flag in AbstractTaskEditorPage because it gets set at various points where we might not
-	 * want to reflow.
+	 * We can't use the reflow flag in AbstractTaskEditorPage because it gets set at various points where we might not want to reflow.
 	 */
 	private boolean reflow = true;
 
@@ -676,7 +671,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private boolean suppressExpandViewers;
 
 	public TaskEditorCommentPart() {
-		this.commentGroupStrategy = new CommentGroupStrategy() {
+		commentGroupStrategy = new CommentGroupStrategy() {
 			@Override
 			protected boolean hasIncomingChanges(ITaskComment taskComment) {
 				return getModel().hasIncomingChanges(taskComment.getTaskAttribute());
@@ -760,23 +755,21 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				// get comment and add reply action as first item in the menu
-				ISelection selection = selectionProvider.getSelection();
-				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					ReplyToCommentAction replyAction = new ReplyToCommentAction(getCurrentViewer());
-					manager.add(replyAction);
-				}
-				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
-				actionGroup.fillContextMenu(manager);
+		menuManager.addMenuListener(manager -> {
+			// get comment and add reply action as first item in the menu
+			ISelection selection = selectionProvider.getSelection();
+			if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+				ReplyToCommentAction replyAction = new ReplyToCommentAction(getCurrentViewer());
+				manager.add(replyAction);
+			}
+			actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
+			actionGroup.fillContextMenu(manager);
 
-				if (getCurrentViewer() != null && getCurrentViewer().getEditor() instanceof RichTextAttributeEditor) {
-					RichTextAttributeEditor editor = (RichTextAttributeEditor) getCurrentViewer().getEditor();
-					if (editor.getViewSourceAction().isEnabled()) {
-						manager.add(new Separator("planning")); //$NON-NLS-1$
-						manager.add(editor.getViewSourceAction());
-					}
+			if (getCurrentViewer() != null && getCurrentViewer().getEditor() instanceof RichTextAttributeEditor) {
+				RichTextAttributeEditor editor = (RichTextAttributeEditor) getCurrentViewer().getEditor();
+				if (editor.getViewSourceAction().isEnabled()) {
+					manager.add(new Separator("planning")); //$NON-NLS-1$
+					manager.add(editor.getViewSourceAction());
 				}
 			}
 		});
@@ -788,28 +781,26 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		if (commentAttributes.isEmpty()) {
 			section.setEnabled(false);
+		} else if (hasIncoming) {
+			expandSection(toolkit, section);
 		} else {
-			if (hasIncoming) {
-				expandSection(toolkit, section);
-			} else {
-				section.addExpansionListener(new ExpansionAdapter() {
-					@Override
-					public void expansionStateChanged(ExpansionEvent event) {
-						if (section.getClient() == null) {
-							try {
-								expandAllInProgress = true;
-								getTaskEditorPage().setReflow(false);
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent event) {
+					if (section.getClient() == null) {
+						try {
+							expandAllInProgress = true;
+							getTaskEditorPage().setReflow(false);
 
-								expandSection(toolkit, section);
-							} finally {
-								expandAllInProgress = false;
-								getTaskEditorPage().setReflow(true);
-							}
-							reflow();
+							expandSection(toolkit, section);
+						} finally {
+							expandAllInProgress = false;
+							getTaskEditorPage().setReflow(true);
 						}
+						reflow();
 					}
-				});
-			}
+				}
+			});
 		}
 		setSection(toolkit, section);
 	}
@@ -910,14 +901,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		// group comments
-		List<ITaskComment> comments = new ArrayList<ITaskComment>();
-		for (TaskAttribute commentAttribute : this.commentAttributes) {
+		List<ITaskComment> comments = new ArrayList<>();
+		for (TaskAttribute commentAttribute : commentAttributes) {
 			comments.add(convertToTaskComment(getModel(), commentAttribute));
 		}
 		String currentPersonId = getModel().getTaskRepository().getUserName();
 		List<CommentGroup> commentGroups = getCommentGroupStrategy().groupComments(comments, currentPersonId);
 
-		commentGroupViewers = new ArrayList<CommentGroupViewer>(commentGroups.size());
+		commentGroupViewers = new ArrayList<>(commentGroups.size());
 		if (commentGroups.size() > 0) {
 			for (int i = 0; i < commentGroups.size(); i++) {
 				CommentGroupViewer viewer = createCommentGroupViewer(commentGroups.get(i));
@@ -948,8 +939,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	@Override
 	public boolean setFormInput(Object input) {
-		if (input instanceof String) {
-			String text = (String) input;
+		if (input instanceof String text) {
 			if (commentAttributes != null) {
 				for (TaskAttribute commentAttribute : commentAttributes) {
 					if (text.equals(commentAttribute.getId())) {

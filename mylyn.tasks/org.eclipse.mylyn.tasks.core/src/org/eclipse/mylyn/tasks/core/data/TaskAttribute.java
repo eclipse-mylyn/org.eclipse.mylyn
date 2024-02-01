@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Assert;
@@ -131,16 +132,14 @@ public final class TaskAttribute {
 	public static final String META_ATTRIBUTE_TYPE = "task.meta.type"; //$NON-NLS-1$
 
 	/**
-	 * A key for {@link TaskAttributeMetaData} that is used to specify the precision of a date or time attribute, which
-	 * must be parseable by {@link TimeUnit#valueOf(String)}. This specifies the precision with which values are
-	 * represented <i>on the server</i>. This is separate from the attribute {@link #META_ATTRIBUTE_TYPE type}, which
-	 * may specify that an attribute should be <i>displayed</i> as a {@link #TYPE_DATE date} or a {@link #TYPE_DATETIME
-	 * date with time}.
+	 * A key for {@link TaskAttributeMetaData} that is used to specify the precision of a date or time attribute, which must be parseable by
+	 * {@link TimeUnit#valueOf(String)}. This specifies the precision with which values are represented <i>on the server</i>. This is
+	 * separate from the attribute {@link #META_ATTRIBUTE_TYPE type}, which may specify that an attribute should be <i>displayed</i> as a
+	 * {@link #TYPE_DATE date} or a {@link #TYPE_DATETIME date with time}.
 	 * <p>
 	 * Connectors should ensure that {@link TaskAttributeMapper#getDateValue(TaskAttribute)} and
-	 * {@link TaskAttributeMapper#setDateValue(TaskAttribute, java.util.Date) setDateValue(TaskAttribute, Date)}
-	 * respectively return and accept dates at midnight in the local time zone when the precision is
-	 * {@link TimeUnit#DAYS} or coarser.
+	 * {@link TaskAttributeMapper#setDateValue(TaskAttribute, java.util.Date) setDateValue(TaskAttribute, Date)} respectively return and
+	 * accept dates at midnight in the local time zone when the precision is {@link TimeUnit#DAYS} or coarser.
 	 *
 	 * @since 3.18
 	 * @see TaskAttributeMetaData#getPrecision()
@@ -149,13 +148,13 @@ public final class TaskAttribute {
 	public static final String META_ATTRIBUTE_PRECISION = "task.meta.precision"; //$NON-NLS-1$
 
 	/**
-	 * A key for {@link TaskAttributeMetaData} that is used for specifying the ID of the parent {@link TaskAttribute}
-	 * for attributes that have a dependency. When the parent is changed we look for all attributes with have a
-	 * {@link TaskAttributeMetaData} of this key and an value of the ID from the changed {@link TaskAttribute} and also
-	 * trigger a change. With this we can refresh the options of each {@link TaskAttribute}.<br>
+	 * A key for {@link TaskAttributeMetaData} that is used for specifying the ID of the parent {@link TaskAttribute} for attributes that
+	 * have a dependency. When the parent is changed we look for all attributes with have a {@link TaskAttributeMetaData} of this key and an
+	 * value of the ID from the changed {@link TaskAttribute} and also trigger a change. With this we can refresh the options of each
+	 * {@link TaskAttribute}.<br>
 	 * <br>
-	 * Example: In Bugzilla we have COMPONENT, VERSION, TARGET_MILESTONE as depends on the PRODUCT. We can so update the
-	 * options of the attributes to match the definition of the PRODUCT.
+	 * Example: In Bugzilla we have COMPONENT, VERSION, TARGET_MILESTONE as depends on the PRODUCT. We can so update the options of the
+	 * attributes to match the definition of the PRODUCT.
 	 *
 	 * @see #BugzillaRestCreateTaskSchema
 	 * @since 3.17
@@ -163,11 +162,10 @@ public final class TaskAttribute {
 	public static final String META_DEPENDS_ON_ATTRIBUTE_ID = "task.meta.dependson.attribute"; //$NON-NLS-1$
 
 	/**
-	 * A key for {@link TaskAttributeMetaData} that is used for specifying the media type of a
-	 * {@link #TYPE_LONG_RICH_TEXT} or {@link #TYPE_SHORT_RICH_TEXT}. The media type if specified must be a valid
-	 * <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a> (also known as Content-Type,
-	 * mime-type) according to <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> and
-	 * <a href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046</a>.
+	 * A key for {@link TaskAttributeMetaData} that is used for specifying the media type of a {@link #TYPE_LONG_RICH_TEXT} or
+	 * {@link #TYPE_SHORT_RICH_TEXT}. The media type if specified must be a valid
+	 * <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a> (also known as Content-Type, mime-type) according
+	 * to <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> and <a href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046</a>.
 	 *
 	 * @see #TYPE_LONG_RICH_TEXT
 	 * @see #TYPE_SHORT_RICH_TEXT
@@ -185,9 +183,9 @@ public final class TaskAttribute {
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
 	/**
-	 * Key for {@link TaskAttributeMetaData} used to specify that a field requires a value before it can be submitted to
-	 * the server. This meta-data is used by the framework as a UI hint and does not guarantee that a connector will
-	 * enforce compliance before attempting to post task data.
+	 * Key for {@link TaskAttributeMetaData} used to specify that a field requires a value before it can be submitted to the server. This
+	 * meta-data is used by the framework as a UI hint and does not guarantee that a connector will enforce compliance before attempting to
+	 * post task data.
 	 *
 	 * @since 3.11
 	 */
@@ -199,8 +197,8 @@ public final class TaskAttribute {
 	public static final String COMMENT_ISPRIVATE = "task.common.comment.isprivate"; //$NON-NLS-1$
 
 	/**
-	 * Key for the meta datum that determines if an attribute is disabled. This is used to indicate that an attribute
-	 * should not be modified, e.g. due to work-flow state but it may still be generally writeable.
+	 * Key for the meta datum that determines if an attribute is disabled. This is used to indicate that an attribute should not be
+	 * modified, e.g. due to work-flow state but it may still be generally writeable.
 	 *
 	 * @since 3.5
 	 * @see TaskAttributeMetaData#isDisabled()
@@ -216,10 +214,10 @@ public final class TaskAttribute {
 	public static final String META_DESCRIPTION = "task.meta.description"; //$NON-NLS-1$
 
 	/**
-	 * Task attribute meta-data key that should be set to "true" to have attribute value indexed as part of the task
-	 * content. Provides a way for connectors to specify non-standard attributes as plain-text indexable. By default,
-	 * {@link #SUMMARY summary} and {@link #DESCRIPTION description} are indexed. Note that setting this meta-data is
-	 * advisory only and will not guarantee that content is indexed.
+	 * Task attribute meta-data key that should be set to "true" to have attribute value indexed as part of the task content. Provides a way
+	 * for connectors to specify non-standard attributes as plain-text indexable. By default, {@link #SUMMARY summary} and
+	 * {@link #DESCRIPTION description} are indexed. Note that setting this meta-data is advisory only and will not guarantee that content
+	 * is indexed.
 	 *
 	 * @since 3.7
 	 */
@@ -235,8 +233,8 @@ public final class TaskAttribute {
 	public static final String PERSON_NAME = "task.common.person.name"; //$NON-NLS-1$
 
 	/**
-	 * Key for {@link RepositoryPerson} used to store the human-readable username used to log into the repository, if it
-	 * is different than the ID used to identify the person in {@link TaskData}.
+	 * Key for {@link RepositoryPerson} used to store the human-readable username used to log into the repository, if it is different than
+	 * the ID used to identify the person in {@link TaskData}.
 	 *
 	 * @since 3.18
 	 */
@@ -420,8 +418,8 @@ public final class TaskAttribute {
 		Assert.isNotNull(attributeId);
 		this.parentAttribute = parentAttribute;
 		this.attributeId = attributeId.intern();
-		this.taskData = parentAttribute.getTaskData();
-		this.values = new ArrayList<String>(1);
+		taskData = parentAttribute.getTaskData();
+		values = new ArrayList<>(1);
 		parentAttribute.add(this);
 	}
 
@@ -430,15 +428,15 @@ public final class TaskAttribute {
 	 */
 	TaskAttribute(TaskData taskData) {
 		Assert.isNotNull(taskData);
-		this.parentAttribute = null;
+		parentAttribute = null;
 		this.taskData = taskData;
-		this.attributeId = "root"; //$NON-NLS-1$
-		this.values = new ArrayList<String>(1);
+		attributeId = "root"; //$NON-NLS-1$
+		values = new ArrayList<>(1);
 	}
 
 	private void add(TaskAttribute attribute) {
 		if (attributeById == null) {
-			attributeById = new LinkedHashMap<String, TaskAttribute>();
+			attributeById = new LinkedHashMap<>();
 		}
 		attributeById.put(attribute.getId(), attribute);
 	}
@@ -472,10 +470,10 @@ public final class TaskAttribute {
 		TaskAttribute target = createAttribute(source.getId());
 		target.values.addAll(source.values);
 		if (source.metaData != null) {
-			target.metaData = new LinkedHashMap<String, String>(source.metaData);
+			target.metaData = new LinkedHashMap<>(source.metaData);
 		}
 		if (source.optionByKey != null) {
-			target.optionByKey = new LinkedHashMap<String, String>(source.optionByKey);
+			target.optionByKey = new LinkedHashMap<>(source.optionByKey);
 		}
 		if (source.attributeById != null) {
 			for (TaskAttribute child : source.attributeById.values()) {
@@ -489,18 +487,11 @@ public final class TaskAttribute {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		final TaskAttribute other = (TaskAttribute) obj;
-		if (attributeId == null) {
-			if (other.attributeId != null) {
-				return false;
-			}
-		} else if (!attributeId.equals(other.attributeId)) {
+		if (!Objects.equals(attributeId, other.attributeId)) {
 			return false;
 		}
 		return true;
@@ -508,7 +499,7 @@ public final class TaskAttribute {
 
 	public TaskAttribute getAttribute(String attributeId) {
 		Assert.isNotNull(attributeId);
-		return (attributeById != null) ? attributeById.get(attributeId) : null;
+		return attributeById != null ? attributeById.get(attributeId) : null;
 	}
 
 	public Map<String, TaskAttribute> getAttributes() {
@@ -525,7 +516,7 @@ public final class TaskAttribute {
 
 	public TaskAttribute getMappedAttribute(String attributeId) {
 		Assert.isNotNull(attributeId);
-		return (attributeById != null)
+		return attributeById != null
 				? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this, attributeId))
 				: null;
 	}
@@ -542,7 +533,7 @@ public final class TaskAttribute {
 	}
 
 	String getMetaDatum(String key) {
-		return (metaData != null) ? metaData.get(key) : null;
+		return metaData != null ? metaData.get(key) : null;
 	}
 
 	Map<String, String> getMetaDataMap() {
@@ -554,7 +545,7 @@ public final class TaskAttribute {
 	}
 
 	public String getOption(String key) {
-		return (optionByKey != null) ? optionByKey.get(key) : null;
+		return optionByKey != null ? optionByKey.get(key) : null;
 	}
 
 	public Map<String, String> getOptions() {
@@ -570,7 +561,7 @@ public final class TaskAttribute {
 	}
 
 	public String[] getPath() {
-		List<String> path = new ArrayList<String>();
+		List<String> path = new ArrayList<>();
 		TaskAttribute attribute = this;
 		while (attribute.getParentAttribute() != null) {
 			path.add(attribute.getId());
@@ -589,9 +580,9 @@ public final class TaskAttribute {
 	}
 
 	/**
-	 * Returns the current value for a single value attribute. For a multi-value attribute, returns the first value.
-	 * Note: returns an empty string if the value has not been set <em>or</em> if the value is actually an empty string.
-	 * To determine whether a value has been explicitly set, use {@link #hasValue()}.
+	 * Returns the current value for a single value attribute. For a multi-value attribute, returns the first value. Note: returns an empty
+	 * string if the value has not been set <em>or</em> if the value is actually an empty string. To determine whether a value has been
+	 * explicitly set, use {@link #hasValue()}.
 	 */
 	public String getValue() {
 		if (values.size() > 0) {
@@ -606,10 +597,9 @@ public final class TaskAttribute {
 	}
 
 	/**
-	 * Indicates whether any value(s) are currently set for this attribute. Note that this is a different case from
-	 * testing whether or not {@link #getValue()} returns an empty string, as it is possible that an empty string value
-	 * has been explicitly set for the attribute. Call {@link #clearValues()} to return the attribute to the unset
-	 * state.
+	 * Indicates whether any value(s) are currently set for this attribute. Note that this is a different case from testing whether or not
+	 * {@link #getValue()} returns an empty string, as it is possible that an empty string value has been explicitly set for the attribute.
+	 * Call {@link #clearValues()} to return the attribute to the unset state.
 	 *
 	 * @return true if any value is set (may be an empty string), false if no value is set.
 	 * @since 3.9
@@ -620,17 +610,14 @@ public final class TaskAttribute {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attributeId == null) ? 0 : attributeId.hashCode());
-		return result;
+		return Objects.hash(attributeId);
 	}
 
 	void putMetaDatum(String key, String value) {
 		Assert.isNotNull(key);
 		Assert.isNotNull(value);
 		if (metaData == null) {
-			metaData = new LinkedHashMap<String, String>();
+			metaData = new LinkedHashMap<>();
 		}
 		metaData.put(key.intern(), value);
 	}
@@ -647,7 +634,7 @@ public final class TaskAttribute {
 		Assert.isNotNull(key);
 		Assert.isNotNull(value);
 		if (optionByKey == null) {
-			optionByKey = new LinkedHashMap<String, String>();
+			optionByKey = new LinkedHashMap<>();
 		}
 		optionByKey.put(key.intern(), value);
 	}
@@ -680,8 +667,7 @@ public final class TaskAttribute {
 		Assert.isNotNull(values);
 
 		/**
-		 * ImmutableCollections (List.of(...)) doesn't allow null values so 'Assert.isTrue(!values.contains(null));'
-		 * throws a NPE
+		 * ImmutableCollections (List.of(...)) doesn't allow null values so 'Assert.isTrue(!values.contains(null));' throws a NPE
 		 */
 		for (String value : values) {
 			Assert.isNotNull(value);

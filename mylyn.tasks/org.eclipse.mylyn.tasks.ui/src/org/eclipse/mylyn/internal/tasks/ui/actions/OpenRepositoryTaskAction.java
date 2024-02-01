@@ -43,6 +43,7 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 
 	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote"; //$NON-NLS-1$
 
+	@Override
 	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(WorkbenchUtil.getShell());
 		dlg.setTitle(Messages.OpenRepositoryTask_Open_Repository_Task);
@@ -116,15 +117,19 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 		}
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 

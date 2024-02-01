@@ -44,7 +44,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 		if (attribute == null) {
 			attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		}
-		return (attribute != null) ? attribute.getTaskData().getAttributeMapper().getValueLabel(attribute) : ""; //$NON-NLS-1$
+		return attribute != null ? attribute.getTaskData().getAttributeMapper().getValueLabel(attribute) : ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 			// locate the exception line index
 			stackStart = description.substring(0, index - 1).lastIndexOf("\n"); //$NON-NLS-1$
-			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
+			stackStart = stackStart == -1 ? 0 : stackStart + 1;
 
 			stackTrace = description.substring(stackStart, lastEnd);
 		}

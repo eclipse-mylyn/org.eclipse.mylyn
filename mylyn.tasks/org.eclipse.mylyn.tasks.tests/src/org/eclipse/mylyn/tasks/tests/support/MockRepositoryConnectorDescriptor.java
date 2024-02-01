@@ -33,7 +33,7 @@ public class MockRepositoryConnectorDescriptor extends RepositoryConnectorDescri
 		public String getLabel() {
 			return super.getLabel() + " (contributed at runtime)";
 		}
-	};
+	}
 
 	public MockRepositoryConnectorDescriptor() {
 	}

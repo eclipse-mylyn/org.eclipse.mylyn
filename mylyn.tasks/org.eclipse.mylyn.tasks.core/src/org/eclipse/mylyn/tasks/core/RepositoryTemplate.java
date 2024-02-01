@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
  */
 public final class RepositoryTemplate {
 
-	public final Map<String, String> genericAttributes = new LinkedHashMap<String, String>();
+	public final Map<String, String> genericAttributes = new LinkedHashMap<>();
 
 	public final String label;
 
@@ -56,8 +56,8 @@ public final class RepositoryTemplate {
 		this.label = label;
 		this.repositoryUrl = TaskRepositoryManager.stripSlashes(repositoryUrl);
 		this.newTaskUrl = newTaskUrl;
-		this.taskPrefixUrl = taskPrefix;
-		this.taskQueryUrl = taskQuery;
+		taskPrefixUrl = taskPrefix;
+		taskQueryUrl = taskQuery;
 		this.newAccountUrl = newAccountUrl;
 		this.version = version;
 		this.anonymous = anonymous;
@@ -74,6 +74,6 @@ public final class RepositoryTemplate {
 	}
 
 	public Map<String, String> getAttributes() {
-		return this.genericAttributes;
+		return genericAttributes;
 	}
 }

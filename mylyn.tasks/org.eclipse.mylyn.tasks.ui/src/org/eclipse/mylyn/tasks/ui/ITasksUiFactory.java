@@ -33,7 +33,7 @@ public interface ITasksUiFactory {
 	 * 
 	 * @since 3.1
 	 */
-	public abstract IContentAssistProcessor createTaskContentAssistProcessor(TaskRepository repository);
+	IContentAssistProcessor createTaskContentAssistProcessor(TaskRepository repository);
 
 	/**
 	 * Returns a content proposal provider for repository users.
@@ -41,7 +41,7 @@ public interface ITasksUiFactory {
 	 * @since 3.1
 	 * @see #createPersonContentProposalLabelProvider(TaskRepository)
 	 */
-	public abstract IContentProposalProvider createPersonContentProposalProvider(TaskRepository repository);
+	IContentProposalProvider createPersonContentProposalProvider(TaskRepository repository);
 
 	/**
 	 * Returns a label provider for repository users content proposals.
@@ -49,6 +49,6 @@ public interface ITasksUiFactory {
 	 * @since 3.1
 	 * @see #createPersonContentProposalProvider(TaskRepository)
 	 */
-	public abstract ILabelProvider createPersonContentProposalLabelProvider(TaskRepository repository);
+	ILabelProvider createPersonContentProposalLabelProvider(TaskRepository repository);
 
 }

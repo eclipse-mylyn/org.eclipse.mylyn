@@ -16,11 +16,11 @@ package org.eclipse.mylyn.tasks.tests.ui.editor;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -54,7 +54,7 @@ public class TaskEditorPartDescriptorTest extends TestCase {
 	}
 
 	public void testInsertIntoSet() {
-		Set<TaskEditorPartDescriptor> set = new LinkedHashSet<TaskEditorPartDescriptor>();
+		Set<TaskEditorPartDescriptor> set = new LinkedHashSet<>();
 		set.add(descriptor1);
 		set.add(descriptor2);
 		assertEquals(1, set.size());

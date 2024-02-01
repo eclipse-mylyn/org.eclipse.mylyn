@@ -56,7 +56,7 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 			ITaskAttachment attachment = contextAttachments.get(0);
 			String author = null;
 			if (attachment.getAuthor() != null) {
-				author = (attachment.getAuthor().getName()) != null
+				author = attachment.getAuthor().getName() != null
 						? attachment.getAuthor().getName()
 						: attachment.getAuthor().getPersonId();
 			}
@@ -147,13 +147,13 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 				link.setEnabled(true);
 				getButton(0).setEnabled(true);
 				getButton(1).setEnabled(true);
-			};
+			}
 
 			@Override
 			protected void saveUiState(Map<Object, Object> savedState) {
 				link.setEnabled(false);
 				getButton(0).setEnabled(false);
-			};
+			}
 		};
 		return progressMonitorPart;
 	}

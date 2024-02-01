@@ -36,7 +36,7 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 
 	public LabelsAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
-		this.isMultiSelect = TaskAttribute.TYPE_MULTI_SELECT.equals(taskAttribute.getMetaData().getType())
+		isMultiSelect = TaskAttribute.TYPE_MULTI_SELECT.equals(taskAttribute.getMetaData().getType())
 				|| TaskAttribute.TYPE_MULTI_LABEL.equals(taskAttribute.getMetaData().getType());
 		if (!isReadOnly() && isMultiSelect) {
 			setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
@@ -46,7 +46,7 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		super.createControl(parent, toolkit,
-				(getLayoutHint() != null && getLayoutHint().rowSpan == RowSpan.MULTIPLE ? SWT.WRAP : SWT.NONE));
+				getLayoutHint() != null && getLayoutHint().rowSpan == RowSpan.MULTIPLE ? SWT.WRAP : SWT.NONE);
 		if (!isReadOnly() && isMultiSelect) {
 			getText().setToolTipText("Separate multiple values with a comma"); //$NON-NLS-1$
 		}
@@ -77,7 +77,7 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 		return Arrays.asList(values)
 				.stream()
 				.map(s -> StringUtils.defaultString(s).trim())
-				.filter(f -> StringUtils.isNotEmpty(f))
+				.filter(StringUtils::isNotEmpty)
 				.collect(Collectors.toUnmodifiableList());
 	}
 }

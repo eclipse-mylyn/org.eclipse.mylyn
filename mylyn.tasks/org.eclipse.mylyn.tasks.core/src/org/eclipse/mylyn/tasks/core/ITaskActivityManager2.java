@@ -29,12 +29,12 @@ public interface ITaskActivityManager2 extends ITaskActivityManager {
 	 * @return the date of the first activity of the given task
 	 * @since 3.10
 	 */
-	public abstract Date getFirstActivity(ITask task);
+	Date getFirstActivity(ITask task);
 
 	/**
 	 * @return the date of the last activity of the given task
 	 * @since 3.10
 	 */
-	public abstract Date getLastActivity(ITask task);
+	Date getLastActivity(ITask task);
 
 }

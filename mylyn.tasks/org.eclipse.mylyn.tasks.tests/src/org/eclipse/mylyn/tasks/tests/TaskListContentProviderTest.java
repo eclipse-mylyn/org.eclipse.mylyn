@@ -15,8 +15,6 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Date;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -25,6 +23,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Felix Schwarz

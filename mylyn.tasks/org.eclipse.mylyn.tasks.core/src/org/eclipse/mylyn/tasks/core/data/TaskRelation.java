@@ -33,7 +33,7 @@ public class TaskRelation {
 	 */
 	public enum Direction {
 		INWARD, OUTWARD
-	};
+	}
 
 	/**
 	 * @since 3.0
@@ -122,10 +122,7 @@ public class TaskRelation {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		TaskRelation other = (TaskRelation) obj;

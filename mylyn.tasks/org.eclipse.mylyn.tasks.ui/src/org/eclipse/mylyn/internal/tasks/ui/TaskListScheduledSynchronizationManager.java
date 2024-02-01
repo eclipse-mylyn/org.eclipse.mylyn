@@ -79,8 +79,8 @@ class TaskListScheduledSynchronizationManager {
 	 * @param scheduler
 	 *            The scheduler to schedule refreshes.
 	 * @param isInitialInvocation
-	 *            {@code true} for the initial invocation; {@code false} for later invocations. When {@code true}, the
-	 *            scheduler interval is set to a fixed startup delay (typically 20 seconds).
+	 *            {@code true} for the initial invocation; {@code false} for later invocations. When {@code true}, the scheduler interval is
+	 *            set to a fixed startup delay (typically 20 seconds).
 	 * @param intervalKey
 	 *            The key in the preferences which is used to retrieve the latest schedule interval time.
 	 * @param enabledKeys

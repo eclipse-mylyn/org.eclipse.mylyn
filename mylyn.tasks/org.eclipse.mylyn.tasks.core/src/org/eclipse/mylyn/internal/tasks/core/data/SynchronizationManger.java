@@ -53,7 +53,7 @@ public class SynchronizationManger {
 
 		public DefaultParticipant(List<String> attributeIds, String connectorKind) {
 			Assert.isNotNull(attributeIds);
-			this.attributeIds = new HashSet<String>(attributeIds);
+			this.attributeIds = new HashSet<>(attributeIds);
 			String id = DefaultParticipant.class.getName();
 			if (connectorKind != null) {
 				id += "." + connectorKind; //$NON-NLS-1$
@@ -75,7 +75,7 @@ public class SynchronizationManger {
 
 	}
 
-	private final Map<String, List<SynchronizationParticipant>> participantsByConnectorKind = new HashMap<String, List<SynchronizationParticipant>>();
+	private final Map<String, List<SynchronizationParticipant>> participantsByConnectorKind = new HashMap<>();
 
 	private List<SynchronizationParticipant> defaultParticipants;
 
@@ -90,8 +90,8 @@ public class SynchronizationManger {
 		MultiStatus status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
 				"Synchronization participants failed to load.", null); //$NON-NLS-1$
 
-		List<SynchronizationParticipant> participants = new ArrayList<SynchronizationParticipant>(1);
-		List<String> attributeIds = new ArrayList<String>();
+		List<SynchronizationParticipant> participants = new ArrayList<>(1);
+		List<String> attributeIds = new ArrayList<>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint connectorsExtensionPoint = registry
@@ -105,8 +105,7 @@ public class SynchronizationManger {
 					if (value != null && value.equals(connectorKind) || value == connectorKind) {
 						try {
 							Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
-							if (object instanceof SynchronizationParticipant) {
-								SynchronizationParticipant participant = (SynchronizationParticipant) object;
+							if (object instanceof SynchronizationParticipant participant) {
 								participant.setId(element.getAttribute("id")); //$NON-NLS-1$
 								participants.add(participant);
 							} else {
@@ -177,10 +176,12 @@ public class SynchronizationManger {
 		final TaskDataDiff diff = new TaskDataDiff(model, newTaskData, oldTaskData);
 		for (final SynchronizationParticipant participant : getDefaultParticipants()) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable exception) {
 					// handled by framework
 				}
 
+				@Override
 				public void run() throws Exception {
 					participant.processUpdate(diff, monitor);
 				}
@@ -188,10 +189,12 @@ public class SynchronizationManger {
 		}
 		for (final SynchronizationParticipant participant : getParticipants(newTaskData.getConnectorKind())) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable exception) {
 					// handled by framework
 				}
 
+				@Override
 				public void run() throws Exception {
 					participant.processUpdate(diff, monitor);
 				}

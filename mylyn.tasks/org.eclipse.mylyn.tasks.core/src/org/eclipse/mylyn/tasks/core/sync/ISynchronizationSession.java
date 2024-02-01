@@ -33,67 +33,67 @@ public interface ISynchronizationSession {
 	/**
 	 * @since 3.0
 	 */
-	public abstract Set<ITask> getChangedTasks();
+	Set<ITask> getChangedTasks();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract Object getData();
+	Object getData();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract IStatus getStatus();
+	IStatus getStatus();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITaskDataManager getTaskDataManager();
+	ITaskDataManager getTaskDataManager();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskRepository getTaskRepository();
+	TaskRepository getTaskRepository();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract Set<ITask> getTasks();
+	Set<ITask> getTasks();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isFullSynchronization();
+	boolean isFullSynchronization();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isUser();
+	boolean isUser();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean needsPerformQueries();
+	boolean needsPerformQueries();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setData(Object data);
+	void setData(Object data);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setNeedsPerformQueries(boolean performQueries);
+	void setNeedsPerformQueries(boolean performQueries);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void markStale(ITask task);
+	void markStale(ITask task);
 
 	/**
 	 * @since 3.0
 	 */
 	// TODO m4.0 pass TaskDataCollector to preSynchronization() instead
-	public abstract void putTaskData(ITask task, TaskData taskData) throws CoreException;
+	void putTaskData(ITask task, TaskData taskData) throws CoreException;
 
 }

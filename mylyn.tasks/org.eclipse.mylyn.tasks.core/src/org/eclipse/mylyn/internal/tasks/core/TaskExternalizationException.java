@@ -23,7 +23,6 @@ public class TaskExternalizationException extends Exception {
 	private static final long serialVersionUID = 5804522104992031907L;
 
 	public TaskExternalizationException() {
-		super();
 	}
 
 	public TaskExternalizationException(String detailMessage) {

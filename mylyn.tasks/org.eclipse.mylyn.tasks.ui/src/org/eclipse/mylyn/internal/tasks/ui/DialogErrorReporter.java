@@ -41,18 +41,16 @@ public class DialogErrorReporter extends AbstractErrorReporter {
 			if (workbench != null) {
 				Display display = workbench.getDisplay();
 				if (display != null && !display.isDisposed()) {
-					display.asyncExec(new Runnable() {
-						public void run() {
-							try {
-								if (!errorDialogOpen) {
-									errorDialogOpen = true;
-									Shell shell = Display.getDefault().getActiveShell();
-									ErrorDialog.openError(shell, Messages.DialogErrorReporter_Mylyn_Error,
-											Messages.DialogErrorReporter_Please_report_the_following_error_at, status);
-								}
-							} finally {
-								errorDialogOpen = false;
+					display.asyncExec(() -> {
+						try {
+							if (!errorDialogOpen) {
+								errorDialogOpen = true;
+								Shell shell = Display.getDefault().getActiveShell();
+								ErrorDialog.openError(shell, Messages.DialogErrorReporter_Mylyn_Error,
+										Messages.DialogErrorReporter_Please_report_the_following_error_at, status);
 							}
+						} finally {
+							errorDialogOpen = false;
 						}
 					});
 				}

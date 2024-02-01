@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 
 public class TaskListChangeAdapter implements ITaskListChangeListener {
 
+	@Override
 	public void containersChanged(Set<TaskContainerDelta> containers) {
 	}
 

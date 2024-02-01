@@ -166,9 +166,9 @@ public class TaskDiffUtil {
 	}
 
 	/**
-	 * Note: Copied from CLabel. Shorten the given text <code>t</code> so that its length doesn't exceed the given
-	 * width. The default implementation replaces characters in the center of the original string with an ellipsis
-	 * ("..."). Override if you need a different strategy.
+	 * Note: Copied from CLabel. Shorten the given text <code>t</code> so that its length doesn't exceed the given width. The default
+	 * implementation replaces characters in the center of the original string with an ellipsis ("..."). Override if you need a different
+	 * strategy.
 	 *
 	 * @param gc
 	 *            the gc to use for text measurement

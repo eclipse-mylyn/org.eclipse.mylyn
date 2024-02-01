@@ -46,7 +46,7 @@ public class AttachmentTableLabelProvider extends StyledCellLabelProvider {
 
 	@Override
 	public void update(ViewerCell cell) {
-		cell.setImage(getColumnImage((ITaskAttachment) cell.getElement(), cell.getColumnIndex()));
+		cell.setImage(getColumnImage(cell.getElement(), cell.getColumnIndex()));
 		StyledString str = buildTextFromEventIndex(cell.getColumnIndex(), (ITaskAttachment) cell.getElement());
 		cell.setText(str.getString());
 		cell.setStyleRanges(str.getStyleRanges());
@@ -123,44 +123,44 @@ public class AttachmentTableLabelProvider extends StyledCellLabelProvider {
 	public StyledString buildTextFromEventIndex(int index, ITaskAttachment attachment) {
 		StyledString text = new StyledString();
 		switch (index) {
-		case 0:
-			if (AttachmentUtil.isContext(attachment)) {
-				text.append(Messages.AttachmentTableLabelProvider_Task_Context);
-			} else if (attachment.isPatch()) {
-				text.append(Messages.AttachmentTableLabelProvider_Patch);
-			} else {
-				text.append(" " + attachment.getFileName()); //$NON-NLS-1$
-			}
-			break;
-		case 1:
-			if (attachment.getDescription() != null) {
-				text.append(attachment.getDescription());
-			}
-			break;
-		case 2:
-			long length = attachment.getLength();
-			if (length < 0) {
-				text.append("-"); //$NON-NLS-1$
-			}
-			text.append(sizeFormatter.format(length));
-			break;
-		case 3:
-			String autherText = (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
-			String[] autherPart = autherText.split(" <"); //$NON-NLS-1$
-			text.append(autherPart[0] + " ", StyledString.COUNTER_STYLER); //$NON-NLS-1$
-			if (autherPart.length > 1) {
-				text.append("<" + autherPart[1], StyledString.COUNTER_STYLER); //$NON-NLS-1$
-			}
-			break;
-		case 4:
-			text.append((attachment.getCreationDate() != null)
-					? EditorUtil.formatDateTime(attachment.getCreationDate())
-					: ""); //$NON-NLS-1$
-			break;
-		case 5:
-			// FIXME add id to ITaskAttachment
-			text.append(getAttachmentId(attachment));
-			break;
+			case 0:
+				if (AttachmentUtil.isContext(attachment)) {
+					text.append(Messages.AttachmentTableLabelProvider_Task_Context);
+				} else if (attachment.isPatch()) {
+					text.append(Messages.AttachmentTableLabelProvider_Patch);
+				} else {
+					text.append(" " + attachment.getFileName()); //$NON-NLS-1$
+				}
+				break;
+			case 1:
+				if (attachment.getDescription() != null) {
+					text.append(attachment.getDescription());
+				}
+				break;
+			case 2:
+				long length = attachment.getLength();
+				if (length < 0) {
+					text.append("-"); //$NON-NLS-1$
+				}
+				text.append(sizeFormatter.format(length));
+				break;
+			case 3:
+				String autherText = attachment.getAuthor() != null ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
+				String[] autherPart = autherText.split(" <"); //$NON-NLS-1$
+				text.append(autherPart[0] + " ", StyledString.COUNTER_STYLER); //$NON-NLS-1$
+				if (autherPart.length > 1) {
+					text.append("<" + autherPart[1], StyledString.COUNTER_STYLER); //$NON-NLS-1$
+				}
+				break;
+			case 4:
+				text.append(attachment.getCreationDate() != null
+						? EditorUtil.formatDateTime(attachment.getCreationDate())
+						: ""); //$NON-NLS-1$
+				break;
+			case 5:
+				// FIXME add id to ITaskAttachment
+				text.append(getAttachmentId(attachment));
+				break;
 		}
 		return text;
 	}

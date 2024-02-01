@@ -30,7 +30,7 @@ public class TreeWalker {
 
 	public enum Direction {
 		UP, DOWN
-	};
+	}
 
 	public static abstract class TreeVisitor {
 
@@ -48,7 +48,7 @@ public class TreeWalker {
 
 	public TreeWalker(TreeViewer treeViewer) {
 		this.treeViewer = treeViewer;
-		this.tree = treeViewer.getTree();
+		tree = treeViewer.getTree();
 	}
 
 	public Direction getDirection() {
@@ -60,7 +60,7 @@ public class TreeWalker {
 	}
 
 	private TreePath getTreePath(TreeItem item) {
-		List<Object> path = new ArrayList<Object>();
+		List<Object> path = new ArrayList<>();
 		do {
 			// the tree is probably not fully refreshed at this point
 			if (item.getData() == null) {
@@ -116,7 +116,7 @@ public class TreeWalker {
 			Collections.reverse(Arrays.asList(items));
 		}
 
-		boolean found = (visitedItem == null);
+		boolean found = visitedItem == null;
 		for (TreeItem item : items) {
 			if (!found) {
 				if (item == visitedItem) {

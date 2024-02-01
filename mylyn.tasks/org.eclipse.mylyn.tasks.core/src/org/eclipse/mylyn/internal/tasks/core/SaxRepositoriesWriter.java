@@ -82,7 +82,7 @@ public class SaxRepositoriesWriter {
 		}
 
 		public Collection<TaskRepository> getRepositories() {
-			return this.repositories;
+			return repositories;
 		}
 
 	}
@@ -93,53 +93,66 @@ public class SaxRepositoriesWriter {
 
 		private ErrorHandler errorHandler;
 
+		@Override
 		public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return false;
 		}
 
+		@Override
 		public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
 
 		}
 
+		@Override
 		public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return null;
 		}
 
+		@Override
 		public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		}
 
+		@Override
 		public void setEntityResolver(EntityResolver resolver) {
 		}
 
+		@Override
 		public EntityResolver getEntityResolver() {
 			return null;
 		}
 
+		@Override
 		public void setDTDHandler(DTDHandler handler) {
 		}
 
+		@Override
 		public DTDHandler getDTDHandler() {
 			return null;
 		}
 
+		@Override
 		public void setContentHandler(ContentHandler handler) {
 			this.handler = handler;
 
 		}
 
+		@Override
 		public ContentHandler getContentHandler() {
 			return handler;
 		}
 
+		@Override
 		public void setErrorHandler(ErrorHandler handler) {
-			this.errorHandler = handler;
+			errorHandler = handler;
 
 		}
 
+		@Override
 		public ErrorHandler getErrorHandler() {
 			return errorHandler;
 		}
 
+		@Override
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof TaskRepositoriesInputSource)) {
 				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
@@ -160,7 +173,7 @@ public class SaxRepositoriesWriter {
 			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, //$NON-NLS-1$
 					TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, rootAttributes);
 
-			for (TaskRepository repository : new ArrayList<TaskRepository>(repositories)) {
+			for (TaskRepository repository : new ArrayList<>(repositories)) {
 				writeRepository(repository);
 			}
 
@@ -209,6 +222,7 @@ public class SaxRepositoriesWriter {
 			}
 		}
 
+		@Override
 		public void parse(String systemId) throws IOException, SAXException {
 			throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 		}

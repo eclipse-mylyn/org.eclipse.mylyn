@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.eclipse.core.net.proxy.IProxyChangeEvent;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IResource;
@@ -205,6 +204,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<>();
 
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
+		@Override
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
 			return p1.getOrder() - p2.getOrder();
 		}
@@ -254,40 +254,34 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
-
-		public Set<AbstractUiNotification> getNotifications() {
-			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
-			Set<AbstractUiNotification> reminders = new HashSet<>();
-			for (AbstractTask task : allTasks) {
-				if (TasksUiPlugin.getTaskActivityManager().isPastReminder(task) && !task.isReminded()) {
-					reminders.add(new TaskListNotificationReminder(task));
-					task.setReminded(true);
-				}
+	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = () -> {
+		Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
+		Set<AbstractUiNotification> reminders = new HashSet<>();
+		for (AbstractTask task : allTasks) {
+			if (TasksUiPlugin.getTaskActivityManager().isPastReminder(task) && !task.isReminded()) {
+				reminders.add(new TaskListNotificationReminder(task));
+				task.setReminded(true);
 			}
-			return reminders;
 		}
+		return reminders;
 	};
 
-	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
+	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = event -> {
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.PLANNING_ENDHOUR)
+				|| event.getProperty().equals(ITasksUiPreferenceConstants.WEEK_START_DAY)) {
+			updateTaskActivityManager();
+		}
 
-		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.PLANNING_ENDHOUR)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.WEEK_START_DAY)) {
-				updateTaskActivityManager();
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+				serviceMessageManager.start();
+			} else {
+				serviceMessageManager.stop();
 			}
+		}
 
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
-				if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
-					serviceMessageManager.start();
-				} else {
-					serviceMessageManager.stop();
-				}
-			}
-
-			if (synchronizationManager != null) {
-				synchronizationManager.processPreferenceChange(event);
-			}
+		if (this.synchronizationManager != null) {
+			this.synchronizationManager.processPreferenceChange(event);
 		}
 	};
 
@@ -521,14 +515,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				@SuppressWarnings("unchecked")
 				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
 				if (proxyService != null) {
-					proxyChangeListener = new IProxyChangeListener() {
-						public void proxyInfoChanged(IProxyChangeEvent event) {
-							List<TaskRepository> repositories = repositoryManager.getAllRepositories();
-							for (TaskRepository repository : repositories) {
-								if (repository.isDefaultProxyEnabled()) {
-									repositoryManager.notifyRepositorySettingsChanged(repository,
-											new TaskRepositoryDelta(Type.PROYX));
-								}
+					proxyChangeListener = event -> {
+						List<TaskRepository> repositories = repositoryManager.getAllRepositories();
+						for (TaskRepository repository : repositories) {
+							if (repository.isDefaultProxyEnabled()) {
+								repositoryManager.notifyRepositorySettingsChanged(repository,
+										new TaskRepositoryDelta(Type.PROYX));
 							}
 						}
 					};
@@ -558,15 +550,19 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			saveParticipant = new ISaveParticipant() {
 
+				@Override
 				public void doneSaving(ISaveContext context) {
 				}
 
+				@Override
 				public void prepareToSave(ISaveContext context) throws CoreException {
 				}
 
+				@Override
 				public void rollback(ISaveContext context) {
 				}
 
+				@Override
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
 						externalizationManager.stop();
@@ -601,29 +597,29 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
 					new NotificationEnvironment() {
-				private Set<String> installedFeatures;
+						private Set<String> installedFeatures;
 
-				@Override
-				public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
-					if (installedFeatures == null) {
-						installedFeatures = fetchInstalledFeatures(monitor);
-					}
-					return installedFeatures;
-				}
-
-				private Set<String> fetchInstalledFeatures(IProgressMonitor monitor) {
-					Set<String> features = new HashSet<>();
-					IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
-							.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
-					if (profile != null) {
-						for (IInstallableUnit unit : profile.available(QueryUtil.createIUGroupQuery(),
-								monitor)) {
-							features.add(unit.getId());
+						@Override
+						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+							if (installedFeatures == null) {
+								installedFeatures = fetchInstalledFeatures(monitor);
+							}
+							return installedFeatures;
 						}
-					}
-					return features;
-				}
-			});
+
+						private Set<String> fetchInstalledFeatures(IProgressMonitor monitor) {
+							Set<String> features = new HashSet<>();
+							IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession())
+									.getProfile(ProvisioningUI.getDefaultUI().getProfileId());
+							if (profile != null) {
+								for (IInstallableUnit unit : profile.available(QueryUtil.createIUGroupQuery(),
+										monitor)) {
+									features.add(unit.getId());
+								}
+							}
+							return features;
+						}
+					});
 
 			// Disabled for initial 3.4 release as per bug#263528
 			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
@@ -638,8 +634,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Migrate credentials from the old secure store location, and from the deprecated keyring if the compatibility.auth
-	 * bundle is present.
+	 * Migrate credentials from the old secure store location, and from the deprecated keyring if the compatibility.auth bundle is present.
 	 */
 	@SuppressWarnings("deprecation")
 	private void migrateCredentials(final List<TaskRepository> repositories) {
@@ -759,8 +754,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the local task repository. If the repository does not exist it is created and added to the task
-	 * repository manager.
+	 * Returns the local task repository. If the repository does not exist it is created and added to the task repository manager.
 	 *
 	 * @return the local task repository; never <code>null</code>
 	 * @since 3.0
@@ -832,7 +826,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		} catch (Exception e) {
 			StatusHandler
-			.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list stop terminated abnormally", e)); //$NON-NLS-1$
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list stop terminated abnormally", e)); //$NON-NLS-1$
 		} finally {
 			super.stop(context);
 		}
@@ -848,9 +842,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other
-	 * jobs are running that modify tasks data. This method will only execute after all conflicting jobs have been
-	 * completed.
+	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other jobs are running
+	 * that modify tasks data. This method will only execute after all conflicting jobs have been completed.
 	 *
 	 * @throws CoreException
 	 *             in case setting of the data directory did not complete normally
@@ -859,27 +852,25 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	public void setDataDirectory(final String path) throws CoreException {
 		Assert.isNotNull(path);
-		IRunnableWithProgress runner = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				try {
-					monitor.beginTask(Messages.TasksUiPlugin_Load_Data_Directory, IProgressMonitor.UNKNOWN);
-					if (monitor.isCanceled()) {
-						throw new InterruptedException();
-					}
-
-					TasksUi.getTaskActivityManager().deactivateActiveTask();
-
-					// set new preference in case of a change
-					if (!path.equals(getDataDirectory())) {
-						getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, path);
-					}
-
-					// reload data from new directory
-					initializeDataSources();
-				} finally {
-					// FIXME roll back preferences change in case of an error?
-					monitor.done();
+		IRunnableWithProgress runner = monitor -> {
+			try {
+				monitor.beginTask(Messages.TasksUiPlugin_Load_Data_Directory, IProgressMonitor.UNKNOWN);
+				if (monitor.isCanceled()) {
+					throw new InterruptedException();
 				}
+
+				TasksUi.getTaskActivityManager().deactivateActiveTask();
+
+				// set new preference in case of a change
+				if (!path.equals(getDataDirectory())) {
+					getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, path);
+				}
+
+				// reload data from new directory
+				initializeDataSources();
+			} finally {
+				// FIXME roll back preferences change in case of an error?
+				monitor.done();
 			}
 		};
 
@@ -938,12 +929,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
 				MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+						.getPreferenceStore()
+						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
 			MonitorUiPlugin.getDefault()
-			.getPreferenceStore()
-			.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -951,11 +942,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		for (final IRepositoryModelListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 
+				@Override
 				public void handleException(Throwable exception) {
 					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), exception));
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.loaded();
 				}
@@ -1224,11 +1217,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		final boolean found[] = new boolean[1];
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
+				@Override
 				public void run() throws Exception {
 					if (linkProvider.getTaskRepository(resource, getRepositoryManager()) != null) {
 						found[0] = true;
@@ -1245,11 +1240,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			SafeRunner.run(new ISafeRunnable() {
 
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
+				@Override
 				public void run() throws Exception {
 					if (linkProvider.canSetTaskRepository(resource)) {
 						result[0] = true;
@@ -1277,11 +1274,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		Assert.isNotNull(resource);
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
+				@Override
 				public void run() throws Exception {
 					boolean canSetRepository = linkProvider.canSetTaskRepository(resource);
 					if (canSetRepository) {
@@ -1293,9 +1292,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
-	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled until the next time
-	 * that the Workbench starts.
+	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project) NOTE: if call does
+	 * not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled until the next time that the Workbench starts.
 	 */
 	public TaskRepository getRepositoryForResource(final IResource resource) {
 		Assert.isNotNull(resource);
@@ -1311,11 +1309,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			long startTime = System.currentTimeMillis();
 			final TaskRepository[] repository = new TaskRepository[1];
 			SafeRunnable.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Task repository link provider failed: \"" //$NON-NLS-1$
 							+ linkProvider.getId() + "\"", e)); //$NON-NLS-1$
 				}
 
+				@Override
 				public void run() throws Exception {
 					repository[0] = linkProvider.getTaskRepository(resource, getRepositoryManager());
 				}
@@ -1424,7 +1424,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 		} catch (Throwable t) {
 			StatusHandler
-			.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize notifications", t)); //$NON-NLS-1$
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize notifications", t)); //$NON-NLS-1$
 		}
 
 		try {

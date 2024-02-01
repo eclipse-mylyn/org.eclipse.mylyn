@@ -30,86 +30,86 @@ public interface ITaskComment {
 	/**
 	 * @since 3.0
 	 */
-	public abstract IRepositoryPerson getAuthor();
+	IRepositoryPerson getAuthor();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	String getConnectorKind();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract Date getCreationDate();
+	Date getCreationDate();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract int getNumber();
+	int getNumber();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getRepositoryUrl();
+	String getRepositoryUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITask getTask();
+	ITask getTask();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskAttribute getTaskAttribute();
+	TaskAttribute getTaskAttribute();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskRepository getTaskRepository();
+	TaskRepository getTaskRepository();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getText();
+	String getText();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getUrl();
+	String getUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setAuthor(IRepositoryPerson author);
+	void setAuthor(IRepositoryPerson author);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setCreationDate(Date creationDate);
+	void setCreationDate(Date creationDate);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setNumber(int number);
+	void setNumber(int number);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setText(String text);
+	void setText(String text);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setUrl(String url);
+	void setUrl(String url);
 
 	/**
 	 * @since 3.6
 	 */
-	public abstract Boolean getIsPrivate();
+	Boolean getIsPrivate();
 
 	/**
 	 * @since 3.6
 	 */
-	public abstract void setIsPrivate(Boolean isPrivate);
+	void setIsPrivate(Boolean isPrivate);
 
 }

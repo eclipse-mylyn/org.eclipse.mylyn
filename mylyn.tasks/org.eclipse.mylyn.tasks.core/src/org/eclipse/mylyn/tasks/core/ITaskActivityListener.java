@@ -26,14 +26,13 @@ public interface ITaskActivityListener {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void activityReset();
+	void activityReset();
 
 	/**
-	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
-	 * running activity.
+	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long running activity.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void elapsedTimeUpdated(ITask task, long newElapsedTime);
+	void elapsedTimeUpdated(ITask task, long newElapsedTime);
 
 }

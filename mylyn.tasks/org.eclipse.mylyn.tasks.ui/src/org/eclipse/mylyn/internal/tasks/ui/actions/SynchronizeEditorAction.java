@@ -49,11 +49,10 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 			return;
 		}
 		Object selectedObject = selection.getFirstElement();
-		if (!(selectedObject instanceof TaskEditor)) {
+		if (!(selectedObject instanceof final TaskEditor editor)) {
 			return;
 		}
 
-		final TaskEditor editor = (TaskEditor) selectedObject;
 		final ITask task = editor.getTaskEditorInput().getTask();
 		if (task == null) {
 			return;
@@ -68,14 +67,12 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							editor.refreshPages();
-						} finally {
-							if (editor != null) {
-								editor.showBusy(false);
-							}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					try {
+						editor.refreshPages();
+					} finally {
+						if (editor != null) {
+							editor.showBusy(false);
 						}
 					}
 				});
@@ -89,8 +86,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		Object selectedObject = selection.getFirstElement();
-		if (selectedObject instanceof TaskEditor) {
-			TaskEditor editor = (TaskEditor) selectedObject;
+		if (selectedObject instanceof TaskEditor editor) {
 			ITask task = editor.getTaskEditorInput().getTask();
 			return !(task instanceof LocalTask);
 		}

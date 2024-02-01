@@ -30,15 +30,14 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 public abstract class AbstractTaskListFilter {
 
 	/**
-	 * Given an element in the task list to filter against, determines whether or not it should be filtered away or if
-	 * it should be kept within view.
+	 * Given an element in the task list to filter against, determines whether or not it should be filtered away or if it should be kept
+	 * within view.
 	 *
 	 * @param parent
 	 *            The parent element we are determining filtering rules for.
 	 * @param element
 	 *            The element we are determining filtering rules for. This is usually some sort of ITask
-	 * @return Returns true if the element should not be filtered, otherwise returns false if it should be filtered away
-	 *         from the task list.
+	 * @return Returns true if the element should not be filtered, otherwise returns false if it should be filtered away from the task list.
 	 */
 	public abstract boolean select(Object parent, Object element);
 
@@ -61,23 +60,19 @@ public abstract class AbstractTaskListFilter {
 	}
 
 	/**
-	 * Given a container and depth, determines if any of the descendants are incoming. This method will search only up
-	 * to the depth provided.
+	 * Given a container and depth, determines if any of the descendants are incoming. This method will search only up to the depth
+	 * provided.
 	 *
 	 * @param container
 	 *            The container of tasks to check against
 	 * @param depth
-	 *            The maximum amount of the depth to search. For example, 0 is a shallow search, while a 1 would search
-	 *            at level one more level deeper.
+	 *            The maximum amount of the depth to search. For example, 0 is a shallow search, while a 1 would search at level one more
+	 *            level deeper.
 	 * @return
 	 */
 	private static boolean hasDescendantIncoming(ITaskContainer container, int depth) {
 		Collection<ITask> children = container.getChildren();
-		if (children == null || depth <= 0) {
-			return false;
-		}
-
-		if (!PresentationFilter.getInstance().select(null, container)) {
+		if (children == null || depth <= 0 || !PresentationFilter.getInstance().select(null, container)) {
 			return false;
 		}
 

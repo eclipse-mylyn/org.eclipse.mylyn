@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Frank Becker and others. 
+ * Copyright (c) 2010, 2011 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
+import org.eclipse.mylyn.commons.ui.ClipboardCopier.TextProvider;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -32,17 +33,14 @@ public class CopyCommenterNameAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
-		ClipboardCopier.getDefault().copy(getStructuredSelection(), new ClipboardCopier.TextProvider() {
-			public String getTextForElement(Object element) {
-				if (element instanceof ITaskComment) {
-					ITaskComment comment = (ITaskComment) element;
-					IRepositoryPerson author = comment.getAuthor();
-					if (author != null) {
-						return author.getName();
-					}
+		ClipboardCopier.getDefault().copy(getStructuredSelection(), (TextProvider) element -> {
+			if (element instanceof ITaskComment comment) {
+				IRepositoryPerson author = comment.getAuthor();
+				if (author != null) {
+					return author.getName();
 				}
-				return null;
 			}
+			return null;
 		});
 	}
 

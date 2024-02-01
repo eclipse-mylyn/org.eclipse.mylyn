@@ -38,10 +38,12 @@ public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCateg
 		return false;
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return connectorKind;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}

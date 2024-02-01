@@ -33,8 +33,7 @@ public class ContextAttachWizard extends Wizard {
 	private ContextAttachWizardPage wizardPage;
 
 	public ContextAttachWizard(ITask task) {
-		this.repository = TasksUi.getRepositoryManager()
-				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+		repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		this.task = task;
 		setWindowTitle(Messages.ContextAttachWizard_Attach_Context);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);

@@ -49,7 +49,7 @@ public abstract class CommentEditor {
 		if (extension != null) {
 			String contextId = extension.getEditorContextId();
 			if (contextId != null) {
-				contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+				contextService = PlatformUI.getWorkbench().getService(IContextService.class);
 				if (contextService != null) {
 					commentContext = contextService.activateContext(contextId,
 							new ActiveShellExpression(composite.getShell()));
@@ -62,12 +62,12 @@ public abstract class CommentEditor {
 			@Override
 			protected void valueChanged(String value) {
 				CommentEditor.this.valueChanged(value);
-			};
+			}
 		};
 		textEditor.createControl(composite, null);
 		textEditor.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		if (handlerService != null) {
 			textSupport = new CommonTextSupport(handlerService);
 			textSupport.install(textEditor.getViewer(), true);

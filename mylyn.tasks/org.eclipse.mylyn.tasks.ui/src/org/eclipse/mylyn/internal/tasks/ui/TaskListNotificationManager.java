@@ -47,13 +47,13 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private TaskListNotificationPopup popup;
 
-	private final Set<AbstractUiNotification> notifications = new HashSet<AbstractUiNotification>();
+	private final Set<AbstractUiNotification> notifications = new HashSet<>();
 
 	private final Set<AbstractUiNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
-	private final List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
+	private final List<ITaskListNotificationProvider> notificationProviders = new ArrayList<>();
 
-	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<Object, Object>();
+	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<>();
 
 	private final Job openJob = new Job(Messages.TaskListNotificationManager_Open_Notification_Job) {
 		@Override
@@ -63,33 +63,30 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 				if (Platform.isRunning() && PlatformUI.getWorkbench() != null
 						&& PlatformUI.getWorkbench().getDisplay() != null
 						&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+						collectNotifications();
 
-						public void run() {
-							collectNotifications();
-
-							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-								List<AbstractUiNotification> notifications = popup.getNotifications();
-								for (AbstractUiNotification notification : notifications) {
-									if (notification.getToken() != null) {
-										cancelledTokens.put(notification.getToken(), null);
-									}
+						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
+							List<AbstractUiNotification> notifications = popup.getNotifications();
+							for (AbstractUiNotification notification : notifications) {
+								if (notification.getToken() != null) {
+									cancelledTokens.put(notification.getToken(), null);
 								}
 							}
+						}
 
-							for (Iterator<AbstractUiNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-								AbstractUiNotification notification = it.next();
-								if (notification.getToken() != null
-										&& cancelledTokens.containsKey(notification.getToken())) {
-									it.remove();
-								}
+						for (Iterator<AbstractUiNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+							AbstractUiNotification notification = it.next();
+							if (notification.getToken() != null
+									&& cancelledTokens.containsKey(notification.getToken())) {
+								it.remove();
 							}
+						}
 
-							synchronized (TaskListNotificationManager.class) {
-								if (currentlyNotifying.size() > 0) {
+						synchronized (TaskListNotificationManager.class) {
+							if (currentlyNotifying.size() > 0) {
 //										popup.close();
-									showPopup();
-								}
+								showPopup();
 							}
 						}
 					});
@@ -122,7 +119,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
 		popup.setFadingEnabled(TasksUiInternal.isAnimationsEnabled());
-		List<AbstractUiNotification> toDisplay = new ArrayList<AbstractUiNotification>(currentlyNotifying);
+		List<AbstractUiNotification> toDisplay = new ArrayList<>(currentlyNotifying);
 		Collections.sort(toDisplay);
 		popup.setContents(toDisplay);
 		cleanNotified();
@@ -194,13 +191,14 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			Object newValue = event.getNewValue();
 			if (!(newValue instanceof Boolean)) {
 				// default if no preference value
 				startNotification(0);
-			} else if ((Boolean) newValue == true) {
+			} else if (((Boolean) newValue)) {
 				startNotification(0);
 			} else {
 				stopNotification();

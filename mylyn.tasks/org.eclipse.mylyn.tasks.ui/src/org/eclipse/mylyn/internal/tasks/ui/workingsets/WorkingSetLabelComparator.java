@@ -24,6 +24,7 @@ import com.ibm.icu.text.Collator;
  */
 public class WorkingSetLabelComparator implements Comparator<IWorkingSet> {
 
+	@Override
 	public int compare(IWorkingSet ws1, IWorkingSet ws2) {
 		return Collator.getInstance().compare(ws1.getLabel(), ws2.getLabel());
 	}

@@ -8,13 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *      IBM Corporation - initial API and implementation 
+ *      IBM Corporation - initial API and implementation
  * 		Sebastian Davids <sdavids@gmx.de> - Fix for bug 19346 - Dialog font
  *   	should be activated and used by other components.
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -90,9 +91,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 		super(parentShell);
 		if (workingSetIds != null) {
 			this.workingSetIds = new HashSet();
-			for (String workingSetId : workingSetIds) {
-				this.workingSetIds.add(workingSetId);
-			}
+			this.workingSetIds.addAll(Arrays.asList(workingSetIds));
 		}
 		this.canEdit = canEdit;
 	}
@@ -264,11 +263,11 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 	protected abstract List getSelectedWorkingSets();
 
 	/**
-	 * Notifies the dialog that there has been a change to the sets available for use. In other words, the user has
-	 * either added, deleted or renamed a set.
+	 * Notifies the dialog that there has been a change to the sets available for use. In other words, the user has either added, deleted or
+	 * renamed a set.
 	 * <p>
-	 * Subclasses should override, but should call <code>super.availableWorkingSetsChanged</code> to update the
-	 * selection button enablements.
+	 * Subclasses should override, but should call <code>super.availableWorkingSetsChanged</code> to update the selection button
+	 * enablements.
 	 * </p>
 	 */
 	protected void availableWorkingSetsChanged() {
@@ -284,6 +283,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.IWorkingSetSelectionDialog#getSelection()
 	 */
+	@Override
 	public IWorkingSet[] getSelection() {
 		return result;
 	}
@@ -291,6 +291,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.IWorkingSetSelectionDialog#setSelection(org.eclipse.ui.IWorkingSet[])
 	 */
+	@Override
 	public void setSelection(IWorkingSet[] selection) {
 		result = selection;
 	}

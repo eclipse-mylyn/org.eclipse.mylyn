@@ -40,11 +40,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof ITask) {
-			return true;
-		}
-
-		if (parent == null && element instanceof ScheduledTaskContainer) {
+		if ((parent instanceof ITask) || (parent == null && element instanceof ScheduledTaskContainer)) {
 			return true;
 		}
 
@@ -85,7 +81,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isContainedInWorkingSet(IRepositoryElement element) {
-		return isContainedInWorkingSet(element, new HashSet<IRepositoryElement>());
+		return isContainedInWorkingSet(element, new HashSet<>());
 	}
 
 	private boolean isContainedInWorkingSet(IRepositoryElement container, Set<IRepositoryElement> visited) {
@@ -126,8 +122,8 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	public boolean updateWorkingSet(IWorkingSet currentWorkingSet) {
 		IAdaptable[] newElements = currentWorkingSet.getElements();
-		if (!Arrays.equals(this.elements, newElements)) {
-			this.elements = newElements;
+		if (!Arrays.equals(elements, newElements)) {
+			elements = newElements;
 			return true;
 		}
 		return false;

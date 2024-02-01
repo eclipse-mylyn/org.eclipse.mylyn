@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.internal.runtime.PlatformActivator;
 import org.eclipse.core.runtime.CoreException;
@@ -70,6 +68,8 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
+import junit.framework.TestCase;
+
 /**
  * @author Benjamin Muskalla
  */
@@ -83,6 +83,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 			taskList.addChangeListener(this);
 		}
 
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			deltasFired++;
 		}
@@ -137,7 +138,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		};
 		ITask firstTask = new MockTask("1");
 		ITask secondTask = new MockTask("2");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(firstTask);
 		tasks.add(secondTask);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -157,7 +158,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		};
 		ITask firstTask = new MockTask("1");
 		ITask secondTask = new MockTask("2");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(firstTask);
 		tasks.add(secondTask);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -168,7 +169,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		ITask task = new MockTask("1");
 		ITask task2 = new MockTask("2");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -184,7 +185,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		ITask secondTask = new MockTask("2");
 		((AbstractTask) firstTask).setStatus(new Status(IStatus.WARNING, "bundle", ""));
 		((AbstractTask) secondTask).setStatus(new Status(IStatus.ERROR, "bundle", ""));
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(firstTask);
 		tasks.add(secondTask);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -212,7 +213,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		};
 		ITask task = new MockTask("1");
 		ITask task2 = new MockTask("2");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -252,7 +253,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		ITask task = new MockTask("1");
 		ITask task2 = new MockTask("2");
 		ITask task3 = new MockTask("3");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		tasks.add(task3);
@@ -390,7 +391,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		((AbstractTask) task).setStatus(new Status(IStatus.WARNING, "bundle", ""));
 		((AbstractTask) task2).setStatus(new Status(IStatus.WARNING, "bundle", ""));
 		((AbstractTask) task3).setStatus(new Status(IStatus.WARNING, "bundle", ""));
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		tasks.add(task3);
@@ -425,7 +426,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		final ITask task = new MockTask("1");
 		final ITask task2 = new MockTask("2");
 		final ITask task3 = new MockTask("3");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		tasks.add(task3);
@@ -467,7 +468,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		};
 		final ITask task = new MockTask("1");
 		final ITask task2 = new MockTask("2");
-		HashSet<ITask> tasks = new HashSet<ITask>();
+		HashSet<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(task2);
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
@@ -477,7 +478,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testGetSingleTaskDataWithRelations() throws Exception {
-		final List<String> requestedTaskIds = new ArrayList<String>();
+		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
@@ -491,7 +492,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 				if (!taskData.getTaskId().equals("1")) {
 					return null;
 				}
-				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
+				ArrayList<TaskRelation> relations = new ArrayList<>();
 				relations.add(TaskRelation.dependency("1.dep.in", Direction.INWARD));
 				relations.add(TaskRelation.dependency("1.dep.out", Direction.OUTWARD));
 				relations.add(TaskRelation.parentTask("1.par"));
@@ -533,7 +534,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	private void getSingleTaskDataWithRelationsAndRemoveRelation(boolean fetchSubtasks) {
-		final List<String> requestedTaskIds = new ArrayList<String>();
+		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
@@ -547,7 +548,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 				if (!taskData.getTaskId().equals("1")) {
 					return null;
 				}
-				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
+				ArrayList<TaskRelation> relations = new ArrayList<>();
 				relations.add(TaskRelation.subtask("1.sub"));
 				relations.add(TaskRelation.subtask("1.sub5"));
 				relations.add(TaskRelation.subtask("taskToBecomeSubtask"));
@@ -560,8 +561,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		ITask taskToBecomeSubtask = new MockTask("taskToBecomeSubtask");
 
 		taskList.addTask(task);
-		taskList.addTask(subtaskToBeGone, ((AbstractTaskContainer) task));
-		taskList.addTask(subtaskToStay, ((AbstractTaskContainer) task));
+		taskList.addTask(subtaskToBeGone, (AbstractTaskContainer) task);
+		taskList.addTask(subtaskToStay, (AbstractTaskContainer) task);
 		taskList.addTask(taskToBecomeSubtask);
 		Collection<ITask> children = ((AbstractTaskContainer) task).getChildren();
 		assertEquals(2, children.size());
@@ -596,7 +597,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testErrorOnRelationRetrieval() throws Exception {
-		final List<String> requestedTaskIds = new ArrayList<String>();
+		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
@@ -613,18 +614,14 @@ public class SynchronizeTasksJobTest extends TestCase {
 				if (!taskData.getTaskId().equals("1")) {
 					return null;
 				}
-				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
+				ArrayList<TaskRelation> relations = new ArrayList<>();
 				relations.add(TaskRelation.subtask("1.sub"));
 				return relations;
 			}
 		};
 		ILog log = InternalPlatform.getDefault().getLog(PlatformActivator.getContext().getBundle());
-		final AtomicReference<IStatus> loggedStatus = new AtomicReference<IStatus>();
-		ILogListener listener = new ILogListener() {
-			public void logging(IStatus status, String plugin) {
-				loggedStatus.set(status);
-			}
-		};
+		final AtomicReference<IStatus> loggedStatus = new AtomicReference<>();
+		ILogListener listener = (status, plugin) -> loggedStatus.set(status);
 		log.addLogListener(listener);
 
 		final ITask task = new MockTask("1");
@@ -637,7 +634,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testTasksForSeveralRepositories() throws Exception {
-		final List<String> requestedTaskIds = new ArrayList<String>();
+		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
@@ -662,7 +659,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 				secondRepositoryUrl);
 		TasksUi.getRepositoryManager().addRepository(secondRepository);
 
-		Set<ITask> tasks = new HashSet<ITask>();
+		Set<ITask> tasks = new HashSet<>();
 		tasks.add(task);
 		tasks.add(anotherTask);
 		SynchronizeTasksJob job = createSyncJobWithoutRepository(connector, tasks);

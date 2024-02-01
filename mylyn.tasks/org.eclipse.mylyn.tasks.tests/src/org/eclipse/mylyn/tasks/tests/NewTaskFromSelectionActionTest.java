@@ -14,8 +14,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -25,6 +23,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Frank Becker

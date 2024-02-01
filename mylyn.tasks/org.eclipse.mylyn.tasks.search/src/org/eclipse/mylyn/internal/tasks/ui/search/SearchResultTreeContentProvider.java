@@ -27,19 +27,18 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
- * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search
- * result.
+ * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search result.
  * 
  * @author Rob Elves (moved into task.ui)
  * @author Mik Kersten
  */
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
 
-	private final Set<Object> elements = new LinkedHashSet<Object>();
+	private final Set<Object> elements = new LinkedHashSet<>();
 
-	private final Map<String, Person> owners = new HashMap<String, Person>();
+	private final Map<String, Person> owners = new HashMap<>();
 
-	private final Map<String, TaskGroup> completeState = new HashMap<String, TaskGroup>();
+	private final Map<String, TaskGroup> completeState = new HashMap<>();
 
 	public enum GroupBy {
 		NONE, OWNER, COMPLETION;
@@ -65,6 +64,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	/**
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement == searchResult) {
 			if (selectedGroup == GroupBy.OWNER) {
@@ -79,6 +79,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 		}
 	}
 
+	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof TaskGroup || parent instanceof Person) {
 			return ((ITaskContainer) parent).getChildren().toArray();
@@ -87,10 +88,12 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 		}
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
@@ -109,7 +112,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 			if (inResult) {
 				boolean added = elements.add(object);
 				if (added && object instanceof ITask) {
-					AbstractTask task = ((AbstractTask) object);
+					AbstractTask task = (AbstractTask) object;
 					String owner = task.getOwner();
 					if (owner == null) {
 						owner = Messages.SearchResultTreeContentProvider__unknown_;
@@ -139,25 +142,23 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 					}
 					completeIncomplete.internalAddChild(task);
 				}
-			} else {
-				if (object instanceof ITask) {
-					AbstractTask task = ((AbstractTask) object);
-					elements.remove(task);
-					String owner = task.getOwner();
-					if (owner == null) {
-						owner = Messages.SearchResultTreeContentProvider__unknown_;
-					}
-					Person person = owners.get(owner);
-					person.internalRemoveChild(task);
-
-					TaskGroup completeIncomplete = null;
-					if (task.isCompleted()) {
-						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
-					} else {
-						completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
-					}
-					completeIncomplete.internalRemoveChild(task);
+			} else if (object instanceof ITask) {
+				AbstractTask task = (AbstractTask) object;
+				elements.remove(task);
+				String owner = task.getOwner();
+				if (owner == null) {
+					owner = Messages.SearchResultTreeContentProvider__unknown_;
 				}
+				Person person = owners.get(owner);
+				person.internalRemoveChild(task);
+
+				TaskGroup completeIncomplete = null;
+				if (task.isCompleted()) {
+					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
+				} else {
+					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
+				}
+				completeIncomplete.internalRemoveChild(task);
 			}
 		}
 	}

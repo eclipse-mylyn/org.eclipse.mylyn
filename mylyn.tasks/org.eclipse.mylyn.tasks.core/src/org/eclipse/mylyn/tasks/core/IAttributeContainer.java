@@ -23,10 +23,10 @@ import java.util.Map;
  */
 public interface IAttributeContainer {
 
-	public abstract String getAttribute(String key);
+	String getAttribute(String key);
 
-	public abstract void setAttribute(String key, String value);
+	void setAttribute(String key, String value);
 
-	public abstract Map<String, String> getAttributes();
+	Map<String, String> getAttributes();
 
 }

@@ -35,6 +35,7 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 		setImageDescriptor(CommonImages.GO_INTO);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
 	}
@@ -47,10 +48,12 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
 	}

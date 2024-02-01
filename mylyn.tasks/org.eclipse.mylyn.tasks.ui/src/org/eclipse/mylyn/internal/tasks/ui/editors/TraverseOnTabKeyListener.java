@@ -19,6 +19,7 @@ import org.eclipse.swt.events.VerifyEvent;
 
 class TraverseOnTabKeyListener implements VerifyKeyListener {
 
+	@Override
 	public void verifyKey(VerifyEvent event) {
 		// if there is a tab key, do not "execute" it and instead traverse to the next control
 		if (event.keyCode == SWT.TAB) {

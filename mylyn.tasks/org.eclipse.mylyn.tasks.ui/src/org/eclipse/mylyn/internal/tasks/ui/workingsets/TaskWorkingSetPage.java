@@ -32,7 +32,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -51,8 +50,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -100,21 +97,20 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		private ElementCategory resourcesContainer;
 
-		private final Map<IRepositoryQuery, TaskRepository> queryMap = new HashMap<IRepositoryQuery, TaskRepository>();
+		private final Map<IRepositoryQuery, TaskRepository> queryMap = new HashMap<>();
 
-		private final Map<IProject, TaskRepositoryProjectMapping> projectMap = new HashMap<IProject, TaskRepositoryProjectMapping>();
+		private final Map<IProject, TaskRepositoryProjectMapping> projectMap = new HashMap<>();
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof List<?>) {
-				List<IAdaptable> taskRepositoriesContainers = new ArrayList<IAdaptable>();
-				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
+				List<IAdaptable> taskRepositoriesContainers = new ArrayList<>();
+				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<>();
 
-				for (AbstractTaskContainer category : TasksUiInternal.getTaskList().getCategories()) {
-					taskRepositoriesContainers.add(category);
-				}
+				taskRepositoriesContainers.addAll(TasksUiInternal.getTaskList().getCategories());
 
 				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-				Set<IProject> unmappedProjects = new HashSet<IProject>();
+				Set<IProject> unmappedProjects = new HashSet<>();
 				for (Object container : (List<?>) parentElement) {
 					if (container instanceof TaskRepository) {
 						// NOTE: looking down, high complexity
@@ -123,7 +119,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						}
 
 						// NOTE: O(n^2) complexity, could fix
-						Set<IProject> mappedProjects = new HashSet<IProject>();
+						Set<IProject> mappedProjects = new HashSet<>();
 
 						for (IProject project : projects) {
 							TaskRepository taskRepository = TasksUiPlugin.getDefault()
@@ -150,7 +146,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						resourcesRepositoriesContainers);
 				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
-				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
+				List<IAdaptable> taskContainers = new ArrayList<>();
 				for (AbstractTaskContainer element : TasksUiPlugin.getTaskList()
 						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof IRepositoryQuery) {
@@ -169,14 +165,17 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			return getChildren(element).length > 0;
 		}
 
+		@Override
 		public Object[] getElements(Object element) {
 			return getChildren(element);
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (element instanceof AbstractTaskCategory || element instanceof TaskRepository) {
 				return tasksContainer;
@@ -196,9 +195,11 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
@@ -211,7 +212,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		public TaskRepositoryProjectMapping(TaskRepository taskRepository, Set<IProject> mappedProjects) {
 			this.taskRepository = taskRepository;
-			this.projects = mappedProjects;
+			projects = mappedProjects;
 		}
 
 		public Set<IProject> getProjects() {
@@ -234,18 +235,22 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			this.children = children;
 		}
 
+		@Override
 		public Object[] getChildren(Object o) {
 			return children.toArray();
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_OBJ_WORKING_SETS);
 		}
 
+		@Override
 		public String getLabel(Object o) {
 			return label;
 		}
 
+		@Override
 		public Object getParent(Object o) {
 			return null;
 		}
@@ -260,6 +265,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		private final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
 
+		@Override
 		public Image getImage(Object element) {
 			if (element instanceof AbstractTaskContainer) {
 				return taskLabelProvider.getImage(element);
@@ -272,6 +278,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element instanceof AbstractTaskContainer) {
 				return taskLabelProvider.getText(element);
@@ -284,16 +291,20 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			return false;
 		}
 
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 		}
 	}
@@ -324,9 +335,10 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		setImageDescriptor(TasksUiImages.BANNER_WORKING_SET);
 	}
 
+	@Override
 	public void finish() {
 		Object[] elements = treeViewer.getCheckedElements();
-		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
+		Set<IAdaptable> validElements = new HashSet<>();
 		for (Object element : elements) {
 			if (element instanceof AbstractTaskContainer || element instanceof IProject) {
 				validElements.add((IAdaptable) element);
@@ -348,10 +360,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	private void addSpecialContainers(Set<IAdaptable> validElements) {
-		HashSet<AbstractTaskContainer> specialContainers = new HashSet<AbstractTaskContainer>();
+		HashSet<AbstractTaskContainer> specialContainers = new HashSet<>();
 		for (IAdaptable element : validElements) {
-			if (element instanceof IRepositoryQuery) {
-				IRepositoryQuery query = (IRepositoryQuery) element;
+			if (element instanceof IRepositoryQuery query) {
 				if (query.getRepositoryUrl() != null) {
 					// Add Unmatched
 					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskList()
@@ -372,10 +383,12 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		validElements.addAll(specialContainers);
 	}
 
+	@Override
 	public IWorkingSet getSelection() {
 		return workingSet;
 	}
 
+	@Override
 	public void setSelection(IWorkingSet workingSet) {
 		this.workingSet = workingSet;
 		if (getShell() != null && text != null) {
@@ -389,6 +402,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		return text.getText();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -410,11 +424,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		text = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				validateInput();
-			}
-		});
+		text.addModifyListener(e -> validateInput());
 		// text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
 
 		label = new Label(composite, SWT.WRAP);
@@ -430,10 +440,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		treeViewer.setSorter(new CustomSorter());
 
-		ArrayList<Object> containers = new ArrayList<Object>();
-		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
-			containers.add(repository);
-		}
+		ArrayList<Object> containers = new ArrayList<>();
+		containers.addAll(TasksUi.getRepositoryManager().getAllRepositories());
 
 		containers.addAll(Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
@@ -446,11 +454,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
 		treeViewer.getControl().setLayoutData(data);
 
-		treeViewer.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				handleCheckStateChange(event);
-			}
-		});
+		treeViewer.addCheckStateListener(this::handleCheckStateChange);
 
 		// Add select / deselect all buttons for bug 46669
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
@@ -506,18 +510,16 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	private void initializeCheckedState() {
-		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-			public void run() {
-				Object[] items = null;
-				if (workingSet != null) {
-					items = workingSet.getElements();
-					if (items != null) {
-						// see bug 191342
-						treeViewer.setCheckedElements(new Object[] {});
-						for (Object item : items) {
-							if (item != null) {
-								treeViewer.setChecked(item, true);
-							}
+		BusyIndicator.showWhile(getShell().getDisplay(), () -> {
+			Object[] items = null;
+			if (workingSet != null) {
+				items = workingSet.getElements();
+				if (items != null) {
+					// see bug 191342
+					treeViewer.setCheckedElements(new Object[] {});
+					for (Object item : items) {
+						if (item != null) {
+							treeViewer.setChecked(item, true);
 						}
 					}
 				}
@@ -527,6 +529,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	protected void handleCheckStateChange(final CheckStateChangedEvent event) {
 		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				IAdaptable element = (IAdaptable) event.getElement();
 				handleCheckStateChangeHelper(event, element);

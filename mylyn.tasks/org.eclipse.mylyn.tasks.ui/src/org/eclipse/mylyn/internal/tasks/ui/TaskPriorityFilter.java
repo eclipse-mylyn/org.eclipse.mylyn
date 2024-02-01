@@ -38,13 +38,9 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (element instanceof AbstractTaskContainer) {
-			AbstractTaskContainer taskContainer = (AbstractTaskContainer) element;
+		if (element instanceof AbstractTaskContainer taskContainer) {
 			String priority = taskContainer.getPriority();
-			if (priority == null || !(priority.startsWith(PRIORITY_PREFIX))) {
-				return true;
-			}
-			if (priorityLevel.compareTo(taskContainer.getPriority()) >= 0) {
+			if (priority == null || !priority.startsWith(PRIORITY_PREFIX) || (priorityLevel.compareTo(taskContainer.getPriority()) >= 0)) {
 				return true;
 			}
 			return false;

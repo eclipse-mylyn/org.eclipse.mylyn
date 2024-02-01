@@ -18,9 +18,9 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.InputStreamReader;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer.Xml11InputStream;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

@@ -24,37 +24,37 @@ import org.eclipse.swt.graphics.Image;
 
 public interface IBrandManager {
 
-	public Image getBrandingIcon(TaskRepository repository);
+	Image getBrandingIcon(TaskRepository repository);
 
-	public ImageDescriptor getOverlayIcon(TaskRepository repository);
+	ImageDescriptor getOverlayIcon(TaskRepository repository);
 
-	public ImageDescriptor getOverlayIcon(ITask task);
-
-	/**
-	 * Returns the branding icon for the given connector kind and brand. Returns the default icon for the repository
-	 * type if the brand is <code>null</code> or is unknown to the connector.
-	 */
-	public Image getBrandingIcon(String connectorKind, @Nullable String brand);
+	ImageDescriptor getOverlayIcon(ITask task);
 
 	/**
-	 * Returns the overlay icon for the given connector kind and brand. Returns the default icon for the repository type
-	 * if the brand is <code>null</code> or is unknown to the connector.
+	 * Returns the branding icon for the given connector kind and brand. Returns the default icon for the repository type if the brand is
+	 * <code>null</code> or is unknown to the connector.
 	 */
-	public ImageDescriptor getOverlayIcon(String connectorKind, @Nullable String brand);
+	Image getBrandingIcon(String connectorKind, @Nullable String brand);
 
 	/**
-	 * Returns the connector label for the given connector and brand. Returns the default label for the connector if the
-	 * brand is <code>null</code> or is unknown to the connector.
+	 * Returns the overlay icon for the given connector kind and brand. Returns the default icon for the repository type if the brand is
+	 * <code>null</code> or is unknown to the connector.
 	 */
-	public String getConnectorLabel(AbstractRepositoryConnector connector, @Nullable String brand);
+	ImageDescriptor getOverlayIcon(String connectorKind, @Nullable String brand);
+
+	/**
+	 * Returns the connector label for the given connector and brand. Returns the default label for the connector if the brand is
+	 * <code>null</code> or is unknown to the connector.
+	 */
+	String getConnectorLabel(AbstractRepositoryConnector connector, @Nullable String brand);
 
 	/**
 	 * Returns the brands known to the given connector.
 	 */
-	public Collection<String> getBrands(String connectorKind);
+	Collection<String> getBrands(String connectorKind);
 
-	public Image getDefaultBrandingIcon(String connectorKind);
+	Image getDefaultBrandingIcon(String connectorKind);
 
-	public ImageDescriptor getDefaultOverlayIcon(String connectorKind);
+	ImageDescriptor getDefaultOverlayIcon(String connectorKind);
 
 }

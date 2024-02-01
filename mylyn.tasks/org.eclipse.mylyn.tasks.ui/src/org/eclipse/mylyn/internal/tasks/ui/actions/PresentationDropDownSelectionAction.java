@@ -104,6 +104,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -111,6 +112,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -120,6 +122,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();

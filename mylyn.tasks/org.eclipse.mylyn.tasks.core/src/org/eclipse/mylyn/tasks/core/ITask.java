@@ -38,40 +38,30 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		 * @since 3.0
 		 */
 		public boolean isIncoming() {
-			switch (this) {
-			case INCOMING:
-			case INCOMING_NEW:
-			case CONFLICT:
-				return true;
-			default:
-				return false;
-			}
+			return switch (this) {
+				case INCOMING, INCOMING_NEW, CONFLICT -> true;
+				default -> false;
+			};
 		}
 
 		/**
 		 * @since 3.0
 		 */
 		public boolean isOutgoing() {
-			switch (this) {
-			case OUTGOING:
-			case OUTGOING_NEW:
-			case CONFLICT:
-				return true;
-			default:
-				return false;
-			}
+			return switch (this) {
+				case OUTGOING, OUTGOING_NEW, CONFLICT -> true;
+				default -> false;
+			};
 		}
 
 		/**
 		 * @since 3.0
 		 */
 		public boolean isSynchronized() {
-			switch (this) {
-			case SYNCHRONIZED:
-				return true;
-			default:
-				return false;
-			}
+			return switch (this) {
+				case SYNCHRONIZED -> true;
+				default -> false;
+			};
 		}
 	}
 
@@ -82,7 +72,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	 * @since 3.7
 	 * @see PriorityLevel#fromValue(IPriorityValue[], IPriorityValue)
 	 */
-	public static interface IPriorityValue {
+	public interface IPriorityValue {
 
 		/**
 		 * Returns the integer value of this priority.
@@ -101,40 +91,28 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 
 		@Override
 		public String toString() {
-			switch (this) {
-			case P1:
-				return "P1"; //$NON-NLS-1$
-			case P2:
-				return "P2"; //$NON-NLS-1$
-			case P3:
-				return "P3"; //$NON-NLS-1$
-			case P4:
-				return "P4"; //$NON-NLS-1$
-			case P5:
-				return "P5"; //$NON-NLS-1$
-			default:
-				return "P3"; //$NON-NLS-1$
-			}
+			return switch (this) {
+				case P1 -> "P1"; //$NON-NLS-1$
+				case P2 -> "P2"; //$NON-NLS-1$
+				case P3 -> "P3"; //$NON-NLS-1$
+				case P4 -> "P4"; //$NON-NLS-1$
+				case P5 -> "P5"; //$NON-NLS-1$
+				default -> "P3"; //$NON-NLS-1$
+			};
 		}
 
 		/**
 		 * @since 3.0
 		 */
 		public String getDescription() {
-			switch (this) {
-			case P1:
-				return Messages.PriorityLevel_Very_High;
-			case P2:
-				return Messages.PriorityLevel_High;
-			case P3:
-				return Messages.PriorityLevel_Normal;
-			case P4:
-				return Messages.PriorityLevel_Low;
-			case P5:
-				return Messages.PriorityLevel_Very_Low;
-			default:
-				return ""; //$NON-NLS-1$
-			}
+			return switch (this) {
+				case P1 -> Messages.PriorityLevel_Very_High;
+				case P2 -> Messages.PriorityLevel_High;
+				case P3 -> Messages.PriorityLevel_Normal;
+				case P4 -> Messages.PriorityLevel_Low;
+				case P5 -> Messages.PriorityLevel_Very_Low;
+				default -> ""; //$NON-NLS-1$
+			};
 		}
 
 		/**
@@ -219,8 +197,8 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		}
 
 		/**
-		 * Maps a priority value to a {@link PriorityLevel}. The value needs to be present in <code>priorities</code>,
-		 * otherwise {@link PriorityLevel#getDefault()} is returned.
+		 * Maps a priority value to a {@link PriorityLevel}. The value needs to be present in <code>priorities</code>, otherwise
+		 * {@link PriorityLevel#getDefault()} is returned.
 		 * <p>
 		 * NOTE: <code>priorities</code> needs to be sorted in ascending order.
 		 *
@@ -259,159 +237,160 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	 *
 	 * @since 3.0
 	 */
-	public abstract Date getCompletionDate();
+	Date getCompletionDate();
 
 	/**
 	 * Returns the identifier that uniquely distinguishes the repository connector associated with this task.
 	 *
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	String getConnectorKind();
 
 	/**
 	 * Returns the date that this task was created.
 	 *
 	 * @since 3.0
 	 */
-	public abstract Date getCreationDate();
+	Date getCreationDate();
 
 	/**
 	 * Returns the date after which this task will become overdue.
 	 *
 	 * @since 3.0
 	 */
-	public abstract Date getDueDate();
+	Date getDueDate();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getHandleIdentifier();
+	@Override
+	String getHandleIdentifier();
 
 	/**
 	 * Returns the date that the repository contents of this task were last modified.
 	 *
 	 * @since 3.0
 	 */
-	public abstract Date getModificationDate();
+	Date getModificationDate();
 
 	/**
 	 * Returns the label of the owner, that is, the <i>option label</i> corresponding to the value of the
-	 * {@link TaskAttribute#USER_ASSIGNED} attribute in the TaskData. If the connector does not provide option labels
-	 * for this attribute, the {@link #getOwnerId() ID} is returned instead.
+	 * {@link TaskAttribute#USER_ASSIGNED} attribute in the TaskData. If the connector does not provide option labels for this attribute,
+	 * the {@link #getOwnerId() ID} is returned instead.
 	 *
 	 * @since 3.0
 	 */
-	public abstract String getOwner();
+	String getOwner();
 
 	/**
-	 * Returns the ID of the owner, that is, the <i>value</i> of the {@link TaskAttribute#USER_ASSIGNED} attribute in
-	 * the TaskData.
+	 * Returns the ID of the owner, that is, the <i>value</i> of the {@link TaskAttribute#USER_ASSIGNED} attribute in the TaskData.
 	 *
 	 * @since 3.15
 	 */
-	public abstract String getOwnerId();
+	String getOwnerId();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getPriority();
+	String getPriority();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getRepositoryUrl();
+	String getRepositoryUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getSummary();
+	@Override
+	String getSummary();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract SynchronizationState getSynchronizationState();
+	SynchronizationState getSynchronizationState();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getTaskId();
+	String getTaskId();
 
 	/**
-	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references.
-	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
+	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references. Can return the same
+	 * as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 *
 	 * @since 3.0
 	 */
-	public abstract String getTaskKey();
+	String getTaskKey();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getTaskKind();
+	String getTaskKind();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isActive();
+	boolean isActive();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isCompleted();
+	boolean isCompleted();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setCompletionDate(Date completionDate);
+	void setCompletionDate(Date completionDate);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setCreationDate(Date date);
+	void setCreationDate(Date date);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setDueDate(Date date);
+	void setDueDate(Date date);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setModificationDate(Date modificationDate);
+	void setModificationDate(Date modificationDate);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setOwner(String owner);
+	void setOwner(String owner);
 
 	/**
 	 * @since 3.15
 	 */
-	public abstract void setOwnerId(String ownerId);
+	void setOwnerId(String ownerId);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setPriority(String priority);
+	void setPriority(String priority);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setSummary(String summary);
+	void setSummary(String summary);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setTaskKind(String kind);
+	void setTaskKind(String kind);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setUrl(String taskUrl);
+	void setUrl(String taskUrl);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setTaskKey(String taskKey);
+	void setTaskKey(String taskKey);
 
 }

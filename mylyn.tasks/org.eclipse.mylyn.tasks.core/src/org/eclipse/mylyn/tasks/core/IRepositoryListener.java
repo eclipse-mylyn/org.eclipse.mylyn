@@ -28,27 +28,27 @@ public interface IRepositoryListener {
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryAdded(@NonNull TaskRepository repository);
+	void repositoryAdded(@NonNull TaskRepository repository);
 
 	/**
 	 * A task repository has been removed.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryRemoved(@NonNull TaskRepository repository);
+	void repositoryRemoved(@NonNull TaskRepository repository);
 
 	/**
 	 * The settings of a repository have been updated.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositorySettingsChanged(@NonNull TaskRepository repository);
+	void repositorySettingsChanged(@NonNull TaskRepository repository);
 
 	/**
 	 * TODO: Refactor into general delta notification
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryUrlChanged(@NonNull TaskRepository repository, @NonNull String oldUrl);
+	void repositoryUrlChanged(@NonNull TaskRepository repository, @NonNull String oldUrl);
 
 }

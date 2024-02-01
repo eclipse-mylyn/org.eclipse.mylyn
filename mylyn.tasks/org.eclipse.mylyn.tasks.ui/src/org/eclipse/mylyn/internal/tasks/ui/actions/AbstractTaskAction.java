@@ -42,8 +42,7 @@ public abstract class AbstractTaskAction extends Action {
 				for (ITask queryHit : repositoryQuery.getChildren()) {
 					performActionOnTask(queryHit);
 				}
-			} else if (element instanceof ITaskContainer) {
-				ITaskContainer container = (ITaskContainer) element;
+			} else if (element instanceof ITaskContainer container) {
 				for (ITask task : container.getChildren()) {
 					if (task != null) {
 						ITask repositoryTask = task;

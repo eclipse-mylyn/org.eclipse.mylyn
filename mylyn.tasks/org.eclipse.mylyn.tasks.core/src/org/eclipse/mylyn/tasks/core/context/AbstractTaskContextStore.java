@@ -36,8 +36,8 @@ public abstract class AbstractTaskContextStore {
 	public abstract void clearContext(ITask task);
 
 	/**
-	 * Copies the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
-	 * <code>sourceTask</code> does not have a context.
+	 * Copies the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a <code>sourceTask</code>
+	 * does not have a context.
 	 *
 	 * @return result of the copy operation
 	 * @since 3.7
@@ -70,8 +70,8 @@ public abstract class AbstractTaskContextStore {
 	public abstract void mergeContext(ITask sourceTask, ITask targetTask);
 
 	/**
-	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
-	 * <code>sourceTask</code> does not have a context.
+	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a <code>sourceTask</code>
+	 * does not have a context.
 	 *
 	 * @return result of the move operation
 	 * @since 3.7
@@ -85,8 +85,7 @@ public abstract class AbstractTaskContextStore {
 			String newRepositoryUrl);
 
 	/**
-	 * Returns an object for persisting task related information. The object needs to be released when it is no longer
-	 * used.
+	 * Returns an object for persisting task related information. The object needs to be released when it is no longer used.
 	 */
 	//public abstract ICommonStorable getStorable(ITask task);
 

@@ -57,14 +57,17 @@ public class BrowserFormPage extends TaskFormPage {
 			browserViewer.setLayoutData(null);
 			browserViewer.setContainer(new IBrowserViewerContainer() {
 
+				@Override
 				public boolean close() {
 					return false;
 				}
 
+				@Override
 				public IActionBars getActionBars() {
 					return BrowserFormPage.this.getEditorSite().getActionBars();
 				}
 
+				@Override
 				public void openInExternalBrowser(String url) {
 					// ignore
 				}
@@ -94,8 +97,8 @@ public class BrowserFormPage extends TaskFormPage {
 	}
 
 	/**
-	 * Returns the initial URL that is displayed in the browser control. The default implementation tries to determine
-	 * the URL from the editor input.
+	 * Returns the initial URL that is displayed in the browser control. The default implementation tries to determine the URL from the
+	 * editor input.
 	 * <p>
 	 * Subclasses should override this method to display a specific URL.
 	 * 

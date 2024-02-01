@@ -52,7 +52,7 @@ public class ReportErrorPage extends WizardPage {
 	public ReportErrorPage(SupportRequest request, IStatus status) {
 		super("reportError"); //$NON-NLS-1$
 		this.status = status;
-		this.contributions = new ArrayList<AttributeTaskMapper>();
+		contributions = new ArrayList<>();
 		addContributions(request.getContributions());
 		setTitle(Messages.ReportErrorPage_Report_as_Bug);
 		setMessage(MessageFormat.format(Messages.ReportErrorPage_AN_UNEXPETED_ERROR_HAS_OCCURED_IN_PLUGIN,
@@ -67,6 +67,7 @@ public class ReportErrorPage extends WizardPage {
 		}
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));

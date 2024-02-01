@@ -15,14 +15,14 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListDropAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves

@@ -20,30 +20,30 @@ import org.eclipse.ui.IActionFilter;
 public class TaskAttachmentAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("rawtypes")
-	private static final Class[] ADAPTER_TYPES = new Class[] { IActionFilter.class };
+	private static final Class[] ADAPTER_TYPES = { IActionFilter.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof TaskAttachment) {
-			return new IActionFilter() {
-				public boolean testAttribute(Object target, String name, String value) {
-					TaskAttachment taskAttachment = (TaskAttachment) target;
-					if ("connectorKind".equals(name)) { //$NON-NLS-1$
-						return value.equals(taskAttachment.getConnectorKind());
-					} else if ("contentType".equals(name)) { //$NON-NLS-1$
-						return value.equals(taskAttachment.getContentType());
-					} else if ("isDeprecated".equals(name)) { //$NON-NLS-1$
-						return Boolean.valueOf(value).booleanValue() == taskAttachment.isDeprecated();
-					} else if ("isPatch".equals(name)) { //$NON-NLS-1$
-						return Boolean.valueOf(value).booleanValue() == taskAttachment.isPatch();
-					}
-					return false;
+			return (IActionFilter) (target, name, value) -> {
+				TaskAttachment taskAttachment = (TaskAttachment) target;
+				if ("connectorKind".equals(name)) { //$NON-NLS-1$
+					return value.equals(taskAttachment.getConnectorKind());
+				} else if ("contentType".equals(name)) { //$NON-NLS-1$
+					return value.equals(taskAttachment.getContentType());
+				} else if ("isDeprecated".equals(name)) { //$NON-NLS-1$
+					return Boolean.parseBoolean(value) == taskAttachment.isDeprecated();
+				} else if ("isPatch".equals(name)) { //$NON-NLS-1$
+					return Boolean.parseBoolean(value) == taskAttachment.isPatch();
 				}
+				return false;
 			};
 		}
 		// ignore

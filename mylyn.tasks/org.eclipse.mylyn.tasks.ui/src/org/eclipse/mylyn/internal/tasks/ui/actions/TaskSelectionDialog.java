@@ -45,7 +45,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -188,7 +187,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private class TaskHistoryItemsComparator implements Comparator<Object> {
 
-		Map<AbstractTask, Integer> positionByTask = new HashMap<AbstractTask, Integer>();
+		Map<AbstractTask, Integer> positionByTask = new HashMap<>();
 
 		public TaskHistoryItemsComparator(List<AbstractTask> history) {
 			for (int i = 0; i < history.size(); i++) {
@@ -196,6 +195,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			}
 		}
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			Integer p1 = positionByTask.get(o1);
 			Integer p2 = positionByTask.get(o2);
@@ -270,8 +270,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		private Set<ITask> allTasksFromWorkingSets;
 
 		/**
-		 * Stores the task containers from selected working set; empty, which can come from no working set selection or
-		 * working set with no task containers selected, means no filtering
+		 * Stores the task containers from selected working set; empty, which can come from no working set selection or working set with no
+		 * task containers selected, means no filtering
 		 */
 		private final Set<AbstractTaskContainer> elements;
 
@@ -283,11 +283,10 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			patternMatcher.setPattern("*" + patternMatcher.getPattern()); //$NON-NLS-1$
 			this.showCompletedTasks = showCompletedTasks;
 
-			elements = new HashSet<AbstractTaskContainer>();
+			elements = new HashSet<>();
 			if (selectedWorkingSet != null) {
 				for (IAdaptable adaptable : selectedWorkingSet.getElements()) {
-					AbstractTaskContainer container = (AbstractTaskContainer) adaptable
-							.getAdapter(AbstractTaskContainer.class);
+					AbstractTaskContainer container = adaptable.getAdapter(AbstractTaskContainer.class);
 					if (container != null) {
 						elements.add(container);
 					}
@@ -300,8 +299,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			if (!super.equalsFilter(filter)) {
 				return false;
 			}
-			if (filter instanceof TasksFilter) {
-				TasksFilter tasksFilter = (TasksFilter) filter;
+			if (filter instanceof TasksFilter tasksFilter) {
 				if (showCompletedTasks != tasksFilter.showCompletedTasks) {
 					return false;
 				}
@@ -320,8 +318,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			if (!super.isSubFilter(filter)) {
 				return false;
 			}
-			if (filter instanceof TasksFilter) {
-				TasksFilter tasksFilter = (TasksFilter) filter;
+			if (filter instanceof TasksFilter tasksFilter) {
 				if (!showCompletedTasks && tasksFilter.showCompletedTasks) {
 					return false;
 				}
@@ -338,10 +335,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public boolean matchItem(Object item) {
-			if (!(item instanceof ITask)) {
-				return false;
-			}
-			if (!showCompletedTasks && ((ITask) item).isCompleted()) {
+			if (!(item instanceof ITask) || (!showCompletedTasks && ((ITask) item).isCompleted())) {
 				return false;
 			}
 			if (!elements.isEmpty()) {
@@ -356,7 +350,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		private void populateTasksFromWorkingSets() {
-			allTasksFromWorkingSets = new HashSet<ITask>(1000);
+			allTasksFromWorkingSets = new HashSet<>(1000);
 			for (ITaskContainer container : elements) {
 				allTasksFromWorkingSets.addAll(container.getChildren());
 			}
@@ -418,16 +412,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * Refilters if the current working set content has changed
 	 */
-	private final IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE)) {
-				if (event.getNewValue().equals(selectedWorkingSet)) {
-					applyFilter();
-				}
+	private final IPropertyChangeListener workingSetListener = event -> {
+		if (event.getProperty().equals(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE)) {
+			if (event.getNewValue().equals(selectedWorkingSet)) {
+				applyFilter();
 			}
 		}
-
 	};
 
 	private final TaskActivationHistory taskActivationHistory;
@@ -438,12 +428,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	public TaskSelectionDialog(Shell parent, boolean multi) {
 		super(parent, multi);
-		this.taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
-		this.history = new LinkedHashSet<AbstractTask>(taskActivationHistory.getPreviousTasks());
-		this.itemsComparator = new TaskHistoryItemsComparator(new ArrayList<AbstractTask>(history));
-		this.needsCreateTask = true;
-		this.labelProvider = new TaskElementLabelProvider(false);
-		this.showCompletedTasksAction = new ShowCompletedTasksAction();
+		taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
+		history = new LinkedHashSet<>(taskActivationHistory.getPreviousTasks());
+		itemsComparator = new TaskHistoryItemsComparator(new ArrayList<>(history));
+		needsCreateTask = true;
+		labelProvider = new TaskElementLabelProvider(false);
+		showCompletedTasksAction = new ShowCompletedTasksAction();
 
 		setSelectionHistory(new TaskSelectionHistory());
 		setListLabelProvider(labelProvider);
@@ -501,10 +491,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			createTaskButton = createButton(composite, CREATE_ID, Messages.TaskSelectionDialog_New_Task_, true);
 			createTaskButton.addSelectionListener(new SelectionListener() {
 
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 					// ignore
 				}
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					close();
 					new NewTaskAction().run();
@@ -575,7 +567,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		progressMonitor.beginTask(Messages.TaskSelectionDialog_Search_for_tasks, 100);
 
 		if (allTasks == null) {
-			allTasks = new HashSet<AbstractTask>();
+			allTasks = new HashSet<>();
 			TaskList taskList = TasksUiPlugin.getTaskList();
 			allTasks.addAll(taskList.getAllTasks());
 		}
@@ -610,8 +602,9 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		menuManager.addMenuListener(new IMenuListener() {
 
-			private final List<ActionContributionItem> lruActions = new ArrayList<ActionContributionItem>();
+			private final List<ActionContributionItem> lruActions = new ArrayList<>();
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				deselectAction.setEnabled(selectedWorkingSet != null);
 				editAction.setEnabled(selectedWorkingSet != null && selectedWorkingSet.isEditable());
@@ -709,8 +702,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	}
 
 	/**
-	 * All working set filter changes should be made through this method; ensures proper history handling and triggers
-	 * refiltering
+	 * All working set filter changes should be made through this method; ensures proper history handling and triggers refiltering
 	 */
 	private void setSelectedWorkingSet(IWorkingSet workingSet) {
 		selectedWorkingSet = workingSet;

@@ -28,14 +28,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITaskDataDiff {
 
-	public boolean hasChanged();
+	boolean hasChanged();
 
-	public void setHasChanged(boolean hasChanged);
+	void setHasChanged(boolean hasChanged);
 
-	public TaskRepository getRepository();
+	TaskRepository getRepository();
 
-	public Collection<ITaskAttributeDiff> getChangedAttributes();
+	Collection<ITaskAttributeDiff> getChangedAttributes();
 
-	public Collection<ITaskComment> getNewComments();
+	Collection<ITaskComment> getNewComments();
 
 }

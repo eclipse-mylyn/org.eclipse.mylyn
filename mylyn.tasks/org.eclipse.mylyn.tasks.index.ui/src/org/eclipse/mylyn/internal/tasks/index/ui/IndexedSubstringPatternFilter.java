@@ -44,8 +44,7 @@ public class IndexedSubstringPatternFilter extends SubstringPatternFilter {
 	@Override
 	protected boolean isLeafMatch(Viewer viewer, Object element) {
 		if (patternString != null && patternString.length() > 0) {
-			if (element instanceof ITask) {
-				ITask task = (ITask) element;
+			if (element instanceof ITask task) {
 				if (index.matches(task, patternString)) {
 					return true;
 				} else {

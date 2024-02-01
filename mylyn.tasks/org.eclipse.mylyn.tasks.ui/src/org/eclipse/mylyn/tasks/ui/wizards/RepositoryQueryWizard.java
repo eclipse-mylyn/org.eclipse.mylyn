@@ -28,8 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Extend to provide a custom edit query dialog, typically invoked by the user requesting properties on a query node in
- * the Task List.
+ * Extend to provide a custom edit query dialog, typically invoked by the user requesting properties on a query node in the Task List.
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -65,13 +64,12 @@ public class RepositoryQueryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (!(currentPage instanceof AbstractRepositoryQueryPage)) {
+		if (!(currentPage instanceof AbstractRepositoryQueryPage page)) {
 			throw new AssertionError(
 					NLS.bind("Current wizard page ''{0}'' does not extends AbstractRepositoryQueryPage", //$NON-NLS-1$
 							currentPage.getClass()));
 		}
 
-		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) currentPage;
 		IRepositoryQuery query = page.getQuery();
 		if (query != null) {
 			String oldSummary = query.getSummary();

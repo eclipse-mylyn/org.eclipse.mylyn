@@ -25,14 +25,17 @@ import org.eclipse.ui.IViewPart;
  */
 public class SynchronizeAllAction implements IViewActionDelegate {
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		TasksUiInternal.synchronizeAllRepositories(true);
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

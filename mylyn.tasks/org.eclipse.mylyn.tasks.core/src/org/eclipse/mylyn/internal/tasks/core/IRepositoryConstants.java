@@ -21,61 +21,60 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface IRepositoryConstants {
 
-	public static final String OLD_PROPERTY_SYNCTIME = "synctime"; //$NON-NLS-1$
+	String OLD_PROPERTY_SYNCTIME = "synctime"; //$NON-NLS-1$
 
-	public static final String PROPERTY_SYNCTIMESTAMP = "lastsynctimestamp"; //$NON-NLS-1$
+	String PROPERTY_SYNCTIMESTAMP = "lastsynctimestamp"; //$NON-NLS-1$
 
-	public static final String PROPERTY_TIMEZONE = "timezone"; //$NON-NLS-1$
+	String PROPERTY_TIMEZONE = "timezone"; //$NON-NLS-1$
 
-	public static final String PROPERTY_ENCODING = "encoding"; //$NON-NLS-1$
+	String PROPERTY_ENCODING = "encoding"; //$NON-NLS-1$
 
-	public static final String PROPERTY_VERSION = "version"; //$NON-NLS-1$
+	String PROPERTY_VERSION = "version"; //$NON-NLS-1$
 
-	public static final String PROPERTY_CONNECTOR_KIND = "kind"; //$NON-NLS-1$
+	String PROPERTY_CONNECTOR_KIND = "kind"; //$NON-NLS-1$
 
-	public static final String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
+	String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
 
-	public static final String PROPERTY_URL = "url"; //$NON-NLS-1$
+	String PROPERTY_URL = "url"; //$NON-NLS-1$
 
-	public static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
+	String PROPERTY_LABEL = "label"; //$NON-NLS-1$
 
-	public static final String PROPERTY_DELIM = ":"; //$NON-NLS-1$
+	String PROPERTY_DELIM = ":"; //$NON-NLS-1$
 
-	public static final String KIND_UNKNOWN = "<unknown>"; //$NON-NLS-1$
+	String KIND_UNKNOWN = "<unknown>"; //$NON-NLS-1$
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_TASKS} instead
 	 */
 	@Deprecated
-	public static final String CATEGORY_TASKS = TaskRepository.CATEGORY_TASKS;
+	String CATEGORY_TASKS = TaskRepository.CATEGORY_TASKS;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_BUGS} instead
 	 */
 	@Deprecated
-	public static final String CATEGORY_BUGS = TaskRepository.CATEGORY_BUGS;
+	String CATEGORY_BUGS = TaskRepository.CATEGORY_BUGS;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_BUILD} instead
 	 */
 	@Deprecated
-	public static final String CATEGORY_BUILD = TaskRepository.CATEGORY_BUILD;
+	String CATEGORY_BUILD = TaskRepository.CATEGORY_BUILD;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_REVIEW} instead
 	 */
 	@Deprecated
-	public static final String CATEGORY_REVIEW = TaskRepository.CATEGORY_REVIEW;
+	String CATEGORY_REVIEW = TaskRepository.CATEGORY_REVIEW;
 
-	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
+	String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 
-	public static final String TEMPLATE_VALUE_PREFIX = "template.value.prefix."; //$NON-NLS-1$
+	String TEMPLATE_VALUE_PREFIX = "template.value.prefix."; //$NON-NLS-1$
 
 	/**
-	 * Key for a repository property storing a stringified boolean ("true" or "false") telling whether to use token
-	 * authentication for a Mylyn task repository.
+	 * Key for a repository property storing a stringified boolean ("true" or "false") telling whether to use token authentication for a
+	 * Mylyn task repository.
 	 */
-	public static final String PROPERTY_USE_TOKEN = IRepositoryConstants.class.getPackage().getName()
-			+ ".REPO_USE_TOKEN"; //$NON-NLS-1$
+	String PROPERTY_USE_TOKEN = IRepositoryConstants.class.getPackage().getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
 
 }

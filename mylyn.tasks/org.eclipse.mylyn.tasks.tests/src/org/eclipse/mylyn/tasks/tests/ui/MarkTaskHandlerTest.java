@@ -18,8 +18,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -47,6 +45,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.Workbench;
 
+import junit.framework.TestCase;
+
 /**
  * @author Steffen Pingel
  */
@@ -62,13 +62,13 @@ public class MarkTaskHandlerTest extends TestCase {
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 
-		handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 
 		TaskRepository repository = TaskTestUtil.createMockRepository();
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// TODO figure out which test leaves a filter enabled
-		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<>(0));
 		TaskTestUtil.openTasksViewInActivePerspective().clearFilters();
 		workingSetManager = Workbench.getInstance().getWorkingSetManager();
 	}
@@ -180,7 +180,7 @@ public class MarkTaskHandlerTest extends TestCase {
 	protected IWorkingSet createAndSelectWorkingSet() {
 		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set", new IAdaptable[] {});
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
-		ArrayList<IWorkingSet> list = new ArrayList<IWorkingSet>();
+		ArrayList<IWorkingSet> list = new ArrayList<>();
 		list.add(workingSet);
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(list);
 		assertTrue(TaskWorkingSetUpdater.isWorkingSetEnabled(workingSet));

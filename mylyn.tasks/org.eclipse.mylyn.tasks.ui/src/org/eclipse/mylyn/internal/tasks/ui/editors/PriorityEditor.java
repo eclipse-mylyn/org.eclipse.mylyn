@@ -24,8 +24,6 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -98,11 +96,9 @@ public class PriorityEditor {
 					menu.setVisible(true);
 				}
 			});
-			selectionButton.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					if (menu != null) {
-						menu.dispose();
-					}
+			selectionButton.addDisposeListener(e -> {
+				if (menu != null) {
+					menu.dispose();
 				}
 			});
 			toolkit.adapt(toolBar);
@@ -139,18 +135,13 @@ public class PriorityEditor {
 
 	private ImageDescriptor getLargeImageDescriptor(PriorityLevel priorityLevel) {
 		if (priorityLevel != null) {
-			switch (priorityLevel) {
-			case P1:
-				return CommonImages.PRIORITY_1_LARGE;
-			case P2:
-				return CommonImages.PRIORITY_2_LARGE;
-			case P3:
-				return CommonImages.PRIORITY_3_LARGE;
-			case P4:
-				return CommonImages.PRIORITY_4_LARGE;
-			case P5:
-				return CommonImages.PRIORITY_5_LARGE;
-			}
+			return switch (priorityLevel) {
+				case P1 -> CommonImages.PRIORITY_1_LARGE;
+				case P2 -> CommonImages.PRIORITY_2_LARGE;
+				case P3 -> CommonImages.PRIORITY_3_LARGE;
+				case P4 -> CommonImages.PRIORITY_4_LARGE;
+				case P5 -> CommonImages.PRIORITY_5_LARGE;
+			};
 		}
 		return CommonImages.PRIORITY_3_LARGE;
 	}
@@ -212,7 +203,7 @@ public class PriorityEditor {
 	}
 
 	public void setLabelByValue(Map<String, String> labelByValue) {
-		this.labelByValue = new LinkedHashMap<String, String>(labelByValue);
+		this.labelByValue = new LinkedHashMap<>(labelByValue);
 		// the menu will be re-created with updated options when it is requested again
 		if (menu != null) {
 			menu.dispose();

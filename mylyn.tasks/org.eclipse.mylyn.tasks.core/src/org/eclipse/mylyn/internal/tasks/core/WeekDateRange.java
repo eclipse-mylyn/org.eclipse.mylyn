@@ -30,14 +30,14 @@ public class WeekDateRange extends DateRange {
 
 	private static final String DESCRIPTION_NEXT_WEEK = Messages.WeekDateRange_Next_Week;
 
-	private final List<DayDateRange> days = new ArrayList<DayDateRange>();
+	private final List<DayDateRange> days = new ArrayList<>();
 
 	public WeekDateRange(Calendar startDate, Calendar endDate) {
 		super(startDate, endDate);
 	}
 
 	public List<DateRange> getRemainingDays() {
-		List<DateRange> remainingDays = new ArrayList<DateRange>();
+		List<DateRange> remainingDays = new ArrayList<>();
 		for (DateRange dayDateRange : getDaysOfWeek()) {
 			if (!dayDateRange.isPast()) {
 				remainingDays.add(dayDateRange);
@@ -48,7 +48,7 @@ public class WeekDateRange extends DateRange {
 
 	public List<DayDateRange> getDaysOfWeek() {
 		if (days.isEmpty()) {
-			for (int x = TaskActivityUtil.getStartDay(); x < (TaskActivityUtil.getStartDay() + 7); x++) {
+			for (int x = TaskActivityUtil.getStartDay(); x < TaskActivityUtil.getStartDay() + 7; x++) {
 				Calendar dayStart = TaskActivityUtil.getCalendar();
 				dayStart.setTime(getStartDate().getTime());
 				TaskActivityUtil.snapStartOfDay(dayStart);
@@ -164,7 +164,7 @@ public class WeekDateRange extends DateRange {
 
 	public static boolean isWeekRange(Calendar calStart, Calendar calEnd) {
 		// bug 248683
-		long diff = (calEnd.getTimeInMillis() - calStart.getTimeInMillis()) - (DAY * 7 - 1);
+		long diff = calEnd.getTimeInMillis() - calStart.getTimeInMillis() - (DAY * 7 - 1);
 		return Math.abs(diff) <= 60 * 60 * 1000;
 	}
 }

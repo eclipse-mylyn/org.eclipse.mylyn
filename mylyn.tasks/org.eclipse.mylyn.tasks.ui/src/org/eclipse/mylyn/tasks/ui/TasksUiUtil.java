@@ -69,8 +69,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 public class TasksUiUtil {
 
 	/**
-	 * Flag that is passed along to the workbench browser support when a task is opened in a browser because no rich
-	 * editor was available.
+	 * Flag that is passed along to the workbench browser support when a task is opened in a browser because no rich editor was available.
 	 *
 	 * @see #openTask(String)
 	 * @deprecated use {@link BrowserUtil#NO_RICH_EDITOR} instead
@@ -139,22 +138,18 @@ public class TasksUiUtil {
 		Object element = selection.getFirstElement();
 		if (element instanceof TaskRepository) {
 			return (TaskRepository) selection.getFirstElement();
-		} else if (element instanceof IRepositoryQuery) {
-			IRepositoryQuery query = (IRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery query) {
 			return TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(), query.getRepositoryUrl());
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		} else if (element instanceof ITask task) {
 			return TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-		} else if (element instanceof IResource) {
-			IResource resource = (IResource) element;
+		} else if (element instanceof IResource resource) {
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
-		} else if (element instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) element;
-			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+		} else if (element instanceof IAdaptable adaptable) {
+			IResource resource = adaptable.getAdapter(IResource.class);
 			if (resource != null) {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 			} else {
-				ITask task = (ITask) adaptable.getAdapter(AbstractTask.class);
+				ITask task = adaptable.getAdapter(AbstractTask.class);
 				if (task != null) {
 					ITask rtask = task;
 					return TasksUi.getRepositoryManager()
@@ -193,8 +188,8 @@ public class TasksUiUtil {
 	public static int openEditRepositoryWizard(TaskRepository repository) {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(repository.getConnectorKind());
-		if (connector == null || (!connector.isUserManaged()
-				&& !connector.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND))) {
+		if (connector == null || !connector.isUserManaged()
+				&& !connector.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 			return Window.CANCEL;
 		}
 
@@ -324,8 +319,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * Either pass in a repository and taskId, or fullUrl, or all of them the time stamp is used for selecting the
-	 * correct comment
+	 * Either pass in a repository and taskId, or fullUrl, or all of them the time stamp is used for selecting the correct comment
 	 *
 	 * @since 3.4
 	 */
@@ -385,7 +379,7 @@ public class TasksUiUtil {
 				handle.setStatus(Status.OK_STATUS);
 			}
 		});
-		return (opened) ? handle : null;
+		return opened ? handle : null;
 	}
 
 	/**
@@ -402,7 +396,7 @@ public class TasksUiUtil {
 	 */
 	public static boolean openWithBrowser(IRepositoryElement element) {
 		TaskRepository repository = TasksUiInternal.getRepository(element);
-		return (repository != null) ? openWithBrowser(repository, element) : false;
+		return repository != null ? openWithBrowser(repository, element) : false;
 	}
 
 	/**

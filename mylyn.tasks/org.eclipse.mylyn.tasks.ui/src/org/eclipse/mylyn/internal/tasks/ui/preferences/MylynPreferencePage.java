@@ -31,6 +31,7 @@ public class MylynPreferencePage extends PreferencePage implements IWorkbenchPre
 		setDescription(Messages.MylynPreferencePage_General_settings_Description);
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 

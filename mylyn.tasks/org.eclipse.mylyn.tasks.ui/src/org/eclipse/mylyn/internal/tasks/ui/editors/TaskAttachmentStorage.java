@@ -103,6 +103,7 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		return name;
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(taskRepository.getConnectorKind());
@@ -110,15 +111,18 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		return handler.getContent(taskRepository, task, attachmentAttribute, new NullProgressMonitor());
 	}
 
+	@Override
 	public IPath getFullPath() {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}

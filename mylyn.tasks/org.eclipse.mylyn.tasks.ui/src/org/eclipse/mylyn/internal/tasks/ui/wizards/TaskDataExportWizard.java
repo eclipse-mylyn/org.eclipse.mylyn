@@ -69,14 +69,14 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		addPage(exportPage);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// no initialization needed
 	}
 
 	/**
-	 * Called when the user clicks finish. Saves the task data. Waits until all overwrite decisions have been made
-	 * before starting to save files. If any overwrite is canceled, no files are saved and the user must adjust the
-	 * dialog.
+	 * Called when the user clicks finish. Saves the task data. Waits until all overwrite decisions have been made before starting to save
+	 * files. If any overwrite is canceled, no files are saved and the user must adjust the dialog.
 	 */
 	@Override
 	public boolean performFinish() {

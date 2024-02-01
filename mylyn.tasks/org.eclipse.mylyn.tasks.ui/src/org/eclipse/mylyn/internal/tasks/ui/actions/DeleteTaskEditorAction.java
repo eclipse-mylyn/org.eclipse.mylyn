@@ -38,7 +38,6 @@ public class DeleteTaskEditorAction extends DeleteAction {
 	}
 
 	public DeleteTaskEditorAction() {
-		super();
 		setText(Messages.DeleteTaskEditorAction_Delete_Task);
 		setId(ID);
 		setActionDefinitionId(null);

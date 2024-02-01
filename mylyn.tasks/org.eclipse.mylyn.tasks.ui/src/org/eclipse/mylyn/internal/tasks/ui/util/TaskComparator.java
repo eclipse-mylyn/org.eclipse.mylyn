@@ -55,9 +55,8 @@ public class TaskComparator implements Comparator<ITask> {
 	 * @return String array[component, taskId, summary]
 	 */
 	public static String[] getSortableFromElement(IRepositoryElement element) {
-		final String a[] = new String[] { "", null, element.getSummary() }; //$NON-NLS-1$
-		if (element instanceof ITask) {
-			ITask task1 = (ITask) element;
+		final String a[] = { "", null, element.getSummary() }; //$NON-NLS-1$
+		if (element instanceof ITask task1) {
 			if (task1.getTaskKey() != null) {
 				a[1] = task1.getTaskKey();
 			}
@@ -101,39 +100,40 @@ public class TaskComparator implements Comparator<ITask> {
 		currentPresentation = CategorizedPresentation.ID;
 	}
 
+	@Override
 	public int compare(ITask element1, ITask element2) {
 		for (SortCriterion key : getCurrentCriteria()) {
 			int result;
 			switch (key.getKey()) {
-			case DATE_CREATED:
-				result = sortByCreationDate(element1, element2, key.getDirection());
-				break;
-			case RANK:
-				result = sortByRank(element1, element2, key.getDirection());
-				break;
-			case PRIORITY:
-				result = sortByPriority(element1, element2, key.getDirection());
-				break;
-			case SUMMARY:
-				result = sortBySummary(element1, element2, key.getDirection());
-				break;
-			case TASK_ID:
-				result = sortByID(element1, element2, key.getDirection());
-				break;
-			case TASK_TYPE:
-				result = compare(element1.getTaskKind(), element2.getTaskKind(), key.getDirection());
-				break;
-			case DUE_DATE:
-				result = sortByDueDate(element1, element2, key.getDirection());
-				break;
-			case MODIFICATION_DATE:
-				result = sortByModificationDate(element1, element2, key.getDirection());
-				break;
-			case SCHEDULED_DATE:
-				result = sortByScheduledDate(element1, element2, key.getDirection());
-				break;
-			default: // NONE
-				return 0;
+				case DATE_CREATED:
+					result = sortByCreationDate(element1, element2, key.getDirection());
+					break;
+				case RANK:
+					result = sortByRank(element1, element2, key.getDirection());
+					break;
+				case PRIORITY:
+					result = sortByPriority(element1, element2, key.getDirection());
+					break;
+				case SUMMARY:
+					result = sortBySummary(element1, element2, key.getDirection());
+					break;
+				case TASK_ID:
+					result = sortByID(element1, element2, key.getDirection());
+					break;
+				case TASK_TYPE:
+					result = compare(element1.getTaskKind(), element2.getTaskKind(), key.getDirection());
+					break;
+				case DUE_DATE:
+					result = sortByDueDate(element1, element2, key.getDirection());
+					break;
+				case MODIFICATION_DATE:
+					result = sortByModificationDate(element1, element2, key.getDirection());
+					break;
+				case SCHEDULED_DATE:
+					result = sortByScheduledDate(element1, element2, key.getDirection());
+					break;
+				default: // NONE
+					return 0;
 			}
 
 			if (result != 0) {
@@ -231,7 +231,7 @@ public class TaskComparator implements Comparator<ITask> {
 
 	private <T> int compare(Comparable<T> key1, T key2, int sortDirection) {
 		if (key1 == null) {
-			return (key2 != null) ? sortDirection : 0;
+			return key2 != null ? sortDirection : 0;
 		} else if (key2 == null) {
 			return -sortDirection;
 		}
@@ -242,7 +242,7 @@ public class TaskComparator implements Comparator<ITask> {
 		String key1 = task1.getTaskKey();
 		String key2 = task2.getTaskKey();
 		if (key1 == null) {
-			return (key2 != null) ? sortDirection : 0;
+			return key2 != null ? sortDirection : 0;
 		} else if (key2 == null) {
 			return -sortDirection;
 		}
@@ -260,10 +260,10 @@ public class TaskComparator implements Comparator<ITask> {
 				String rankString2 = task2.getAttribute(TaskAttribute.RANK);
 				try {
 					Double rank1 = rankString1 == null || rankString1.length() == 0
-							? Double.valueOf(0)
+							? (double) 0
 							: Double.valueOf(rankString1);
 					Double rank2 = rankString2 == null || rankString2.length() == 0
-							? Double.valueOf(0)
+							? (double) 0
 							: Double.valueOf(rankString2);
 					return compare(rank1, rank2, sortDirection);
 				} catch (NumberFormatException e) {
@@ -282,7 +282,7 @@ public class TaskComparator implements Comparator<ITask> {
 		String key1 = task1.getSummary();
 		String key2 = task2.getSummary();
 		if (key1 == null) {
-			return (key2 != null) ? sortDirection : 0;
+			return key2 != null ? sortDirection : 0;
 		} else if (key2 == null) {
 			return -sortDirection;
 		}

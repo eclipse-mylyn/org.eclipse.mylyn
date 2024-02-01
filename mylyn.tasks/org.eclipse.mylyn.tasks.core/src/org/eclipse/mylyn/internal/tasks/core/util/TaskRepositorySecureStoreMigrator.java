@@ -31,8 +31,8 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * Reads all data from the old "org.eclipse.mylyn.tasks.core" secure store node and writes it to the
- * {@link ICredentialsStore} provided by the {@link ILocationService}.
+ * Reads all data from the old "org.eclipse.mylyn.tasks.core" secure store node and writes it to the {@link ICredentialsStore} provided by
+ * the {@link ILocationService}.
  * 
  * @author Sam Davis
  */
@@ -67,7 +67,7 @@ public class TaskRepositorySecureStoreMigrator {
 	}
 
 	private Set<String> getRepositoryUrls(Collection<TaskRepository> repositories) {
-		Set<String> repositoryUrls = new HashSet<String>();
+		Set<String> repositoryUrls = new HashSet<>();
 		for (TaskRepository taskRepository : repositories) {
 			repositoryUrls.add(taskRepository.getRepositoryUrl());
 		}

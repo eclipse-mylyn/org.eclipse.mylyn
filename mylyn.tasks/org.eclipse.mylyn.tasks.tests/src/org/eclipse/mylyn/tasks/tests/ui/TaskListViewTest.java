@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -68,7 +68,7 @@ public class TaskListViewTest extends TestCase {
 		view.getViewer().setSelection(new StructuredSelection(new Object[] { task1, task2 }));
 		view.selectedAndFocusTask(task1);
 		// make sure only a single task is selected
-		assertEquals(toString(selection), toString(((TreeSelection) view.getViewer().getSelection())));
+		assertEquals(toString(selection), toString((TreeSelection) view.getViewer().getSelection()));
 	}
 
 	public void testSelectedAndFocusTaskRestore() {
@@ -91,7 +91,7 @@ public class TaskListViewTest extends TestCase {
 		TreeSelection selection = new TreeSelection(new TreePath(new Object[] { category1, task1 }));
 		view.getViewer().setSelection(selection);
 		view.selectedAndFocusTask(task1);
-		assertEquals(toString(selection), toString(((TreeSelection) view.getViewer().getSelection())));
+		assertEquals(toString(selection), toString((TreeSelection) view.getViewer().getSelection()));
 
 		// select different path and restore original path
 		view.getViewer().setSelection(new TreeSelection(new TreePath(new Object[] { category2, task1 })));

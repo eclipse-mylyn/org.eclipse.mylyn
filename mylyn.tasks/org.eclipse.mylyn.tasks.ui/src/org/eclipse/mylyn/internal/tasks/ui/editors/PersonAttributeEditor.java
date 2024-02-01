@@ -99,15 +99,13 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 				@Override
 				public void mouseExit(MouseEvent e) {
 					final int lastVersion = version;
-					Display.getDefault().timerExec(100, new Runnable() {
-						public void run() {
-							if (version != lastVersion || selfLink.isDisposed()) {
-								return;
-							}
-							selfLink.redraw();
-							((GridData) selfLink.getLayoutData()).exclude = true;
-							composite.layout();
+					Display.getDefault().timerExec(100, () -> {
+						if (version != lastVersion || selfLink.isDisposed()) {
+							return;
 						}
+						selfLink.redraw();
+						((GridData) selfLink.getLayoutData()).exclude = true;
+						composite.layout();
 					});
 				}
 			};
@@ -124,7 +122,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 	public String getValue() {
 		IRepositoryPerson repositoryPerson = getAttributeMapper().getRepositoryPerson(getTaskAttribute());
 		if (repositoryPerson != null) {
-			return (isReadOnly()) ? repositoryPerson.toString() : repositoryPerson.getPersonId();
+			return isReadOnly() ? repositoryPerson.toString() : repositoryPerson.getPersonId();
 		}
 		return ""; //$NON-NLS-1$
 	}

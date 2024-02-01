@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

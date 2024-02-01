@@ -53,6 +53,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 		setImageDescriptor(TasksUiImages.QUERY_NEW);
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
@@ -97,16 +98,19 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 		dialog.open();
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		if ("skipFirstPage".equals(data)) { //$NON-NLS-1$
-			this.skipRepositoryPage = true;
+			skipRepositoryPage = true;
 		}
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 

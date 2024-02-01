@@ -26,14 +26,14 @@ public interface ITaskAttachmentViewer {
 	/**
 	 * @return arbitrary string, used to remember preferred viewer
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * @return name of the editor, displayed to user
 	 */
-	public String getLabel();
+	String getLabel();
 
-	public void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) throws CoreException;
+	void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) throws CoreException;
 
-	public boolean isWorkbenchDefault();
+	boolean isWorkbenchDefault();
 }

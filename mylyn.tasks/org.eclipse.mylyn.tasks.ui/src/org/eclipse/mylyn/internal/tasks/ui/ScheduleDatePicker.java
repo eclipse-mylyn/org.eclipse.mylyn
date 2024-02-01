@@ -49,7 +49,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private Button pickButton;
 
-	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
+	private final List<SelectionListener> pickerListeners = new LinkedList<>();
 
 	private final String initialText = DatePicker.LABEL_CHOOSE;
 
@@ -67,7 +67,7 @@ public class ScheduleDatePicker extends Composite {
 		super(parent, style);
 		if (task != null) {
 			if (task.getScheduledForDate() != null) {
-				this.scheduledDate = task.getScheduledForDate();
+				scheduledDate = task.getScheduledForDate();
 			}
 		}
 
@@ -76,7 +76,7 @@ public class ScheduleDatePicker extends Composite {
 
 			@Override
 			protected DateRange getScheduledForDate(AbstractTask singleTaskSelection) {
-				return ScheduleDatePicker.this.scheduledDate;
+				return scheduledDate;
 			}
 
 			@Override
@@ -90,7 +90,7 @@ public class ScheduleDatePicker extends Composite {
 				notifyPickerListeners();
 			}
 		};
-		tasks = new ArrayList<IRepositoryElement>();
+		tasks = new ArrayList<>();
 		tasks.add(task);
 	}
 
@@ -101,7 +101,7 @@ public class ScheduleDatePicker extends Composite {
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
-		this.setLayout(gridLayout);
+		setLayout(gridLayout);
 
 		scheduledDateText = new Text(this, style);
 		scheduledDateText.setEditable(false);

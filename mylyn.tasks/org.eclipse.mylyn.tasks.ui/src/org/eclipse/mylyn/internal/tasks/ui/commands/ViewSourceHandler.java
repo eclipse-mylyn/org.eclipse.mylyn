@@ -75,6 +75,7 @@ public class ViewSourceHandler extends AbstractHandler implements IElementUpdate
 
 	public static final String VIEW_SOURCE_ACTION = "viewSourceAction"; //$NON-NLS-1$
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
 		if (site instanceof IEditorSite) {
@@ -84,8 +85,7 @@ public class ViewSourceHandler extends AbstractHandler implements IElementUpdate
 				Control focusedControl = EditorUtil.getFocusControl(page);
 				if (focusedControl != null) {
 					Object data = focusedControl.getData(VIEW_SOURCE_ACTION);
-					if (data instanceof IAction) {
-						IAction action = (IAction) data;
+					if (data instanceof IAction action) {
 						action.setChecked(!action.isChecked());
 						action.run();
 						setChecked(action.isChecked());
@@ -96,6 +96,7 @@ public class ViewSourceHandler extends AbstractHandler implements IElementUpdate
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public void updateElement(UIElement element, Map parameters) {
 		element.setChecked(checked);

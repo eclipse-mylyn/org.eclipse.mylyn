@@ -22,18 +22,22 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskRepositoryAdapter implements IRepositoryListener {
 
+	@Override
 	public void repositoryAdded(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositoryRemoved(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositorySettingsChanged(TaskRepository repository) {
 		// ignore
 	}
 
+	@Override
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		// ignore
 	}

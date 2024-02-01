@@ -43,10 +43,12 @@ public class ExportAction implements IViewActionDelegate {
 
 	private ISelection selection;
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (selection.isEmpty() || !(selection instanceof StructuredSelection)) {
 			MessageDialog.openError(WorkbenchUtil.getShell(), Messages.ExportAction_Dialog_Title,
@@ -80,6 +82,7 @@ public class ExportAction implements IViewActionDelegate {
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

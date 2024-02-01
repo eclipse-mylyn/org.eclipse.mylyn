@@ -15,10 +15,8 @@ package org.eclipse.mylyn.internal.tasks.ui.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -93,12 +91,15 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		listViewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		listViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public Object[] getElements(Object parent) {
 				return TasksUi.getRepositoryManager().getAllRepositories().toArray();
 			}
@@ -108,15 +109,13 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		listViewer.setSorter(new TaskRepositoriesSorter());
 		listViewer.setInput(project.getWorkspace());
 
-		listViewer.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				if (event.getChecked()) {
-					// only allow single selection
-					listViewer.setAllChecked(false);
-					listViewer.setChecked(event.getElement(), event.getChecked());
-				}
-				modified = true;
+		listViewer.addCheckStateListener(event -> {
+			if (event.getChecked()) {
+				// only allow single selection
+				listViewer.setAllChecked(false);
+				listViewer.setChecked(event.getElement(), event.getChecked());
 			}
+			modified = true;
 		});
 		updateLinkedRepository();
 

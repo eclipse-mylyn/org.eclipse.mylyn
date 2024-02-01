@@ -52,8 +52,8 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	private IRegion activeRegion;
 
 	/**
-	 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
-	 * multiple times while you move the mouse over a task hyperlink (bug#209409)
+	 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set multiple times while you
+	 * move the mouse over a task hyperlink (bug#209409)
 	 */
 	private ITask currentTask;
 
@@ -95,7 +95,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	@Override
 	public void uninstall() {
 		hideHyperlinks();
-		this.textViewer = null;
+		textViewer = null;
 		delegate.uninstall();
 	}
 
@@ -126,9 +126,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	public void showHyperlinks(IHyperlink[] hyperlinks, boolean takesFocusWhenVisible) {
 		activeRegion = null;
 		// show task name in tooltip
-		if (hyperlinks.length == 1 && hyperlinks[0] instanceof TaskHyperlink) {
-			TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
-
+		if (hyperlinks.length == 1 && hyperlinks[0] instanceof TaskHyperlink hyperlink) {
 			TaskList taskList = TasksUiPlugin.getTaskList();
 			String repositoryUrl = hyperlink.getRepository().getRepositoryUrl();
 

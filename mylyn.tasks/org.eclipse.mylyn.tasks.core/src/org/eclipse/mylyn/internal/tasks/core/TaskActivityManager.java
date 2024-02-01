@@ -56,13 +56,13 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
-	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+	private final List<ITaskActivityListener> activityListeners = new ArrayList<>();
 
-	private final List<ITaskActivationListener> activationListeners = new ArrayList<ITaskActivationListener>();
+	private final List<ITaskActivationListener> activationListeners = new ArrayList<>();
 
-	private final Set<ITask> allScheduledTasks = new HashSet<ITask>();
+	private final Set<ITask> allScheduledTasks = new HashSet<>();
 
-	private final Set<ITask> allDueTasks = new HashSet<ITask>();
+	private final Set<ITask> allDueTasks = new HashSet<>();
 
 	private final SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
 			.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
@@ -75,9 +75,9 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
 	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active
-	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
+	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<>();
 
-	private final Map<String, SortedMap<Calendar, Long>> workingSetElapsedTimeMap = new ConcurrentHashMap<String, SortedMap<Calendar, Long>>();
+	private final Map<String, SortedMap<Calendar, Long>> workingSetElapsedTimeMap = new ConcurrentHashMap<>();
 
 	private final TaskList taskList;
 
@@ -89,16 +89,13 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	private boolean listenersInitialized = false;
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
-
-		public void containersChanged(Set<TaskContainerDelta> containers) {
-			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getKind() == TaskContainerDelta.Kind.ROOT) {
-					reloadPlanningData();
-				} else if (!taskContainerDelta.isTransient() && Kind.DELETED == taskContainerDelta.getKind()
-						&& taskContainerDelta.getElement() instanceof ITask && taskActivationHistory != null) {
-					taskActivationHistory.removeTask((ITask) taskContainerDelta.getElement());
-				}
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = containers -> {
+		for (TaskContainerDelta taskContainerDelta : containers) {
+			if (taskContainerDelta.getKind() == TaskContainerDelta.Kind.ROOT) {
+				reloadPlanningData();
+			} else if (!taskContainerDelta.isTransient() && Kind.DELETED == taskContainerDelta.getKind()
+					&& taskContainerDelta.getElement() instanceof ITask && taskActivationHistory != null) {
+				taskActivationHistory.removeTask((ITask) taskContainerDelta.getElement());
 			}
 		}
 	};
@@ -175,18 +172,22 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		}
 	}
 
+	@Override
 	public void addActivityListener(ITaskActivityListener listener) {
 		activityListeners.add(listener);
 	}
 
+	@Override
 	public void removeActivityListener(ITaskActivityListener listener) {
 		activityListeners.remove(listener);
 	}
 
+	@Override
 	public void addActivationListener(ITaskActivationListener listener) {
 		activationListeners.add(listener);
 	}
 
+	@Override
 	public void removeActivationListener(ITaskActivationListener listener) {
 		activationListeners.remove(listener);
 	}
@@ -228,11 +229,11 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			end.setTime(endDate);
 			TaskActivityUtil.snapEndOfHour(end);
 			activityMap = activityMap.subMap(start, end);
-			for (Calendar cal : new HashSet<Calendar>(activityMap.keySet())) {
+			for (Calendar cal : new HashSet<>(activityMap.keySet())) {
 				activityMap.remove(cal);
 			}
 			long elapsedTime = getElapsedTime(task);
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			for (ITaskActivityListener listener : new ArrayList<>(activityListeners)) {
 				try {
 					listener.elapsedTimeUpdated(task, elapsedTime);
 				} catch (Throwable t) {
@@ -293,7 +294,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			Map<Calendar, Long> subMap = noTaskActiveMap.subMap(startRange, endRange);
 			for (Long time : subMap.values()) {
 				if (time != null && time > 0) {
-					result += time.longValue();
+					result += time;
 				}
 			}
 		}
@@ -328,7 +329,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		snapToStartOfHour(hourOfDay);
 		Long daysActivity = activityMap.get(hourOfDay);
 		if (daysActivity == null) {
-			daysActivity = Long.valueOf(0);
+			daysActivity = (long) 0;
 		}
 
 		daysActivity = daysActivity.longValue() + attentionSpan;
@@ -337,14 +338,14 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 		Set<AbstractTask> active = activeTasks.get(hourOfDay);
 		if (active == null) {
-			active = new HashSet<AbstractTask>();
+			active = new HashSet<>();
 			activeTasks.put(hourOfDay, active);
 		}
 		active.add(task);
 
 		long totalElapsed = getElapsedTime(activityMap);
 
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+		for (ITaskActivityListener listener : new ArrayList<>(activityListeners)) {
 			try {
 				listener.elapsedTimeUpdated(task, totalElapsed);
 			} catch (Throwable t) {
@@ -365,7 +366,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		if (range != null) {
 			Set<ITask> tasks = scheduledTasks.get(range);
 			if (tasks == null) {
-				tasks = new CopyOnWriteArraySet<ITask>();
+				tasks = new CopyOnWriteArraySet<>();
 				scheduledTasks.put(range, tasks);
 			}
 			tasks.add(task);
@@ -385,7 +386,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public Set<ITask> getScheduledTasks(DateRange range) {
-		Set<ITask> resultingTasks = new HashSet<ITask>();
+		Set<ITask> resultingTasks = new HashSet<>();
 		synchronized (scheduledTasks) {
 			Set<ITask> result = scheduledTasks.get(range);
 			if (result != null && !result.isEmpty()) {
@@ -401,7 +402,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public Set<ITask> getScheduledTasks(Calendar start, Calendar end) {
-		Set<ITask> resultingTasks = new HashSet<ITask>();
+		Set<ITask> resultingTasks = new HashSet<>();
 		synchronized (scheduledTasks) {
 			DateRange startRange = new DateRange(start);
 			Calendar endExclusive = TaskActivityUtil.getCalendar();
@@ -431,7 +432,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		synchronized (dueTasks) {
 			Set<ITask> tasks = dueTasks.get(time);
 			if (tasks == null) {
-				tasks = new CopyOnWriteArraySet<ITask>();
+				tasks = new CopyOnWriteArraySet<>();
 				dueTasks.put(time, tasks);
 			}
 			tasks.add(task);
@@ -449,8 +450,9 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		}
 	}
 
+	@Override
 	public Set<ITask> getDueTasks(Calendar start, Calendar end) {
-		Set<ITask> resultingTasks = new HashSet<ITask>();
+		Set<ITask> resultingTasks = new HashSet<>();
 		SortedMap<Calendar, Set<ITask>> result = dueTasks.subMap(start, end);
 		synchronized (dueTasks) {
 			for (Set<ITask> set : result.values()) {
@@ -460,6 +462,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return resultingTasks;
 	}
 
+	@Override
 	public void activateTask(ITask task) {
 		if (activeTask != null) {
 			if (!shouldDeactivateTask(activeTask)) {
@@ -473,7 +476,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		initTaskListeners();
 
 		// notify that a task is about to be activated
-		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<>(activationListeners)) {
 			try {
 				listener.preTaskActivated(task);
 			} catch (Throwable t) {
@@ -485,7 +488,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		activeTask = task;
 		((AbstractTask) activeTask).setActive(true);
 
-		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<>(activationListeners)) {
 			try {
 				listener.taskActivated(task);
 			} catch (Throwable t) {
@@ -495,14 +498,16 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		}
 	}
 
+	@Override
 	public void deactivateActiveTask() {
 		if (activeTask != null) {
 			deactivateTask(activeTask);
 		}
 	}
 
+	@Override
 	public void deactivateTask(ITask task) {
-		if (task == null || (task.isActive() && !shouldDeactivateTask(task))) {
+		if (task == null || task.isActive() && !shouldDeactivateTask(task)) {
 			return;
 		}
 		deactivateTaskInternal(task);
@@ -513,7 +518,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			// notify that a task is about to be deactivated
 			initTaskListeners();
 
-			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<>(activationListeners)) {
 				try {
 					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
@@ -525,7 +530,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			((AbstractTask) activeTask).setActive(false);
 			activeTask = null;
 
-			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<>(activationListeners)) {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
@@ -539,7 +544,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	protected boolean shouldDeactivateTask(ITask task) {
-		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<>(activationListeners)) {
 			try {
 				if (listener instanceof TaskActivationAdapter) {
 					if (!((TaskActivationAdapter) listener).canDeactivateTask(task)) {
@@ -557,8 +562,9 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	/**
 	 * returns active tasks from start to end (exclusive) where both are snapped to the beginning of the hour
 	 */
+	@Override
 	public Set<AbstractTask> getActiveTasks(Calendar start, Calendar end) {
-		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+		Set<AbstractTask> resultingTasks = new HashSet<>();
 		Calendar startInternal = TaskActivityUtil.getCalendar();
 		startInternal.setTimeInMillis(start.getTimeInMillis());
 		TaskActivityUtil.snapStartOfHour(startInternal);
@@ -577,6 +583,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	/** total elapsed time based on activation history */
+	@Override
 	public long getElapsedTime(ITask task) {
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		return getElapsedTime(activityMap);
@@ -589,7 +596,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			synchronized (activityMap) {
 				for (Long time : activityMap.values()) {
 					if (time != null) {
-						result += time.longValue();
+						result += time;
 					}
 				}
 			}
@@ -600,6 +607,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	/**
 	 * total elapsed time based on activation history
 	 */
+	@Override
 	public long getElapsedTime(ITask task, Calendar start, Calendar end) {
 
 		if (task == null) {
@@ -619,7 +627,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 				activityMap = activityMap.subMap(startRange, endRange);
 				for (Long time : activityMap.values()) {
 					if (time != null) {
-						result += time.longValue();
+						result += time;
 					}
 				}
 			}
@@ -650,6 +658,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return cal;
 	}
 
+	@Override
 	public ITask getActiveTask() {
 		return activeTask;
 	}
@@ -668,10 +677,10 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	public void setScheduledFor(AbstractTask task, DateRange reminderDate) {
 		Assert.isNotNull(task);
 		if (reminderDate != null && !reminderDate.equals(task.getScheduledForDate())) {
-			(task).setReminded(false);
+			task.setReminded(false);
 		}
 
-		(task).setScheduledForDate(reminderDate);
+		task.setScheduledForDate(reminderDate);
 		if (reminderDate == null) {
 			removeScheduledTask(task);
 		} else {
@@ -736,12 +745,10 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	public boolean isPastReminder(DateRange date, boolean isComplete) {
 		if (date == null || isComplete) {
 			return false;
+		} else if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0 && date instanceof DayDateRange) {
+			return true;
 		} else {
-			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0 && date instanceof DayDateRange) {
-				return true;
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 
@@ -760,7 +767,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	 * Tests if the task is owned by the current user and overdue.
 	 */
 	public boolean isOverdue(ITask task) {
-		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
+		return !task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate())
 				&& repositoryManager.isOwnedByUser(task);
 	}
 
@@ -768,7 +775,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	 * Tests whether the task is owned by another user and overdue.
 	 */
 	public boolean isOverdueForOther(ITask task) {
-		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
+		return !task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate())
 				&& !repositoryManager.isOwnedByUser(task);
 	}
 
@@ -854,7 +861,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	private boolean isSheduledForPastWeek(DateRange range) {
 		if (range != null) {
-			return (range instanceof WeekDateRange && range.isPast());
+			return range instanceof WeekDateRange && range.isPast();
 		}
 		return false;
 	}
@@ -896,6 +903,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return taskActivationHistory;
 	}
 
+	@Override
 	public Date getFirstActivity(ITask task) {
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		if (activityMap != null && !activityMap.isEmpty()) {
@@ -904,6 +912,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return null;
 	}
 
+	@Override
 	public Date getLastActivity(ITask task) {
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		if (activityMap != null && !activityMap.isEmpty()) {
@@ -913,11 +922,11 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public Set<ITask> getAllScheduledTasks() {
-		return new HashSet<ITask>(allScheduledTasks);
+		return new HashSet<>(allScheduledTasks);
 	}
 
 	public Set<AbstractTask> getAllScheduledTasksInternal() {
-		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		Set<AbstractTask> tasks = new HashSet<>();
 		synchronized (scheduledTasks) {
 			for (ITask task : allScheduledTasks) {
 				if (task instanceof AbstractTask) {
@@ -928,12 +937,13 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return tasks;
 	}
 
+	@Override
 	public Set<ITask> getAllDueTasks() {
-		return new HashSet<ITask>(allDueTasks);
+		return new HashSet<>(allDueTasks);
 	}
 
 	public Set<ITask> getOverScheduledTasks() {
-		Set<ITask> children = new HashSet<ITask>();
+		Set<ITask> children = new HashSet<>();
 		Calendar start = TaskActivityUtil.getCalendar();
 		start.setTimeInMillis(0);
 		Calendar end = TaskActivityUtil.getCalendar();
@@ -948,7 +958,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public Collection<? extends ITask> getOverDueTasks() {
-		Set<ITask> children = new HashSet<ITask>();
+		Set<ITask> children = new HashSet<>();
 		Calendar start = TaskActivityUtil.getCalendar();
 		start.setTimeInMillis(0);
 		Calendar end = TaskActivityUtil.getCalendar();
@@ -962,13 +972,14 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public Collection<AbstractTask> getUnscheduled() {
-		Set<AbstractTask> allTasks = new HashSet<AbstractTask>(taskList.getAllTasks());
+		Set<AbstractTask> allTasks = new HashSet<>(taskList.getAllTasks());
 		for (ITask abstractTask : getAllScheduledTasks()) {
 			allTasks.remove(abstractTask);
 		}
 		return allTasks;
 	}
 
+	@Override
 	public boolean isActive(ITask task) {
 		Assert.isNotNull(task);
 		return task.equals(getActiveTask());

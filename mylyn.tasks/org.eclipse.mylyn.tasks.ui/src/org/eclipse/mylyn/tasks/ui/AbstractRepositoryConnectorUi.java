@@ -60,8 +60,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	private final AbstractRepositoryConnector connector;
 
 	/**
-	 * Connectors should provide a one-argument constructor that can be used to pass the connector into the connector UI
-	 * in tests. Connectors must provide a default constructor so that they can be created via extension point.
+	 * Connectors should provide a one-argument constructor that can be used to pass the connector into the connector UI in tests.
+	 * Connectors must provide a default constructor so that they can be created via extension point.
 	 *
 	 * @param connector
 	 *            the task repository connector
@@ -115,9 +115,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
-	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and
-	 * Context pages.
+	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for showing the additional
+	 * pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and Context pages.
 	 *
 	 * @since 3.0
 	 */
@@ -127,10 +126,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Default implementation returns the standard {@link org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput}. Override
-	 * this method to return a custom task editor input. The connector author must ensure the corresponding editor is
-	 * capable of opening this editor input and will likely need to override
-	 * AbstractRepositoryConnectorUi.getTaskEditorId() as well.
+	 * Default implementation returns the standard {@link org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput}. Override this method to
+	 * return a custom task editor input. The connector author must ensure the corresponding editor is capable of opening this editor input
+	 * and will likely need to override AbstractRepositoryConnectorUi.getTaskEditorId() as well.
 	 *
 	 * @param repository
 	 *            - task repository for which to construct an editor
@@ -177,9 +175,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Connector-specific task icons. Not recommended to override unless providing custom icons and kind overlays. For
-	 * connectors that have a decorator that they want to reuse, the connector can maintain a reference to the label
-	 * provider and get the descriptor from the images it returns.
+	 * Connector-specific task icons. Not recommended to override unless providing custom icons and kind overlays. For connectors that have
+	 * a decorator that they want to reuse, the connector can maintain a reference to the label provider and get the descriptor from the
+	 * images it returns.
 	 *
 	 * @since 3.0
 	 */
@@ -187,8 +185,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public ImageDescriptor getImageDescriptor(@NonNull IRepositoryElement element) {
 		if (element instanceof RepositoryQuery) {
 			return ((RepositoryQuery) element).getAutoUpdate() ? TasksUiImages.QUERY : TasksUiImages.QUERY_OFFLINE;
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		} else if (element instanceof ITask task) {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl());
 			if (repository != null && connector != null && connector.isOwnedByUser(repository, task)) {
 				return TasksUiImages.TASK_OWNED;
@@ -210,8 +207,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Connector-specific priority icons. Not recommended to override since priority icons are used elsewhere in the
-	 * Task List UI (e.g. filter selection in view menu).
+	 * Connector-specific priority icons. Not recommended to override since priority icons are used elsewhere in the Task List UI (e.g.
+	 * filter selection in view menu).
 	 *
 	 * @since 3.0
 	 */
@@ -274,8 +271,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Override to return a specific textual reference to a comment, e.g. by default this method returns
-	 * <code>In reply to comment #12</code> for a reply to comment 12. This text is used when generating replies to
-	 * comments.
+	 * <code>In reply to comment #12</code> for a reply to comment 12. This text is used when generating replies to comments.
 	 *
 	 * @return the reply text with a reference to <code>taskComment</code>; null, if no reference is available
 	 * @since 3.0
@@ -295,9 +291,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1
-	 * clients may limit the results to hyperlinks found at <code>index</code>. It is legal for clients to always return
-	 * all results.
+	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1 clients may limit the
+	 * results to hyperlinks found at <code>index</code>. It is legal for clients to always return all results.
 	 *
 	 * @param repository
 	 *            the task repository, never <code>null</code>
@@ -342,9 +337,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1
-	 * clients may limit the results to hyperlinks found at <code>index</code>. It is legal for clients to always return
-	 * all results.
+	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1 clients may limit the
+	 * results to hyperlinks found at <code>index</code>. It is legal for clients to always return all results.
 	 *
 	 * @param repository
 	 *            the task repository, never <code>null</code>

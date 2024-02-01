@@ -18,10 +18,12 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class TaskEditorOutlineContentProvider implements ITreeContentProvider {
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof TaskEditorOutlineNode) {
 			Object[] children = ((TaskEditorOutlineNode) parentElement).getChildren();
@@ -30,6 +32,7 @@ public class TaskEditorOutlineContentProvider implements ITreeContentProvider {
 		return new Object[0];
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof TaskEditorOutlineModel) {
 			return new Object[] { ((TaskEditorOutlineModel) inputElement).getRoot() };
@@ -37,6 +40,7 @@ public class TaskEditorOutlineContentProvider implements ITreeContentProvider {
 		return new Object[0];
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof TaskEditorOutlineNode) {
 			return ((TaskEditorOutlineNode) element).getParent();
@@ -44,6 +48,7 @@ public class TaskEditorOutlineContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof TaskEditorOutlineNode) {
 			return ((TaskEditorOutlineNode) element).getChildren().length > 0;
@@ -51,6 +56,7 @@ public class TaskEditorOutlineContentProvider implements ITreeContentProvider {
 		return false;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewerChanged, Object oldInput, Object newInput) {
 		// ignore
 	}

@@ -19,9 +19,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import junit.framework.AssertionFailedError;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -34,7 +34,7 @@ public class TestUtil {
 
 	public enum PrivilegeLevel {
 		ANONYMOUS, GUEST, USER, ADMIN, READ_ONLY
-	};
+	}
 
 	public static class Credentials {
 
@@ -96,21 +96,15 @@ public class TestUtil {
 
 		String defaultPassword = properties.getProperty("pass");
 
-		realm = (realm != null) ? realm + "." : "";
-		switch (level) {
-		case ANONYMOUS:
-			return createCredentials(properties, realm + "anon.", "", "");
-		case GUEST:
-			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
-		case USER:
-			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
-		case READ_ONLY:
-			return createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
-		case ADMIN:
-			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
-		}
-
-		throw new AssertionFailedError("invalid privilege level");
+		realm = realm != null ? realm + "." : "";
+		return switch (level) {
+			case ANONYMOUS -> createCredentials(properties, realm + "anon.", "", "");
+			case GUEST -> createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
+			case USER -> createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
+			case READ_ONLY -> createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
+			case ADMIN -> createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
+			default -> throw new AssertionFailedError("invalid privilege level");
+		};
 	}
 
 	private static Credentials createCredentials(Properties properties, String prefix, String defaultUsername,
@@ -143,7 +137,7 @@ public class TestUtil {
 	 */
 	@Deprecated
 	public static boolean runHeartbeatTestsOnly() {
-		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+		return !Boolean.getBoolean("org.eclipse.mylyn.tests.all");
 	}
 
 }

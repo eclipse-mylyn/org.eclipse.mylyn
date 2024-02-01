@@ -57,65 +57,68 @@ public class SaxTaskListHandler extends DefaultHandler {
 		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
 
-		this.subTasks = new HashSetValuedHashMap<>();
-		this.queryResults = new HashSetValuedHashMap<>();
-		this.categorizedTasks = new HashSetValuedHashMap<>();
+		subTasks = new HashSetValuedHashMap<>();
+		queryResults = new HashSetValuedHashMap<>();
+		categorizedTasks = new HashSetValuedHashMap<>();
 
-		this.orphanBuilder = new SaxOrphanBuilder();
+		orphanBuilder = new SaxOrphanBuilder();
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch (localName) {
-		case TaskListExternalizationConstants.NODE_TASK:
-			checkState(currentBuilder == null, "Cannot begin reading a task while reading another task list element."); //$NON-NLS-1$
+			case TaskListExternalizationConstants.NODE_TASK:
+				checkState(currentBuilder == null,
+						"Cannot begin reading a task while reading another task list element."); //$NON-NLS-1$
 
-			currentBuilder = new SaxTaskBuilder(repositoryModel, repositoryManager);
-			currentBuilder.beginItem(attributes);
+				currentBuilder = new SaxTaskBuilder(repositoryModel, repositoryManager);
+				currentBuilder.beginItem(attributes);
 
-			break;
-		case TaskListExternalizationConstants.NODE_QUERY:
-			checkState(currentBuilder == null, "Cannot begin reading a query while reading another task list element."); //$NON-NLS-1$
+				break;
+			case TaskListExternalizationConstants.NODE_QUERY:
+				checkState(currentBuilder == null,
+						"Cannot begin reading a query while reading another task list element."); //$NON-NLS-1$
 
-			currentBuilder = new SaxQueryBuilder(repositoryModel, repositoryManager);
-			currentBuilder.beginItem(attributes);
+				currentBuilder = new SaxQueryBuilder(repositoryModel, repositoryManager);
+				currentBuilder.beginItem(attributes);
 
-			break;
-		case TaskListExternalizationConstants.NODE_CATEGORY:
-			checkState(currentBuilder == null,
-					"Cannot begin reading a category while reading another task list element."); //$NON-NLS-1$
+				break;
+			case TaskListExternalizationConstants.NODE_CATEGORY:
+				checkState(currentBuilder == null,
+						"Cannot begin reading a category while reading another task list element."); //$NON-NLS-1$
 
-			currentBuilder = new SaxCategoryBuilder(taskList);
-			currentBuilder.beginItem(attributes);
+				currentBuilder = new SaxCategoryBuilder(taskList);
+				currentBuilder.beginItem(attributes);
 
-			break;
-		case TaskListExternalizationConstants.NODE_ATTRIBUTE:
-			if (isOK(currentBuilder) && !currentBuilder.isAcceptingAttributeValues()) {
-				currentBuilder.startAttribute(attributes);
-			}
+				break;
+			case TaskListExternalizationConstants.NODE_ATTRIBUTE:
+				if (isOK(currentBuilder) && !currentBuilder.isAcceptingAttributeValues()) {
+					currentBuilder.startAttribute(attributes);
+				}
 
-			break;
-		case TaskListExternalizationConstants.NODE_SUB_TASK:
-			checkState(currentBuilder instanceof SaxTaskBuilder, "Cannot read a sub task hit unless reading a task"); //$NON-NLS-1$
+				break;
+			case TaskListExternalizationConstants.NODE_SUB_TASK:
+				checkState(currentBuilder instanceof SaxTaskBuilder,
+						"Cannot read a sub task hit unless reading a task"); //$NON-NLS-1$
 
-			recordHit(attributes, subTasks, (SaxTaskBuilder) currentBuilder);
+				recordHit(attributes, subTasks, (SaxTaskBuilder) currentBuilder);
 
-			break;
-		case TaskListExternalizationConstants.NODE_QUERY_HIT:
-			checkState(currentBuilder instanceof SaxQueryBuilder, "Cannot read a query hit unless reading a query"); //$NON-NLS-1$
+				break;
+			case TaskListExternalizationConstants.NODE_QUERY_HIT:
+				checkState(currentBuilder instanceof SaxQueryBuilder, "Cannot read a query hit unless reading a query"); //$NON-NLS-1$
 
-			recordHit(attributes, queryResults, (SaxQueryBuilder) currentBuilder);
+				recordHit(attributes, queryResults, (SaxQueryBuilder) currentBuilder);
 
-			break;
-		case TaskListExternalizationConstants.NODE_TASK_REFERENCE:
-			checkState(currentBuilder instanceof SaxCategoryBuilder,
-					"Cannot read a category hit unless reading a category"); //$NON-NLS-1$
+				break;
+			case TaskListExternalizationConstants.NODE_TASK_REFERENCE:
+				checkState(currentBuilder instanceof SaxCategoryBuilder,
+						"Cannot read a category hit unless reading a category"); //$NON-NLS-1$
 
-			recordHit(attributes, categorizedTasks, (SaxCategoryBuilder) currentBuilder);
+				recordHit(attributes, categorizedTasks, (SaxCategoryBuilder) currentBuilder);
 
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
 		}
 
 		// don't attempt to make the root element an orphan
@@ -135,27 +138,27 @@ public class SaxTaskListHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		switch (localName) {
-		case TaskListExternalizationConstants.NODE_TASK:
-		case TaskListExternalizationConstants.NODE_QUERY:
-		case TaskListExternalizationConstants.NODE_CATEGORY:
-			commitCurrentTopLevelElement();
-			currentBuilder = null;
+			case TaskListExternalizationConstants.NODE_TASK:
+			case TaskListExternalizationConstants.NODE_QUERY:
+			case TaskListExternalizationConstants.NODE_CATEGORY:
+				commitCurrentTopLevelElement();
+				currentBuilder = null;
 
-			break;
-		case TaskListExternalizationConstants.NODE_ATTRIBUTE:
-			if (isOK(currentBuilder) && currentBuilder.isAcceptingAttributeValues()) {
-				currentBuilder.endAttribute();
-			}
+				break;
+			case TaskListExternalizationConstants.NODE_ATTRIBUTE:
+				if (isOK(currentBuilder) && currentBuilder.isAcceptingAttributeValues()) {
+					currentBuilder.endAttribute();
+				}
 
-			break;
-		case TaskListExternalizationConstants.NODE_TASK_LIST:
-			applyContainmentToTaskList(subTasks);
-			applyContainmentToTaskList(queryResults);
-			applyContainmentToTaskList(categorizedTasks);
-			commitUntransferedTasksToTaskList();
-			break;
-		default:
-			break;
+				break;
+			case TaskListExternalizationConstants.NODE_TASK_LIST:
+				applyContainmentToTaskList(subTasks);
+				applyContainmentToTaskList(queryResults);
+				applyContainmentToTaskList(categorizedTasks);
+				commitUntransferedTasksToTaskList();
+				break;
+			default:
+				break;
 		}
 
 		orphanBuilder.endElement();

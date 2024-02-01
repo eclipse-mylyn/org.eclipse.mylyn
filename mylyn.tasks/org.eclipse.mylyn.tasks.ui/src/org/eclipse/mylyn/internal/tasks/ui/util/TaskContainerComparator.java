@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
  */
 public class TaskContainerComparator implements Comparator<AbstractTaskContainer> {
 
+	@Override
 	public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
 		if (c1.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
 			return -1;

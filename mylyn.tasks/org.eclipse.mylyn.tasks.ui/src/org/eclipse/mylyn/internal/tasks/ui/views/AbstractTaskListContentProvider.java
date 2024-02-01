@@ -26,7 +26,7 @@ public abstract class AbstractTaskListContentProvider implements ITreeContentPro
 	protected AbstractTaskListView taskListView;
 
 	public AbstractTaskListContentProvider(AbstractTaskListView view) {
-		this.taskListView = view;
+		taskListView = view;
 	}
 
 }

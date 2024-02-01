@@ -50,6 +50,7 @@ public final class TaskListRefreshJob extends DelayedRefreshJob {
 		@Override
 		public void containersChanged(final Set<TaskContainerDelta> deltas) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : deltas) {
 						if (taskListView.isScheduledPresentation()) {
@@ -57,28 +58,28 @@ public final class TaskListRefreshJob extends DelayedRefreshJob {
 							refresh();
 						} else {
 							switch (taskContainerDelta.getKind()) {
-							case ROOT:
-								refresh();
-								break;
-							case ADDED:
-							case REMOVED:
-								if (isFilteredContainer(taskContainerDelta)) {
-									// container may have changed visibility, refresh root
+								case ROOT:
 									refresh();
-								} else {
-									if (taskContainerDelta.getElement() != null) {
-										refreshElement(taskContainerDelta.getElement());
-									}
-									if (taskContainerDelta.getParent() != null) {
-										refreshElement(taskContainerDelta.getParent());
-									} else {
-										// element was added/removed from the root
+									break;
+								case ADDED:
+								case REMOVED:
+									if (isFilteredContainer(taskContainerDelta)) {
+										// container may have changed visibility, refresh root
 										refresh();
+									} else {
+										if (taskContainerDelta.getElement() != null) {
+											refreshElement(taskContainerDelta.getElement());
+										}
+										if (taskContainerDelta.getParent() != null) {
+											refreshElement(taskContainerDelta.getParent());
+										} else {
+											// element was added/removed from the root
+											refresh();
+										}
 									}
-								}
-								break;
-							case CONTENT:
-								refreshElement(taskContainerDelta.getElement());
+									break;
+								case CONTENT:
+									refreshElement(taskContainerDelta.getElement());
 							}
 
 						}
@@ -109,8 +110,8 @@ public final class TaskListRefreshJob extends DelayedRefreshJob {
 		} else if (items.length > 0) {
 			try {
 				if (taskListView.isFocusedMode()) {
-					Set<Object> children = new HashSet<Object>(Arrays.asList(items));
-					Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+					Set<Object> children = new HashSet<>(Arrays.asList(items));
+					Set<AbstractTaskContainer> parents = new HashSet<>();
 					for (Object item : items) {
 						if (item instanceof AbstractTask) {
 							parents.addAll(((AbstractTask) item).getParentContainers());
@@ -132,7 +133,7 @@ public final class TaskListRefreshJob extends DelayedRefreshJob {
 						updateExpansionState(item);
 					}
 				} else {
-					Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+					Set<AbstractTaskContainer> parents = new HashSet<>();
 					for (Object item : items) {
 						if (item instanceof AbstractTask) {
 							parents.addAll(((AbstractTask) item).getParentContainers());
@@ -157,9 +158,8 @@ public final class TaskListRefreshJob extends DelayedRefreshJob {
 	}
 
 	private TreePath preserveSelection() {
-		if (viewer instanceof TreeViewer) {
-			TreeViewer treeViewer = (TreeViewer) viewer;
-			// in case the refresh removes the currently selected item, 
+		if (viewer instanceof TreeViewer treeViewer) {
+			// in case the refresh removes the currently selected item,
 			// remember the next item in the tree to restore the selection
 			// TODO: consider making this optional
 			TreeItem[] selection = treeViewer.getTree().getSelection();

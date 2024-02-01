@@ -20,13 +20,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -47,7 +44,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.UiLegendDialog;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
-import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler.IFilterChangeListener;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
@@ -55,10 +51,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
@@ -138,27 +130,25 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		hookContextMenu();
 		this.window = window;
 		indicateActiveTaskWorkingSet();
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if (changeListener != null) {
-					TasksUiInternal.getTaskList().removeChangeListener(changeListener);
-				}
-				if (taskProgressBarChangeListener != null) {
-					TasksUiInternal.getTaskList().removeChangeListener(taskProgressBarChangeListener);
-				}
-				if (taskProgressBarActivityListener != null) {
-					TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
-				}
-				if (taskProgressBarWorkingSetListener != null) {
-					PlatformUI.getWorkbench()
-							.getWorkingSetManager()
-							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
-				}
-				actionGroup.setSelectionProvider(null);
-				activeTaskMenuManager.dispose();
-				if (taskListToolTip != null) {
-					taskListToolTip.dispose();
-				}
+		addDisposeListener(e -> {
+			if (changeListener != null) {
+				TasksUiInternal.getTaskList().removeChangeListener(changeListener);
+			}
+			if (taskProgressBarChangeListener != null) {
+				TasksUiInternal.getTaskList().removeChangeListener(taskProgressBarChangeListener);
+			}
+			if (taskProgressBarActivityListener != null) {
+				TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
+			}
+			if (taskProgressBarWorkingSetListener != null) {
+				PlatformUI.getWorkbench()
+						.getWorkingSetManager()
+						.removePropertyChangeListener(taskProgressBarWorkingSetListener);
+			}
+			actionGroup.setSelectionProvider(null);
+			activeTaskMenuManager.dispose();
+			if (taskListToolTip != null) {
+				taskListToolTip.dispose();
 			}
 		});
 	}
@@ -168,11 +158,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
-		activeTaskMenuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				actionGroup.fillContextMenu(manager);
-			}
-		});
+		activeTaskMenuManager.addMenuListener(manager -> actionGroup.fillContextMenu(manager));
 	}
 
 	@Override
@@ -228,13 +214,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		};
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(taskProgressBarActivityListener);
 
-		taskProgressBarWorkingSetListener = new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				String property = event.getProperty();
-				if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
-						|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
-					updateTaskProgressBar();
-				}
+		taskProgressBarWorkingSetListener = event -> {
+			String property = event.getProperty();
+			if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
+					|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
+				updateTaskProgressBar();
 			}
 		};
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(taskProgressBarWorkingSetListener);
@@ -257,11 +241,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	private void initSearchComposite() {
 		searchHandler.createSearchComposite(searchComposite);
 		searchHandler.adaptTextSearchControl(getTextSearchControl().getTextControl());
-		searchHandler.addFilterChangeListener(new IFilterChangeListener() {
-			public void filterChanged() {
-				getRefreshPolicy().filterChanged();
-			}
-		});
+		searchHandler.addFilterChangeListener(() -> getRefreshPolicy().filterChanged());
 
 		if (SearchUtil.supportsTaskSearch()) {
 
@@ -270,14 +250,17 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
+				@Override
 				public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 					SearchUtil.openSearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 				}
 
+				@Override
 				public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 					searchLink.setUnderlined(true);
 				}
 
+				@Override
 				public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 					searchLink.setUnderlined(false);
 				}
@@ -305,8 +288,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		completeTasks = 0;
 		incompleteTime = 0;
 		for (ITask task : tasksThisWeek) {
-			if (task instanceof AbstractTask) {
-				AbstractTask abstractTask = (AbstractTask) task;
+			if (task instanceof AbstractTask abstractTask) {
 				if (task.isCompleted()) {
 					completeTasks++;
 					if (abstractTask.getEstimatedTimeHours() > 0) {
@@ -314,28 +296,24 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					} else {
 						completeTime++;
 					}
+				} else if (abstractTask.getEstimatedTimeHours() > 0) {
+					incompleteTime += abstractTask.getEstimatedTimeHours();
 				} else {
-					if (abstractTask.getEstimatedTimeHours() > 0) {
-						incompleteTime += abstractTask.getEstimatedTimeHours();
-					} else {
-						incompleteTime++;
-					}
+					incompleteTime++;
 				}
 			}
 		}
 
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
-					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
+				taskProgressBar.reset(completeTime, completeTime + incompleteTime);
 
-					taskProgressBar.setToolTipText(Messages.TaskListFilteredTree_Workweek_Progress + "\n" //$NON-NLS-1$
-							+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
-									completeTime + incompleteTime)
-							+ "\n" //$NON-NLS-1$
-							+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
-									totalTasks));
-				}
+				taskProgressBar.setToolTipText(Messages.TaskListFilteredTree_Workweek_Progress + "\n" //$NON-NLS-1$
+						+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
+								completeTime + incompleteTime)
+						+ "\n" //$NON-NLS-1$
+						+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
+								totalTasks));
 			}
 		});
 	}
@@ -353,14 +331,17 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		final TaskWorkingSetAction workingSetAction = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
 
+			@Override
 			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 				workingSetAction.getMenu(workingSetButton).setVisible(true);
 			}
 
+			@Override
 			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_DOWN));
 			}
 
+			@Override
 			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
@@ -393,17 +374,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
 					if (taskContainerDelta.getElement() instanceof ITask) {
-						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getElement());
+						final AbstractTask changedTask = (AbstractTask) taskContainerDelta.getElement();
 						if (changedTask.isActive()) {
 							if (Platform.isRunning() && PlatformUI.getWorkbench() != null) {
 								if (Display.getCurrent() == null) {
 									if (PlatformUI.getWorkbench().getDisplay() != null
 											&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-											public void run() {
-												indicateActiveTask(changedTask);
-											}
-										});
+										PlatformUI.getWorkbench().getDisplay().asyncExec(() -> indicateActiveTask(changedTask));
 									}
 								} else {
 									indicateActiveTask(changedTask);
@@ -431,6 +408,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			private Menu dropDownMenu;
 
+			@Override
 			public void linkActivated(HyperlinkEvent event) {
 				if (dropDownMenu != null) {
 					dropDownMenu.dispose();
@@ -442,29 +420,29 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				dropDownMenu.setVisible(true);
 			}
 
+			@Override
 			public void linkEntered(HyperlinkEvent event) {
 				activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_DOWN));
 			}
 
+			@Override
 			public void linkExited(HyperlinkEvent event) {
 				activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
 
-		activeTaskLink.addMenuDetectListener(new MenuDetectListener() {
-			public void menuDetected(MenuDetectEvent e) {
-				// do not show menu for inactive task link
-				if (activeTaskSelectionProvider != null && activeSelection != null && !activeSelection.isEmpty()) {
-					// grab focus since the active task will become the active selection: this causes the focus listener on the task list viewer to reset the active selection when focus is set back to the task list
-					activeTaskLink.setFocus();
+		activeTaskLink.addMenuDetectListener(e -> {
+			// do not show menu for inactive task link
+			if (activeTaskSelectionProvider != null && activeSelection != null && !activeSelection.isEmpty()) {
+				// grab focus since the active task will become the active selection: this causes the focus listener on the task list viewer to reset the active selection when focus is set back to the task list
+				activeTaskLink.setFocus();
 
-					// set site selection to active task
-					activeTaskSelectionProvider.setSelection(activeSelection);
+				// set site selection to active task
+				activeTaskSelectionProvider.setSelection(activeSelection);
 
-					// show menu that has been registered with view
-					Menu activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
-					activeTaskMenu.setVisible(true);
-				}
+				// show menu that has been registered with view
+				Menu activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
+				activeTaskMenu.setVisible(true);
 			}
 		});
 
@@ -474,7 +452,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void mouseDown(MouseEvent e) {
 				// only handle left clicks, context menu is handled by platform
 				if (e.button == 1) {
-					ITask activeTask = (TasksUi.getTaskActivityManager().getActiveTask());
+					ITask activeTask = TasksUi.getTaskActivityManager().getActiveTask();
 					if (activeTask == null) {
 						ActivateTaskDialogAction activateAction = new ActivateTaskDialogAction();
 						activateAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -580,7 +558,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	protected String getFilterString() {
 		String text = super.getFilterString();
-		return (text != null) ? text.trim() : null;
+		return text != null ? text.trim() : null;
 	}
 
 	public TaskWorkingSetFilter getWorkingSetFilter() {
@@ -601,7 +579,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public void setActiveTaskSelectionProvider(SelectionProviderAdapter activeTaskSelectionProvider) {
 		this.activeTaskSelectionProvider = activeTaskSelectionProvider;
-		this.actionGroup.setSelectionProvider(activeTaskSelectionProvider);
+		actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 	}
 
 	@SuppressWarnings("deprecation")

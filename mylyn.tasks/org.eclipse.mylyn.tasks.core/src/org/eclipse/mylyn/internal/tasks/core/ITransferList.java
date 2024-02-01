@@ -25,24 +25,24 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public interface ITransferList {
 
-	public abstract void addCategory(TaskCategory category);
+	void addCategory(TaskCategory category);
 
-	public abstract void addQuery(RepositoryQuery query);
+	void addQuery(RepositoryQuery query);
 
-	public abstract void addTask(ITask task);
+	void addTask(ITask task);
 
-	public abstract boolean addTask(ITask task, AbstractTaskContainer parentContainer);
+	boolean addTask(ITask task, AbstractTaskContainer parentContainer);
 
-	public AbstractTaskCategory getContainerForHandle(String handle);
+	AbstractTaskCategory getContainerForHandle(String handle);
 
-	public abstract Collection<AbstractTask> getAllTasks();
+	Collection<AbstractTask> getAllTasks();
 
-	public abstract Set<AbstractTaskCategory> getCategories();
+	Set<AbstractTaskCategory> getCategories();
 
-	public abstract Set<RepositoryQuery> getQueries();
+	Set<RepositoryQuery> getQueries();
 
-	public AbstractTask getTask(String handleIdentifier);
+	AbstractTask getTask(String handleIdentifier);
 
-	public abstract ITask getTask(String repositoryUrl, String taskId);
+	ITask getTask(String repositoryUrl, String taskId);
 
 }

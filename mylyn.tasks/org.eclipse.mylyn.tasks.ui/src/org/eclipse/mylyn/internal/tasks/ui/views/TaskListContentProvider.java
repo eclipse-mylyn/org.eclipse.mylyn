@@ -37,29 +37,32 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
- * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
- * containers showing if nothing should show under them. TODO: move to viewer filter architecture?
+ * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress containers showing if nothing
+ * should show under them. TODO: move to viewer filter architecture?
  * 
  * @author Mik Kersten
  * @author Rob Elves
  */
 public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
-	protected static Object[] EMPTY_ARRRY = new Object[0];
+	protected static Object[] EMPTY_ARRRY = {};
 
 	public TaskListContentProvider(AbstractTaskListView taskListView) {
 		super(taskListView);
 	}
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		this.taskListView.expandToActiveTasks();
+		taskListView.expandToActiveTasks();
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
-		if (parent.equals(this.taskListView.getViewSite())) {
+		if (parent.equals(taskListView.getViewSite())) {
 			return applyFilter(TasksUiPlugin.getTaskList().getRootElements()).toArray();
 		}
 		return getChildren(parent);
@@ -68,10 +71,10 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	/**
 	 * @return first parent found
 	 */
+	@Override
 	public Object getParent(Object child) {
 		// return first parent found, first search within categories then queries
-		if (child instanceof ITask) {
-			ITask task = (ITask) child;
+		if (child instanceof ITask task) {
 			AbstractTaskCategory parent = TaskCategory.getParentTaskCategory(task);
 			if (parent != null) {
 				return parent;
@@ -87,6 +90,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object parent) {
 		return getFilteredChildrenFor(parent).toArray();
 	}
@@ -94,6 +98,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	/**
 	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered children (see bug 145194).
 	 */
+	@Override
 	public boolean hasChildren(Object parent) {
 		Object[] children = getChildren(parent);
 		return children != null && children.length > 0;
@@ -113,7 +118,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
-		List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
+		List<AbstractTaskContainer> filteredRoots = new ArrayList<>();
 		for (AbstractTaskContainer element : roots) {
 			// NOTE: tasks can no longer appear as root elements
 			if (selectContainer(element)) {
@@ -138,8 +143,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText(this.taskListView.getFilteredTree().getFilterString())) {
-			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
+		if (containsNoFilterText(taskListView.getFilteredTree().getFilterString())) {
+			List<IRepositoryElement> children = new ArrayList<>();
 			if (parent instanceof ITask) {
 				Collection<ITask> subTasks = ((AbstractTask) parent).getChildren();
 				for (ITask task : subTasks) {
@@ -152,7 +157,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 				return getFilteredRootChildren((ITaskContainer) parent);
 			}
 		} else {
-			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
+			List<IRepositoryElement> children = new ArrayList<>();
 			if (parent instanceof ITaskContainer) {
 				children.addAll(((ITaskContainer) parent).getChildren());
 				return children;
@@ -165,17 +170,15 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * @return all children who aren't already revealed as a sub task
 	 */
 	private List<IRepositoryElement> getFilteredRootChildren(ITaskContainer parent) {
-		List<IRepositoryElement> result = new ArrayList<IRepositoryElement>();
+		List<IRepositoryElement> result = new ArrayList<>();
 		if (TasksUiPlugin.getDefault().groupSubtasks(parent)) {
 			Collection<ITask> parentTasks = parent.getChildren();
-			Set<IRepositoryElement> parents = new HashSet<IRepositoryElement>();
-			Set<ITask> children = new HashSet<ITask>();
+			Set<IRepositoryElement> parents = new HashSet<>();
+			Set<ITask> children = new HashSet<>();
 			// get all children
 			for (ITask element : parentTasks) {
 				if (element instanceof ITaskContainer) {
-					for (ITask abstractTask : ((ITaskContainer) element).getChildren()) {
-						children.add(abstractTask);
-					}
+					children.addAll(((ITaskContainer) element).getChildren());
 				}
 			}
 			for (ITask task : parentTasks) {
@@ -195,8 +198,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected boolean filter(Object parent, Object object) {
-		boolean notSearching = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
-		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
+		boolean notSearching = containsNoFilterText(taskListView.getFilteredTree().getFilterString());
+		for (AbstractTaskListFilter filter : taskListView.getFilters()) {
 			if (notSearching || filter.applyToFilteredText()) {
 				if (!filter.select(parent, object)) {
 					return true;
@@ -207,8 +210,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected boolean filter(TreePath path, Object parent, Object object) {
-		boolean emptyFilterText = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
-		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
+		boolean emptyFilterText = containsNoFilterText(taskListView.getFilteredTree().getFilterString());
+		for (AbstractTaskListFilter filter : taskListView.getFilters()) {
 			if (emptyFilterText || filter.applyToFilteredText()) {
 				if (filter instanceof TaskListInterestFilter) {
 					if (!((TaskListInterestFilter) filter).select(path.getLastSegment(), object)) {
@@ -223,9 +226,10 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	public boolean isSearching() {
-		return !containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
+		return !containsNoFilterText(taskListView.getFilteredTree().getFilterString());
 	}
 
+	@Override
 	public Object[] getChildren(TreePath parentPath) {
 		Object parent = parentPath.getLastSegment();
 		if (PresentationFilter.getInstance().isFilterNonMatching()) {
@@ -254,10 +258,12 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return getFilteredChildrenFor(parent).toArray();
 	}
 
+	@Override
 	public boolean hasChildren(TreePath path) {
 		return getChildren(path).length > 0;
 	}
 
+	@Override
 	public TreePath[] getParents(Object element) {
 		return new TreePath[0];
 	}

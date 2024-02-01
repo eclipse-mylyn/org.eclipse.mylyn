@@ -70,12 +70,12 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	private Map<String, String> errorProposals;
 
 	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
-		this(task, taskData, new HashMap<String, String>(0));
+		this(task, taskData, new HashMap<>(0));
 	}
 
 	public PersonProposalProvider(AbstractTask task, TaskData taskData, Map<String, String> proposals) {
-		this.currentTask = task;
-		this.currentTaskData = taskData;
+		currentTask = task;
+		currentTaskData = taskData;
 		if (task != null) {
 			repositoryUrl = task.getRepositoryUrl();
 			connectorKind = task.getConnectorKind();
@@ -83,18 +83,18 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			repositoryUrl = taskData.getRepositoryUrl();
 			connectorKind = taskData.getConnectorKind();
 		}
-		this.proposals = new HashMap<String, String>(proposals);
+		this.proposals = new HashMap<>(proposals);
 	}
 
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind) {
-		this(repositoryUrl, repositoryKind, new HashMap<String, String>(0));
+		this(repositoryUrl, repositoryKind, new HashMap<>(0));
 	}
 
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind, Map<String, String> proposals) {
-		this.currentTask = null;
+		currentTask = null;
 		this.repositoryUrl = repositoryUrl;
-		this.connectorKind = repositoryKind;
-		this.proposals = new HashMap<String, String>(proposals);
+		connectorKind = repositoryKind;
+		this.proposals = new HashMap<>(proposals);
 	}
 
 	protected String getRepositoryUrl() {
@@ -105,6 +105,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		return connectorKind;
 	}
 
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		Assert.isLegal(contents != null);
 		Assert.isLegal(position >= 0);
@@ -131,7 +132,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				nextWord[searchText.length() - 1]++;
 
 				// filter matching keys
-				addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
+				addressSet = new TreeSet<>(addressSet.subSet(searchText, new String(nextWord)));
 
 				// add matching keys based on pretty names
 				addMatchingProposalsByPrettyName(addressSet, searchText);
@@ -207,7 +208,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			return addressSet;
 		}
 
-		addressSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+		addressSet = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 		if (errorProposals != null && !errorProposals.isEmpty()) {
 			for (String proposal : errorProposals.keySet()) {
@@ -235,7 +236,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 
 		if (repositoryUrl != null && connectorKind != null) {
-			Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+			Set<AbstractTask> tasks = new HashSet<>();
 			if (currentTask != null) {
 				tasks.add(currentTask);
 			}

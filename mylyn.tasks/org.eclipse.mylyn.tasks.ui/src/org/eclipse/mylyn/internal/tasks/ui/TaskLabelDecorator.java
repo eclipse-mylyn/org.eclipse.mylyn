@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
+	@Override
 	public void decorate(Object element, IDecoration decoration) {
 
 		ImageDescriptor priorityOverlay = getPriorityImageDescriptor(element);
@@ -39,8 +40,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
 
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof ITask task) {
 			if (!task.isCompleted() && (TasksUiPlugin.getTaskActivityManager().isDueToday(task)
 					|| TasksUiPlugin.getTaskActivityManager().isOverdue(task))) {
 				decoration.addOverlay(CommonImages.OVERLAY_DATE_OVERDUE, IDecoration.TOP_RIGHT);
@@ -50,8 +50,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			if (hasNotes(task)) {
 				decoration.addOverlay(TasksUiImages.NOTES, IDecoration.BOTTOM_RIGHT);
 			}
-		} else if (element instanceof ITaskRepositoryElement) {
-			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) element;
+		} else if (element instanceof ITaskRepositoryElement repositoryElement) {
 			String repositoryUrl = repositoryElement.getRepositoryUrl();
 			TaskRepository taskRepository = TasksUi.getRepositoryManager()
 					.getRepository(repositoryElement.getConnectorKind(), repositoryUrl);
@@ -68,26 +67,29 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		}
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
 	}
 
 	private ImageDescriptor getPriorityImageDescriptor(Object element) {
 		AbstractRepositoryConnectorUi connectorUi;
-		if (element instanceof ITask) {
-			ITask repositoryTask = (ITask) element;
+		if (element instanceof ITask repositoryTask) {
 			connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
 			if (connectorUi != null) {
 				return connectorUi.getTaskPriorityOverlay(repositoryTask);

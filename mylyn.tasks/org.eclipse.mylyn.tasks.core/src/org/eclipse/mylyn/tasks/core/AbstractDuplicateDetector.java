@@ -38,15 +38,15 @@ public abstract class AbstractDuplicateDetector {
 	}
 
 	public void setConnectorKind(String kind) {
-		this.connectorKind = kind;
+		connectorKind = kind;
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public String getConnectorKind() {
-		return this.connectorKind;
+		return connectorKind;
 	}
 
 	public boolean canQuery(TaskData taskData) {

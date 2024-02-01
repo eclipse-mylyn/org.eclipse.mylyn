@@ -53,14 +53,17 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 		this.isSystem = isSystem;
 	}
 
+	@Override
 	public String getId() {
 		return descriptor.getId();
 	}
 
+	@Override
 	public String getLabel() {
 		return descriptor.getLabel();
 	}
 
+	@Override
 	public void openAttachment(final IWorkbenchPage page, final ITaskAttachment attachment) throws CoreException {
 		if (promptToConfirmOpen(attachment)) {
 			DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(
@@ -93,6 +96,7 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 		return true;
 	}
 
+	@Override
 	public boolean isWorkbenchDefault() {
 		return isWorkbenchDefault;
 	}

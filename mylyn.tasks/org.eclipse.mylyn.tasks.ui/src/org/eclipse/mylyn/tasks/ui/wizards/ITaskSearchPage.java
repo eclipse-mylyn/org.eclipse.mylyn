@@ -23,8 +23,8 @@ import org.eclipse.jface.dialogs.IDialogPage;
  */
 public interface ITaskSearchPage extends IDialogPage {
 
-	public abstract void setContainer(ITaskSearchPageContainer container);
+	void setContainer(ITaskSearchPageContainer container);
 
-	public abstract boolean performSearch();
+	boolean performSearch();
 
 }

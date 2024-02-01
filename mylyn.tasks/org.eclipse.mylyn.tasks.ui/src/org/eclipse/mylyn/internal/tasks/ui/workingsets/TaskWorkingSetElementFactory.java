@@ -38,6 +38,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 
 	static final String HANDLE_PROJECT = "handle.project"; //$NON-NLS-1$
 
+	@Override
 	public IAdaptable createElement(IMemento memento) {
 		String taskHandle = memento.getString(HANDLE_TASK);
 		if (taskHandle != null) {

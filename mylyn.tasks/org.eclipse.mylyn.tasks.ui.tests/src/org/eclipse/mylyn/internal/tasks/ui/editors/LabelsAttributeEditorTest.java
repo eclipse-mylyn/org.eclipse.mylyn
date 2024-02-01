@@ -124,7 +124,7 @@ public class LabelsAttributeEditorTest {
 
 	private void assertLayoutHint(boolean isMultiSelect) {
 		assertEquals(ColumnSpan.SINGLE, editor.getLayoutHint().columnSpan);
-		assertEquals((isMultiSelect ? RowSpan.MULTIPLE : RowSpan.SINGLE), editor.getLayoutHint().rowSpan);
+		assertEquals(isMultiSelect ? RowSpan.MULTIPLE : RowSpan.SINGLE, editor.getLayoutHint().rowSpan);
 	}
 
 	private void assertMultiSelectValue(String stringValue, List<String> values) {

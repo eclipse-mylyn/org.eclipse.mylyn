@@ -55,6 +55,7 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size() == 1) {
@@ -63,14 +64,14 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 						.getRepositoryConnector(((TaskRepository) selectedObject).getConnectorKind());
 				if (connector.isUserManaged()) {
-					this.repository = (TaskRepository) selectedObject;
-					setChecked(this.repository.isOffline());
+					repository = (TaskRepository) selectedObject;
+					setChecked(repository.isOffline());
 					setEnabled(true);
 					return;
 				}
 			}
 		}
-		this.repository = null;
+		repository = null;
 		setChecked(false);
 		setEnabled(false);
 	}

@@ -108,6 +108,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private ImageHyperlink clearKey;
 
+	@Override
 	public boolean performAction() {
 		saveDialogSettings();
 		String key = keyText.getText();
@@ -125,19 +126,23 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 	}
 
+	@Override
 	public void setContainer(ISearchPageContainer container) {
-		this.pageContainer = container;
-		this.taskSearchPageContainer = new ITaskSearchPageContainer() {
+		pageContainer = container;
+		taskSearchPageContainer = new ITaskSearchPageContainer() {
+			@Override
 			public IRunnableContext getRunnableContext() {
 				return pageContainer.getRunnableContext();
 			}
 
+			@Override
 			public void setPerformActionEnabled(boolean enabled) {
 				pageContainer.setPerformActionEnabled(enabled);
 			}
 		};
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		fParentComposite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
@@ -193,10 +198,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		keyText.addKeyListener(new KeyListener() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				updatePageEnablement();
 			}
@@ -225,15 +232,13 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			if (repositoryCombo.getSelectionIndex() > -1) {
 				pageContainer.setPerformActionEnabled(true);
 			}
-		} else {
-			//setControlsEnabled(queryPages[currentPageIndex], true);
-			if (queryPages != null && queryPages[currentPageIndex] != null
-					&& queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
-				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(true);
-			}
-			//setControlsEnabled(queryPages[currentPageIndex], true);
-			//pageContainer.setPerformActionEnabled(false);
+		} else //setControlsEnabled(queryPages[currentPageIndex], true);
+		if (queryPages != null && queryPages[currentPageIndex] != null
+				&& queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
+			((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(true);
 		}
+		//setControlsEnabled(queryPages[currentPageIndex], true);
+		//pageContainer.setPerformActionEnabled(false);
 		if (keyText != null && repositoryCombo != null && clearKey != null) {
 			boolean hasRepos = repositoryCombo.getItemCount() > 0;
 			keyText.setEnabled(hasRepos);
@@ -312,6 +317,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
 					SafeRunner.run(new ISafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							ITaskSearchPage searchPage = getSearchPage(connectorUi);
 							if (searchPage != null) {
@@ -325,6 +331,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 							}
 						}
 
+						@Override
 						public void handleException(Throwable e) {
 							ITaskSearchPage page = createErrorPage(repository, e);
 							queryPages[pageIndex] = page.getControl();
@@ -378,12 +385,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
 			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>(repositories.size());
+			List<TaskRepository> searchableRepositories = new ArrayList<>(repositories.size());
 			for (TaskRepository repository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 						.getRepositoryConnector(repository.getConnectorKind());
-				if ((connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline())
+				if (connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline()
 						|| connector.canCreateTaskFromKey(repository)) {
 					searchableRepositories.add(repository);
 				}
@@ -404,10 +411,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 			IDialogSettings settings = getDialogSettings();
 			if (repositoryCombo != null) {
-				for (int x = 0; x < searchableRepositories.size(); x++) {
-					repositoryCombo.add(searchableRepositories.get(x).getRepositoryLabel());
-					repositoryCombo.setData(searchableRepositories.get(x).getRepositoryLabel(),
-							searchableRepositories.get(x));
+				for (TaskRepository element : searchableRepositories) {
+					repositoryCombo.add(element.getRepositoryLabel());
+					repositoryCombo.setData(element.getRepositoryLabel(), element);
 				}
 				if (searchableRepositories.isEmpty()) {
 					if (repositories.isEmpty()) {
@@ -563,6 +569,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			super("Search page error", rep); //$NON-NLS-1$
 		}
 
+		@Override
 		public void createControl(Composite parent) {
 			Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
 			hyperlink.setText(Messages.TaskSearchPage_ERROR_Unable_to_present_query_page);
@@ -618,6 +625,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			super("No search page", rep); //$NON-NLS-1$
 		}
 
+		@Override
 		public void createControl(Composite parent) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(new GridLayout());

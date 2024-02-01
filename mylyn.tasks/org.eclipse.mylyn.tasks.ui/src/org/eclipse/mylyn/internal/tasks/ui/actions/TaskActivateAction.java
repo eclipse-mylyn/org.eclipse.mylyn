@@ -40,6 +40,7 @@ public class TaskActivateAction extends BaseSelectionListenerAction implements I
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -59,10 +60,12 @@ public class TaskActivateAction extends BaseSelectionListenerAction implements I
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			selectionChanged((IStructuredSelection) selection);

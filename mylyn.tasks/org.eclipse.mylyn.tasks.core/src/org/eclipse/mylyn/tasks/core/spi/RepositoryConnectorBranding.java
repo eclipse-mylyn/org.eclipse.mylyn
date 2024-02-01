@@ -23,11 +23,10 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 
 /**
- * Specifies branding for a connector. The branding extension is obtained by adapting an
- * {@link AbstractRepositoryConnector} instance to {@link RepositoryConnectorBranding}.
+ * Specifies branding for a connector. The branding extension is obtained by adapting an {@link AbstractRepositoryConnector} instance to
+ * {@link RepositoryConnectorBranding}.
  * <p>
- * To contribute branding clients need to register an {@link IAdapterFactory} for the type
- * {@link AbstractRepositoryConnector}.
+ * To contribute branding clients need to register an {@link IAdapterFactory} for the type {@link AbstractRepositoryConnector}.
  * </p>
  * Example <code>plugin.xml</code>:
  * <p>
@@ -46,8 +45,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
  * </pre>
  * </p>
  * <p>
- * <code>MyRepositoryConnector</code> needs to return an instance of {@link RepositoryConnectorBranding} for the
- * appropriate connector instance:
+ * <code>MyRepositoryConnector</code> needs to return an instance of {@link RepositoryConnectorBranding} for the appropriate connector
+ * instance:
  *
  * <pre>
  * public class MyRepositoryConnectorAdapter implements IAdapterFactory {
@@ -82,12 +81,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 public abstract class RepositoryConnectorBranding {
 
 	/**
-	 * Returns an input stream with the image data for a 16x16 branding icon, for a connector that is registered at
-	 * runtime using {@link RepositoryConnectorContributor}. This is typically shown in the UI when selecting
-	 * connectors. Supported file formats are GIF and PNG.
+	 * Returns an input stream with the image data for a 16x16 branding icon, for a connector that is registered at runtime using
+	 * {@link RepositoryConnectorContributor}. This is typically shown in the UI when selecting connectors. Supported file formats are GIF
+	 * and PNG.
 	 * <p>
-	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension
-	 * point, the branding image specified in the extension takes precedence; this method is never called.
+	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension point, the branding image
+	 * specified in the extension takes precedence; this method is never called.
 	 *
 	 * @return input stream for image data
 	 * @throws IOException
@@ -97,12 +96,12 @@ public abstract class RepositoryConnectorBranding {
 	public abstract InputStream getBrandingImageData() throws IOException;
 
 	/**
-	 * Returns an input stream with the image data for a 7x8 overlay branding icon, for a connector that is registered
-	 * at runtime using {@link RepositoryConnectorContributor}. This is typically a very small version of the branding
-	 * icon that is used for overlays over repository icons. Supported file formats are GIF and PNG.
+	 * Returns an input stream with the image data for a 7x8 overlay branding icon, for a connector that is registered at runtime using
+	 * {@link RepositoryConnectorContributor}. This is typically a very small version of the branding icon that is used for overlays over
+	 * repository icons. Supported file formats are GIF and PNG.
 	 * <p>
-	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension
-	 * point, the overlay image specified in the extension takes precedence; this method is never called.
+	 * Note: for connectors contributed through the <code>org.eclipse.mylyn.tasks.ui.repositories</code> extension point, the overlay image
+	 * specified in the extension takes precedence; this method is never called.
 	 *
 	 * @return input stream for image data
 	 * @throws IOException
@@ -112,9 +111,8 @@ public abstract class RepositoryConnectorBranding {
 	public abstract InputStream getOverlayImageData() throws IOException;
 
 	/**
-	 * Returns a list of identifiers of the brands supported by this connector. This is useful for connectors that can
-	 * connect to different brands of the same system. Typically, different brands are functionally identical but use
-	 * different labels and icons.
+	 * Returns a list of identifiers of the brands supported by this connector. This is useful for connectors that can connect to different
+	 * brands of the same system. Typically, different brands are functionally identical but use different labels and icons.
 	 * <p>
 	 * Each brand may be presented in the UI as though it were a separate connector.
 	 *
@@ -126,9 +124,9 @@ public abstract class RepositoryConnectorBranding {
 	}
 
 	/**
-	 * Returns branding image data for a specific brand of the target system. Returns <code>null</code> if the given
-	 * brand is unknown to the connector or uses the {@link #getBrandingImageData() default branding image}. The default
-	 * implementation always returns <code>null</code>.
+	 * Returns branding image data for a specific brand of the target system. Returns <code>null</code> if the given brand is unknown to the
+	 * connector or uses the {@link #getBrandingImageData() default branding image}. The default implementation always returns
+	 * <code>null</code>.
 	 *
 	 * @return input stream for image data, or <code>null</code>
 	 * @throws IOException
@@ -143,9 +141,9 @@ public abstract class RepositoryConnectorBranding {
 	}
 
 	/**
-	 * Returns overlay image data for a specific brand of the target system. Returns <code>null</code> if the given
-	 * brand is unknown to the connector or uses the {@link #getOverlayImageData() default overlay image}. The default
-	 * implementation always returns <code>null</code>.
+	 * Returns overlay image data for a specific brand of the target system. Returns <code>null</code> if the given brand is unknown to the
+	 * connector or uses the {@link #getOverlayImageData() default overlay image}. The default implementation always returns
+	 * <code>null</code>.
 	 *
 	 * @param brand
 	 * @throws IOException
@@ -161,9 +159,9 @@ public abstract class RepositoryConnectorBranding {
 	}
 
 	/**
-	 * Returns the connector label to use for a specific brand of the target system. Returns <code>null</code> if the
-	 * given brand is unknown to the connector or uses the {@link AbstractRepositoryConnector#getLabel() default
-	 * connector label}. The default implementation always returns <code>null</code>.
+	 * Returns the connector label to use for a specific brand of the target system. Returns <code>null</code> if the given brand is unknown
+	 * to the connector or uses the {@link AbstractRepositoryConnector#getLabel() default connector label}. The default implementation
+	 * always returns <code>null</code>.
 	 *
 	 * @param brand
 	 * @return

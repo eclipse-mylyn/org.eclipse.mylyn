@@ -65,8 +65,7 @@ public class NewTaskFromSelectionAction extends Action {
 	}
 
 	public void selectionChanged(ISelection selection) {
-		if (selection instanceof TextSelection) {
-			TextSelection textSelection = (TextSelection) selection;
+		if (selection instanceof TextSelection textSelection) {
 			final String text = textSelection.getText();
 			if (text != null && text.length() > 0) {
 				taskMapping = new TaskMapping() {
@@ -97,7 +96,7 @@ public class NewTaskFromSelectionAction extends Action {
 //
 //				sb.append("\n\n");
 //				if (taskSelection != null) {
-//					// if text was selected, prefer that 
+//					// if text was selected, prefer that
 //					sb.append(taskSelection.getLegacyTaskData().getDescription());
 //				} else {
 //					sb.append(comment.getText());
@@ -120,8 +119,7 @@ public class NewTaskFromSelectionAction extends Action {
 //			}
 		} else if (selection instanceof StructuredSelection) {
 			Object element = ((StructuredSelection) selection).getFirstElement();
-			if (element instanceof ITaskComment) {
-				ITaskComment comment = (ITaskComment) element;
+			if (element instanceof ITaskComment comment) {
 				final StringBuilder sb = new StringBuilder();
 				sb.append("\n" + Messages.NewTaskFromSelectionAction____Created_from_Comment___); //$NON-NLS-1$
 				if (comment.getUrl() == null) {

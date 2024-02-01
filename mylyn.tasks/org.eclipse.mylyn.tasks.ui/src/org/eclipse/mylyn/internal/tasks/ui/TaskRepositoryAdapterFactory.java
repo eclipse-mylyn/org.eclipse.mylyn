@@ -29,36 +29,36 @@ import org.eclipse.ui.IActionFilter;
 public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("rawtypes")
-	private static final Class[] ADAPTER_TYPES = new Class[] { IActionFilter.class };
+	private static final Class[] ADAPTER_TYPES = { IActionFilter.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(final Object adaptable, Class adapterType) {
 		if (adaptable instanceof TaskRepository) {
-			return new IActionFilter() {
-				public boolean testAttribute(Object target, String name, String value) {
-					TaskRepository repository = (TaskRepository) target;
-					if ("offline".equals(name)) { //$NON-NLS-1$
-						return Boolean.valueOf(value).booleanValue() == repository.isOffline();
-					} else if ("supportQuery".equals(name)) { //$NON-NLS-1$
-						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-								.getConnectorUi(repository.getConnectorKind());
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-								.getRepositoryConnector(repository.getConnectorKind());
-						return null != connectorUi.getQueryWizard(repository, null) && connector.canQuery(repository);
-					} else if ("supportNewTask".equals(name)) { //$NON-NLS-1$
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-								.getRepositoryConnector(repository.getConnectorKind());
-						return connector.canCreateNewTask(repository);
-					} else if ("hasRepository".equals(name)) { //$NON-NLS-1$
-						return !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND);
-					}
-					return false;
+			return (IActionFilter) (target, name, value) -> {
+				TaskRepository repository = (TaskRepository) target;
+				if ("offline".equals(name)) { //$NON-NLS-1$
+					return Boolean.parseBoolean(value) == repository.isOffline();
+				} else if ("supportQuery".equals(name)) { //$NON-NLS-1$
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+							.getConnectorUi(repository.getConnectorKind());
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+							.getRepositoryConnector(repository.getConnectorKind());
+					return null != connectorUi.getQueryWizard(repository, null) && connector.canQuery(repository);
+				} else if ("supportNewTask".equals(name)) { //$NON-NLS-1$
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+							.getRepositoryConnector(repository.getConnectorKind());
+					return connector.canCreateNewTask(repository);
+				} else if ("hasRepository".equals(name)) { //$NON-NLS-1$
+					return !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND);
 				}
+				return false;
 			};
 		}
 		return null;

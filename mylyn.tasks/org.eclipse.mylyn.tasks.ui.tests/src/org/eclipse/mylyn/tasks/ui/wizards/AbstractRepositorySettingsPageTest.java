@@ -46,8 +46,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class AbstractRepositorySettingsPageTest {
 
@@ -356,14 +354,10 @@ public class AbstractRepositorySettingsPageTest {
 		IWizard wizard = mock(IWizard.class);
 		IWizardContainer container = mock(IWizardContainer.class);
 		try {
-			doAnswer(new Answer<Void>() {
-
-				@Override
-				public Void answer(InvocationOnMock invocation) throws Throwable {
-					IRunnableWithProgress runnable = (IRunnableWithProgress) invocation.getArguments()[2];
-					runnable.run(new NullProgressMonitor());
-					return null;
-				}
+			doAnswer(invocation -> {
+				IRunnableWithProgress runnable = (IRunnableWithProgress) invocation.getArguments()[2];
+				runnable.run(new NullProgressMonitor());
+				return null;
 			}).when(container).run(anyBoolean(), anyBoolean(), any());
 		} catch (InvocationTargetException | InterruptedException e) {
 			throw new RuntimeException(e);

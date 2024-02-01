@@ -28,54 +28,53 @@ public interface IRepositoryPerson {
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	String getConnectorKind();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getName();
+	String getName();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getPersonId();
+	String getPersonId();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getRepositoryUrl();
+	String getRepositoryUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskRepository getTaskRepository();
+	TaskRepository getTaskRepository();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setName(String name);
+	void setName(String name);
 
 	/**
-	 * Compares persons using the {@link TaskAttribute#PERSON_USERNAME} if defined, or the {@link #getPersonId() person
-	 * ID} otherwise.
+	 * Compares persons using the {@link TaskAttribute#PERSON_USERNAME} if defined, or the {@link #getPersonId() person ID} otherwise.
 	 * 
 	 * @since 3.18
 	 */
-	public abstract boolean matchesUsername(String username);
+	boolean matchesUsername(String username);
 
 	/**
 	 * @since 3.18
 	 */
-	public abstract String getAttribute(String key);
+	String getAttribute(String key);
 
 	/**
 	 * @since 3.18
 	 */
-	public abstract void setAttribute(String key, String value);
+	void setAttribute(String key, String value);
 
 	/**
 	 * @since 3.18
 	 */
-	public abstract Map<String, String> getAttributes();
+	Map<String, String> getAttributes();
 
 }

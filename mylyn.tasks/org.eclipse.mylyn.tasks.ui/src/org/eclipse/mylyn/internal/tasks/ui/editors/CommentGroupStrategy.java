@@ -50,7 +50,7 @@ public class CommentGroupStrategy {
 		}
 
 		public List<TaskAttribute> getCommentAttributes() {
-			List<TaskAttribute> commentAttributes = new ArrayList<TaskAttribute>(comments.size());
+			List<TaskAttribute> commentAttributes = new ArrayList<>(comments.size());
 			for (ITaskComment comment : comments) {
 				commentAttributes.add(comment.getTaskAttribute());
 			}
@@ -90,10 +90,10 @@ public class CommentGroupStrategy {
 			return Collections.emptyList();
 		}
 
-		List<CommentGroup> commentGroups = new ArrayList<CommentGroup>(3);
+		List<CommentGroup> commentGroups = new ArrayList<>(3);
 
 		// current
-		List<ITaskComment> current = new ArrayList<ITaskComment>(MAX_CURRENT);
+		List<ITaskComment> current = new ArrayList<>(MAX_CURRENT);
 		if (comments.size() > MAX_CURRENT) {
 			for (int i = comments.size() - 1; i >= 0; i--) {
 				ITaskComment comment = comments.get(i);
@@ -111,14 +111,14 @@ public class CommentGroupStrategy {
 		if (comments.size() > current.size()) {
 			int recentToIndex = comments.size() - current.size();
 			int recentFromIndex = Math.max(recentToIndex - MAX_RECENT, 0);
-			List<ITaskComment> recent = new ArrayList<ITaskComment>(comments.subList(recentFromIndex, recentToIndex));
+			List<ITaskComment> recent = new ArrayList<>(comments.subList(recentFromIndex, recentToIndex));
 			if (recent.size() > 0) {
 				commentGroups.add(new CommentGroup(CommentGroup.RECENT, recent, hasIncomingChanges(recent)));
 
 				// the rest goes to older
 				if (comments.size() > current.size() + recent.size()) {
 					int olderToIndex = comments.size() - current.size() - recent.size();
-					List<ITaskComment> older = new ArrayList<ITaskComment>(comments.subList(0, olderToIndex));
+					List<ITaskComment> older = new ArrayList<>(comments.subList(0, olderToIndex));
 					commentGroups.add(new CommentGroup(CommentGroup.OLDER, older, hasIncomingChanges(older)));
 				}
 			}

@@ -47,8 +47,8 @@ public class DayDateRange extends DateRange {
 		boolean isThisWeek = TaskActivityUtil.getCurrentWeek().includes(this);
 		Calendar endNextWeek = TaskActivityUtil.getCalendar();
 		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
-		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
-		if (isThisWeek || (useDayOfWeekForNextWeek && isNextWeek)) {
+		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && before(endNextWeek);
+		if (isThisWeek || useDayOfWeekForNextWeek && isNextWeek) {
 			String day = getDayOfWeek();
 			if (isPresent()) {
 				return day + Messages.DayDateRange___Today;
@@ -62,34 +62,34 @@ public class DayDateRange extends DateRange {
 	public String getDayOfWeek() {
 		String day = ""; //$NON-NLS-1$
 		switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
-		case Calendar.MONDAY:
-			day = CommonMessages.Monday;
-			break;
-		case Calendar.TUESDAY:
-			day = CommonMessages.Tuesday;
-			break;
-		case Calendar.WEDNESDAY:
-			day = CommonMessages.Wednesday;
-			break;
-		case Calendar.THURSDAY:
-			day = CommonMessages.Thursday;
-			break;
-		case Calendar.FRIDAY:
-			day = CommonMessages.Friday;
-			break;
-		case Calendar.SATURDAY:
-			day = CommonMessages.Saturday;
-			break;
-		case Calendar.SUNDAY:
-			day = CommonMessages.Sunday;
-			break;
+			case Calendar.MONDAY:
+				day = CommonMessages.Monday;
+				break;
+			case Calendar.TUESDAY:
+				day = CommonMessages.Tuesday;
+				break;
+			case Calendar.WEDNESDAY:
+				day = CommonMessages.Wednesday;
+				break;
+			case Calendar.THURSDAY:
+				day = CommonMessages.Thursday;
+				break;
+			case Calendar.FRIDAY:
+				day = CommonMessages.Friday;
+				break;
+			case Calendar.SATURDAY:
+				day = CommonMessages.Saturday;
+				break;
+			case Calendar.SUNDAY:
+				day = CommonMessages.Sunday;
+				break;
 		}
 		return day;
 	}
 
 	public static boolean isDayRange(Calendar calStart, Calendar calEnd) {
 		// bug 248683
-		long diff = (calEnd.getTimeInMillis() - calStart.getTimeInMillis()) - (DAY - 1);
+		long diff = calEnd.getTimeInMillis() - calStart.getTimeInMillis() - (DAY - 1);
 		return Math.abs(diff) <= 60 * 60 * 1000;
 	}
 }

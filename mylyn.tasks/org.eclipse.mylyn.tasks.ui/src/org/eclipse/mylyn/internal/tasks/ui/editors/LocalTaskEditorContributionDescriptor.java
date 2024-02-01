@@ -26,7 +26,7 @@ public class LocalTaskEditorContributionDescriptor {
 
 	public LocalTaskEditorContributionDescriptor(IConfigurationElement element) {
 		this.element = element;
-		this.id = element.getAttribute("id"); //$NON-NLS-1$
+		id = element.getAttribute("id"); //$NON-NLS-1$
 	}
 
 	public AbstractLocalEditorPart createPart() {

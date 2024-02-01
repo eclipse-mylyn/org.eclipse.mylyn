@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TestTaskDataCollector extends TaskDataCollector {
 
-	public List<TaskData> results = new ArrayList<TaskData>();
+	public List<TaskData> results = new ArrayList<>();
 
 	@Override
 	public void accept(TaskData taskData) {
@@ -38,7 +38,7 @@ public class TestTaskDataCollector extends TaskDataCollector {
 	}
 
 	public Set<ITask> getTasks(AbstractRepositoryConnector connector, TaskRepository repository) {
-		Set<ITask> tasks = new LinkedHashSet<ITask>(results.size());
+		Set<ITask> tasks = new LinkedHashSet<>(results.size());
 		for (TaskData taskData : results) {
 			ITask task = TasksUi.getRepositoryModel().getTask(repository, taskData.getTaskId());
 			if (task == null) {

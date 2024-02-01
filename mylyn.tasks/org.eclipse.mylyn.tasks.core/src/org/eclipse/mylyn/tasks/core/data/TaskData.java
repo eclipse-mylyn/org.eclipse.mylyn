@@ -45,7 +45,7 @@ public final class TaskData {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
-		this.root = new TaskAttribute(this);
+		root = new TaskAttribute(this);
 	}
 
 	public TaskAttribute getRoot() {
@@ -91,8 +91,8 @@ public final class TaskData {
 	 * 
 	 * @see #isPartial()
 	 * @see AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery, TaskDataCollector,
-	 *      org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession, org.eclipse.core.runtime.IProgressMonitor)
+	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery, TaskDataCollector, org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 * @see AbstractRepositoryConnector#getTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, String,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 * @see #isPartial()

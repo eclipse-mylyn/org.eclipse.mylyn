@@ -27,8 +27,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -153,11 +151,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		}
 
 		final Text usernameField = new Text(composite, SWT.BORDER);
-		usernameField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				username = usernameField.getText();
-			}
-		});
+		usernameField.addModifyListener(e -> username = usernameField.getText());
 		usernameField.setText(username);
 		if (username.length() == 0) {
 			usernameField.setFocus();
@@ -190,11 +184,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_Password);
 
 		final Text passwordField = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-		passwordField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				password = passwordField.getText();
-			}
-		});
+		passwordField.addModifyListener(e -> password = passwordField.getText());
 		passwordField.setText(password);
 		if (username.length() > 0) {
 			passwordField.setFocus();

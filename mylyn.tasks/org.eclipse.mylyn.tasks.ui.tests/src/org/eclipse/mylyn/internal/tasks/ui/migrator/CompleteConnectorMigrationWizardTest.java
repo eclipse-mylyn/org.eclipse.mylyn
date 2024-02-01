@@ -117,9 +117,10 @@ public class CompleteConnectorMigrationWizardTest {
 		IWizardPage firstPage = container.getCurrentPage();
 		assertEquals("Have You Recreated Your Queries?", firstPage.getTitle());
 		assertEquals(
-				"Migration will remove your old queries. Some queries could not be automatically migrated. "
-						+ "Please review your old and new queries and edit or create new ones as needed. "
-						+ "Your old and new queries are shown below and you can edit them by double-clicking.",
+				"""
+						Migration will remove your old queries. Some queries could not be automatically migrated.\s\
+						Please review your old and new queries and edit or create new ones as needed.\s\
+						Your old and new queries are shown below and you can edit them by double-clicking.""",
 				firstPage.getMessage());
 		assertTrue(firstPage.getControl() instanceof Composite);
 		Composite control = (Composite) firstPage.getControl();
@@ -172,18 +173,21 @@ public class CompleteConnectorMigrationWizardTest {
 		assertEquals(1, control.getChildren().length);
 		assertTrue(control.getChildren()[0] instanceof Text);
 		String text = ((Text) control.getChildren()[0]).getText();
-		assertTrue(text.contains("When you click finish, your context, scheduled dates, private notes and other data "
-				+ "will be migrated to the new connectors. Any tasks in your task list that are not included in the new "
-				+ "queries will be downloaded using the new connectors. The old tasks, "
-				+ "queries, and repositories will be deleted."));
+		assertTrue(text.contains("""
+				When you click finish, your context, scheduled dates, private notes and other data\s\
+				will be migrated to the new connectors. Any tasks in your task list that are not included in the new\s\
+				queries will be downloaded using the new connectors. The old tasks,\s\
+				queries, and repositories will be deleted."""));
 		assertTrue(text.contains(
 				"This may take a while. You should not use the task list or task editor while this is happening. "
 						+ "You will be prompted when migration is complete."));
-		assertTrue(text.contains("You will be able to "
-				+ "undo the migration by selecting \"Restore Tasks from History\" in the Task List view menu and choosing the "
-				+ "connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup. This will restore your task "
-				+ "list and repositories to the state they were in before the migration, but any data stored by 3rd party "
-				+ "plugins for Mylyn may be lost"));
+		assertTrue(text.contains(
+				"""
+						You will be able to\s\
+						undo the migration by selecting "Restore Tasks from History" in the Task List view menu and choosing the\s\
+						connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup. This will restore your task\s\
+						list and repositories to the state they were in before the migration, but any data stored by 3rd party\s\
+						plugins for Mylyn may be lost"""));
 	}
 
 	@Test

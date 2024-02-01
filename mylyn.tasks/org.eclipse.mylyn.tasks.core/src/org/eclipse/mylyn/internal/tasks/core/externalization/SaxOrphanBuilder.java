@@ -38,8 +38,8 @@ public class SaxOrphanBuilder {
 	private final Element orphansElement;
 
 	public SaxOrphanBuilder() throws CoreException {
-		this.document = createDocument();
-		this.orphansElement = document.getDocumentElement();
+		document = createDocument();
+		orphansElement = document.getDocumentElement();
 	}
 
 	private Document createDocument() throws CoreException {

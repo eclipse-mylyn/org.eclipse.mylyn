@@ -44,14 +44,17 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 	protected ISelection selection;
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		run(getSelectedQuery(selection));
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 		IRepositoryQuery selectedQuery = getSelectedQuery(selection);
@@ -83,10 +86,10 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 			return;
 		}
 
-		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<>();
 		queries.add(selectedQuery);
 
-		List<RepositoryQuery> clonedQueries = new ArrayList<RepositoryQuery>(queries.size());
+		List<RepositoryQuery> clonedQueries = new ArrayList<>(queries.size());
 		for (RepositoryQuery query : queries) {
 			TaskRepository repository = TasksUi.getRepositoryManager()
 					.getRepository(query.getConnectorKind(), query.getRepositoryUrl());

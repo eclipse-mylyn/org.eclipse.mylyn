@@ -26,8 +26,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
- * Provides static utility methods to access the implementation that is contributed by the searchProvider extension
- * point.
+ * Provides static utility methods to access the implementation that is contributed by the searchProvider extension point.
  * 
  * @author Flavio Donze
  * @author David Green
@@ -55,15 +54,14 @@ public class SearchUtil {
 	private static AbstractSearchProvider provider;
 
 	/**
-	 * Creates the search provider according to the defined extension point. Not synchronized since all invocations are
-	 * from UI thread.
+	 * Creates the search provider according to the defined extension point. Not synchronized since all invocations are from UI thread.
 	 */
 	private static final AbstractSearchProvider getSearchProvider() {
 		if (provider != null) {
 			return provider;
 		}
 
-		ExtensionPointReader<AbstractSearchProvider> reader = new ExtensionPointReader<AbstractSearchProvider>(
+		ExtensionPointReader<AbstractSearchProvider> reader = new ExtensionPointReader<>(
 				TasksUiPlugin.ID_PLUGIN, EXTENSION_SEARCH_PROVIDER, EXTENSION_SEARCH_PROVIDER,
 				AbstractSearchProvider.class);
 		reader.read();
@@ -85,7 +83,7 @@ public class SearchUtil {
 	}
 
 	public static AbstractSearchHandler createSearchHandler() {
-		ExtensionPointReader<AbstractSearchHandler> reader = new ExtensionPointReader<AbstractSearchHandler>(
+		ExtensionPointReader<AbstractSearchHandler> reader = new ExtensionPointReader<>(
 				TasksUiPlugin.ID_PLUGIN, EXTENSION_SEARCH_HANDLER, EXTENSION_SEARCH_HANDLER,
 				AbstractSearchHandler.class);
 		reader.read();

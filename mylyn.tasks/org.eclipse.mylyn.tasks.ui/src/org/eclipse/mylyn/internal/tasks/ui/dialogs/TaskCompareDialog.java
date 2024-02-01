@@ -127,7 +127,7 @@ public class TaskCompareDialog extends SelectionDialog {
 //						if (descendingButtons[index].getSelection()) {
 //							oldSelectionDirection = -1;
 //						}
-						ArrayList<String> oldSelectionList = new ArrayList<String>(
+						ArrayList<String> oldSelectionList = new ArrayList<>(
 								Arrays.asList(priorityCombos[index].getItems()));
 						String oldSelection;
 						if (index + 1 == SortCriterion.kindCount) {
@@ -151,13 +151,13 @@ public class TaskCompareDialog extends SelectionDialog {
 							descendingButtons[index].setEnabled(true);
 							if (index + 1 < SortCriterion.kindCount) {
 								priorityCombos[index + 1].setEnabled(true);
-								ArrayList<String> availablePriorities = new ArrayList<String>(
+								ArrayList<String> availablePriorities = new ArrayList<>(
 										Arrays.asList(priorityCombos[index].getItems()));
 								availablePriorities.remove(newSelection);
 								for (int k = index + 1; k < SortCriterion.kindCount; k++) {
 									priorityCombos[k].removeAll();
-									for (int j = 0; j < availablePriorities.size(); j++) {
-										priorityCombos[k].add(availablePriorities.get(j));
+									for (String element : availablePriorities) {
+										priorityCombos[k].add(element);
 									}
 									priorityCombos[k]
 											.select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
@@ -167,13 +167,13 @@ public class TaskCompareDialog extends SelectionDialog {
 							ascendingButtons[index].setEnabled(false);
 							descendingButtons[index].setEnabled(false);
 							if (index + 1 < SortCriterion.kindCount) {
-								ArrayList<String> availablePriorities = new ArrayList<String>(
+								ArrayList<String> availablePriorities = new ArrayList<>(
 										Arrays.asList(priorityCombos[index].getItems()));
 								for (int k = index + 1; k < SortCriterion.kindCount; k++) {
 									priorityCombos[k].setEnabled(true);
 									priorityCombos[k].removeAll();
-									for (int j = 0; j < availablePriorities.size(); j++) {
-										priorityCombos[k].add(availablePriorities.get(j));
+									for (String element : availablePriorities) {
+										priorityCombos[k].add(element);
 									}
 									priorityCombos[k]
 											.select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
@@ -261,7 +261,8 @@ public class TaskCompareDialog extends SelectionDialog {
 		dirty = true;
 	}
 
-	private final Comparator<String> columnComparator = new Comparator<String>() {
+	private final Comparator<String> columnComparator = new Comparator<>() {
+		@Override
 		public int compare(String arg0, String arg1) {
 			int index0 = -1;
 			int index1 = -1;
@@ -278,12 +279,12 @@ public class TaskCompareDialog extends SelectionDialog {
 	};
 
 	protected void updateUI() {
-		ArrayList<String> availablePriorities = new ArrayList<String>(Arrays.asList(propertyText));
+		ArrayList<String> availablePriorities = new ArrayList<>(Arrays.asList(propertyText));
 		for (int i = 0; i < TaskComparator.CRITERIA_COUNT; i++) {
 			SortCriterion criterion = taskComparator.getSortCriterion(i);
 			priorityCombos[i].removeAll();
-			for (int j = 0; j < availablePriorities.size(); j++) {
-				priorityCombos[i].add(availablePriorities.get(j));
+			for (String element : availablePriorities) {
+				priorityCombos[i].add(element);
 			}
 			priorityCombos[i].select(priorityCombos[i].indexOf(propertyText[criterion.getKey().ordinal()]));
 			ascendingButtons[i].setSelection(criterion.getDirection() == 1);
@@ -297,8 +298,8 @@ public class TaskCompareDialog extends SelectionDialog {
 				ascendingButtons[i].setEnabled(false);
 				descendingButtons[i].setEnabled(false);
 				for (int k = i + 1; k < TaskComparator.CRITERIA_COUNT; k++) {
-					for (int j = 0; j < availablePriorities.size(); j++) {
-						priorityCombos[k].add(availablePriorities.get(j));
+					for (String element : availablePriorities) {
+						priorityCombos[k].add(element);
 					}
 					priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
 					if (k == TaskComparator.CRITERIA_COUNT - 1) {

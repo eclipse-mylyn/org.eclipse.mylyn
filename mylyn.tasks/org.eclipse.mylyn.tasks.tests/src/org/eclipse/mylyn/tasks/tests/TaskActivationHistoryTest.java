@@ -18,8 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -35,6 +33,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Frank Becker
@@ -89,7 +89,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
-		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<IWorkingSet>(0));
+		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<>(0));
 	}
 
 	public void testWithWorkingSet() {
@@ -134,7 +134,7 @@ public class TaskActivationHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task12);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task11);
 
-		prevHistoryList = history.getPreviousTasks(new HashSet<AbstractTaskContainer>());
+		prevHistoryList = history.getPreviousTasks(new HashSet<>());
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 3);
@@ -190,7 +190,7 @@ public class TaskActivationHistoryTest extends TestCase {
 
 		// taskView.getPreviousTaskAction().run();
 		// assertTrue(task1.isActive());
-		//		
+		//
 		// taskView.getPreviousTaskAction().run();
 		// assertTrue(task1.isActive());
 

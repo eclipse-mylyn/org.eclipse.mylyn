@@ -35,7 +35,7 @@ public class SynchronizationScheduler {
 	public HashMap<Object, Synchronizer<?>> synchronizerByObject;
 
 	public SynchronizationScheduler() {
-		synchronizerByObject = new HashMap<Object, Synchronizer<?>>();
+		synchronizerByObject = new HashMap<>();
 	}
 
 	public void schedule(final Object object, final Synchronizer<?> synchronizer) {

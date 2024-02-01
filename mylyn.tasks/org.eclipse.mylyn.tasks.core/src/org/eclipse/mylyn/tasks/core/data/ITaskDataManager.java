@@ -28,31 +28,31 @@ public interface ITaskDataManager {
 	/**
 	 * @since 3.0
 	 */
-	public ITaskDataWorkingCopy createWorkingCopy(ITask task, TaskData taskData);
+	ITaskDataWorkingCopy createWorkingCopy(ITask task, TaskData taskData);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException;
+	ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void discardEdits(ITask task) throws CoreException;
+	void discardEdits(ITask task) throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskData getTaskData(ITask task) throws CoreException;
+	TaskData getTaskData(ITask task) throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract TaskData getTaskData(TaskRepository task, String taskId) throws CoreException;
+	TaskData getTaskData(TaskRepository task, String taskId) throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean hasTaskData(ITask task);
+	boolean hasTaskData(ITask task);
 
 }

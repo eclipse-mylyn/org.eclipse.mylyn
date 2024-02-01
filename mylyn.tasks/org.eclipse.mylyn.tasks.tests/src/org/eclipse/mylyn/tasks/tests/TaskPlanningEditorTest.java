@@ -13,10 +13,10 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves

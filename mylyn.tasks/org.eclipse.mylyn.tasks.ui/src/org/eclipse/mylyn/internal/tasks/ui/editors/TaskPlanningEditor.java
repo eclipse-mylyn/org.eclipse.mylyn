@@ -56,8 +56,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPropertyListener;
@@ -84,12 +82,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Button saveButton;
 
-	private final IPropertyListener dirtyStateListener = new IPropertyListener() {
-
-		public void propertyChanged(Object source, int propId) {
-			if (propId == IWorkbenchPartConstants.PROP_DIRTY && saveButton != null) {
-				saveButton.setEnabled(getEditor().isDirty());
-			}
+	private final IPropertyListener dirtyStateListener = (source, propId) -> {
+		if (propId == IWorkbenchPartConstants.PROP_DIRTY && saveButton != null) {
+			saveButton.setEnabled(getEditor().isDirty());
 		}
 	};
 
@@ -102,11 +97,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 					if (updateTask != null && task != null
 							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									refresh();
-								}
-							});
+							PlatformUI.getWorkbench().getDisplay().asyncExec(() -> refresh());
 						}
 						break;
 					}
@@ -134,11 +125,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 				.getLocalEditorContributions();
 		for (final LocalTaskEditorContributionDescriptor descriptor : localEditorContributions) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Error creating task editor contribution: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
+				@Override
 				public void run() throws Exception {
 					AbstractLocalEditorPart part = descriptor.createPart();
 					initializePart(editorComposite, part);
@@ -248,8 +241,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
-		this.textSupport
+		textSupport = new CommonTextSupport(getSite().getService(IHandlerService.class));
+		textSupport
 				.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
 
 		site.setSelectionProvider(
@@ -301,11 +294,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 					saveButton.setText(Messages.TaskPlanningEditor_Save);
 					saveButton.setImage(CommonImages.getImage(CommonImages.SAVE));
 					saveButton.setBackground(null);
-					saveButton.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							doSave(new NullProgressMonitor());
-						}
-					});
+					saveButton.addListener(SWT.Selection, e -> doSave(new NullProgressMonitor()));
 					saveButton.setEnabled(getEditor().isDirty());
 
 					return saveButton;

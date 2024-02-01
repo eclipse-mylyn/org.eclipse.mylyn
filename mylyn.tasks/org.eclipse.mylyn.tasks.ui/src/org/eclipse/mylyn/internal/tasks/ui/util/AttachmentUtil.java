@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.CoreUtil;
@@ -100,7 +99,7 @@ public class AttachmentUtil {
 	}
 
 	public static List<ITaskAttachment> getContextAttachments(TaskRepository repository, ITask task) {
-		List<ITaskAttachment> contextAttachments = new ArrayList<ITaskAttachment>();
+		List<ITaskAttachment> contextAttachments = new ArrayList<>();
 		TaskData taskData;
 		try {
 			taskData = TasksUi.getTaskDataManager().getTaskData(task);
@@ -136,30 +135,27 @@ public class AttachmentUtil {
 			TasksUi.getTaskActivityManager().deactivateTask(task);
 		}
 		try {
-			context.run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					File targetFile = TasksUiPlugin.getContextStore().getFileForContext(task);
-					try {
-						boolean exceptionThrown = true;
-						OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
-						try {
-							AttachmentUtil.downloadAttachment(attachment, out, monitor);
-							exceptionThrown = false;
-						} catch (CoreException e) {
-							throw new InvocationTargetException(e);
-						} finally {
-							out.close();
-							if (exceptionThrown) {
-								targetFile.delete();
-							}
+			context.run(true, true, monitor -> {
+				File targetFile = TasksUiPlugin.getContextStore().getFileForContext(task);
+				try {
+					boolean exceptionThrown = true;
+					OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
+					try (out) {
+						AttachmentUtil.downloadAttachment(attachment, out, monitor);
+						exceptionThrown = false;
+					} catch (CoreException e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						if (exceptionThrown) {
+							targetFile.delete();
 						}
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					} catch (IOException e) {
-						throw new InvocationTargetException(
-								new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-										RepositoryStatus.ERROR_IO, "Error writing to context file", e))); //$NON-NLS-1$
 					}
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} catch (IOException e) {
+					throw new InvocationTargetException(
+							new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+									RepositoryStatus.ERROR_IO, "Error writing to context file", e))); //$NON-NLS-1$
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -211,11 +207,9 @@ public class AttachmentUtil {
 		final SubmitJob submitJob = TasksUiInternal.getJobFactory()
 				.createSubmitTaskAttachmentJob(connector, repository, task, source, comment, taskAttribute);
 		try {
-			context.run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					if (((SubmitTaskAttachmentJob) submitJob).run(monitor) == Status.CANCEL_STATUS) {
-						throw new InterruptedException();
-					}
+			context.run(true, true, monitor -> {
+				if (((SubmitTaskAttachmentJob) submitJob).run(monitor) == Status.CANCEL_STATUS) {
+					throw new InterruptedException();
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -327,7 +321,7 @@ public class AttachmentUtil {
 	public static List<ITaskAttachment> getSelectedAttachments(ExecutionEvent event) {
 		if (event == null) {
 			// create bogus execution event to obtain active menu selection
-			IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+			IHandlerService service = PlatformUI.getWorkbench().getService(IHandlerService.class);
 			if (service != null) {
 				event = new ExecutionEvent(null, Collections.emptyMap(), null, service.getCurrentState());
 			} else {
@@ -343,7 +337,7 @@ public class AttachmentUtil {
 		}
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			List<?> items = ((IStructuredSelection) selection).toList();
-			List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+			List<ITaskAttachment> attachments = new ArrayList<>();
 			for (Object item : items) {
 				if (item instanceof ITaskAttachment) {
 					attachments.add((ITaskAttachment) item);
@@ -362,11 +356,10 @@ public class AttachmentUtil {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			ISelection windowSelection = window.getSelectionService().getSelection();
-			if (windowSelection instanceof IStructuredSelection && !windowSelection.isEmpty()) {
-				IStructuredSelection selection = (IStructuredSelection) windowSelection;
+			if (windowSelection instanceof IStructuredSelection selection && !windowSelection.isEmpty()) {
 				List<?> items = selection.toList();
 
-				List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+				List<ITaskAttachment> attachments = new ArrayList<>();
 				for (Object item : items) {
 					if (item instanceof ITaskAttachment) {
 						attachments.add((ITaskAttachment) item);

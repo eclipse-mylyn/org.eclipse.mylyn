@@ -13,10 +13,12 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import junit.framework.TestCase;
+import java.util.Objects;
 
 import org.eclipse.mylyn.tasks.core.ITask.IPriorityValue;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -31,16 +33,14 @@ public class PriorityLevelTest extends TestCase {
 			this.value = value;
 		}
 
+		@Override
 		public int getPriorityValue() {
 			return value;
 		}
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + value;
-			return result;
+			return Objects.hash(value);
 		}
 
 		@Override
@@ -48,10 +48,7 @@ public class PriorityLevelTest extends TestCase {
 			if (this == obj) {
 				return true;
 			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
+			if ((obj == null) || (getClass() != obj.getClass())) {
 				return false;
 			}
 			Priority other = (Priority) obj;
@@ -67,7 +64,7 @@ public class PriorityLevelTest extends TestCase {
 		Priority p1 = new Priority(1);
 		Priority p2 = new Priority(2);
 		Priority p3 = new Priority(3);
-		Priority[] priorities = new Priority[] { p1, p2, p3 };
+		Priority[] priorities = { p1, p2, p3 };
 		assertEquals("P1", PriorityLevel.fromValue(priorities, new Priority(1)).toString());
 		assertEquals("P3", PriorityLevel.fromValue(priorities, new Priority(2)).toString());
 		assertEquals("P5", PriorityLevel.fromValue(priorities, new Priority(3)).toString());
@@ -77,7 +74,7 @@ public class PriorityLevelTest extends TestCase {
 
 	public void testFromValueSinglePriority() {
 		Priority p1 = new Priority(10);
-		Priority[] priorities = new Priority[] { p1 };
+		Priority[] priorities = { p1 };
 		assertEquals("P1", PriorityLevel.fromValue(priorities, new Priority(10)).toString());
 		assertEquals("P3", PriorityLevel.fromValue(priorities, new Priority(11)).toString());
 		assertEquals("P3", PriorityLevel.fromValue(priorities, null).toString());
@@ -90,7 +87,7 @@ public class PriorityLevelTest extends TestCase {
 		Priority p4 = new Priority(40);
 		Priority p5 = new Priority(70);
 		Priority p6 = new Priority(100);
-		Priority[] priorities = new Priority[] { p1, p2, p3, p4, p5, p6 };
+		Priority[] priorities = { p1, p2, p3, p4, p5, p6 };
 		assertEquals("P1", PriorityLevel.fromValue(priorities, new Priority(10)).toString());
 		assertEquals("P1", PriorityLevel.fromValue(priorities, new Priority(20)).toString());
 		assertEquals("P2", PriorityLevel.fromValue(priorities, new Priority(30)).toString());

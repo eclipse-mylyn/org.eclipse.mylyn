@@ -22,21 +22,21 @@ public interface ITaskActivationListener {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void preTaskActivated(ITask task);
+	void preTaskActivated(ITask task);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void preTaskDeactivated(ITask task);
+	void preTaskDeactivated(ITask task);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void taskActivated(ITask task);
+	void taskActivated(ITask task);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void taskDeactivated(ITask task);
+	void taskDeactivated(ITask task);
 
 }

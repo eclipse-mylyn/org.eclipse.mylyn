@@ -30,21 +30,24 @@ public class ActivityManager implements IActivityManager, IActivitySession {
 	private final Set<ActivityEvent> events;
 
 	public ActivityManager() {
-		this.events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
+		events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
 	}
 
 	public Collection<ActivityEvent> getEvents(ActivityScope scope) {
 		return events;
 	}
 
+	@Override
 	public IActivityStream getStream(ActivityScope scope) {
 		return new ActivityStream(this, scope);
 	}
 
+	@Override
 	public IActivityManager getManger() {
 		return this;
 	}
 
+	@Override
 	public void fireActivityEvent(ActivityEvent event) {
 		events.add(event);
 	}

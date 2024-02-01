@@ -24,6 +24,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class ShowQuickOutlineHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		QuickOutlineDialog dialog = new QuickOutlineDialog(window);

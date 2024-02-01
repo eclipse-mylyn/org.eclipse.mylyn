@@ -63,7 +63,7 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 	private static class TestTaskCollector extends TaskCollector {
 
-		private final List<ITask> tasks = new ArrayList<ITask>();
+		private final List<ITask> tasks = new ArrayList<>();
 
 		@Override
 		public void collect(ITask task) {
@@ -218,7 +218,7 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 		context.getDataManager().putSubmittedTaskData(repositoryTask, taskData, new DelegatingProgressMonitor());
 
-		Set<ITask> changedElements = new HashSet<ITask>();
+		Set<ITask> changedElements = new HashSet<>();
 		changedElements.add(localTask);
 		changedElements.add(repositoryTask);
 		context.getTaskList().notifyElementsChanged(changedElements);
@@ -493,8 +493,8 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 	}
 
 	/**
-	 * Verify that multiple threads can concurrently use the index to find tasks, i.e. that no threads are blocked from
-	 * finding tasks by other threads.
+	 * Verify that multiple threads can concurrently use the index to find tasks, i.e. that no threads are blocked from finding tasks by
+	 * other threads.
 	 */
 	@Test
 	public void testMultithreadedAccessOnFind() throws CoreException, InterruptedException, ExecutionException {
@@ -509,33 +509,30 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 		final int[] concurrencyLevel = new int[1];
 		ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
 		try {
-			Collection<Callable<Object>> tasks = new HashSet<Callable<Object>>();
+			Collection<Callable<Object>> tasks = new HashSet<>();
 			for (int x = 0; x < nThreads; ++x) {
-				tasks.add(new Callable<Object>() {
+				tasks.add(() -> {
+					final int[] hitCount = new int[1];
+					index.find(repositoryTask.getSummary(), new TaskCollector() {
 
-					public Object call() throws Exception {
-						final int[] hitCount = new int[1];
-						index.find(repositoryTask.getSummary(), new TaskCollector() {
-
-							@Override
-							public void collect(ITask task) {
-								synchronized (concurrencyLevel) {
-									++concurrencyLevel[0];
-									if (concurrencyLevel[0] < nThreads) {
-										try {
-											concurrencyLevel.wait(5000L);
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-									} else {
-										concurrencyLevel.notifyAll();
+						@Override
+						public void collect(ITask task) {
+							synchronized (concurrencyLevel) {
+								++concurrencyLevel[0];
+								if (concurrencyLevel[0] < nThreads) {
+									try {
+										concurrencyLevel.wait(5000L);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
 									}
+								} else {
+									concurrencyLevel.notifyAll();
 								}
-								++hitCount[0];
 							}
-						}, 100);
-						return hitCount[0] == 1;
-					}
+							++hitCount[0];
+						}
+					}, 100);
+					return hitCount[0] == 1;
 				});
 			}
 			List<Future<Object>> futures = executorService.invokeAll(tasks);

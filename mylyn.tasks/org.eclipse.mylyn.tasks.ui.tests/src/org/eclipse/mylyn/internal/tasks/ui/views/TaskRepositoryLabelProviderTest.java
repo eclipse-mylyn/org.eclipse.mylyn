@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
 
 public class TaskRepositoryLabelProviderTest {
-	private final IBrandManager manager = mock(IBrandManager.class);;
+	private final IBrandManager manager = mock(IBrandManager.class);
 
 	private final TaskRepositoryLabelProvider labelProvider = new TaskRepositoryLabelProvider() {
 		@Override

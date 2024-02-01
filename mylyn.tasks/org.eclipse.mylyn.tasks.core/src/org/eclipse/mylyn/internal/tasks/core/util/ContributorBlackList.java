@@ -27,14 +27,14 @@ public class ContributorBlackList {
 	/**
 	 * Plug-in ids of connector extensions that are black listed.
 	 */
-	private final Set<String> disabledContributors = new HashSet<String>();
+	private final Set<String> disabledContributors = new HashSet<>();
 
 	public boolean isDisabled(IConfigurationElement element) {
 		return disabledContributors.contains(element.getContributor().getName());
 	}
 
 	public Set<String> getDisabledContributors() {
-		return Collections.unmodifiableSet(new HashSet<String>(disabledContributors));
+		return Collections.unmodifiableSet(new HashSet<>(disabledContributors));
 	}
 
 	public void disableContributor(String pluginId) {

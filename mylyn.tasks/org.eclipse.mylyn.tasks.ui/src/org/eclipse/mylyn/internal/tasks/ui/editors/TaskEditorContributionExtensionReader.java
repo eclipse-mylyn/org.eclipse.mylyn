@@ -60,8 +60,8 @@ public class TaskEditorContributionExtensionReader {
 	}
 
 	private static void initExtensions() {
-		Collection<TaskEditorPartDescriptor> repositoryContributions = new ArrayList<TaskEditorPartDescriptor>();
-		Collection<LocalTaskEditorContributionDescriptor> localContributions = new ArrayList<LocalTaskEditorContributionDescriptor>();
+		Collection<TaskEditorPartDescriptor> repositoryContributions = new ArrayList<>();
+		Collection<LocalTaskEditorContributionDescriptor> localContributions = new ArrayList<>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 

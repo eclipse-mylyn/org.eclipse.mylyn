@@ -75,9 +75,9 @@ public class TaskActivityProvider extends ActivityProvider {
 		@Override
 		public void collect(ITask task) {
 
-			Map<String, String> attrMap = new HashMap<String, String>();
+			Map<String, String> attrMap = new HashMap<>();
 			attrMap.put("author", getAuthor(task)); //$NON-NLS-1$
-			attrMap.put("taskId", getTaskId(task)); //$NON-NLS-1$			
+			attrMap.put("taskId", getTaskId(task)); //$NON-NLS-1$
 			ActivityEvent activityEvent = new ActivityEvent(task.getHandleIdentifier(), task.getConnectorKind(),
 					task.getSummary(), task.getCreationDate(), attrMap);
 			session.fireActivityEvent(activityEvent);

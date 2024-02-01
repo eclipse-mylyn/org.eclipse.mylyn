@@ -51,14 +51,13 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		this.activityManager = activityManager;
 		this.range = range;
 		if (summary == null) {
-			if (range instanceof DayDateRange && TaskActivityUtil.getNextWeek().includes(range)) {
-				DayDateRange dayRange = (DayDateRange) range;
+			if (range instanceof DayDateRange dayRange && TaskActivityUtil.getNextWeek().includes(range)) {
 				String day = NLS.bind(Messages.ScheduledTaskContainer_Next_Day, dayRange.getDayOfWeek());
 				this.summary = day;
-				this.shortSummary = day;
+				shortSummary = day;
 			} else {
 				this.summary = range.toString(false);
-				this.shortSummary = this.summary;
+				shortSummary = this.summary;
 			}
 		} else {
 			this.summary = summary;
@@ -115,7 +114,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 				}
 			}
 		}
-		Set<ITask> children = new HashSet<ITask>();
+		Set<ITask> children = new HashSet<>();
 		Calendar cal = TaskActivityUtil.getCalendar();
 		for (ITask task : tasks) {
 			if (!task.isCompleted() || isCompletedToday(task)) {
@@ -221,7 +220,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	private boolean isCompletedToday(ITask task) {
-		return (task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent());
+		return task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent();
 	}
 
 	private void addChild(Set<ITask> collection, ITask task) {
@@ -260,8 +259,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public int compareTo(IRepositoryElement element) {
-		if (element instanceof ScheduledTaskContainer) {
-			ScheduledTaskContainer container = ((ScheduledTaskContainer) element);
+		if (element instanceof ScheduledTaskContainer container) {
 			return range.compareTo(container.getDateRange());
 		}
 		return 0;

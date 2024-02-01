@@ -23,31 +23,31 @@ public interface IRepositoryQuery extends IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	String getConnectorKind();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getRepositoryUrl();
+	String getRepositoryUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getUrl();
+	String getUrl();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setUrl(String url);
+	void setUrl(String url);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getSummary();
+	String getSummary();
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void setSummary(String summary);
+	void setSummary(String summary);
 
 }

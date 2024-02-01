@@ -28,10 +28,12 @@ public class Person extends AbstractTaskContainer implements ITaskRepositoryElem
 		this.repositoryUrl = repositoryUrl;
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return connectorKind;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}

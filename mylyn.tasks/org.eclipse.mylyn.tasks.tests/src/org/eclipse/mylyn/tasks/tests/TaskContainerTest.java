@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

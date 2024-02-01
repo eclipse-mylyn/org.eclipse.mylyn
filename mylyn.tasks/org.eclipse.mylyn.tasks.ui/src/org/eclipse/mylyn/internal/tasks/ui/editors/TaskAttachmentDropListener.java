@@ -52,6 +52,7 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		this.page = page;
 	}
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 		if (event.detail == DND.DROP_DEFAULT) {
 			if ((event.operations & DND.DROP_COPY) != 0) {
@@ -74,12 +75,14 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		}
 	}
 
+	@Override
 	public void dragOver(DropTargetEvent event) {
 		event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
 	}
 
+	@Override
 	public void dragOperationChanged(DropTargetEvent event) {
-		if ((event.detail == DND.DROP_DEFAULT) || (event.operations & DND.DROP_COPY) != 0) {
+		if (event.detail == DND.DROP_DEFAULT || (event.operations & DND.DROP_COPY) != 0) {
 			event.detail = DND.DROP_COPY;
 		} else {
 			event.detail = DND.DROP_NONE;
@@ -92,12 +95,15 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		}
 	}
 
+	@Override
 	public void dragLeave(DropTargetEvent event) {
 	}
 
+	@Override
 	public void dropAccept(DropTargetEvent event) {
 	}
 
+	@Override
 	public void drop(DropTargetEvent event) {
 		if (LocalSelectionTransfer.getTransfer().isSupportedType(event.currentDataType)) {
 			TasksUiInternal.getTaskDropHandler().loadTaskDropListeners();
@@ -134,15 +140,14 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 	}
 
 	public static String[] getFilesFromSelection(ISelection selection) {
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<>();
 		if (selection instanceof IStructuredSelection) {
 			for (Object element : ((IStructuredSelection) selection).toList()) {
 				IResource resource = null;
 				if (element instanceof IResource) {
 					resource = (IResource) element;
-				} else if (element instanceof IAdaptable) {
-					IAdaptable adaptable = (IAdaptable) element;
-					resource = (IResource) adaptable.getAdapter(IResource.class);
+				} else if (element instanceof IAdaptable adaptable) {
+					resource = adaptable.getAdapter(IResource.class);
 				}
 				if (resource != null && resource.getRawLocation() != null) {
 					files.add(resource.getRawLocation().toOSString());

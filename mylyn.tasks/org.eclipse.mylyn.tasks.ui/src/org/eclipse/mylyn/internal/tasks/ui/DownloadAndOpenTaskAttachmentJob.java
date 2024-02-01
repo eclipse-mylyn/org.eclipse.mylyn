@@ -57,6 +57,7 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 		this.editorID = editorID;
 	}
 
+	@Override
 	public void run(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 		try {
@@ -132,14 +133,10 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 		if (disp.getThread() == Thread.currentThread()) {
 			return openEditor(file, attachmentFilename);
 		} else {
-			final AtomicReference<IStatus> status = new AtomicReference<IStatus>();
+			final AtomicReference<IStatus> status = new AtomicReference<>();
 			final File tmpFile = file;
 
-			disp.syncExec(new Runnable() {
-				public void run() {
-					status.set(openEditor(tmpFile, attachmentFilename));
-				};
-			});
+			disp.syncExec(() -> status.set(openEditor(tmpFile, attachmentFilename)));
 
 			if (status.get() == null) {
 				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -192,7 +189,7 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) { //$NON-NLS-1$
-				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+				return label.substring(repository.getRepositoryUrl().indexOf("//") + 2); //$NON-NLS-1$
 			}
 			return label;
 		}

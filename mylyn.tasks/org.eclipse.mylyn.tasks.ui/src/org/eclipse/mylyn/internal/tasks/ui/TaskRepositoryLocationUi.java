@@ -78,7 +78,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 	private boolean areEqual(AuthenticationCredentials oldCredentials, AuthenticationCredentials credentials) {
 		if (oldCredentials == null) {
-			return (credentials == null);
+			return credentials == null;
 		} else {
 			return oldCredentials.equals(credentials);
 		}
@@ -95,7 +95,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		private boolean canceled;
 
 		public PasswordRunner(AuthenticationType credentialType, String message) {
-			this.authType = credentialType;
+			authType = credentialType;
 			this.message = message;
 		}
 
@@ -107,6 +107,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			return canceled;
 		}
 
+		@Override
 		public void run() {
 			//Shell shell = Display.getCurrent().getActiveShell();
 			Shell shell = WorkbenchUtil.getShell();

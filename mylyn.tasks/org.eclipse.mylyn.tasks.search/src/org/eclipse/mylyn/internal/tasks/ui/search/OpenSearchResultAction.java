@@ -50,9 +50,7 @@ public class OpenSearchResultAction extends Action {
 	public void run() {
 		// Get the selected items
 		ISelection s = resultView.getViewer().getSelection();
-		if (s instanceof IStructuredSelection) {
-			IStructuredSelection selection = (IStructuredSelection) s;
-
+		if (s instanceof IStructuredSelection selection) {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<AbstractTask> it = selection.iterator(); it.hasNext();) {
 				AbstractTask repositoryHit = it.next();

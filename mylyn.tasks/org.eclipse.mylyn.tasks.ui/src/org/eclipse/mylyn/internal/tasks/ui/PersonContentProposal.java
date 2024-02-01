@@ -44,18 +44,22 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 		this(address, isCurrentUser, address, address.length());
 	}
 
+	@Override
 	public String getLabel() {
 		return address;
 	}
 
+	@Override
 	public String getDescription() {
 		return null;
 	}
 
+	@Override
 	public int getCursorPosition() {
 		return cursorPosition;
 	}
 
+	@Override
 	public String getContent() {
 		return replacementText;
 	}
@@ -68,6 +72,7 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 		}
 	}
 
+	@Override
 	public int compareTo(PersonContentProposal otherContentProposal) {
 		if (isCurrentUser) {
 			return -1;

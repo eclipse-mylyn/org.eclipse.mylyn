@@ -78,37 +78,37 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 		close();
 	}
 
+	@Override
 	public void handleEvent(final ServiceMessageEvent event) {
 		switch (event.getEventKind()) {
-		case MESSAGE_UPDATE:
-			IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
-			preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME, new Date().getTime());
-			String lastMessageId = preferenceStore.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
-			if (lastMessageId != null && lastMessageId.startsWith("org.eclipse.mylyn.reset.")) { //$NON-NLS-1$
-				lastMessageId = ""; //$NON-NLS-1$
-				preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, lastMessageId);
-			}
-
-			for (final ServiceMessage message : event.getMessages()) {
-				if (!message.isValid() || message.getId().equals("-1")) { //$NON-NLS-1$
-					continue;
+			case MESSAGE_UPDATE:
+				IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+				preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME,
+						new Date().getTime());
+				String lastMessageId = preferenceStore.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
+				if (lastMessageId != null && lastMessageId.startsWith("org.eclipse.mylyn.reset.")) { //$NON-NLS-1$
+					lastMessageId = ""; //$NON-NLS-1$
+					preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, lastMessageId);
 				}
 
-				if (message.getId().compareTo(lastMessageId) > 0) {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+				for (final ServiceMessage message : event.getMessages()) {
+					if (!message.isValid() || message.getId().equals("-1")) { //$NON-NLS-1$
+						continue;
+					}
+
+					if (message.getId().compareTo(lastMessageId) > 0) {
+						Display.getDefault().asyncExec(() -> {
 							setMessage(message);
 							// event id is not used but must be set to make configure link visible
 							setEventId(""); //$NON-NLS-1$
-						}
-					});
-					break;
+						});
+						break;
+					}
 				}
-			}
-			break;
-		case STOP:
-			close();
-			break;
+				break;
+			case STOP:
+				close();
+				break;
 		}
 	}
 
@@ -122,7 +122,7 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 						message.getLastModified());
 			}
 
-			this.currentMessage = message;
+			currentMessage = message;
 
 			setTitle(message.getTitle());
 			setTitleImage(Dialog.getImage(message.getImage()));
@@ -151,8 +151,7 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 					closeMessage();
 					final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
 					if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
-						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-								.getService(IHandlerService.class);
+						IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 						try {
 							handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 						} catch (Exception e1) {
@@ -168,6 +167,7 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 					TasksUiUtil.openUrl(e.text);
 				} else if (currentMessage != null) {
 					SafeRunner.run(new SafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							if (currentMessage.openLink(action)) {
 								closeMessage();

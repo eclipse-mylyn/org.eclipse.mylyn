@@ -24,43 +24,19 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITaskRepositoryFilter {
 
-	public static ITaskRepositoryFilter ALL = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return true;
-		}
-	};
+	ITaskRepositoryFilter ALL = (repository, connector) -> true;
 
-	public static ITaskRepositoryFilter CAN_QUERY = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return !(connector instanceof LocalRepositoryConnector) && !repository.isOffline()
-					&& connector.canQuery(repository);
-		}
-	};
+	ITaskRepositoryFilter CAN_QUERY = (repository, connector) -> !(connector instanceof LocalRepositoryConnector) && !repository.isOffline()
+			&& connector.canQuery(repository);
 
-	public static ITaskRepositoryFilter CAN_CREATE_NEW_TASK = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.canCreateNewTask(repository) && !repository.isOffline();
-		}
-	};
+	ITaskRepositoryFilter CAN_CREATE_NEW_TASK = (repository, connector) -> connector.canCreateNewTask(repository) && !repository.isOffline();
 
-	public static ITaskRepositoryFilter CAN_CREATE_TASK_FROM_KEY = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.canCreateTaskFromKey(repository) && !repository.isOffline();
-		}
-	};
+	ITaskRepositoryFilter CAN_CREATE_TASK_FROM_KEY = (repository, connector) -> connector.canCreateTaskFromKey(repository) && !repository.isOffline();
 
-	public static ITaskRepositoryFilter IS_USER_MANAGED = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.isUserManaged();
-		}
-	};
+	ITaskRepositoryFilter IS_USER_MANAGED = (repository, connector) -> connector.isUserManaged();
 
-	public static ITaskRepositoryFilter CAN_CREATE_REPOSITORY = new ITaskRepositoryFilter() {
-		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.canCreateRepository();
-		}
-	};
+	ITaskRepositoryFilter CAN_CREATE_REPOSITORY = (repository, connector) -> connector.canCreateRepository();
 
-	public abstract boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
+	boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
 
 }

@@ -29,7 +29,7 @@ public class ProductRepositoryMapping {
 
 	public ProductRepositoryMapping(String namespace) {
 		this.namespace = namespace;
-		this.attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 	}
 
 	public void addAttributes(Map<String, String> attributes) {

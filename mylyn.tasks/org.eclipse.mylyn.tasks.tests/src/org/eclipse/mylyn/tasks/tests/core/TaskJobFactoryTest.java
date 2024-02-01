@@ -15,14 +15,14 @@ package org.eclipse.mylyn.tasks.tests.core;
 
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+
+import junit.framework.TestCase;
 
 public class TaskJobFactoryTest extends TestCase {
 	private static abstract class JobCreator {

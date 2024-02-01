@@ -15,8 +15,6 @@ package org.eclipse.mylyn.tasks.tests.ui;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
@@ -39,6 +37,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla

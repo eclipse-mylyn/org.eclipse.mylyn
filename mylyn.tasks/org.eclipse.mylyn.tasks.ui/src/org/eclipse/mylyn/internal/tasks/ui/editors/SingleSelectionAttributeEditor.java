@@ -94,7 +94,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			if (text != null && !text.isDisposed()) {
 				String label = getValueLabel();
 				if ("".equals(label)) { //$NON-NLS-1$
-					// if set to the empty string the label will use 64px on GTK 
+					// if set to the empty string the label will use 64px on GTK
 					text.setText(" "); //$NON-NLS-1$
 				} else {
 					text.setText(label);

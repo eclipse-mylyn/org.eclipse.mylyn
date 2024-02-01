@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkingSetElementAdapter;
  */
 public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 
+	@Override
 	public IAdaptable[] adaptElements(IWorkingSet workingSet, IAdaptable[] elements) {
 		for (IAdaptable adaptable : elements) {
 			if (!(adaptable instanceof AbstractTaskContainer)) {
@@ -39,7 +40,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 	}
 
 	private IAdaptable[] selectContainers(IAdaptable[] elements) {
-		List<IAdaptable> containers = new ArrayList<IAdaptable>(elements.length);
+		List<IAdaptable> containers = new ArrayList<>(elements.length);
 		for (IAdaptable adaptable : elements) {
 			if (adaptable instanceof AbstractTaskContainer) {
 				containers.add(adaptable);
@@ -50,6 +51,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 		return containers.toArray(new IAdaptable[containers.size()]);
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}

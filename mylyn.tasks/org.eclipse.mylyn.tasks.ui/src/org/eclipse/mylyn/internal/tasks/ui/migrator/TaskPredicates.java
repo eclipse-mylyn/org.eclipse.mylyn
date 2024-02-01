@@ -49,10 +49,10 @@ public class TaskPredicates {
 	}
 
 	public static Predicate<RepositoryQuery> isSynchronizing() {
-		return query -> query.isSynchronizing();
+		return RepositoryQuery::isSynchronizing;
 	}
 
 	public static Predicate<AbstractTask> isTaskSynchronizing() {
-		return task -> task.isSynchronizing();
+		return AbstractTask::isSynchronizing;
 	}
 }

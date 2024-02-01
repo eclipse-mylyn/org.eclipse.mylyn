@@ -43,18 +43,22 @@ class ContentProposal implements IContentProposal {
 		this.description = description;
 	}
 
+	@Override
 	public String getContent() {
 		return content;
 	}
 
+	@Override
 	public int getCursorPosition() {
 		return cursorPosition;
 	}
 
+	@Override
 	public String getLabel() {
 		return label;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}

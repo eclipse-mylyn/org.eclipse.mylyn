@@ -53,19 +53,15 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 	private AbstractRepositoryConnector connector;
 
 	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, IRepositoryQuery repositoryQuery) {
-		this.taskList = tasklist;
+		taskList = tasklist;
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
-		this.searchResult = new RepositorySearchResult(this);
+		searchResult = new RepositorySearchResult(this);
 	}
 
 	public void aboutToStart() {
 		searchResult.removeAll();
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				NewSearchUI.activateSearchResultView();
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().asyncExec(NewSearchUI::activateSearchResultView);
 	}
 
 	@Override
@@ -80,22 +76,27 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		searchResult.addMatch(new Match(task, 0, 0));
 	}
 
+	@Override
 	public String getLabel() {
 		return Messages.SearchHitCollector_Querying_Repository_;
 	}
 
+	@Override
 	public boolean canRerun() {
 		return true;
 	}
 
+	@Override
 	public boolean canRunInBackground() {
 		return true;
 	}
 
+	@Override
 	public ISearchResult getSearchResult() {
 		return searchResult;
 	}
 
+	@Override
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
 		monitor = Policy.monitorFor(monitor);
 
@@ -108,11 +109,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		if (connector != null) {
 			final IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_failed, status);
-					}
-				});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_failed, status));
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,

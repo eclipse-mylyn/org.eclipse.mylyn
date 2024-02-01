@@ -41,7 +41,7 @@ public class SupportProvider extends AbstractSupportElement implements IProvider
 
 	public void add(IProduct provider) {
 		if (products == null) {
-			products = new ArrayList<IProduct>();
+			products = new ArrayList<>();
 		}
 		products.add(provider);
 	}
@@ -53,7 +53,7 @@ public class SupportProvider extends AbstractSupportElement implements IProvider
 	}
 
 	public List<IProduct> getProducts() {
-		return new ArrayList<IProduct>(products);
+		return new ArrayList<>(products);
 	}
 
 }

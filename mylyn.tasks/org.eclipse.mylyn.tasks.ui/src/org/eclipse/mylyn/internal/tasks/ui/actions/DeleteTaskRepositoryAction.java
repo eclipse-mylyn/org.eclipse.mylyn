@@ -28,7 +28,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
@@ -76,10 +75,10 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 	public static void run(final TaskRepository repositoryToDelete) {
 		Assert.isNotNull(repositoryToDelete);
 
-		final List<IRepositoryQuery> queriesToDelete = new ArrayList<IRepositoryQuery>();
-		final List<AbstractTask> tasksToDelete = new ArrayList<AbstractTask>();
+		final List<IRepositoryQuery> queriesToDelete = new ArrayList<>();
+		final List<AbstractTask> tasksToDelete = new ArrayList<>();
 
-		// check for queries over this repository			
+		// check for queries over this repository
 		Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
 		for (IRepositoryQuery query : queries) {
 			if (repositoryToDelete.getRepositoryUrl().equals(query.getRepositoryUrl())
@@ -124,28 +123,24 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
 		}
 		if (deleteConfirmed) {
-			ICoreRunnable op = new ICoreRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					try {
-						monitor.beginTask(Messages.DeleteTaskRepositoryAction_Delete_Repository_In_Progress,
-								IProgressMonitor.UNKNOWN);
-						DeleteAction.prepareDeletion(tasksToDelete);
-						DeleteAction.prepareDeletion(queriesToDelete);
-						TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
-							public void execute(IProgressMonitor monitor) throws CoreException {
-								// delete tasks
-								DeleteAction.performDeletion(tasksToDelete);
-								// delete queries
-								DeleteAction.performDeletion(queriesToDelete);
-								// delete repository
-								TasksUiPlugin.getRepositoryManager().removeRepository(repositoryToDelete);
-								// if repository is contributed via template, ensure it isn't added again
-								TaskRepositoryUtil.disableAddAutomatically(repositoryToDelete.getRepositoryUrl());
-							}
-						}, monitor);
-					} finally {
-						monitor.done();
-					}
+			ICoreRunnable op = monitor -> {
+				try {
+					monitor.beginTask(Messages.DeleteTaskRepositoryAction_Delete_Repository_In_Progress,
+							IProgressMonitor.UNKNOWN);
+					DeleteAction.prepareDeletion(tasksToDelete);
+					DeleteAction.prepareDeletion(queriesToDelete);
+					TasksUiPlugin.getTaskList().run(monitor1 -> {
+						// delete tasks
+						DeleteAction.performDeletion(tasksToDelete);
+						// delete queries
+						DeleteAction.performDeletion(queriesToDelete);
+						// delete repository
+						TasksUiPlugin.getRepositoryManager().removeRepository(repositoryToDelete);
+						// if repository is contributed via template, ensure it isn't added again
+						TaskRepositoryUtil.disableAddAutomatically(repositoryToDelete.getRepositoryUrl());
+					}, monitor);
+				} finally {
+					monitor.done();
 				}
 			};
 			try {

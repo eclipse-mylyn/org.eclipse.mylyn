@@ -60,13 +60,11 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 		refresh();
 		setControl(button);
 		if (!getTaskAttribute().hasValue()) {
-			// set initial value to false to match what the editor shows 
+			// set initial value to false to match what the editor shows
 			// use asyncExec to ensure this happens after decorating, otherwise this appears as an incoming change
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (!getTaskAttribute().hasValue()) {
-						getAttributeMapper().setBooleanValue(getTaskAttribute(), false);
-					}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+				if (!getTaskAttribute().hasValue()) {
+					getAttributeMapper().setBooleanValue(getTaskAttribute(), false);
 				}
 			});
 		}

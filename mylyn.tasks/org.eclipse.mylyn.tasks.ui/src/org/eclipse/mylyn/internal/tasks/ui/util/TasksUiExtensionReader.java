@@ -175,8 +175,7 @@ public class TasksUiExtensionReader {
 	private static void readDuplicateDetector(IConfigurationElement element) {
 		try {
 			Object obj = element.createExecutableExtension(ATTR_CLASS);
-			if (obj instanceof AbstractDuplicateDetector) {
-				AbstractDuplicateDetector duplicateDetector = (AbstractDuplicateDetector) obj;
+			if (obj instanceof AbstractDuplicateDetector duplicateDetector) {
 				duplicateDetector.setName(element.getAttribute(ATTR_NAME));
 				duplicateDetector.setConnectorKind(element.getAttribute(ATTR_KIND));
 				TasksUiPlugin.getDefault().addDuplicateDetector(duplicateDetector);
@@ -217,8 +216,7 @@ public class TasksUiExtensionReader {
 
 		try {
 			Object item = element.createExecutableExtension(ATTR_CLASS);
-			if (item instanceof AbstractTaskEditorPageFactory) {
-				AbstractTaskEditorPageFactory editorPageFactory = (AbstractTaskEditorPageFactory) item;
+			if (item instanceof AbstractTaskEditorPageFactory editorPageFactory) {
 				editorPageFactory.setId(id);
 				editorPageFactory.setPluginId(element.getNamespaceIdentifier());
 				TasksUiPlugin.getDefault().addTaskEditorPageFactory(editorPageFactory);

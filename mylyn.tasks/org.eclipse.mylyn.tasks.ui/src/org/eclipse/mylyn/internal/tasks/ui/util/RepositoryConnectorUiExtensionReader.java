@@ -186,7 +186,7 @@ public class RepositoryConnectorUiExtensionReader {
 	public <T> T loadAdapter(final AbstractRepositoryConnector connector, Class<T> klass) {
 		T adapter = null;
 		if (connector instanceof IAdaptable) {
-			adapter = (T) ((IAdaptable) connector).getAdapter(klass);
+			adapter = ((IAdaptable) connector).getAdapter(klass);
 		}
 		if (adapter == null) {
 			adapter = (T) Platform.getAdapterManager().loadAdapter(connector, klass.getName());
@@ -220,8 +220,7 @@ public class RepositoryConnectorUiExtensionReader {
 	private void registerRepositoryConnectorUi(IConfigurationElement element) {
 		try {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
-			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
-				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
+			if (connectorUiObject instanceof AbstractRepositoryConnectorUi connectorUi) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(connectorUi.getConnectorKind());
 				if (connector != null) {
 					TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);

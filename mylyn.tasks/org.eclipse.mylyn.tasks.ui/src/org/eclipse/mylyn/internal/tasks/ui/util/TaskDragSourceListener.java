@@ -52,9 +52,9 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 	public void dragStart(DragSourceEvent event) {
 		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			this.currentSelection = (IStructuredSelection) selection;
+			currentSelection = (IStructuredSelection) selection;
 		} else {
-			this.currentSelection = null;
+			currentSelection = null;
 			event.doit = false;
 		}
 	}
@@ -77,11 +77,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 				String[] paths = new String[1];
 				paths[0] = file.getAbsolutePath();
 				event.data = paths;
-			} catch (CoreException e) {
-				StatusHandler
-						.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problems encountered dragging task", //$NON-NLS-1$
-								e));
-			} catch (IOException e) {
+			} catch (CoreException | IOException e) {
 				StatusHandler
 						.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problems encountered dragging task", //$NON-NLS-1$
 								e));

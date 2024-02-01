@@ -34,7 +34,7 @@ public class RepositoryModel implements IRepositoryModel {
 
 	private final IRepositoryManager repositoryManager;
 
-	private final Map<String, ITask> taskByHandle = new WeakHashMap<String, ITask>();
+	private final Map<String, ITask> taskByHandle = new WeakHashMap<>();
 
 	private final TaskList taskList;
 
@@ -54,12 +54,13 @@ public class RepositoryModel implements IRepositoryModel {
 
 			@Override
 			public void repositoryRemoved(TaskRepository repository) {
-				// TODO 
+				// TODO
 				//taskList.removeUnmatchedContainer(taskList.getUnmatchedContainer(repository.getRepositoryUrl()));
 			}
 		});
 	}
 
+	@Override
 	public IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository) {
 		String handle = taskList.getUniqueHandleIdentifier();
 		RepositoryQuery query = new RepositoryQuery(taskRepository.getConnectorKind(), handle);
@@ -67,6 +68,7 @@ public class RepositoryModel implements IRepositoryModel {
 		return query;
 	}
 
+	@Override
 	public synchronized ITask createTask(TaskRepository taskRepository, String taskId) {
 		String handle = getTaskHandle(taskRepository, taskId);
 		ITask task = taskByHandle.get(handle);
@@ -103,6 +105,7 @@ public class RepositoryModel implements IRepositoryModel {
 		return taskComment;
 	}
 
+	@Override
 	public synchronized ITask getTask(String handleIdentifier) {
 		ITask task = taskByHandle.get(handleIdentifier);
 		if (task == null) {
@@ -111,10 +114,12 @@ public class RepositoryModel implements IRepositoryModel {
 		return task;
 	}
 
+	@Override
 	public synchronized ITask getTask(TaskRepository taskRepository, String taskId) {
 		return getTask(getTaskHandle(taskRepository, taskId));
 	}
 
+	@Override
 	public synchronized ITask getTaskByKey(TaskRepository repository, String taskKey) {
 		return taskList.getTaskByKey(repository.getUrl(), taskKey);
 	}

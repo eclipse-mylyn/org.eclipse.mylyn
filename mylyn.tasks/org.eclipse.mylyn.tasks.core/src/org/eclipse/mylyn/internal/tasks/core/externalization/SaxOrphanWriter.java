@@ -31,14 +31,12 @@ public class SaxOrphanWriter {
 	public void writeOrphans(NodeList orphanNodes) throws SAXException {
 		for (int i = 0; i < orphanNodes.getLength(); i++) {
 			Node orphanNode = orphanNodes.item(i);
-			if (orphanNode instanceof Element) {
-				Element orphanElement = (Element) orphanNode;
+			if (orphanNode instanceof Element orphanElement) {
 				AttributesWrapper saxAttributes = getAttributes(orphanElement);
 				handler.startElement(orphanElement.getNodeName(), saxAttributes);
 				writeOrphans(orphanElement.getChildNodes());
 				handler.endElement(orphanElement.getNodeName());
-			} else if (orphanNode instanceof Text) {
-				Text orphanText = (Text) orphanNode;
+			} else if (orphanNode instanceof Text orphanText) {
 				handler.characters(orphanText.getData());
 			}
 		}

@@ -30,18 +30,14 @@ public class TaskRepositoriesViewSorter extends TaskRepositoriesSorter {
 		if (e1 instanceof Category && e2 instanceof Category) {
 			return ((Category) e1).compareTo(e2);
 		}
-		if (e1 instanceof Category && e2 instanceof TaskRepository) {
-
-			Category cat1 = ((Category) e1);
+		if (e1 instanceof Category cat1 && e2 instanceof TaskRepository) {
 
 			String categoryId = ((TaskRepository) e2).getProperty(IRepositoryConstants.PROPERTY_CATEGORY);
 			Category cat2 = ((TaskRepositoryManager) TasksUi.getRepositoryManager()).getCategory(categoryId);
 
 			return cat1.compareTo(cat2);
 
-		} else if (e1 instanceof TaskRepository && e2 instanceof Category) {
-			Category cat1 = ((Category) e2);
-
+		} else if (e1 instanceof TaskRepository && e2 instanceof Category cat1) {
 			String categoryId = ((TaskRepository) e1).getProperty(IRepositoryConstants.PROPERTY_CATEGORY);
 			Category cat2 = ((TaskRepositoryManager) TasksUi.getRepositoryManager()).getCategory(categoryId);
 			int result = cat2.compareTo(cat1);

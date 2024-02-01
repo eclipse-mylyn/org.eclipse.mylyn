@@ -19,9 +19,11 @@ package org.eclipse.mylyn.tasks.core;
  */
 public class TaskActivityAdapter implements ITaskActivityListener {
 
+	@Override
 	public void activityReset() {
 	}
 
+	@Override
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 	}
 

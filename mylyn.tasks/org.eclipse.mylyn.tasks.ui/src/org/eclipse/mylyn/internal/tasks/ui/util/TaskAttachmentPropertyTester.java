@@ -30,9 +30,9 @@ public class TaskAttachmentPropertyTester extends PropertyTester {
 		return Boolean.valueOf(value).equals(expectedValue);
 	}
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof ITaskAttachment) {
-			ITaskAttachment taskAttachment = (ITaskAttachment) receiver;
+		if (receiver instanceof ITaskAttachment taskAttachment) {
 			if (PROPERTY_IS_CONTEXT.equals(property)) {
 				return equals(AttachmentUtil.isContext(taskAttachment), expectedValue);
 			}

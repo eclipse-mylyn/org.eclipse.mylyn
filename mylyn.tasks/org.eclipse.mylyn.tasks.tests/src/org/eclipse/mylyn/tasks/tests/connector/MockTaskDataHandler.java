@@ -45,7 +45,7 @@ public class MockTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		if (taskData.getTaskId() == null || taskData.getTaskId().length() == 0) {
 			return new RepositoryResponse(ResponseKind.TASK_UPDATED,
-					String.valueOf(this.connector.idSeed.incrementAndGet()));
+					String.valueOf(connector.idSeed.incrementAndGet()));
 		} else {
 			return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
@@ -54,7 +54,7 @@ public class MockTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
 			IProgressMonitor monitor) throws CoreException {
-		TaskMapper mapper = this.connector.getTaskMapping(data);
+		TaskMapper mapper = connector.getTaskMapping(data);
 		mapper.setCreationDate(new Date());
 		mapper.setDescription("");
 		mapper.setModificationDate(mapper.getCreationDate());

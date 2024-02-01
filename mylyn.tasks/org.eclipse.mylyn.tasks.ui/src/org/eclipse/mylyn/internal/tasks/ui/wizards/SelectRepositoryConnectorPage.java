@@ -24,12 +24,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -73,14 +69,17 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			this.connectors = connectors;
 		}
 
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
-			List<ConnectorBrand> connectorBrands = new ArrayList<ConnectorBrand>();
+			List<ConnectorBrand> connectorBrands = new ArrayList<>();
 			for (AbstractRepositoryConnector connector : connectors) {
 				if (connector.isUserManaged() && connector.canCreateRepository()) {
 					connectorBrands.add(new ConnectorBrand(connector, null));
@@ -105,6 +104,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		return connectorBrand != null;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).applyTo(container);
@@ -116,22 +116,15 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() instanceof ConnectorBrand) {
-					setConnectorBrand((ConnectorBrand) selection.getFirstElement());
-					setPageComplete(true);
-				}
-			}
-
-		});
-
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				getContainer().showPage(getNextPage());
+		viewer.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			if (selection.getFirstElement() instanceof ConnectorBrand) {
+				setConnectorBrand((ConnectorBrand) selection.getFirstElement());
+				setPageComplete(true);
 			}
 		});
+
+		viewer.addOpenListener(event -> getContainer().showPage(getNextPage()));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 
 		// add a hyperlink for connector discovery if it's available and enabled.
@@ -146,8 +139,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			discoveryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-							.getService(IHandlerService.class);
+					IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {

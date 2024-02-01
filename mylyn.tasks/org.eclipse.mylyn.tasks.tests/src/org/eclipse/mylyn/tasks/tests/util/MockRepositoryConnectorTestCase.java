@@ -16,8 +16,6 @@ package org.eclipse.mylyn.tasks.tests.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -26,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 public class MockRepositoryConnectorTestCase extends TestCase {
 

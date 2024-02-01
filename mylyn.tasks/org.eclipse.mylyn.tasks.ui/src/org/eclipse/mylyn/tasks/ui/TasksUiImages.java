@@ -255,20 +255,14 @@ public class TasksUiImages {
 		if (priorityLevel == null) {
 			return null;
 		}
-		switch (priorityLevel) {
-		case P1:
-			return CommonImages.PRIORITY_1;
-		case P2:
-			return CommonImages.PRIORITY_2;
-		case P3:
-			return CommonImages.PRIORITY_3;
-		case P4:
-			return CommonImages.PRIORITY_4;
-		case P5:
-			return CommonImages.PRIORITY_5;
-		default:
-			return null;
-		}
+		return switch (priorityLevel) {
+			case P1 -> CommonImages.PRIORITY_1;
+			case P2 -> CommonImages.PRIORITY_2;
+			case P3 -> CommonImages.PRIORITY_3;
+			case P4 -> CommonImages.PRIORITY_4;
+			case P5 -> CommonImages.PRIORITY_5;
+			default -> null;
+		};
 	}
 
 	public static ImageDescriptor create(String prefix, String name) {
@@ -284,7 +278,7 @@ public class TasksUiImages {
 			throw new MalformedURLException();
 		}
 
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		buffer.append('/');
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());

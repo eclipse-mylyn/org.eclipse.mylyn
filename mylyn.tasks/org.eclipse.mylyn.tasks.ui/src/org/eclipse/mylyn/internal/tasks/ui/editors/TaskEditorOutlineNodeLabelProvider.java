@@ -36,8 +36,7 @@ public class TaskEditorOutlineNodeLabelProvider extends LabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof TaskEditorOutlineNode) {
-			TaskEditorOutlineNode node = (TaskEditorOutlineNode) element;
+		if (element instanceof TaskEditorOutlineNode node) {
 			if (TaskEditorOutlineNode.LABEL_COMMENTS.equals(node.getLabel())
 					|| TaskEditorOutlineNode.LABEL_NEW_COMMENT.equals(node.getLabel())) {
 				return CommonImages.getImage(TasksUiImages.COMMENT);
@@ -95,8 +94,7 @@ public class TaskEditorOutlineNodeLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof TaskEditorOutlineNode) {
-			TaskEditorOutlineNode node = (TaskEditorOutlineNode) element;
+		if (element instanceof TaskEditorOutlineNode node) {
 			if (TaskEditorOutlineNode.LABEL_COMMENTS.equals(node.getLabel())
 					|| TaskEditorOutlineNode.LABEL_NEW_COMMENT.equals(node.getLabel())
 					|| TaskEditorOutlineNode.LABEL_DESCRIPTION.equals(node.getLabel())) {

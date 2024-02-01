@@ -34,6 +34,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 
 	private IWorkbenchWindow window;
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}

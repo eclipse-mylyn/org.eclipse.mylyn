@@ -26,7 +26,7 @@ public class AttributeMap {
 	private final Map<String, String> attributes;
 
 	public AttributeMap() {
-		attributes = new HashMap<String, String>(4);
+		attributes = new HashMap<>(4);
 	}
 
 	public String getAttribute(String key) {
@@ -34,7 +34,7 @@ public class AttributeMap {
 	}
 
 	public Map<String, String> getAttributes() {
-		return new HashMap<String, String>(attributes);
+		return new HashMap<>(attributes);
 	}
 
 	public void setAttribute(String key, String value) {

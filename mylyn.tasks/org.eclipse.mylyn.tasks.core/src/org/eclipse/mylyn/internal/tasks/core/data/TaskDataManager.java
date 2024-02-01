@@ -31,7 +31,6 @@ import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -63,7 +62,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final TaskActivityManager taskActivityManager;
 
-	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<ITaskDataManagerListener>();
+	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<>();
 
 	private final SynchronizationManger synchronizationManager;
 
@@ -86,6 +85,7 @@ public class TaskDataManager implements ITaskDataManager {
 		listeners.remove(listener);
 	}
 
+	@Override
 	public ITaskDataWorkingCopy createWorkingCopy(final ITask task, final TaskData taskData) {
 		Assert.isNotNull(task);
 		final TaskDataState state = new TaskDataState(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
@@ -98,6 +98,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return state;
 	}
 
+	@Override
 	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask) throws CoreException {
 		return getWorkingCopy(itask, true);
 	}
@@ -108,21 +109,20 @@ public class TaskDataManager implements ITaskDataManager {
 		final String kind = task.getConnectorKind();
 		final TaskDataState[] result = new TaskDataState[1];
 		final boolean[] changed = new boolean[1];
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				final File file = getMigratedFile(task, kind);
-				final TaskDataState state = taskDataStore.getTaskDataState(file);
-				if (state == null) {
-					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \"" //$NON-NLS-1$
-							+ file + "\" not found")); //$NON-NLS-1$
-				}
-				if (task.isMarkReadPending()) {
-					state.setLastReadData(state.getRepositoryData());
-				}
-				state.init(TaskDataManager.this, task);
-				state.revert();
-				if (markRead) {
-					switch (task.getSynchronizationState()) {
+		taskList.run(monitor -> {
+			final File file = getMigratedFile(task, kind);
+			final TaskDataState state = taskDataStore.getTaskDataState(file);
+			if (state == null) {
+				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \"" //$NON-NLS-1$
+						+ file + "\" not found")); //$NON-NLS-1$
+			}
+			if (task.isMarkReadPending()) {
+				state.setLastReadData(state.getRepositoryData());
+			}
+			state.init(TaskDataManager.this, task);
+			state.revert();
+			if (markRead) {
+				switch (task.getSynchronizationState()) {
 					case INCOMING:
 					case INCOMING_NEW:
 						task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -132,11 +132,10 @@ public class TaskDataManager implements ITaskDataManager {
 						task.setSynchronizationState(SynchronizationState.OUTGOING);
 						changed[0] = true;
 						break;
-					}
-					task.setMarkReadPending(true);
 				}
-				result[0] = state;
+				task.setMarkReadPending(true);
 			}
+			result[0] = state;
 		}, null, true);
 		if (changed[0]) {
 			taskList.notifyElementChanged(task);
@@ -149,18 +148,16 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
 		final boolean[] changed = new boolean[1];
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				final File file = fileManager.getFile(task, kind);
-				taskDataStore.putTaskData(ensurePathExists(file), state);
-				switch (task.getSynchronizationState()) {
+		taskList.run(monitor -> {
+			final File file = fileManager.getFile(task, kind);
+			taskDataStore.putTaskData(ensurePathExists(file), state);
+			switch (task.getSynchronizationState()) {
 				case SYNCHRONIZED:
 					task.setSynchronizationState(SynchronizationState.OUTGOING);
 					changed[0] = true;
 					break;
-				}
-				taskList.addTask(task);
 			}
+			taskList.addTask(task);
 		});
 		if (changed[0]) {
 			taskList.notifyElementChanged(task);
@@ -194,56 +191,52 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 		final boolean[] synchronizationStateChanged = new boolean[1];
 		if (taskDataChanged || user) {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					TaskDataState state = null;
-					if (!taskData.isPartial()) {
+			taskList.run(monitor1 -> {
+				TaskDataState state = null;
+				if (!taskData.isPartial()) {
+					File file = getMigratedFile(task, task.getConnectorKind());
+					state = taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(),
+							user);
+					task.setMarkReadPending(false);
+					event.setTaskDataUpdated(true);
+				}
+
+				boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
+				event.setTaskChanged(taskChanged);
+
+				if (taskDataChanged) {
+					String suppressIncoming = null;
+					// determine whether to show an incoming
+					if (state == null) {
 						File file = getMigratedFile(task, task.getConnectorKind());
-						state = taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(),
-								user);
-						task.setMarkReadPending(false);
-						event.setTaskDataUpdated(true);
+						state = taskDataStore.getTaskDataState(ensurePathExists(file));
 					}
+					TaskData lastReadData = state != null ? state.getLastReadData() : null;
+					TaskDataDiff diff = synchronizationManager.createDiff(taskData, lastReadData, monitor1);
+					suppressIncoming = Boolean.toString(!diff.hasChanged());
 
-					boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
-					event.setTaskChanged(taskChanged);
-
-					if (taskDataChanged) {
-						String suppressIncoming = null;
-						// determine whether to show an incoming
-						if (state == null) {
-							File file = getMigratedFile(task, task.getConnectorKind());
-							state = taskDataStore.getTaskDataState(ensurePathExists(file));
-						}
-						TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
-						TaskDataDiff diff = synchronizationManager.createDiff(taskData, lastReadData, monitor);
-						suppressIncoming = Boolean.toString(!diff.hasChanged());
-
-						switch (task.getSynchronizationState()) {
+					switch (task.getSynchronizationState()) {
 						case OUTGOING:
 							task.setSynchronizationState(SynchronizationState.CONFLICT);
 							break;
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
 							break;
-						}
+					}
 
-						// if an incoming was previously suppressed it may need to show now
-						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
-					}
-					if (task.isSynchronizing()) {
-						task.setSynchronizing(false);
-						synchronizationStateChanged[0] = true;
-					}
+					// if an incoming was previously suppressed it may need to show now
+					task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
+				}
+				if (task.isSynchronizing()) {
+					task.setSynchronizing(false);
+					synchronizationStateChanged[0] = true;
 				}
 			});
 		} else {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					if (task.isSynchronizing()) {
-						task.setSynchronizing(false);
-						synchronizationStateChanged[0] = true;
-					}
+			taskList.run(monitor1 -> {
+				if (task.isSynchronizing()) {
+					task.setSynchronizing(false);
+					synchronizationStateChanged[0] = true;
 				}
 			});
 		}
@@ -296,18 +289,18 @@ public class TaskDataManager implements ITaskDataManager {
 		return file;
 	}
 
+	@Override
 	public void discardEdits(final ITask itask) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
 		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask);
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File dataFile = fileManager.getFile(task, kind);
-				if (dataFile.exists()) {
-					taskDataStore.discardEdits(dataFile);
-				}
-				switch (task.getSynchronizationState()) {
+		taskList.run(monitor -> {
+			File dataFile = fileManager.getFile(task, kind);
+			if (dataFile.exists()) {
+				taskDataStore.discardEdits(dataFile);
+			}
+			switch (task.getSynchronizationState()) {
 				case OUTGOING:
 					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 					event.setTaskChanged(true);
@@ -316,7 +309,6 @@ public class TaskDataManager implements ITaskDataManager {
 					task.setSynchronizationState(SynchronizationState.INCOMING);
 					event.setTaskChanged(true);
 					break;
-				}
 			}
 		});
 		if (event.getTaskChanged()) {
@@ -337,6 +329,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return fileManager.getDataPath();
 	}
 
+	@Override
 	public TaskData getTaskData(ITask task) throws CoreException {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
@@ -354,6 +347,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return taskDataStore.getTaskDataState(findFile(task, kind));
 	}
 
+	@Override
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId) throws CoreException {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskId);
@@ -366,6 +360,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return state.getRepositoryData();
 	}
 
+	@Override
 	public boolean hasTaskData(ITask task) {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
@@ -383,21 +378,19 @@ public class TaskDataManager implements ITaskDataManager {
 		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, null);
 		event.setTaskDataChanged(true);
 		event.setData(((DelegatingProgressMonitor) monitor).getData());
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				if (!taskData.isPartial()) {
-					File file = getMigratedFile(task, task.getConnectorKind());
-					taskDataStore.setTaskData(ensurePathExists(file), taskData);
-					task.setMarkReadPending(false);
-					event.setTaskDataUpdated(true);
-				}
-
-				boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
-				event.setTaskChanged(taskChanged);
-
-				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-				task.setSynchronizing(false);
+		taskList.run(monitor1 -> {
+			if (!taskData.isPartial()) {
+				File file = getMigratedFile(task, task.getConnectorKind());
+				taskDataStore.setTaskData(ensurePathExists(file), taskData);
+				task.setMarkReadPending(false);
+				event.setTaskDataUpdated(true);
 			}
+
+			boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
+			event.setTaskChanged(taskChanged);
+
+			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+			task.setSynchronizing(false);
 		});
 		taskList.notifyElementChanged(task);
 		fireTaskDataUpdated(event);
@@ -406,13 +399,11 @@ public class TaskDataManager implements ITaskDataManager {
 	public void deleteTaskData(final ITask itask) throws CoreException {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = fileManager.getFile(task, task.getConnectorKind());
-				if (file.exists()) {
-					taskDataStore.deleteTaskData(file);
-					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-				}
+		taskList.run(monitor -> {
+			File file = fileManager.getFile(task, task.getConnectorKind());
+			if (file.exists()) {
+				taskDataStore.deleteTaskData(file);
+				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 			}
 		});
 		taskList.notifyElementChanged(task);
@@ -434,10 +425,9 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isNotNull(task);
 		final boolean changed[] = new boolean[1];
 		try {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					if (read) {
-						switch (task.getSynchronizationState()) {
+			taskList.run(monitor -> {
+				if (read) {
+					switch (task.getSynchronizationState()) {
 						case INCOMING:
 						case INCOMING_NEW:
 							task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -449,18 +439,17 @@ public class TaskDataManager implements ITaskDataManager {
 							task.setMarkReadPending(true);
 							changed[0] = true;
 							break;
-						}
-					} else {
-						// if an incoming was previously suppressed it need to show now
-						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING,
-								Boolean.toString(false));
-						switch (task.getSynchronizationState()) {
+					}
+				} else {
+					// if an incoming was previously suppressed it need to show now
+					task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING,
+							Boolean.toString(false));
+					switch (task.getSynchronizationState()) {
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
 							task.setMarkReadPending(false);
 							changed[0] = true;
 							break;
-						}
 					}
 				}
 			});
@@ -480,10 +469,9 @@ public class TaskDataManager implements ITaskDataManager {
 		final String kind = task.getConnectorKind();
 		Assert.isNotNull(editsData);
 		final boolean[] changed = new boolean[1];
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				taskDataStore.putEdits(fileManager.getFile(task, kind), editsData);
-				switch (task.getSynchronizationState()) {
+		taskList.run(monitor -> {
+			taskDataStore.putEdits(fileManager.getFile(task, kind), editsData);
+			switch (task.getSynchronizationState()) {
 				case INCOMING:
 				case INCOMING_NEW:
 					// TODO throw exception instead?
@@ -494,7 +482,6 @@ public class TaskDataManager implements ITaskDataManager {
 					task.setSynchronizationState(SynchronizationState.OUTGOING);
 					changed[0] = true;
 					break;
-				}
 			}
 		});
 		if (changed[0]) {
@@ -508,10 +495,12 @@ public class TaskDataManager implements ITaskDataManager {
 			for (final ITaskDataManagerListener listener : array) {
 				SafeRunner.run(new ISafeRunnable() {
 
+					@Override
 					public void handleException(Throwable exception) {
 						// ignore
 					}
 
+					@Override
 					public void run() throws Exception {
 						listener.taskDataUpdated(event);
 					}
@@ -527,10 +516,12 @@ public class TaskDataManager implements ITaskDataManager {
 			for (final ITaskDataManagerListener listener : array) {
 				SafeRunner.run(new ISafeRunnable() {
 
+					@Override
 					public void handleException(Throwable exception) {
 						// ignore
 					}
 
+					@Override
 					public void run() throws Exception {
 						listener.editsDiscarded(event);
 					}
@@ -545,18 +536,16 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
 		final String kind = task.getConnectorKind();
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = getMigratedFile(task, kind);
-				if (file.exists()) {
-					TaskDataState oldState = taskDataStore.getTaskDataState(file);
-					if (oldState != null) {
-						File newFile = fileManager.getFile(newStorageRepositoryUrl, task, kind);
-						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), newRepositoryUrl,
-								oldState.getTaskId());
-						newState.merge(oldState);
-						taskDataStore.putTaskData(ensurePathExists(newFile), newState);
-					}
+		taskList.run(monitor -> {
+			File file = getMigratedFile(task, kind);
+			if (file.exists()) {
+				TaskDataState oldState = taskDataStore.getTaskDataState(file);
+				if (oldState != null) {
+					File newFile = fileManager.getFile(newStorageRepositoryUrl, task, kind);
+					TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), newRepositoryUrl,
+							oldState.getTaskId());
+					newState.merge(oldState);
+					taskDataStore.putTaskData(ensurePathExists(newFile), newState);
 				}
 			}
 		});
@@ -567,15 +556,13 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
 		final String kind = task.getConnectorKind();
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = getMigratedFile(task, kind);
-				if (file.exists()) {
-					TaskDataState state = taskDataStore.getTaskDataState(file);
-					if (state != null) {
-						state.changeAttributeValues(newValues);
-						taskDataStore.putTaskData(file, state);
-					}
+		taskList.run(monitor -> {
+			File file = getMigratedFile(task, kind);
+			if (file.exists()) {
+				TaskDataState state = taskDataStore.getTaskDataState(file);
+				if (state != null) {
+					state.changeAttributeValues(newValues);
+					taskDataStore.putTaskData(file, state);
 				}
 			}
 		});
@@ -583,22 +570,19 @@ public class TaskDataManager implements ITaskDataManager {
 
 	public void refactorTaskId(final AbstractTask task, final ITask newTask) throws CoreException {
 		final String kind = task.getConnectorKind();
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = getMigratedFile(task, kind);
-				if (file.exists()) {
-					TaskDataState oldState = taskDataStore.getTaskDataState(file);
-					if (oldState != null) {
-						File newFile = fileManager.getFile(task.getRepositoryUrl(), newTask, kind);
-						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), task.getRepositoryUrl(),
-								newTask.getTaskId());
-						newState.merge(oldState);
-						taskDataStore.putTaskData(ensurePathExists(newFile), newState);
-						taskDataStore.deleteTaskData(file);
-					}
+		taskList.run(monitor -> {
+			File file = getMigratedFile(task, kind);
+			if (file.exists()) {
+				TaskDataState oldState = taskDataStore.getTaskDataState(file);
+				if (oldState != null) {
+					File newFile = fileManager.getFile(task.getRepositoryUrl(), newTask, kind);
+					TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), task.getRepositoryUrl(),
+							newTask.getTaskId());
+					newState.merge(oldState);
+					taskDataStore.putTaskData(ensurePathExists(newFile), newState);
+					taskDataStore.deleteTaskData(file);
 				}
 			}
-
 		});
 	}
 
@@ -606,15 +590,13 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
 		final String kind = task.getConnectorKind();
-		taskList.run(new ITaskListRunnable() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = getMigratedFile(task, kind);
-				if (file.exists()) {
-					TaskDataState state = taskDataStore.getTaskDataState(file);
-					if (state != null) {
-						state.refactorAttribute(attribute);
-						taskDataStore.putTaskData(file, state);
-					}
+		taskList.run(monitor -> {
+			File file = getMigratedFile(task, kind);
+			if (file.exists()) {
+				TaskDataState state = taskDataStore.getTaskDataState(file);
+				if (state != null) {
+					state.refactorAttribute(attribute);
+					taskDataStore.putTaskData(file, state);
 				}
 			}
 		});

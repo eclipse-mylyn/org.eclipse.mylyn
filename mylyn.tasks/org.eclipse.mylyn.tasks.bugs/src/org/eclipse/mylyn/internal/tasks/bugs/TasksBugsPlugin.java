@@ -44,11 +44,7 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 			if (workbench != null) {
 				Display display = workbench.getDisplay();
 				if (display != null && !display.isDisposed()) {
-					display.asyncExec(new Runnable() {
-						public void run() {
-							getTaskErrorReporter().handle(status);
-						}
-					});
+					display.asyncExec(() -> getTaskErrorReporter().handle(status));
 				}
 			}
 		}

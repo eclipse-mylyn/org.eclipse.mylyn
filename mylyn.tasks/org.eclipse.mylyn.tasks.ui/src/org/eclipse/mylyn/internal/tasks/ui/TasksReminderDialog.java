@@ -51,7 +51,7 @@ public class TasksReminderDialog extends Dialog {
 
 	private TableViewer tableViewer = null;
 
-	private final String[] columnNames = new String[] { Messages.TasksReminderDialog_Description,
+	private final String[] columnNames = { Messages.TasksReminderDialog_Description,
 			Messages.TasksReminderDialog_Priority, Messages.TasksReminderDialog_Reminder_Day };
 
 	private static final int DISMISS_ALL_ID = 200;
@@ -160,8 +160,7 @@ public class TasksReminderDialog extends Dialog {
 			okPressed();
 		} else if (buttonId == DISMISS_ID) {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof ITask) {
-				ITask t = (ITask) sel;
+			if (sel != null && sel instanceof ITask t) {
 				((AbstractTask) t).setReminded(true);
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
@@ -172,8 +171,7 @@ public class TasksReminderDialog extends Dialog {
 			}
 		} else if (buttonId == SNOOZE_ID) {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof ITask) {
-				ITask t = (ITask) sel;
+			if (sel != null && sel instanceof ITask t) {
 				((AbstractTask) t).setReminded(false);
 				((AbstractTask) t).setScheduledForDate(TaskActivityUtil.getDayOf(new Date(new Date().getTime() + DAY)));
 				tasks.remove(t);
@@ -189,32 +187,37 @@ public class TasksReminderDialog extends Dialog {
 
 	private class ReminderTasksContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return tasks.toArray();
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
 
 	private static class ReminderTasksLabelProvider extends LabelProvider implements ITableLabelProvider {
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof ITask) {
 				AbstractTask task = (AbstractTask) element;
 				switch (columnIndex) {
-				case 0:
-					return task.getSummary();
-				case 1:
-					return task.getPriority();
-				case 2:
-					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getScheduledForDate());
+					case 0:
+						return task.getSummary();
+					case 1:
+						return task.getPriority();
+					case 2:
+						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getScheduledForDate());
 				}
 			}
 			return null;
@@ -233,7 +236,6 @@ public class TasksReminderDialog extends Dialog {
 		private final int criteria;
 
 		public ReminderTaskSorter(int criteria) {
-			super();
 			this.criteria = criteria;
 		}
 
@@ -242,16 +244,12 @@ public class TasksReminderDialog extends Dialog {
 			ITask t1 = (ITask) obj1;
 			ITask t2 = (ITask) obj2;
 
-			switch (criteria) {
-			case DESCRIPTION:
-				return compareDescription(t1, t2);
-			case PRIORITY:
-				return comparePriority(t1, t2);
-			case DATE:
-				return compareDate((AbstractTask) t1, (AbstractTask) t2);
-			default:
-				return 0;
-			}
+			return switch (criteria) {
+				case DESCRIPTION -> compareDescription(t1, t2);
+				case PRIORITY -> comparePriority(t1, t2);
+				case DATE -> compareDate((AbstractTask) t1, (AbstractTask) t2);
+				default -> 0;
+			};
 		}
 
 		private int compareDescription(ITask task1, ITask task2) {

@@ -247,7 +247,7 @@ public class TaskListExternalizationTest extends TestCase {
 	}
 
 	public void testSubTaskExternalization() throws Exception {
-		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
+		Set<AbstractTask> rootTasks = new HashSet<>();
 		AbstractTask task1 = new LocalTask("1", "task1");
 		taskList.addTask(task1);
 		rootTasks.add(task1);
@@ -273,7 +273,7 @@ public class TaskListExternalizationTest extends TestCase {
 	}
 
 	public void testCreationAndExternalization() throws Exception {
-		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
+		Set<AbstractTask> rootTasks = new HashSet<>();
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		rootTasks.add(task1);
 		assertEquals(1, taskList.getAllTasks().size());
@@ -290,8 +290,8 @@ public class TaskListExternalizationTest extends TestCase {
 		rootTasks.add(task2);
 		assertEquals(3, taskList.getAllTasks().size());
 
-		Set<TaskCategory> categories = new HashSet<TaskCategory>();
-		Set<AbstractTask> cat1Contents = new HashSet<AbstractTask>();
+		Set<TaskCategory> categories = new HashSet<>();
+		Set<AbstractTask> cat1Contents = new HashSet<>();
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		taskList.addCategory(cat1);
 		categories.add(cat1);
@@ -332,10 +332,8 @@ public class TaskListExternalizationTest extends TestCase {
 
 		Set<AbstractTaskCategory> readCats = taskList.getTaskCategories();
 		assertTrue(taskList.getCategories().contains(cat1));
-		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
 		boolean found = false;
-		while (iterator.hasNext()) {
-			ITaskContainer readCat1 = iterator.next();
+		for (ITaskContainer readCat1 : readCats) {
 			if (cat1.equals(readCat1)) {
 				found = true;
 				for (ITask task : readCat1.getChildren()) {

@@ -28,9 +28,10 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskRepositoryParameterValues implements IParameterValues {
 
+	@Override
 	public Map<String, String> getParameterValues() {
 		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, String> values = new HashMap<>();
 		for (AbstractRepositoryConnector connector : connectors) {
 			if (connector.canCreateRepository()) {
 				values.put(connector.getLabel(), connector.getConnectorKind());

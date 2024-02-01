@@ -30,9 +30,11 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class RestoreTaskListAction extends Action implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
@@ -46,13 +48,16 @@ public class RestoreTaskListAction extends Action implements IViewActionDelegate
 		dialog.open();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		// ignore
 	}

@@ -83,6 +83,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		addPage(importPage);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// no initialization needed
 	}
@@ -150,6 +151,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			this.sourceZipFile = sourceZipFile;
 		}
 
+		@Override
 		public void run(final IProgressMonitor monitor) throws CoreException {
 			try {
 				boolean hasDefaultTaskList = false;
@@ -157,7 +159,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 				// determine properties of backup
 				ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-				try {
+				try (zipFile) {
 					Enumeration<? extends ZipEntry> entries = zipFile.entries();
 					while (entries.hasMoreElements()) {
 						ZipEntry entry = entries.nextElement();
@@ -166,8 +168,6 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 						}
 						numEntries++;
 					}
-				} finally {
-					zipFile.close();
 				}
 
 				if (numEntries > 0) {
@@ -197,13 +197,11 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private void readTaskListData() {
 			if (!CoreUtil.TEST_MODE) {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						try {
-							TasksUiPlugin.getDefault().reloadDataDirectory();
-						} catch (CoreException e) {
-							TasksUiInternal.displayStatus(Messages.TaskDataImportWizard_Import_Error, e.getStatus());
-						}
+				PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+					try {
+						TasksUiPlugin.getDefault().reloadDataDirectory();
+					} catch (CoreException e) {
+						TasksUiInternal.displayStatus(Messages.TaskDataImportWizard_Import_Error, e.getStatus());
 					}
 				});
 			} else {

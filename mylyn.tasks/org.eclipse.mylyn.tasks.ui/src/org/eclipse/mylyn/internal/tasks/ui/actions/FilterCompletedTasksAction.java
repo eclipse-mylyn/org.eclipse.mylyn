@@ -49,6 +49,6 @@ public class FilterCompletedTasksAction extends Action {
 		} else {
 			view.removeFilter(view.getCompleteFilter());
 		}
-		this.view.refresh();
+		view.refresh();
 	}
 }

@@ -58,11 +58,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getElement();
 					if (task.equals(updateTask)) {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									updateImageDescriptor();
-								}
-							});
+							PlatformUI.getWorkbench().getDisplay().asyncExec(() -> updateImageDescriptor());
 						}
 					}
 				}
@@ -100,6 +96,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		setEnabled(!task.isCompleted());
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (menuManager != null) {
 			menuManager.dispose();
@@ -109,6 +106,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		return menuManager.getMenu();
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (menuManager != null) {
 			return menuManager.getMenu();
@@ -116,6 +114,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 		return null;
 	}
 
+	@Override
 	public void dispose() {
 		if (menuManager != null) {
 			menuManager.dispose();

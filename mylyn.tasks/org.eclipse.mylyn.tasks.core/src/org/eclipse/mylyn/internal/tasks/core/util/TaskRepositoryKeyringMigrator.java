@@ -28,8 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * Extends {@link KeyringMigrator} to migrate TaskRepository credentials, including usernames which are stored in the
- * repository properties.
+ * Extends {@link KeyringMigrator} to migrate TaskRepository credentials, including usernames which are stored in the repository properties.
  * 
  * @author Sam Davis
  */

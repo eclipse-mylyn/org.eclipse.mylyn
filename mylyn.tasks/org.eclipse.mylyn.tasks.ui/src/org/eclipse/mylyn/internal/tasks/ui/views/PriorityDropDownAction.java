@@ -46,7 +46,6 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 	private Menu dropDownMenu = null;
 
 	public PriorityDropDownAction(TaskListView taskListView) {
-		super();
 		this.taskListView = taskListView;
 		setText(Messages.PriorityDropDownAction_Filter_Priority_Lower_Than);
 		setToolTipText(Messages.PriorityDropDownAction_Filter_Priority_Lower_Than);
@@ -54,6 +53,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		setMenuCreator(this);
 	}
 
+	@Override
 	public void dispose() {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -61,6 +61,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -70,6 +71,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		return dropDownMenu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
@@ -86,7 +88,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 				TasksUiPlugin.getDefault()
 						.getPreferenceStore()
 						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P1.toString());
-				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
+				taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
 			}
 		};
 		priority1.setEnabled(true);
@@ -101,7 +103,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 				TasksUiPlugin.getDefault()
 						.getPreferenceStore()
 						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P2.toString());
-				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
+				taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
 			}
 		};
 		priority2.setEnabled(true);
@@ -116,7 +118,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 				TasksUiPlugin.getDefault()
 						.getPreferenceStore()
 						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P3.toString());
-				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
+				taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
 			}
 		};
 		priority3.setEnabled(true);
@@ -131,7 +133,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 				TasksUiPlugin.getDefault()
 						.getPreferenceStore()
 						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P4.toString());
-				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
+				taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
 			}
 		};
 		priority4.setEnabled(true);
@@ -146,7 +148,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 				TasksUiPlugin.getDefault()
 						.getPreferenceStore()
 						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
-				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
+				taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
 			}
 		};
 		priority5.setEnabled(true);
@@ -196,6 +198,6 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 
 	@Override
 	public void run() {
-		this.setChecked(isChecked());
+		setChecked(isChecked());
 	}
 }

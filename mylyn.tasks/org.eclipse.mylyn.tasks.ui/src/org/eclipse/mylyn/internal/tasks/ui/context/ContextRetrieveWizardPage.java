@@ -63,6 +63,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		setTitle(Messages.ContextRetrieveWizardPage_Select_context);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -90,6 +91,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		});
 		contextTable.addMouseListener(new MouseListener() {
 
+			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				selectedContextAttachment = (ITaskAttachment) contextTable.getItem(contextTable.getSelectionIndex())
 						.getData();
@@ -99,9 +101,11 @@ public class ContextRetrieveWizardPage extends WizardPage {
 				getWizard().getContainer().getShell().close();
 			}
 
+			@Override
 			public void mouseDown(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseUp(MouseEvent e) {
 			}
 

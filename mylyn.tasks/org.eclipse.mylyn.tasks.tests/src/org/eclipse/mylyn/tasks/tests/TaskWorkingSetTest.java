@@ -16,8 +16,6 @@ package org.eclipse.mylyn.tasks.tests;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -37,6 +35,8 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -106,7 +106,7 @@ public class TaskWorkingSetTest extends TestCase {
 //		TaskList taskList = TasksUiPlugin.getTaskList();
 //		taskList.addQuery(query);
 //		workingSet = createWorkingSet(query);
-//		
+//
 //		TasksUiPlugin.getTaskList().deleteQuery(query);
 //		query = new MockRepositoryQuery("newDescription");
 //		TasksUiPlugin.getTaskList().addQuery(query);

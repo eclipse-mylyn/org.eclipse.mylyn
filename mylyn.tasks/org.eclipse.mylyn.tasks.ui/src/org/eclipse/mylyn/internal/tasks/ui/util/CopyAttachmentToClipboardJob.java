@@ -50,19 +50,17 @@ public class CopyAttachmentToClipboardJob extends Job {
 		}
 
 		String contents = new String(out.toByteArray());
-		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator")); //$NON-NLS-1$ //$NON-NLS-2$
+		contents = contents.replaceAll("\r\n|\n", System.lineSeparator()); //$NON-NLS-1$
 		copyToClipboard(contents);
 
 		return Status.OK_STATUS;
 	}
 
 	private void copyToClipboard(final String contents) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-				clipboard.setContents(new Object[] { contents }, new Transfer[] { TextTransfer.getInstance() });
-				clipboard.dispose();
-			}
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+			Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+			clipboard.setContents(new Object[] { contents }, new Transfer[] { TextTransfer.getInstance() });
+			clipboard.dispose();
 		});
 	}
 

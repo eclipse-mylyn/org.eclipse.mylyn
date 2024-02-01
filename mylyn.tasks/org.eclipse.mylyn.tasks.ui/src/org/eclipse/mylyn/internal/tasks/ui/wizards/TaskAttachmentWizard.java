@@ -34,7 +34,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -101,16 +100,14 @@ public class TaskAttachmentWizard extends Wizard {
 				return transfers;
 			}
 
-			transfers = new ArrayList<Transfer>();
+			transfers = new ArrayList<>();
 			try {
 				Class<?> clazz = Class.forName("org.eclipse.swt.dnd.ImageTransfer"); //$NON-NLS-1$
 				Method method = clazz.getMethod("getInstance"); //$NON-NLS-1$
 				if (method != null) {
 					transfers.add((Transfer) method.invoke(null));
 				}
-			} catch (Exception e) {
-				// ignore
-			} catch (LinkageError e) {
+			} catch (Exception | LinkageError e) {
 				// ignore
 			}
 			transfers.add(TextTransfer.getInstance());
@@ -120,18 +117,16 @@ public class TaskAttachmentWizard extends Wizard {
 		private Object contents;
 
 		public ClipboardTaskAttachmentSource() {
-			BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
-				public void run() {
-					Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-					List<Transfer> transfers = getTransfers();
-					for (Transfer transfer : transfers) {
-						contents = clipboard.getContents(transfer);
-						if (contents != null) {
-							break;
-						}
+			BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), () -> {
+				Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+				List<Transfer> transfers = getTransfers();
+				for (Transfer transfer : transfers) {
+					contents = clipboard.getContents(transfer);
+					if (contents != null) {
+						break;
 					}
-					clipboard.dispose();
 				}
+				clipboard.dispose();
 			});
 		}
 
@@ -162,7 +157,7 @@ public class TaskAttachmentWizard extends Wizard {
 		@Override
 		public long getLength() {
 			byte[] bytes = getData();
-			return (bytes != null) ? bytes.length : -1;
+			return bytes != null ? bytes.length : -1;
 		}
 
 		private byte[] getData() {
@@ -195,7 +190,7 @@ public class TaskAttachmentWizard extends Wizard {
 			return true;
 		}
 
-	};
+	}
 
 	static class ImageSource extends AbstractTaskAttachmentSource {
 
@@ -244,7 +239,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 		@Override
 		public long getLength() {
-			return (file != null) ? file.length() : -1;
+			return file != null ? file.length() : -1;
 		}
 
 		@Override
@@ -278,8 +273,8 @@ public class TaskAttachmentWizard extends Wizard {
 	public TaskAttachmentWizard(TaskRepository taskRepository, ITask task, TaskAttribute taskAttachment) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskAttachment);
-		this.model = new TaskAttachmentModel(taskRepository, task, taskAttachment);
-		this.connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
+		model = new TaskAttachmentModel(taskRepository, task, taskAttachment);
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
 		setMode(Mode.DEFAULT);
 		setNeedsProgressMonitor(true);
 		setDialogSettings(TasksUiPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS_KEY));
@@ -391,15 +386,13 @@ public class TaskAttachmentWizard extends Wizard {
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (job.getStatus() != null) {
-							getContainer().getShell().setVisible(true);
-						}
-						handleDone(job);
-						if (job.getStatus() == null) {
-							getContainer().getShell().close();
-						}
+				Display.getDefault().asyncExec(() -> {
+					if (job.getStatus() != null) {
+						getContainer().getShell().setVisible(true);
+					}
+					handleDone(job);
+					if (job.getStatus() == null) {
+						getContainer().getShell().close();
 					}
 				});
 			}
@@ -409,11 +402,9 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private boolean runInWizard(final SubmitJob job) {
 		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					if (((SubmitTaskAttachmentJob) job).run(monitor) == Status.CANCEL_STATUS) {
-						throw new InterruptedException();
-					}
+			getContainer().run(true, true, monitor -> {
+				if (((SubmitTaskAttachmentJob) job).run(monitor) == Status.CANCEL_STATUS) {
+					throw new InterruptedException();
 				}
 			});
 			handleDone(job);
@@ -441,7 +432,7 @@ public class TaskAttachmentWizard extends Wizard {
 	}
 
 	public void setSource(AbstractTaskAttachmentSource source) {
-		this.model.setSource(source);
+		model.setSource(source);
 	}
 
 }

@@ -23,6 +23,6 @@ import java.util.Set;
  */
 public interface ITaskListChangeListener {
 
-	public abstract void containersChanged(Set<TaskContainerDelta> containers);
+	void containersChanged(Set<TaskContainerDelta> containers);
 
 }

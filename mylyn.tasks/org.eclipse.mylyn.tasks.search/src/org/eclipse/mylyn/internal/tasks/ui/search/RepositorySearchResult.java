@@ -52,8 +52,8 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	}
 
 	/**
-	 * This function always returns <code>null</code>, as the matches for this implementation of
-	 * <code>AbstractTextSearchResult</code> never contain files.
+	 * This function always returns <code>null</code>, as the matches for this implementation of <code>AbstractTextSearchResult</code> never
+	 * contain files.
 	 * 
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchResult#getFileMatchAdapter()
 	 */
@@ -62,6 +62,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 		return null;
 	}
 
+	@Override
 	public String getLabel() {
 		return getMatchCount() == 1 ? getSingularLabel() : getPluralLabel();
 	}
@@ -84,14 +85,17 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 		return MessageFormat.format(Messages.RepositorySearchResult_Task_search_X_matches, getMatchCount());
 	}
 
+	@Override
 	public String getTooltip() {
 		return getLabel();
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return SearchPluginImages.DESC_OBJ_TSEARCH_DPDN;
 	}
 
+	@Override
 	public ISearchQuery getQuery() {
 		return repositoryQuery;
 	}

@@ -23,7 +23,7 @@ public class RepositoryResponse {
 
 	public enum ResponseKind {
 		TASK_CREATED, TASK_UPDATED;
-	};
+	}
 
 	private final String taskId;
 

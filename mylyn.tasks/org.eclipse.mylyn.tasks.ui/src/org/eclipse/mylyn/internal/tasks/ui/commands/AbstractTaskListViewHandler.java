@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
-import java.util.Iterator;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -31,13 +29,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
-		if (site instanceof IViewSite) {
-			IViewSite viewSite = (IViewSite) site;
+		if (site instanceof IViewSite viewSite) {
 			IWorkbenchPart part = viewSite.getPart();
-			if (part instanceof TaskListView) {
-				TaskListView taskListView = (TaskListView) part;
+			if (part instanceof TaskListView taskListView) {
 				execute(event, taskListView);
 			}
 		}
@@ -46,8 +43,7 @@ public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 
 	protected void execute(ExecutionEvent event, TaskListView taskListView) throws ExecutionException {
 		ITreeSelection selection = (ITreeSelection) taskListView.getViewer().getSelection();
-		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-			Object item = it.next();
+		for (Object item : selection) {
 			if (item instanceof IRepositoryElement) {
 				execute(event, taskListView, (IRepositoryElement) item);
 			}

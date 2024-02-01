@@ -21,8 +21,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -62,16 +60,14 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(EditorUtil.TEXT_FONT);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.setToolTipText(getDescription());
-			text.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					try {
-						suppressRefresh = true;
-						setValue(text.getText());
-					} finally {
-						suppressRefresh = false;
-					}
-					CommonFormUtil.ensureVisible(text);
+			text.addModifyListener(e -> {
+				try {
+					suppressRefresh = true;
+					setValue(text.getText());
+				} finally {
+					suppressRefresh = false;
 				}
+				CommonFormUtil.ensureVisible(text);
 			});
 		}
 		toolkit.adapt(text, false, false);

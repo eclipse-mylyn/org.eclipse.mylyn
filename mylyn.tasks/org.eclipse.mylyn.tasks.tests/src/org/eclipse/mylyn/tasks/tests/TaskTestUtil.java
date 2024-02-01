@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -37,6 +35,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
+
+import junit.framework.Assert;
 
 /**
  * @author Mik Kersten
@@ -65,8 +65,8 @@ public class TaskTestUtil {
 	}
 
 	/**
-	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
-	 * list will only have default categories but no tasks.
+	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task list will only have
+	 * default categories but no tasks.
 	 */
 	public static void resetTaskListAndRepositories() throws Exception {
 		TestFixture.resetTaskListAndRepositories();

@@ -26,6 +26,7 @@ public class TaskPreferenceTester extends PropertyTester {
 
 	private static final String PROPERTY_SHOW_TRIM = "showTrim"; //$NON-NLS-1$
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (PROPERTY_SHOW_TRIM.equals(property)) {
 			return CoreUtil.propertyEquals(shouldShowTrim(), expectedValue);

@@ -61,8 +61,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 /**
- * Allows users to migrate their data from an old connector to a new one for the same repository. Performs the following
- * steps:
+ * Allows users to migrate their data from an old connector to a new one for the same repository. Performs the following steps:
  *
  * <pre>
  * * uses task list message service to prompt users to migrate
@@ -89,7 +88,7 @@ public class ConnectorMigrator {
 
 		public OldTaskState(ITask oldTask) {
 			this.oldTask = oldTask;
-			this.syncState = oldTask.getSynchronizationState();
+			syncState = oldTask.getSynchronizationState();
 		}
 
 		public ITask getOldTask() {
@@ -111,19 +110,13 @@ public class ConnectorMigrator {
 
 	private final ConnectorMigrationUi migrationUi;
 
-	private final Map<TaskRepository, TaskRepository> repositories = new HashMap<TaskRepository, TaskRepository>();
+	private final Map<TaskRepository, TaskRepository> repositories = new HashMap<>();
 
 	private final Table<TaskRepository, String, OldTaskState> oldTasksStates = HashBasedTable.create();
 
 	private Map<ITask, AbstractTaskCategory> categories;
 
-	private final JobListener syncTaskJobListener = new JobListener(new Runnable() {
-
-		@Override
-		public void run() {
-			completeMigration();
-		}
-	});
+	private final JobListener syncTaskJobListener = new JobListener(this::completeMigration);
 
 	private boolean anyQueriesMigrated;
 
@@ -162,7 +155,7 @@ public class ConnectorMigrator {
 
 	public void setConnectorsToMigrate(List<String> connectors) {
 		Validate.isTrue(connectorKinds.keySet().containsAll(connectors));
-		this.connectorsToMigrate = List.copyOf(connectors);
+		connectorsToMigrate = List.copyOf(connectors);
 	}
 
 	protected void migrateConnectors(IProgressMonitor monitor) throws IOException {
@@ -253,8 +246,8 @@ public class ConnectorMigrator {
 	}
 
 	/**
-	 * @return whether all queries have been migrated for all migrated repositories; returns <code>true</code> if no
-	 *         repositories have yet been migrated
+	 * @return whether all queries have been migrated for all migrated repositories; returns <code>true</code> if no repositories have yet
+	 *         been migrated
 	 */
 	protected boolean allQueriesMigrated() {
 		return allQueriesMigrated;
@@ -274,7 +267,7 @@ public class ConnectorMigrator {
 	}
 
 	protected List<TaskRepository> gatherRepositoriesToMigrate(List<String> connectors) {
-		List<TaskRepository> oldRepositories = new ArrayList<TaskRepository>();
+		List<TaskRepository> oldRepositories = new ArrayList<>();
 		for (String kind : connectors) {
 			oldRepositories.addAll(getRepositoryManager().getRepositories(kind));
 		}
@@ -346,7 +339,7 @@ public class ConnectorMigrator {
 				.collect(Collectors.toUnmodifiableMap(ITask::getTaskKey, Function.identity()));
 
 		final Map<AbstractTask, OldTaskState> migratedTasks = new HashMap<>();
-		Set<ITask> tasksToSynchronize = new HashSet<ITask>();
+		Set<ITask> tasksToSynchronize = new HashSet<>();
 		for (ITask oldTask : tasksToMigrate) {
 			String taskKey = oldTask.getTaskKey();
 			ITask newTask = tasksByKey.get(taskKey);
@@ -376,28 +369,25 @@ public class ConnectorMigrator {
 		}
 		SynchronizationJob job = tasksState.getTaskJobFactory()
 				.createSynchronizeTasksJob(newConnector, newRepository, tasksToSynchronize);
-		getSyncTaskJobListener().add(job, new Runnable() {
-			@Override
-			public void run() {
-				long start = System.currentTimeMillis();
-				while (migratedTasks.keySet().stream().anyMatch(isTaskSynchronizing())
-						&& System.currentTimeMillis() - start < MILLISECONDS.convert(4, HOURS)) {
-					try {
-						Thread.sleep(MILLISECONDS.convert(3, SECONDS));
-					} catch (InterruptedException e) {// NOSONAR
-					}
+		getSyncTaskJobListener().add(job, () -> {
+			long start = System.currentTimeMillis();
+			while (migratedTasks.keySet().stream().anyMatch(isTaskSynchronizing())
+					&& System.currentTimeMillis() - start < MILLISECONDS.convert(4, HOURS)) {
+				try {
+					Thread.sleep(MILLISECONDS.convert(3, SECONDS));
+				} catch (InterruptedException e) {// NOSONAR
 				}
-				for (Entry<AbstractTask, OldTaskState> entry : migratedTasks.entrySet()) {
-					AbstractTask newTask = entry.getKey();
-					OldTaskState oldTask = entry.getValue();
-					newTask.setSynchronizationState(oldTask.getSyncState());
-				}
-				Set<RepositoryQuery> queries = getTaskList().getRepositoryQueries(newRepository.getRepositoryUrl());
-				if (!queries.isEmpty()) {
-					SynchronizationJob synchronizeQueriesJob = tasksState.getTaskJobFactory()
-							.createSynchronizeQueriesJob(newConnector, newRepository, queries);
-					synchronizeQueriesJob.schedule();
-				}
+			}
+			for (Entry<AbstractTask, OldTaskState> entry : migratedTasks.entrySet()) {
+				AbstractTask newTask = entry.getKey();
+				OldTaskState oldTask = entry.getValue();
+				newTask.setSynchronizationState(oldTask.getSyncState());
+			}
+			Set<RepositoryQuery> queries = getTaskList().getRepositoryQueries(newRepository.getRepositoryUrl());
+			if (!queries.isEmpty()) {
+				SynchronizationJob synchronizeQueriesJob = tasksState.getTaskJobFactory()
+						.createSynchronizeQueriesJob(newConnector, newRepository, queries);
+				synchronizeQueriesJob.schedule();
 			}
 		});
 		job.schedule();
@@ -406,7 +396,7 @@ public class ConnectorMigrator {
 	private void migrateTaskContext(Map<AbstractTask, OldTaskState> taskStates) {
 		Map<ITask, ITask> tasks = taskStates.entrySet()
 				.stream()
-				.collect(Collectors.toMap(e -> e.getValue().getOldTask(), e -> e.getKey()));
+				.collect(Collectors.toMap(e -> e.getValue().getOldTask(), Entry::getKey));
 		TasksUiPlugin.getContextStore().moveContext(tasks);
 	}
 
@@ -466,7 +456,7 @@ public class ConnectorMigrator {
 	 */
 	protected Map<ITask, AbstractTaskCategory> getCategories() {
 		if (categories == null) {
-			categories = new HashMap<ITask, AbstractTaskCategory>();
+			categories = new HashMap<>();
 			for (AbstractTaskCategory category : getTaskList().getCategories()) {
 				for (ITask task : category.getChildren()) {
 					categories.put(task, category);

@@ -26,8 +26,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -76,11 +74,12 @@ public class TaskAttachmentPage extends WizardPage {
 	public TaskAttachmentPage(TaskAttachmentModel model) {
 		super("AttachmentDetails"); //$NON-NLS-1$
 		this.model = model;
-		this.taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
+		taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
 		setTitle(Messages.TaskAttachmentPage_Attachment_Details);
 		setNeedsDescription(true);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
@@ -113,11 +112,9 @@ public class TaskAttachmentPage extends WizardPage {
 			new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Description);
 			descriptionText = new Text(composite, SWT.BORDER);
 			descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
-			descriptionText.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					taskAttachment.setDescription(descriptionText.getText().trim());
-					validate();
-				}
+			descriptionText.addModifyListener(e -> {
+				taskAttachment.setDescription(descriptionText.getText().trim());
+				validate();
 			});
 		}
 
@@ -149,10 +146,12 @@ public class TaskAttachmentPage extends WizardPage {
 
 		/* Update attachment on select content type */
 		contentTypeList.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				taskAttachment.setContentType(contentTypeList.getItem(contentTypeList.getSelectionIndex()));
 				validate();
@@ -181,13 +180,11 @@ public class TaskAttachmentPage extends WizardPage {
 		 * Attachment file name listener, update the local attachment
 		 * accordingly
 		 */
-		fileNameText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				// determine type by extension
-				taskAttachment.setFileName(fileNameText.getText());
-				setContentTypeFromFilename(fileNameText.getText());
-				validate();
-			}
+		fileNameText.addModifyListener(e -> {
+			// determine type by extension
+			taskAttachment.setFileName(fileNameText.getText());
+			setContentTypeFromFilename(fileNameText.getText());
+			validate();
 		});
 
 		/* Listener for isPatch */
@@ -285,7 +282,7 @@ public class TaskAttachmentPage extends WizardPage {
 	}
 
 	public void setNeedsDescription(boolean supportsDescription) {
-		this.needsDescription = supportsDescription;
+		needsDescription = supportsDescription;
 	}
 
 	/**
@@ -335,8 +332,8 @@ public class TaskAttachmentPage extends WizardPage {
 	}
 
 	/**
-	 * Set to true if the page needs a check box for replacing existing attachments. Must be called before the page is
-	 * constructed, it has no effect otherwise.
+	 * Set to true if the page needs a check box for replacing existing attachments. Must be called before the page is constructed, it has
+	 * no effect otherwise.
 	 * <p>
 	 * This flag is set to false by default.
 	 * </p>

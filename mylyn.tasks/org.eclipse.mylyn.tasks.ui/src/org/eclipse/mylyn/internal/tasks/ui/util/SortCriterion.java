@@ -36,30 +36,19 @@ public class SortCriterion {
 		}
 
 		public String getLabel() {
-			switch (this) {
-			case NONE:
-				return Messages.SortKindEntry_None;
-			case PRIORITY:
-				return Messages.SortKindEntry_Priority;
-			case SUMMARY:
-				return Messages.SortKindEntry_Summary;
-			case RANK:
-				return Messages.SortKindEntry_Rank;
-			case DATE_CREATED:
-				return Messages.SortKindEntry_Date_Created;
-			case TASK_ID:
-				return Messages.SortKindEntry_Task_ID;
-			case TASK_TYPE:
-				return Messages.SortCriterion_Type;
-			case DUE_DATE:
-				return Messages.SortKindEntry_Due_Date;
-			case MODIFICATION_DATE:
-				return Messages.SortCriterion_Modification_Date;
-			case SCHEDULED_DATE:
-				return Messages.SortCriterion_Scheduled_Date;
-			default:
-				return null;
-			}
+			return switch (this) {
+				case NONE -> Messages.SortKindEntry_None;
+				case PRIORITY -> Messages.SortKindEntry_Priority;
+				case SUMMARY -> Messages.SortKindEntry_Summary;
+				case RANK -> Messages.SortKindEntry_Rank;
+				case DATE_CREATED -> Messages.SortKindEntry_Date_Created;
+				case TASK_ID -> Messages.SortKindEntry_Task_ID;
+				case TASK_TYPE -> Messages.SortCriterion_Type;
+				case DUE_DATE -> Messages.SortKindEntry_Due_Date;
+				case MODIFICATION_DATE -> Messages.SortCriterion_Modification_Date;
+				case SCHEDULED_DATE -> Messages.SortCriterion_Scheduled_Date;
+				default -> null;
+			};
 		}
 
 	}
@@ -88,8 +77,8 @@ public class SortCriterion {
 	}
 
 	public SortCriterion(SortKey kind, int sortDirection) {
-		this.key = kind;
-		this.direction = sortDirection;
+		key = kind;
+		direction = sortDirection;
 	}
 
 	public SortKey getKey() {
@@ -98,7 +87,7 @@ public class SortCriterion {
 
 	public void setKey(SortKey kind) {
 		Assert.isNotNull(kind);
-		this.key = kind;
+		key = kind;
 	}
 
 	public int getDirection() {
@@ -107,7 +96,7 @@ public class SortCriterion {
 
 	public void setDirection(int sortDirection) {
 		Assert.isTrue(sortDirection == -1 || sortDirection == 1);
-		this.direction = sortDirection;
+		direction = sortDirection;
 	}
 
 	private SortKey getSortKey(IMemento memento, String key, SortKey defaultValue) {

@@ -36,6 +36,7 @@ public class ActivityRecordLabelProvider extends LabelProvider implements IStyle
 				((ActivityEvent) element).getSummary());
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getText(element);
 		if (text != null) {

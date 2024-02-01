@@ -35,9 +35,9 @@ public class TaskRepositoryPropertyTester extends PropertyTester {
 		return Boolean.valueOf(value).equals(expectedValue);
 	}
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) receiver;
+		if (receiver instanceof TaskRepository repository) {
 			if (PROPERTY_CONNECTOR_KIND.equals(property)) {
 				return repository.getConnectorKind().equals(expectedValue);
 			} else if (PROPERTY_USER_MANAGED.equals(property)) {

@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
  */
 public class SynchronizeAllHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		TasksUiInternal.synchronizeAllRepositories(true);
 		return null;

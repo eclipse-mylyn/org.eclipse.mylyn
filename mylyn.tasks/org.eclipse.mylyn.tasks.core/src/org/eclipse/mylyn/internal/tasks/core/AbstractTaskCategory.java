@@ -14,8 +14,8 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 /**
- * A container that stores tasks from any repository. A task can only have a single AbstractTaskCategory parent (only be
- * in one category at a time).
+ * A container that stores tasks from any repository. A task can only have a single AbstractTaskCategory parent (only be in one category at
+ * a time).
  * 
  * @author Mik Kersten
  */

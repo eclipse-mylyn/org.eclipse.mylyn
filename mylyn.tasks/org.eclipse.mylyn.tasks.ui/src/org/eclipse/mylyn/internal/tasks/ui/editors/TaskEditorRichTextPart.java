@@ -22,8 +22,6 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.State;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedEvent;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedListener;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -187,14 +185,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			toggleEditAction.setImageDescriptor(CommonImages.EDIT_SMALL);
 			toggleEditAction.setToolTipText(Messages.TaskEditorRichTextPart_Edit_Tooltip);
 			toggleEditAction.setChecked(true);
-			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {
-				public void stateChanged(StateChangedEvent event) {
-					try {
-						ignoreToggleEvents = true;
-						toggleEditAction.setChecked(event.state == State.EDITOR || event.state == State.DEFAULT);
-					} finally {
-						ignoreToggleEvents = false;
-					}
+			getEditor().getEditor().addStateChangedListener(event -> {
+				try {
+					ignoreToggleEvents = true;
+					toggleEditAction.setChecked(event.state == State.EDITOR || event.state == State.DEFAULT);
+				} finally {
+					ignoreToggleEvents = false;
 				}
 			});
 			manager.add(toggleEditAction);
@@ -220,14 +216,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			toggleBrowserAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
 			toggleBrowserAction.setToolTipText(Messages.TaskEditorRichTextPart_Browser_Preview);
 			toggleBrowserAction.setChecked(false);
-			getEditor().getEditor().addStateChangedListener(new StateChangedListener() {
-				public void stateChanged(StateChangedEvent event) {
-					try {
-						ignoreToggleEvents = true;
-						toggleBrowserAction.setChecked(event.state == State.BROWSER);
-					} finally {
-						ignoreToggleEvents = false;
-					}
+			getEditor().getEditor().addStateChangedListener(event -> {
+				try {
+					ignoreToggleEvents = true;
+					toggleBrowserAction.setChecked(event.state == State.BROWSER);
+				} finally {
+					ignoreToggleEvents = false;
 				}
 			});
 			manager.add(toggleBrowserAction);
@@ -240,7 +234,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected Control getLayoutControl() {
-		return (getEditor() != null) ? getEditor().getControl() : null;
+		return getEditor() != null ? getEditor().getControl() : null;
 	}
 
 	@Override

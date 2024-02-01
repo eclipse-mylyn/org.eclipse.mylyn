@@ -46,8 +46,8 @@ public abstract class ToolBarButtonContribution extends ControlContribution {
 		if (Platform.WS_CARBON.equals(SWT.getPlatform())) {
 			layout.marginTop = -3;
 		}
-		layout.marginLeft = this.marginLeft;
-		layout.marginRight = this.marginRight;
+		layout.marginLeft = marginLeft;
+		layout.marginRight = marginRight;
 		composite.setLayout(layout);
 
 		Control button = createButton(composite);

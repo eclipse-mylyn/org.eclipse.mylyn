@@ -56,56 +56,60 @@ public class SaxRepositoriesTest {
 
 	private SaxRepositoriesContentHandler handler;
 
-	private final String version1RepositoryXml = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-			+ "<TaskRepositories OutputVersion=\"1\">" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"/>" //
-			+ "</TaskRepositories>", firstUrl, kind, labelPropertyKey, labelPropertyValue);
+	private final String version1RepositoryXml = String.format("""
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="1">\
+			<TaskRepository url="%s" kind="%s" %s="%s"/>\
+			</TaskRepositories>""", firstUrl, kind, labelPropertyKey, labelPropertyValue);
 
-	private final String version1RepositoryXmlMultiple = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-			+ "<TaskRepositories OutputVersion=\"1\">" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"/>" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"/>" //
-			+ "</TaskRepositories>", firstUrl, kind, labelPropertyKey, labelPropertyValue, secondUrl, kind,
+	private final String version1RepositoryXmlMultiple = String.format("""
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="1">\
+			<TaskRepository url="%s" kind="%s" %s="%s"/>\
+			<TaskRepository url="%s" kind="%s" %s="%s"/>\
+			</TaskRepositories>""", firstUrl, kind, labelPropertyKey, labelPropertyValue, secondUrl, kind,
 			labelPropertyKey, labelPropertyValue);
 
 	/**
 	 * The old xml is escaped twice: once by the xml library and once within mylyn
 	 */
 	private final String version1RepositoryXmlSpecialCharacters = String.format(
-			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-					+ "<TaskRepositories OutputVersion=\"1\">" //
-					+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"/>" //
-					+ "</TaskRepositories>",
-			escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)), labelPropertyKey,
-			escapeXml(escapeXml(labelPropertyCharacters)));
+			"""
+					<?xml version="1.0" encoding="UTF-8"?>\
+					<TaskRepositories OutputVersion="1">\
+					<TaskRepository url="%s" kind="%s" %s="%s"/>\
+					</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
+			labelPropertyKey, escapeXml(escapeXml(labelPropertyCharacters)));
 
-	private final String version2RepositoryXml = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-			+ "<TaskRepositories OutputVersion=\"2\">" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-			+ "</TaskRepositories>" //
-			, firstUrl, kind, labelPropertyKey, labelPropertyValue);
+	private final String version2RepositoryXml = String.format("""
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="2">\
+			<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			</TaskRepositories>""", firstUrl, kind, labelPropertyKey, labelPropertyValue);
 
-	private final String version2RepositoryXmlMultiple = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-			+ "<TaskRepositories OutputVersion=\"2\">" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-			+ "<TaskRepository url=\"%s\" kind=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-			+ "</TaskRepositories>", firstUrl, kind, labelPropertyKey, labelPropertyValue, secondUrl, kind,
+	private final String version2RepositoryXmlMultiple = String.format("""
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="2">\
+			<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			</TaskRepositories>""", firstUrl, kind, labelPropertyKey, labelPropertyValue, secondUrl, kind,
 			labelPropertyKey, labelPropertyValue);
 
 	private final String version2RepositoryXmlSpecialCharacters = String.format(
-			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-					+ "<TaskRepositories OutputVersion=\"2\">" //
-					+ "<TaskRepository url=\"%s\" kind=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-					+ "</TaskRepositories>",
-			escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
+			"""
+					<?xml version="1.0" encoding="UTF-8"?>\
+					<TaskRepositories OutputVersion="2">\
+					<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
+					</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
 			escapeXml(labelPropertyKeyCharacters), escapeXml(labelPropertyCharacters));
 
 	private final String version1AndVersion2RepositoryXmlMultiple = String.format(
-			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //
-					+ "<TaskRepositories OutputVersion=\"2\">" //
-					+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-					+ "<TaskRepository url=\"%s\" kind=\"%s\" %s=\"%s\"><Property key=\"%s\" value=\"%s\"/></TaskRepository>" //
-					+ "</TaskRepositories>", //
+			"""
+					<?xml version="1.0" encoding="UTF-8"?>\
+					<TaskRepositories OutputVersion="2">\
+					<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+					<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+					</TaskRepositories>""", //
 			firstUrl, kind, labelPropertyKey, labelPropertyValueAlternate, labelPropertyKey, labelPropertyValue,
 			secondUrl, kind, labelPropertyKey, labelPropertyValueAlternate, labelPropertyKey, labelPropertyValue);
 

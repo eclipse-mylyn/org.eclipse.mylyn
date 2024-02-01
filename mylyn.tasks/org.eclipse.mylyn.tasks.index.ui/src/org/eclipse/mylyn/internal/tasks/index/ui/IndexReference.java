@@ -31,12 +31,10 @@ public class IndexReference extends AbstractIndexReference {
 
 	private static AtomicInteger referenceCount = new AtomicInteger();
 
-	private static IRepositoryModelListener listener = new IRepositoryModelListener() {
-		public void loaded() {
-			synchronized (IndexReference.class) {
-				if (theIndex != null) {
-					theIndex.setLocation(getDefaultIndexLocation());
-				}
+	private static IRepositoryModelListener listener = () -> {
+		synchronized (IndexReference.class) {
+			if (theIndex != null) {
+				theIndex.setLocation(getDefaultIndexLocation());
 			}
 		}
 	};
@@ -46,8 +44,8 @@ public class IndexReference extends AbstractIndexReference {
 	}
 
 	/**
-	 * When not null serves as flag indicating that theIndex is referenced, thus preventing bad behaviour if dispose is
-	 * called multiple times.
+	 * When not null serves as flag indicating that theIndex is referenced, thus preventing bad behaviour if dispose is called multiple
+	 * times.
 	 */
 	private TaskListIndex index;
 

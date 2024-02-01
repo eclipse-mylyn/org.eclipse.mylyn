@@ -37,8 +37,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public abstract class AbstractTaskDataHandler {
 
 	/**
-	 * Download task data for each id provided Override {@link #canGetMultiTaskData(TaskRepository)} to return true and
-	 * implement this method if connector supports download of multiple task data in one request.
+	 * Download task data for each id provided Override {@link #canGetMultiTaskData(TaskRepository)} to return true and implement this
+	 * method if connector supports download of multiple task data in one request.
 	 * 
 	 * @since 3.0
 	 */
@@ -67,8 +67,8 @@ public abstract class AbstractTaskDataHandler {
 	 *            {@link TaskInitializationData}.
 	 * @param monitor
 	 *            The {@link IProgressMonitor} that will be used during initialization.
-	 * @return whether the initialization of the {@code TaskData} was successful. Implementations can alternativly throw
-	 *         a {@code CoreException} with further details.
+	 * @return whether the initialization of the {@code TaskData} was successful. Implementations can alternativly throw a
+	 *         {@code CoreException} with further details.
 	 * @since 3.0
 	 */
 	public abstract boolean initializeTaskData(@NonNull TaskRepository repository, @NonNull TaskData data,
@@ -107,8 +107,8 @@ public abstract class AbstractTaskDataHandler {
 	public abstract TaskAttributeMapper getAttributeMapper(@NonNull TaskRepository repository);
 
 	/**
-	 * Returns true if connector support downloading multiple task data in single request, false otherwise. If true,
-	 * override and implement {@link #getMultiTaskData(TaskRepository, Set, TaskDataCollector, IProgressMonitor)}.
+	 * Returns true if connector support downloading multiple task data in single request, false otherwise. If true, override and implement
+	 * {@link #getMultiTaskData(TaskRepository, Set, TaskDataCollector, IProgressMonitor)}.
 	 * 
 	 * @param repository
 	 *            the repository for which multi task data download is supported

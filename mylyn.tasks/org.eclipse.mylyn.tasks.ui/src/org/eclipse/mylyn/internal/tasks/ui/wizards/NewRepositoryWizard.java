@@ -112,6 +112,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		return super.getNextPage(page);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
@@ -174,13 +175,11 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 				}
 
 				// execute delayed to avoid stacking dialogs
-				getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						WizardDialog queryDialog = new WizardDialog(WorkbenchUtil.getShell(), queryWizard);
-						queryDialog.create();
-						queryDialog.setBlockOnOpen(true);
-						queryDialog.open();
-					}
+				getShell().getDisplay().asyncExec(() -> {
+					WizardDialog queryDialog = new WizardDialog(WorkbenchUtil.getShell(), queryWizard);
+					queryDialog.create();
+					queryDialog.setBlockOnOpen(true);
+					queryDialog.open();
 				});
 			}
 		}

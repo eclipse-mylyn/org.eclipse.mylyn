@@ -21,18 +21,22 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class TaskAttachmentBrowserViewer implements ITaskAttachmentViewer {
 
+	@Override
 	public String getId() {
 		return "inBrowserViewer"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getLabel() {
 		return Messages.TaskAttachmentViewerBrowser_browser;
 	}
 
+	@Override
 	public void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) {
 		TasksUiUtil.openUrl(attachment.getUrl());
 	}
 
+	@Override
 	public boolean isWorkbenchDefault() {
 		return false;
 	}

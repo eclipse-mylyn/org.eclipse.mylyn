@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -38,6 +36,8 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
+
+import junit.framework.TestCase;
 
 /**
  * Tests TaskListView's filtering mechanism.
@@ -219,7 +219,7 @@ public class TaskListUiTest extends TestCase {
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<IRepositoryElement> selectedElements = new Vector<IRepositoryElement>();
+		List<IRepositoryElement> selectedElements = new Vector<>();
 		selectedElements.add(cat1task1);
 		int numCategories = taskList.getCategories().size();
 		int numSeparators = 1;
@@ -235,8 +235,7 @@ public class TaskListUiTest extends TestCase {
 		// +1 for separator
 		assertEquals(expectedNrOfSubMenuEntries, menuManager.getItems().length);
 
-		if (item instanceof NewCategoryAction) {
-			NewCategoryAction action = (NewCategoryAction) item;
+		if (item instanceof NewCategoryAction action) {
 			assertEquals(newCatActon.getText(), action.getText());
 		}
 
@@ -250,15 +249,15 @@ public class TaskListUiTest extends TestCase {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		MenuManager menuManager = null;
-		List<IRepositoryElement> selectedElements = new Vector<IRepositoryElement>();
+		List<IRepositoryElement> selectedElements = new Vector<>();
 		selectedElements.add(cat1task1);
 
-		List<IRepositoryElement> emptySelection = new Vector<IRepositoryElement>();
+		List<IRepositoryElement> emptySelection = new Vector<>();
 
-		List<IRepositoryElement> categorySelection = new Vector<IRepositoryElement>();
+		List<IRepositoryElement> categorySelection = new Vector<>();
 		categorySelection.add(cat1);
 
-		List<IRepositoryElement> querySelection = new Vector<IRepositoryElement>();
+		List<IRepositoryElement> querySelection = new Vector<>();
 		querySelection.add(new MockRepositoryQuery("query", null));
 
 		//execute system under test & assert
@@ -302,16 +301,12 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkFilter(int type, TreeItem[] items) {
-		switch (type) {
-		case CHECK_COMPLETE_FILTER:
-			return checkCompleteIncompleteFilter(items, false);
-		case CHECK_INCOMPLETE_FILTER:
-			return checkCompleteIncompleteFilter(items, true);
-		case CHECK_PRIORITY_FILTER:
-			return checkPriorityFilter(items);
-		default:
-			return false;
-		}
+		return switch (type) {
+			case CHECK_COMPLETE_FILTER -> checkCompleteIncompleteFilter(items, false);
+			case CHECK_INCOMPLETE_FILTER -> checkCompleteIncompleteFilter(items, true);
+			case CHECK_PRIORITY_FILTER -> checkPriorityFilter(items);
+			default -> false;
+		};
 	}
 
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {

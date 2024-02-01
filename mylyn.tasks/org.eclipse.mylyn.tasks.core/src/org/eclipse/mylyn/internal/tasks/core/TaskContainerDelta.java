@@ -66,7 +66,7 @@ public final class TaskContainerDelta {
 	 */
 	public TaskContainerDelta(IRepositoryElement element, Kind kind) {
 		this.element = element;
-		this.parent = null;
+		parent = null;
 		this.kind = kind;
 	}
 

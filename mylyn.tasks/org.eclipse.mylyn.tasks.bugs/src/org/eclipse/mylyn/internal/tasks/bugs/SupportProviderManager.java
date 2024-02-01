@@ -125,7 +125,7 @@ public class SupportProviderManager {
 
 	private IBundleGroup getBundleGroup(String featureId) {
 		if (bundleGroupById == null) {
-			bundleGroupById = new HashMap<String, IBundleGroup>();
+			bundleGroupById = new HashMap<>();
 			IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
 			if (providers != null) {
 				for (IBundleGroupProvider provider : providers) {
@@ -206,7 +206,7 @@ public class SupportProviderManager {
 						try {
 							item.setIcon(ImageDescriptor.createFromURL(new URL(imageUrl)));
 						} catch (MalformedURLException e) {
-							// ignore 
+							// ignore
 						}
 					}
 				}
@@ -248,9 +248,9 @@ public class SupportProviderManager {
 	}
 
 	private void readExtensions() {
-		categories = new ArrayList<SupportCategory>();
-		productById = new HashMap<String, SupportProduct>();
-		providerById = new HashMap<String, SupportProvider>();
+		categories = new ArrayList<>();
+		productById = new HashMap<>();
+		providerById = new HashMap<>();
 		defaultProduct = new SupportProduct();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -296,7 +296,7 @@ public class SupportProviderManager {
 	private ProductRepositoryMapping readMapping(IConfigurationElement element) {
 		String namespace = element.getAttribute(ATTRIBUTE_NAMESPACE);
 		String productId = element.getAttribute(ATTRIBUTE_PRODUCT_ID);
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		// repository
 		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_REPOSITORY)) {
 			String repositoryUrl = attributeElement.getAttribute(ATTRIBUTE_REPOSITORY_URL);
@@ -342,10 +342,9 @@ public class SupportProviderManager {
 		String providerId = element.getAttribute(ATTRIBUTE_PROVIDER_ID);
 		IProvider provider = getProvider(providerId);
 		if (provider == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
-					NLS.bind(
-							"Product contributed by {0} with id ''{1}'' ignored, unknown provider id ''{2}'' specified", //$NON-NLS-1$
-							new String[] { element.getNamespaceIdentifier(), id, providerId })));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
+					"Product contributed by {0} with id ''{1}'' ignored, unknown provider id ''{2}'' specified", //$NON-NLS-1$
+					new String[] { element.getNamespaceIdentifier(), id, providerId })));
 			return null;
 		}
 		boolean enabled = true;

@@ -38,42 +38,52 @@ public class RepositoryPerson implements IRepositoryPerson {
 		this.personId = personId;
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return taskRepository.getConnectorKind();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getPersonId() {
 		return personId;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return taskRepository.getRepositoryUrl();
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
+	@Override
 	public String getAttribute(String key) {
 		return attributes.get(key);
 	}
 
+	@Override
 	public Map<String, String> getAttributes() {
 		return Map.copyOf(attributes);
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public void setAttribute(String key, String value) {
 		attributes.put(key, value);
 	}
 
+	@Override
 	public boolean matchesUsername(String username) {
 		String thisUsername = attributes.get(TaskAttribute.PERSON_USERNAME);
 		if (thisUsername != null) {

@@ -29,8 +29,7 @@ public class MyTasksFilter extends AbstractTaskListFilter {
 		if (element instanceof LocalTask) {
 			return true;
 		}
-		if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
+		if (element instanceof AbstractTask task) {
 			TaskRepository repository = TasksUi.getRepositoryManager()
 					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			if (repository != null) {

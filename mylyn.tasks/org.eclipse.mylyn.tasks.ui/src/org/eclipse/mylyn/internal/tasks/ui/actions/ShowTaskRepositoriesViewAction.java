@@ -24,13 +24,16 @@ import org.eclipse.ui.IViewPart;
  */
 public class ShowTaskRepositoriesViewAction implements IViewActionDelegate {
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		TaskRepositoriesView.openInActivePerspective();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

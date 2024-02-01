@@ -138,7 +138,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 			@Override
 			public String getConnectorKind() {
 				return "mock-connector-with-no-brands";
-			};
+			}
 		};
 		assertEquals(connector.getLabel(), manager.getConnectorLabel(mockConnector, "org.mylyn"));
 	}

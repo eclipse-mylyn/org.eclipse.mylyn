@@ -46,15 +46,15 @@ public class TaskEditorExtensions {
 
 	private static final String BASE_MARKUP_KEY = "base-markup"; //$NON-NLS-1$
 
-	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<String, RegisteredTaskEditorExtension>();
+	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<>();
 
-	private static Map<String, String> associationByConnectorKind = new HashMap<String, String>();
+	private static Map<String, String> associationByConnectorKind = new HashMap<>();
 
 	private static boolean initialized;
 
 	public static SortedSet<RegisteredTaskEditorExtension> getTaskEditorExtensions() {
 		init();
-		return new TreeSet<RegisteredTaskEditorExtension>(extensionsById.values());
+		return new TreeSet<>(extensionsById.values());
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class TaskEditorExtensions {
 					Iterator<String> iter = parameters.get(MARKUP_KEY).iterator();
 					String markup = iter.next();
 					Iterator<String> baseMarkupIterator = parameters.get(BASE_MARKUP_KEY).iterator();
-					String baseMarkup = (baseMarkupIterator.hasNext() ? baseMarkupIterator.next() : ""); //$NON-NLS-1$
+					String baseMarkup = baseMarkupIterator.hasNext() ? baseMarkupIterator.next() : ""; //$NON-NLS-1$
 
 					SortedSet<RegisteredTaskEditorExtension> extensions = getTaskEditorExtensions();
 					for (RegisteredTaskEditorExtension extension : extensions) {
@@ -237,6 +237,7 @@ public class TaskEditorExtensions {
 			return extension;
 		}
 
+		@Override
 		public int compareTo(RegisteredTaskEditorExtension o) {
 			if (o == this) {
 				return 0;
@@ -248,10 +249,12 @@ public class TaskEditorExtensions {
 			return i;
 		}
 
+		@Override
 		public String getLocalId() {
 			return id;
 		}
 
+		@Override
 		public String getPluginId() {
 			return pluginId;
 		}

@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -29,6 +27,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -242,7 +242,7 @@ public class TaskDataManagerTest extends TestCase {
 	// newData, false);
 	// assertEquals(SynchronizationState.INCOMING, task.getSyncState());
 	// assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp());
-	//		
+	//
 	// TasksUiPlugin.getSynchronizationManager().updateOfflineState(task,
 	// newData, false);
 	// assertEquals(SynchronizationState.SYNCHRONIZED, task.getSyncState());
