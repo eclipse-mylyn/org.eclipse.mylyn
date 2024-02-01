@@ -19,4 +19,4 @@ Export-Package: org.eclipse.mylyn.wikitext.markdown;version="4.2.0";uses:="org.e
  org.eclipse.mylyn.wikitext.markdown.internal.token;version="4.2.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
  org.eclipse.mylyn.wikitext.markdown.internal.util;version="4.2.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.markdown.internal.block,org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
  org.eclipse.mylyn.wikitext.markdown.internal.validation;version="4.2.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
-Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
