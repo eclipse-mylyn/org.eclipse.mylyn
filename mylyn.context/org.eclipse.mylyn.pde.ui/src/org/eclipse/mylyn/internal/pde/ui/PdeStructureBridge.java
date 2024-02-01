@@ -181,8 +181,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		// we can only create handles for PluginObjectNodes and plugin.xml files
 		if (object instanceof XmlNodeHelper) {
 			return ((XmlNodeHelper) object).getHandle();
-		} else if (object instanceof PluginObjectNode) {
-			PluginObjectNode node = (PluginObjectNode) object;
+		} else if (object instanceof PluginObjectNode node) {
 			try {
 				// get the handle for the PluginObjectNode
 				if (node.getModel() == null || node.getModel().getUnderlyingResource() == null
@@ -199,8 +198,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e)); //$NON-NLS-1$
 			}
-		} else if (object instanceof PluginNode) {
-			PluginNode node = (PluginNode) object;
+		} else if (object instanceof PluginNode node) {
 			try {
 				if (node.getModel() == null || node.getModel().getUnderlyingResource() == null
 						|| node.getModel().getUnderlyingResource().getFullPath() == null) {
@@ -217,9 +215,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e)); //$NON-NLS-1$
 			}
 
-		} else if (object instanceof File) {
+		} else if (object instanceof File file) {
 			// get the handle for the file if it is plugin.xml
-			File file = (File) object;
 			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return file.getFullPath().toString();
 			}
@@ -229,16 +226,14 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getLabel(Object object) {
-		if (object instanceof PluginObjectNode) {
-			PluginObjectNode node = (PluginObjectNode) object;
+		if (object instanceof PluginObjectNode node) {
 			String name = node.getXMLAttributeValue("name"); //$NON-NLS-1$
 			if (name == null) {
 				name = node.getXMLTagName();
 			}
 			name = node.getModel().getUnderlyingResource().getName() + ": " + name; //$NON-NLS-1$
 			return name;
-		} else if (object instanceof File) {
-			File file = (File) object;
+		} else if (object instanceof File file) {
 			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return "plugin.xml"; //$NON-NLS-1$
 			}
@@ -268,8 +263,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return true;
 			}
-		} else if (object instanceof File) {
-			File file = (File) object;
+		} else if (object instanceof File file) {
 			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return true;
 			}
@@ -308,8 +302,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			// we can only get a handle for a marker with the resource
 			// plugin.xml
 			try {
-				if (markerResource instanceof IFile) {
-					IFile file = (IFile) markerResource;
+				if (markerResource instanceof IFile file) {
 					if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 						return file.getFullPath().toString();
 					} else {

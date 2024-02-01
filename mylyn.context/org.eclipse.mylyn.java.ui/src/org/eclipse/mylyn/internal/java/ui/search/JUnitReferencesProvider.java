@@ -33,8 +33,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 
 	@Override
 	protected boolean acceptResultElement(IJavaElement element) {
-		if (element instanceof IMethod) {
-			IMethod method = (IMethod) element;
+		if (element instanceof IMethod method) {
 			boolean isTestMethod = false;
 			boolean isTestCase = false;
 			if (method.getElementName().startsWith("test")) { //$NON-NLS-1$
@@ -42,8 +41,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 			}
 
 			IJavaElement parent = method.getParent();
-			if (parent instanceof IType) {
-				IType type = (IType) parent;
+			if (parent instanceof IType type) {
 				isTestCase = InteractionContextTestUtil.isTestType(type);
 			}
 			return isTestMethod && isTestCase;

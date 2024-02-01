@@ -18,8 +18,8 @@ import java.util.List;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
- * A model of task context weighted by interaction based on frequency and recency of access, as determined by the
- * degree-of-interest weighting mechanism.
+ * A model of task context weighted by interaction based on frequency and recency of access, as determined by the degree-of-interest
+ * weighting mechanism.
  * 
  * @author Mik Kersten
  * @author Shawn Minto
@@ -35,14 +35,14 @@ public interface IInteractionContext {
 	 * @return null if no unique handle, e.g. if a composite context
 	 * @since 2.0
 	 */
-	public abstract String getHandleIdentifier();
+	String getHandleIdentifier();
 
 	/**
 	 * Returns a list of all interesting interaction elements. Modifying the list will not affect the context.
 	 * 
 	 * @since 2.0
 	 */
-	public abstract List<InteractionEvent> getInteractionHistory();
+	List<InteractionEvent> getInteractionHistory();
 
 	/**
 	 * indicate if the interaction element identified by the given handle is interesting
@@ -52,67 +52,67 @@ public interface IInteractionContext {
 	 * @return true if an {@link #getInteresting() interesting} interaction element exists with the given handle
 	 * @since 3.2
 	 */
-	public boolean isInteresting(String elementHandle);
+	boolean isInteresting(String elementHandle);
 
 	/**
 	 * Returns a list of all interesting interaction elements. Modifying the list will not affect the context.
 	 * 
 	 * @since 2.0
 	 */
-	public List<IInteractionElement> getInteresting();
+	List<IInteractionElement> getInteresting();
 
 	/**
 	 * Returns a list of all interaction elements that are landmarks. Modifying the list will not affect the context.
 	 * 
 	 * @since 2.2
 	 */
-	public List<IInteractionElement> getLandmarks();
+	List<IInteractionElement> getLandmarks();
 
 	/**
 	 * @since 2.0
 	 */
-	public abstract IInteractionElement get(String element);
+	IInteractionElement get(String element);
 
 	/**
 	 * @since 2.0
 	 */
-	public abstract IInteractionElement getActiveNode();
+	IInteractionElement getActiveNode();
 
 	/**
 	 * @since 2.0
 	 */
-	public abstract void delete(IInteractionElement element);
+	void delete(IInteractionElement element);
 
 	/**
 	 * @since 3.2
 	 */
-	public abstract void delete(Collection<IInteractionElement> elements);
+	void delete(Collection<IInteractionElement> elements);
 
 	/**
 	 * @since 2.0
 	 */
-	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
+	void updateElementHandle(IInteractionElement element, String newHandle);
 
 	/**
 	 * Returns a list of all interaction elements. Modifying the list will not affect the context.
 	 * 
 	 * @since 2.0
 	 */
-	public abstract List<IInteractionElement> getAllElements();
+	List<IInteractionElement> getAllElements();
 
 	/**
 	 * @since 3.0
 	 */
-	public IInteractionContextScaling getScaling();
+	IInteractionContextScaling getScaling();
 
 	/**
 	 * @since 2.2
 	 */
-	public String getContentLimitedTo();
+	String getContentLimitedTo();
 
 	/**
 	 * @since 2.2
 	 */
-	public void setContentLimitedTo(String contentLimitedTo);
+	void setContentLimitedTo(String contentLimitedTo);
 
 }

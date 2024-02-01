@@ -22,15 +22,17 @@ import org.eclipse.mylyn.tasks.core.data.TaskRevision;
  */
 public class TaskHistoryContentProvider implements ITreeContentProvider {
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	public TaskHistoryContentProvider() {
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof TaskRevision) {
 			return ((TaskRevision) parentElement).getChanges().toArray();
@@ -38,6 +40,7 @@ public class TaskHistoryContentProvider implements ITreeContentProvider {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof TaskHistory) {
 			return ((TaskHistory) inputElement).getRevisions().toArray();
@@ -45,10 +48,12 @@ public class TaskHistoryContentProvider implements ITreeContentProvider {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof TaskRevision) {
 			return getChildren(element).length > 1;
@@ -56,6 +61,7 @@ public class TaskHistoryContentProvider implements ITreeContentProvider {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 

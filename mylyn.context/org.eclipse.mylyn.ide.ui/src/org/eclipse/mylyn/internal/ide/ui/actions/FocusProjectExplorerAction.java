@@ -36,11 +36,10 @@ public class FocusProjectExplorerAction extends FocusCommonNavigatorAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 
 		IViewPart view = super.getPartForAction();
-		if (view instanceof CommonNavigator) {
-			CommonNavigator navigator = (CommonNavigator) view;
+		if (view instanceof CommonNavigator navigator) {
 			viewers.add(navigator.getCommonViewer());
 		}
 		return viewers;

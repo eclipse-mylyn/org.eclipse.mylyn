@@ -44,8 +44,8 @@ public class ContextStateManager {
 	private final ContextState defaultState;
 
 	public ContextStateManager() {
-		this.participants = new CommonListenerList<ContextStateParticipant>(ContextUiPlugin.ID_PLUGIN);
-		this.defaultState = createMemento(null, "default"); //$NON-NLS-1$
+		participants = new CommonListenerList<>(ContextUiPlugin.ID_PLUGIN);
+		defaultState = createMemento(null, "default"); //$NON-NLS-1$
 	}
 
 	public void addParticipant(ContextStateParticipant participant) {
@@ -70,16 +70,11 @@ public class ContextStateManager {
 		if (in != null) {
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET));
-				try {
+				try (reader) {
 					XMLMemento xmlMemento = XMLMemento.createReadRoot(reader);
 					return new ContextState(context, context.getHandleIdentifier(), xmlMemento);
-				} finally {
-					reader.close();
 				}
-			} catch (IOException e) {
-				StatusHandler.log(
-						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore context state", e)); //$NON-NLS-1$
-			} catch (CoreException e) {
+			} catch (IOException | CoreException e) {
 				StatusHandler.log(
 						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore context state", e)); //$NON-NLS-1$
 			}
@@ -150,10 +145,8 @@ public class ContextStateManager {
 	public void write(OutputStream out, ContextState memento) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, CHARSET));
-			try {
+			try (writer) {
 				memento.getMemento().save(writer);
-			} finally {
-				writer.close();
 			}
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to save context state", e)); //$NON-NLS-1$

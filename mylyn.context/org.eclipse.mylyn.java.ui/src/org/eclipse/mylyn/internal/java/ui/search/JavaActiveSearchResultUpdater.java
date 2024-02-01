@@ -49,6 +49,7 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		// TODO make this work with resources
 	}
 
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		// long t0= System.currentTimeMillis();
 		IJavaElementDelta delta = event.getDelta();
@@ -67,8 +68,7 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		Object[] elements = fResult.getElements();
 		for (Object element : elements) {
 			if (isContainedInRemoved(removedElements, element)) {
-				if (element instanceof IJavaElement) {
-					IJavaElement je = (IJavaElement) element;
+				if (element instanceof IJavaElement je) {
 					if (!je.exists()) {
 						Match[] matches = fResult.getMatches(element);
 						for (Match matche : matches) {
@@ -76,8 +76,7 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 						}
 						// XXX remove edge and element
 					}
-				} else if (element instanceof IResource) {
-					IResource resource = (IResource) element;
+				} else if (element instanceof IResource resource) {
 					if (!resource.exists()) {
 						Match[] matches = fResult.getMatches(element);
 						for (Match matche : matches) {
@@ -138,10 +137,12 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
+	@Override
 	public void queryAdded(ISearchQuery query) {
 		// don't care
 	}
 
+	@Override
 	public void queryRemoved(ISearchQuery query) {
 		if (fResult.equals(query.getSearchResult())) {
 			JavaCore.removeElementChangedListener(this);
@@ -160,10 +161,12 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
+	@Override
 	public void queryStarting(ISearchQuery query) {
 		// not interested
 	}
 
+	@Override
 	public void queryFinished(ISearchQuery query) {
 		// not interested
 	}

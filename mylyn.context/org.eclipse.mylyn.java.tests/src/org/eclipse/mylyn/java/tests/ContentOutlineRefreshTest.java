@@ -69,7 +69,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		context.reset();
 
 		// FocusOutlineAction.getDefault().update(true);
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		IEditorReference[] parts = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getActivePage()

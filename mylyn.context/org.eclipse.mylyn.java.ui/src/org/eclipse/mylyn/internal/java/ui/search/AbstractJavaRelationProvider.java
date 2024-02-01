@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.java.ui.search;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	private static final int DEFAULT_DEGREE = 2;
 
-	private static final List<Job> runningJobs = new ArrayList<Job>();
+	private static final List<Job> runningJobs = new ArrayList<>();
 
 	@Override
 	public String getGenericId() {
@@ -82,7 +83,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		List<IDegreeOfSeparation> separations = new ArrayList<>();
 		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
 		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
 		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
@@ -122,15 +123,14 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				.getActiveContext()
 				.getInteresting();
 
-		Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
+		Set<IJavaElement> searchElements = new HashSet<>();
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IInteractionElement landmark : landmarks) {
 				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
-					if (o instanceof IJavaElement) {
-						IJavaElement landmarkElement = (IJavaElement) o;
+					if (o instanceof IJavaElement landmarkElement) {
 						if (landmarkElement.exists()) {
 							if (landmarkElement instanceof IMember && !landmark.getInterest().isPropagated()) {
 								searchElements.add(((IMember) landmarkElement).getCompilationUnit());
@@ -146,8 +146,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
-					if (object instanceof IJavaElement) {
-						IJavaElement interestingElement = (IJavaElement) object;
+					if (object instanceof IJavaElement interestingElement) {
 						if (interestingElement.exists()) {
 							if (interestingElement instanceof IMember && !interesting.getInterest().isPropagated()) {
 								searchElements.add(((IMember) interestingElement).getCompilationUnit());
@@ -204,16 +203,14 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	private boolean includeNodeInScope(IInteractionElement interesting, AbstractContextStructureBridge bridge) {
 		if (interesting == null || bridge == null) {
 			return false;
+		} else if (interesting.getContentType() == null) {
+			// TODO: remove
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
+					+ interesting.getHandleIdentifier()));
+			return false;
 		} else {
-			if (interesting.getContentType() == null) {
-				// TODO: remove
-				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
-						+ interesting.getHandleIdentifier()));
-				return false;
-			} else {
-				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
-						|| bridge.isDocument(interesting.getHandleIdentifier());
-			}
+			return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
+					|| bridge.isDocument(interesting.getHandleIdentifier());
 		}
 	}
 
@@ -250,16 +247,18 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 			private boolean gathered = false;
 
+			@Override
 			public boolean resultsGathered() {
 				return gathered;
 			}
 
+			@Override
 			@SuppressWarnings("rawtypes")
 			public void searchCompleted(List l) {
 				if (l == null) {
 					return;
 				}
-				List<IJavaElement> relatedHandles = new ArrayList<IJavaElement>();
+				List<IJavaElement> relatedHandles = new ArrayList<>();
 				Object[] elements = l.toArray();
 				for (Object element : elements) {
 					if (element instanceof IJavaElement) {
@@ -345,10 +344,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				if (objs == null) {
 					notifySearchCompleted(null);
 				} else {
-					List<Object> l = new ArrayList<Object>();
-					for (Object obj : objs) {
-						l.add(obj);
-					}
+					List<Object> l = new ArrayList<>();
+					Collections.addAll(l, objs);
 					notifySearchCompleted(l);
 				}
 			}
@@ -366,7 +363,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		}
 
 		/** List of listeners wanting to know about the searches */
-		private final List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
+		private final List<IActiveSearchListener> listeners = new ArrayList<>();
 
 		/**
 		 * Add a listener for when the bugzilla search is completed
@@ -374,6 +371,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		 * @param l
 		 *            The listener to add
 		 */
+		@Override
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
 			listeners.add(l);
@@ -385,6 +383,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		 * @param l
 		 *            The listener to remove
 		 */
+		@Override
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
 			listeners.remove(l);
@@ -401,10 +400,12 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		public void notifySearchCompleted(final List<Object> l) {
 			for (final IActiveSearchListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						listener.searchCompleted(l);
 					}
 
+					@Override
 					public void handleException(Throwable e) {
 						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 								NLS.bind("Unexpected error during listener invocation: {0}", listener.getClass()), e)); //$NON-NLS-1$

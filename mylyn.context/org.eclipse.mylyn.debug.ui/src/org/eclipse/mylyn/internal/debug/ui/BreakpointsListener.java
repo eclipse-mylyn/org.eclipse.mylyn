@@ -30,10 +30,12 @@ public class BreakpointsListener implements IBreakpointsListener {
 	private final AbstractContextStructureBridge structureBridge = ContextCore
 			.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
+	@Override
 	public void breakpointsAdded(IBreakpoint[] breakpoints) {
 		breakpointsChanged(breakpoints, new IMarkerDelta[breakpoints.length]);
 	}
 
+	@Override
 	public void breakpointsRemoved(IBreakpoint[] breakpoints, IMarkerDelta[] deltas) {
 		for (IBreakpoint breakpoint : breakpoints) {
 			IInteractionElement element = ContextCore.getContextManager()
@@ -44,6 +46,7 @@ public class BreakpointsListener implements IBreakpointsListener {
 		}
 	}
 
+	@Override
 	public void breakpointsChanged(IBreakpoint[] breakpoints, IMarkerDelta[] deltas) {
 		for (int i = 0; i < breakpoints.length; i++) {
 			IBreakpoint breakpoint = breakpoints[i];

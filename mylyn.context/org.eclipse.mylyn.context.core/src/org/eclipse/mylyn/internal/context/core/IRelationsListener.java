@@ -19,6 +19,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
  */
 public interface IRelationsListener {
 
-	public void relationsChanged(IInteractionElement element);
+	void relationsChanged(IInteractionElement element);
 
 }

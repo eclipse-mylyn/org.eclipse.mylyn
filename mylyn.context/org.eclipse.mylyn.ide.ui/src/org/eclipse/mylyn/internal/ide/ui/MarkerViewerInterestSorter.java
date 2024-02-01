@@ -26,28 +26,24 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class MarkerViewerInterestSorter extends ViewerSorter {
 
-	protected InterestComparator<IInteractionElement> interestComparator = new InterestComparator<IInteractionElement>();
+	protected InterestComparator<IInteractionElement> interestComparator = new InterestComparator<>();
 
 	@Override
 	public int compare(Viewer viewer, Object obj1, Object obj2) {
-		if (obj1 instanceof ProblemMarker && obj2 instanceof ProblemMarker) {
-			ProblemMarker marker1 = (ProblemMarker) obj1;
-			ProblemMarker marker2 = (ProblemMarker) obj2;
+		if (obj1 instanceof ProblemMarker marker1 && obj2 instanceof ProblemMarker marker2) {
 			if (marker1.getSeverity() == IMarker.SEVERITY_ERROR && marker2.getSeverity() < IMarker.SEVERITY_ERROR) {
 				return -1;
 			} else if (marker2.getSeverity() == IMarker.SEVERITY_ERROR
 					&& marker1.getSeverity() < IMarker.SEVERITY_ERROR) {
 				return 1;
-			} else {
-				if (ContextCore.getContextManager().isContextActive()) {
-					AbstractContextStructureBridge bridge = ContextCore
-							.getStructureBridge(marker1.getResource().getFileExtension());
-					IInteractionElement node1 = ContextCore.getContextManager()
-							.getElement(bridge.getHandleForOffsetInObject(marker1, 0));
-					IInteractionElement node2 = ContextCore.getContextManager()
-							.getElement(bridge.getHandleForOffsetInObject(marker2, 0));
-					return interestComparator.compare(node1, node2);
-				}
+			} else if (ContextCore.getContextManager().isContextActive()) {
+				AbstractContextStructureBridge bridge = ContextCore
+						.getStructureBridge(marker1.getResource().getFileExtension());
+				IInteractionElement node1 = ContextCore.getContextManager()
+						.getElement(bridge.getHandleForOffsetInObject(marker1, 0));
+				IInteractionElement node2 = ContextCore.getContextManager()
+						.getElement(bridge.getHandleForOffsetInObject(marker2, 0));
+				return interestComparator.compare(node1, node2);
 			}
 		}
 		return super.compare(viewer, obj1, obj2);

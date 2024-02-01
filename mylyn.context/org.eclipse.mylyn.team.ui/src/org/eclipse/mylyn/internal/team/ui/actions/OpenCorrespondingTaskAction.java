@@ -40,6 +40,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		setImageDescriptor(TasksUiImages.TASK_REPOSITORY);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -51,9 +52,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
-		if (action instanceof ObjectPluginAction) {
-			ObjectPluginAction objectAction = (ObjectPluginAction) action;
+		if (action instanceof ObjectPluginAction objectAction) {
 			if (objectAction.getSelection() instanceof StructuredSelection) {
 				StructuredSelection selection = (StructuredSelection) objectAction.getSelection();
 				run(selection);
@@ -68,6 +69,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		finder.open();
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

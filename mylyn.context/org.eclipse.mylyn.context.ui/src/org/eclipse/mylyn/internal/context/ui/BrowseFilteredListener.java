@@ -85,19 +85,20 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		this.wasExternalClick = wasExternalClick;
 	}
 
+	@Override
 	public void keyPressed(KeyEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void keyReleased(KeyEvent event) {
 		InterestFilter filter = getInterestFilter(viewer);
 
 		if (event.keyCode == SWT.ARROW_RIGHT) {
-			if (filter == null || !(viewer instanceof TreeViewer)) {
+			if (filter == null || !(viewer instanceof final TreeViewer treeViewer)) {
 				return;
 			}
 
-			final TreeViewer treeViewer = (TreeViewer) viewer;
 			ISelection selection = treeViewer.getSelection();
 			if (selection instanceof IStructuredSelection) {
 				Object targetObject = ((IStructuredSelection) selection).getFirstElement();
@@ -106,21 +107,23 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		}
 	}
 
+	@Override
 	public void mouseDown(MouseEvent event) {
 		// ignore
 	}
 
+	@Override
 	public void mouseDoubleClick(MouseEvent e) {
 		// ignore
 	}
 
+	@Override
 	public void mouseUp(MouseEvent event) {
 		final InterestFilter filter = getInterestFilter(viewer);
-		if (filter == null || !(viewer instanceof TreeViewer)) {
+		if (filter == null || !(viewer instanceof TreeViewer treeViewer)) {
 			return;
 		}
 
-		TreeViewer treeViewer = (TreeViewer) viewer;
 		Object selectedObject = null;
 		Object clickedObject = getClickedItem(event);
 		if (clickedObject != null) {
@@ -130,22 +133,19 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		}
 
 		if (isUnfilterEvent(event)) {
-			if (treeViewer instanceof CommonViewer) {
-				CommonViewer commonViewer = (CommonViewer) treeViewer;
+			if (treeViewer instanceof CommonViewer commonViewer) {
 				commonViewer.setSelection(new StructuredSelection(selectedObject), true);
 			}
 			unfilter(filter, treeViewer, selectedObject);
-		} else {
-			if (event.button == 1) {
-				if ((event.stateMask & SWT.MOD1) != 0 || wasExternalClick) {
-					viewer.refresh(selectedObject);
-					wasExternalClick = false;
-				} else {
-					final Object unfiltered = filter.getLastTemporarilyUnfiltered();
-					if (unfiltered != null) {
-						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
-						resetUnfiltered();
-					}
+		} else if (event.button == 1) {
+			if ((event.stateMask & SWT.MOD1) != 0 || wasExternalClick) {
+				viewer.refresh(selectedObject);
+				wasExternalClick = false;
+			} else {
+				final Object unfiltered = filter.getLastTemporarilyUnfiltered();
+				if (unfiltered != null) {
+					// NOTE: delaying refresh to ensure double click is handled, see bug 208702
+					resetUnfiltered();
 				}
 			}
 		}

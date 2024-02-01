@@ -22,12 +22,12 @@ package org.eclipse.mylyn.context.core;
  */
 public interface IInteractionRelation extends IInteractionObject {
 
-	public abstract String getLabel();
+	String getLabel();
 
-	public abstract String getRelationshipHandle();
+	String getRelationshipHandle();
 
-	public abstract IInteractionElement getTarget();
+	IInteractionElement getTarget();
 
-	public abstract IInteractionElement getSource();
+	IInteractionElement getSource();
 
 }

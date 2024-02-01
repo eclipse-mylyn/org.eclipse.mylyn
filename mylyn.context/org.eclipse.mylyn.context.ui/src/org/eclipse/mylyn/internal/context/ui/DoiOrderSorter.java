@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.core.InterestComparator;
  * @author Mik Kersten
  */
 public class DoiOrderSorter extends ViewerSorter {
-	protected InterestComparator<Object> comparator = new InterestComparator<Object>();
+	protected InterestComparator<Object> comparator = new InterestComparator<>();
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {

@@ -39,10 +39,10 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	private final JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
 	/**
-	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never
-	 * explicitly removed. TODO: consider clearing on each re-launch
+	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never explicitly removed.
+	 * TODO: consider clearing on each re-launch
 	 */
-	private final Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
+	private final Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<>();
 
 	@Override
 	public boolean acceptsObject(Object object) {
@@ -57,8 +57,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public boolean canFilter(Object element) {
 //		return element instanceof JDIStackFrame;
-		if (element instanceof JDIStackFrame) {
-			JDIStackFrame stackFrame = (JDIStackFrame) element;
+		if (element instanceof JDIStackFrame stackFrame) {
 			try {
 				IStackFrame[] frames = stackFrame.getThread().getStackFrames();
 
@@ -106,8 +105,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof JDIStackFrame) {
-			JDIStackFrame stackFrame = (JDIStackFrame) object;
+		if (object instanceof JDIStackFrame stackFrame) {
 			IType type = null;
 			if (stackFrameMap.containsKey(stackFrame)) {
 				type = stackFrameMap.get(stackFrame);

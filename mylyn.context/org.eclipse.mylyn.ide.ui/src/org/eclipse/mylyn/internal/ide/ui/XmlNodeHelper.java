@@ -55,7 +55,7 @@ public class XmlNodeHelper {
 	 */
 	public XmlNodeHelper(String filename, int s) {
 		this.filename = filename;
-		this.end = "" + s; //$NON-NLS-1$
+		end = "" + s; //$NON-NLS-1$
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class XmlNodeHelper {
 	 */
 	public XmlNodeHelper(String filename, String s) {
 		this.filename = filename;
-		this.end = s;
+		end = s;
 	}
 
 	/**
@@ -93,8 +93,7 @@ public class XmlNodeHelper {
 
 	@Override
 	public boolean equals(Object e) {
-		if (e instanceof XmlNodeHelper) {
-			XmlNodeHelper xnode = ((XmlNodeHelper) e);
+		if (e instanceof XmlNodeHelper xnode) {
 			return xnode.getHandle().equals(getHandle());
 		}
 		return false;
@@ -145,10 +144,10 @@ public class XmlNodeHelper {
 	// char prevChar = ' ';
 	// for(int i = endLine - 1; i >= 0; i--){
 	// // parse backwards
-	//            
+	//
 	// String line = lines[i];
 	// for(int cpos = line.length()-1; cpos >=0; cpos--){
-	//                
+	//
 	// if(attr){
 	// if(attrName.length() != 0 && (isWhitespace(line.charAt(cpos))))
 	// {
@@ -160,7 +159,7 @@ public class XmlNodeHelper {
 	// }
 	// attrName = line.charAt(cpos) + attrName;
 	// }
-	//                               
+	//
 	// if(line.charAt(cpos) == '"' && inQuote){
 	// inQuote = false;
 	// }else if(line.charAt(cpos) == '"' && !inQuote){
@@ -184,11 +183,11 @@ public class XmlNodeHelper {
 	// }
 	// }
 	// }
-	//    
+	//
 	// private boolean isWhitespace(char c){
 	// return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 	// }
-	//    
+	//
 	// public String getCanName()
 	// {
 	// int slash = filename.lastIndexOf("/");
@@ -224,13 +223,13 @@ public class XmlNodeHelper {
 	// public int getEndLine() {
 	// return endLine;
 	// }
-	//    
+	//
 	//
 	// public void setEndLine(int endLine) {
 	// this.endLine = endLine;
 	// }
 
-	//    
+	//
 	//
 	// public void setStartLine(int startOffset) {
 	// this.startLine = startOffset;

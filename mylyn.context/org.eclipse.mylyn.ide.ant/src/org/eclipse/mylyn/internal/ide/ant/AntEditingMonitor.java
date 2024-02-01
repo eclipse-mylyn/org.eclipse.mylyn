@@ -34,7 +34,6 @@ import org.eclipse.ui.part.FileEditorInput;
 public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 
 	public AntEditingMonitor() {
-		super();
 	}
 
 	@Override
@@ -116,9 +115,8 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 		}
 
 		for (Object obj : topNode.getChildNodes()) {
-			if (obj instanceof AntElementNode) {
-				AntElementNode node = (AntElementNode) obj;
-//				path = (String) method.invoke(node, new Object[] {});
+			if (obj instanceof AntElementNode node) {
+				//				path = (String) method.invoke(node, new Object[] {});
 				path = node.getElementPath();
 				if (path.compareTo(elementPath) == 0) {
 					return node;

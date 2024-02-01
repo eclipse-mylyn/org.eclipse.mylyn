@@ -20,6 +20,7 @@ import org.eclipse.ui.IActionFilter;
  */
 public class ContextActiveActionFilter implements IActionFilter {
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		return ContextCore.getContextManager().isContextActive();
 	}

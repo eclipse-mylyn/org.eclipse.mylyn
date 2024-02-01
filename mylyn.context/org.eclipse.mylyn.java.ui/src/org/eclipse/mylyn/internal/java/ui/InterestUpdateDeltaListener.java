@@ -32,6 +32,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private static boolean asyncExecMode = true;
 
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		IJavaElementDelta delta = event.getDelta();
 		handleDelta(delta.getAffectedChildren());
@@ -87,11 +88,8 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-				workbench.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ContextCore.getContextManager().updateHandle(element, newHandle);
-					}
-				});
+				workbench.getDisplay()
+						.asyncExec(() -> ContextCore.getContextManager().updateHandle(element, newHandle));
 			}
 		}
 	}
@@ -102,11 +100,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-				workbench.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ContextCore.getContextManager().deleteElement(element);
-					}
-				});
+				workbench.getDisplay().asyncExec(() -> ContextCore.getContextManager().deleteElement(element));
 			}
 		}
 	}

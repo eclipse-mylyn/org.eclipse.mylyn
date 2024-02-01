@@ -45,11 +45,10 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	private Button manageExpansionButton = null;
 
 	/**
-	 * Constructor - set preference store to ContextUiPlugin store since the tasklist plugin needs access to the values
-	 * stored from the preference page because it needs access to the highlighters on start up.
+	 * Constructor - set preference store to ContextUiPlugin store since the tasklist plugin needs access to the values stored from the
+	 * preference page because it needs access to the highlighters on start up.
 	 */
 	public ContextUiPreferencePage() {
-		super();
 		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
 		setTitle(Messages.ContextUiPreferencePage_Context);
 		setDescription(Messages.ContextUiPreferencePage_CONFIGURE_TASK_FOCUSED_UI_MANAGEMENT_AND_AUTOMATION);
@@ -69,10 +68,12 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		return entryTable;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// don't have anything to initialize
 	}
 
+	@Override
 	public void widgetDefaultSelected(SelectionEvent se) {
 		widgetSelected(se);
 	}
@@ -80,6 +81,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	/**
 	 * Handle selection of an item in the menu.
 	 */
+	@Override
 	public void widgetSelected(SelectionEvent se) {
 		// don't care when the widget is selected
 	}
@@ -112,8 +114,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	}
 
 	/**
-	 * Handle RestoreDefaults Note: changes to default are not stored in the preference store until OK or Apply is
-	 * pressed
+	 * Handle RestoreDefaults Note: changes to default are not stored in the preference store until OK or Apply is pressed
 	 */
 	@Override
 	public void performDefaults() {

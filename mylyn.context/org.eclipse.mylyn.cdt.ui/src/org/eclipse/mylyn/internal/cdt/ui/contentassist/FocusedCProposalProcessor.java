@@ -57,13 +57,13 @@ public class FocusedCProposalProcessor {
 
 	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
-	private final List<ICompletionProposalComputer> monitoredProposalComputers = new ArrayList<ICompletionProposalComputer>();
+	private final List<ICompletionProposalComputer> monitoredProposalComputers = new ArrayList<>();
 
-	private final List<ICompletionProposalComputer> alreadyComputedProposals = new ArrayList<ICompletionProposalComputer>();
+	private final List<ICompletionProposalComputer> alreadyComputedProposals = new ArrayList<>();
 
-	private final List<ICompletionProposalComputer> alreadyContainSeparator = new ArrayList<ICompletionProposalComputer>();
+	private final List<ICompletionProposalComputer> alreadyContainSeparator = new ArrayList<>();
 
-	private final List<ICompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<ICompletionProposalComputer>();
+	private final List<ICompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<>();
 
 	private static FocusedCProposalProcessor INSTANCE = new FocusedCProposalProcessor();
 
@@ -150,7 +150,7 @@ public class FocusedCProposalProcessor {
 		}
 		return hasInteresting;
 
-// FIXME ADD BACK THE RIGHT WAY TO DO THIS!		
+// FIXME ADD BACK THE RIGHT WAY TO DO THIS!
 //		boolean hasInteresting = false;
 //		ICElement cElement = proposal.getCElement();
 //

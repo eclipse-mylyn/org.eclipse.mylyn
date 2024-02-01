@@ -14,8 +14,6 @@ package org.eclipse.mylyn.context.tasks.tests;
 
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
@@ -30,6 +28,8 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -116,7 +116,7 @@ public class PerspectiveRestoreTest extends TestCase {
 
 		task = TaskTestUtil.createMockTask("1");
 
-		// check that activating new task with the same id does not switch the perspective 
+		// check that activating new task with the same id does not switch the perspective
 		TasksUi.getTaskActivityManager().activateTask(task);
 		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
 	}

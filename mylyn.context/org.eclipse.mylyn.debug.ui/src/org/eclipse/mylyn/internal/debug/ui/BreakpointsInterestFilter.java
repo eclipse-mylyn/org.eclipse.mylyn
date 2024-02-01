@@ -31,8 +31,7 @@ public class BreakpointsInterestFilter extends InterestFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
-		if (element instanceof IBreakpoint) {
-			IBreakpoint breakpoint = (IBreakpoint) element;
+		if (element instanceof IBreakpoint breakpoint) {
 			IInteractionElement interactionElement = ContextCore.getContextManager()
 					.getElement(structureBridge.getHandleIdentifier(breakpoint));
 			if (interactionElement == null) {

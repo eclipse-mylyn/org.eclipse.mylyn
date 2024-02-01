@@ -25,8 +25,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Extend to focus a view on task context, e.g. the filtering and expansion of a tree view such as the Package Explorer.
- * A structure bridge should be implemented or reused to determine the degree-of-interest of elements in the view.
+ * Extend to focus a view on task context, e.g. the filtering and expansion of a tree view such as the Package Explorer. A structure bridge
+ * should be implemented or reused to determine the degree-of-interest of elements in the view.
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -86,6 +86,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 
 		// can not run this until the view has been initialized
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {

@@ -50,14 +50,12 @@ public class XmlTestActiveSearchListener extends TestActiveSearchListener {
 
 		if (l.get(0) instanceof FileSearchResult) {
 			FileSearchResult fsr = (FileSearchResult) l.get(0);
-			List<Object> nodes = new ArrayList<Object>();
+			List<Object> nodes = new ArrayList<>();
 			Object[] far = fsr.getElements();
 			for (Object element : far) {
 				Match[] mar = fsr.getMatches(element);
 
-				if (element instanceof File) {
-					File f = (File) element;
-
+				if (element instanceof File f) {
 					for (Match m : mar) {
 						try {
 

@@ -109,23 +109,21 @@ public class ContextTestUtil {
 	}
 
 	public static void delete(final IResource resource) throws CoreException {
-		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				for (int i = 0; i < MAX_RETRY; i++) {
+		IWorkspaceRunnable runnable = monitor -> {
+			for (int i = 0; i < MAX_RETRY; i++) {
+				try {
+					resource.delete(true, null);
+					i = MAX_RETRY;
+				} catch (CoreException e) {
+					if (i == MAX_RETRY - 1) {
+						StatusHandler.log(e.getStatus());
+						throw e;
+					}
+					System.gc(); // help windows to really close file
+					// locks
 					try {
-						resource.delete(true, null);
-						i = MAX_RETRY;
-					} catch (CoreException e) {
-						if (i == MAX_RETRY - 1) {
-							StatusHandler.log(e.getStatus());
-							throw e;
-						}
-						System.gc(); // help windows to really close file
-						// locks
-						try {
-							Thread.sleep(1000); // sleep a second
-						} catch (InterruptedException e1) {
-						}
+						Thread.sleep(1000); // sleep a second
+					} catch (InterruptedException e1) {
 					}
 				}
 			}
@@ -143,8 +141,7 @@ public class ContextTestUtil {
 	}
 
 	/**
-	 * Test cases that rely on lazy startup of Context Ui (e.g. context bridges) need to invoke this method prior to
-	 * running the test.
+	 * Test cases that rely on lazy startup of Context Ui (e.g. context bridges) need to invoke this method prior to running the test.
 	 */
 	public static void triggerContextUiLazyStart() {
 		if (contextUiLazyStarted) {
@@ -153,7 +150,7 @@ public class ContextTestUtil {
 
 		contextUiLazyStarted = true;
 
-		// make sure monitor UI is started and logs the start interaction event 
+		// make sure monitor UI is started and logs the start interaction event
 		MonitorUiPlugin.getDefault();
 
 		ContextCore.getContextManager().activateContext("startup");

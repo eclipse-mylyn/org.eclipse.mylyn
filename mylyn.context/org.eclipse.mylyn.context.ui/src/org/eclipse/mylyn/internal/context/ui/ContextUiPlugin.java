@@ -81,18 +81,18 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case PRE_ACTIVATED:
-				initLazyStart();
-				break;
+				case PRE_ACTIVATED:
+					initLazyStart();
+					break;
 			}
 		}
 	}
 
 	private final ContextActivationListener contextActivationListener = new ContextActivationListener();
 
-	private final Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
+	private final Map<String, AbstractContextUiBridge> bridges = new HashMap<>();
 
-	private final Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
+	private final Map<String, ILabelProvider> contextLabelProviders = new HashMap<>();
 
 	private static ContextUiPlugin INSTANCE;
 
@@ -102,13 +102,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private final ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
-	private final Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
+	private final Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<>();
 
-	private final Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
+	private final Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<>();
 
-	private final Map<String, Set<String>> preservedFilterClasses = new HashMap<String, Set<String>>();
+	private final Map<String, Set<String>> preservedFilterClasses = new HashMap<>();
 
-	private final Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
+	private final Map<String, Set<String>> preservedFilterIds = new HashMap<>();
 
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
@@ -224,11 +224,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				if (Display.getCurrent() != null) {
 					lazyStart(PlatformUI.getWorkbench());
 				} else {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							lazyStart(PlatformUI.getWorkbench());
-						}
-					});
+					Display.getDefault().asyncExec(() -> lazyStart(PlatformUI.getWorkbench()));
 				}
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
@@ -323,7 +319,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = ContextUiPlugin.getDefault().getResourceBundle();
 		try {
-			return (bundle != null) ? bundle.getString(key) : key;
+			return bundle != null ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
 			return key;
 		}
@@ -336,7 +332,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public static String getMessage(String key) {
 		ResourceBundle bundle = getDefault().getResourceBundle();
 		try {
-			return (bundle != null) ? bundle.getString(key) : key;
+			return bundle != null ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
 			return key;
 		}
@@ -352,7 +348,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public List<AbstractContextUiBridge> getUiBridges() {
 		UiExtensionPointReader.initExtensions();
-		return new ArrayList<AbstractContextUiBridge>(bridges.values());
+		return new ArrayList<>(bridges.values());
 	}
 
 	/**
@@ -388,7 +384,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void internalAddBridge(String extension, AbstractContextUiBridge bridge) {
-		this.bridges.put(extension, bridge);
+		bridges.put(extension, bridge);
 	}
 
 	public ILabelProvider getContextLabelProvider(String extension) {
@@ -401,7 +397,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
-		this.contextLabelProviders.put(extension, provider);
+		contextLabelProviders.put(extension, provider);
 	}
 
 	public static FocusedViewerManager getViewerManager() {
@@ -532,7 +528,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		private static final String ELEMENT_STARTUP = "startup"; //$NON-NLS-1$
 
 		public static void runStartupExtensions() {
-			ExtensionPointReader<IContextUiStartup> reader = new ExtensionPointReader<IContextUiStartup>(
+			ExtensionPointReader<IContextUiStartup> reader = new ExtensionPointReader<>(
 					ContextUiPlugin.ID_PLUGIN, EXTENSION_ID_STARTUP, ELEMENT_STARTUP, IContextUiStartup.class);
 			reader.read();
 
@@ -563,7 +559,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void addPreservedFilterClass(String viewId, String filterClass) {
 		Set<String> preservedList = preservedFilterClasses.get(viewId);
 		if (preservedList == null) {
-			preservedList = new HashSet<String>();
+			preservedList = new HashSet<>();
 			preservedFilterClasses.put(viewId, preservedList);
 		}
 		preservedList.add(filterClass);
@@ -581,7 +577,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void addPreservedFilterId(String viewId, String filterId) {
 		Set<String> preservedList = preservedFilterIds.get(viewId);
 		if (preservedList == null) {
-			preservedList = new HashSet<String>();
+			preservedList = new HashSet<>();
 			preservedFilterIds.put(viewId, preservedList);
 		}
 		preservedList.add(filterId);
@@ -617,8 +613,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// }
 			try {
 				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
-				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class }); //$NON-NLS-1$
-				method.invoke(treeContentProvider, new Object[] { true });
+				Method method = clazz.getDeclaredMethod("setIsFlatLayout", boolean.class); //$NON-NLS-1$
+				method.invoke(treeContentProvider, true);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$

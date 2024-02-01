@@ -72,7 +72,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-	};
+	}
 
 	class LandmarksModelListener extends AbstractContextListener {
 
@@ -83,12 +83,12 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case LANDMARKS_ADDED:
-				numAdditions += event.getElements().size();
-				break;
-			case LANDMARKS_REMOVED:
-				numDeletions += event.getElements().size();
-				break;
+				case LANDMARKS_ADDED:
+					numAdditions += event.getElements().size();
+					break;
+				case LANDMARKS_REMOVED:
+					numDeletions += event.getElements().size();
+					break;
 			}
 		}
 	}
@@ -256,7 +256,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(parent.getInterest().isInteresting());
 		assertTrue(parent.getInterest().isPropagated());
 
-		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
+		for (int i = 0; i < 1 / scaling.getDecay() * 3; i++) {
 			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
 
@@ -290,7 +290,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testPropagationBetweenResourcesAndJava() throws JavaModelException, Exception {
-		Workspace workspace = ((Workspace) ResourcesPlugin.getWorkspace());
+		Workspace workspace = (Workspace) ResourcesPlugin.getWorkspace();
 		IPath fullPath = p1.getResource().getFullPath();
 
 		IFolder newResource = (IFolder) workspace.newResource(fullPath.append("meta-inf"), IResource.FOLDER);
@@ -463,8 +463,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager()
-				.processInteractionEvent(new String("non existent"), InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
-						context);
+				.processInteractionEvent("non existent", InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
@@ -591,7 +590,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			assertTrue(originalElement instanceof CompositeContextElement);
 			assertEquals(1, ((CompositeContextElement) originalElement).getNodes().size());
 
-			ContextCorePlugin.getContextManager().deleteElements(Arrays.asList(new IInteractionElement[] { element }));
+			ContextCorePlugin.getContextManager().deleteElements(Arrays.asList(element));
 			IInteractionElement deletedElement = ContextCorePlugin.getContextManager()
 					.getElement(element.getHandleIdentifier());
 			assertTrue(deletedElement instanceof CompositeContextElement);
@@ -619,15 +618,15 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
 
-			case LANDMARKS_REMOVED:
-			case ELEMENTS_DELETED:
-				if (event.isExplicitManipulation()) {
-					explicitDeletionEventCount++;
-				} else {
-					implicitDeletionEventCount++;
-				}
-				elementCount += event.getElements().size();
-				break;
+				case LANDMARKS_REMOVED:
+				case ELEMENTS_DELETED:
+					if (event.isExplicitManipulation()) {
+						explicitDeletionEventCount++;
+					} else {
+						implicitDeletionEventCount++;
+					}
+					elementCount += event.getElements().size();
+					break;
 			}
 		}
 	}

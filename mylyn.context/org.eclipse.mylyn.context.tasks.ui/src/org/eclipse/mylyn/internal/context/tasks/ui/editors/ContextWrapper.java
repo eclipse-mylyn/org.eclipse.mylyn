@@ -30,7 +30,7 @@ class ContextWrapper implements IInteractionContext {
 	private final ITask task;
 
 	public ContextWrapper(IInteractionContext context, ITask task) {
-		this.wrappedContext = context;
+		wrappedContext = context;
 		this.task = task;
 	}
 
@@ -50,58 +50,72 @@ class ContextWrapper implements IInteractionContext {
 		this.wrappedContext = wrappedContext;
 	}
 
+	@Override
 	public String getHandleIdentifier() {
 		return wrappedContext.getHandleIdentifier();
 	}
 
+	@Override
 	public List<InteractionEvent> getInteractionHistory() {
 		return wrappedContext.getInteractionHistory();
 	}
 
+	@Override
 	public boolean isInteresting(String elementHandle) {
 		return wrappedContext.isInteresting(elementHandle);
 	}
 
+	@Override
 	public List<IInteractionElement> getInteresting() {
 		return wrappedContext.getInteresting();
 	}
 
+	@Override
 	public List<IInteractionElement> getLandmarks() {
 		return wrappedContext.getLandmarks();
 	}
 
+	@Override
 	public IInteractionElement get(String element) {
 		return wrappedContext.get(element);
 	}
 
+	@Override
 	public IInteractionElement getActiveNode() {
 		return wrappedContext.getActiveNode();
 	}
 
+	@Override
 	public void delete(IInteractionElement element) {
 		wrappedContext.delete(element);
 	}
 
+	@Override
 	public void delete(Collection<IInteractionElement> elements) {
 		wrappedContext.delete(elements);
 	}
 
+	@Override
 	public void updateElementHandle(IInteractionElement element, String newHandle) {
 		wrappedContext.updateElementHandle(element, newHandle);
 	}
 
+	@Override
 	public List<IInteractionElement> getAllElements() {
 		return wrappedContext.getAllElements();
 	}
 
+	@Override
 	public IInteractionContextScaling getScaling() {
 		return wrappedContext.getScaling();
 	}
 
+	@Override
 	public String getContentLimitedTo() {
 		return wrappedContext.getContentLimitedTo();
 	}
 
+	@Override
 	public void setContentLimitedTo(String contentLimitedTo) {
 		wrappedContext.setContentLimitedTo(contentLimitedTo);
 	}

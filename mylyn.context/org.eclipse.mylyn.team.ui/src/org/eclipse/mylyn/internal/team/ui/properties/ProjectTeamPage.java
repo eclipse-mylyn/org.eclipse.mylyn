@@ -24,8 +24,6 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage;
 import org.eclipse.mylyn.internal.team.ui.templates.TemplateHandlerContentProposalProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -169,11 +167,9 @@ public class ProjectTeamPage extends PropertyPage {
 		IControlContentAdapter adapter = new TextContentAdapter();
 		Text control = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		control.setText(text);
-		control.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (!ignoreModifyEvents) {
-					modified = true;
-				}
+		control.addModifyListener(e -> {
+			if (!ignoreModifyEvents) {
+				modified = true;
 			}
 		});
 

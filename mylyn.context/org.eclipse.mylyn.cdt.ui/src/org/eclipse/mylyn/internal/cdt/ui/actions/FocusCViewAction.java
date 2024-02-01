@@ -81,16 +81,14 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CView) {
 			for (IContributionItem item : ((CView) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					if (actionItem.getAction() instanceof ToggleLinkingAction) {
 						actionItem.getAction().setEnabled(enabled);
 					}
 				}
 			}
 			for (IContributionItem item : ((CView) part).getViewSite().getActionBars().getMenuManager().getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					// TODO: file bug asking for extensibility
 					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { //$NON-NLS-1$
 						actionItem.getAction().setEnabled(enabled);
@@ -99,7 +97,7 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 				// NOTE: turning off dynamically contributed filter items is not currently feasible
 //				else if (item instanceof ContributionItem) {
 //					ContributionItem contributionItem = (ContributionItem) item;
-//					
+//
 //					if (contributionItem.getClass().getSimpleName().equals("FilterActionMenuContributionItem")) {
 //						try {
 //							Class<?> clazz = contributionItem.getClass();
@@ -138,7 +136,7 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		// TODO: get from super
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CView) {

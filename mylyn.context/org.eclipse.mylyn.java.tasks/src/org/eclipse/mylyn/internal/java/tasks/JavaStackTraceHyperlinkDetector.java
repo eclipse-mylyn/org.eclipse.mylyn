@@ -37,7 +37,7 @@ public class JavaStackTraceHyperlinkDetector extends AbstractTaskHyperlinkDetect
 	}
 
 	private static boolean isInRegion(int offsetInText, Matcher m) {
-		return (offsetInText == -1) || (offsetInText >= m.start() && offsetInText <= m.end());
+		return offsetInText == -1 || offsetInText >= m.start() && offsetInText <= m.end();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class JavaStackTraceHyperlinkDetector extends AbstractTaskHyperlinkDetect
 		while (m.find()) {
 			if (isInRegion(offsetInContent, m)) {
 				if (links == null) {
-					links = new ArrayList<IHyperlink>();
+					links = new ArrayList<>();
 				}
 				links.add(new JavaStackTraceFileHyperlink(determineRegion(contentOffset, m, 0), m.group(),
 						determineRegion(contentOffset, m, 1)));

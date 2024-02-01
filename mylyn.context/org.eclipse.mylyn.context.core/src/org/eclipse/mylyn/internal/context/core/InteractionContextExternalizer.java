@@ -78,7 +78,7 @@ public class InteractionContextExternalizer {
 	static String getFirstContextHandle(File sourceFile) throws CoreException {
 		try {
 			ZipFile zipFile = new ZipFile(sourceFile);
-			try {
+			try (zipFile) {
 				for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
 					ZipEntry entry = (ZipEntry) e.nextElement();
 					String name = entry.getName();
@@ -96,8 +96,6 @@ public class InteractionContextExternalizer {
 					}
 				}
 				return null;
-			} finally {
-				zipFile.close();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
@@ -122,15 +120,11 @@ public class InteractionContextExternalizer {
 		}
 
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		try {
+		try (fileOutputStream) {
 			ZipOutputStream outputStream = new ZipOutputStream(fileOutputStream);
-			try {
+			try (outputStream) {
 				writeContext(context, outputStream, writer);
-			} finally {
-				outputStream.close();
 			}
-		} finally {
-			fileOutputStream.close();
 		}
 	}
 
@@ -161,12 +155,14 @@ public class InteractionContextExternalizer {
 			throws IOException {
 		for (final IContextContributor contributor : getContextContributor()) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(
 							new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Context contribution failed: " //$NON-NLS-1$
 									+ contributor.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					InputStream additionalContextInformation = contributor.getDataAsStream(context);
 					if (additionalContextInformation != null) {

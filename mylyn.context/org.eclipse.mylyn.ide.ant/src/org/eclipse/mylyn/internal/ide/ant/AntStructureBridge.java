@@ -183,16 +183,14 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		// we can only create handles for AntElementNodes and build.xml Files
 		if (object instanceof XmlNodeHelper) {
 			return ((XmlNodeHelper) object).getHandle();
-		} else if (object instanceof AntElementNode) {
-			AntElementNode node = (AntElementNode) object;
+		} else if (object instanceof AntElementNode node) {
 			String path = node.getElementPath();
 			if (path == null || node.getIFile() == null) {
 				return null;
 			}
 			XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
 			return helper.getHandle();
-		} else if (object instanceof File) {
-			File file = (File) object;
+		} else if (object instanceof File file) {
 			// get the handle for the build.xml file
 			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 				return file.getFullPath().toString();
@@ -206,12 +204,10 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	 */
 	@Override
 	public String getLabel(Object object) {
-		if (object instanceof AntElementNode) {
-			AntElementNode n = (AntElementNode) object;
+		if (object instanceof AntElementNode n) {
 			String name = n.getIFile().getName() + ": " + n.getName(); //$NON-NLS-1$
 			return name;
-		} else if (object instanceof File) {
-			File file = (File) object;
+		} else if (object instanceof File file) {
 			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 				return "build.xml"; //$NON-NLS-1$
 			}
@@ -220,8 +216,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canBeLandmark(Object) TODO: make a non-handle
-	 *      based test
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canBeLandmark(Object) TODO: make a non-handle based test
 	 */
 	@Override
 	public boolean canBeLandmark(String handle) {
@@ -244,8 +239,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 			if (((XmlNodeHelper) object).getFilename().endsWith("build.xml")) { //$NON-NLS-1$
 				return true;
 			}
-		} else if (object instanceof File) {
-			File file = (File) object;
+		} else if (object instanceof File file) {
 			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 				return true;
 			}
@@ -294,8 +288,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		if (markerResource != null) {
 			// we can only return a handle if the resource is build.xml
 			try {
-				if (markerResource instanceof IFile) {
-					IFile file = (IFile) markerResource;
+				if (markerResource instanceof IFile file) {
 					if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 						return file.getFullPath().toString();
 					} else {

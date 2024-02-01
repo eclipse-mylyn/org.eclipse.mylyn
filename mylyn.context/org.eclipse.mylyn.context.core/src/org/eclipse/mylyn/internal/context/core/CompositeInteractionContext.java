@@ -34,7 +34,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class CompositeInteractionContext implements IInteractionContext {
 
-	protected Map<String, InteractionContext> contexts = new HashMap<String, InteractionContext>();
+	protected Map<String, InteractionContext> contexts = new HashMap<>();
 
 	protected IInteractionElement activeNode = null;
 
@@ -47,7 +47,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 	}
 
 	public IInteractionElement addEvent(InteractionEvent event) {
-		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
+		List<InteractionContextElement> nodes = new ArrayList<>();
 		for (InteractionContext context : contexts.values()) {
 			InteractionContextElement info = (InteractionContextElement) context.parseEvent(event);
 			nodes.add(info);
@@ -57,11 +57,12 @@ public class CompositeInteractionContext implements IInteractionContext {
 		return compositeNode;
 	}
 
+	@Override
 	public IInteractionElement get(String handle) {
-		if (handle == null || contexts.values().size() == 0) {
+		if (handle == null || contexts.size() == 0) {
 			return null;
 		}
-		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
+		List<InteractionContextElement> nodes = new ArrayList<>();
 		for (InteractionContext taskscape : contexts.values()) {
 			InteractionContextElement node = (InteractionContextElement) taskscape.get(handle);
 			if (node != null) {
@@ -72,8 +73,9 @@ public class CompositeInteractionContext implements IInteractionContext {
 		return composite;
 	}
 
+	@Override
 	public List<IInteractionElement> getLandmarks() {
-		Set<IInteractionElement> landmarks = new HashSet<IInteractionElement>();
+		Set<IInteractionElement> landmarks = new HashSet<>();
 		for (InteractionContext taskscape : contexts.values()) {
 			for (IInteractionElement concreteNode : taskscape.getLandmarks()) {
 				if (concreteNode != null) {
@@ -81,11 +83,12 @@ public class CompositeInteractionContext implements IInteractionContext {
 				}
 			}
 		}
-		return new ArrayList<IInteractionElement>(landmarks);
+		return new ArrayList<>(landmarks);
 	}
 
+	@Override
 	public List<IInteractionElement> getInteresting() {
-		Set<IInteractionElement> landmarks = new HashSet<IInteractionElement>();
+		Set<IInteractionElement> landmarks = new HashSet<>();
 		for (InteractionContext context : contexts.values()) {
 			for (IInteractionElement concreteNode : context.getInteresting()) {
 				if (concreteNode != null) {
@@ -93,9 +96,10 @@ public class CompositeInteractionContext implements IInteractionContext {
 				}
 			}
 		}
-		return new ArrayList<IInteractionElement>(landmarks);
+		return new ArrayList<>(landmarks);
 	}
 
+	@Override
 	public boolean isInteresting(String elementHandle) {
 		for (InteractionContext context : contexts.values()) {
 			if (context.isInteresting(elementHandle)) {
@@ -106,19 +110,22 @@ public class CompositeInteractionContext implements IInteractionContext {
 	}
 
 	public void setActiveElement(IInteractionElement activeElement) {
-		this.activeNode = activeElement;
+		activeNode = activeElement;
 	}
 
+	@Override
 	public IInteractionElement getActiveNode() {
 		return activeNode;
 	}
 
+	@Override
 	public void delete(IInteractionElement node) {
 		for (InteractionContext taskscape : contexts.values()) {
 			taskscape.delete(node);
 		}
 	}
 
+	@Override
 	public void delete(Collection<IInteractionElement> nodes) {
 		for (InteractionContext context : contexts.values()) {
 			context.delete(nodes);
@@ -135,27 +142,30 @@ public class CompositeInteractionContext implements IInteractionContext {
 		return contexts;
 	}
 
+	@Override
 	public List<IInteractionElement> getAllElements() {
-		Set<IInteractionElement> nodes = new HashSet<IInteractionElement>();
+		Set<IInteractionElement> nodes = new HashSet<>();
 		for (InteractionContext context : contexts.values()) {
 			for (IInteractionElement concreteNode : context.getAllElements()) {
 				nodes.add(get(concreteNode.getHandleIdentifier()));
 			}
 		}
-		return new ArrayList<IInteractionElement>(nodes);
+		return new ArrayList<>(nodes);
 	}
 
 	/**
 	 * TODO: sort by date?
 	 */
+	@Override
 	public List<InteractionEvent> getInteractionHistory() {
-		Set<InteractionEvent> events = new HashSet<InteractionEvent>();
+		Set<InteractionEvent> events = new HashSet<>();
 		for (InteractionContext taskscape : contexts.values()) {
 			events.addAll(taskscape.getInteractionHistory());
 		}
-		return new ArrayList<InteractionEvent>(events);
+		return new ArrayList<>(events);
 	}
 
+	@Override
 	public void updateElementHandle(IInteractionElement element, String newHandle) {
 		for (InteractionContext context : contexts.values()) {
 			context.updateElementHandle(element, newHandle);
@@ -168,22 +178,26 @@ public class CompositeInteractionContext implements IInteractionContext {
 	 * 
 	 * @return null if no unique handle
 	 */
+	@Override
 	public String getHandleIdentifier() {
-		if (contexts.values().size() == 1) {
+		if (contexts.size() == 1) {
 			return contexts.keySet().iterator().next();
 		} else {
 			return null;
 		}
 	}
 
+	@Override
 	public IInteractionContextScaling getScaling() {
 		return contextScaling;
 	}
 
+	@Override
 	public String getContentLimitedTo() {
 		return contentLimitedTo;
 	}
 
+	@Override
 	public void setContentLimitedTo(String contentLimitedTo) {
 		this.contentLimitedTo = contentLimitedTo;
 	}

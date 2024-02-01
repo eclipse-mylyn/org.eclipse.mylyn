@@ -69,8 +69,7 @@ public abstract class AbstractContextListener implements IContextListener {
 	}
 
 	/**
-	 * The interest level of one or more elements has changed. The last element in the list is the element invoking the
-	 * change.
+	 * The interest level of one or more elements has changed. The last element in the list is the element invoking the change.
 	 * 
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
@@ -112,39 +111,40 @@ public abstract class AbstractContextListener implements IContextListener {
 	/**
 	 * @since 3.2
 	 */
+	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case PRE_ACTIVATED:
-			contextPreActivated(event.getContext());
-			break;
-		case ACTIVATED:
-			contextActivated(event.getContext());
-			break;
-		case DEACTIVATED:
-			contextDeactivated(event.getContext());
-			break;
-		case CLEARED:
-			contextCleared(event.getContext());
-			break;
-		case INTEREST_CHANGED:
-			interestChanged(event.getElements());
-			break;
-		case LANDMARKS_ADDED:
-			for (IInteractionElement element : event.getElements()) {
-				landmarkAdded(element);
-			}
-			break;
-		case LANDMARKS_REMOVED:
-			for (IInteractionElement element : event.getElements()) {
-				landmarkRemoved(element);
-			}
-			break;
-		case ELEMENTS_DELETED:
-			elementsDeleted(event.getElements());
-			break;
-		default:
-			StatusHandler
-					.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unknown context changed event type")); //$NON-NLS-1$
+			case PRE_ACTIVATED:
+				contextPreActivated(event.getContext());
+				break;
+			case ACTIVATED:
+				contextActivated(event.getContext());
+				break;
+			case DEACTIVATED:
+				contextDeactivated(event.getContext());
+				break;
+			case CLEARED:
+				contextCleared(event.getContext());
+				break;
+			case INTEREST_CHANGED:
+				interestChanged(event.getElements());
+				break;
+			case LANDMARKS_ADDED:
+				for (IInteractionElement element : event.getElements()) {
+					landmarkAdded(element);
+				}
+				break;
+			case LANDMARKS_REMOVED:
+				for (IInteractionElement element : event.getElements()) {
+					landmarkRemoved(element);
+				}
+				break;
+			case ELEMENTS_DELETED:
+				elementsDeleted(event.getElements());
+				break;
+			default:
+				StatusHandler.log(
+						new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unknown context changed event type")); //$NON-NLS-1$
 		}
 
 	}

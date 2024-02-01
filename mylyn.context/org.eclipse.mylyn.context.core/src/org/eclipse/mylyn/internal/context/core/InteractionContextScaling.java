@@ -37,7 +37,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 
 	private static final float DEFAULT_FORCED_LANDMARK = 7 * DEFAULT_LANDMARK;
 
-	private final Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<InteractionEvent.Kind, Float>();
+	private final Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<>();
 
 	private float interesting = DEFAULT_INTERESTING;
 
@@ -57,6 +57,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 		interactionScalingFactors.put(InteractionEvent.Kind.EDIT, DEFAULT_EVENT_EDIT);
 	}
 
+	@Override
 	public float get(InteractionEvent.Kind kind) {
 		if (interactionScalingFactors.containsKey(kind)) {
 			return interactionScalingFactors.get(kind);
@@ -69,6 +70,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 		interactionScalingFactors.put(kind, value);
 	}
 
+	@Override
 	public float getDecay() {
 		return decay;
 	}
@@ -77,6 +79,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 		this.decay = decay;
 	}
 
+	@Override
 	public float getInteresting() {
 		return interesting;
 	}
@@ -85,6 +88,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 		this.interesting = interesting;
 	}
 
+	@Override
 	public float getLandmark() {
 		return landmark;
 	}
@@ -103,11 +107,12 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 		return maxNumInterestingErrors;
 	}
 
+	@Override
 	public float getForcedLandmark() {
 		return forcedLandmark;
 	}
 
 	public void setForcedLandmark(float userLandmark) {
-		this.forcedLandmark = userLandmark;
+		forcedLandmark = userLandmark;
 	}
 }

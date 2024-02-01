@@ -139,14 +139,12 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		// We need to delay the setting of the selection until after the selection event is processed
 		// 288416: unable to open a C element when focus is enabled
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=288416
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (commonNavigator == null) {
-					commonNavigator = (CommonNavigator) FocusCommonNavigatorAction.super.getPartForAction();
-				}
-				if (commonNavigator != null) {
-					commonNavigator.selectReveal(toSelect);
-				}
+		Display.getDefault().asyncExec(() -> {
+			if (commonNavigator == null) {
+				commonNavigator = (CommonNavigator) FocusCommonNavigatorAction.super.getPartForAction();
+			}
+			if (commonNavigator != null) {
+				commonNavigator.selectReveal(toSelect);
 			}
 		});
 	}
@@ -160,8 +158,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 					.getActionBars()
 					.getToolBarManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					if (actionItem.getAction() instanceof LinkEditorAction) {
 						actionItem.getAction().setEnabled(on);
 					}
@@ -171,8 +168,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 					.getActionBars()
 					.getMenuManager()
 					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
+				if (item instanceof ActionContributionItem actionItem) {
 					if (actionItem.getAction() instanceof SelectFiltersAction) {
 						actionItem.getAction().setEnabled(on);
 					}
@@ -200,9 +196,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 
 	@Override
 	protected boolean isPreservedFilter(ViewerFilter filter) {
-		if (filter instanceof CoreExpressionFilter) {
-			CoreExpressionFilter expressionFilter = (CoreExpressionFilter) filter;
-
+		if (filter instanceof CoreExpressionFilter expressionFilter) {
 			Set<String> preservedIds = ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
 			if (!preservedIds.isEmpty()) {
 				try {
@@ -216,10 +210,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 							}
 						}
 					}
-				} catch (IllegalArgumentException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
-							"Could not determine filter", e)); //$NON-NLS-1$
-				} catch (IllegalAccessException e) {
+				} catch (IllegalArgumentException | IllegalAccessException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 							"Could not determine filter", e)); //$NON-NLS-1$
 				}
@@ -236,7 +227,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	@SuppressWarnings("unchecked")
 	private IStructuredSelection mergeSelection(IStructuredSelection aBase, IStructuredSelection aSelectionToAppend) {
 		if (aBase == null || aBase.isEmpty()) {
-			return (aSelectionToAppend != null) ? aSelectionToAppend : StructuredSelection.EMPTY;
+			return aSelectionToAppend != null ? aSelectionToAppend : StructuredSelection.EMPTY;
 		} else if (aSelectionToAppend == null || aSelectionToAppend.isEmpty()) {
 			return aBase;
 		} else {

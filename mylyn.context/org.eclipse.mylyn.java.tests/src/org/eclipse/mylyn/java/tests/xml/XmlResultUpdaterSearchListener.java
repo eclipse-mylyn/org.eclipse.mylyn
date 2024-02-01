@@ -44,7 +44,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 	public XmlResultUpdaterSearchListener(AbstractRelationProvider prov, IInteractionElement searchNode,
 			int degreeOfSeparation) {
 		super(prov);
-		this.node = searchNode;
+		node = searchNode;
 		this.degreeOfSeparation = degreeOfSeparation;
 	}
 
@@ -52,13 +52,13 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 
 	@Override
 	public void searchCompleted(List<?> l) {
-		results = new ArrayList<IInteractionElement>();
+		results = new ArrayList<>();
 
 		if (l.isEmpty()) {
 			return;
 		}
 
-		Map<String, String> nodes = new HashMap<String, String>();
+		Map<String, String> nodes = new HashMap<>();
 
 		if (l.get(0) instanceof FileSearchResult) {
 			FileSearchResult fsr = (FileSearchResult) l.get(0);
@@ -67,9 +67,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 			for (Object element : far) {
 				Match[] mar = fsr.getMatches(element);
 
-				if (element instanceof File) {
-					File f = (File) element;
-
+				if (element instanceof File f) {
 					// change the file into a document
 					FileEditorInput fei = new FileEditorInput(f);
 

@@ -51,10 +51,12 @@ public abstract class AbstractInterestManipulationAction
 
 	private ISelection selection;
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		this.view = view;
 	}
@@ -66,6 +68,7 @@ public abstract class AbstractInterestManipulationAction
 
 	protected abstract boolean isIncrement();
 
+	@Override
 	public void run(IAction action) {
 		IInteractionContext context = getContext();
 		if (context == null) {
@@ -74,9 +77,8 @@ public abstract class AbstractInterestManipulationAction
 
 		boolean increment = !isRemove();
 
-		if (selection instanceof StructuredSelection) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
-			List<IInteractionElement> nodes = new ArrayList<IInteractionElement>();
+		if (selection instanceof StructuredSelection structuredSelection) {
+			List<IInteractionElement> nodes = new ArrayList<>();
 			for (Object object : structuredSelection.toList()) {
 				IInteractionElement node = convertSelectionToInteractionElement(context, object);
 				nodes.add(node);
@@ -132,7 +134,7 @@ public abstract class AbstractInterestManipulationAction
 			IEditorPart activeEditor = activePage.getActiveEditor();
 			// action is invoked from context editor
 			if (activeEditor != null && activePage.getActivePart().equals(activeEditor)) {
-				context = (IInteractionContext) activeEditor.getEditorInput().getAdapter(IInteractionContext.class);
+				context = activeEditor.getEditorInput().getAdapter(IInteractionContext.class);
 			}
 		}
 
@@ -166,10 +168,12 @@ public abstract class AbstractInterestManipulationAction
 		return node;
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

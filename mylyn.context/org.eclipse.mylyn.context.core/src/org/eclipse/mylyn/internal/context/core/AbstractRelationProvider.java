@@ -80,13 +80,13 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case LANDMARKS_ADDED:
-			if (enabled) {
-				for (IInteractionElement node : event.getElements()) {
-					findRelated(node, degreeOfSeparation);
+			case LANDMARKS_ADDED:
+				if (enabled) {
+					for (IInteractionElement node : event.getElements()) {
+						findRelated(node, degreeOfSeparation);
+					}
 				}
-			}
-			break;
+				break;
 		}
 	}
 

@@ -72,6 +72,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
 		listener = new IInteractionEventListener() {
+			@Override
 			public void interactionObserved(InteractionEvent event) {
 				if (event.getKind() == Kind.EDIT) {
 					editingCount++;
@@ -80,10 +81,12 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 				}
 			}
 
+			@Override
 			public void startMonitoring() {
 				// ignore
 			}
 
+			@Override
 			public void stopMonitoring() {
 				// ignore
 			}
@@ -102,9 +105,8 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	}
 
 	/**
-	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the
-	 * same element are deemed to be an edit of the selection as this is the best guess that can be made. See bug
-	 * 252306.
+	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the same element are
+	 * deemed to be an edit of the selection as this is the best guess that can be made. See bug 252306.
 	 */
 	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
 		assertEquals(0, editingCount);

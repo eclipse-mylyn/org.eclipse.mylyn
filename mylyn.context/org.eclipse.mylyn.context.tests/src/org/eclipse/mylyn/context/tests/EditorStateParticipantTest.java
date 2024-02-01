@@ -224,10 +224,10 @@ public class EditorStateParticipantTest extends TestCase {
 		memento.save(writer);
 		String s = out.toString();
 		// when reading from disk new lines are escaped
-		s = s.replaceAll("&#x0D;", "\r");
-		s = s.replaceAll("&#x0A;", "\n");
+		s = s.replace("&#x0D;", "\r");
+		s = s.replace("&#x0A;", "\n");
 		// always use LF as line separator
-		s = s.replaceAll("\r\n", "\n");
+		s = s.replace("\r\n", "\n");
 		// resolve workspace variable
 		s = s.replaceAll("WORKSPACE", workspace.getAbsolutePath());
 		return s;

@@ -35,7 +35,7 @@ public class InteractionContextElement implements IInteractionElement {
 
 	private final InteractionContext context;
 
-	private final Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<String, InteractionContextRelation>();
+	private final Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<>();
 
 	public InteractionContextElement(String kind, String elementHandle, InteractionContext context) {
 		this(kind, elementHandle, context, -1);
@@ -47,19 +47,22 @@ public class InteractionContextElement implements IInteractionElement {
 			throw new RuntimeException("malformed context: null handle"); //$NON-NLS-1$
 		}
 		interest = new DegreeOfInterest(context, context.getScaling(), eventCountOnCreation);
-		this.handle = elementHandle.intern();
-		this.kind = (kind != null) ? kind.intern() : null;
+		handle = elementHandle.intern();
+		this.kind = kind != null ? kind.intern() : null;
 		this.context = context;
 	}
 
+	@Override
 	public String getHandleIdentifier() {
 		return handle;
 	}
 
+	@Override
 	public void setHandleIdentifier(String handle) {
 		this.handle = handle;
 	}
 
+	@Override
 	public String getContentType() {
 		return kind;
 	}
@@ -68,10 +71,12 @@ public class InteractionContextElement implements IInteractionElement {
 		this.kind = kind;
 	}
 
+	@Override
 	public Collection<InteractionContextRelation> getRelations() {
 		return edges.values();
 	}
 
+	@Override
 	public InteractionContextRelation getRelation(String targetHandle) {
 		return edges.get(targetHandle);
 	}
@@ -83,6 +88,7 @@ public class InteractionContextElement implements IInteractionElement {
 		edges.put(edge.getTarget().getHandleIdentifier(), edge);
 	}
 
+	@Override
 	public void clearRelations() {
 		edges.clear();
 	}
@@ -93,15 +99,11 @@ public class InteractionContextElement implements IInteractionElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if (obj == null || getHandleIdentifier() == null) {
 			return false;
 		}
-		if (this.getHandleIdentifier() == null) {
-			return false;
-		}
-		if (obj instanceof InteractionContextElement) {
-			InteractionContextElement node = (InteractionContextElement) obj;
-			return this.getHandleIdentifier().equals(node.getHandleIdentifier());
+		if (obj instanceof InteractionContextElement node) {
+			return getHandleIdentifier().equals(node.getHandleIdentifier());
 		}
 		return false;
 	}
@@ -115,10 +117,12 @@ public class InteractionContextElement implements IInteractionElement {
 		}
 	}
 
+	@Override
 	public IDegreeOfInterest getInterest() {
 		return interest;
 	}
 
+	@Override
 	public InteractionContext getContext() {
 		return context;
 	}

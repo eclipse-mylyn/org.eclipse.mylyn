@@ -84,10 +84,10 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				List<IEditorReference> toClose = new ArrayList<IEditorReference>(0);
+				List<IEditorReference> toClose = new ArrayList<>(0);
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
-						IResource input = (IResource) reference.getEditorInput().getAdapter(IResource.class);
+						IResource input = reference.getEditorInput().getAdapter(IResource.class);
 						if (input instanceof IFile && ((IFile) input).equals(object)) {
 							toClose.add(reference);
 						}
@@ -120,8 +120,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 	@Override
 	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IResource.class);
-		if (adapter instanceof IFile) {
-			IFile javaElement = (IFile) adapter;
+		if (adapter instanceof IFile javaElement) {
 			String handle = ContextCore.getStructureBridge(javaElement).getHandleIdentifier(javaElement);
 			return ContextCore.getContextManager().getElement(handle);
 		} else {

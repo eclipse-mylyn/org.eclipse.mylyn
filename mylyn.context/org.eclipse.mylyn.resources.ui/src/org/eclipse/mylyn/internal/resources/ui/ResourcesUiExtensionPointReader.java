@@ -36,7 +36,7 @@ public class ResourcesUiExtensionPointReader {
 
 	public final static String ATTR_ANT_PATTERN = "antPattern"; //$NON-NLS-1$
 
-	private static Set<String> resourceExclusionPatterns = new HashSet<String>();
+	private static Set<String> resourceExclusionPatterns = new HashSet<>();
 
 	private static boolean extensionsRead = false;
 

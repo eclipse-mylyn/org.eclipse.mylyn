@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -56,11 +57,11 @@ public class InteractionContext implements IInteractionContext {
 	private final IInteractionContextScaling contextScaling;
 
 	public InteractionContext(String id, IInteractionContextScaling scaling) {
-		this.handleIdentifier = id;
-		this.contextScaling = scaling;
-		this.interactionHistory = new ArrayList<InteractionEvent>();
-		this.elementMap = new HashMap<String, InteractionContextElement>();
-		this.landmarkMap = new HashMap<String, IInteractionElement>();
+		handleIdentifier = id;
+		contextScaling = scaling;
+		interactionHistory = new ArrayList<>();
+		elementMap = new HashMap<>();
+		landmarkMap = new HashMap<>();
 
 		for (InteractionEvent event : interactionHistory) {
 			parseInteractionEvent(event);
@@ -146,6 +147,7 @@ public class InteractionContext implements IInteractionContext {
 		return node;
 	}
 
+	@Override
 	public synchronized IInteractionElement get(String elementHandle) {
 		if (elementHandle == null) {
 			return null;
@@ -154,6 +156,7 @@ public class InteractionContext implements IInteractionContext {
 		}
 	}
 
+	@Override
 	public synchronized boolean isInteresting(String elementHandle) {
 		InteractionContextElement element = elementMap.get(elementHandle);
 		if (element != null) {
@@ -162,8 +165,9 @@ public class InteractionContext implements IInteractionContext {
 		return false;
 	}
 
+	@Override
 	public synchronized List<IInteractionElement> getInteresting() {
-		List<IInteractionElement> elements = new ArrayList<IInteractionElement>();
+		List<IInteractionElement> elements = new ArrayList<>();
 		for (String key : elementMap.keySet()) {
 			InteractionContextElement info = elementMap.get(key);
 			if (info != null && info.getInterest().isInteresting()) {
@@ -173,10 +177,12 @@ public class InteractionContext implements IInteractionContext {
 		return elements;
 	}
 
+	@Override
 	public synchronized List<IInteractionElement> getLandmarks() {
-		return new ArrayList<IInteractionElement>(landmarkMap.values());
+		return new ArrayList<>(landmarkMap.values());
 	}
 
+	@Override
 	public synchronized void updateElementHandle(IInteractionElement element, String newHandle) {
 		InteractionContextElement currElement = elementMap.remove(element.getHandleIdentifier());
 		if (currElement != null) {
@@ -185,13 +191,15 @@ public class InteractionContext implements IInteractionContext {
 		}
 	}
 
+	@Override
 	public synchronized IInteractionElement getActiveNode() {
 		return activeNode;
 	}
 
+	@Override
 	public synchronized void delete(Collection<IInteractionElement> nodes) {
 		// remove elements
-		Set<String> handlesToRemove = new HashSet<String>();
+		Set<String> handlesToRemove = new HashSet<>();
 		for (IInteractionElement node : nodes) {
 			handlesToRemove.add(node.getHandleIdentifier());
 			landmarkMap.remove(node.getHandleIdentifier());
@@ -203,7 +211,7 @@ public class InteractionContext implements IInteractionContext {
 		}
 
 		// remove events
-		List<InteractionEvent> eventsToRemove = new ArrayList<InteractionEvent>();
+		List<InteractionEvent> eventsToRemove = new ArrayList<>();
 		for (InteractionEvent event : interactionHistory) {
 			if (handlesToRemove.contains(event.getStructureHandle())) {
 				eventsToRemove.add(event);
@@ -212,14 +220,17 @@ public class InteractionContext implements IInteractionContext {
 		interactionHistory.removeAll(eventsToRemove);
 	}
 
+	@Override
 	public synchronized void delete(IInteractionElement node) {
 		delete(Collections.singleton(node));
 	}
 
+	@Override
 	public synchronized List<IInteractionElement> getAllElements() {
-		return new ArrayList<IInteractionElement>(elementMap.values());
+		return new ArrayList<>(elementMap.values());
 	}
 
+	@Override
 	public String getHandleIdentifier() {
 		return handleIdentifier;
 	}
@@ -228,7 +239,7 @@ public class InteractionContext implements IInteractionContext {
 	 * @since 2.1
 	 */
 	public void setHandleIdentifier(String handle) {
-		this.handleIdentifier = handle;
+		handleIdentifier = handle;
 	}
 
 	@Override
@@ -250,8 +261,9 @@ public class InteractionContext implements IInteractionContext {
 		return numUserEvents;
 	}
 
+	@Override
 	public synchronized List<InteractionEvent> getInteractionHistory() {
-		return new ArrayList<InteractionEvent>(interactionHistory);
+		return new ArrayList<>(interactionHistory);
 	}
 
 	public synchronized void collapse() {
@@ -259,7 +271,7 @@ public class InteractionContext implements IInteractionContext {
 	}
 
 	private synchronized void collapseHistory(List<InteractionEvent> interactionHistoryToCollapseTo) {
-		List<InteractionEvent> collapsedHistory = new ArrayList<InteractionEvent>();
+		List<InteractionEvent> collapsedHistory = new ArrayList<>();
 		for (InteractionContextElement node : elementMap.values()) {
 			if (!node.equals(activeNode)) {
 				collapseNode(collapsedHistory, node);
@@ -304,25 +316,11 @@ public class InteractionContext implements IInteractionContext {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		InteractionContext other = (InteractionContext) obj;
-		if (contentLimitedTo == null) {
-			if (other.contentLimitedTo != null) {
-				return false;
-			}
-		} else if (!contentLimitedTo.equals(other.contentLimitedTo)) {
-			return false;
-		}
-		if (handleIdentifier == null) {
-			if (other.handleIdentifier != null) {
-				return false;
-			}
-		} else if (!handleIdentifier.equals(other.handleIdentifier)) {
+		if (!Objects.equals(contentLimitedTo, other.contentLimitedTo) || !Objects.equals(handleIdentifier, other.handleIdentifier)) {
 			return false;
 		}
 		return true;
@@ -330,21 +328,20 @@ public class InteractionContext implements IInteractionContext {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((contentLimitedTo == null) ? 0 : contentLimitedTo.hashCode());
-		result = prime * result + ((handleIdentifier == null) ? 0 : handleIdentifier.hashCode());
-		return result;
+		return Objects.hash(contentLimitedTo, handleIdentifier);
 	}
 
+	@Override
 	public IInteractionContextScaling getScaling() {
 		return contextScaling;
 	}
 
+	@Override
 	public String getContentLimitedTo() {
 		return contentLimitedTo;
 	}
 
+	@Override
 	public void setContentLimitedTo(String contentLimitedTo) {
 		this.contentLimitedTo = contentLimitedTo;
 	}

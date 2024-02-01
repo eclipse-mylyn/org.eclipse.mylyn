@@ -40,11 +40,8 @@ public class CdtStructureBridgeTest extends AbstractCdtContextTest {
 		super.setUp();
 		importedProject = ResourcesPlugin.getWorkspace().getRoot().getProject("TestProject");
 		ImportOperation importOperation = new ImportOperation(importedProject.getFullPath(),
-				new File("data/TestProject/"), new FileSystemStructureProvider(), new IOverwriteQuery() {
-					public String queryOverwrite(String file) {
-						return ALL;
-					}
-				});
+				new File("data/TestProject/"), new FileSystemStructureProvider(), file -> IOverwriteQuery.ALL);
+		
 		importOperation.run(null);
 	}
 

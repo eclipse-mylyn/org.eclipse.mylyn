@@ -12,10 +12,10 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

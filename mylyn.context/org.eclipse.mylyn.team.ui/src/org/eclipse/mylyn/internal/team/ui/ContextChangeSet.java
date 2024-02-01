@@ -58,6 +58,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 		return true;
 	}
 
+	@Override
 	public void updateLabel() {
 		super.setName(task.getSummary());
 		super.setTitle(task.getSummary());
@@ -91,6 +92,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 		return getComment(true);
 	}
 
+	@Override
 	public String getComment(boolean checkTaskRepository) {
 		return TeamUiUtil.getComment(checkTaskRepository, task, getChangedResources());
 	}
@@ -120,6 +122,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 		super.add(newResources);
 	}
 
+	@Override
 	public void restoreResources(IResource[] newResources) throws CoreException {
 		super.add(newResources);
 		setComment(getComment(false));
@@ -137,15 +140,14 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 	}
 
 	public List<IResource> getAllResourcesInChangeContext() {
-		Set<IResource> allResources = new HashSet<IResource>();
-		allResources.addAll(Arrays.asList(super.getResources()));
+		Set<IResource> allResources = new HashSet<>(Arrays.asList(super.getResources()));
 		if (Platform.isRunning() && ResourcesUiBridgePlugin.getDefault() != null && task.isActive()) {
 			// TODO: if super is always managed correctly should remove
 			// following line
 			allResources.addAll(ResourcesUiBridgePlugin.getDefault()
 					.getInterestingResources(ContextCore.getContextManager().getActiveContext()));
 		}
-		return new ArrayList<IResource>(allResources);
+		return new ArrayList<>(allResources);
 	}
 
 	/**
@@ -158,8 +160,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof ContextChangeSet && task != null) {
-			ContextChangeSet changeSet = (ContextChangeSet) object;
+		if (object instanceof ContextChangeSet changeSet && task != null) {
 			return task.equals(changeSet.getTask());
 		} else {
 			return super.equals(object);
@@ -175,10 +176,12 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 		}
 	}
 
+	@Override
 	public ITask getTask() {
 		return task;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 //		if (adapter == ResourceMapping.class) {

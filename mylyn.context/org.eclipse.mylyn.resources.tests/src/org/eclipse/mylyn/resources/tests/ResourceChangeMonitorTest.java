@@ -65,7 +65,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 			result.setNewInfo(info);
 			result.setOldInfo(info);
 
-			Set<MockResourceDelta> children = new HashSet<MockResourceDelta>();
+			Set<MockResourceDelta> children = new HashSet<>();
 
 			if (childPaths != null) {
 				for (String childPath : childPaths) {
@@ -133,7 +133,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testCreatedFile() throws CoreException {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				new String[] { "/test.txt" }, (IResourceDelta.ADDED | IResourceDelta.CONTENT), IResource.PROJECT);
+				new String[] { "/test.txt" }, IResourceDelta.ADDED | IResourceDelta.CONTENT, IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
@@ -145,7 +145,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testLargeFileChangeNotAddedToContext() throws CoreException {
 
-		List<String> filePaths = new ArrayList<String>();
+		List<String> filePaths = new ArrayList<>();
 		filePaths.add("/" + file.getProjectRelativePath().toPortableString());
 		for (int i = 0; i < 10; i++) {
 			IFile newFile = project.getProject().getFile("test" + i + ".txt");
@@ -155,7 +155,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		}
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				filePaths.toArray(new String[filePaths.size()]), (IResourceDelta.CHANGED | IResourceDelta.CONTENT),
+				filePaths.toArray(new String[filePaths.size()]), IResourceDelta.CHANGED | IResourceDelta.CONTENT,
 				IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
@@ -167,7 +167,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testLargeFileAddedNotAddedToContext() throws CoreException {
 
-		List<String> filePaths = new ArrayList<String>();
+		List<String> filePaths = new ArrayList<>();
 		filePaths.add("/" + file.getProjectRelativePath().toPortableString());
 		for (int i = 0; i < 10; i++) {
 			IFile newFile = project.getProject().getFile("test" + i + ".txt");
@@ -177,7 +177,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		}
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				filePaths.toArray(new String[filePaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				filePaths.toArray(new String[filePaths.size()]), IResourceDelta.ADDED | IResourceDelta.CONTENT,
 				IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
@@ -189,7 +189,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testLargeFolderAddedNotAddedToContext() throws CoreException {
 
-		List<String> folderPaths = new ArrayList<String>();
+		List<String> folderPaths = new ArrayList<>();
 		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
 		for (int i = 0; i < 3; i++) {
 			IFolder newFolder = project.getProject().getFolder("testFolder" + i);
@@ -199,7 +199,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		}
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				folderPaths.toArray(new String[folderPaths.size()]), IResourceDelta.ADDED | IResourceDelta.CONTENT,
 				IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
@@ -211,7 +211,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testLargeFolderChangeNotAddedToContext() throws CoreException {
 
-		List<String> folderPaths = new ArrayList<String>();
+		List<String> folderPaths = new ArrayList<>();
 		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
 		for (int i = 0; i < 3; i++) {
 			IFolder newFolder = project.getProject().getFolder("testFolder" + i);
@@ -221,7 +221,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		}
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.CHANGED | IResourceDelta.CONTENT),
+				folderPaths.toArray(new String[folderPaths.size()]), IResourceDelta.CHANGED | IResourceDelta.CONTENT,
 				IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
@@ -233,11 +233,11 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testFolderAdded() throws CoreException {
 
-		List<String> folderPaths = new ArrayList<String>();
+		List<String> folderPaths = new ArrayList<>();
 		folderPaths.add("/" + folder.getProjectRelativePath().toPortableString());
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				folderPaths.toArray(new String[folderPaths.size()]), (IResourceDelta.ADDED | IResourceDelta.CONTENT),
+				folderPaths.toArray(new String[folderPaths.size()]), IResourceDelta.ADDED | IResourceDelta.CONTENT,
 				IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
@@ -249,7 +249,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	public void testModifiedFile() throws CoreException {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+				new String[] { "/test.txt" }, IResourceDelta.CHANGED | IResourceDelta.CONTENT, IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
@@ -263,7 +263,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		fileInFolder.setDerived(true, null);
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+				new String[] { "/test.txt" }, IResourceDelta.CHANGED | IResourceDelta.CONTENT, IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(fileInFolder).getHandleIdentifier(fileInFolder);
@@ -278,12 +278,12 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		fileInFolder.setDerived(false, null);
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(), null,
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+				IResourceDelta.CHANGED | IResourceDelta.CONTENT, IResource.PROJECT);
 
 		MockResourceDelta child = MockResourceDelta.createMockDelta(
 				"/" + project.getProject().getName() + "/" + folder.getName(),
-				new String[] { "/" + folder.getName() + "/test.txt" },
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
+				new String[] { "/" + folder.getName() + "/test.txt" }, IResourceDelta.CHANGED | IResourceDelta.CONTENT,
+				IResource.FOLDER);
 
 		delta.setChildren(new ResourceDelta[] { child });
 
@@ -304,7 +304,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 			ResourcesUiPreferenceInitializer.addForcedExclusionPattern("*.txt");
 
 			MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
-					new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+					new String[] { "/test.txt" }, IResourceDelta.CHANGED | IResourceDelta.CONTENT, IResource.PROJECT);
 			IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 			changeMonitor.resourceChanged(event);
 			String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);

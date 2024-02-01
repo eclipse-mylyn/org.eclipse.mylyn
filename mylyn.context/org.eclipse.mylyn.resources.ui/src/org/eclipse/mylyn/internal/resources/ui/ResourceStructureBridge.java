@@ -93,16 +93,14 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof IResource) {
-			IResource resource = (IResource) object;
-			if (resource instanceof IContainer) {
-				IContainer container = (IContainer) resource;
+		if (object instanceof IResource resource) {
+			if (resource instanceof IContainer container) {
 				IResource[] children;
 				try {
 					// make sure that we dont try to get the children of a closed project as this can cause an exception
 					if (container.isAccessible()) {
 						children = container.members();
-						List<String> childHandles = new ArrayList<String>();
+						List<String> childHandles = new ArrayList<>();
 						for (IResource element : children) {
 							String childHandle = getHandleIdentifier(element);
 							if (childHandle != null) {
@@ -135,8 +133,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof IResource) {
 			return ((IResource) object).getFullPath().toPortableString();
 
-		} else if (object instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) object;
+		} else if (object instanceof IAdaptable adaptable) {
 			Object adapter = adaptable.getAdapter(IResource.class);
 			if (adapter instanceof IResource) {
 				return ((IResource) adapter).getFullPath().toPortableString();
@@ -187,8 +184,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof IResource || object instanceof IWorkingSet) {
 			return true;
 		}
-		if (object instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) object;
+		if (object instanceof IAdaptable adaptable) {
 			Object adapter = adaptable.getAdapter(IResource.class);
 			if (adapter instanceof IResource) {
 				return true;
@@ -243,8 +239,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 		// we can only get a handle for a marker with the resource plugin.xml
 		try {
-			if (markerResource instanceof IFile) {
-				IFile file = (IFile) markerResource;
+			if (markerResource instanceof IFile file) {
 				return getHandleIdentifier(file);
 			}
 			return null;

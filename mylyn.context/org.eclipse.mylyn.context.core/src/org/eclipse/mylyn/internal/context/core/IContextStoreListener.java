@@ -26,6 +26,6 @@ public interface IContextStoreListener {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void contextStoreMoved(File newDirectory);
+	void contextStoreMoved(File newDirectory);
 
 }

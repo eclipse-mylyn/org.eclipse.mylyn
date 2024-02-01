@@ -297,11 +297,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File file = File.createTempFile("context", null);
 		file.deleteOnExit();
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-		try {
+		try (out) {
 			ZipEntry entry = new ZipEntry("name");
 			out.putNextEntry(entry);
-		} finally {
-			out.close();
 		}
 
 		context = (InteractionContext) externalizer.readContextFromXml("abc", file, scaling);

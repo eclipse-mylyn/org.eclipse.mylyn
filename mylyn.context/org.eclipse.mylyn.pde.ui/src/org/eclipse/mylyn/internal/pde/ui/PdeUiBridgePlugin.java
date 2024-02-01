@@ -25,6 +25,7 @@ public class PdeUiBridgePlugin extends Plugin {
 
 	public static class PdeUiBrideStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			PdeUiBridgePlugin.getDefault().lazyStart();
 		}

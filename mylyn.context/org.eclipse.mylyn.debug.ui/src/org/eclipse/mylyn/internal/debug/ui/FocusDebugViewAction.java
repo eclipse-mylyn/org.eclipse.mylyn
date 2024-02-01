@@ -33,10 +33,9 @@ public class FocusDebugViewAction extends AbstractFocusViewAction {
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		IViewPart viewPart = super.getPartForAction();
-		if (viewPart instanceof IDebugView) {
-			IDebugView view = (IDebugView) viewPart;
+		if (viewPart instanceof IDebugView view) {
 			Viewer viewer = view.getViewer();
 			if (viewer instanceof StructuredViewer) {
 				viewers.add((StructuredViewer) viewer);

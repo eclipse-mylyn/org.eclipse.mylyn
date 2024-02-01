@@ -42,7 +42,7 @@ public class PerspectiveStateParticipant extends ContextStateParticipant {
 
 	@Override
 	public void clearState(String contextHandle, boolean isActiveContext) {
-		// ignore		
+		// ignore
 	}
 
 	public String getActivePerspectiveId() {

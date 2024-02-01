@@ -50,6 +50,7 @@ public class CompositeContextElement implements IInteractionElement {
 	/**
 	 * @return the context with the highest value TODO: is this always best?
 	 */
+	@Override
 	public IInteractionContext getContext() {
 		IInteractionElement highestValueNode = null;
 		for (IInteractionElement node : nodes) {
@@ -64,6 +65,7 @@ public class CompositeContextElement implements IInteractionElement {
 		}
 	}
 
+	@Override
 	public IDegreeOfInterest getInterest() {
 		if (nodes.size() == 1) {
 			return nodes.iterator().next().getInterest();
@@ -77,10 +79,12 @@ public class CompositeContextElement implements IInteractionElement {
 		}
 	}
 
+	@Override
 	public String getHandleIdentifier() {
 		return handle;
 	}
 
+	@Override
 	public void setHandleIdentifier(String handle) {
 		Assert.isNotNull(handle);
 		this.handle = handle;
@@ -96,8 +100,9 @@ public class CompositeContextElement implements IInteractionElement {
 	/**
 	 * @return empty string if all kinds aren't equal
 	 */
+	@Override
 	public String getContentType() {
-		Set<String> kinds = new HashSet<String>();
+		Set<String> kinds = new HashSet<>();
 		String lastKind = null;
 		for (IInteractionElement node : nodes) {
 			lastKind = node.getContentType();
@@ -113,8 +118,9 @@ public class CompositeContextElement implements IInteractionElement {
 	/**
 	 * TODO: need composite edges here
 	 */
+	@Override
 	public IInteractionRelation getRelation(String targetHandle) {
-		Set<IInteractionRelation> edges = new HashSet<IInteractionRelation>();
+		Set<IInteractionRelation> edges = new HashSet<>();
 		for (IInteractionElement node : nodes) {
 			edges.add(node.getRelation(targetHandle));
 		}
@@ -127,8 +133,9 @@ public class CompositeContextElement implements IInteractionElement {
 		return edges.iterator().next();
 	}
 
+	@Override
 	public Collection<InteractionContextRelation> getRelations() {
-		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
+		Set<InteractionContextRelation> edges = new HashSet<>();
 
 		for (InteractionContextElement node : nodes) {
 			edges.addAll(node.getRelations());
@@ -136,6 +143,7 @@ public class CompositeContextElement implements IInteractionElement {
 		return edges;
 	}
 
+	@Override
 	public void clearRelations() {
 		for (InteractionContextElement node : nodes) {
 			node.clearRelations();
@@ -147,9 +155,8 @@ public class CompositeContextElement implements IInteractionElement {
 		if (object == null) {
 			return false;
 		}
-		if (object instanceof CompositeContextElement) {
-			CompositeContextElement element = (CompositeContextElement) object;
-			return this.getHandleIdentifier().equals(element.getHandleIdentifier());
+		if (object instanceof CompositeContextElement element) {
+			return getHandleIdentifier().equals(element.getHandleIdentifier());
 		}
 		return false;
 	}

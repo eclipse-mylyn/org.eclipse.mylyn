@@ -105,7 +105,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 	protected List<ICompletionProposal> computeCompletionProposals(CContentAssistInvocationContext context,
 			IASTCompletionNode completionNode, String prefix) {
 
-		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		List<ICompletionProposal> proposals = new ArrayList<>();
 
 		if (inPreprocessorDirective(context)) {
 			if (!inPreprocessorKeyword(context)) {
@@ -123,13 +123,13 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			boolean handleMacros = false;
 			IASTName[] names = completionNode.getNames();
 
-			for (int i = 0; i < names.length; ++i) {
-				if (names[i].getTranslationUnit() == null) {
+			for (IASTName name : names) {
+				if (name.getTranslationUnit() == null) {
 					// The node isn't properly hooked up, must have backtracked out of this node
 					continue;
 				}
 
-				IASTCompletionContext astContext = names[i].getCompletionContext();
+				IASTCompletionContext astContext = name.getCompletionContext();
 				if (astContext == null) {
 					continue;
 				} else if (astContext instanceof IASTIdExpression || astContext instanceof IASTNamedTypeSpecifier) {
@@ -137,10 +137,10 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 					handleMacros = prefix.length() > 0;
 				}
 
-				IBinding[] bindings = astContext.findBindings(names[i], !context.isContextInformationStyle());
+				IBinding[] bindings = astContext.findBindings(name, !context.isContextInformationStyle());
 				if (bindings != null) {
-					for (int j = 0; j < bindings.length; ++j) {
-						handleBinding(bindings[j], context, prefix, astContext, proposals);
+					for (IBinding binding : bindings) {
+						handleBinding(binding, context, prefix, astContext, proposals);
 					}
 				}
 			}
@@ -208,21 +208,21 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		IASTCompletionNode completionNode = context.getCompletionNode();
 		IASTPreprocessorMacroDefinition[] macros = completionNode.getTranslationUnit().getMacroDefinitions();
 		if (macros != null) {
-			for (int i = 0; i < macros.length; ++i) {
-				final char[] macroName = macros[i].getName().toCharArray();
+			for (IASTPreprocessorMacroDefinition element : macros) {
+				final char[] macroName = element.getName().toCharArray();
 				if (CharArrayUtils.equals(macroName, 0, matchPrefix ? prefixChars.length : macroName.length,
 						prefixChars, true)) {
-					handleMacro(macros[i], context, prefix, proposals);
+					handleMacro(element, context, prefix, proposals);
 				}
 			}
 		}
 		macros = completionNode.getTranslationUnit().getBuiltinMacroDefinitions();
 		if (macros != null) {
-			for (int i = 0; i < macros.length; ++i) {
-				final char[] macroName = macros[i].getName().toCharArray();
+			for (IASTPreprocessorMacroDefinition element : macros) {
+				final char[] macroName = element.getName().toCharArray();
 				if (CharArrayUtils.equals(macroName, 0, matchPrefix ? prefixChars.length : macroName.length,
 						prefixChars, true)) {
-					handleMacro(macros[i], context, prefix, proposals);
+					handleMacro(element, context, prefix, proposals);
 				}
 			}
 		}
@@ -237,9 +237,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 
 		Image image = getImage(CElementImageProvider.getMacroImageDescriptor());
 
-		if (macro instanceof IASTPreprocessorFunctionStyleMacroDefinition) {
-			IASTPreprocessorFunctionStyleMacroDefinition functionMacro = (IASTPreprocessorFunctionStyleMacroDefinition) macro;
-
+		if (macro instanceof IASTPreprocessorFunctionStyleMacroDefinition functionMacro) {
 			StringBuilder repStringBuff = new StringBuilder();
 			repStringBuff.append(macroName);
 			repStringBuff.append('(');
@@ -348,21 +346,20 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			int relevance = 0;
 			try {
 				switch (classType.getKey()) {
-				case ICPPClassType.k_class:
-					relevance = RelevanceConstants.CLASS_TYPE_RELEVANCE;
-					break;
-				case ICompositeType.k_struct:
-					relevance = RelevanceConstants.STRUCT_TYPE_RELEVANCE;
-					break;
-				case ICompositeType.k_union:
-					relevance = RelevanceConstants.UNION_TYPE_RELEVANCE;
-					break;
+					case ICPPClassType.k_class:
+						relevance = RelevanceConstants.CLASS_TYPE_RELEVANCE;
+						break;
+					case ICompositeType.k_struct:
+						relevance = RelevanceConstants.STRUCT_TYPE_RELEVANCE;
+						break;
+					case ICompositeType.k_union:
+						relevance = RelevanceConstants.UNION_TYPE_RELEVANCE;
+						break;
 				}
 			} catch (Exception e) {
 				handle(e);
 			}
-			if (astContext instanceof IASTName && !(astContext instanceof ICPPASTQualifiedName)) {
-				IASTName name = (IASTName) astContext;
+			if (astContext instanceof IASTName name && !(astContext instanceof ICPPASTQualifiedName)) {
 				if (name.getParent() instanceof IASTDeclarator) {
 					proposals.add(createProposal(classType.getName() + "::", classType.getName(), getImage(classType), //$NON-NLS-1$
 							baseRelevance + relevance, context, getCElement(classType), classType.getName()));
@@ -682,31 +679,23 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 					imageDescriptor = CElementImageProvider.getUnionImageDescriptor();
 				}
 			} else if (binding instanceof ICPPMethod) {
-				switch (((ICPPMethod) binding).getVisibility()) {
-				case ICPPMember.v_private:
-					imageDescriptor = CElementImageProvider.getMethodImageDescriptor(ASTAccessVisibility.PRIVATE);
-					break;
-				case ICPPMember.v_protected:
-					imageDescriptor = CElementImageProvider.getMethodImageDescriptor(ASTAccessVisibility.PROTECTED);
-					break;
-				default:
-					imageDescriptor = CElementImageProvider.getMethodImageDescriptor(ASTAccessVisibility.PUBLIC);
-					break;
-				}
+				imageDescriptor = switch (((ICPPMethod) binding).getVisibility()) {
+					case ICPPMember.v_private -> CElementImageProvider
+							.getMethodImageDescriptor(ASTAccessVisibility.PRIVATE);
+					case ICPPMember.v_protected -> CElementImageProvider
+							.getMethodImageDescriptor(ASTAccessVisibility.PROTECTED);
+					default -> CElementImageProvider.getMethodImageDescriptor(ASTAccessVisibility.PUBLIC);
+				};
 			} else if (binding instanceof IFunction) {
 				imageDescriptor = CElementImageProvider.getFunctionImageDescriptor();
 			} else if (binding instanceof ICPPField) {
-				switch (((ICPPField) binding).getVisibility()) {
-				case ICPPMember.v_private:
-					imageDescriptor = CElementImageProvider.getFieldImageDescriptor(ASTAccessVisibility.PRIVATE);
-					break;
-				case ICPPMember.v_protected:
-					imageDescriptor = CElementImageProvider.getFieldImageDescriptor(ASTAccessVisibility.PROTECTED);
-					break;
-				default:
-					imageDescriptor = CElementImageProvider.getFieldImageDescriptor(ASTAccessVisibility.PUBLIC);
-					break;
-				}
+				imageDescriptor = switch (((ICPPField) binding).getVisibility()) {
+					case ICPPMember.v_private -> CElementImageProvider
+							.getFieldImageDescriptor(ASTAccessVisibility.PRIVATE);
+					case ICPPMember.v_protected -> CElementImageProvider
+							.getFieldImageDescriptor(ASTAccessVisibility.PROTECTED);
+					default -> CElementImageProvider.getFieldImageDescriptor(ASTAccessVisibility.PUBLIC);
+				};
 			} else if (binding instanceof IField) {
 				imageDescriptor = CElementImageProvider.getFieldImageDescriptor(ASTAccessVisibility.PUBLIC);
 			} else if (binding instanceof IVariable) {

@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -44,11 +43,9 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	public ActivityExternalizationParticipant(ExternalizationManager manager) {
 		this.manager = manager;
-		MonitorUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
-			public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-				if (event.getProperty().equals(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED)) {
-					requestSave();
-				}
+		MonitorUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
+			if (event.getProperty().equals(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED)) {
+				requestSave();
 			}
 		});
 	}
@@ -57,18 +54,18 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
-		case SAVE:
-			if (ContextCorePlugin.getDefault() != null && MonitorUiPlugin.getDefault().isActivityTrackingEnabled()
-					&& ContextCorePlugin.getContextManager() != null) {
-				setDirty(false);
-				ContextCorePlugin.getContextManager().saveActivityMetaContext();
-			}
-			break;
-		case LOAD:
-			ContextCorePlugin.getContextManager().loadActivityMetaContext();
-			break;
-		case SNAPSHOT:
-			break;
+			case SAVE:
+				if (ContextCorePlugin.getDefault() != null && MonitorUiPlugin.getDefault().isActivityTrackingEnabled()
+						&& ContextCorePlugin.getContextManager() != null) {
+					setDirty(false);
+					ContextCorePlugin.getContextManager().saveActivityMetaContext();
+				}
+				break;
+			case LOAD:
+				ContextCorePlugin.getContextManager().loadActivityMetaContext();
+				break;
+			case SNAPSHOT:
+				break;
 		}
 	}
 
@@ -116,10 +113,12 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		// ignore see execute method
 	}
 
+	@Override
 	public void activityReset() {
 		// ignore see execute method
 	}
 
+	@Override
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		if (System.currentTimeMillis() - lastUpdate > 1000 * 60) {
 			requestSave();

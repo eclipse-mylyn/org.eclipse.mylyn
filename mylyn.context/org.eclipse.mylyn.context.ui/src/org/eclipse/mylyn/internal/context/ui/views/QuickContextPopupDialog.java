@@ -32,8 +32,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -137,6 +135,7 @@ public class QuickContextPopupDialog extends PopupDialog
 	private void createUIListenersTreeViewer() {
 		final Tree tree = commonViewer.getTree();
 		tree.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == 0x1B) {
 					// Dispose on ESC key press
@@ -144,6 +143,7 @@ public class QuickContextPopupDialog extends PopupDialog
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// ignore
 			}
@@ -157,10 +157,12 @@ public class QuickContextPopupDialog extends PopupDialog
 		});
 
 		tree.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// ignore
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				gotoSelectedElement();
 			}
@@ -168,7 +170,7 @@ public class QuickContextPopupDialog extends PopupDialog
 	}
 
 	private void handleTreeViewerMouseUp(final Tree tree, MouseEvent e) {
-		if ((tree.getSelectionCount() < 1) || (e.button != 1) || (tree.equals(e.getSource()) == false)) {
+		if (tree.getSelectionCount() < 1 || e.button != 1 || !tree.equals(e.getSource())) {
 			return;
 		}
 		// Selection is made in the selection changed listener
@@ -186,19 +188,23 @@ public class QuickContextPopupDialog extends PopupDialog
 		return ((IStructuredSelection) commonViewer.getSelection()).getFirstElement();
 	}
 
+	@Override
 	public void addDisposeListener(DisposeListener listener) {
 		getShell().addDisposeListener(listener);
 	}
 
+	@Override
 	public void addFocusListener(FocusListener listener) {
 		getShell().addFocusListener(listener);
 	}
 
+	@Override
 	public Point computeSizeHint() {
 		// Note that it already has the persisted size if persisting is enabled.
 		return getShell().getSize();
 	}
 
+	@Override
 	public void dispose() {
 		close();
 	}
@@ -208,6 +214,7 @@ public class QuickContextPopupDialog extends PopupDialog
 		return new Point(400, 300);
 	}
 
+	@Override
 	public boolean isFocusControl() {
 		if (commonViewer.getControl().isFocusControl() || fFilterText.isFocusControl()) {
 			return true;
@@ -215,31 +222,38 @@ public class QuickContextPopupDialog extends PopupDialog
 		return false;
 	}
 
+	@Override
 	public void removeDisposeListener(DisposeListener listener) {
 		getShell().removeDisposeListener(listener);
 	}
 
+	@Override
 	public void removeFocusListener(FocusListener listener) {
 		getShell().removeFocusListener(listener);
 	}
 
+	@Override
 	public void setBackgroundColor(Color background) {
 		applyBackgroundColor(background, getContents());
 	}
 
+	@Override
 	public void setFocus() {
 		getShell().forceFocus();
 		fFilterText.setFocus();
 	}
 
+	@Override
 	public void setForegroundColor(Color foreground) {
 		applyForegroundColor(foreground, getContents());
 	}
 
+	@Override
 	public void setInformation(String information) {
 		// See IInformationControlExtension2
 	}
 
+	@Override
 	public void setLocation(Point location) {
 		/*
 		 * If the location is persisted, it gets managed by PopupDialog - fine. Otherwise, the location is
@@ -252,19 +266,22 @@ public class QuickContextPopupDialog extends PopupDialog
 		 * the call to constrainShellSize in PopupDialog.open will still ensure that the shell is
 		 * entirely visible.
 		 */
-		if (getPersistLocation() == false || getDialogSettings() == null) {
+		if (!getPersistLocation() || getDialogSettings() == null) {
 			getShell().setLocation(location);
 		}
 	}
 
+	@Override
 	public void setSize(int width, int height) {
 		getShell().setSize(width, height);
 	}
 
+	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		// Ignore
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			open();
@@ -274,13 +291,15 @@ public class QuickContextPopupDialog extends PopupDialog
 		}
 	}
 
+	@Override
 	public boolean hasContents() {
-		if ((commonViewer == null) || (commonViewer.getInput() == null)) {
+		if (commonViewer == null || commonViewer.getInput() == null) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	public void setInput(Object input) {
 		// Input comes from PDESourceInfoProvider.getInformation2()
 		// The input should be a model object of some sort
@@ -290,6 +309,7 @@ public class QuickContextPopupDialog extends PopupDialog
 		}
 	}
 
+	@Override
 	public void widgetDisposed(DisposeEvent e) {
 		// Note: We do not reuse the dialog
 		commonViewer = null;
@@ -346,6 +366,7 @@ public class QuickContextPopupDialog extends PopupDialog
 
 	private void createUIListenersFilterText() {
 		fFilterText.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
@@ -362,30 +383,29 @@ public class QuickContextPopupDialog extends PopupDialog
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// NO-OP
 			}
 		});
 		// Handle text modify events
-		fFilterText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String text = ((Text) e.widget).getText();
-				int length = text.length();
-				if (length > 0) {
-					// Append a '*' pattern to the end of the text value if it
-					// does not have one already
-					if (text.charAt(length - 1) != '*') {
-						text = text + '*';
-					}
-					// Prepend a '*' pattern to the beginning of the text value
-					// if it does not have one already
-					if (text.charAt(0) != '*') {
-						text = '*' + text;
-					}
+		fFilterText.addModifyListener(e -> {
+			String text = ((Text) e.widget).getText();
+			int length = text.length();
+			if (length > 0) {
+				// Append a '*' pattern to the end of the text value if it
+				// does not have one already
+				if (text.charAt(length - 1) != '*') {
+					text = text + '*';
 				}
-				// Set and update the pattern
-				setMatcherString(text, true);
+				// Prepend a '*' pattern to the beginning of the text value
+				// if it does not have one already
+				if (text.charAt(0) != '*') {
+					text = '*' + text;
+				}
 			}
+			// Set and update the pattern
+			setMatcherString(text, true);
 		});
 	}
 
@@ -416,8 +436,7 @@ public class QuickContextPopupDialog extends PopupDialog
 	}
 
 	/**
-	 * The string matcher has been modified. The default implementation refreshes the view and selects the first matched
-	 * element
+	 * The string matcher has been modified. The default implementation refreshes the view and selects the first matched element
 	 */
 	private void stringMatcherUpdated() {
 		// Refresh the tree viewer to re-filter

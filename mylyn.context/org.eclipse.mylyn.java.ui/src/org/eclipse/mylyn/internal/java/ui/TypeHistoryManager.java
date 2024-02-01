@@ -35,30 +35,30 @@ public class TypeHistoryManager extends AbstractContextListener {
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-			clearTypeHistory();
-			for (IInteractionElement node : event.getContext().getInteresting()) {
-				updateTypeHistory(node, true);
-			}
-			break;
-		case DEACTIVATED:
-			clearTypeHistory();
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
+			case ACTIVATED:
 				clearTypeHistory();
-			}
-			break;
-		case INTEREST_CHANGED:
-			for (IInteractionElement node : event.getElements()) {
-				updateTypeHistory(node, true);
-			}
-			break;
-		case ELEMENTS_DELETED:
-			for (IInteractionElement element : event.getElements()) {
-				updateTypeHistory(element, false);
-			}
-			break;
+				for (IInteractionElement node : event.getContext().getInteresting()) {
+					updateTypeHistory(node, true);
+				}
+				break;
+			case DEACTIVATED:
+				clearTypeHistory();
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					clearTypeHistory();
+				}
+				break;
+			case INTEREST_CHANGED:
+				for (IInteractionElement node : event.getElements()) {
+					updateTypeHistory(node, true);
+				}
+				break;
+			case ELEMENTS_DELETED:
+				for (IInteractionElement element : event.getElements()) {
+					updateTypeHistory(element, false);
+				}
+				break;
 		}
 	}
 
@@ -67,8 +67,7 @@ public class TypeHistoryManager extends AbstractContextListener {
 	 */
 	private void updateTypeHistory(IInteractionElement node, boolean add) {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
-		if (element instanceof IType) {
-			IType type = (IType) element;
+		if (element instanceof IType type) {
 			try {
 				if (type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
 					JavaSearchTypeNameMatch typeNameMatch = new JavaSearchTypeNameMatch(type, type.getFlags());

@@ -35,8 +35,8 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
- * This externalization participant only handles saving the active context periodically. No snapshots are taken and task
- * activation and deactivation control the load and final write of the context in InteractionContextManager.
+ * This externalization participant only handles saving the active context periodically. No snapshots are taken and task activation and
+ * deactivation control the load and final write of the context in InteractionContextManager.
  * 
  * @author Shawn Minto
  */
@@ -55,13 +55,13 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case ACTIVATED:
-				currentlyActiveContext = event.getContext();
-				break;
-			case DEACTIVATED:
-				currentlyActiveContext = null;
-				setDirty(false);
-				break;
+				case ACTIVATED:
+					currentlyActiveContext = event.getContext();
+					break;
+				case DEACTIVATED:
+					currentlyActiveContext = null;
+					setDirty(false);
+					break;
 			}
 		}
 	};
@@ -82,7 +82,7 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 		ContextCore.getContextManager().removeListener(listener);
 		TasksUi.getTaskActivityManager().removeActivityListener(this);
 		if (MonitorUiPlugin.getDefault().getActivityContextManager() != null) {
-			(MonitorUiPlugin.getDefault().getActivityContextManager()).removeListener(this);
+			MonitorUiPlugin.getDefault().getActivityContextManager().removeListener(this);
 		}
 	}
 
@@ -90,18 +90,18 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
-		case SAVE:
-			if (shouldWriteContext()) {
-				setDirty(false);
-				ContextCorePlugin.getContextManager().saveContext(currentlyActiveContext);
-			}
-			break;
-		case LOAD:
-			// ignore loads since we will do this synchronously with task activation
-			break;
-		case SNAPSHOT:
-			// ignore snapshots
-			break;
+			case SAVE:
+				if (shouldWriteContext()) {
+					setDirty(false);
+					ContextCorePlugin.getContextManager().saveContext(currentlyActiveContext);
+				}
+				break;
+			case LOAD:
+				// ignore loads since we will do this synchronously with task activation
+				break;
+			case SNAPSHOT:
+				// ignore snapshots
+				break;
 		}
 	}
 
@@ -123,7 +123,7 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 	@Override
 	public boolean isDirty(boolean full) {
 		synchronized (this) {
-			return isDirty || (full && shouldWriteContext());
+			return isDirty || full && shouldWriteContext();
 		}
 	}
 
@@ -149,6 +149,7 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 		// ignore see execute method
 	}
 
+	@Override
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		if (System.currentTimeMillis() - lastUpdate > 1000 * 60 * 3) {
 			// TODO check if context is dirty
@@ -169,14 +170,17 @@ public class ActiveContextExternalizationParticipant extends AbstractExternaliza
 		return false;
 	}
 
+	@Override
 	public void activityReset() {
 		// ignore
 	}
 
+	@Override
 	public void userAttentionGained() {
 		// ignore
 	}
 
+	@Override
 	public void userAttentionLost() {
 		setDirty(shouldWriteContext());
 		if (isDirty()) {

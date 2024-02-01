@@ -166,7 +166,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 
 		assertEquals(2, page.getEditorReferences().length);
 		// process a number of events to trigger decay
-		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
+		for (int i = 0; i < 1 / scaling.getDecay() * 3; i++) {
 			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
 

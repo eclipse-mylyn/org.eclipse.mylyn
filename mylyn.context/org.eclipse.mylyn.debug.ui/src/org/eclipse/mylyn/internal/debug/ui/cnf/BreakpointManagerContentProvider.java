@@ -29,16 +29,20 @@ public class BreakpointManagerContentProvider implements ITreeContentProvider {
 		breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IWorkspaceRoot) {
 			return new Object[] { breakpointManager };
@@ -48,10 +52,12 @@ public class BreakpointManagerContentProvider implements ITreeContentProvider {
 		return new Object[0];
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element.equals(breakpointManager) && breakpointManager.getBreakpoints().length > 0) {
 			return true;

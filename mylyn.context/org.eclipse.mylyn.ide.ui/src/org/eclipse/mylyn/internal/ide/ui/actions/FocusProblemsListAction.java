@@ -20,6 +20,5 @@ import org.eclipse.mylyn.ide.ui.AbstractFocusMarkerViewAction;
 public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 
 	public FocusProblemsListAction() {
-		super();
 	}
 }

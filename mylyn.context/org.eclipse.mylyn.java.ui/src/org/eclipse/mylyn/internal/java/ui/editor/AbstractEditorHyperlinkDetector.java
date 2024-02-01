@@ -26,6 +26,7 @@ public abstract class AbstractEditorHyperlinkDetector implements IHyperlinkDetec
 
 	private ITextEditor editor;
 
+	@Override
 	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
 			boolean canShowMultipleHyperlinks);
 

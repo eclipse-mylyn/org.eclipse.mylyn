@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -106,30 +105,26 @@ public class BreakpointsStateUtilTest {
 			childNodes.add(child);
 			sortNodes(child);
 		}
-		Collections.sort(childNodes, new Comparator<Node>() {
-
-			@Override
-			public int compare(Node a, Node b) {
-				if (a.getAttributes() == null) {
-					if (b.getAttributes() == null) {
-						return 0;
-					}
-					return 1;
-				} else if (b.getAttributes() == null) {
-					return -1;
+		Collections.sort(childNodes, (a, b) -> {
+			if (a.getAttributes() == null) {
+				if (b.getAttributes() == null) {
+					return 0;
 				}
-				Node nameA = a.getAttributes().getNamedItem("name");
-				Node nameB = b.getAttributes().getNamedItem("name");
-				if (nameA == null) {
-					if (nameB == null) {
-						return 0;
-					}
-					return 1;
-				} else if (nameB == null) {
-					return -1;
-				}
-				return nameA.getNodeValue().compareTo(nameB.getNodeValue());
+				return 1;
+			} else if (b.getAttributes() == null) {
+				return -1;
 			}
+			Node nameA = a.getAttributes().getNamedItem("name");
+			Node nameB = b.getAttributes().getNamedItem("name");
+			if (nameA == null) {
+				if (nameB == null) {
+					return 0;
+				}
+				return 1;
+			} else if (nameB == null) {
+				return -1;
+			}
+			return nameA.getNodeValue().compareTo(nameB.getNodeValue());
 		});
 		for (Node child : childNodes) {
 			node.removeChild(child);
@@ -175,11 +170,9 @@ public class BreakpointsStateUtilTest {
 	private Document getDocument(File inputFile) throws IOException, ParserConfigurationException, SAXException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		FileInputStream fileInputStream = new FileInputStream(inputFile);
-		try {
+		try (fileInputStream) {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			return builder.parse(fileInputStream);
-		} finally {
-			fileInputStream.close();
 		}
 	}
 

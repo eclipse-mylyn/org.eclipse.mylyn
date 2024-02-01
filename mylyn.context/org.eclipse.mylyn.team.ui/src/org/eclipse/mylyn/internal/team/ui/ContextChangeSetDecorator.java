@@ -23,28 +23,32 @@ import org.eclipse.mylyn.team.ui.IContextChangeSet;
  */
 public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 
+	@Override
 	public void decorate(Object element, IDecoration decoration) {
-		if (element instanceof IContextChangeSet) {
-			IContextChangeSet changeSet = (IContextChangeSet) element;
+		if (element instanceof IContextChangeSet changeSet) {
 			if (changeSet.getTask().isActive()) {
 				decoration.setFont(CommonFonts.BOLD);
 			}
 		}
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		// ignore
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
 	}

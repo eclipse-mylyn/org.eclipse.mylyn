@@ -57,8 +57,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getAdaptedParent(Object object) {
-		if (object instanceof IFile) {
-			IFile file = (IFile) object;
+		if (object instanceof IFile file) {
 			return CoreModel.getDefault().create(file.getParent());
 		} else {
 			return super.getAdaptedParent(object);
@@ -78,14 +77,12 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof ICElement) {
-			ICElement element = (ICElement) object;
-			if (element instanceof IParent) {
-				IParent parent = (IParent) element;
+		if (object instanceof ICElement element) {
+			if (element instanceof IParent parent) {
 				ICElement[] children;
 				try {
 					children = parent.getChildren();
-					List<String> childHandles = new ArrayList<String>();
+					List<String> childHandles = new ArrayList<>();
 					for (ICElement element2 : children) {
 						String childHandle = getHandleIdentifier(element2);
 						if (childHandle != null) {
@@ -150,12 +147,10 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof ICElement) {
 			return getHandleForElement((ICElement) object);
-		} else {
-			if (object instanceof IAdaptable) {
-				Object adapter = ((IAdaptable) object).getAdapter(ICElement.class);
-				if (adapter instanceof ICElement) {
-					return getHandleForElement((ICElement) adapter);
-				}
+		} else if (object instanceof IAdaptable) {
+			Object adapter = ((IAdaptable) object).getAdapter(ICElement.class);
+			if (adapter instanceof ICElement) {
+				return getHandleForElement((ICElement) adapter);
 			}
 		}
 		return null;
@@ -189,7 +184,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 			object = ((IResource) object).getAdapter(ICElement.class);
 		}
 
-		boolean accepts = (object instanceof ICElement && !(object instanceof IBinary))
+		boolean accepts = object instanceof ICElement && !(object instanceof IBinary)
 				|| object instanceof CElementGrouping;
 
 		return accepts;
@@ -238,14 +233,13 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 
 		Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
 		if (attribute instanceof Integer) {
-			charStart = ((Integer) attribute).intValue();
+			charStart = (Integer) attribute;
 		}
 
 		try {
 			ITranslationUnit translationUnit = null;
 			IResource resource = marker.getResource();
-			if (resource instanceof IFile) {
-				IFile file = (IFile) resource;
+			if (resource instanceof IFile file) {
 				if (CoreModel.isValidTranslationUnitName(null, file.getName())) {
 					ICElement element = CoreModel.getDefault().create(file);
 					translationUnit = CoreModel.getDefault()
@@ -286,26 +280,26 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 		try {
 			ICElement element = (ICElement) getObjectForHandle(node.getHandleIdentifier());
 			switch (element.getElementType()) {
-			case ICElement.C_PROJECT:
-			case ICElement.C_CCONTAINER:
-			case ICElement.C_VCONTAINER:
-				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
-			case ICElement.C_UNIT:
-				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-			case ICElement.C_USING:
-			case ICElement.C_NAMESPACE:
-			case ICElement.C_INCLUDE:
-			case ICElement.C_TYPEDEF:
-			case ICElement.C_MACRO:
-			case ICElement.C_FUNCTION:
-			case ICElement.C_METHOD:
-			case ICElement.C_FIELD:
-			case ICElement.C_VARIABLE_LOCAL:
-			case ICElement.C_CLASS:
-				ITranslationUnit cu = (ITranslationUnit) element.getAncestor(ICElement.C_UNIT);
-				if (cu != null) {
+				case ICElement.C_PROJECT:
+				case ICElement.C_CCONTAINER:
+				case ICElement.C_VCONTAINER:
+					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
+				case ICElement.C_UNIT:
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-				}
+				case ICElement.C_USING:
+				case ICElement.C_NAMESPACE:
+				case ICElement.C_INCLUDE:
+				case ICElement.C_TYPEDEF:
+				case ICElement.C_MACRO:
+				case ICElement.C_FUNCTION:
+				case ICElement.C_METHOD:
+				case ICElement.C_FIELD:
+				case ICElement.C_VARIABLE_LOCAL:
+				case ICElement.C_CLASS:
+					ITranslationUnit cu = (ITranslationUnit) element.getAncestor(ICElement.C_UNIT);
+					if (cu != null) {
+						return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
+					}
 			}
 		} catch (CoreException e) {
 			// ignore

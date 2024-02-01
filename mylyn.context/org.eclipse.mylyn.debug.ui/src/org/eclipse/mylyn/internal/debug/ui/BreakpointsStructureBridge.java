@@ -46,8 +46,7 @@ public class BreakpointsStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof IBreakpoint) {
-			IBreakpoint breakpoint = (IBreakpoint) object;
+		if (object instanceof IBreakpoint breakpoint) {
 			updateBreakpointId((IBreakpoint) object);
 			return breakpoint.getMarker().getAttribute(ATTRIBUTE_ID, ATTRIBUTE_ID_DEFAULT);
 		} else if (object instanceof IBreakpointManager) {
@@ -61,7 +60,7 @@ public class BreakpointsStructureBridge extends AbstractContextStructureBridge {
 		if (object.getMarker().getAttribute(ATTRIBUTE_ID, null) == null) {
 			try {
 				// FIXME: there are better *unique* random number generators than Math.random...
-				object.getMarker().setAttribute(ATTRIBUTE_ID, "breakpoint[" + (Math.random() * 10000) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				object.getMarker().setAttribute(ATTRIBUTE_ID, "breakpoint[" + Math.random() * 10000 + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
 				IResource resource = object.getMarker().getResource();
 				StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
