@@ -50,7 +50,7 @@ public class BugzillaRestGetTaskComments extends BugzillaRestGetRequest<ArrayLis
 
 	@Override
 	protected ArrayList<TaskAttribute> parseFromJson(InputStreamReader in) {
-		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<ArrayList<TaskAttribute>>() {
+		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<>() {
 		};
 		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
 				.create()
@@ -64,7 +64,7 @@ public class BugzillaRestGetTaskComments extends BugzillaRestGetRequest<ArrayLis
 		@Override
 		public ArrayList<TaskAttribute> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
-			ArrayList<TaskAttribute> response = new ArrayList<TaskAttribute>();
+			ArrayList<TaskAttribute> response = new ArrayList<>();
 			for (Entry<String, JsonElement> commentEntry : ((JsonObject) json.getAsJsonObject().get("bugs")) //$NON-NLS-1$
 					.entrySet()) {
 				for (JsonElement jsonElement : ((JsonObject) commentEntry.getValue()).get("comments") //$NON-NLS-1$

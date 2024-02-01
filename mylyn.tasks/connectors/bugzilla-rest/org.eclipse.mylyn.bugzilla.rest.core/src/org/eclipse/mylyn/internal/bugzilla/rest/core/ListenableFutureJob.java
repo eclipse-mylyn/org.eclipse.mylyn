@@ -53,7 +53,7 @@ public abstract class ListenableFutureJob<V> extends Job /* implements Listenabl
 	public ListenableFutureJob(String name) {
 		super(name);
 		resultObject = null;
-		this.addJobChangeListener(new JobChangeAdapter() {
+		addJobChangeListener(new JobChangeAdapter() {
 
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -88,11 +88,11 @@ public abstract class ListenableFutureJob<V> extends Job /* implements Listenabl
 	}
 
 	protected void set(V future) {
-		this.resultObject = future;
+		resultObject = future;
 	}
 
 	public boolean isCancelled() {
-		return this.getResult().getSeverity() == IStatus.CANCEL;
+		return getResult().getSeverity() == IStatus.CANCEL;
 	}
 
 	public boolean isDone() {

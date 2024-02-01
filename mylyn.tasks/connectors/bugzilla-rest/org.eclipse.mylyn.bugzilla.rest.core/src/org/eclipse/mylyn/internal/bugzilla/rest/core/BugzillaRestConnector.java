@@ -68,7 +68,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	public static final Duration CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION = new Duration(1, TimeUnit.DAYS);
 
-	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
+	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<>();
 
 	private BugzillaRestTaskAttachmentHandler attachmentHandler;
 
@@ -87,16 +87,12 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
-	private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			if (ignoredProperty(evt.getPropertyName())) {
-				return;
-			}
-			TaskRepository taskRepository = (TaskRepository) evt.getSource();
-			clientCache.invalidate(new RepositoryKey(taskRepository));
+	private final PropertyChangeListener repositoryChangeListener4ClientCache = evt -> {
+		if (ignoredProperty(evt.getPropertyName())) {
+			return;
 		}
+		TaskRepository taskRepository = (TaskRepository) evt.getSource();
+		this.clientCache.invalidate(new RepositoryKey(taskRepository));
 	};
 
 	private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
@@ -114,14 +110,10 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	private final LoadingCache<RepositoryKey, BugzillaRestClient> clientCache = Caffeine.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
-			.build(new CacheLoader<RepositoryKey, BugzillaRestClient>() {
-
-				@Override
-				public BugzillaRestClient load(RepositoryKey key) throws Exception {
-					TaskRepository repository = key.getRepository();
-					repository.addChangeListener(repositoryChangeListener4ClientCache);
-					return createClient(repository);
-				}
+			.build(key -> {
+				TaskRepository repository = key.getRepository();
+				repository.addChangeListener(repositoryChangeListener4ClientCache);
+				return createClient(repository);
 			});
 
 	private final LoadingCache<RepositoryKey, Optional<BugzillaRestConfiguration>> configurationCache;
@@ -131,8 +123,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	public BugzillaRestConnector(Duration refreshAfterWriteDuration) {
-		super();
-		this.attachmentHandler = new BugzillaRestTaskAttachmentHandler(this);
+		attachmentHandler = new BugzillaRestTaskAttachmentHandler(this);
 		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
 				.build(new CacheLoader<RepositoryKey, Optional<BugzillaRestConfiguration>>() {
 
@@ -147,7 +138,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 					@Override
 					public Optional<BugzillaRestConfiguration> reload(RepositoryKey key,
 							Optional<BugzillaRestConfiguration> oldValue) throws Exception {
-						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob<Optional<BugzillaRestConfiguration>>(
+						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob<>(
 								"") {
 
 							@Override

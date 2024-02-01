@@ -37,7 +37,7 @@ public class BugzillaKeywordAttributeEditor extends CheckboxMultiSelectAttribute
 
 	@Override
 	public List<String> getValues() {
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList<>();
 		values = getTaskAttribute().getValues();
 		return values;
 	}
@@ -65,7 +65,7 @@ public class BugzillaKeywordAttributeEditor extends CheckboxMultiSelectAttribute
 	@Override
 	protected InPlaceCheckBoxTreeDialog createInPlaceCheckBoxTreeDialog(List<String> values) {
 		Map<String, String> validDescriptions = getTaskAttribute().getOptions();
-		LinkedHashMap<String, String> validValues = new LinkedHashMap<String, String>(validDescriptions.size());
+		LinkedHashMap<String, String> validValues = new LinkedHashMap<>(validDescriptions.size());
 		for (String value : validDescriptions.keySet()) {
 			validValues.put(value, value);
 		}

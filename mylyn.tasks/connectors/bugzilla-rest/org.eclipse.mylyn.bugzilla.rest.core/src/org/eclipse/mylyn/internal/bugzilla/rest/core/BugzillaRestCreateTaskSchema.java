@@ -29,17 +29,17 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 	}
 
 	private static Map<String, String> attribute2FieldMapper = Map.ofEntries(
-			new AbstractMap.SimpleEntry<String, String>(getDefault().SUMMARY.getKey(), "summary"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().OPERATION.getKey(), "status"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().PRODUCT.getKey(), "product"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().COMPONENT.getKey(), "component"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().CC.getKey(), "cc"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().SEVERITY.getKey(), "severity"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().PRIORITY.getKey(), "priority"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
-			new AbstractMap.SimpleEntry<String, String>(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().SUMMARY.getKey(), "summary"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().OPERATION.getKey(), "status"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().PRODUCT.getKey(), "product"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().COMPONENT.getKey(), "component"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().CC.getKey(), "cc"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().SEVERITY.getKey(), "severity"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().PRIORITY.getKey(), "priority"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
+			new AbstractMap.SimpleEntry<>(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
 	);
 
 	public static String getFieldNameFromAttributeName(String attributeName) {

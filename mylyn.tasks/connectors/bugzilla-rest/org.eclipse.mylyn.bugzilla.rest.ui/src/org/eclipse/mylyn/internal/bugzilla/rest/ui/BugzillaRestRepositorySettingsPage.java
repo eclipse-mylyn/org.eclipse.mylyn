@@ -29,8 +29,6 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -98,10 +96,8 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 						oldApiKeyValue = apiKeyText;
 					}
 					apiKey.setText(""); //$NON-NLS-1$
-				} else {
-					if (StringUtils.isNotEmpty(oldApiKeyValue)) {
-						apiKey.setText(oldApiKeyValue);
-					}
+				} else if (StringUtils.isNotEmpty(oldApiKeyValue)) {
+					apiKey.setText(oldApiKeyValue);
 				}
 			}
 		});
@@ -139,13 +135,7 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 		}
 
 		updateURLInformation();
-		serverUrlCombo.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				updateURLInformation();
-			}
-		});
+		serverUrlCombo.addModifyListener(e -> updateURLInformation());
 		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
 
 			@Override

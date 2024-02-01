@@ -27,8 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -47,7 +45,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
-	private final List<FlagType> flagAttributes = new ArrayList<FlagType>();
+	private final List<FlagType> flagAttributes = new ArrayList<>();
 
 	private final FormToolkit toolkit;
 
@@ -128,20 +126,20 @@ public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
 					final Text requesteeText = new Text(flagComposite, SWT.BORDER);
 					requesteeText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 					requesteeText.setEditable(false);
-					requesteeText.addModifyListener(new ModifyListener() {
-						public void modifyText(ModifyEvent e) {
-							TaskAttribute requesteeAttribute = attribute.getAttribute("requestee"); //$NON-NLS-1$
-							if (requesteeAttribute != null) {
-								String value = requesteeText.getText().trim();
-								requesteeAttribute.setValue(value);
-							}
+					requesteeText.addModifyListener(e -> {
+						TaskAttribute requesteeAttribute1 = attribute.getAttribute("requestee"); //$NON-NLS-1$
+						if (requesteeAttribute1 != null) {
+							String value = requesteeText.getText().trim();
+							requesteeAttribute1.setValue(value);
 						}
 					});
 					flagState.addSelectionListener(new SelectionListener() {
+						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
 							// ignore
 						}
 
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 							if (state != null) {
@@ -154,10 +152,12 @@ public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
 				} else {
 					flagState.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 					flagState.addSelectionListener(new SelectionListener() {
+						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
 							// ignore
 						}
 
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 							String value = flagState.getItem(flagState.getSelectionIndex());

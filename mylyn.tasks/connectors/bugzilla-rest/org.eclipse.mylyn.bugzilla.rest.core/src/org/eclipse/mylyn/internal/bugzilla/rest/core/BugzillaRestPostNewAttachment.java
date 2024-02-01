@@ -144,11 +144,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			out.name("is_private").value(isPrivate); //$NON-NLS-1$
 			if (attachmentAttribute != null) {
 				attachmentAttribute.getAttributes().values();
-				Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-				for (TaskAttribute taskAttribute : attachmentAttribute.getAttributes().values()) {
-					changed.add(taskAttribute);
-				}
-
+				Set<TaskAttribute> changed = new HashSet<>(attachmentAttribute.getAttributes().values());
 				BugzillaRestGsonUtil.buildFlags(out, changed, attachmentAttribute);
 			}
 			out.endObject();
@@ -163,13 +159,13 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 
 	@Override
 	protected BugzillaRestIdsResult parseFromJson(InputStreamReader in) {
-		TypeToken<BugzillaRestIdsResult> type = new TypeToken<BugzillaRestIdsResult>() {
+		TypeToken<BugzillaRestIdsResult> type = new TypeToken<>() {
 		};
 		return new Gson().fromJson(in, type.getType());
 	}
 
 	protected BugzillaRestStatus parseErrorFromJson(InputStreamReader in) {
-		TypeToken<BugzillaRestStatus> type = new TypeToken<BugzillaRestStatus>() {
+		TypeToken<BugzillaRestStatus> type = new TypeToken<>() {
 		};
 		return new Gson().fromJson(in, type.getType());
 	}
@@ -194,15 +190,14 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			throws IOException, BugzillaRestException {
 		InputStream is = response.getResponseEntityAsStream();
 		InputStreamReader in = new InputStreamReader(is);
-		switch (response.getStatusCode()) {
-		case HttpURLConnection.HTTP_OK:
-		case HttpURLConnection.HTTP_CREATED:
-			return parseFromJson(in);
-		default:
-			BugzillaRestStatus status = parseErrorFromJson(in);
-			throw new BugzillaRestException(
-					NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(),
-							HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
-		}
+		return switch (response.getStatusCode()) {
+			case HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_CREATED -> parseFromJson(in);
+			default -> {
+				BugzillaRestStatus status = parseErrorFromJson(in);
+				throw new BugzillaRestException(
+						NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(),
+								HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
+			}
+		};
 	}
 }

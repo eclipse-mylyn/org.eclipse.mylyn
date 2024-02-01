@@ -32,8 +32,8 @@ public class BugzillaRestGsonUtil {
 		Set<String> remove;
 
 		public RemoveAddStringHelper(Set<String> removeSet, Set<String> addSet) {
-			add = new HashSet<String>(addSet);
-			remove = new HashSet<String>(removeSet);
+			add = new HashSet<>(addSet);
+			remove = new HashSet<>(removeSet);
 			if (remove.contains("")) { //$NON-NLS-1$
 				remove.remove(""); //$NON-NLS-1$
 			}
@@ -58,8 +58,8 @@ public class BugzillaRestGsonUtil {
 		Set<Integer> remove;
 
 		public RemoveAddIntegerHelper(Set<Integer> removeSet, Set<Integer> addSet) {
-			add = new HashSet<Integer>(addSet);
-			remove = new HashSet<Integer>(removeSet);
+			add = new HashSet<>(addSet);
+			remove = new HashSet<>(removeSet);
 			if (remove.contains(null)) {
 				remove.remove(null);
 			}
@@ -85,7 +85,7 @@ public class BugzillaRestGsonUtil {
 		StringBuffer ostr = new StringBuffer();
 		for (int i = 0; i < str.length(); i++) {
 			char ch = str.charAt(i);
-			if ((ch >= 0x0020) && (ch <= 0x007e)) {
+			if (ch >= 0x0020 && ch <= 0x007e) {
 				ostr.append(ch);
 			} else {
 				ostr.append("\\u"); //$NON-NLS-1$
@@ -96,7 +96,7 @@ public class BugzillaRestGsonUtil {
 				ostr.append(hex.toLowerCase());
 			}
 		}
-		return (new String(ostr));
+		return new String(ostr);
 	}
 
 	private static BugzillaRestGsonUtil instance;
@@ -132,15 +132,11 @@ public class BugzillaRestGsonUtil {
 		gson.toJson(test, RemoveAddStringHelper.class, out);
 	}
 
-	private final Function<String, Integer> convert2Integer = new Function<String, Integer>() {
-
-		@Override
-		public Integer apply(String input) {
-			if ("".equals(input)) {
-				return null;
-			}
-			return Integer.parseInt(input);
+	private final Function<String, Integer> convert2Integer = input -> {
+		if ("".equals(input)) {
+			return null;
 		}
+		return Integer.parseInt(input);
 	};
 
 	public void buildAddRemoveIntegerHash(JsonWriter out, String id, Set<String> setOld, Set<String> setNew)

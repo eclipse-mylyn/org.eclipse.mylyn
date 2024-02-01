@@ -44,7 +44,7 @@ public class BugzillaRestGetTaskAttachmentData extends BugzillaRestGetRequest<In
 
 	@Override
 	protected InputStream parseFromJson(InputStreamReader in) {
-		TypeToken<InputStream> type = new TypeToken<InputStream>() {
+		TypeToken<InputStream> type = new TypeToken<>() {
 		};
 		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
 				.create()

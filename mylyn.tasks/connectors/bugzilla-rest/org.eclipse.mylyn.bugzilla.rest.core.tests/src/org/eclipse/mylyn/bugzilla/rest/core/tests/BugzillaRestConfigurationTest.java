@@ -47,7 +47,7 @@ public class BugzillaRestConfigurationTest {
 	private BugzillaRestConnector connector;
 
 	public BugzillaRestConfigurationTest(BugzillaRestTestFixture fixture) {
-		this.actualFixture = fixture;
+		actualFixture = fixture;
 	}
 
 	@BeforeClass

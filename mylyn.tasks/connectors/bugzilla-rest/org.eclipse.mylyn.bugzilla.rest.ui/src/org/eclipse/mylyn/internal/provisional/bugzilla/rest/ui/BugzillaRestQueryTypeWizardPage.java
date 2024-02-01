@@ -82,10 +82,10 @@ public class BugzillaRestQueryTypeWizardPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (buttonForm.getSelection()) {
-			searchPage.setWizard(this.getWizard());
+			searchPage.setWizard(getWizard());
 			return searchPage;
 		}
-		customPage.setWizard(this.getWizard());
+		customPage.setWizard(getWizard());
 		return customPage;
 	}
 }

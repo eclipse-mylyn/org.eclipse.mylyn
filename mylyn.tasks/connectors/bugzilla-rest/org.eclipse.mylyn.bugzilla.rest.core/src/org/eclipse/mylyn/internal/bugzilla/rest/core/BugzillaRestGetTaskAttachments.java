@@ -51,7 +51,7 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 
 	@Override
 	protected ArrayList<TaskAttribute> parseFromJson(InputStreamReader in) {
-		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<ArrayList<TaskAttribute>>() {
+		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<>() {
 		};
 		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
 				.create()
@@ -65,7 +65,7 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 		@Override
 		public ArrayList<TaskAttribute> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
-			ArrayList<TaskAttribute> response = new ArrayList<TaskAttribute>();
+			ArrayList<TaskAttribute> response = new ArrayList<>();
 
 			for (Entry<String, JsonElement> bugEntry : ((JsonObject) json.getAsJsonObject().get("bugs")).entrySet()) { //$NON-NLS-1$
 				for (JsonElement jsonElement : bugEntry.getValue().getAsJsonArray()) {
