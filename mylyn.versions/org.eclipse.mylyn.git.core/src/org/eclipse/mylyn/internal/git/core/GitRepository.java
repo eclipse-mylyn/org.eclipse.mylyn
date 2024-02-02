@@ -37,7 +37,7 @@ public class GitRepository extends ScmRepository {
 	}
 
 	public Repository getRepository() {
-		return this.mapping.getRepository();
+		return mapping.getRepository();
 	}
 
 	public RepositoryMapping getMapping() {
@@ -58,7 +58,7 @@ public class GitRepository extends ScmRepository {
 		String originUrl = getRepository().getConfig().getString("remote", "origin", "url"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		if (originUrl != null) {
-			this.setUrl(originUrl);
+			setUrl(originUrl);
 		}
 	}
 

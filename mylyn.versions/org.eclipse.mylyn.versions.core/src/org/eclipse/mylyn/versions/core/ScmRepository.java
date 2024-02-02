@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.versions.core;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 
 /**
@@ -60,12 +62,7 @@ public class ScmRepository {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((connector == null) ? 0 : connector.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
-		return result;
+		return Objects.hash(connector, name, url);
 	}
 
 	@Override
@@ -73,32 +70,17 @@ public class ScmRepository {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		ScmRepository other = (ScmRepository) obj;
-		if (connector == null) {
-			if (other.connector != null) {
-				return false;
-			}
-		} else if (!connector.equals(other.connector)) {
+		if (!Objects.equals(connector, other.connector)) {
 			return false;
 		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
+		if (!Objects.equals(name, other.name)) {
 			return false;
 		}
-		if (url == null) {
-			if (other.url != null) {
-				return false;
-			}
-		} else if (!url.equals(other.url)) {
+		if (!Objects.equals(url, other.url)) {
 			return false;
 		}
 		return true;

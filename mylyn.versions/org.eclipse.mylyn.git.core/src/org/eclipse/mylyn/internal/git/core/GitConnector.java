@@ -153,7 +153,7 @@ public class GitConnector extends ScmConnector {
 		treeWalk.addTree(commit.getTree());
 		treeWalk.setRecursive(true);
 
-		List<Change> changes = new ArrayList<Change>();
+		List<Change> changes = new ArrayList<>();
 		List<DiffEntry> entries = DiffEntry.scan(treeWalk);
 		File repoDir = repository2.getWorkTree().getAbsoluteFile();
 
@@ -243,18 +243,13 @@ public class GitConnector extends ScmConnector {
 	}
 
 	private ChangeType mapChangeType(org.eclipse.jgit.diff.DiffEntry.ChangeType change) {
-		switch (change) {
-		case ADD:
-		case COPY:
-			return ChangeType.ADDED;
-		case DELETE:
-			return ChangeType.DELETED;
-		case MODIFY:
-			return ChangeType.MODIFIED;
-		case RENAME:
-			return ChangeType.REPLACED;
-		}
-		return null;
+		return switch (change) {
+			case ADD, COPY -> ChangeType.ADDED;
+			case DELETE -> ChangeType.DELETED;
+			case MODIFY -> ChangeType.MODIFIED;
+			case RENAME -> ChangeType.REPLACED;
+			default -> null;
+		};
 	}
 
 	@Override
@@ -290,7 +285,7 @@ public class GitConnector extends ScmConnector {
 
 	@Override
 	public List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException {
-		ArrayList<ScmRepository> repos = new ArrayList<ScmRepository>();
+		ArrayList<ScmRepository> repos = new ArrayList<>();
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 			GitRepository repository = this.getRepository(project, monitor);
 			if (repository != null) {

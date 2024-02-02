@@ -50,7 +50,7 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class ScmUi {
 
-	private static HashMap<String, ScmConnectorUi> connectorById = new HashMap<String, ScmConnectorUi>();
+	private static HashMap<String, ScmConnectorUi> connectorById = new HashMap<>();
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.versions.ui"; //$NON-NLS-1$
 
@@ -62,14 +62,17 @@ public class ScmUi {
 			this.name = name;
 		}
 
+		@Override
 		public String getName() {
 			return name;
 		}
 
+		@Override
 		public Image getImage() {
 			return null;
 		}
 
+		@Override
 		public String getType() {
 			return ITypedElement.UNKNOWN_TYPE;
 		}
@@ -81,8 +84,7 @@ public class ScmUi {
 	}
 
 	private static IResource getResource(IFileRevision revision) {
-		if (revision instanceof LocalFileRevision) {
-			LocalFileRevision local = (LocalFileRevision) revision;
+		if (revision instanceof LocalFileRevision local) {
 			return local.getFile();
 		}
 		return null;
@@ -123,7 +125,7 @@ public class ScmUi {
 	 * @return
 	 */
 	public static List<ScmConnectorUi> getAllRegisteredUiConnectors() {
-		List<ScmConnectorUi> scmUiConnectors = new ArrayList<ScmConnectorUi>();
+		List<ScmConnectorUi> scmUiConnectors = new ArrayList<>();
 		String[] teamProviderIds = RepositoryProvider.getAllProviderTypeIds();
 		for (String providerId : teamProviderIds) {
 			ScmConnectorUi connector = getScmUiConnectorById(providerId);

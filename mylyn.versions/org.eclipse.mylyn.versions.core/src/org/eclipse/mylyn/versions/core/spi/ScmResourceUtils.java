@@ -113,7 +113,7 @@ public class ScmResourceUtils {
 			return null;
 		}
 		int length = files.length;
-		ArrayList<IFile> existentFiles = new ArrayList<IFile>(length);
+		ArrayList<IFile> existentFiles = new ArrayList<>(length);
 		for (int i = 0; i < length; i++) {
 			if (files[i].exists()) {
 				existentFiles.add(files[i]);

@@ -28,7 +28,7 @@ public class ChangeSet implements ScmInfoAttributes {
 
 	private final List<Change> changes;
 
-	private final Map<String, String> fAtrributes = new HashMap<String, String>();
+	private final Map<String, String> fAtrributes = new HashMap<>();
 
 	private final ScmUser author;
 
@@ -50,9 +50,9 @@ public class ChangeSet implements ScmInfoAttributes {
 		this.author = author;
 		this.date = date;
 		this.id = id;
-		this.message = fullMessage;
+		message = fullMessage;
 		this.repository = repository;
-		this.changes = new ArrayList<Change>(changes);
+		this.changes = new ArrayList<>(changes);
 	}
 
 	public List<Change> getChanges() {
@@ -103,6 +103,7 @@ public class ChangeSet implements ScmInfoAttributes {
 		this.repository = repository;
 	}
 
+	@Override
 	public Map<String, String> getInfoAtrributes() {
 		return fAtrributes;
 	}
