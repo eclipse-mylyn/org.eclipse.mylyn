@@ -42,7 +42,7 @@ import org.eclipse.team.core.RepositoryProvider;
  */
 public class ScmCore {
 
-	private static HashMap<String, ScmConnector> connectorById = new HashMap<String, ScmConnector>();
+	private static HashMap<String, ScmConnector> connectorById = new HashMap<>();
 
 	public static IResource findResource(String file) {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -72,7 +72,7 @@ public class ScmCore {
 	}
 
 	public static List<ScmConnector> getAllRegisteredConnectors() {
-		List<ScmConnector> scmConnectors = new ArrayList<ScmConnector>();
+		List<ScmConnector> scmConnectors = new ArrayList<>();
 		String[] teamProviderIds = RepositoryProvider.getAllProviderTypeIds();
 		for (String providerId : teamProviderIds) {
 			ScmConnector connector = getScmConnectorById(providerId);

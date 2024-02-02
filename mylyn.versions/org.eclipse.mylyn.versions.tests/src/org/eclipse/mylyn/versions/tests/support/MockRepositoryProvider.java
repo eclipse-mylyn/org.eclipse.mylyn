@@ -26,6 +26,7 @@ public class MockRepositoryProvider extends RepositoryProvider {
 		// ignore
 	}
 
+	@Override
 	public void deconfigure() throws CoreException {
 		// ignore
 

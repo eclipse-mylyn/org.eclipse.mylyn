@@ -27,10 +27,9 @@ public class Change implements ScmInfoAttributes {
 
 	private final ChangeType changeType;
 
-	private final Map<String, String> fAtrributes = new HashMap<String, String>();
+	private final Map<String, String> fAtrributes = new HashMap<>();
 
 	public Change(ScmArtifact base, ScmArtifact target, ChangeType changeType) {
-		super();
 		this.base = base;
 		this.target = target;
 		this.changeType = changeType;
@@ -48,6 +47,7 @@ public class Change implements ScmInfoAttributes {
 		return changeType;
 	}
 
+	@Override
 	public Map<String, String> getInfoAtrributes() {
 		return fAtrributes;
 	}

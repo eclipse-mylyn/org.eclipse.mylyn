@@ -34,9 +34,9 @@ class LazyChangeSet extends ChangeSet {
 
 	public LazyChangeSet(RevCommit r, GitRepository repository) {
 		super(getScmUser(r.getCommitterIdent()), getAdjustedCommitTime(r), r.name(), r.getFullMessage(), repository,
-				new ArrayList<Change>());
-		this.commit = r;
-		this.scmRepository = repository;
+				new ArrayList<>());
+		commit = r;
+		scmRepository = repository;
 	}
 
 	private static Date getAdjustedCommitTime(RevCommit r) {
@@ -54,7 +54,7 @@ class LazyChangeSet extends ChangeSet {
 
 	private synchronized List<Change> getOrInitDelegate() {
 		if (delegate == null) {
-			delegate = new ArrayList<Change>();
+			delegate = new ArrayList<>();
 			fetchChanges();
 		}
 		return delegate;

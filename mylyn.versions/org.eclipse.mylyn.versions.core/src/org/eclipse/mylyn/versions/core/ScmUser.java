@@ -25,7 +25,7 @@ public class ScmUser {
 	public ScmUser(String id, String name, String emailAddress) {
 		this.id = id;
 		this.name = name;
-		this.email = emailAddress;
+		email = emailAddress;
 	}
 
 	public String getEmail() {
@@ -75,10 +75,8 @@ public class ScmUser {
 		StringBuilder sb = new StringBuilder();
 		if (id != null) {
 			sb.append(id);
-		} else {
-			if (name != null) {
-				sb.append(name);
-			}
+		} else if (name != null) {
+			sb.append(name);
 		}
 		if (email != null) {
 			sb.append(" <" + email + ">");

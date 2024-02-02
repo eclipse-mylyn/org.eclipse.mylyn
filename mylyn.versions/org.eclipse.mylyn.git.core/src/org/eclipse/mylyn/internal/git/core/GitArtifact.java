@@ -47,34 +47,42 @@ public class GitArtifact extends ScmArtifact {
 			final IPath path = Path.fromPortableString(getPath());
 			return new FileRevision() {
 
+				@Override
 				public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 					return this;
 				}
 
+				@Override
 				public boolean isPropertyMissing() {
 					return false;
 				}
 
+				@Override
 				public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 					return new IStorage() {
 
+						@Override
 						@SuppressWarnings("rawtypes")
 						public Object getAdapter(Class adapter) {
 							return null;
 						}
 
+						@Override
 						public boolean isReadOnly() {
 							return true;
 						}
 
+						@Override
 						public String getName() {
 							return path.lastSegment();
 						}
 
+						@Override
 						public IPath getFullPath() {
 							return path;
 						}
 
+						@Override
 						public InputStream getContents() throws CoreException {
 							try {
 								return repository.getRepository()
@@ -89,6 +97,7 @@ public class GitArtifact extends ScmArtifact {
 					};
 				}
 
+				@Override
 				public String getName() {
 					return path.lastSegment();
 				}
