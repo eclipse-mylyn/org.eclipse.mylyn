@@ -44,8 +44,7 @@ public class GitHub {
 	public static final String HTTPS_GITHUB_COM = "https://github.com"; //$NON-NLS-1$
 
 	/** URL_PATTERN */
-	public static final Pattern URL_PATTERN = Pattern
-			.compile("https?://github.com/([^/]+)/([^/]+)"); //$NON-NLS-1$
+	public static final Pattern URL_PATTERN = Pattern.compile("https?://github.com/([^/]+)/([^/]+)"); //$NON-NLS-1$
 
 	/** USER_AGENT */
 	public static final String USER_AGENT = "GitHubEclipse/1.3.0"; //$NON-NLS-1$
@@ -54,16 +53,11 @@ public class GitHub {
 	public static final String REPOSITORY_SEGMENTS = "/user/repository"; //$NON-NLS-1$
 
 	/**
-	 * Key for a repository property storing a stringified boolean ("true" or
-	 * "false") telling whether to use token authentication for a Mylyn task
-	 * repository.
-	 *
-	 * Kept to not break existing repository definitions. Replace by
-	 * IRepositoryConstants.PROPERTY_USE_TOKEN
+	 * Key for a repository property storing a stringified boolean ("true" or "false") telling whether to use token authentication for a
+	 * Mylyn task repository. Kept to not break existing repository definitions. Replace by IRepositoryConstants.PROPERTY_USE_TOKEN
 	 */
 	@Deprecated(since = "4.1")
-	public static final String PROPERTY_USE_TOKEN = GitHub.class.getPackage()
-			.getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
+	public static final String PROPERTY_USE_TOKEN = GitHub.class.getPackage().getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
 
 	/**
 	 * Configure client with standard configuration
@@ -82,17 +76,13 @@ public class GitHub {
 	 * @param repository
 	 * @return specified client
 	 */
-	public static GitHubClient addCredentials(GitHubClient client,
-			TaskRepository repository) {
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
+	public static GitHubClient addCredentials(GitHubClient client, TaskRepository repository) {
+		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
-			if (Boolean.parseBoolean(repository
-					.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
+			if (Boolean.parseBoolean(repository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
 				client.setOAuth2Token(credentials.getPassword());
 			} else {
-				client.setCredentials(credentials.getUserName(),
-						credentials.getPassword());
+				client.setCredentials(credentials.getUserName(), credentials.getPassword());
 			}
 		}
 		return client;
@@ -149,13 +139,11 @@ public class GitHub {
 	 * @return status
 	 */
 	public static IStatus createErrorStatus(Throwable e) {
-		return createStatus(IStatus.ERROR,
-				"Unexpected error: " + e.getLocalizedMessage(), e); //$NON-NLS-1$
+		return createStatus(IStatus.ERROR, "Unexpected error: " + e.getLocalizedMessage(), e); //$NON-NLS-1$
 	}
 
 	/**
-	 * Create error status from {@link IOException} that wraps it in a
-	 * {@link GitHubException} if it is a {@link RequestException}
+	 * Create error status from {@link IOException} that wraps it in a {@link GitHubException} if it is a {@link RequestException}
 	 *
 	 * @param e
 	 * @return status
@@ -208,7 +196,6 @@ public class GitHub {
 	 * @param user
 	 * @param project
 	 * @return url
-	 *
 	 */
 	public static String createGitHubUrl(String user, String project) {
 		return HTTPS_GITHUB_COM + '/' + user + '/' + project;

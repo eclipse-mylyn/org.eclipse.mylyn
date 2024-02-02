@@ -45,8 +45,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private final Pattern issuePattern = Pattern
-			.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)"); //$NON-NLS-1$
+	private final Pattern issuePattern = Pattern.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)"); //$NON-NLS-1$
 
 	/**
 	 * Get core repository connector
@@ -54,13 +53,10 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @return connector
 	 */
 	public static IssueConnector getCoreConnector() {
-		return (IssueConnector) TasksUi
-				.getRepositoryConnector(GitHub.CONNECTOR_KIND);
+		return (IssueConnector) TasksUi.getRepositoryConnector(GitHub.CONNECTOR_KIND);
 	}
 
 	/**
-	 *
-	 *
 	 * @return the unique type of the repository: "github"
 	 */
 	@Override
@@ -69,25 +65,18 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 *
-	 *
-	 * @return {@link AbstractRepositorySettingsPage} with GitHub specific
-	 *         parameter like user name, password, ...
+	 * @return {@link AbstractRepositorySettingsPage} with GitHub specific parameter like user name, password, ...
 	 */
 	@Override
-	public ITaskRepositoryPage getSettingsPage(
-			final TaskRepository taskRepository) {
+	public ITaskRepositoryPage getSettingsPage(final TaskRepository taskRepository) {
 		return new IssueRepositorySettingsPage(taskRepository);
 	}
 
 	/**
-	 *
-	 *
 	 * @return {@link NewTaskWizard} with GitHub specific tab
 	 */
 	@Override
-	public IWizard getNewTaskWizard(final TaskRepository taskRepository,
-			final ITaskMapping taskSelection) {
+	public IWizard getNewTaskWizard(final TaskRepository taskRepository, final ITaskMapping taskSelection) {
 		return new NewTaskWizard(taskRepository, taskSelection);
 	}
 
@@ -102,15 +91,13 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Returns {@link IWizard} used in Mylyn for creating new queries. This
-	 * {@link IWizard} has a wizard page for creating GitHub specific task
-	 * queries.
+	 * Returns {@link IWizard} used in Mylyn for creating new queries. This {@link IWizard} has a wizard page for creating GitHub specific
+	 * task queries.
 	 *
 	 * @return {@link RepositoryQueryWizard} with GitHub specific query page
 	 */
 	@Override
-	public IWizard getQueryWizard(final TaskRepository taskRepository,
-			final IRepositoryQuery queryToEdit) {
+	public IWizard getQueryWizard(final TaskRepository taskRepository, final IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
 		IssueRepositoryQueryPage queryPage = new IssueRepositoryQueryPage(
 				taskRepository, queryToEdit);
@@ -119,14 +106,12 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text,
-			int index, int textOffset) {
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
 		List<IHyperlink> hyperlinks = new ArrayList<>();
 
 		Matcher matcher = issuePattern.matcher(text);
 		while (matcher.find()) {
-			if (index == -1
-					|| (index >= matcher.start() && index <= matcher.end())) {
+			if (index == -1 || index >= matcher.start() && index <= matcher.end()) {
 				String user = matcher.group(1);
 				String project = matcher.group(2);
 				String taskId = matcher.group(3);
@@ -135,28 +120,24 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 					// same project name, different user
 					String url = repository.getUrl();
 					RepositoryId repo = GitHub.getRepository(url);
-					if (repo != null)
+					if (repo != null) {
 						project = repo.getName();
+					}
 				}
 
 				TaskRepository taskRepository = null;
 				if (user == null && project == null) {
 					taskRepository = repository;
 				} else if (user != null && project != null) {
-					String repositoryUrl = GitHub
-							.createGitHubUrl(user, project);
-					taskRepository = TasksUi
-							.getRepositoryManager()
-							.getRepository(GitHub.CONNECTOR_KIND, repositoryUrl);
+					String repositoryUrl = GitHub.createGitHubUrl(user, project);
+					taskRepository = TasksUi.getRepositoryManager().getRepository(GitHub.CONNECTOR_KIND, repositoryUrl);
 				}
 				if (taskRepository != null) {
 					Region region = createRegion(textOffset, matcher);
-					hyperlinks
-							.add(new TaskHyperlink(region, repository, taskId));
+					hyperlinks.add(new TaskHyperlink(region, repository, taskId));
 				} else if (user != null && project != null) {
 					Region region = createRegion(textOffset, matcher);
-					String url = GitHub.createGitHubUrl(user, project)
-							+ "/issues/" + taskId; //$NON-NLS-1$
+					String url = GitHub.createGitHubUrl(user, project) + "/issues/" + taskId; //$NON-NLS-1$
 					hyperlinks.add(new URLHyperlink(region, url));
 				}
 			}
@@ -165,8 +146,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	private Region createRegion(int textOffset, Matcher matcher) {
-		return new Region(matcher.start() + textOffset, matcher.end()
-				- matcher.start());
+		return new Region(matcher.start() + textOffset, matcher.end() - matcher.start());
 	}
 
 	/**
@@ -174,8 +154,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
 	@Override
-	public ITaskSearchPage getSearchPage(TaskRepository repository,
-			IStructuredSelection selection) {
+	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return new IssueRepositoryQueryPage(repository, null);
 	}
 

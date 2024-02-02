@@ -42,8 +42,8 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 	 * @param taskRepository
 	 */
 	public GistRepositorySettingsPage(TaskRepository taskRepository) {
-		super(Messages.GistRepositorySettingsPage_Title,
-				Messages.GistRepositorySettingsPage_Description, taskRepository);
+		super(Messages.GistRepositorySettingsPage_Title, Messages.GistRepositorySettingsPage_Description,
+				taskRepository);
 		setNeedsAnonymousLogin(false);
 		setUseTokenForAuthentication(false);
 	}
@@ -57,8 +57,7 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 	protected void createAdditionalControls(Composite parent) {
 		if (repository == null) {
 			setUrl(URL);
-			repositoryLabelEditor
-					.setStringValue(Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
+			repositoryLabelEditor.setStringValue(Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
 		}
 		// For gists we still need a user name.
 	}
@@ -74,8 +73,7 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 				try {
 					monitor.subTask(Messages.GistRepositorySettingsPage_TaskContacting);
 					try {
-						GitHubClient client = GistConnector
-								.createClient(taskRepository);
+						GitHubClient client = GistConnector.createClient(taskRepository);
 						GistService service = new GistService(client);
 						String user = taskRepository.getCredentials(
 								AuthenticationType.REPOSITORY).getUserName();
@@ -83,9 +81,8 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 						service.getGists(user);
 					} catch (IOException e) {
 						e = GitHubException.wrap(e);
-						String message = MessageFormat
-								.format(Messages.GistRepositorySettingsPage_StatusError,
-										e.getLocalizedMessage());
+						String message = MessageFormat.format(Messages.GistRepositorySettingsPage_StatusError,
+								e.getLocalizedMessage());
 						setStatus(GitHubUi.createErrorStatus(message));
 						return;
 					} finally {

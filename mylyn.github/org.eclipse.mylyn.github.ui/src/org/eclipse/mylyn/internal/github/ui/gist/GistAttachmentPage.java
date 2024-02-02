@@ -18,8 +18,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -32,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 public class GistAttachmentPage extends WizardPage {
 
 	private TaskAttachmentMapper mapper;
+
 	private TaskAttachmentModel model;
 
 	private Text nameText;
@@ -64,19 +63,11 @@ public class GistAttachmentPage extends WizardPage {
 
 		nameText = new Text(displayArea, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(nameText);
-		nameText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				updateFilename();
-			}
-		});
+		nameText.addModifyListener(e -> updateFilename());
 
 		Label binaryLabel = new Label(displayArea, SWT.WRAP);
-		binaryLabel
-				.setText(Messages.GistAttachmentPage_LabelBinaryWarning);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(binaryLabel);
+		binaryLabel.setText(Messages.GistAttachmentPage_LabelBinaryWarning);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(binaryLabel);
 
 		setControl(displayArea);
 	}
@@ -95,10 +86,12 @@ public class GistAttachmentPage extends WizardPage {
 		super.setVisible(visible);
 		if (visible) {
 			String current = mapper.getFileName();
-			if (current == null)
+			if (current == null) {
 				current = model.getSource().getName();
-			if (current != null)
+			}
+			if (current != null) {
 				nameText.setText(current);
+			}
 			nameText.selectAll();
 			nameText.setFocus();
 			updateFilename();

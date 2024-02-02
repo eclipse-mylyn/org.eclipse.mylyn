@@ -34,7 +34,7 @@ public enum PullRequestOperation {
 
 	private final String label;
 
-	private PullRequestOperation(String label) {
+	PullRequestOperation(String label) {
 		this.label = label;
 	}
 
@@ -61,13 +61,14 @@ public enum PullRequestOperation {
 	 * 
 	 * @param opId
 	 *            the id, or null
-	 * @return the operation, or null if the id was null or did not match any
-	 *         operation
+	 * @return the operation, or null if the id was null or did not match any operation
 	 */
 	public static PullRequestOperation fromId(final String opId) {
-		for (PullRequestOperation op : values())
-			if (op.getId().equals(opId))
+		for (PullRequestOperation op : values()) {
+			if (op.getId().equals(opId)) {
 				return op;
+			}
+		}
 		return null;
 	}
 

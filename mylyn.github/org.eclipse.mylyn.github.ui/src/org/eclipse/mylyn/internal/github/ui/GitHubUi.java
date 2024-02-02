@@ -98,8 +98,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	 * @return status
 	 */
 	public static IStatus createErrorStatus(Throwable e) {
-		return createStatus(IStatus.ERROR,
-				"Unexpected error: " + e.getMessage(), e); //$NON-NLS-1$
+		return createStatus(IStatus.ERROR, "Unexpected error: " + e.getMessage(), e); //$NON-NLS-1$
 	}
 
 	/**
@@ -159,8 +158,9 @@ public class GitHubUi extends AbstractUIPlugin {
 		INSTANCE = this;
 		loadAvatars(context);
 		ITaskActivityManager activityManager = TasksUi.getTaskActivityManager();
-		if (activityManager != null)
+		if (activityManager != null) {
 			activityManager.addActivationListener(prSynchronize);
+		}
 	}
 
 	/**
@@ -176,21 +176,21 @@ public class GitHubUi extends AbstractUIPlugin {
 			try {
 				stream = new ObjectInputStream(Files.newInputStream(file.toPath()));
 				store = (AvatarStore) stream.readObject();
-			} catch (IOException e) {
-				logError("Error reading avatar store", e); //$NON-NLS-1$
-			} catch (ClassNotFoundException cnfe) {
+			} catch (IOException | ClassNotFoundException cnfe) {
 				logError("Error reading avatar store", cnfe); //$NON-NLS-1$
 			} finally {
-				if (stream != null)
+				if (stream != null) {
 					try {
 						stream.close();
 					} catch (IOException ignore) {
 						// Ignored
 					}
+				}
 			}
 		}
-		if (store == null)
+		if (store == null) {
 			store = new AvatarStore();
+		}
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class GitHubUi extends AbstractUIPlugin {
 		File file = location.append(STORE_NAME).toFile();
 
 		try (ObjectOutputStream stream = new ObjectOutputStream(Files.newOutputStream(file.toPath()))) {
-			stream.writeObject(this.store);
+			stream.writeObject(store);
 		} catch (IOException e) {
 			logError("Error writing avatar store", e); //$NON-NLS-1$
 		}
@@ -219,7 +219,8 @@ public class GitHubUi extends AbstractUIPlugin {
 		INSTANCE = null;
 		saveAvatars(context);
 		ITaskActivityManager activityManager = TasksUi.getTaskActivityManager();
-		if (activityManager != null)
+		if (activityManager != null) {
 			activityManager.removeActivationListener(prSynchronize);
+		}
 	}
 }

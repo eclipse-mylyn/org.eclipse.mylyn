@@ -46,23 +46,21 @@ public class PullRequestTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		prComp = PullRequestConnector.getPullRequest(getModel().getTaskData());
-		Set<TaskEditorPartDescriptor> partDescriptors = super
-				.createPartDescriptors();
-		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors
-				.iterator();
+		Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
+		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
 			String id = partDescriptor.getId();
-			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY))
+			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)) {
 				descriptorIt.remove();
+			}
 		}
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
 			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new IssueSummaryPart(
-						PullRequestAttribute.REPORTER_GRAVATAR.getMetadata()
-								.getId(), null);
+						PullRequestAttribute.REPORTER_GRAVATAR.getMetadata().getId(), null);
 			}
 		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {

@@ -18,11 +18,7 @@ import java.util.Collections;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
@@ -46,8 +42,7 @@ public class GistConnectorSelectionDialog extends SelectionDialog {
 	 * @param parentShell
 	 * @param repositories
 	 */
-	public GistConnectorSelectionDialog(Shell parentShell,
-			Collection<TaskRepository> repositories) {
+	public GistConnectorSelectionDialog(Shell parentShell, Collection<TaskRepository> repositories) {
 		super(parentShell);
 		setTitle(Messages.GistConnectorSelectionDialog_Title);
 		setMessage(Messages.GistConnectorSelectionDialog_Message);
@@ -60,34 +55,22 @@ public class GistConnectorSelectionDialog extends SelectionDialog {
 
 		createMessageArea(c);
 
-		TableViewer viewer = new TableViewer(c, SWT.SINGLE | SWT.FULL_SELECTION
-				| SWT.V_SCROLL | SWT.H_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true)
-				.applyTo(viewer.getControl());
+		TableViewer viewer = new TableViewer(c, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.setLabelProvider(new DecoratingLabelProvider(
-				new TaskRepositoryLabelProvider(), PlatformUI.getWorkbench()
-						.getDecoratorManager().getLabelDecorator()));
+				new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setComparator(new ViewerComparator());
 		viewer.setInput(repos);
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				Object selected = ((IStructuredSelection) event.getSelection())
-						.getFirstElement();
-				setResult(Collections.singletonList(selected));
-				okPressed();
-			}
+		viewer.addDoubleClickListener(event -> {
+			Object selected = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			setResult(Collections.singletonList(selected));
+			okPressed();
 		});
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object selected = ((IStructuredSelection) event.getSelection())
-						.getFirstElement();
-				setResult(Collections.singletonList(selected));
-			}
+		viewer.addSelectionChangedListener(event -> {
+			Object selected = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			setResult(Collections.singletonList(selected));
 		});
 
 		return c;

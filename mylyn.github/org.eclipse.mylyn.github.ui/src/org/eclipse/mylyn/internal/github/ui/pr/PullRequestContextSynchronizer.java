@@ -43,34 +43,32 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
- * Adds the files from a pull request's commits to the context when it is
- * activated.
+ * Adds the files from a pull request's commits to the context when it is activated.
  */
 public class PullRequestContextSynchronizer extends TaskActivationAdapter {
 
 	@Override
 	public void taskActivated(ITask task) {
-		if (task == null)
+		if ((task == null) || !PullRequestConnector.KIND.equals(task.getConnectorKind())) {
 			return;
-		if (!PullRequestConnector.KIND.equals(task.getConnectorKind()))
+		}
+		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
+		if (context == null) {
 			return;
-		IInteractionContext context = ContextCore.getContextManager()
-				.getActiveContext();
-		if (context == null)
-			return;
+		}
 
 		try {
 			TaskData data = TasksUi.getTaskDataManager().getTaskData(task);
-			PullRequestComposite prComp = PullRequestConnector
-					.getPullRequest(data);
-			if (prComp == null)
+			PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
+			if (prComp == null) {
 				return;
+			}
 			PullRequest request = prComp.getRequest();
 			Repository repository = PullRequestUtils.getRepository(request);
-			if (repository == null)
+			if (repository == null) {
 				return;
-			try (RevWalk walk = new RevWalk(repository);
-					TreeWalk diffs = new TreeWalk(walk.getObjectReader())) {
+			}
+			try (RevWalk walk = new RevWalk(repository); TreeWalk diffs = new TreeWalk(walk.getObjectReader())) {
 				diffs.setFilter(TreeFilter.ANY_DIFF);
 				diffs.setRecursive(true);
 				diffs.addTree(walk.parseCommit(
@@ -81,20 +79,18 @@ public class PullRequestContextSynchronizer extends TaskActivationAdapter {
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 				String base = repository.getWorkTree().getAbsolutePath() + "/"; //$NON-NLS-1$
 				while (diffs.next()) {
-					IFile file = root.getFileForLocation(Path.fromOSString(base
-							+ diffs.getPathString()));
-					if (file != null)
+					IFile file = root.getFileForLocation(Path.fromOSString(base + diffs.getPathString()));
+					if (file != null) {
 						resources.add(file);
+					}
 				}
-				if (!resources.isEmpty())
-					ResourcesUi.addResourceToContext(resources,
-							InteractionEvent.Kind.SELECTION);
+				if (!resources.isEmpty()) {
+					ResourcesUi.addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
+				}
 			}
 		} catch (MissingObjectException ignored) {
 			// Ignored
-		} catch (IOException e) {
-			GitHubUi.logError(e);
-		} catch (CoreException e) {
+		} catch (IOException | CoreException e) {
 			GitHubUi.logError(e);
 		}
 	}

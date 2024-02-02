@@ -56,8 +56,8 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 	 */
 	public RepositoryImportWizard() {
 		setNeedsProgressMonitor(true);
-		setDefaultPageImageDescriptor(WorkbenchImages
-				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
+		setDefaultPageImageDescriptor(
+				WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
 		setWindowTitle(Messages.RepositorySearchWizardPage_Title);
 	}
 
@@ -77,19 +77,18 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 		addPage(repositorySearchWizardPage);
 	}
 
-	private CloneOperation createCloneOperation(SearchRepository repo,
-			RepositoryService service) throws IOException, URISyntaxException {
+	private CloneOperation createCloneOperation(SearchRepository repo, RepositoryService service)
+			throws IOException, URISyntaxException {
 		Repository fullRepo = service.getRepository(repo);
 		URIish uri = new URIish(fullRepo.getCloneUrl());
 
 		String defaultRepoDir = RepositoryUtil.getDefaultRepositoryDir();
-		File directory = new File(new File(defaultRepoDir, repo.getOwner()),
-				repo.getName());
+		File directory = new File(new File(defaultRepoDir, repo.getOwner()), repo.getName());
 
 		int timeout = GitSettings.getRemoteConnectionTimeout();
 
-		return new CloneOperation(uri, true, null, directory, Constants.R_HEADS
-				+ Constants.MASTER, Constants.DEFAULT_REMOTE_NAME, timeout);
+		return new CloneOperation(uri, true, null, directory, Constants.R_HEADS + Constants.MASTER,
+				Constants.DEFAULT_REMOTE_NAME, timeout);
 	}
 
 	/**
@@ -97,49 +96,36 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		final SearchRepository[] repositories = repositorySearchWizardPage
-				.getRepositories();
+		final SearchRepository[] repositories = repositorySearchWizardPage.getRepositories();
 		String name = MessageFormat.format(
-				Messages.RepositoryImportWizard_CloningRepositories,
-				Integer.valueOf(repositories.length));
+				Messages.RepositoryImportWizard_CloningRepositories, Integer.valueOf(repositories.length));
 		Job job = new Job(name) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					SubMonitor progress = SubMonitor.convert(monitor, name,
-							repositories.length * 3);
-					GitHubClient client = GitHub
-							.configureClient(new GitHubClient());
+					SubMonitor progress = SubMonitor.convert(monitor, name, repositories.length * 3);
+					GitHubClient client = GitHub.configureClient(new GitHubClient());
 					RepositoryService service = new RepositoryService(client);
 					for (SearchRepository repo : repositories) {
 						try {
 							final String id = repo.getId();
 							progress.subTask(MessageFormat.format(
-									Messages.RepositoryImportWizard_CreatingOperation,
-									id));
-							CloneOperation op = createCloneOperation(repo,
-									service);
+									Messages.RepositoryImportWizard_CreatingOperation, id));
+							CloneOperation op = createCloneOperation(repo, service);
 							progress.worked(1);
 
 							monitor.setTaskName(MessageFormat.format(
-									Messages.RepositoryImportWizard_Cloning,
-									id));
+									Messages.RepositoryImportWizard_Cloning, id));
 							op.run(progress.newChild(1));
 
 							monitor.setTaskName(MessageFormat.format(
-									Messages.RepositoryImportWizard_Registering,
-									id));
-							RepositoryUtil.INSTANCE
-									.addConfiguredRepository(op.getGitDir());
+									Messages.RepositoryImportWizard_Registering, id));
+							RepositoryUtil.INSTANCE.addConfiguredRepository(op.getGitDir());
 							progress.worked(1);
-						} catch (InvocationTargetException e) {
-							GitHubUi.logError(e);
-						} catch (InterruptedException e) {
-							GitHubUi.logError(e);
 						} catch (IOException e) {
 							GitHubUi.logError(GitHubException.wrap(e));
-						} catch (URISyntaxException e) {
+						} catch (InvocationTargetException | InterruptedException | URISyntaxException e) {
 							GitHubUi.logError(e);
 						}
 					}
@@ -151,12 +137,13 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				}
 			}
 		};
-		IWorkbenchSiteProgressService progress = PlatformUI
-				.getWorkbench().getService(IWorkbenchSiteProgressService.class);
-		if (progress != null)
+		IWorkbenchSiteProgressService progress = PlatformUI.getWorkbench()
+				.getService(IWorkbenchSiteProgressService.class);
+		if (progress != null) {
 			progress.schedule(job);
-		else
+		} else {
 			job.schedule();
+		}
 		return true;
 	}
 }

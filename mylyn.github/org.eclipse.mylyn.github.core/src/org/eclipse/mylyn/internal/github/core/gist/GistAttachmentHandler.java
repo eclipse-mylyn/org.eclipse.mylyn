@@ -58,19 +58,16 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler#getContent(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask,
-	 *      org.eclipse.mylyn.tasks.core.data.TaskAttribute,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskAttribute, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public InputStream getContent(TaskRepository repository, ITask task,
-			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
-			throws CoreException {
-		TaskAttribute urlAttribute = attachmentAttribute
-				.getAttribute(GistAttribute.RAW_FILE_URL.getMetadata().getId());
+	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
+			IProgressMonitor monitor) throws CoreException {
+		TaskAttribute urlAttribute = attachmentAttribute.getAttribute(GistAttribute.RAW_FILE_URL.getMetadata().getId());
 		try {
-			if (urlAttribute == null)
+			if (urlAttribute == null) {
 				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
+			}
 			URL url = new URL(urlAttribute.getValue());
 			GitHubClient client = new GitHubClient(url.getHost()) {
 
@@ -89,18 +86,13 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler#postContent(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask,
-	 *      org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource,
-	 *      java.lang.String, org.eclipse.mylyn.tasks.core.data.TaskAttribute,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource, java.lang.String,
+	 *      org.eclipse.mylyn.tasks.core.data.TaskAttribute, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void postContent(TaskRepository repository, ITask task,
-			AbstractTaskAttachmentSource source, String comment,
-			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
-			throws CoreException {
-		TaskAttachmentMapper mapper = TaskAttachmentMapper
-				.createFrom(attachmentAttribute);
+	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source, String comment,
+			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
+		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
 		Gist gist = new Gist().setId(task.getTaskId());
 		gist.setDescription(attachmentAttribute.getParentAttribute()
 				.getAttribute(GistAttribute.DESCRIPTION.getMetadata().getId())
@@ -116,8 +108,9 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			byte[] buffer = new byte[8192];
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			int read;
-			while ((read = input.read(buffer)) != -1)
+			while ((read = input.read(buffer)) != -1) {
 				output.write(buffer, 0, read);
+			}
 			file.setContent(output.toString());
 			service.updateGist(gist);
 		} catch (IOException e) {

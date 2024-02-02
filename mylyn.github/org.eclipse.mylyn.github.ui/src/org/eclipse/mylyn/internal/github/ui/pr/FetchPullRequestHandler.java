@@ -54,8 +54,9 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
-		if (data == null)
+		if (data == null) {
 			return null;
+		}
 
 		Job job = new Job(MessageFormat.format(
 				Messages.FetchPullRequestHandler_JobName, data.getTaskId())) {
@@ -63,25 +64,20 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					PullRequestComposite prComp = PullRequestConnector
-							.getPullRequest(data);
-					if (prComp == null)
+					PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
+					if (prComp == null) {
 						return Status.CANCEL_STATUS;
+					}
 					PullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
 					if (repo == null) {
 						PullRequestConnectorUi.showNoRepositoryDialog(request);
 						return Status.CANCEL_STATUS;
 					}
-					RemoteConfig remote = PullRequestUtils.addRemote(repo,
-							request);
+					RemoteConfig remote = PullRequestUtils.addRemote(repo, request);
 					new FetchOperationUI(repo, remote, false).execute(monitor);
 					executeCallback(event);
-				} catch (IOException e) {
-					GitHubUi.logError(e);
-				} catch (URISyntaxException e) {
-					GitHubUi.logError(e);
-				} catch (CoreException e) {
+				} catch (IOException | URISyntaxException | CoreException e) {
 					GitHubUi.logError(e);
 				}
 				return Status.OK_STATUS;

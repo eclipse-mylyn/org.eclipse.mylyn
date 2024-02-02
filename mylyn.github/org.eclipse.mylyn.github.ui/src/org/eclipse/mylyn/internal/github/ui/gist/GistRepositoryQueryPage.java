@@ -23,7 +23,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -36,14 +35,14 @@ import org.eclipse.swt.widgets.Text;
 public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 	private Text titleText;
+
 	private Text userText;
 
 	/**
 	 * @param taskRepository
 	 * @param query
 	 */
-	public GistRepositoryQueryPage(TaskRepository taskRepository,
-			IRepositoryQuery query) {
+	public GistRepositoryQueryPage(TaskRepository taskRepository, IRepositoryQuery query) {
 		this("gistQueryPage", taskRepository, query); //$NON-NLS-1$
 	}
 
@@ -52,8 +51,7 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public GistRepositoryQueryPage(String pageName,
-			TaskRepository taskRepository, IRepositoryQuery query) {
+	public GistRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName, taskRepository, query);
 	}
 
@@ -65,45 +63,38 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(displayArea);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false)
-				.applyTo(displayArea);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).applyTo(displayArea);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(displayArea);
 
-		ModifyListener completeListener = new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				setPageComplete(isPageComplete());
-			}
-		};
+		ModifyListener completeListener = e -> setPageComplete(isPageComplete());
 
 		if (!inSearchContainer()) {
-			new Label(displayArea, SWT.NONE)
-					.setText(Messages.GistRepositoryQueryPage_LabelTitle);
+			new Label(displayArea, SWT.NONE).setText(Messages.GistRepositoryQueryPage_LabelTitle);
 			titleText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(completeListener);
 			titleText.setFocus();
 		}
 
-		new Label(displayArea, SWT.NONE)
-				.setText(Messages.GistRepositoryQueryPage_LabelUser);
+		new Label(displayArea, SWT.NONE).setText(Messages.GistRepositoryQueryPage_LabelUser);
 		userText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
 		userText.addModifyListener(completeListener);
 
 		IRepositoryQuery query = getQuery();
 		if (query != null) {
-			if (titleText != null && query.getSummary() != null)
+			if (titleText != null && query.getSummary() != null) {
 				titleText.setText(query.getSummary());
-			if (query.getAttribute(IGistQueryConstants.USER) != null)
+			}
+			if (query.getAttribute(IGistQueryConstants.USER) != null) {
 				userText.setText(query.getAttribute(IGistQueryConstants.USER));
+			}
 		} else if (!inSearchContainer() && !hasQueries()) {
 			titleText.setText(Messages.GistRepositoryQueryPage_TitleDefault);
-			AuthenticationCredentials credentials = getTaskRepository()
-					.getCredentials(AuthenticationType.REPOSITORY);
-			if (credentials != null)
+			AuthenticationCredentials credentials = getTaskRepository().getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials != null) {
 				userText.setText(credentials.getUserName());
+			}
 		}
 
 		Dialog.applyDialogFont(displayArea);
@@ -133,8 +124,9 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	@Override
 	public boolean isPageComplete() {
 		boolean complete = inSearchContainer() ? true : super.isPageComplete();
-		if (complete)
+		if (complete) {
 			complete = userText.getText().trim().length() > 0;
+		}
 		return complete;
 	}
 

@@ -36,9 +36,13 @@ import org.eclipse.ui.PlatformUI;
 public class CreateGistJob extends Job {
 
 	private String title;
+
 	private String content;
+
 	private GistService service;
+
 	private boolean isPublic;
+
 	private TaskRepository repository;
 
 	/**
@@ -51,8 +55,8 @@ public class CreateGistJob extends Job {
 	 * @param isPublic
 	 * @param repository
 	 */
-	public CreateGistJob(String name, String title, String content,
-			GistService service, boolean isPublic, TaskRepository repository) {
+	public CreateGistJob(String name, String title, String content, GistService service, boolean isPublic,
+			TaskRepository repository) {
 		super(name);
 		this.title = title;
 		this.content = content;
@@ -70,20 +74,16 @@ public class CreateGistJob extends Job {
 			gist.setFiles(Collections.singletonMap(title, file));
 			final Gist created = service.createGist(gist);
 			final Display display = PlatformUI.getWorkbench().getDisplay();
-			display.asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					GistNotificationPopup popup = new GistNotificationPopup(
-							display, created, title, repository);
-					popup.create();
-					popup.open();
-				}
+			display.asyncExec(() -> {
+				GistNotificationPopup popup = new GistNotificationPopup(
+						display, created, title, repository);
+				popup.create();
+				popup.open();
 			});
-			TasksUiPlugin
-					.getTaskJobFactory()
+			TasksUiPlugin.getTaskJobFactory()
 					.createSynchronizeRepositoriesJob(
-							GistConnectorUi.getRepositories()).schedule();
+							GistConnectorUi.getRepositories())
+					.schedule();
 		} catch (IOException e) {
 			GitHubUi.logError(GitHubException.wrap(e));
 		}

@@ -65,8 +65,7 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @return label
 	 */
 	public static String getRepositoryLabel(IRepositoryIdProvider repo) {
-		return repo.generateId()
-				+ Messages.PullRequestConnector_LabelPullRequests;
+		return repo.generateId() + Messages.PullRequestConnector_LabelPullRequests;
 	}
 
 	/**
@@ -82,8 +81,8 @@ public class PullRequestConnector extends RepositoryConnector {
 	 *            whether the password is a token
 	 * @return the {@link TaskRepository}
 	 */
-	public static TaskRepository createTaskRepository(Repository repo,
-			String username, String password, boolean isToken) {
+	public static TaskRepository createTaskRepository(Repository repo, String username, String password,
+			boolean isToken) {
 		String url = PullRequestConnector.appendPulls(GitHub.createGitHubUrl(
 				repo.getOwner().getLogin(), repo.getName()));
 		TaskRepository repository = new TaskRepository(KIND, url);
@@ -92,12 +91,12 @@ public class PullRequestConnector extends RepositoryConnector {
 		if (loginName == null && isToken) {
 			loginName = ""; //$NON-NLS-1$
 		}
-		if (loginName != null && password != null)
-			repository.setCredentials(AuthenticationType.REPOSITORY,
-					new AuthenticationCredentials(loginName, password), true);
+		if (loginName != null && password != null) {
+			repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(loginName, password),
+					true);
+		}
 		repository.setCategory(TaskRepository.CATEGORY_REVIEW);
-		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
-				Boolean.toString(isToken));
+		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN, Boolean.toString(isToken));
 		return repository;
 	}
 
@@ -119,8 +118,7 @@ public class PullRequestConnector extends RepositoryConnector {
 	 */
 	public static String stripPulls(String repoUrl) {
 		if (repoUrl.endsWith(IGitHubConstants.SEGMENT_PULLS)) {
-			return repoUrl.substring(0, repoUrl.length()
-					- IGitHubConstants.SEGMENT_PULLS.length());
+			return repoUrl.substring(0, repoUrl.length() - IGitHubConstants.SEGMENT_PULLS.length());
 		}
 		return repoUrl;
 	}
@@ -132,11 +130,13 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @return pull request
 	 */
 	public static PullRequestComposite getPullRequest(TaskData data) {
-		if (data == null)
+		if (data == null) {
 			return null;
+		}
 		String value = PullRequestAttribute.MODEL.getMetadata().getValue(data);
-		if (value.length() == 0)
+		if (value.length() == 0) {
 			return null;
+		}
 		return GsonUtils.fromJson(value, PullRequestComposite.class);
 	}
 
@@ -189,15 +189,13 @@ public class PullRequestConnector extends RepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository,
-			IRepositoryQuery query, TaskDataCollector collector,
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus result = Status.OK_STATUS;
 		List<String> statuses = QueryUtils.getAttributes(
 				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.PullRequestConnector_TaskFetching,
-				statuses.size());
+		monitor.beginTask(Messages.PullRequestConnector_TaskFetching, statuses.size());
 		try {
 			RepositoryId repo = getRepository(repository.getRepositoryUrl());
 
@@ -214,13 +212,13 @@ public class PullRequestConnector extends RepositoryConnector {
 					PullRequestComposite prComp = new PullRequestComposite();
 					prComp.setRequest(pr);
 					List<Comment> comments = null;
-					if (pr.getComments() > 0)
-						comments = commentService.getComments(repo.getOwner(),
-								repo.getName(),
+					if (pr.getComments() > 0) {
+						comments = commentService.getComments(repo.getOwner(), repo.getName(),
 								Integer.toString(pr.getNumber()));
-					if (pr.getCommits() > 0)
-						prComp.setCommits(service.getCommits(repo,
-								pr.getNumber()));
+					}
+					if (pr.getCommits() > 0) {
+						prComp.setCommits(service.getCommits(repo, pr.getNumber()));
+					}
 					TaskData taskData = taskDataHandler.createTaskData(
 							repository, monitor, repo, prComp, comments);
 					collector.accept(taskData);
@@ -236,26 +234,25 @@ public class PullRequestConnector extends RepositoryConnector {
 	}
 
 	@Override
-	public TaskData getTaskData(TaskRepository repository, String taskId,
-			IProgressMonitor monitor) throws CoreException {
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		RepositoryId repo = getRepository(repository.getRepositoryUrl());
 
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
 			PullRequestService service = new PullRequestService(client);
-			PullRequest pr = service.getPullRequest(repo,
-					Integer.parseInt(taskId));
+			PullRequest pr = service.getPullRequest(repo, Integer.parseInt(taskId));
 			PullRequestComposite prComp = new PullRequestComposite();
 			prComp.setRequest(pr);
 			IssueService commentService = new IssueService(client);
 			List<Comment> comments = null;
-			if (pr.getComments() > 0)
-				comments = commentService.getComments(repo.getOwner(),
-						repo.getName(), taskId);
-			if (pr.getCommits() > 0)
+			if (pr.getComments() > 0) {
+				comments = commentService.getComments(repo.getOwner(), repo.getName(), taskId);
+			}
+			if (pr.getCommits() > 0) {
 				prComp.setCommits(service.getCommits(repo, pr.getNumber()));
-			return taskDataHandler.createTaskData(repository, monitor, repo,
-					prComp, comments);
+			}
+			return taskDataHandler.createTaskData(repository, monitor, repo, prComp, comments);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
@@ -264,9 +261,9 @@ public class PullRequestConnector extends RepositoryConnector {
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
 		int lastPull = taskFullUrl.lastIndexOf(SEGMENT_PULL);
-		if (lastPull != -1)
-			return taskFullUrl.substring(0, lastPull)
-					+ IGitHubConstants.SEGMENT_PULLS;
+		if (lastPull != -1) {
+			return taskFullUrl.substring(0, lastPull) + IGitHubConstants.SEGMENT_PULLS;
+		}
 		return null;
 	}
 
