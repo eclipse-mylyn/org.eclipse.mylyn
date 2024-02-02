@@ -51,8 +51,7 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 	 * @param title
 	 * @param repository
 	 */
-	public GistNotificationPopup(Display display, Gist gist, String title,
-			TaskRepository repository) {
+	public GistNotificationPopup(Display display, Gist gist, String title, TaskRepository repository) {
 		super(display);
 		this.gist = gist;
 		this.title = title;
@@ -75,12 +74,12 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AbstractTask task = TasksUiInternal.getTask(
-						repository.getRepositoryUrl(), gist.getId(),
-						gist.getHtmlUrl());
-				if (task != null)
+						repository.getRepositoryUrl(), gist.getId(), gist.getHtmlUrl());
+				if (task != null) {
 					TasksUiInternal.refreshAndOpenTaskListElement(task);
-				else
+				} else {
 					TasksUiInternal.openTask(repository, gist.getId(), null);
+				}
 			}
 		});
 	}

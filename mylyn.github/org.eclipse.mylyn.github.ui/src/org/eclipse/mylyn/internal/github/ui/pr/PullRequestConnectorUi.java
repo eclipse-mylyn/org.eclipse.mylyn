@@ -35,30 +35,19 @@ import org.eclipse.ui.PlatformUI;
 public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
-	 * Show informational dialog for when a pull request cannot be resolved to a
-	 * Git repository.
+	 * Show informational dialog for when a pull request cannot be resolved to a Git repository.
 	 *
 	 * @param request
 	 *            must be non-null
 	 */
 	public static void showNoRepositoryDialog(PullRequest request) {
 		Repository remoteRepo = request.getBase().getRepo();
-		String id = remoteRepo.getOwner().getLogin() + '/'
-				+ remoteRepo.getName();
+		String id = remoteRepo.getOwner().getLogin() + '/' + remoteRepo.getName();
 		final String message = MessageFormat.format(
 				Messages.PullRequestConnectorUi_MessageRepositoryNotFound, id);
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				MessageDialog
-						.openInformation(
-								PlatformUI.getWorkbench().getDisplay()
-										.getActiveShell(),
-								Messages.PullRequestConnectorUi_TitleRepositoryNotFound,
-								message);
-			}
-		});
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> MessageDialog.openInformation(
+				PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+				Messages.PullRequestConnectorUi_TitleRepositoryNotFound, message));
 	}
 
 	@Override
@@ -72,8 +61,7 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository taskRepository,
-			IRepositoryQuery queryToEdit) {
+	public IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
 		PullRequestRepositoryQueryPage queryPage = new PullRequestRepositoryQueryPage(
 				taskRepository, queryToEdit);
@@ -82,8 +70,7 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository,
-			ITaskMapping selection) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
 		return new NewTaskWizard(taskRepository, selection);
 	}
 

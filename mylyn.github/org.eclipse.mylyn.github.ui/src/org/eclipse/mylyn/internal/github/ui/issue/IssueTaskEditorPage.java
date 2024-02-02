@@ -54,10 +54,8 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> partDescriptors = super
-				.createPartDescriptors();
-		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors
-				.iterator();
+		Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
+		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
 			String id = partDescriptor.getId();
@@ -69,8 +67,7 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 
 			@Override
 			public AbstractTaskEditorPart createPart() {
-				return new IssueSummaryPart(IssueAttribute.REPORTER_GRAVATAR
-						.getMetadata().getId(),
+				return new IssueSummaryPart(IssueAttribute.REPORTER_GRAVATAR.getMetadata().getId(),
 						IssueAttribute.ASSIGNEE_GRAVATAR.getMetadata().getId());
 			}
 		}.setPath(PATH_HEADER));
@@ -109,22 +106,16 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		boolean isToken = Boolean.parseBoolean(taskRepository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))
 				|| Boolean.parseBoolean(taskRepository.getProperty(GitHub.PROPERTY_USE_TOKEN));
-		boolean noUser = !isToken && cred != null
-				&& StringUtils.isEmpty(cred.getUserName());
+		boolean noUser = !isToken && cred != null && StringUtils.isEmpty(cred.getUserName());
 		if (cred == null || noUser) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					getTaskEditor().setMessage(Messages.IssueTaskEditorPage_MessageAnonymousCannotSubmit, type,
-							new HyperlinkAdapter() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getTaskEditor().setMessage(Messages.IssueTaskEditorPage_MessageAnonymousCannotSubmit, type,
+					new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
 							TasksUiUtil.openEditRepositoryWizard(taskRepository);
 							refresh();
 						}
-					});
-				}
-			});
+					}));
 			return false;
 		}
 		return true;

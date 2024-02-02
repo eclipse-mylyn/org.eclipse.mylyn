@@ -23,8 +23,6 @@ import org.eclipse.mylyn.internal.github.ui.GitHubRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -39,7 +37,9 @@ import org.eclipse.swt.widgets.Text;
 public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private Button openButton;
+
 	private Button closedButton;
+
 	private Text titleText;
 
 	private SelectionListener completeListener = new SelectionAdapter() {
@@ -56,8 +56,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public PullRequestRepositoryQueryPage(String pageName,
-			TaskRepository taskRepository, IRepositoryQuery query) {
+	public PullRequestRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName, taskRepository, query);
 		setDescription(Messages.PullRequestRepositoryQueryPage_Description);
 		setPageComplete(false);
@@ -67,8 +66,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public PullRequestRepositoryQueryPage(TaskRepository taskRepository,
-			IRepositoryQuery query) {
+	public PullRequestRepositoryQueryPage(TaskRepository taskRepository, IRepositoryQuery query) {
 		this("prQueryPage", taskRepository, query); //$NON-NLS-1$
 	}
 
@@ -78,24 +76,20 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(optionsArea);
 
 		Composite statusArea = new Composite(optionsArea, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(4).equalWidth(false)
-				.applyTo(statusArea);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(statusArea);
+		GridLayoutFactory.fillDefaults().numColumns(4).equalWidth(false).applyTo(statusArea);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(statusArea);
 
-		new Label(statusArea, SWT.NONE)
-				.setText(Messages.PullRequestRepositoryQueryPage_LabelStatus);
+		new Label(statusArea, SWT.NONE).setText(Messages.PullRequestRepositoryQueryPage_LabelStatus);
 
 		openButton = new Button(statusArea, SWT.CHECK);
 		openButton.setSelection(true);
 		openButton.setText(Messages.PullRequestRepositoryQueryPage_StatusOpen);
-		openButton.addSelectionListener(this.completeListener);
+		openButton.addSelectionListener(completeListener);
 
 		closedButton = new Button(statusArea, SWT.CHECK);
 		closedButton.setSelection(true);
-		closedButton
-				.setText(Messages.PullRequestRepositoryQueryPage_StatusClosed);
-		closedButton.addSelectionListener(this.completeListener);
+		closedButton.setText(Messages.PullRequestRepositoryQueryPage_StatusClosed);
+		closedButton.addSelectionListener(completeListener);
 	}
 
 	/**
@@ -104,27 +98,18 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
-				.applyTo(displayArea);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).applyTo(displayArea);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(displayArea);
 
 		if (!inSearchContainer()) {
 			Composite titleArea = new Composite(displayArea, SWT.NONE);
 			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(titleArea);
-			GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-					.applyTo(titleArea);
+			GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(titleArea);
 
-			new Label(titleArea, SWT.NONE)
-					.setText(Messages.PullRequestRepositoryQueryPage_LabelTitle);
+			new Label(titleArea, SWT.NONE).setText(Messages.PullRequestRepositoryQueryPage_LabelTitle);
 			titleText = new Text(titleArea, SWT.SINGLE | SWT.BORDER);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
-			titleText.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					setPageComplete(isPageComplete());
-				}
-			});
+			titleText.addModifyListener(e -> setPageComplete(isPageComplete()));
 		}
 
 		createOptionsArea(displayArea);
@@ -135,8 +120,9 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private void initialize() {
 		IRepositoryQuery query = getQuery();
-		if (query == null)
+		if (query == null) {
 			return;
+		}
 
 		titleText.setText(query.getSummary());
 		List<String> status = QueryUtils.getAttributes(
@@ -153,8 +139,9 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		boolean complete = super.isPageComplete();
 		if (complete) {
 			String message = null;
-			if (!openButton.getSelection() && !closedButton.getSelection())
+			if (!openButton.getSelection() && !closedButton.getSelection()) {
 				message = Messages.PullRequestRepositoryQueryPage_MessageSelectStatus;
+			}
 
 			setErrorMessage(message);
 			complete = message == null;
@@ -167,7 +154,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	 */
 	@Override
 	public String getQueryTitle() {
-		return this.titleText != null ? this.titleText.getText() : null;
+		return titleText != null ? titleText.getText() : null;
 	}
 
 	/**
@@ -178,10 +165,12 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		query.setSummary(getQueryTitle());
 
 		List<String> statuses = new LinkedList<>();
-		if (openButton.getSelection())
+		if (openButton.getSelection()) {
 			statuses.add(IssueService.STATE_OPEN);
-		if (closedButton.getSelection())
+		}
+		if (closedButton.getSelection()) {
 			statuses.add(IssueService.STATE_CLOSED);
+		}
 		QueryUtils.setAttribute(IssueService.FILTER_STATE, statuses, query);
 	}
 }

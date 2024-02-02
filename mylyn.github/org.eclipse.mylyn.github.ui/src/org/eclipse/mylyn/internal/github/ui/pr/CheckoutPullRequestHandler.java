@@ -60,8 +60,7 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 	public CheckoutPullRequestHandler() {
 	}
 
-	private RevCommit getBase(Repository repo, PullRequest request)
-			throws IOException {
+	private RevCommit getBase(Repository repo, PullRequest request) throws IOException {
 		try (RevWalk walk = new RevWalk(repo)) {
 			return walk.parseCommit(repo.resolve(request.getBase().getSha()));
 		}
@@ -70,8 +69,9 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
-		if (data == null)
+		if (data == null) {
 			return null;
+		}
 
 		Job job = new Job(MessageFormat.format(
 				Messages.CheckoutPullRequestHandler_JobName, data.getTaskId())) {
@@ -80,14 +80,15 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 			protected IStatus run(IProgressMonitor monitor) {
 				SubMonitor progress = SubMonitor.convert(monitor, 5);
 				try {
-					PullRequestComposite prComp = PullRequestConnector
-							.getPullRequest(data);
-					if (prComp == null)
+					PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
+					if (prComp == null) {
 						return Status.CANCEL_STATUS;
+					}
 					PullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
-					if (repo == null)
+					if (repo == null) {
 						return Status.CANCEL_STATUS;
+					}
 
 					String branchName = PullRequestUtils.getBranchName(request);
 					Ref branchRef = repo.findRef(branchName);
@@ -96,62 +97,45 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 
 					// Add remote
 					if (!PullRequestUtils.isFromSameRepository(request)) {
-						progress.subTask(MessageFormat
-								.format(Messages.CheckoutPullRequestHandler_TaskAddRemote,
-										request.getHead().getRepo().getOwner()
-												.getLogin()));
+						progress.subTask(MessageFormat.format(Messages.CheckoutPullRequestHandler_TaskAddRemote,
+								request.getHead().getRepo().getOwner().getLogin()));
 						remote = PullRequestUtils.addRemote(repo, request);
 						headBranch = PullRequestUtils.getHeadBranch(request);
 					} else {
-						remote = PullRequestUtils.getRemoteConfig(repo,
-								Constants.DEFAULT_REMOTE_NAME);
+						remote = PullRequestUtils.getRemoteConfig(repo, Constants.DEFAULT_REMOTE_NAME);
 						headBranch = request.getHead().getRef();
 					}
 					progress.worked(1);
 
 					// Create topic branch starting at SHA-1 of base
 					if (branchRef == null) {
-						progress.subTask(MessageFormat
-								.format(Messages.CheckoutPullRequestHandler_TaskCreateBranch,
-										branchName));
+						progress.subTask(
+								MessageFormat.format(Messages.CheckoutPullRequestHandler_TaskCreateBranch, branchName));
 						PullRequestUtils.configureTopicBranch(repo, request);
-						new CreateLocalBranchOperation(repo, branchName,
-								getBase(repo, request))
-										.execute(progress.newChild(1));
+						new CreateLocalBranchOperation(repo, branchName, getBase(repo, request))
+								.execute(progress.newChild(1));
 					}
 
 					// Checkout topic branch
 					if (!PullRequestUtils.isCurrentBranch(branchName, repo)) {
-						progress.subTask(MessageFormat
-								.format(Messages.CheckoutPullRequestHandler_TaskCheckoutBranch,
-										branchName));
-						BranchOperationUI.checkout(repo, branchName)
-								.run(progress.newChild(1));
+						progress.subTask(MessageFormat.format(Messages.CheckoutPullRequestHandler_TaskCheckoutBranch,
+								branchName));
+						BranchOperationUI.checkout(repo, branchName).run(progress.newChild(1));
 					}
 
 					// Fetch from remote
 					progress.subTask(MessageFormat.format(
-							Messages.CheckoutPullRequestHandler_TaskFetching,
-							remote.getName()));
-					new FetchOperation(repo, remote,
-							GitSettings.getRemoteConnectionTimeout(),
-							false).run(progress.newChild(1));
+							Messages.CheckoutPullRequestHandler_TaskFetching, remote.getName()));
+					new FetchOperation(repo, remote, GitSettings.getRemoteConnectionTimeout(), false)
+							.run(progress.newChild(1));
 
 					// Merge head onto base
 					progress.subTask(MessageFormat.format(
-							Messages.CheckoutPullRequestHandler_TaskMerging,
-							headBranch));
-					new MergeOperation(repo, headBranch)
-							.execute(progress.newChild(1));
+							Messages.CheckoutPullRequestHandler_TaskMerging, headBranch));
+					new MergeOperation(repo, headBranch).execute(progress.newChild(1));
 
 					executeCallback(event);
-				} catch (IOException e) {
-					GitHubUi.logError(e);
-				} catch (CoreException e) {
-					GitHubUi.logError(e);
-				} catch (URISyntaxException e) {
-					GitHubUi.logError(e);
-				} catch (InvocationTargetException e) {
+				} catch (IOException | CoreException | URISyntaxException | InvocationTargetException e) {
 					GitHubUi.logError(e);
 				} finally {
 					if (monitor != null) {

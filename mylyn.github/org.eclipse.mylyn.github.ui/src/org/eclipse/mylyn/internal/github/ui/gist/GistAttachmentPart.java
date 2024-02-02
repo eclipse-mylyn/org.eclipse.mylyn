@@ -20,14 +20,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -68,8 +65,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * Gist editor attachment part. Modeled after {@link TaskEditorAttachmentPart}
- * but with less columns.
+ * Gist editor attachment part. Modeled after {@link TaskEditorAttachmentPart} but with less columns.
  */
 @SuppressWarnings("restriction")
 public class GistAttachmentPart extends AbstractTaskEditorPart {
@@ -110,9 +106,9 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 		final Section section = createSection(parent, toolkit, hasIncoming);
 		section.setText(getPartName() + " (" + attachments.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-		if (hasIncoming)
+		if (hasIncoming) {
 			expandSection(toolkit, section);
-		else
+		} else {
 			section.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent event) {
@@ -122,6 +118,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 					}
 				}
 			});
+		}
 		setSection(toolkit, section);
 	}
 
@@ -132,13 +129,12 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 		getTaskEditorPage().registerDefaultDropListener(section);
 
-		if (attachments.size() > 0)
+		if (attachments.size() > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
-		else {
-			Label label = toolkit
-					.createLabel(
-							attachmentsComposite,
-							org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorAttachmentPart_No_attachments);
+		} else {
+			Label label = toolkit.createLabel(
+					attachmentsComposite,
+					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorAttachmentPart_No_attachments);
 			getTaskEditorPage().registerDefaultDropListener(label);
 		}
 
@@ -153,24 +149,24 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	 */
 	@Override
 	public void dispose() {
-		if (menuManager != null)
+		if (menuManager != null) {
 			menuManager.dispose();
+		}
 		super.dispose();
 	}
 
 	@SuppressWarnings("unused")
-	private void createAttachmentTable(FormToolkit toolkit,
-			final Composite attachmentsComposite) {
-		attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI
-				| SWT.FULL_SELECTION);
+	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
+		attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL)
-				.grab(true, false).hint(500, SWT.DEFAULT)
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, false)
+				.hint(500, SWT.DEFAULT)
 				.applyTo(attachmentsTable);
-		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER,
-				FormToolkit.TREE_BORDER);
+		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
@@ -188,18 +184,18 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		TableViewer attachmentsViewer = new TableViewer(attachmentsTable);
 		attachmentsViewer.setUseHashlookup(true);
 		attachmentsViewer.setColumnProperties(attachmentsColumns);
-		ColumnViewerToolTipSupport.enableFor(attachmentsViewer,
-				ToolTip.NO_RECREATE);
+		ColumnViewerToolTipSupport.enableFor(attachmentsViewer, ToolTip.NO_RECREATE);
 
 		attachmentsViewer.setComparator(new GistAttachmentSorter());
 
 		List<ITaskAttachment> attachmentList = new ArrayList<>(
 				attachments.size());
 		for (TaskAttribute attribute : attachments) {
-			ITaskAttachment taskAttachment = new TaskAttachment(getModel()
-					.getTaskRepository(), getModel().getTask(), attribute);
-			getTaskData().getAttributeMapper().updateTaskAttachment(
-					taskAttachment, attribute);
+			ITaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
+					attribute);
+			getTaskData().getAttributeMapper()
+					.updateTaskAttachment(
+							taskAttachment, attribute);
 			attachmentList.add(taskAttachment);
 		}
 		attachmentsViewer.setContentProvider(new ArrayContentProvider());
@@ -208,38 +204,29 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 			@Override
 			public String getColumnText(Object element, int columnIndex) {
-				if (columnIndex > 0)
+				if (columnIndex > 0) {
 					columnIndex++;
+				}
 				return super.getColumnText(element, columnIndex);
 			}
 
 			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
-				if (columnIndex > 0)
+				if (columnIndex > 0) {
 					columnIndex++;
+				}
 				return super.getColumnImage(element, columnIndex);
 			}
 
 		});
-		attachmentsViewer.addOpenListener(new IOpenListener() {
-			@Override
-			public void open(OpenEvent event) {
-				openAttachments(event);
-			}
-		});
+		attachmentsViewer.addOpenListener(this::openAttachments);
 		attachmentsViewer.addSelectionChangedListener(getTaskEditorPage());
 		attachmentsViewer.setInput(attachmentList.toArray());
 
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				TasksUiMenus.fillTaskAttachmentMenu(manager);
-			}
-		});
-		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU,
-				menuManager, attachmentsViewer, true);
+		menuManager.addMenuListener(TasksUiMenus::fillTaskAttachmentMenu);
+		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, true);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
 
@@ -247,44 +234,39 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private File getStateFile() {
-		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin
-				.getDefault().getBundle());
+		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
 		return stateLocation.append("GistAttachmentPart.xml").toFile(); //$NON-NLS-1$
 	}
 
-	private void createButtons(Composite attachmentsComposite,
-			FormToolkit toolkit) {
-		final Composite attachmentControlsComposite = toolkit
-				.createComposite(attachmentsComposite);
+	private void createButtons(Composite attachmentsComposite, FormToolkit toolkit) {
+		final Composite attachmentControlsComposite = toolkit.createComposite(attachmentsComposite);
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(
 				GridData.BEGINNING));
 
-		Button attachFileButton = toolkit
-				.createButton(
-						attachmentControlsComposite,
-						org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorAttachmentPart_Attach_,
-						SWT.PUSH);
-		attachFileButton.setImage(CommonImages
-				.getImage(CommonImages.FILE_PLAIN));
+		Button attachFileButton = toolkit.createButton(
+				attachmentControlsComposite,
+				org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorAttachmentPart_Attach_, SWT.PUSH);
+		attachFileButton.setImage(CommonImages.getImage(CommonImages.FILE_PLAIN));
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(),
-						Mode.DEFAULT, null);
+				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(), Mode.DEFAULT, null);
 			}
 		});
 		getTaskEditorPage().registerDefaultDropListener(attachFileButton);
 	}
 
 	private void initialize() {
-		attachments = getTaskData().getAttributeMapper().getAttributesByType(
-				getTaskData(), TaskAttribute.TYPE_ATTACHMENT);
-		for (TaskAttribute attachmentAttribute : attachments)
+		attachments = getTaskData().getAttributeMapper()
+				.getAttributesByType(
+						getTaskData(), TaskAttribute.TYPE_ATTACHMENT);
+		for (TaskAttribute attachmentAttribute : attachments) {
 			if (getModel().hasIncomingChanges(attachmentAttribute)) {
 				hasIncoming = true;
 				break;
 			}
+		}
 	}
 
 	/**
@@ -295,8 +277,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		Action attachFileAction = new Action() {
 			@Override
 			public void run() {
-				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(),
-						Mode.DEFAULT, null);
+				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(), Mode.DEFAULT, null);
 			}
 		};
 		attachFileAction
@@ -313,19 +294,20 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	protected void openAttachments(OpenEvent event) {
 		List<ITaskAttachment> attachments = new ArrayList<>();
 
-		StructuredSelection selection = (StructuredSelection) event
-				.getSelection();
+		StructuredSelection selection = (StructuredSelection) event.getSelection();
 
 		List<?> items = selection.toList();
-		for (Object item : items)
-			if (item instanceof ITaskAttachment)
+		for (Object item : items) {
+			if (item instanceof ITaskAttachment) {
 				attachments.add((ITaskAttachment) item);
+			}
+		}
 
-		if (attachments.isEmpty())
+		if (attachments.isEmpty()) {
 			return;
+		}
 
-		IWorkbenchPage page = getTaskEditorPage().getSite()
-				.getWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = getTaskEditorPage().getSite().getWorkbenchWindow().getActivePage();
 		try {
 			OpenTaskAttachmentHandler.openAttachments(page, attachments);
 		} catch (OperationCanceledException e) {
@@ -336,7 +318,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	@Override
 	public boolean setFormInput(Object input) {
 		if (input instanceof String) {
-			if (attachments != null)
+			if (attachments != null) {
 				for (TaskAttribute attachmentAttribute : attachments) {
 					if (input.equals(attachmentAttribute.getId())) {
 						CommonFormUtil.setExpanded(
@@ -344,30 +326,29 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 						return selectReveal(attachmentAttribute);
 					}
 				}
+			}
 		}
 		return super.setFormInput(input);
 	}
 
 	/**
-	 * Selects and shows in the table of attachments an attachment matching the
-	 * given {@link TaskAttribute}.
+	 * Selects and shows in the table of attachments an attachment matching the given {@link TaskAttribute}.
 	 *
 	 * @param attachmentAttribute
 	 *            to select
 	 * @return whether an element was found and selected
 	 */
 	public boolean selectReveal(TaskAttribute attachmentAttribute) {
-		if (attachmentAttribute == null || attachmentsTable == null)
+		if (attachmentAttribute == null || attachmentsTable == null) {
 			return false;
+		}
 
 		TableItem[] attachments = attachmentsTable.getItems();
 		int index = 0;
 		for (TableItem attachment : attachments) {
 			Object data = attachment.getData();
-			if (data instanceof ITaskAttachment) {
-				ITaskAttachment attachmentData = ((ITaskAttachment) data);
-				if (attachmentData.getTaskAttribute().getValue()
-						.equals(attachmentAttribute.getValue())) {
+			if (data instanceof ITaskAttachment attachmentData) {
+				if (attachmentData.getTaskAttribute().getValue().equals(attachmentAttribute.getValue())) {
 					attachmentsTable.deselectAll();
 					attachmentsTable.select(index);
 					IManagedForm mform = getManagedForm();

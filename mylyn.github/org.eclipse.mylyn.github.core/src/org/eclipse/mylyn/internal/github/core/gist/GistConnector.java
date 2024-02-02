@@ -49,8 +49,7 @@ public class GistConnector extends RepositoryConnector {
 	 * @return client
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = GitHubClient.createClient(repository
-				.getRepositoryUrl());
+		GitHubClient client = GitHubClient.createClient(repository.getRepositoryUrl());
 		return configureClient(client, repository);
 	}
 
@@ -61,8 +60,7 @@ public class GistConnector extends RepositoryConnector {
 	 * @param repository
 	 * @return client
 	 */
-	public static GitHubClient configureClient(GitHubClient client,
-			TaskRepository repository) {
+	public static GitHubClient configureClient(GitHubClient client, TaskRepository repository) {
 		GitHub.addCredentials(client, repository);
 		return GitHub.configureClient(client);
 	}
@@ -126,20 +124,18 @@ public class GistConnector extends RepositoryConnector {
 	 *      java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public TaskData getTaskData(TaskRepository repository, String taskId,
-			IProgressMonitor monitor) throws CoreException {
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		GistService service = new GistService(createClient(repository));
 		try {
-			TaskAttributeMapper mapper = dataHandler
-					.getAttributeMapper(repository);
+			TaskAttributeMapper mapper = dataHandler.getAttributeMapper(repository);
 			Gist gist = service.getGist(taskId);
-			TaskData data = new TaskData(mapper, getConnectorKind(),
-					repository.getUrl(), gist.getId());
+			TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getId());
 			data.setPartial(false);
 			dataHandler.fillTaskData(repository, data, gist);
-			if (gist.getComments() > 0)
-				dataHandler.fillComments(repository, data,
-						service.getComments(gist.getId()));
+			if (gist.getComments() > 0) {
+				dataHandler.fillComments(repository, data, service.getComments(gist.getId()));
+			}
 			return data;
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
@@ -148,24 +144,19 @@ public class GistConnector extends RepositoryConnector {
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery,
-	 *      org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
-	 *      org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery, org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
+	 *      org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public IStatus performQuery(TaskRepository repository,
-			IRepositoryQuery query, TaskDataCollector collector,
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		GistService service = new GistService(createClient(repository));
 		String user = query.getAttribute(IGistQueryConstants.USER);
 		try {
-			TaskAttributeMapper mapper = dataHandler
-					.getAttributeMapper(repository);
+			TaskAttributeMapper mapper = dataHandler.getAttributeMapper(repository);
 			for (Gist gist : service.getGists(user)) {
-				TaskData data = new TaskData(mapper, getConnectorKind(),
-						repository.getUrl(), gist.getId());
+				TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getId());
 				data.setPartial(true);
 				dataHandler.fillTaskData(repository, data, gist);
 				collector.accept(data);

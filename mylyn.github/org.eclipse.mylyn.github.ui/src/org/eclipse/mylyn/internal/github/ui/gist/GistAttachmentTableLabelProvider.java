@@ -41,15 +41,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Copied from org.eclipse.mylyn.tasks.ui,
- * org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider,
- * commit SHA 70d3be89608a56a87862c30f4f1f2cd98d04a521, and then adapted to
- * compile against Mylyn 3.7 (base version of egit-github) and 3.23 (current
- * version as of 2017).
- *
- * Used in GistAttachmentPart, which previously used the Mylyn-internal
- * AttachmentTableLabelProvider directly. Unfortunately, that class changed
- * in non-compatible ways with Mylyn Tasks 3.23.0.
+ * Copied from org.eclipse.mylyn.tasks.ui, org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider, commit SHA
+ * 70d3be89608a56a87862c30f4f1f2cd98d04a521, and then adapted to compile against Mylyn 3.7 (base version of egit-github) and 3.23 (current
+ * version as of 2017). Used in GistAttachmentPart, which previously used the Mylyn-internal AttachmentTableLabelProvider directly.
+ * Unfortunately, that class changed in non-compatible ways with Mylyn Tasks 3.23.0.
  */
 @SuppressWarnings("restriction")
 public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
@@ -73,12 +68,11 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 	public GistAttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
-		this.imageManager = new LocalResourceManager(JFaceResources.getResources());
+		imageManager = new LocalResourceManager(JFaceResources.getResources());
 	}
 
 	/**
-	 * Determines an appropriate image for the element shown in a particular
-	 * column.
+	 * Determines an appropriate image for the element shown in a particular column.
 	 *
 	 * @param element
 	 *            being shown
@@ -90,9 +84,9 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		if (columnIndex == 0) {
 			if (AttachmentUtil.isContext(attachment)) {
-				return (Image) imageManager.get(TasksUiImages.CONTEXT_TRANSFER);
+				return imageManager.get(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
-				return (Image) imageManager.get(TasksUiImages.TASK_ATTACHMENT_PATCH);
+				return imageManager.get(TasksUiImages.TASK_ATTACHMENT_PATCH);
 			} else {
 				return getFileImage(attachment.getFileName());
 			}
@@ -103,18 +97,15 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 	}
 
 	/**
-	 * Simplified implementation of
-	 * org.eclipse.mylyn.commons.workbench.CommonImageManager#getFileName(String).
-	 * The CommonImageManagerPackage was relocated from package
-	 * org.eclipse.mylyn.internal.provisional.commons.ui some time after Mylyn
-	 * 3.7.
+	 * Simplified implementation of org.eclipse.mylyn.commons.workbench.CommonImageManager#getFileName(String). The
+	 * CommonImageManagerPackage was relocated from package org.eclipse.mylyn.internal.provisional.commons.ui some time after Mylyn 3.7.
 	 *
 	 * @param filename
 	 *            to get an image for
 	 * @return the image
 	 */
 	private Image getFileImage(String filename) {
-		return (Image) imageManager.get(PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(filename));
+		return imageManager.get(PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(filename));
 	}
 
 	/**
@@ -127,15 +118,14 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 	protected Image getAuthorImage(IRepositoryPerson person, TaskRepository repository) {
 		// These two images have been copied from org.eclipse.mylyn.commons.ui; 3.23.0
 		if (repository != null && person != null && person.getPersonId().equals(repository.getUserName())) {
-			return (Image) imageManager.get(GitHubImages.DESC_PERSON_ME);
+			return imageManager.get(GitHubImages.DESC_PERSON_ME);
 		} else {
-			return (Image) imageManager.get(GitHubImages.DESC_PERSON);
+			return imageManager.get(GitHubImages.DESC_PERSON);
 		}
 	}
 
 	/**
-	 * Determines the text to shown in a particular column for a particular
-	 * element. column.
+	 * Determines the text to shown in a particular column for a particular element. column.
 	 *
 	 * @param element
 	 *            being shown
@@ -146,32 +136,33 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 	public String getColumnText(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		switch (columnIndex) {
-		case 0:
-			if (AttachmentUtil.isContext(attachment)) {
-				return org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AttachmentTableLabelProvider_Task_Context;
-			} else if (attachment.isPatch()) {
-				return org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AttachmentTableLabelProvider_Patch;
-			} else {
-				return " " + attachment.getFileName(); //$NON-NLS-1$
-			}
-		case 1:
-			return attachment.getDescription();
-		case 2:
-			long length = attachment.getLength();
-			if (length < 0) {
-				return "-"; //$NON-NLS-1$
-			}
-			return sizeFormatter.format(length);
-		case 3:
-			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
-		case 4:
-			return (attachment.getCreationDate() != null)
+			case 0:
+				if (AttachmentUtil.isContext(attachment)) {
+					return org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AttachmentTableLabelProvider_Task_Context;
+				} else if (attachment.isPatch()) {
+					return org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AttachmentTableLabelProvider_Patch;
+				} else {
+					return " " + attachment.getFileName(); //$NON-NLS-1$
+				}
+			case 1:
+				return attachment.getDescription();
+			case 2:
+				long length = attachment.getLength();
+				if (length < 0) {
+					return "-"; //$NON-NLS-1$
+				}
+				return sizeFormatter.format(length);
+			case 3:
+				return attachment.getAuthor() != null ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
+			case 4:
+				return attachment.getCreationDate() != null
 //					? EditorUtil.formatDateTime(attachment.getCreationDate())
-					? DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(attachment.getCreationDate())
-					: ""; //$NON-NLS-1$
-		case 5:
-			// FIXME add id to ITaskAttachment
-			return getAttachmentId(attachment);
+						? DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+								.format(attachment.getCreationDate())
+						: ""; //$NON-NLS-1$
+			case 5:
+				// FIXME add id to ITaskAttachment
+				return getAttachmentId(attachment);
 		}
 		return "unrecognized column"; //$NON-NLS-1$
 	}

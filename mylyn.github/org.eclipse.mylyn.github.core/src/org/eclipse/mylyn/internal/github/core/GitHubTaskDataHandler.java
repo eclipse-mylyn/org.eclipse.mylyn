@@ -50,11 +50,11 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param repository
 	 * @return task attribute
 	 */
-	protected TaskAttribute setPersonValue(TaskData data,
-			TaskAttribute attribute, User user, TaskRepository repository) {
-		if (user != null)
-			data.getAttributeMapper().setRepositoryPerson(attribute,
-					createPerson(user, repository));
+	protected TaskAttribute setPersonValue(TaskData data, TaskAttribute attribute, User user,
+			TaskRepository repository) {
+		if (user != null) {
+			data.getAttributeMapper().setRepositoryPerson(attribute, createPerson(user, repository));
+		}
 		return attribute;
 	}
 
@@ -65,8 +65,7 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param repository
 	 * @return repository person
 	 */
-	protected IRepositoryPerson createPerson(User user,
-			TaskRepository repository) {
+	protected IRepositoryPerson createPerson(User user, TaskRepository repository) {
 		IRepositoryPerson person = repository.createPerson(user.getLogin());
 		person.setName(user.getName());
 		return person;
@@ -80,10 +79,10 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param date
 	 * @return task attribute
 	 */
-	protected TaskAttribute setDateValue(TaskData data,
-			TaskAttribute attribute, Date date) {
-		if (date != null)
+	protected TaskAttribute setDateValue(TaskData data, TaskAttribute attribute, Date date) {
+		if (date != null) {
 			data.getAttributeMapper().setDateValue(attribute, date);
+		}
 		return attribute;
 	}
 
@@ -94,23 +93,22 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param comments
 	 * @param repository
 	 */
-	protected void addComments(final TaskAttribute parent,
-			final List<Comment> comments, final TaskRepository repository) {
-		if (comments == null || comments.isEmpty())
+	protected void addComments(final TaskAttribute parent, final List<Comment> comments,
+			final TaskRepository repository) {
+		if (comments == null || comments.isEmpty()) {
 			return;
+		}
 
 		int count = 1;
 		for (Comment comment : comments) {
 			TaskCommentMapper commentMapper = new TaskCommentMapper();
-			commentMapper
-					.setAuthor(createPerson(comment.getUser(), repository));
+			commentMapper.setAuthor(createPerson(comment.getUser(), repository));
 			commentMapper.setCreationDate(comment.getCreatedAt());
 			commentMapper.setText(comment.getBody());
 			commentMapper.setCommentId(comment.getUrl());
-			commentMapper.setNumber(Integer.valueOf(count));
+			commentMapper.setNumber(count);
 
-			TaskAttribute attribute = parent
-					.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
+			TaskAttribute attribute = parent.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
 			commentMapper.applyTo(attribute);
 			count++;
 		}
@@ -123,8 +121,7 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param attr
 	 * @return value
 	 */
-	protected String getAttributeValue(TaskData taskData,
-			GitHubAttributeMetadata attr) {
+	protected String getAttributeValue(TaskData taskData, GitHubAttributeMetadata attr) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.getId());
 		return attribute == null ? null : attribute.getValue();
 	}
@@ -136,12 +133,13 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param attribute
 	 * @return created task attribute
 	 */
-	protected TaskAttribute createAttribute(TaskData data,
-			GitHubAttributeMetadata attribute) {
+	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata attribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(attribute.getId());
 		TaskAttributeMetaData metaData = attr.getMetaData();
-		metaData.defaults().setType(attribute.getType())
-				.setKind(attribute.getKind()).setLabel(attribute.getLabel())
+		metaData.defaults()
+				.setType(attribute.getType())
+				.setKind(attribute.getKind())
+				.setLabel(attribute.getLabel())
 				.setReadOnly(attribute.isReadOnly());
 		return attr;
 	}
@@ -154,11 +152,11 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param value
 	 * @return created attribute
 	 */
-	protected TaskAttribute createAttribute(TaskData data,
-			GitHubAttributeMetadata metadata, String value) {
+	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata metadata, String value) {
 		TaskAttribute attr = createAttribute(data, metadata);
-		if (value != null)
+		if (value != null) {
 			data.getAttributeMapper().setValue(attr, value);
+		}
 		return attr;
 	}
 
@@ -170,8 +168,7 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param date
 	 * @return created attribute
 	 */
-	protected TaskAttribute createAttribute(TaskData data,
-			GitHubAttributeMetadata metadata, Date date) {
+	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata metadata, Date date) {
 		return setDateValue(data, createAttribute(data, metadata), date);
 	}
 
@@ -184,11 +181,9 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param repository
 	 * @return created attribute
 	 */
-	protected TaskAttribute createAttribute(TaskData data,
-			GitHubAttributeMetadata metadata, User user,
+	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata metadata, User user,
 			TaskRepository repository) {
-		return setPersonValue(data, createAttribute(data, metadata), user,
-				repository);
+		return setPersonValue(data, createAttribute(data, metadata), user, repository);
 	}
 
 	/**
@@ -198,8 +193,9 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @return created attribute
 	 */
 	protected TaskAttribute createOperationAttribute(TaskData data) {
-		TaskAttribute attribute = data.getRoot().createAttribute(
-				TaskAttribute.OPERATION);
+		TaskAttribute attribute = data.getRoot()
+				.createAttribute(
+						TaskAttribute.OPERATION);
 		attribute.getMetaData().setType(TaskAttribute.TYPE_OPERATION);
 		return attribute;
 	}
@@ -213,35 +209,33 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param isDefault
 	 * @return created task attribute
 	 */
-	protected TaskAttribute addOperation(TaskData data, String id,
-			String label, boolean isDefault) {
+	protected TaskAttribute addOperation(TaskData data, String id, String label, boolean isDefault) {
 		final TaskAttribute root = data.getRoot();
-		TaskAttribute attribute = root
-				.createAttribute(TaskAttribute.PREFIX_OPERATION + id);
+		TaskAttribute attribute = root.createAttribute(TaskAttribute.PREFIX_OPERATION + id);
 		TaskOperation.applyTo(attribute, id, label);
 
-		if (isDefault)
-			TaskOperation.applyTo(root.getAttribute(TaskAttribute.OPERATION),
-					id, label);
+		if (isDefault) {
+			TaskOperation.applyTo(root.getAttribute(TaskAttribute.OPERATION), id, label);
+		}
 		return attribute;
 	}
 
 	/**
-	 * Does the attribute's value in the given task data match the authenticated
-	 * client user?
+	 * Does the attribute's value in the given task data match the authenticated client user?
 	 *
 	 * @param client
 	 * @param metadata
 	 * @param data
 	 * @return true if match, false otherwise
 	 */
-	protected boolean attributeMatchesUser(GitHubClient client,
-			GitHubAttributeMetadata metadata, TaskData data) {
-		if (client == null || metadata == null || data == null)
+	protected boolean attributeMatchesUser(GitHubClient client, GitHubAttributeMetadata metadata, TaskData data) {
+		if (client == null || metadata == null || data == null) {
 			return false;
+		}
 		String user = client.getUser();
-		if (user == null || user.length() == 0)
+		if (user == null || user.length() == 0) {
 			return false;
+		}
 		return metadata.getValue(data).equals(user);
 	}
 
@@ -253,11 +247,11 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @return true if collaborator, false otherwise
 	 * @throws IOException
 	 */
-	protected boolean isCollaborator(GitHubClient client, RepositoryId repo)
-			throws IOException {
+	protected boolean isCollaborator(GitHubClient client, RepositoryId repo) throws IOException {
 		String user = client.getUser();
-		if (user == null || user.length() == 0)
+		if (user == null || user.length() == 0) {
 			return false;
+		}
 		return new CollaboratorService(client).isCollaborator(repo, user);
 	}
 }

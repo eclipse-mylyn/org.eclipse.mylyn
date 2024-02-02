@@ -41,8 +41,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @return gist connector
 	 */
 	public static GistConnector getCoreConnector() {
-		return (GistConnector) TasksUi
-				.getRepositoryConnector(GistConnector.KIND);
+		return (GistConnector) TasksUi.getRepositoryConnector(GistConnector.KIND);
 	}
 
 	/**
@@ -51,8 +50,9 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @return possibly empty set of Gist task repositories
 	 */
 	public static Set<TaskRepository> getRepositories() {
-		return TasksUi.getRepositoryManager().getRepositories(
-				GistConnector.KIND);
+		return TasksUi.getRepositoryManager()
+				.getRepositories(
+						GistConnector.KIND);
 	}
 
 	/**
@@ -84,8 +84,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
 	@Override
-	public IWizard getQueryWizard(TaskRepository taskRepository,
-			IRepositoryQuery queryToEdit) {
+	public IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
 		wizard.addPage(new GistRepositoryQueryPage(taskRepository, queryToEdit));
 		return wizard;
@@ -96,8 +95,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 *      org.eclipse.mylyn.tasks.core.ITaskMapping)
 	 */
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository,
-			ITaskMapping selection) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
 		return new NewTaskWizard(taskRepository, selection);
 	}
 
@@ -114,8 +112,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
 	@Override
-	public ITaskSearchPage getSearchPage(TaskRepository repository,
-			IStructuredSelection selection) {
+	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return new GistRepositoryQueryPage(repository, null);
 	}
 

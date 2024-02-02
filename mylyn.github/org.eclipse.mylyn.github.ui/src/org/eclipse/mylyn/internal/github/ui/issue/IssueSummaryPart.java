@@ -31,8 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * Issue summary task editor part modeled after {@link TaskEditorSummaryPart}
- * but displaying reporter and assignee avatar images.
+ * Issue summary task editor part modeled after {@link TaskEditorSummaryPart} but displaying reporter and assignee avatar images.
  */
 @SuppressWarnings("restriction")
 public class IssueSummaryPart extends AbstractTaskEditorPart {
@@ -60,71 +59,72 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		this.assigneeAvatarId = assigneeAvatarId;
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit,
-			TaskAttribute attribute) {
-		addAttribute(composite, toolkit, attribute,
-				EditorUtil.HEADER_COLUMN_MARGIN);
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
+		addAttribute(composite, toolkit, attribute, EditorUtil.HEADER_COLUMN_MARGIN);
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit,
-			TaskAttribute attribute, int indent) {
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent) {
 		addAttribute(composite, toolkit, attribute, indent, true);
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit,
-			TaskAttribute attribute, int indent, boolean showLabel) {
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
+			boolean showLabel) {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
-		if (editor == null)
+		if (editor == null) {
 			return;
+		}
 
 		editor.setReadOnly(true);
 		editor.setDecorationEnabled(false);
 
 		if (showLabel) {
 			editor.createLabelControl(composite, toolkit);
-			GridDataFactory.defaultsFor(editor.getLabelControl())
-					.indent(indent, 0).applyTo(editor.getLabelControl());
+			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(indent, 0).applyTo(editor.getLabelControl());
 		}
 
-		if (isAttribute(attribute, TaskAttribute.DATE_MODIFICATION)
-				&& editor instanceof DateAttributeEditor)
+		if (isAttribute(attribute, TaskAttribute.DATE_MODIFICATION) && editor instanceof DateAttributeEditor) {
 			((DateAttributeEditor) editor).setShowTime(true);
+		}
 
 		editor.createControl(composite, toolkit);
 		getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 	}
 
 	private boolean isAttribute(TaskAttribute attribute, String id) {
-		return attribute
-				.getId()
-				.equals(attribute.getTaskData().getAttributeMapper()
+		return attribute.getId()
+				.equals(attribute.getTaskData()
+						.getAttributeMapper()
 						.mapToRepositoryKey(attribute.getParentAttribute(), id));
 	}
 
 	private void addSummaryText(Composite composite, final FormToolkit toolkit) {
-		TaskAttribute summaryAttrib = getTaskData().getRoot()
-				.getMappedAttribute(TaskAttribute.SUMMARY);
+		TaskAttribute summaryAttrib = getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		summaryEditor = createAttributeEditor(summaryAttrib);
-		if (summaryEditor == null)
+		if (summaryEditor == null) {
 			return;
+		}
 
-		if (summaryAttrib.getMetaData().isReadOnly())
+		if (summaryAttrib.getMetaData().isReadOnly()) {
 			summaryEditor.setReadOnly(true);
+		}
 
 		if (summaryEditor instanceof RichTextAttributeEditor) {
-			Composite roundedBorder = EditorUtil.createBorder(composite,
-					toolkit, !summaryEditor.isReadOnly());
+			Composite roundedBorder = EditorUtil.createBorder(composite, toolkit, !summaryEditor.isReadOnly());
 			summaryEditor.createControl(roundedBorder, toolkit);
 			EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 		} else {
 			final Composite border = toolkit.createComposite(composite);
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING)
+			GridDataFactory.fillDefaults()
+					.align(SWT.FILL, SWT.BEGINNING)
 					.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
-					.grab(true, false).applyTo(border);
+					.grab(true, false)
+					.applyTo(border);
 			GridLayoutFactory.fillDefaults().margins(1, 4).applyTo(border);
 			summaryEditor.createControl(border, toolkit);
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)
-					.grab(true, false).applyTo(summaryEditor.getControl());
+			GridDataFactory.fillDefaults()
+					.align(SWT.FILL, SWT.CENTER)
+					.grab(true, false)
+					.applyTo(summaryEditor.getControl());
 			toolkit.paintBordersFor(border);
 		}
 		getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
@@ -138,13 +138,13 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		return getTaskData().getRoot().getAttribute(id);
 	}
 
-	private boolean addAvatarPart(Composite parent, FormToolkit toolkit,
-			TaskAttribute avatarAttribute, IRepositoryPerson person) {
-		if (avatarAttribute == null || avatarAttribute.getValue().length() == 0)
+	private boolean addAvatarPart(Composite parent, FormToolkit toolkit, TaskAttribute avatarAttribute,
+			IRepositoryPerson person) {
+		if (avatarAttribute == null || avatarAttribute.getValue().length() == 0) {
 			return false;
+		}
 
-		AvatarLabel label = new AvatarLabel(GitHubUi.getDefault().getStore(),
-				person, avatarAttribute);
+		AvatarLabel label = new AvatarLabel(GitHubUi.getDefault().getStore(), person, avatarAttribute);
 		label.create(parent, toolkit);
 		return true;
 	}
@@ -168,53 +168,45 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 		TaskAttribute reporter = getAttribute(TaskAttribute.USER_REPORTER);
 		if (reporter != null) {
-			IRepositoryPerson person = getTaskData().getAttributeMapper()
-					.getRepositoryPerson(reporter);
-			if (reporterAvatarId != null
-					&& addAvatarPart(composite, toolkit,
-							getAttribute(reporterAvatarId), person))
+			IRepositoryPerson person = getTaskData().getAttributeMapper().getRepositoryPerson(reporter);
+			if (reporterAvatarId != null && addAvatarPart(composite, toolkit, getAttribute(reporterAvatarId), person)) {
 				layout.numColumns++;
+			}
 		}
 		addSummaryText(composite, toolkit);
 
 		TaskAttribute assignee = getAttribute(IssueAttribute.ASSIGNEE);
 		if (assignee != null) {
-			IRepositoryPerson person = getTaskData().getAttributeMapper()
-					.getRepositoryPerson(assignee);
-			if (this.assigneeAvatarId != null
-					&& addAvatarPart(composite, toolkit,
-							getAttribute(this.assigneeAvatarId), person))
+			IRepositoryPerson person = getTaskData().getAttributeMapper().getRepositoryPerson(assignee);
+			if (assigneeAvatarId != null && addAvatarPart(composite, toolkit, getAttribute(assigneeAvatarId), person)) {
 				layout.numColumns++;
+			}
 		}
 
-		if (needsHeader())
+		if (needsHeader()) {
 			createHeaderLayout(composite, toolkit);
+		}
 
 		toolkit.paintBordersFor(composite);
 		setControl(composite);
 	}
 
-	private Composite createHeaderLayout(Composite composite,
-			FormToolkit toolkit) {
+	private Composite createHeaderLayout(Composite composite, FormToolkit toolkit) {
 		Composite headerComposite = toolkit.createComposite(composite);
 		GridLayout layout = new GridLayout(1, false);
 		layout.verticalSpacing = 1;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		headerComposite.setLayout(layout);
-		GridDataFactory.fillDefaults().grab(true, false)
-				.applyTo(headerComposite);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComposite);
 
 		TaskAttribute root = getTaskData().getRoot();
 
-		addAttribute(headerComposite, toolkit,
-				root.getMappedAttribute(TaskAttribute.STATUS), 0);
+		addAttribute(headerComposite, toolkit, root.getMappedAttribute(TaskAttribute.STATUS), 0);
 
-		addAttribute(headerComposite, toolkit,
-				root.getMappedAttribute(TaskAttribute.DATE_CREATION));
+		addAttribute(headerComposite, toolkit, root.getMappedAttribute(TaskAttribute.DATE_CREATION));
 
-		addAttribute(headerComposite, toolkit,
-				root.getMappedAttribute(TaskAttribute.DATE_MODIFICATION));
+		addAttribute(headerComposite, toolkit, root.getMappedAttribute(TaskAttribute.DATE_MODIFICATION));
 
 		// ensure layout does not wrap
 		layout.numColumns = headerComposite.getChildren().length;
@@ -236,7 +228,8 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 	 */
 	@Override
 	public void setFocus() {
-		if (summaryEditor != null)
+		if (summaryEditor != null) {
 			summaryEditor.getControl().setFocus();
+		}
 	}
 }

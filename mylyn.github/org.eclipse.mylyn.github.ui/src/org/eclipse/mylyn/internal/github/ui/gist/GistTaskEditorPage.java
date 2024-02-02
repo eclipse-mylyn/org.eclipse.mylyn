@@ -46,17 +46,16 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		setNeedsSubmitButton(true);
 	}
 
-	private CommandContributionItem createCommandContributionItem(
-			String commandId) {
+	private CommandContributionItem createCommandContributionItem(String commandId) {
 		CommandContributionItemParameter parameter = new CommandContributionItemParameter(
-				getSite(), commandId, commandId,
-				CommandContributionItem.STYLE_PUSH);
+				getSite(), commandId, commandId, CommandContributionItem.STYLE_PUSH);
 		return new CommandContributionItem(parameter);
 	}
 
 	private void addCloneAction(IToolBarManager manager) {
-		if (TasksUiUtil.isOutgoingNewTask(getTask(), GistConnector.KIND))
+		if (TasksUiUtil.isOutgoingNewTask(getTask(), GistConnector.KIND)) {
 			return;
+		}
 		manager.prependToGroup(
 				"open", createCommandContributionItem(CloneGistHandler.ID)); //$NON-NLS-1$
 	}
@@ -75,25 +74,22 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 	 */
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> partDescriptors = super
-				.createPartDescriptors();
-		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors
-				.iterator();
+		Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
+		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
 			String id = partDescriptor.getId();
-			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)
-					|| id.equals(ID_PART_ATTACHMENTS)
-					|| id.equals(ID_PART_ACTIONS))
+			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY) || id.equals(ID_PART_ATTACHMENTS)
+					|| id.equals(ID_PART_ACTIONS)) {
 				descriptorIt.remove();
+			}
 		}
 		if (!getModel().getTaskData().isNew()) {
 			partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
 				@Override
 				public AbstractTaskEditorPart createPart() {
-					return new IssueSummaryPart(GistAttribute.AUTHOR_GRAVATAR
-							.getMetadata().getId(), null);
+					return new IssueSummaryPart(GistAttribute.AUTHOR_GRAVATAR.getMetadata().getId(), null);
 				}
 			}.setPath(PATH_HEADER));
 			partDescriptors.add(new TaskEditorPartDescriptor(
@@ -112,8 +108,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 				return new TaskEditorActionPart() {
 
 					@Override
-					protected void addAttachContextButton(
-							Composite buttonComposite, FormToolkit toolkit) {
+					protected void addAttachContextButton(Composite buttonComposite, FormToolkit toolkit) {
 						// Prohibit context button since Gists don't support
 						// binary attachments
 					}

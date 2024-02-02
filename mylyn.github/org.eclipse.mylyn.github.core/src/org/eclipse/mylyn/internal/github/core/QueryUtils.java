@@ -38,18 +38,20 @@ public abstract class QueryUtils {
 	 * @param values
 	 * @param query
 	 */
-	public static void setAttribute(String key, Collection<String> values,
-			IRepositoryQuery query) {
-		if (key == null || query == null)
+	public static void setAttribute(String key, Collection<String> values, IRepositoryQuery query) {
+		if (key == null || query == null) {
 			return;
+		}
 
 		if (values != null && !values.isEmpty()) {
 			StringBuilder value = new StringBuilder();
-			for (String entry : values)
+			for (String entry : values) {
 				value.append(entry).append(DELIMITER);
+			}
 			query.setAttribute(key, value.toString());
-		} else
+		} else {
 			query.setAttribute(key, null);
+		}
 
 	}
 
@@ -61,18 +63,22 @@ public abstract class QueryUtils {
 	 * @return non-null but possibly empty list
 	 */
 	public static List<String> getAttributes(String key, IRepositoryQuery query) {
-		if (key == null || query == null)
+		if (key == null || query == null) {
 			return Collections.emptyList();
+		}
 
 		String attribute = query.getAttribute(key);
-		if (attribute == null || attribute.length() == 0)
+		if (attribute == null || attribute.length() == 0) {
 			return Collections.emptyList();
+		}
 
 		List<String> attrs = new LinkedList<>();
 		String[] values = attribute.split(DELIMITER);
-		for (String value : values)
-			if (value.length() > 0)
+		for (String value : values) {
+			if (value.length() > 0) {
 				attrs.add(value);
+			}
+		}
 
 		return attrs;
 	}

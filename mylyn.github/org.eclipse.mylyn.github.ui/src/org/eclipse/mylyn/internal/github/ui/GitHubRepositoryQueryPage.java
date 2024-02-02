@@ -19,15 +19,13 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 /**
  * Base repository query page
  */
-public abstract class GitHubRepositoryQueryPage extends
-		AbstractRepositoryQueryPage {
+public abstract class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 	/**
 	 * @param pageName
 	 * @param taskRepository
 	 */
-	public GitHubRepositoryQueryPage(String pageName,
-			TaskRepository taskRepository) {
+	public GitHubRepositoryQueryPage(String pageName, TaskRepository taskRepository) {
 		super(pageName, taskRepository);
 	}
 
@@ -36,8 +34,7 @@ public abstract class GitHubRepositoryQueryPage extends
 	 * @param taskRepository
 	 * @param query
 	 */
-	public GitHubRepositoryQueryPage(String pageName,
-			TaskRepository taskRepository, IRepositoryQuery query) {
+	public GitHubRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName, taskRepository, query);
 	}
 
@@ -45,8 +42,9 @@ public abstract class GitHubRepositoryQueryPage extends
 	public void setPageComplete(boolean complete) {
 		super.setPageComplete(complete);
 		// Forward completeness to search container if applicable
-		if (inSearchContainer())
+		if (inSearchContainer()) {
 			getSearchContainer().setPerformActionEnabled(complete);
+		}
 	}
 
 }

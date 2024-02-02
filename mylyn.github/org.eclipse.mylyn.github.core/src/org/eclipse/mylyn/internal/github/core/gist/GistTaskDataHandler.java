@@ -60,8 +60,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param comments
 	 * @return specified task data
 	 */
-	public TaskData fillComments(TaskRepository repository, TaskData data,
-			List<Comment> comments) {
+	public TaskData fillComments(TaskRepository repository, TaskData data, List<Comment> comments) {
 		addComments(data.getRoot(), comments, repository);
 		return data;
 	}
@@ -85,49 +84,48 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param gist
 	 * @return specified task data
 	 */
-	public TaskData fillTaskData(TaskRepository repository, TaskData data,
-			Gist gist) {
+	public TaskData fillTaskData(TaskRepository repository, TaskData data, Gist gist) {
 		boolean isOwner = isOwner(repository, gist.getOwner());
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
 		TaskAttribute key = GistAttribute.KEY.getMetadata().create(data);
 		mapper.setValue(key, gist.getId());
 
-		TaskAttribute description = GistAttribute.DESCRIPTION.getMetadata()
-				.create(data);
+		TaskAttribute description = GistAttribute.DESCRIPTION.getMetadata().create(data);
 		description.getMetaData().setReadOnly(!isOwner);
 		String gistDescription = gist.getDescription();
-		if (gistDescription != null)
+		if (gistDescription != null) {
 			mapper.setValue(description, gistDescription);
+		}
 
-		TaskAttribute created = GistAttribute.CREATED.getMetadata()
-				.create(data);
+		TaskAttribute created = GistAttribute.CREATED.getMetadata().create(data);
 		mapper.setDateValue(created, gist.getCreatedAt());
 
-		TaskAttribute updated = GistAttribute.UPDATED.getMetadata()
-				.create(data);
+		TaskAttribute updated = GistAttribute.UPDATED.getMetadata().create(data);
 		mapper.setDateValue(updated, gist.getUpdatedAt());
 
 		TaskAttribute url = GistAttribute.URL.getMetadata().create(data);
 		url.setValue(gist.getHtmlUrl());
 
-		TaskAttribute cloneUrl = GistAttribute.CLONE_URL.getMetadata().create(
-				data);
-		if (isOwner)
+		TaskAttribute cloneUrl = GistAttribute.CLONE_URL.getMetadata()
+				.create(
+						data);
+		if (isOwner) {
 			cloneUrl.setValue(gist.getGitPushUrl());
-		else
+		} else {
 			cloneUrl.setValue(gist.getGitPullUrl());
+		}
 
 		IRepositoryPerson reporterPerson = null;
 		User owner = gist.getOwner();
 		if (owner != null) {
-			TaskAttribute reporter = GistAttribute.AUTHOR.getMetadata().create(
-					data);
+			TaskAttribute reporter = GistAttribute.AUTHOR.getMetadata()
+					.create(
+							data);
 			reporterPerson = createPerson(owner, repository);
 			mapper.setRepositoryPerson(reporter, reporterPerson);
 
-			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR
-					.getMetadata().create(data);
+			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR.getMetadata().create(data);
 			mapper.setValue(gravatar, owner.getAvatarUrl());
 		}
 
@@ -142,16 +140,16 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 				TaskAttachmentMapper attachmentMapper = new TaskAttachmentMapper();
 				attachmentMapper.setFileName(file.getFilename());
 				attachmentMapper.setReplaceExisting(Boolean.TRUE);
-				attachmentMapper.setLength(Long.valueOf(file.getSize()));
+				attachmentMapper.setLength((long) file.getSize());
 				attachmentMapper.setPatch(Boolean.FALSE);
 				attachmentMapper.setAuthor(reporterPerson);
 				attachmentMapper.setAttachmentId(file.getFilename());
-				TaskAttribute attribute = data.getRoot().createAttribute(
-						TaskAttribute.PREFIX_ATTACHMENT + count);
+				TaskAttribute attribute = data.getRoot()
+						.createAttribute(
+								TaskAttribute.PREFIX_ATTACHMENT + count);
 				attachmentMapper.applyTo(attribute);
 
-				GistAttribute.RAW_FILE_URL.getMetadata().create(attribute)
-						.setValue(file.getRawUrl());
+				GistAttribute.RAW_FILE_URL.getMetadata().create(attribute).setValue(file.getRawUrl());
 
 				count++;
 			}
@@ -159,10 +157,8 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 		GistAttribute.COMMENT_NEW.getMetadata().create(data);
 
-		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata()
-				.create(data);
-		mapper.setValue(summary,
-				generateSummary(fileCount, sizeCount, gist.getDescription()));
+		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata().create(data);
+		mapper.setValue(summary, generateSummary(fileCount, sizeCount, gist.getDescription()));
 
 		return data;
 	}
@@ -179,8 +175,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 				// Break on last whitespace if maximum length is in the middle
 				// of a word
 				if (!Character.isWhitespace(desc.charAt(SUMMARY_LENGTH))
-						&& !Character.isWhitespace(desc
-								.charAt(SUMMARY_LENGTH - 1))) {
+						&& !Character.isWhitespace(desc.charAt(SUMMARY_LENGTH - 1))) {
 					int lastWhitespace = desc.lastIndexOf(' ');
 					if (lastWhitespace > 0) {
 						desc = desc.substring(0, lastWhitespace);
@@ -198,8 +193,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		}
 		if (files != 1) {
 			summaryText.append(MessageFormat.format(
-					Messages.GistTaskDataHandler_FilesMultiple,
-					Integer.valueOf(files)));
+					Messages.GistTaskDataHandler_FilesMultiple, Integer.valueOf(files)));
 		} else {
 			summaryText.append(Messages.GistTaskDataHandler_FilesSingle);
 		}
@@ -208,44 +202,37 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	}
 
 	private String formatSize(long size) {
-		if (size == 1)
+		if (size == 1) {
 			return Messages.GistTaskDataHandler_SizeByte;
-		else if (size < 1024)
-			return new DecimalFormat(Messages.GistTaskDataHandler_SizeBytes)
-					.format(size);
-		else if (size >= 1024 && size <= 1048575)
-			return new DecimalFormat(Messages.GistTaskDataHandler_SizeKilobytes)
-					.format(size / 1024.0);
-		else if (size >= 1048576 && size <= 1073741823)
-			return new DecimalFormat(Messages.GistTaskDataHandler_SizeMegabytes)
-					.format(size / 1048576.0);
-		else
-			return new DecimalFormat(Messages.GistTaskDataHandler_SizeGigabytes)
-					.format(size / 1073741824.0);
+		} else if (size < 1024) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeBytes).format(size);
+		} else if (size >= 1024 && size <= 1048575) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeKilobytes).format(size / 1024.0);
+		} else if (size >= 1048576 && size <= 1073741823) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeMegabytes).format(size / 1048576.0);
+		} else {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeGigabytes).format(size / 1073741824.0);
+		}
 	}
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#postTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.data.TaskData, java.util.Set,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 *      org.eclipse.mylyn.tasks.core.data.TaskData, java.util.Set, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public RepositoryResponse postTaskData(TaskRepository repository,
-			TaskData taskData, Set<TaskAttribute> oldAttributes,
-			IProgressMonitor monitor) throws CoreException {
+	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
+			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		RepositoryResponse response = null;
 
 		Gist gist = new Gist();
 		GitHubClient client = GistConnector.createClient(repository);
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
+		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
 			if (Boolean.parseBoolean(repository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))
 					|| Boolean.parseBoolean(repository.getProperty(GitHub.PROPERTY_USE_TOKEN))) {
 				client.setOAuth2Token(credentials.getPassword());
 			} else {
-				client.setCredentials(credentials.getUserName(),
-						credentials.getPassword());
+				client.setCredentials(credentials.getUserName(), credentials.getPassword());
 			}
 			gist.setOwner(new User().setLogin(credentials.getUserName()));
 		}
@@ -262,42 +249,39 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 			} catch (IOException e) {
 				throw new CoreException(GitHub.createWrappedStatus(e));
 			}
-			response = new RepositoryResponse(ResponseKind.TASK_CREATED,
-					gist.getId());
+			response = new RepositoryResponse(ResponseKind.TASK_CREATED, gist.getId());
 		} else {
 			try {
 				String newComment = root.getAttribute(
-						GistAttribute.COMMENT_NEW.getMetadata().getId())
-						.getValue();
-				if (newComment.length() > 0)
+						GistAttribute.COMMENT_NEW.getMetadata().getId()).getValue();
+				if (newComment.length() > 0) {
 					service.createComment(taskData.getTaskId(), newComment);
-				String author = GistAttribute.AUTHOR.getMetadata().getValue(
-						taskData);
-				if (isOwner(repository, author))
+				}
+				String author = GistAttribute.AUTHOR.getMetadata()
+						.getValue(
+								taskData);
+				if (isOwner(repository, author)) {
 					service.updateGist(gist);
+				}
 			} catch (IOException e) {
 				throw new CoreException(GitHub.createWrappedStatus(e));
 			}
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED,
-					taskData.getTaskId());
+			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
 		return response;
 	}
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.data.TaskData,
-	 *      org.eclipse.mylyn.tasks.core.ITaskMapping,
+	 *      org.eclipse.mylyn.tasks.core.data.TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public boolean initializeTaskData(TaskRepository repository, TaskData data,
-			ITaskMapping initializationData, IProgressMonitor monitor)
-			throws CoreException {
+	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
+			IProgressMonitor monitor) throws CoreException {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
-		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata()
-				.create(data);
+		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata().create(data);
 		mapper.setValue(summary, Messages.GistTaskDataHandler_SummaryNewGist);
 		GistAttribute.DESCRIPTION.getMetadata().create(data);
 
@@ -305,33 +289,31 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	}
 
 	/**
-	 * Is the given Gist author the same user as configured via the task
-	 * repository's credentials?
+	 * Is the given Gist author the same user as configured via the task repository's credentials?
 	 *
 	 * @param repository
 	 * @param author
 	 * @return true if owner, false otherwise
 	 */
 	protected boolean isOwner(TaskRepository repository, User author) {
-		if (author == null)
+		if (author == null) {
 			return false;
+		}
 		return isOwner(repository, author.getLogin());
 	}
 
 	/**
-	 * Is the given Gist author the same user as configured via the task
-	 * repository's credentials?
+	 * Is the given Gist author the same user as configured via the task repository's credentials?
 	 *
 	 * @param repository
 	 * @param author
 	 * @return true if owner, false otherwise
 	 */
 	protected boolean isOwner(TaskRepository repository, String author) {
-		AuthenticationCredentials creds = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (creds == null)
+		AuthenticationCredentials creds = repository.getCredentials(AuthenticationType.REPOSITORY);
+		if (creds == null) {
 			return false;
-		return author != null && author.length() > 0
-				&& author.equals(creds.getUserName());
+		}
+		return author != null && author.length() > 0 && author.equals(creds.getUserName());
 	}
 }
