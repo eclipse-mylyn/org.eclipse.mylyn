@@ -70,6 +70,7 @@ public class ArtifactsLabelProvider extends LabelProvider implements IStyledLabe
 		return super.getText(element);
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getText(element);
 		if (text != null) {

@@ -53,7 +53,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	private IBuildServer original;
 
 	public BuildServerWizard(IBuildServer server) {
-		this.original = server;
+		original = server;
 		setNeedsProgressMonitor(true);
 		if (isNew()) {
 			setWindowTitle("New Build Server");
@@ -66,8 +66,8 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * We use this method when the wizard instance has been created by means of the extension point mechanism and need
-	 * to set initial build server data.
+	 * We use this method when the wizard instance has been created by means of the extension point mechanism and need to set initial build
+	 * server data.
 	 *
 	 * @param server
 	 *            the build server
@@ -104,6 +104,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		return model;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// ignore
 	}
@@ -139,13 +140,13 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		List<IBuildPlan> selectedPlans = ((BuildServerWizardPage) getPages()[0]).getSelectedPlans();
 
 		Set<String> oldPlanIds = BuildsUiInternal.toSetOfIds(oldPlans);
-		HashSet<String> toRemovePlanIds = new HashSet<String>(oldPlanIds);
+		HashSet<String> toRemovePlanIds = new HashSet<>(oldPlanIds);
 		Set<String> toAddPlanIds = BuildsUiInternal.toSetOfIds(selectedPlans);
 		toRemovePlanIds.removeAll(toAddPlanIds);
 		toAddPlanIds.removeAll(oldPlanIds);
 
 		if (toAddPlanIds.size() > 0) {
-			List<IBuildPlan> addPlans = new ArrayList<IBuildPlan>(toAddPlanIds.size());
+			List<IBuildPlan> addPlans = new ArrayList<>(toAddPlanIds.size());
 			for (IBuildPlan plan : selectedPlans) {
 				if (toAddPlanIds.contains(plan.getId())) {
 					((BuildPlan) plan).setServer(original);
@@ -156,7 +157,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		}
 
 		if (toRemovePlanIds.size() > 0) {
-			List<IBuildPlan> removePlans = new ArrayList<IBuildPlan>(toRemovePlanIds.size());
+			List<IBuildPlan> removePlans = new ArrayList<>(toRemovePlanIds.size());
 			for (IBuildPlan plan : oldPlans) {
 				if (toRemovePlanIds.contains(plan.getId())) {
 					removePlans.add(plan);

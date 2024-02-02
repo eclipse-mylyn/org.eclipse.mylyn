@@ -37,7 +37,7 @@ public class JenkinsLoginForm {
 
 	public UrlEncodedFormEntity createEntity() throws UnsupportedEncodingException {
 		// set form content
-		List<NameValuePair> requestParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> requestParameters = new ArrayList<>();
 		requestParameters.add(new BasicNameValuePair("j_username", j_username)); //$NON-NLS-1$
 		requestParameters.add(new BasicNameValuePair("j_password", j_password)); //$NON-NLS-1$
 		requestParameters.add(new BasicNameValuePair("from", from)); //$NON-NLS-1$

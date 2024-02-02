@@ -25,15 +25,18 @@ public class UrlPatternMatchListener implements IPatternMatchListenerDelegate {
 
 	private TextConsole console;
 
+	@Override
 	public void connect(TextConsole console) {
 		this.console = console;
 	}
 
+	@Override
 	public void disconnect() {
 		// ignore
 
 	}
 
+	@Override
 	public void matchFound(PatternMatchEvent event) {
 		try {
 			int offset = event.getOffset();

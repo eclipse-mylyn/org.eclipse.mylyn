@@ -64,11 +64,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 			Action openAction = new Action() {
 				@Override
 				public void run() {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							BuildsUiUtil.openPropertiesDialog(server);
-						}
-					});
+					Display.getDefault().asyncExec(() -> BuildsUiUtil.openPropertiesDialog(server));
 				}
 			};
 			openAction.setText(NLS.bind("Properties for {0}", server.getLocation().getLabel()));
@@ -82,7 +78,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 		CommandContributionItemParameter parm = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
 				RepositoryUi.ID_VIEW_REPOSITORIES, IWorkbenchCommandConstants.VIEWS_SHOW_VIEW,
 				CommandContributionItem.STYLE_PUSH);
-		Map<String, String> targetId = new HashMap<String, String>();
+		Map<String, String> targetId = new HashMap<>();
 		targetId.put(IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
 		parm.parameters = targetId;
 		parm.label = "Show Repositories View";
@@ -93,6 +89,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 		return new CommandContributionItem(parm);
 	}
 
+	@Override
 	public void dispose() {
 		if (menu != null) {
 			menu.dispose();
@@ -104,12 +101,14 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		initMenuManager();
 		menu = manager.createContextMenu(parent);
 		return menu;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		initMenuManager();
 		menu = new Menu(parent);

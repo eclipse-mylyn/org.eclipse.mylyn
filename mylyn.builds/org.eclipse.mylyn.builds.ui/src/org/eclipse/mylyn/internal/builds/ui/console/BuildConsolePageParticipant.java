@@ -26,10 +26,12 @@ public class BuildConsolePageParticipant implements IConsolePageParticipant {
 
 	private CloseConsoleAction closeAction;
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
 
+	@Override
 	public void init(IPageBookViewPage page, IConsole console) {
 		closeAction = new CloseConsoleAction(console);
 
@@ -37,14 +39,17 @@ public class BuildConsolePageParticipant implements IConsolePageParticipant {
 		manager.appendToGroup(IConsoleConstants.LAUNCH_GROUP, closeAction);
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void activated() {
 		// ignore
 	}
 
+	@Override
 	public void deactivated() {
 		// ignore
 	}

@@ -72,12 +72,11 @@ public class OpenHandler extends AbstractHandler {
 	}
 
 	public static List<EditorHandle> open(IWorkbenchPage page, List<? extends IBuildElement> elements) {
-		List<EditorHandle> handles = new ArrayList<EditorHandle>();
+		List<EditorHandle> handles = new ArrayList<>();
 		for (IBuildElement element : elements) {
 			// open last build in case of build plans
 			IBuildElement openElement = null;
-			if (element instanceof IBuildPlan) {
-				IBuildPlan plan = (IBuildPlan) element;
+			if (element instanceof IBuildPlan plan) {
 				if (plan.getLastBuild() != null) {
 					openElement = plan.getLastBuild();
 				}
@@ -126,6 +125,7 @@ public class OpenHandler extends AbstractHandler {
 		return element.getName() == null;
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		IWorkbenchPage page = window.getActivePage();

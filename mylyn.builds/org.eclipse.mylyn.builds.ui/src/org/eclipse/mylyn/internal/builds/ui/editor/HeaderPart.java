@@ -31,7 +31,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 public class HeaderPart extends AbstractBuildEditorPart {
 
 	public HeaderPart() {
-		this.span = 2;
+		span = 2;
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		if (build.getStatus() != null) {
 			return build.getStatus().getLabel();
 		}
-		return (build.getState() == BuildState.RUNNING) ? Messages.HeaderPart_Running : Messages.HeaderPart_Unknown;
+		return build.getState() == BuildState.RUNNING ? Messages.HeaderPart_Running : Messages.HeaderPart_Unknown;
 	}
 
 	@Override

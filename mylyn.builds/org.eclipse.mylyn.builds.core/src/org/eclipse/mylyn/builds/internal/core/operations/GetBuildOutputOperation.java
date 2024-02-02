@@ -66,18 +66,16 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 		Assert.isNotNull(reader);
 		this.build = build;
 		this.reader = reader;
-		this.server = (BuildServer) build.getServer();
+		server = (BuildServer) build.getServer();
 	}
 
 	public void doGetOutput(IBuild build, IOperationMonitor monitor) throws CoreException {
 		try {
 			Reader in = server.getBehaviour().getConsole(build, monitor);
-			try {
+			try (in) {
 				BuildOutputEvent event = new BuildOutputEvent();
 				event.input = new BufferedReader(in);
 				reader.handle(event, monitor);
-			} finally {
-				in.close();
 			}
 		} catch (IOException e) {
 			throw new CoreException(

@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of
- * the model. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of the model. <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -122,8 +122,7 @@ public interface IBuildFactory {
 	IUser createUser();
 
 	/**
-	 * Returns a new object of class '<em>Choice Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Returns a new object of class '<em>Choice Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Choice Parameter Definition</em>'.
 	 * @generated
@@ -131,8 +130,7 @@ public interface IBuildFactory {
 	IChoiceParameterDefinition createChoiceParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Boolean Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Returns a new object of class '<em>Boolean Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Boolean Parameter Definition</em>'.
 	 * @generated
@@ -156,8 +154,7 @@ public interface IBuildFactory {
 	IPlanParameterDefinition createPlanParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Password Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Returns a new object of class '<em>Password Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Password Parameter Definition</em>'.
 	 * @generated
@@ -173,8 +170,7 @@ public interface IBuildFactory {
 	IBuildParameterDefinition createBuildParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>String Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Returns a new object of class '<em>String Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>String Parameter Definition</em>'.
 	 * @generated

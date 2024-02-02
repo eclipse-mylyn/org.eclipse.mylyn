@@ -14,8 +14,6 @@ package org.eclipse.mylyn.builds.tests.operations;
 
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildFactory;
@@ -25,6 +23,8 @@ import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.tests.support.BuildHarness;
 import org.eclipse.mylyn.builds.tests.support.MockBuildServerBehaviour;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

@@ -86,6 +86,7 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 		intervalText.setEnabled(enableRefreshButton.getSelection());
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// ignore
 	}

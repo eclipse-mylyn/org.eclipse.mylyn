@@ -35,8 +35,7 @@ public abstract class BuildConnector {
 	 * Returns a class that describes the behavior for location.
 	 * 
 	 * @param location
-	 *            the location of the build server; guaranteed to have a connector kind that matches the kind of this
-	 *            connector
+	 *            the location of the build server; guaranteed to have a connector kind that matches the kind of this connector
 	 * @return an instance that implements the behavior for location
 	 * @throws CoreException
 	 *             thrown in case of an error
@@ -44,8 +43,7 @@ public abstract class BuildConnector {
 	public abstract BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException;
 
 	/**
-	 * Returns an element that is described by <code>url</code> or <code>null</code> if url is not associated with
-	 * <code>server</code>.
+	 * Returns an element that is described by <code>url</code> or <code>null</code> if url is not associated with <code>server</code>.
 	 * 
 	 * @param server
 	 *            the build server; guaranteed to have a connector kind that matches the kind of this connector

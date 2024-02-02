@@ -15,8 +15,6 @@ package org.eclipse.mylyn.jenkins.tests.integration;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
@@ -29,6 +27,8 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.jenkins.core.JenkinsCore;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

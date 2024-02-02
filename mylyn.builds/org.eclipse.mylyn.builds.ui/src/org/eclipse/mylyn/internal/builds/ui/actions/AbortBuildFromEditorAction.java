@@ -33,15 +33,13 @@ public class AbortBuildFromEditorAction extends AbortBuildAction {
 	private final BuildEditor editor;
 
 	public AbortBuildFromEditorAction(BuildEditor editor) {
-		super();
 		this.editor = editor;
 	}
 
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
-		if (selection instanceof IBuild) {
-			IBuild build = (IBuild) selection;
+		if (selection instanceof IBuild build) {
 			abortBuild(build, editor);
 		}
 	}
@@ -53,21 +51,19 @@ public class AbortBuildFromEditorAction extends AbortBuildAction {
 			@Override
 			public void done(OperationChangeEvent event) {
 				if (event.getStatus().isOK()) {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							IBuildPlan plan = build.getPlan();
-							String label = build.getLabel();
-							EditorHandle handle = new EditorHandle();
-							handle.setPart(editor);
-							GetBuildsRequest request = new GetBuildsRequest(plan, Collections.singletonList(label),
-									Scope.FULL);
-							GetBuildsOperation operation = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
-							operation
-									.addOperationChangeListener(new RefreshBuildEditorOperationListener(build, handle));
-							operation.execute();
-							if (build.getBuildNumber() == plan.getLastBuild().getBuildNumber()) {
-								BuildsUiInternal.getFactory().getRefreshOperation(build).execute();
-							}
+					Display.getDefault().asyncExec(() -> {
+						IBuildPlan plan = build.getPlan();
+						String label = build.getLabel();
+						EditorHandle handle = new EditorHandle();
+						handle.setPart(editor);
+						GetBuildsRequest request = new GetBuildsRequest(plan, Collections.singletonList(label),
+								Scope.FULL);
+						GetBuildsOperation operation1 = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
+						operation1
+								.addOperationChangeListener(new RefreshBuildEditorOperationListener(build, handle));
+						operation1.execute();
+						if (build.getBuildNumber() == plan.getLastBuild().getBuildNumber()) {
+							BuildsUiInternal.getFactory().getRefreshOperation(build).execute();
 						}
 					});
 				}

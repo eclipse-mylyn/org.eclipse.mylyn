@@ -52,8 +52,7 @@ import org.eclipse.mylyn.builds.core.IOperation;
  */
 public abstract class BuildElement extends EObjectImpl implements IBuildElement {
 	/**
-	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getUrl()
 	 * @generated
@@ -71,8 +70,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected String url = URL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -81,8 +79,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -91,8 +88,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOperations() <em>Operations</em>}' attribute list. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOperations() <em>Operations</em>}' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getOperations()
 	 * @generated
@@ -101,8 +97,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected EList<IOperation> operations;
 
 	/**
-	 * The default value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getElementStatus()
 	 * @generated
@@ -111,8 +107,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final IStatus ELEMENT_STATUS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getElementStatus()
 	 * @generated
@@ -121,8 +117,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected IStatus elementStatus = ELEMENT_STATUS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRefreshDate()
 	 * @generated
@@ -131,8 +126,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final Date REFRESH_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRefreshDate()
 	 * @generated
@@ -141,8 +135,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected Date refreshDate = REFRESH_DATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getAttributes()
 	 * @generated
@@ -156,7 +149,6 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * @generated
 	 */
 	protected BuildElement() {
-		super();
 	}
 
 	/**
@@ -174,6 +166,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getUrl() {
 		return url;
 	}
@@ -183,11 +176,13 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__URL, oldUrl, url));
+		}
 	}
 
 	/**
@@ -195,6 +190,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -204,11 +200,13 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__NAME, oldName, name));
+		}
 	}
 
 	/**
@@ -216,9 +214,10 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IOperation> getOperations() {
 		if (operations == null) {
-			operations = new EDataTypeUniqueEList<IOperation>(IOperation.class, this,
+			operations = new EDataTypeUniqueEList<>(IOperation.class, this,
 					BuildPackage.BUILD_ELEMENT__OPERATIONS);
 		}
 		return operations;
@@ -229,6 +228,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IStatus getElementStatus() {
 		return elementStatus;
 	}
@@ -238,12 +238,14 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setElementStatus(IStatus newElementStatus) {
 		IStatus oldElementStatus = elementStatus;
 		elementStatus = newElementStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS,
 					oldElementStatus, elementStatus));
+		}
 	}
 
 	/**
@@ -251,6 +253,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Date getRefreshDate() {
 		return refreshDate;
 	}
@@ -260,12 +263,14 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRefreshDate(Date newRefreshDate) {
 		Date oldRefreshDate = refreshDate;
 		refreshDate = newRefreshDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_ELEMENT__REFRESH_DATE,
 					oldRefreshDate, refreshDate));
+		}
 	}
 
 	/**
@@ -273,16 +278,19 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Map<String, String> getAttributes() {
 		if (attributes == null) {
-			attributes = new EcoreEMap<String, String>(BuildPackage.Literals.STRING_TO_STRING_MAP,
+			attributes = new EcoreEMap<>(BuildPackage.Literals.STRING_TO_STRING_MAP,
 					StringToStringMap.class, this, BuildPackage.BUILD_ELEMENT__ATTRIBUTES);
 		}
 		return attributes.map();
 	}
 
+	@Override
 	public abstract String getLabel();
 
+	@Override
 	public abstract IBuildServer getServer();
 
 	/**
@@ -293,9 +301,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
-					.basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+				return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
+						.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -308,21 +316,22 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_ELEMENT__URL:
-			return getUrl();
-		case BuildPackage.BUILD_ELEMENT__NAME:
-			return getName();
-		case BuildPackage.BUILD_ELEMENT__OPERATIONS:
-			return getOperations();
-		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
-			return getElementStatus();
-		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
-			return getRefreshDate();
-		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			if (coreType)
-				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
-			else
-				return getAttributes();
+			case BuildPackage.BUILD_ELEMENT__URL:
+				return getUrl();
+			case BuildPackage.BUILD_ELEMENT__NAME:
+				return getName();
+			case BuildPackage.BUILD_ELEMENT__OPERATIONS:
+				return getOperations();
+			case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
+				return getElementStatus();
+			case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+				return getRefreshDate();
+			case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+				if (coreType) {
+					return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
+				} else {
+					return getAttributes();
+				}
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -336,26 +345,26 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_ELEMENT__URL:
-			setUrl((String) newValue);
-			return;
-		case BuildPackage.BUILD_ELEMENT__NAME:
-			setName((String) newValue);
-			return;
-		case BuildPackage.BUILD_ELEMENT__OPERATIONS:
-			getOperations().clear();
-			getOperations().addAll((Collection<? extends IOperation>) newValue);
-			return;
-		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
-			setElementStatus((IStatus) newValue);
-			return;
-		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
-			setRefreshDate((Date) newValue);
-			return;
-		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
-					.set(newValue);
-			return;
+			case BuildPackage.BUILD_ELEMENT__URL:
+				setUrl((String) newValue);
+				return;
+			case BuildPackage.BUILD_ELEMENT__NAME:
+				setName((String) newValue);
+				return;
+			case BuildPackage.BUILD_ELEMENT__OPERATIONS:
+				getOperations().clear();
+				getOperations().addAll((Collection<? extends IOperation>) newValue);
+				return;
+			case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
+				setElementStatus((IStatus) newValue);
+				return;
+			case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+				setRefreshDate((Date) newValue);
+				return;
+			case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+				((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
+						.set(newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -368,24 +377,24 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_ELEMENT__URL:
-			setUrl(URL_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_ELEMENT__NAME:
-			setName(NAME_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_ELEMENT__OPERATIONS:
-			getOperations().clear();
-			return;
-		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
-			setElementStatus(ELEMENT_STATUS_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
-			setRefreshDate(REFRESH_DATE_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			getAttributes().clear();
-			return;
+			case BuildPackage.BUILD_ELEMENT__URL:
+				setUrl(URL_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_ELEMENT__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_ELEMENT__OPERATIONS:
+				getOperations().clear();
+				return;
+			case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
+				setElementStatus(ELEMENT_STATUS_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+				setRefreshDate(REFRESH_DATE_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+				getAttributes().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -398,20 +407,20 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_ELEMENT__URL:
-			return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
-		case BuildPackage.BUILD_ELEMENT__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case BuildPackage.BUILD_ELEMENT__OPERATIONS:
-			return operations != null && !operations.isEmpty();
-		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
-			return ELEMENT_STATUS_EDEFAULT == null
-					? elementStatus != null
-					: !ELEMENT_STATUS_EDEFAULT.equals(elementStatus);
-		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
-			return REFRESH_DATE_EDEFAULT == null ? refreshDate != null : !REFRESH_DATE_EDEFAULT.equals(refreshDate);
-		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
-			return attributes != null && !attributes.isEmpty();
+			case BuildPackage.BUILD_ELEMENT__URL:
+				return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
+			case BuildPackage.BUILD_ELEMENT__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case BuildPackage.BUILD_ELEMENT__OPERATIONS:
+				return operations != null && !operations.isEmpty();
+			case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
+				return ELEMENT_STATUS_EDEFAULT == null
+						? elementStatus != null
+						: !ELEMENT_STATUS_EDEFAULT.equals(elementStatus);
+			case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
+				return REFRESH_DATE_EDEFAULT == null ? refreshDate != null : !REFRESH_DATE_EDEFAULT.equals(refreshDate);
+			case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+				return attributes != null && !attributes.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -423,10 +432,11 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (url: "); //$NON-NLS-1$
 		result.append(url);
 		result.append(", name: "); //$NON-NLS-1$

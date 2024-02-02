@@ -21,14 +21,17 @@ import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
  */
 public class MockBuildModelRealm implements IBuildModelRealm {
 
+	@Override
 	public void exec(Runnable runnable) {
 		runnable.run();
 	}
 
+	@Override
 	public void asyncExec(Runnable runnable) {
 		runnable.run();
 	}
 
+	@Override
 	public void syncExec(Runnable runnable) {
 		runnable.run();
 	}

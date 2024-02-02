@@ -35,8 +35,8 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  */
 public class ChangeSet extends EObjectImpl implements IChangeSet {
 	/**
-	 * The cached value of the '{@link #getChanges() <em>Changes</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChanges() <em>Changes</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getChanges()
 	 * @generated
@@ -45,8 +45,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	protected EList<IChange> changes;
 
 	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getKind()
 	 * @generated
@@ -55,8 +54,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	protected static final String KIND_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getKind()
 	 * @generated
@@ -70,7 +68,6 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	 * @generated
 	 */
 	protected ChangeSet() {
-		super();
 	}
 
 	/**
@@ -86,16 +83,16 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Changes</em>' reference list isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Changes</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IChange> getChanges() {
 		if (changes == null) {
-			changes = new EObjectContainmentEList<IChange>(IChange.class, this, BuildPackage.CHANGE_SET__CHANGES);
+			changes = new EObjectContainmentEList<>(IChange.class, this, BuildPackage.CHANGE_SET__CHANGES);
 		}
 		return changes;
 	}
@@ -109,6 +106,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getKind() {
 		return kind;
 	}
@@ -118,11 +116,13 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setKind(String newKind) {
 		String oldKind = kind;
 		kind = newKind;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_SET__KIND, oldKind, kind));
+		}
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_SET__CHANGES:
-			return ((InternalEList<?>) getChanges()).basicRemove(otherEnd, msgs);
+			case BuildPackage.CHANGE_SET__CHANGES:
+				return ((InternalEList<?>) getChanges()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -147,10 +147,10 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_SET__CHANGES:
-			return getChanges();
-		case BuildPackage.CHANGE_SET__KIND:
-			return getKind();
+			case BuildPackage.CHANGE_SET__CHANGES:
+				return getChanges();
+			case BuildPackage.CHANGE_SET__KIND:
+				return getKind();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -164,13 +164,13 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_SET__CHANGES:
-			getChanges().clear();
-			getChanges().addAll((Collection<? extends IChange>) newValue);
-			return;
-		case BuildPackage.CHANGE_SET__KIND:
-			setKind((String) newValue);
-			return;
+			case BuildPackage.CHANGE_SET__CHANGES:
+				getChanges().clear();
+				getChanges().addAll((Collection<? extends IChange>) newValue);
+				return;
+			case BuildPackage.CHANGE_SET__KIND:
+				setKind((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -183,12 +183,12 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_SET__CHANGES:
-			getChanges().clear();
-			return;
-		case BuildPackage.CHANGE_SET__KIND:
-			setKind(KIND_EDEFAULT);
-			return;
+			case BuildPackage.CHANGE_SET__CHANGES:
+				getChanges().clear();
+				return;
+			case BuildPackage.CHANGE_SET__KIND:
+				setKind(KIND_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -201,10 +201,10 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_SET__CHANGES:
-			return changes != null && !changes.isEmpty();
-		case BuildPackage.CHANGE_SET__KIND:
-			return KIND_EDEFAULT == null ? kind != null : !KIND_EDEFAULT.equals(kind);
+			case BuildPackage.CHANGE_SET__CHANGES:
+				return changes != null && !changes.isEmpty();
+			case BuildPackage.CHANGE_SET__KIND:
+				return KIND_EDEFAULT == null ? kind != null : !KIND_EDEFAULT.equals(kind);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -216,10 +216,11 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');

@@ -70,7 +70,7 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 
 	protected void initialize() {
 		if (configurationByUrl == null) {
-			configurationByUrl = new HashMap<String, C>();
+			configurationByUrl = new HashMap<>();
 			readCache();
 		}
 	}

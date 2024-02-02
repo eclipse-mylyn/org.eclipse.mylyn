@@ -22,22 +22,15 @@ public enum BuildStatus {
 	FAILED, UNSTABLE, SUCCESS, DISABLED, ABORTED, NOT_BUILT;
 
 	public String getLabel() {
-		switch (this) {
-		case FAILED:
-			return "Failed";
-		case UNSTABLE:
-			return "Unstable";
-		case SUCCESS:
-			return "Success";
-		case DISABLED:
-			return "Disabled";
-		case ABORTED:
-			return "Aborted";
-		case NOT_BUILT:
-			return "Not built";
-		default:
-			return "Unknown";
-		}
-	};
+		return switch (this) {
+			case FAILED -> "Failed";
+			case UNSTABLE -> "Unstable";
+			case SUCCESS -> "Success";
+			case DISABLED -> "Disabled";
+			case ABORTED -> "Aborted";
+			case NOT_BUILT -> "Not built";
+			default -> "Unknown";
+		};
+	}
 
 }

@@ -46,8 +46,8 @@ import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.builds.core.TestCaseResult;
 
 /**
- * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of
- * the model. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of the model. <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -67,7 +67,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	public static BuildFactory init() {
 		try {
 			BuildFactory theBuildFactory = (BuildFactory) EPackage.Registry.INSTANCE
-					.getEFactory("http://eclipse.org/mylyn/models/build"); //$NON-NLS-1$ 
+					.getEFactory("http://eclipse.org/mylyn/models/build"); //$NON-NLS-1$
 			if (theBuildFactory != null) {
 				return theBuildFactory;
 			}
@@ -83,7 +83,6 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * @generated
 	 */
 	public BuildFactory() {
-		super();
 	}
 
 	/**
@@ -93,58 +92,33 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-		case BuildPackage.STRING_TO_STRING_MAP:
-			return (EObject) createStringToStringMap();
-		case BuildPackage.ARTIFACT:
-			return (EObject) createArtifact();
-		case BuildPackage.BUILD:
-			return (EObject) createBuild();
-		case BuildPackage.BUILD_CAUSE:
-			return (EObject) createBuildCause();
-		case BuildPackage.BUILD_REFERENCE:
-			return (EObject) createBuildReference();
-		case BuildPackage.BUILD_PLAN:
-			return (EObject) createBuildPlan();
-		case BuildPackage.HEALTH_REPORT:
-			return (EObject) createHealthReport();
-		case BuildPackage.BUILD_MODEL:
-			return (EObject) createBuildModel();
-		case BuildPackage.BUILD_SERVER:
-			return (EObject) createBuildServer();
-		case BuildPackage.CHANGE:
-			return (EObject) createChange();
-		case BuildPackage.CHANGE_SET:
-			return (EObject) createChangeSet();
-		case BuildPackage.CHANGE_ARTIFACT:
-			return (EObject) createChangeArtifact();
-		case BuildPackage.USER:
-			return (EObject) createUser();
-		case BuildPackage.CHOICE_PARAMETER_DEFINITION:
-			return (EObject) createChoiceParameterDefinition();
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION:
-			return (EObject) createBooleanParameterDefinition();
-		case BuildPackage.FILE_PARAMETER_DEFINITION:
-			return (EObject) createFileParameterDefinition();
-		case BuildPackage.PLAN_PARAMETER_DEFINITION:
-			return (EObject) createPlanParameterDefinition();
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION:
-			return (EObject) createPasswordParameterDefinition();
-		case BuildPackage.BUILD_PARAMETER_DEFINITION:
-			return (EObject) createBuildParameterDefinition();
-		case BuildPackage.STRING_PARAMETER_DEFINITION:
-			return (EObject) createStringParameterDefinition();
-		case BuildPackage.TEST_RESULT:
-			return (EObject) createTestResult();
-		case BuildPackage.TEST_ELEMENT:
-			return (EObject) createTestElement();
-		case BuildPackage.TEST_SUITE:
-			return (EObject) createTestSuite();
-		case BuildPackage.TEST_CASE:
-			return (EObject) createTestCase();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eClass.getClassifierID()) {
+			case BuildPackage.STRING_TO_STRING_MAP -> (EObject) createStringToStringMap();
+			case BuildPackage.ARTIFACT -> (EObject) createArtifact();
+			case BuildPackage.BUILD -> (EObject) createBuild();
+			case BuildPackage.BUILD_CAUSE -> (EObject) createBuildCause();
+			case BuildPackage.BUILD_REFERENCE -> (EObject) createBuildReference();
+			case BuildPackage.BUILD_PLAN -> (EObject) createBuildPlan();
+			case BuildPackage.HEALTH_REPORT -> (EObject) createHealthReport();
+			case BuildPackage.BUILD_MODEL -> (EObject) createBuildModel();
+			case BuildPackage.BUILD_SERVER -> (EObject) createBuildServer();
+			case BuildPackage.CHANGE -> (EObject) createChange();
+			case BuildPackage.CHANGE_SET -> (EObject) createChangeSet();
+			case BuildPackage.CHANGE_ARTIFACT -> (EObject) createChangeArtifact();
+			case BuildPackage.USER -> (EObject) createUser();
+			case BuildPackage.CHOICE_PARAMETER_DEFINITION -> (EObject) createChoiceParameterDefinition();
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION -> (EObject) createBooleanParameterDefinition();
+			case BuildPackage.FILE_PARAMETER_DEFINITION -> (EObject) createFileParameterDefinition();
+			case BuildPackage.PLAN_PARAMETER_DEFINITION -> (EObject) createPlanParameterDefinition();
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION -> (EObject) createPasswordParameterDefinition();
+			case BuildPackage.BUILD_PARAMETER_DEFINITION -> (EObject) createBuildParameterDefinition();
+			case BuildPackage.STRING_PARAMETER_DEFINITION -> (EObject) createStringParameterDefinition();
+			case BuildPackage.TEST_RESULT -> (EObject) createTestResult();
+			case BuildPackage.TEST_ELEMENT -> (EObject) createTestElement();
+			case BuildPackage.TEST_SUITE -> (EObject) createTestSuite();
+			case BuildPackage.TEST_CASE -> (EObject) createTestCase();
+			default -> throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -154,22 +128,16 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-		case BuildPackage.TEST_CASE_RESULT:
-			return createTestCaseResultFromString(eDataType, initialValue);
-		case BuildPackage.BUILD_STATE:
-			return createBuildStateFromString(eDataType, initialValue);
-		case BuildPackage.BUILD_STATUS:
-			return createBuildStatusFromString(eDataType, initialValue);
-		case BuildPackage.EDIT_TYPE:
-			return createEditTypeFromString(eDataType, initialValue);
-		case BuildPackage.ISTATUS:
-			return createIStatusFromString(eDataType, initialValue);
-		case BuildPackage.IOPERATION:
-			return createIOperationFromString(eDataType, initialValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eDataType.getClassifierID()) {
+			case BuildPackage.TEST_CASE_RESULT -> createTestCaseResultFromString(eDataType, initialValue);
+			case BuildPackage.BUILD_STATE -> createBuildStateFromString(eDataType, initialValue);
+			case BuildPackage.BUILD_STATUS -> createBuildStatusFromString(eDataType, initialValue);
+			case BuildPackage.EDIT_TYPE -> createEditTypeFromString(eDataType, initialValue);
+			case BuildPackage.ISTATUS -> createIStatusFromString(eDataType, initialValue);
+			case BuildPackage.IOPERATION -> createIOperationFromString(eDataType, initialValue);
+			default -> throw new IllegalArgumentException(
+					"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -179,22 +147,16 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-		case BuildPackage.TEST_CASE_RESULT:
-			return convertTestCaseResultToString(eDataType, instanceValue);
-		case BuildPackage.BUILD_STATE:
-			return convertBuildStateToString(eDataType, instanceValue);
-		case BuildPackage.BUILD_STATUS:
-			return convertBuildStatusToString(eDataType, instanceValue);
-		case BuildPackage.EDIT_TYPE:
-			return convertEditTypeToString(eDataType, instanceValue);
-		case BuildPackage.ISTATUS:
-			return convertIStatusToString(eDataType, instanceValue);
-		case BuildPackage.IOPERATION:
-			return convertIOperationToString(eDataType, instanceValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eDataType.getClassifierID()) {
+			case BuildPackage.TEST_CASE_RESULT -> convertTestCaseResultToString(eDataType, instanceValue);
+			case BuildPackage.BUILD_STATE -> convertBuildStateToString(eDataType, instanceValue);
+			case BuildPackage.BUILD_STATUS -> convertBuildStatusToString(eDataType, instanceValue);
+			case BuildPackage.EDIT_TYPE -> convertEditTypeToString(eDataType, instanceValue);
+			case BuildPackage.ISTATUS -> convertIStatusToString(eDataType, instanceValue);
+			case BuildPackage.IOPERATION -> convertIOperationToString(eDataType, instanceValue);
+			default -> throw new IllegalArgumentException(
+					"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -202,6 +164,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildModel createBuildModel() {
 		BuildModel buildModel = new BuildModel();
 		return buildModel;
@@ -212,6 +175,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildPlan createBuildPlan() {
 		BuildPlan buildPlan = new BuildPlan();
 		return buildPlan;
@@ -222,6 +186,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IHealthReport createHealthReport() {
 		HealthReport healthReport = new HealthReport();
 		return healthReport;
@@ -232,6 +197,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildServer createBuildServer() {
 		BuildServer buildServer = new BuildServer();
 		return buildServer;
@@ -242,6 +208,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IArtifact createArtifact() {
 		Artifact artifact = new Artifact();
 		return artifact;
@@ -252,6 +219,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuild createBuild() {
 		Build build = new Build();
 		return build;
@@ -262,6 +230,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildCause createBuildCause() {
 		BuildCause buildCause = new BuildCause();
 		return buildCause;
@@ -272,6 +241,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildReference createBuildReference() {
 		BuildReference buildReference = new BuildReference();
 		return buildReference;
@@ -282,6 +252,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChangeSet createChangeSet() {
 		ChangeSet changeSet = new ChangeSet();
 		return changeSet;
@@ -292,6 +263,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChangeArtifact createChangeArtifact() {
 		ChangeArtifact changeArtifact = new ChangeArtifact();
 		return changeArtifact;
@@ -302,6 +274,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChange createChange() {
 		Change change = new Change();
 		return change;
@@ -312,6 +285,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser createUser() {
 		User user = new User();
 		return user;
@@ -322,6 +296,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChoiceParameterDefinition createChoiceParameterDefinition() {
 		ChoiceParameterDefinition choiceParameterDefinition = new ChoiceParameterDefinition();
 		return choiceParameterDefinition;
@@ -332,6 +307,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBooleanParameterDefinition createBooleanParameterDefinition() {
 		BooleanParameterDefinition booleanParameterDefinition = new BooleanParameterDefinition();
 		return booleanParameterDefinition;
@@ -342,6 +318,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileParameterDefinition createFileParameterDefinition() {
 		FileParameterDefinition fileParameterDefinition = new FileParameterDefinition();
 		return fileParameterDefinition;
@@ -352,6 +329,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IPlanParameterDefinition createPlanParameterDefinition() {
 		PlanParameterDefinition planParameterDefinition = new PlanParameterDefinition();
 		return planParameterDefinition;
@@ -362,6 +340,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IPasswordParameterDefinition createPasswordParameterDefinition() {
 		PasswordParameterDefinition passwordParameterDefinition = new PasswordParameterDefinition();
 		return passwordParameterDefinition;
@@ -372,6 +351,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildParameterDefinition createBuildParameterDefinition() {
 		BuildParameterDefinition buildParameterDefinition = new BuildParameterDefinition();
 		return buildParameterDefinition;
@@ -382,6 +362,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IStringParameterDefinition createStringParameterDefinition() {
 		StringParameterDefinition stringParameterDefinition = new StringParameterDefinition();
 		return stringParameterDefinition;
@@ -392,6 +373,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestResult createTestResult() {
 		TestResult testResult = new TestResult();
 		return testResult;
@@ -402,6 +384,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestElement createTestElement() {
 		TestElement testElement = new TestElement();
 		return testElement;
@@ -412,6 +395,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestSuite createTestSuite() {
 		TestSuite testSuite = new TestSuite();
 		return testSuite;
@@ -422,6 +406,7 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestCase createTestCase() {
 		TestCase testCase = new TestCase();
 		return testCase;
@@ -434,9 +419,10 @@ public class BuildFactory extends EFactoryImpl implements IBuildFactory {
 	 */
 	public TestCaseResult createTestCaseResultFromString(EDataType eDataType, String initialValue) {
 		TestCaseResult result = TestCaseResult.get(initialValue);
-		if (result == null)
+		if (result == null) {
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		return result;
 	}
 

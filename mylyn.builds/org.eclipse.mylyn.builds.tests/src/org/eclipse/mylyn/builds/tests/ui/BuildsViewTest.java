@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.builds.tests.ui;
 
 import static org.mockito.Mockito.when;
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -24,6 +23,8 @@ import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView.BuildsSummary;
 import org.mockito.Mockito;
+
+import junit.framework.TestCase;
 
 public class BuildsViewTest extends TestCase {
 	public class TestBuildsView extends BuildsView {

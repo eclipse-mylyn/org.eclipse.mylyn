@@ -23,8 +23,8 @@ import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsConfigurationCache;
-import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo.Type;
+import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 
 /**
  * @author Markus Knittig

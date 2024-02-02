@@ -38,7 +38,7 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 	public BuildOutputPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Output");
-		this.span = 2;
+		span = 2;
 	}
 
 	@Override

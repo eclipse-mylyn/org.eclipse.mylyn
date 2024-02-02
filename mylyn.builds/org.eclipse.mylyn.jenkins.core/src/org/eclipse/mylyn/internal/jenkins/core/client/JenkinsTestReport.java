@@ -27,13 +27,13 @@ public class JenkinsTestReport {
 	private final HudsonTasksJunitTestResult junitResult;
 
 	public JenkinsTestReport(HudsonTasksJunitTestResult junitResult) {
-		this.aggregatedResult = null;
+		aggregatedResult = null;
 		this.junitResult = junitResult;
 	}
 
 	public JenkinsTestReport(HudsonTasksTestAggregatedTestResultAction aggregatedResult) {
 		this.aggregatedResult = aggregatedResult;
-		this.junitResult = null;
+		junitResult = null;
 	}
 
 	public HudsonTasksTestAggregatedTestResultAction getAggregatedResult() {

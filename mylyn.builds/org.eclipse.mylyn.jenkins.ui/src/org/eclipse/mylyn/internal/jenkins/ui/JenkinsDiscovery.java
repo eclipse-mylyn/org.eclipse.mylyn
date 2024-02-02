@@ -45,16 +45,16 @@ import org.eclipse.osgi.util.NLS;
  */
 public class JenkinsDiscovery {
 	/**
-	 * This class works around a source incompatibility between the org.eclipse.ecf.discovery version in Luna and
-	 * earlier versions. Version 5.0 added the triggerDiscovery method to IServiceListener. This class can be extended
-	 * in order to implement this method without the @Overide annotation causing compilation to fail against earlier
-	 * versions (e.g. Kepler).
+	 * This class works around a source incompatibility between the org.eclipse.ecf.discovery version in Luna and earlier versions. Version
+	 * 5.0 added the triggerDiscovery method to IServiceListener. This class can be extended in order to implement this method without
+	 * the @Overide annotation causing compilation to fail against earlier versions (e.g. Kepler).
 	 */
 	private static abstract class AbstractServiceListener {
 		public abstract boolean triggerDiscovery();
 	}
 
 	private final class JenkinsServiceListener extends AbstractServiceListener implements IServiceListener {
+		@Override
 		public void serviceDiscovered(IServiceEvent anEvent) {
 			IServiceInfo serviceInfo = anEvent.getServiceInfo();
 			IServiceID serviceId = serviceInfo.getServiceID();
@@ -80,6 +80,7 @@ public class JenkinsDiscovery {
 			}
 		}
 
+		@Override
 		public void serviceUndiscovered(IServiceEvent anEvent) {
 			// Ignore this for now
 		}
@@ -139,10 +140,7 @@ public class JenkinsDiscovery {
 			adapter.addServiceListener(new JenkinsServiceListener());
 			container.connect(null, null);
 
-		} catch (ContainerCreateException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, JenkinsConnectorUi.ID_PLUGIN,
-					Messages.Discovery_CouldNotStartService, e));
-		} catch (ContainerConnectException e) {
+		} catch (ContainerCreateException | ContainerConnectException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, JenkinsConnectorUi.ID_PLUGIN,
 					Messages.Discovery_CouldNotStartService, e));
 		}

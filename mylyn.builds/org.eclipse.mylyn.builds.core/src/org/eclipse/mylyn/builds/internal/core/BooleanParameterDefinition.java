@@ -17,13 +17,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Boolean Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Boolean Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default
- * Value</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
  * 
@@ -31,8 +29,7 @@ import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
  */
 public class BooleanParameterDefinition extends ParameterDefinition implements IBooleanParameterDefinition {
 	/**
-	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDefaultValue()
 	 * @generated
@@ -41,8 +38,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	protected static final boolean DEFAULT_VALUE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDefaultValue()
 	 * @generated
@@ -56,7 +52,6 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * @generated
 	 */
 	protected BooleanParameterDefinition() {
-		super();
 	}
 
 	/**
@@ -72,13 +67,13 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isDefaultValue() {
 		return defaultValue;
 	}
@@ -88,12 +83,14 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDefaultValue(boolean newDefaultValue) {
 		boolean oldDefaultValue = defaultValue;
 		defaultValue = newDefaultValue;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE, oldDefaultValue, defaultValue));
+		}
 	}
 
 	/**
@@ -104,8 +101,8 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			return isDefaultValue();
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				return isDefaultValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -118,9 +115,9 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			setDefaultValue((Boolean) newValue);
-			return;
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				setDefaultValue((Boolean) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -133,9 +130,9 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			setDefaultValue(DEFAULT_VALUE_EDEFAULT);
-			return;
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				setDefaultValue(DEFAULT_VALUE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -148,8 +145,8 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			return defaultValue != DEFAULT_VALUE_EDEFAULT;
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				return defaultValue != DEFAULT_VALUE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -161,10 +158,11 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (defaultValue: "); //$NON-NLS-1$
 		result.append(defaultValue);
 		result.append(')');

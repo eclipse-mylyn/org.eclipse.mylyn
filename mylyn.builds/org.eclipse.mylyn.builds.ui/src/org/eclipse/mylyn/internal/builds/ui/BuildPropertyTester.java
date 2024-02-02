@@ -26,9 +26,9 @@ public class BuildPropertyTester extends PropertyTester {
 		// ignore
 	}
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof IBuild) {
-			IBuild build = (IBuild) receiver;
+		if (receiver instanceof IBuild build) {
 			if ("hasConsole".equals(property)) {
 				return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.ui.console") != null, expectedValue);
 			}

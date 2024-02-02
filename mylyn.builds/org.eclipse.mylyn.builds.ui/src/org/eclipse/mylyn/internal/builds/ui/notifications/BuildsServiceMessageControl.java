@@ -40,12 +40,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
- * GUI control designed to display build service messages. These messages can contain links that may be clicked by the
- * user and handled here. The following link formats are allowed:
+ * GUI control designed to display build service messages. These messages can contain links that may be clicked by the user and handled
+ * here. The following link formats are allowed:
  * <ul>
  * <li><code>create</code> - Calls the create wizard selection dialog.</li>
- * <li><code>discover:&lt;id&gt;?&lt;arguments&gt;</code> - Calls the wizard with the specified id and passes along the
- * given arguments.</li>
+ * <li><code>discover:&lt;id&gt;?&lt;arguments&gt;</code> - Calls the wizard with the specified id and passes along the given
+ * arguments.</li>
  * </ul>
  * <p>
  * An exact list of which properties are supported can be found in {@link RepositoryLocation}.
@@ -54,8 +54,8 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * A stack of messages is maintained. When a new message arrives it is placed on top of the stack and displayed.
  * </p>
  * <p>
- * The code was lifted from org.eclipse.mylyn.internal.tasks.ui.notifications and modified to be suitable for this use.
- * It also has been simplified a bit.
+ * The code was lifted from org.eclipse.mylyn.internal.tasks.ui.notifications and modified to be suitable for this use. It also has been
+ * simplified a bit.
  * </p>
  * 
  * @author Torkild U. Resheim
@@ -68,9 +68,10 @@ public class BuildsServiceMessageControl extends NotificationControl {
 
 	public BuildsServiceMessageControl(Composite parent) {
 		super(parent);
-		messages = new CopyOnWriteArrayList<AbstractNotification>();
+		messages = new CopyOnWriteArrayList<>();
 	}
 
+	@Override
 	protected void closeMessage() {
 		if (messages.isEmpty()) {
 			close();
@@ -114,9 +115,9 @@ public class BuildsServiceMessageControl extends NotificationControl {
 				if (wizard instanceof BuildServerWizard) {
 					try {
 
-						// Set data we got from the discovery mechanism. This 
+						// Set data we got from the discovery mechanism. This
 						// comes as a list of properties with keys and values.
-						HashMap<String, String> properties = new HashMap<String, String>();
+						HashMap<String, String> properties = new HashMap<>();
 						int i = data.indexOf('?');
 						if (i > -1) {
 							String[] props = data.substring(i + 1).split("&"); //$NON-NLS-1$
@@ -173,16 +174,12 @@ public class BuildsServiceMessageControl extends NotificationControl {
 	}
 
 	public void notify(final NotificationSinkEvent event) {
-		for (final AbstractNotification message : event.getNotifications()) {
-			messages.add(message);
-		}
+		messages.addAll(event.getNotifications());
 		// Show the next message but only if we're currently not
 		// showing any messages.
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (isClosed()) {
-					nextMessage();
-				}
+		Display.getDefault().asyncExec(() -> {
+			if (isClosed()) {
+				nextMessage();
 			}
 		});
 	}

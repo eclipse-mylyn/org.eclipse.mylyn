@@ -15,13 +15,13 @@ package org.eclipse.mylyn.jenkins.tests.support;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
+
+import junit.framework.Assert;
 
 /**
  * @author Steffen Pingel

@@ -51,18 +51,18 @@ public class TestResultLabelProvider extends LabelProvider implements IStyledLab
 
 	private ImageDescriptor getImageDescriptor(ITestCase testCase) {
 		switch (testCase.getStatus()) {
-		case PASSED:
-		case FIXED:
-			return BuildImages.TEST_PASSED;
-		case REGRESSION:
-		case FAILED:
-			if (testCase.getMessage() != null) {
-				return BuildImages.TEST_FAILED;
-			} else {
-				return BuildImages.TEST_ERROR;
-			}
-		case SKIPPED:
-			return BuildImages.TEST_IGNORED;
+			case PASSED:
+			case FIXED:
+				return BuildImages.TEST_PASSED;
+			case REGRESSION:
+			case FAILED:
+				if (testCase.getMessage() != null) {
+					return BuildImages.TEST_FAILED;
+				} else {
+					return BuildImages.TEST_ERROR;
+				}
+			case SKIPPED:
+				return BuildImages.TEST_IGNORED;
 		}
 		return BuildImages.TEST;
 	}
@@ -74,19 +74,19 @@ public class TestResultLabelProvider extends LabelProvider implements IStyledLab
 		int ignoredCount = 0;
 		for (ITestCase testCase : suite.getCases()) {
 			switch (testCase.getStatus()) {
-			case PASSED:
-			case FIXED:
-				passedCount++;
-				break;
-			case REGRESSION:
-			case FAILED:
-				if (testCase.getMessage() != null) {
-					failedCount++;
-				} else {
-					errorCount++;
-				}
-			case SKIPPED:
-				ignoredCount++;
+				case PASSED:
+				case FIXED:
+					passedCount++;
+					break;
+				case REGRESSION:
+				case FAILED:
+					if (testCase.getMessage() != null) {
+						failedCount++;
+					} else {
+						errorCount++;
+					}
+				case SKIPPED:
+					ignoredCount++;
 			}
 		}
 		if (errorCount > 0) {
@@ -115,6 +115,7 @@ public class TestResultLabelProvider extends LabelProvider implements IStyledLab
 		return super.getText(element);
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getText(element);
 		if (text != null) {

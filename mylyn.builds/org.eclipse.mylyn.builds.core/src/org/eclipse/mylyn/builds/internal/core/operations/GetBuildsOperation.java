@@ -46,7 +46,7 @@ public class GetBuildsOperation extends AbstractElementOperation<IBuildPlan> {
 		Assert.isNotNull(request.getPlan());
 		Assert.isNotNull(request.getPlan().getServer());
 		this.request = request;
-		this.server = (BuildServer) request.getPlan().getServer();
+		server = (BuildServer) request.getPlan().getServer();
 	}
 
 	@Override

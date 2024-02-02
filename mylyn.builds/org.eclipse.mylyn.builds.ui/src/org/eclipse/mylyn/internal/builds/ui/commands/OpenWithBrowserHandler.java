@@ -26,12 +26,12 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
  */
 public class OpenWithBrowserHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
 		if (elements.size() > 0) {
 			Object item = elements.get(0);
-			if (item instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) item;
+			if (item instanceof IBuildElement element) {
 				BrowserUtil.openUrl(element.getUrl(), BrowserUtil.NO_RICH_EDITOR);
 			}
 		}

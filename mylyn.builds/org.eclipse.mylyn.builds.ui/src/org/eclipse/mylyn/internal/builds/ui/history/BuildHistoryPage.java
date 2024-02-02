@@ -16,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -64,10 +62,12 @@ public class BuildHistoryPage extends HistoryPage {
 	public BuildHistoryPage() {
 	}
 
+	@Override
 	public boolean isValidInput(Object object) {
 		return canShowHistoryFor(object);
 	}
 
+	@Override
 	public void refresh() {
 		inputSet();
 	}
@@ -83,15 +83,18 @@ public class BuildHistoryPage extends HistoryPage {
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		IBuildPlan plan = getPlan();
-		return (plan != null) ? NLS.bind("Build Plan {0}", plan.getLabel()) : null;
+		return plan != null ? NLS.bind("Build Plan {0}", plan.getLabel()) : null;
 	}
 
+	@Override
 	public String getDescription() {
 		return NLS.bind("Build history for {0}", getName());
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
@@ -113,6 +116,7 @@ public class BuildHistoryPage extends HistoryPage {
 		if (plan != null && refreshOperation == null) {
 			GetBuildsRequest request = new GetBuildsRequest(plan, Kind.ALL, Scope.HISTORY);
 			refreshOperation = new GetBuildsOperation(BuildsUiInternal.getFactory().getService(), request) {
+				@Override
 				protected void schedule(List<BuildJob> jobs) {
 					for (BuildJob job : jobs) {
 						BuildHistoryPage.this.schedule(job);
@@ -124,17 +128,15 @@ public class BuildHistoryPage extends HistoryPage {
 				public void done(OperationChangeEvent event) {
 					if (event.getStatus().isOK() && !Display.getDefault().isDisposed()) {
 						final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-									List<IBuild> builds = operation.getBuilds();
-									if (builds != null) {
-										for (IBuild build : builds) {
-											build.setPlan(plan);
-											build.setServer(plan.getServer());
-										}
-										viewer.setInput(builds);
+						Display.getDefault().asyncExec(() -> {
+							if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+								List<IBuild> builds = operation.getBuilds();
+								if (builds != null) {
+									for (IBuild build : builds) {
+										build.setPlan(plan);
+										build.setServer(plan.getServer());
 									}
+									viewer.setInput(builds);
 								}
 							}
 						});
@@ -208,13 +210,10 @@ public class BuildHistoryPage extends HistoryPage {
 		contentProvider = new BuildHistoryContentProvider();
 		viewer.setContentProvider(contentProvider);
 
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (item instanceof IBuild) {
-					IBuild build = (IBuild) item;
-					OpenHandler.fetchAndOpen(getSite().getPage(), build);
-				}
+		viewer.addDoubleClickListener(event -> {
+			Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (item instanceof IBuild build) {
+				OpenHandler.fetchAndOpen(getSite().getPage(), build);
 			}
 		});
 	}

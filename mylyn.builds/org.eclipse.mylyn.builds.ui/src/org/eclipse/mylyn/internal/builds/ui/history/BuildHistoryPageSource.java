@@ -26,10 +26,12 @@ public class BuildHistoryPageSource extends HistoryPageSource {
 		return instance;
 	}
 
+	@Override
 	public boolean canShowHistoryFor(Object object) {
 		return BuildHistoryPage.canShowHistoryFor(object);
 	}
 
+	@Override
 	public Page createPage(Object object) {
 		BuildHistoryPage page = new BuildHistoryPage();
 		page.setInput(object);

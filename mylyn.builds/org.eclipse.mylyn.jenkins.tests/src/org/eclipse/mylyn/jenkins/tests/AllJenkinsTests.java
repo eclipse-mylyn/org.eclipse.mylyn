@@ -59,7 +59,7 @@ public class AllJenkinsTests {
 			List<JenkinsFixture> fixtures = configuration.discover(JenkinsFixture.class, "jenkins");
 			for (JenkinsFixture fixture : fixtures) {
 				if (fixture.isExcluded()
-						|| (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken())) {
+						|| fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken()) {
 					continue;
 				}
 				fixture.createSuite(suite);

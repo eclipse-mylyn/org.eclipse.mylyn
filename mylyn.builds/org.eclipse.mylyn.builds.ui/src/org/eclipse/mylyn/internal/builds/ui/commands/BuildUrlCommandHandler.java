@@ -74,12 +74,12 @@ public class BuildUrlCommandHandler extends AbstractHandler {
 	}
 
 	private static class BuildCache {
-		private WeakReference<IBuild> lastBuild = new WeakReference<IBuild>(null);
+		private WeakReference<IBuild> lastBuild = new WeakReference<>(null);
 
 		private BuildUrlCommandHandler lastHandler;
 
 		public void put(BuildUrlCommandHandler handler, IBuild build) {
-			lastBuild = new WeakReference<IBuild>(build);
+			lastBuild = new WeakReference<>(build);
 			lastHandler = handler;
 		}
 
@@ -114,8 +114,7 @@ public class BuildUrlCommandHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if (event.getTrigger() instanceof Event) {
 			Object data = ((Event) event.getTrigger()).widget.getData();
-			if (data instanceof String) {
-				String buildUrl = (String) data;
+			if (data instanceof String buildUrl) {
 				if (needsDownload) {
 					final IBuildServer buildServer = findServerForBuild(buildUrl);
 					if (buildServer != null) {
@@ -172,11 +171,7 @@ public class BuildUrlCommandHandler extends AbstractHandler {
 						populatedBuild.setPlan(plan);
 						buildCache.put(BuildUrlCommandHandler.this, populatedBuild);
 						action.selectionChanged(new StructuredSelection(populatedBuild));
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								action.run();
-							}
-						});
+						PlatformUI.getWorkbench().getDisplay().asyncExec(() -> action.run());
 					}
 				} catch (CoreException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, e.getMessage(), e));

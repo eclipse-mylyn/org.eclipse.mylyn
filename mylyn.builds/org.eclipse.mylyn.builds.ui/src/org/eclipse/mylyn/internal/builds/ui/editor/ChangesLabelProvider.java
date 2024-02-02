@@ -39,7 +39,7 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 	private final CommonImageManger imageManager;
 
 	public ChangesLabelProvider() {
-		this.imageManager = new CommonImageManger();
+		imageManager = new CommonImageManger();
 	}
 
 	@Override
@@ -52,13 +52,13 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 	public Image getImage(Object element) {
 		if (element instanceof IChange) {
 			return CommonImages.getImage(BuildImages.CHANGE_SET);
-		} else if (element instanceof IChangeArtifact) {
-			IChangeArtifact changeArtifact = (IChangeArtifact) element;
+		} else if (element instanceof IChangeArtifact changeArtifact) {
 			return imageManager.getFileImage(changeArtifact.getFile());
 		}
 		return null;
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getText(element);
 		if (text != null) {
@@ -68,8 +68,7 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 				if (author != null && author.getId() != null) {
 					styledString.append("  " + author.getId(), StyledString.DECORATIONS_STYLER);
 				}
-			} else if (element instanceof IChangeArtifact) {
-				IChangeArtifact artifact = (IChangeArtifact) element;
+			} else if (element instanceof IChangeArtifact artifact) {
 				StringBuilder sb = new StringBuilder();
 				if (artifact.getRevision() != null) {
 					sb.append("  " + artifact.getRevision());

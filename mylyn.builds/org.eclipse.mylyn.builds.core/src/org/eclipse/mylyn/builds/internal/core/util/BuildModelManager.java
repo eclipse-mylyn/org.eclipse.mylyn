@@ -94,17 +94,15 @@ public class BuildModelManager {
 		// ensure that model is a consistent state
 		List<IBuildServer> servers = model.getServers();
 
-		List<IBuild> builds = new ArrayList<IBuild>();
+		List<IBuild> builds = new ArrayList<>();
 
-		List<IBuildPlan> danglingPlans = new ArrayList<IBuildPlan>();
+		List<IBuildPlan> danglingPlans = new ArrayList<>();
 		List<IBuildPlan> plans = model.getPlans();
 		for (IBuildPlan plan : plans) {
 			if (!servers.contains(plan.getServer())) {
 				danglingPlans.add(plan);
-			} else {
-				if (plan.getLastBuild() != null) {
-					builds.add(plan.getLastBuild());
-				}
+			} else if (plan.getLastBuild() != null) {
+				builds.add(plan.getLastBuild());
 			}
 		}
 		plans.removeAll(danglingPlans);
@@ -112,7 +110,7 @@ public class BuildModelManager {
 		model.getBuilds().clear();
 		model.getBuilds().addAll(builds);
 
-		Map<Object, Object> options = new HashMap<Object, Object>();
+		Map<Object, Object> options = new HashMap<>();
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 		resource.save(options);
 	}

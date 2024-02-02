@@ -106,8 +106,8 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 
 	public JenkinsServerBehaviour(RepositoryLocation location, JenkinsConfigurationCache cache) {
 		this.location = location;
-		this.client = new RestfulJenkinsClient(location, cache);
-		this.jenkinsUrlUtil = new JenkinsUrlUtil(this.location);
+		client = new RestfulJenkinsClient(location, cache);
+		jenkinsUrlUtil = new JenkinsUrlUtil(this.location);
 	}
 
 	public RepositoryLocation getLocation() {
@@ -160,7 +160,7 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 			if (request.getKind() == Kind.ALL && request.getScope() == Scope.HISTORY) {
 				HudsonModelJob job = createJobParameter(request.getPlan());
 				List<HudsonModelRun> hudsonBuilds = client.getBuilds(job, monitor);
-				ArrayList<IBuild> builds = new ArrayList<IBuild>(hudsonBuilds.size());
+				ArrayList<IBuild> builds = new ArrayList<>(hudsonBuilds.size());
 				for (HudsonModelRun hudsonBuild : hudsonBuilds) {
 					builds.add(parseBuild(job, hudsonBuild));
 				}
@@ -180,7 +180,7 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 	@Override
 	public BuildServerConfiguration getConfiguration() {
 		Map<String, String> jobNameById = client.getConfiguration().jobNameById;
-		List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobNameById.size());
+		List<IBuildPlan> plans = new ArrayList<>(jobNameById.size());
 		for (Entry<String, String> entry : jobNameById.entrySet()) {
 			IBuildPlan plan = createBuildPlan();
 			plan.setId(entry.getKey());
@@ -246,7 +246,7 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 	public List<IBuildPlan> getPlans(BuildPlanRequest request, IOperationMonitor monitor) throws CoreException {
 		try {
 			List<HudsonModelJob> jobs = client.getJobs(request.getPlanIds(), monitor);
-			List<IBuildPlan> plans = new ArrayList<IBuildPlan>(jobs.size());
+			List<IBuildPlan> plans = new ArrayList<>(jobs.size());
 			for (HudsonModelJob job : jobs) {
 				IBuildPlan plan = parseJob(job);
 				plans.add(plan);
@@ -319,7 +319,7 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 		int failCount = 0;
 		int skipCount = 0;
 		int totalCount = 0;
-		Set<String> causeDescriptions = new LinkedHashSet<String>();
+		Set<String> causeDescriptions = new LinkedHashSet<>();
 		for (Object action : actions) {
 			Node node = (Node) action;
 			NodeList children = node.getChildNodes();
@@ -573,12 +573,12 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 		IBuildPlan plan = createBuildPlan();
 
 		String jobUrl = job.getUrl();
-		if (this.jenkinsUrlUtil.isNestedJob(jobUrl)) {
+		if (jenkinsUrlUtil.isNestedJob(jobUrl)) {
 			plan.setId(jobUrl);
 		} else {
 			plan.setId(job.getName());
 		}
-		plan.setName(this.jenkinsUrlUtil.getDisplayName(jobUrl));
+		plan.setName(jenkinsUrlUtil.getDisplayName(jobUrl));
 		plan.setDescription(job.getDescription());
 		plan.setUrl(job.getUrl());
 		updateStateAndStatus(job, plan);
@@ -745,21 +745,21 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 				testCase.setMessage(hudsonCase.getErrorDetails());
 				testCase.setStackTrace(hudsonCase.getErrorStackTrace());
 				switch (hudsonCase.getStatus()) {
-				case PASSED:
-					testCase.setStatus(TestCaseResult.PASSED);
-					break;
-				case SKIPPED:
-					testCase.setStatus(TestCaseResult.SKIPPED);
-					break;
-				case FAILED:
-					testCase.setStatus(TestCaseResult.FAILED);
-					break;
-				case FIXED:
-					testCase.setStatus(TestCaseResult.FIXED);
-					break;
-				case REGRESSION:
-					testCase.setStatus(TestCaseResult.REGRESSION);
-					break;
+					case PASSED:
+						testCase.setStatus(TestCaseResult.PASSED);
+						break;
+					case SKIPPED:
+						testCase.setStatus(TestCaseResult.SKIPPED);
+						break;
+					case FAILED:
+						testCase.setStatus(TestCaseResult.FAILED);
+						break;
+					case FIXED:
+						testCase.setStatus(TestCaseResult.FIXED);
+						break;
+					case REGRESSION:
+						testCase.setStatus(TestCaseResult.REGRESSION);
+						break;
 
 				}
 				testCase.setSuite(testSuite);
@@ -874,67 +874,67 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 			plan.setState(null);
 		} else {
 			switch (color) {
-			case BLUE:
-			case GREEN:
-				plan.setStatus(BuildStatus.SUCCESS);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case BLUE_ANIME:
-			case GREEN_ANIME:
-				plan.setStatus(BuildStatus.SUCCESS);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case RED:
-				plan.setStatus(BuildStatus.FAILED);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case RED_ANIME:
-				plan.setStatus(BuildStatus.FAILED);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case YELLOW:
-				plan.setStatus(BuildStatus.UNSTABLE);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case YELLOW_ANIME:
-				plan.setStatus(BuildStatus.UNSTABLE);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case GREY:
-				plan.setStatus(BuildStatus.DISABLED);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case GREY_ANIME:
-				plan.setStatus(BuildStatus.DISABLED);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case DISABLED:
-				plan.setStatus(BuildStatus.DISABLED);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case DISABLED_ANIME:
-				plan.setStatus(BuildStatus.DISABLED);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case ABORTED:
-				plan.setStatus(BuildStatus.ABORTED);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case ABORTED_ANIME:
-				plan.setStatus(BuildStatus.ABORTED);
-				plan.setState(BuildState.RUNNING);
-				break;
-			case NOTBUILT:
-				plan.setStatus(BuildStatus.NOT_BUILT);
-				plan.setState(BuildState.STOPPED);
-				break;
-			case NOTBUILT_ANIME:
-				plan.setStatus(BuildStatus.NOT_BUILT);
-				plan.setState(BuildState.RUNNING);
-				break;
-			default:
-				plan.setStatus(null);
-				plan.setState(null);
+				case BLUE:
+				case GREEN:
+					plan.setStatus(BuildStatus.SUCCESS);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case BLUE_ANIME:
+				case GREEN_ANIME:
+					plan.setStatus(BuildStatus.SUCCESS);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case RED:
+					plan.setStatus(BuildStatus.FAILED);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case RED_ANIME:
+					plan.setStatus(BuildStatus.FAILED);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case YELLOW:
+					plan.setStatus(BuildStatus.UNSTABLE);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case YELLOW_ANIME:
+					plan.setStatus(BuildStatus.UNSTABLE);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case GREY:
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case GREY_ANIME:
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case DISABLED:
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case DISABLED_ANIME:
+					plan.setStatus(BuildStatus.DISABLED);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case ABORTED:
+					plan.setStatus(BuildStatus.ABORTED);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case ABORTED_ANIME:
+					plan.setStatus(BuildStatus.ABORTED);
+					plan.setState(BuildState.RUNNING);
+					break;
+				case NOTBUILT:
+					plan.setStatus(BuildStatus.NOT_BUILT);
+					plan.setState(BuildState.STOPPED);
+					break;
+				case NOTBUILT_ANIME:
+					plan.setStatus(BuildStatus.NOT_BUILT);
+					plan.setState(BuildState.RUNNING);
+					break;
+				default:
+					plan.setStatus(null);
+					plan.setState(null);
 			}
 		}
 

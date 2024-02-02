@@ -40,7 +40,7 @@ public class RefreshConfigurationOperation extends BuildJob {
 	public RefreshConfigurationOperation(List<IBuildServer> servers) {
 		super("Refresh Configuration");
 		Assert.isNotNull(servers);
-		this.servers = new ArrayList<IBuildServer>(servers.size());
+		this.servers = new ArrayList<>(servers.size());
 		for (IBuildServer server : servers) {
 			this.servers.add(((BuildServer) server).createWorkingCopy());
 		}

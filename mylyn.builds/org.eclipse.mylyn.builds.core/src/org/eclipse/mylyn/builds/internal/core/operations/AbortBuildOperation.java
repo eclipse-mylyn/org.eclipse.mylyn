@@ -37,7 +37,7 @@ public class AbortBuildOperation extends AbstractElementOperation<IBuild> {
 		super(service);
 		Assert.isNotNull(build);
 		this.build = build;
-		this.server = (BuildServer) build.getServer();
+		server = (BuildServer) build.getServer();
 	}
 
 	@Override

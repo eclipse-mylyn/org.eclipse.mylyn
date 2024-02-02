@@ -32,6 +32,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewTaskFromTestHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {

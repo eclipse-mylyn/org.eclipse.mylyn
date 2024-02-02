@@ -28,8 +28,7 @@ public interface IBuildCause {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -40,8 +39,8 @@ public interface IBuildCause {
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getDescription <em>Description</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getDescription <em>Description</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
@@ -53,8 +52,7 @@ public interface IBuildCause {
 	/**
 	 * Returns the value of the '<em><b>Build</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Build</em>' containment reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -65,8 +63,8 @@ public interface IBuildCause {
 	IBuildReference getBuild();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getBuild <em>Build</em>}' containment
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getBuild <em>Build</em>}' containment reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Build</em>' containment reference.
@@ -78,8 +76,7 @@ public interface IBuildCause {
 	/**
 	 * Returns the value of the '<em><b>User</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>User</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>User</em>' containment reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -90,8 +87,8 @@ public interface IBuildCause {
 	IUser getUser();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getUser <em>User</em>}' containment
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getUser <em>User</em>}' containment reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>User</em>' containment reference.

@@ -31,8 +31,7 @@ import org.eclipse.mylyn.builds.core.IHealthReport;
  */
 public class HealthReport extends EObjectImpl implements IHealthReport {
 	/**
-	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -41,8 +40,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected static final int HEALTH_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -51,8 +49,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected int health = HEALTH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -61,8 +58,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -76,7 +72,6 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 * @generated
 	 */
 	protected HealthReport() {
-		super();
 	}
 
 	/**
@@ -94,6 +89,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getHealth() {
 		return health;
 	}
@@ -103,12 +99,14 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setHealth(int newHealth) {
 		int oldHealth = health;
 		health = newHealth;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.HEALTH_REPORT__HEALTH, oldHealth,
 					health));
+		}
 	}
 
 	/**
@@ -116,6 +114,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -125,12 +124,14 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.HEALTH_REPORT__DESCRIPTION,
 					oldDescription, description));
+		}
 	}
 
 	/**
@@ -141,10 +142,10 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.HEALTH_REPORT__HEALTH:
-			return getHealth();
-		case BuildPackage.HEALTH_REPORT__DESCRIPTION:
-			return getDescription();
+			case BuildPackage.HEALTH_REPORT__HEALTH:
+				return getHealth();
+			case BuildPackage.HEALTH_REPORT__DESCRIPTION:
+				return getDescription();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,12 +158,12 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.HEALTH_REPORT__HEALTH:
-			setHealth((Integer) newValue);
-			return;
-		case BuildPackage.HEALTH_REPORT__DESCRIPTION:
-			setDescription((String) newValue);
-			return;
+			case BuildPackage.HEALTH_REPORT__HEALTH:
+				setHealth((Integer) newValue);
+				return;
+			case BuildPackage.HEALTH_REPORT__DESCRIPTION:
+				setDescription((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -175,12 +176,12 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.HEALTH_REPORT__HEALTH:
-			setHealth(HEALTH_EDEFAULT);
-			return;
-		case BuildPackage.HEALTH_REPORT__DESCRIPTION:
-			setDescription(DESCRIPTION_EDEFAULT);
-			return;
+			case BuildPackage.HEALTH_REPORT__HEALTH:
+				setHealth(HEALTH_EDEFAULT);
+				return;
+			case BuildPackage.HEALTH_REPORT__DESCRIPTION:
+				setDescription(DESCRIPTION_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -193,10 +194,10 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.HEALTH_REPORT__HEALTH:
-			return health != HEALTH_EDEFAULT;
-		case BuildPackage.HEALTH_REPORT__DESCRIPTION:
-			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case BuildPackage.HEALTH_REPORT__HEALTH:
+				return health != HEALTH_EDEFAULT;
+			case BuildPackage.HEALTH_REPORT__DESCRIPTION:
+				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -208,10 +209,11 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (health: "); //$NON-NLS-1$
 		result.append(health);
 		result.append(", description: "); //$NON-NLS-1$

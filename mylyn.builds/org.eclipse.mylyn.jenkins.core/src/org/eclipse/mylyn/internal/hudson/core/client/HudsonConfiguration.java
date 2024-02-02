@@ -20,8 +20,8 @@ import java.util.Map;
  * @author Steffen Pingel
  */
 /**
- * Needed to accept existing Hudson repositories so they can be converted to Jenkins repositories. Can probably be
- * deleted around 2024-09 once the 4.0.0 release has been adopted "globally"
+ * Needed to accept existing Hudson repositories so they can be converted to Jenkins repositories. Can probably be deleted around 2024-09
+ * once the 4.0.0 release has been adopted "globally"
  *
  * @author George Lindholm
  */
@@ -30,7 +30,7 @@ public class HudsonConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Map<String, String> jobNameById = new HashMap<String, String>();
+	public Map<String, String> jobNameById = new HashMap<>();
 
 	@Override
 	public String toString() {

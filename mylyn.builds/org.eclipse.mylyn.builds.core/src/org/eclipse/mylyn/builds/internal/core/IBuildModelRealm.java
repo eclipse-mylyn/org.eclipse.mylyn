@@ -17,10 +17,10 @@ package org.eclipse.mylyn.builds.internal.core;
  */
 public interface IBuildModelRealm {
 
-	public void exec(Runnable runnable);
+	void exec(Runnable runnable);
 
-	public void asyncExec(Runnable runnable);
+	void asyncExec(Runnable runnable);
 
-	public void syncExec(Runnable runnable);
+	void syncExec(Runnable runnable);
 
 }

@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
- *     Itema AS - Added support for build service messages 
+ *     Itema AS - Added support for build service messages
  *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
 
@@ -101,25 +101,23 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Performs a one-shot refresh of build server data regardless of the automatic refresh preference setting. This
-	 * method should be called when build service settings has been changed in a way that require update of the data.
-	 * For instance when a new repository has been added.
+	 * Performs a one-shot refresh of build server data regardless of the automatic refresh preference setting. This method should be called
+	 * when build service settings has been changed in a way that require update of the data. For instance when a new repository has been
+	 * added.
 	 */
 	public void refreshBuilds() {
 		initializeRefresh();
 		refresher.refresh();
 
-		// delay the save until other async tasks complete to ensure that the model is updated before it's persisted 
-		BuildsUiInternal.getModel().getLoader().getRealm().asyncExec(new Runnable() {
-			public void run() {
-				// trigger a save in case Eclipse crashes and stop() is not executed
-				try {
-					BuildsUiInternal.save();
-				} catch (IOException e) {
-					StatusManager.getManager()
-							.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-									"Unexpected error while saving builds", e));
-				}
+		// delay the save until other async tasks complete to ensure that the model is updated before it's persisted
+		BuildsUiInternal.getModel().getLoader().getRealm().asyncExec(() -> {
+			// trigger a save in case Eclipse crashes and stop() is not executed
+			try {
+				BuildsUiInternal.save();
+			} catch (IOException e) {
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+								"Unexpected error while saving builds", e));
 			}
 		});
 	}
@@ -149,20 +147,21 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		private static void runStartupExtension(IConfigurationElement configurationElement) {
 			try {
 				Object object = configurationElement.createExecutableExtension(ELEMENT_CLASS);
-				if (!(object instanceof BuildsUiStartup)) {
+				if (!(object instanceof final BuildsUiStartup startup)) {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
 							NLS.bind("Startup extension failed: {0} does notimplement {1}", //$NON-NLS-1$
 									object.getClass().getCanonicalName(), BuildsUiStartup.class.getCanonicalName())));
 					return;
 				}
-				final BuildsUiStartup startup = (BuildsUiStartup) object;
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						startup.lazyStartup();
 					}
 
+					@Override
 					public void handleException(Throwable exception) {
-						// ignore, handled by SafeRunner						
+						// ignore, handled by SafeRunner
 					}
 				});
 			} catch (Throwable e) {

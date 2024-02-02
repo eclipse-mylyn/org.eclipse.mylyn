@@ -27,9 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -78,6 +76,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	private Button refreshButton = null;
 
 	public class BuildServerPartUrlValidator extends UrlValidator {
+		@Override
 		public IStatus validate(Object value) {
 			IStatus validationStatus = super.validate(value);
 			urlValid = validationStatus == Status.OK_STATUS;
@@ -159,7 +158,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	public BuildServerPart(IBuildServer model) {
 		super(model.getLocation());
 		this.model = model;
-		this.selectedPlans = Collections.emptyList();
+		selectedPlans = Collections.emptyList();
 		setNeedsProxy(true);
 		setNeedsHttpAuth(true);
 		setNeedsCertificateAuth(true);
@@ -292,17 +291,17 @@ public class BuildServerPart extends RepositoryLocationPart {
 				new SubstringPatternFilter());
 		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(filteredTree);
 		planViewer = filteredTree.getCheckboxTreeViewer();//new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER);
-		planViewer.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				BuildPlan plan = (BuildPlan) event.getElement();
-				plan.setSelected(event.getChecked());
-			}
+		planViewer.addCheckStateListener(event -> {
+			BuildPlan plan = (BuildPlan) event.getElement();
+			plan.setSelected(event.getChecked());
 		});
 		planViewer.setCheckStateProvider(new ICheckStateProvider() {
+			@Override
 			public boolean isChecked(Object element) {
 				return ((IBuildPlan) element).isSelected();
 			}
 
+			@Override
 			public boolean isGrayed(Object element) {
 				for (IBuildPlan child : ((IBuildPlan) element).getChildren()) {
 					if (!child.isSelected()) {
@@ -321,28 +320,34 @@ public class BuildServerPart extends RepositoryLocationPart {
 		planViewer.setContentProvider(new ITreeContentProvider() {
 			private BuildServerConfiguration configuration;
 
-			private final Object[] EMPTY_ARRAY = new Object[0];
+			private final Object[] EMPTY_ARRAY = {};
 
+			@Override
 			public void dispose() {
 				// ignore
 			}
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				return EMPTY_ARRAY;
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return configuration.getPlans().toArray();
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return null;
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return false;
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				configuration = (BuildServerConfiguration) newInput;
 			}
@@ -368,7 +373,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	public List<IBuildPlan> getSelectedPlans() {
 		if (planViewer.getInput() instanceof BuildServerConfiguration) {
 			BuildServerConfiguration configuration = (BuildServerConfiguration) planViewer.getInput();
-			List<IBuildPlan> selectedPlans = new ArrayList<IBuildPlan>();
+			List<IBuildPlan> selectedPlans = new ArrayList<>();
 			for (IBuildPlan plan : configuration.getPlans()) {
 				if (plan.isSelected()) {
 					selectedPlans.add(plan);

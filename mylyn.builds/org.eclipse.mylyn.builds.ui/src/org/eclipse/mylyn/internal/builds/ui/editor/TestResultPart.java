@@ -20,12 +20,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -106,14 +102,16 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 	static class TestResultContentProvider implements ITreeContentProvider {
 
-		private static final Object[] NO_ELEMENTS = new Object[0];
+		private static final Object[] NO_ELEMENTS = {};
 
 		private TestResult input;
 
+		@Override
 		public void dispose() {
 			input = null;
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof ITestSuite) {
 				return ((ITestSuite) parentElement).getCases().toArray();
@@ -121,6 +119,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement == input) {
 				return input.getSuites().toArray();
@@ -131,10 +130,12 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof ITestSuite) {
 				return !((ITestSuite) element).getCases().isEmpty();
@@ -142,6 +143,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			return false;
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof TestResult) {
 				input = (TestResult) newInput;
@@ -224,19 +226,13 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		GridDataFactory.fillDefaults().hint(300, 100).span(6, 1).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new TestResultContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new TestResultLabelProvider(), null, null));
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
-			}
-		});
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (item instanceof ITestSuite) {
-					TestResultManager.openInEditor((ITestSuite) item);
-				} else if (item instanceof ITestCase) {
-					TestResultManager.openInEditor((ITestCase) item);
-				}
+		viewer.addSelectionChangedListener(event -> getPage().getSite().getSelectionProvider().setSelection(event.getSelection()));
+		viewer.addOpenListener(event -> {
+			Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (item instanceof ITestSuite) {
+				TestResultManager.openInEditor((ITestSuite) item);
+			} else if (item instanceof ITestCase) {
+				TestResultManager.openInEditor((ITestCase) item);
 			}
 		});
 

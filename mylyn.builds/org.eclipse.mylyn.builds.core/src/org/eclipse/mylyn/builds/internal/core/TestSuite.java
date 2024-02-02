@@ -37,8 +37,8 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  */
 public class TestSuite extends TestElement implements ITestSuite {
 	/**
-	 * The cached value of the '{@link #getCases() <em>Cases</em>}' containment reference list. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCases() <em>Cases</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getCases()
 	 * @generated
@@ -52,7 +52,6 @@ public class TestSuite extends TestElement implements ITestSuite {
 	 * @generated
 	 */
 	protected TestSuite() {
-		super();
 	}
 
 	/**
@@ -68,16 +67,16 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Cases</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Cases</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<ITestCase> getCases() {
 		if (cases == null) {
-			cases = new EObjectContainmentWithInverseEList<ITestCase>(ITestCase.class, this,
+			cases = new EObjectContainmentWithInverseEList<>(ITestCase.class, this,
 					BuildPackage.TEST_SUITE__CASES, BuildPackage.TEST_CASE__SUITE);
 		}
 		return cases;
@@ -86,16 +85,17 @@ public class TestSuite extends TestElement implements ITestSuite {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Result</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Result</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestResult getResult() {
-		if (eContainerFeatureID() != BuildPackage.TEST_SUITE__RESULT)
+		if (eContainerFeatureID() != BuildPackage.TEST_SUITE__RESULT) {
 			return null;
+		}
 		return (ITestResult) eContainer();
 	}
 
@@ -114,23 +114,29 @@ public class TestSuite extends TestElement implements ITestSuite {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setResult(ITestResult newResult) {
 		if (newResult != eInternalContainer()
-				|| (eContainerFeatureID() != BuildPackage.TEST_SUITE__RESULT && newResult != null)) {
-			if (EcoreUtil.isAncestor(this, (EObject) newResult))
+				|| eContainerFeatureID() != BuildPackage.TEST_SUITE__RESULT && newResult != null) {
+			if (EcoreUtil.isAncestor(this, (EObject) newResult)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newResult != null)
+			}
+			if (newResult != null) {
 				msgs = ((InternalEObject) newResult).eInverseAdd(this, BuildPackage.TEST_RESULT__SUITES,
 						ITestResult.class, msgs);
+			}
 			msgs = basicSetResult(newResult, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_SUITE__RESULT, newResult,
 					newResult));
+		}
 	}
 
 	/**
@@ -142,12 +148,13 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getCases()).basicAdd(otherEnd, msgs);
-		case BuildPackage.TEST_SUITE__RESULT:
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetResult((ITestResult) otherEnd, msgs);
+			case BuildPackage.TEST_SUITE__CASES:
+				return ((InternalEList<InternalEObject>) (InternalEList<?>) getCases()).basicAdd(otherEnd, msgs);
+			case BuildPackage.TEST_SUITE__RESULT:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetResult((ITestResult) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -160,10 +167,10 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			return ((InternalEList<?>) getCases()).basicRemove(otherEnd, msgs);
-		case BuildPackage.TEST_SUITE__RESULT:
-			return basicSetResult(null, msgs);
+			case BuildPackage.TEST_SUITE__CASES:
+				return ((InternalEList<?>) getCases()).basicRemove(otherEnd, msgs);
+			case BuildPackage.TEST_SUITE__RESULT:
+				return basicSetResult(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -176,8 +183,9 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case BuildPackage.TEST_SUITE__RESULT:
-			return eInternalContainer().eInverseRemove(this, BuildPackage.TEST_RESULT__SUITES, ITestResult.class, msgs);
+			case BuildPackage.TEST_SUITE__RESULT:
+				return eInternalContainer().eInverseRemove(this, BuildPackage.TEST_RESULT__SUITES, ITestResult.class,
+						msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -190,10 +198,10 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			return getCases();
-		case BuildPackage.TEST_SUITE__RESULT:
-			return getResult();
+			case BuildPackage.TEST_SUITE__CASES:
+				return getCases();
+			case BuildPackage.TEST_SUITE__RESULT:
+				return getResult();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -207,13 +215,13 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			getCases().clear();
-			getCases().addAll((Collection<? extends ITestCase>) newValue);
-			return;
-		case BuildPackage.TEST_SUITE__RESULT:
-			setResult((ITestResult) newValue);
-			return;
+			case BuildPackage.TEST_SUITE__CASES:
+				getCases().clear();
+				getCases().addAll((Collection<? extends ITestCase>) newValue);
+				return;
+			case BuildPackage.TEST_SUITE__RESULT:
+				setResult((ITestResult) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -226,12 +234,12 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			getCases().clear();
-			return;
-		case BuildPackage.TEST_SUITE__RESULT:
-			setResult((ITestResult) null);
-			return;
+			case BuildPackage.TEST_SUITE__CASES:
+				getCases().clear();
+				return;
+			case BuildPackage.TEST_SUITE__RESULT:
+				setResult((ITestResult) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -244,10 +252,10 @@ public class TestSuite extends TestElement implements ITestSuite {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.TEST_SUITE__CASES:
-			return cases != null && !cases.isEmpty();
-		case BuildPackage.TEST_SUITE__RESULT:
-			return getResult() != null;
+			case BuildPackage.TEST_SUITE__CASES:
+				return cases != null && !cases.isEmpty();
+			case BuildPackage.TEST_SUITE__RESULT:
+				return getResult() != null;
 		}
 		return super.eIsSet(featureID);
 	}

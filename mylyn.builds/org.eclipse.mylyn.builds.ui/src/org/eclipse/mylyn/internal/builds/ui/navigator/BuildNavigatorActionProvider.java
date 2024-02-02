@@ -32,7 +32,7 @@ public class BuildNavigatorActionProvider extends CommonActionProvider {
 	public void init(ICommonActionExtensionSite aSite) {
 		super.init(aSite);
 
-		this.propertiesAction = new PropertiesAction();
+		propertiesAction = new PropertiesAction();
 	}
 
 	@Override
