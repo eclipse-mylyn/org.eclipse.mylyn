@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -35,11 +36,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface IRepository extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Approval Types</b></em>' containment reference list. The list contents are of
-	 * type {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Approval Types</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Approval Types</em>' containment reference list isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Approval Types</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -51,8 +52,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Task Repository Url</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Task Repository Url</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Task Repository Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -63,8 +63,8 @@ public interface IRepository extends EObject {
 	String getTaskRepositoryUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task
-	 * Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Repository Url</em>' attribute.
@@ -76,8 +76,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Task Connector Kind</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Task Connector Kind</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Task Connector Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -88,8 +87,8 @@ public interface IRepository extends EObject {
 	String getTaskConnectorKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task
-	 * Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Connector Kind</em>' attribute.
@@ -101,8 +100,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Task Repository</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Task Repository</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Task Repository</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -113,8 +111,8 @@ public interface IRepository extends EObject {
 	TaskRepository getTaskRepository();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task
-	 * Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Task Repository</em>' attribute.
@@ -126,8 +124,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Account</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Account</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Account</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -138,8 +135,8 @@ public interface IRepository extends EObject {
 	IUser getAccount();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount <em>Account</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount <em>Account</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Account</em>' reference.
@@ -153,8 +150,7 @@ public interface IRepository extends EObject {
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReview}. It is bidirectional and its opposite is '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Reviews</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Reviews</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -168,8 +164,7 @@ public interface IRepository extends EObject {
 	 * Returns the value of the '<em><b>Users</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IUser}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Users</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Users</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -181,8 +176,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -193,8 +187,8 @@ public interface IRepository extends EObject {
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription
-	 * <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.

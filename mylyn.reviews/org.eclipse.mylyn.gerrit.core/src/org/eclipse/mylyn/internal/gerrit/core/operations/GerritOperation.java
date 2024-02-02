@@ -55,7 +55,7 @@ public class GerritOperation<T> extends Job {
 	}
 
 	protected void execute(IProgressMonitor monitor) throws GerritException {
-		this.operationResult = request.execute(client, monitor);
+		operationResult = request.execute(client, monitor);
 	}
 
 	public T getOperationResult() {

@@ -29,15 +29,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -79,10 +76,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -97,8 +92,8 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.Version;
 
 /**
- * This class initiate a new workbench view. The view shows data obtained from Gerrit Dashboard model. The view is
- * connected to the model using a content provider.
+ * This class initiate a new workbench view. The view shows data obtained from Gerrit Dashboard model. The view is connected to the model
+ * using a content provider.
  * <p>
  * The view uses a label provider to define how model objects should be presented in the view.
  *
@@ -154,7 +149,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private Button fSearchRequestBtn;
 
-	private Set<String> fRequestList = new LinkedHashSet<String>();
+	private Set<String> fRequestList = new LinkedHashSet<>();
 
 	private TableViewer fViewer;
 
@@ -166,7 +161,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private Action doubleClickAction;
 
-	private final LinkedHashSet<Job> fJobs = new LinkedHashSet<Job>();
+	private final LinkedHashSet<Job> fJobs = new LinkedHashSet<>();
 
 	// ------------------------------------------------------------------------
 	// TableRefreshJob
@@ -183,14 +178,11 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 		@Override
 		protected void doRefresh(Object[] items) {
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					fViewer.setInput(fReviewTable.getReviews());
-					//Refresh the counter
-					setReviewsTotalResultLabel(Integer.toString(fReviewTable.getReviews().length));
-					fViewer.refresh(false, false);
-				}
+			Display.getDefault().syncExec(() -> {
+				fViewer.setInput(fReviewTable.getReviews());
+				//Refresh the counter
+				setReviewsTotalResultLabel(Integer.toString(fReviewTable.getReviews().length));
+				fViewer.refresh(false, false);
 			});
 		}
 	}
@@ -354,37 +346,24 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		setSearchText(""); //$NON-NLS-1$
 
 		//Handle the CR in the search text
-		fSearchRequestText.addListener(SWT.DefaultSelection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				//The shorten request is: "is:open" with 7 characters, so need to process the command if text is smaller
-				if (fSearchRequestText.getText().trim().length() > 6) {
-					processCommands(GerritQuery.CUSTOM);
-				}
+		fSearchRequestText.addListener(SWT.DefaultSelection, event -> {
+			//The shorten request is: "is:open" with 7 characters, so need to process the command if text is smaller
+			if (fSearchRequestText.getText().trim().length() > 6) {
+				processCommands(GerritQuery.CUSTOM);
 			}
 		});
 
 		//Create a SEARCH button
 		fSearchRequestBtn = new Button(rightSearchForm, SWT.NONE);
 		fSearchRequestBtn.setText(Messages.GerritTableView_search);
-		fSearchRequestBtn.addListener(SWT.Selection, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				processCommands(GerritQuery.CUSTOM);
-			}
-		});
+		fSearchRequestBtn.addListener(SWT.Selection, event -> processCommands(GerritQuery.CUSTOM));
 
 	}
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager(Messages.GerritTableView_popupMenu);
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				GerritTableView.this.fillContextMenu(manager);
-			}
-		});
+		menuMgr.addMenuListener(GerritTableView.this::fillContextMenu);
 		Menu menu = menuMgr.createContextMenu(fViewer.getControl());
 		fViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, fViewer);
@@ -410,10 +389,9 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 				// Retrieve the single table selection ("the" task)
 				ISelection selection = fViewer.getSelection();
-				if (!(selection instanceof IStructuredSelection)) {
+				if (!(selection instanceof IStructuredSelection structuredSelection)) {
 					return;
 				}
-				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 				if (structuredSelection.size() != 1) {
 					return;
 				}
@@ -431,11 +409,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	}
 
 	private void hookDoubleClickAction() {
-		fViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
+		fViewer.addDoubleClickListener(event -> doubleClickAction.run());
 	}
 
 	/**
@@ -553,10 +527,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 				}
 
 			} else if (fMapRepoServer.size() > 1) {
-				List<TaskRepository> listTaskRepository = new ArrayList<TaskRepository>();
-				for (TaskRepository key : mapSet) {
-					listTaskRepository.add(key);
-				}
+				List<TaskRepository> listTaskRepository = new ArrayList<>(mapSet);
 				fTaskRepository = getSelectedRepositoryURL(listTaskRepository);
 				if (fTaskRepository != null) {
 					//Save it for the next query time
@@ -569,10 +540,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		if (fTaskRepository == null) {
 			UIUtils.showErrorDialog(Messages.GerritTableView_defineRepository,
 					Messages.GerritTableView_noGerritRepository);
-		} else {
-			if (aQuery != null && !aQuery.equals("")) { //$NON-NLS-1$
-				updateTable(fTaskRepository, aQuery);
-			}
+		} else if (aQuery != null && !aQuery.equals("")) { //$NON-NLS-1$
+			updateTable(fTaskRepository, aQuery);
 		}
 	}
 
@@ -674,27 +643,24 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					fReviewTable.createReviewItem(aQueryType, aTaskRepo);
 					status = getReviews(aTaskRepo, aQueryType);
 					if (status.isOK()) {
-						Display.getDefault().syncExec(new Runnable() {
-							@Override
-							public void run() {
-								if (aQueryType != GerritQuery.CUSTOM) {
-									if (fCurrentQuery != null) {
-										String query = fCurrentQuery.getAttribute(GerritQuery.QUERY_STRING);
-										setSearchText(query);
-									}
-								} else {
-									//Record the custom query
-									setSearchText(getSearchText());
+						Display.getDefault().syncExec(() -> {
+							if (aQueryType != GerritQuery.CUSTOM) {
+								if (fCurrentQuery != null) {
+									String query = fCurrentQuery.getAttribute(GerritQuery.QUERY_STRING);
+									setSearchText(query);
 								}
-								boolean ok = setConnector(fConnector);
-								GerritClient gerritClient = null;
-								if (ok) {
-									gerritClient = fConnector.getClient(aTaskRepo);
-								}
-								if (gerritClient != null) {
-									setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(),
-											gerritClient.getVersion().toString());
-								}
+							} else {
+								//Record the custom query
+								setSearchText(getSearchText());
+							}
+							boolean ok = setConnector(fConnector);
+							GerritClient gerritClient = null;
+							if (ok) {
+								gerritClient = fConnector.getClient(aTaskRepo);
+							}
+							if (gerritClient != null) {
+								setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(),
+										gerritClient.getVersion().toString());
 							}
 						});
 					}
@@ -733,12 +699,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 				if (index != -1) {
 					fRequestList.remove(fRequestList.remove(ar[index]));
-				} else {
-					//Remove the oldest element from the list
-					if (fRequestList.size() > SEARCH_SIZE_MENU_LIST) {
-						Object obj = fRequestList.iterator().next(); //Should be the first item in the list
-						fRequestList.remove(fRequestList.remove(obj));
-					}
+				} else //Remove the oldest element from the list
+				if (fRequestList.size() > SEARCH_SIZE_MENU_LIST) {
+					Object obj = fRequestList.iterator().next(); //Should be the first item in the list
+					fRequestList.remove(fRequestList.remove(obj));
 				}
 				//Add the new text in the combo
 				fRequestList.add(aSt.trim());
@@ -758,8 +722,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	}
 
 	/**
-	 * Take the list of last save queries and reverse the order to have the latest selection to be the first one on the
-	 * pull-down menu
+	 * Take the list of last save queries and reverse the order to have the latest selection to be the first one on the pull-down menu
 	 *
 	 * @param aList
 	 *            String[]
@@ -778,11 +741,9 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private String getSearchText() {
 		if (!fSearchRequestText.isDisposed()) {
 			final String[] str = new String[1];
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					str[0] = fSearchRequestText.getText().trim();
-					GerritUi.Ftracer.traceInfo("Custom string: " + str[0]); //$NON-NLS-1$
-				}
+			Display.getDefault().syncExec(() -> {
+				str[0] = fSearchRequestText.getText().trim();
+				GerritUi.Ftracer.traceInfo("Custom string: " + str[0]); //$NON-NLS-1$
 			});
 			return str[0];
 		}
@@ -794,12 +755,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	// ------------------------------------------------------------------------
 
 	private void displayWarning(final String st) {
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				final MessageDialog dialog = new MessageDialog(null, Messages.GerritTableView_warning, null, st,
-						MessageDialog.WARNING, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
-				dialog.open();
-			}
+		Display.getDefault().syncExec(() -> {
+			final MessageDialog dialog = new MessageDialog(null, Messages.GerritTableView_warning, null, st,
+					MessageDialog.WARNING, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+			dialog.open();
 		});
 	}
 
@@ -901,7 +860,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		}
 
 		// Extract the result
-		List<GerritTask> reviews = new ArrayList<GerritTask>();
+		List<GerritTask> reviews = new ArrayList<>();
 		List<TaskData> tasksData = resultCollector.getResults();
 		for (TaskData taskData : tasksData) {
 			GerritTask review = new GerritTask(taskData);
@@ -922,25 +881,25 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		for (TaskContainerDelta taskContainerDelta : deltas) {
 			IRepositoryElement element = taskContainerDelta.getElement();
 			switch (taskContainerDelta.getKind()) {
-			case ROOT:
-				refresh();
-				break;
-			case ADDED:
-			case CONTENT:
-				if (element != null && element instanceof TaskTask) {
-					updateReview((TaskTask) element);
-				}
-				refresh();
-				break;
-			case DELETED:
-			case REMOVED:
-				if (element != null && element instanceof TaskTask) {
-					deleteReview((TaskTask) element);
-				}
-				refresh();
-				break;
-			default:
-				break;
+				case ROOT:
+					refresh();
+					break;
+				case ADDED:
+				case CONTENT:
+					if (element != null && element instanceof TaskTask) {
+						updateReview((TaskTask) element);
+					}
+					refresh();
+					break;
+				case DELETED:
+				case REMOVED:
+					if (element != null && element instanceof TaskTask) {
+						deleteReview((TaskTask) element);
+					}
+					refresh();
+					break;
+				default:
+					break;
 			}
 		}
 	}

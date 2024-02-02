@@ -57,7 +57,7 @@ public class GerritServerUtility {
 
 	private static GerritServerUtility instance = null;
 
-	private static Map<TaskRepository, String> fResultTask = new HashMap<TaskRepository, String>();
+	private static Map<TaskRepository, String> fResultTask = new HashMap<>();
 
 	// ------------------------------------------------------------------------
 	// Constructors
@@ -106,7 +106,7 @@ public class GerritServerUtility {
 	private void adjustTemplatemanager(TaskRepository aTaskRepo) {
 		RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
 		//Verify to only add once in the repository template
-		Boolean found = false;
+		boolean found = false;
 		for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
 			String convertedRemoteURL = aTaskRepo.getRepositoryUrl();
 			GerritPlugin.Ftracer.traceInfo("\t template.label: " + template.label + "\t repo label: " //$NON-NLS-1$ //$NON-NLS-2$
@@ -122,7 +122,7 @@ public class GerritServerUtility {
 		if (!found) {
 			//Set each parameter of the Gerrit server
 			String userName = aTaskRepo.getUserName();
-			Boolean anonymous = (userName != null && !userName.isEmpty()) ? false : true;
+			Boolean anonymous = userName != null && !userName.isEmpty() ? false : true;
 
 			//Create a repository template
 			RepositoryTemplate templateTest = new RepositoryTemplate(aTaskRepo.getRepositoryLabel(),
@@ -185,7 +185,7 @@ public class GerritServerUtility {
 	 * @return Boolean
 	 */
 	public Boolean saveLastGerritServer(String aURL) {
-		Boolean ok = true;
+		boolean ok = true;
 		File file = getLastGerritFile();
 		try {
 			FileWriter fw = new FileWriter(file);

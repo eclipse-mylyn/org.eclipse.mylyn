@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.util.Map;
 
 /**
- * Data model object for <a href=
- * "https://gerrit-review.googlesource.com/Documentation/rest-api-config.html#download-scheme-info">DownloadSchemeInfo</a>.
+ * Data model object for
+ * <a href= "https://gerrit-review.googlesource.com/Documentation/rest-api-config.html#download-scheme-info">DownloadSchemeInfo</a>.
  *
  * @since 2.12
  */

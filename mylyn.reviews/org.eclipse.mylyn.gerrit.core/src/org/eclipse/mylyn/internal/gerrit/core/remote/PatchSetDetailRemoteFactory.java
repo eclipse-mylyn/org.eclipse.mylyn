@@ -30,8 +30,8 @@ import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
- * Converts patch set details to review sets. Does not retrive actual patch set content. Does not require a remote
- * invocation, as the neccesary data is collected as part of {@link GerritReviewRemoteFactory} API call.
+ * Converts patch set details to review sets. Does not retrive actual patch set content. Does not require a remote invocation, as the
+ * neccesary data is collected as part of {@link GerritReviewRemoteFactory} API call.
  * 
  * @author Miles Parker
  * @author Steffen Pingel

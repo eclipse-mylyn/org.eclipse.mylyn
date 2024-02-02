@@ -123,7 +123,7 @@ public class ChangeDetailXTest extends TestCase {
 
 	private static GerritConfigX getTestConfig() {
 		GerritConfigX result = new GerritConfigX();
-		List<ApprovalType> approvals = new ArrayList<ApprovalType>(3);
+		List<ApprovalType> approvals = new ArrayList<>(3);
 		approvals.add(ApprovalUtil.CRVW);
 		approvals.add(ApprovalUtil.VRIF);
 		approvals.add(ApprovalUtil.IPCL);

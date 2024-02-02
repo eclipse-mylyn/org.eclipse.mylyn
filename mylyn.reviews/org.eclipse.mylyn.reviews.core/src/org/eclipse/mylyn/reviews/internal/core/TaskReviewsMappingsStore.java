@@ -33,10 +33,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
- * This class is used by review connectors to provide a mapping from tasks to reviews. These mappings are used by
- * TaskEditorReviewPart to give a table of the reviews pertaining to a task. The class is limited as it maps one task to
- * many reviews. It is however possible (albeit strange) to have multiple tasks for one review. This is a limitation by
- * design.
+ * This class is used by review connectors to provide a mapping from tasks to reviews. These mappings are used by TaskEditorReviewPart to
+ * give a table of the reviews pertaining to a task. The class is limited as it maps one task to many reviews. It is however possible
+ * (albeit strange) to have multiple tasks for one review. This is a limitation by design.
  *
  * @author Blaine Lewis
  */
@@ -145,11 +144,9 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 			if (delta.getKind() == Kind.DELETED) {
 				IRepositoryElement reviewRepoElement = delta.getElement();
 
-				if (!(reviewRepoElement instanceof ITask)) {
+				if (!(reviewRepoElement instanceof ITask review)) {
 					continue;
 				}
-
-				ITask review = (ITask) reviewRepoElement;
 
 				//We need to check it in case the mapping was removed from the task
 				AbstractRepositoryConnector connector = repositoryManager

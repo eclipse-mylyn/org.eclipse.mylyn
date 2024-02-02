@@ -69,7 +69,7 @@ public class GerritCommentLinkDetector {
 				continue;
 			}
 			if (links == null) {
-				links = new ArrayList<IHyperlink>();
+				links = new ArrayList<>();
 			}
 			String url = href;
 			for (int i = 1; i <= matcher.groupCount(); i++) {

@@ -25,7 +25,7 @@ public class ReviewItemCache {
 	private final Map<String, IReviewItem> reviewItemById;
 
 	public ReviewItemCache() {
-		reviewItemById = new HashMap<String, IReviewItem>();
+		reviewItemById = new HashMap<>();
 	}
 
 	public IReviewItem getItem(String id) {

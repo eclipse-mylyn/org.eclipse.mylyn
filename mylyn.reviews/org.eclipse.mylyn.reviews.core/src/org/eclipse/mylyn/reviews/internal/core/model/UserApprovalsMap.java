@@ -11,33 +11,20 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import java.util.Map.Entry;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEMap;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>User Approvals Map</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>User Approvals Map</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -50,8 +37,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  */
 public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUser, IReviewerEntry> {
 	/**
-	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTypedKey()
 	 * @generated
@@ -60,8 +46,8 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	protected IUser key;
 
 	/**
-	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getTypedValue()
 	 * @generated
@@ -75,7 +61,6 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * @generated
 	 */
 	protected UserApprovalsMap() {
-		super();
 	}
 
 	/**
@@ -222,8 +207,8 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			return basicSetTypedValue(null, msgs);
+			case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+				return basicSetTypedValue(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -236,16 +221,16 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.USER_APPROVALS_MAP__KEY:
-			if (resolve) {
-				return getTypedKey();
-			}
-			return basicGetTypedKey();
-		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			if (resolve) {
-				return getTypedValue();
-			}
-			return basicGetTypedValue();
+			case ReviewsPackage.USER_APPROVALS_MAP__KEY:
+				if (resolve) {
+					return getTypedKey();
+				}
+				return basicGetTypedKey();
+			case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+				if (resolve) {
+					return getTypedValue();
+				}
+				return basicGetTypedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -259,12 +244,12 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.USER_APPROVALS_MAP__KEY:
-			setTypedKey((IUser) newValue);
-			return;
-		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			setTypedValue((IReviewerEntry) newValue);
-			return;
+			case ReviewsPackage.USER_APPROVALS_MAP__KEY:
+				setTypedKey((IUser) newValue);
+				return;
+			case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+				setTypedValue((IReviewerEntry) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -277,12 +262,12 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.USER_APPROVALS_MAP__KEY:
-			setTypedKey((IUser) null);
-			return;
-		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			setTypedValue((IReviewerEntry) null);
-			return;
+			case ReviewsPackage.USER_APPROVALS_MAP__KEY:
+				setTypedKey((IUser) null);
+				return;
+			case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+				setTypedValue((IReviewerEntry) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -295,10 +280,10 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.USER_APPROVALS_MAP__KEY:
-			return key != null;
-		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			return value != null;
+			case ReviewsPackage.USER_APPROVALS_MAP__KEY:
+				return key != null;
+			case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+				return value != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -315,10 +300,11 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getHash() {
 		if (hash == -1) {
 			Object theKey = getKey();
-			hash = (theKey == null ? 0 : theKey.hashCode());
+			hash = theKey == null ? 0 : theKey.hashCode();
 		}
 		return hash;
 	}
@@ -328,6 +314,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setHash(int hash) {
 		this.hash = hash;
 	}
@@ -337,6 +324,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getKey() {
 		return getTypedKey();
 	}
@@ -346,6 +334,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setKey(IUser key) {
 		setTypedKey(key);
 	}
@@ -355,6 +344,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReviewerEntry getValue() {
 		return getTypedValue();
 	}
@@ -364,6 +354,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReviewerEntry setValue(IReviewerEntry value) {
 		IReviewerEntry oldValue = getValue();
 		setTypedValue(value);

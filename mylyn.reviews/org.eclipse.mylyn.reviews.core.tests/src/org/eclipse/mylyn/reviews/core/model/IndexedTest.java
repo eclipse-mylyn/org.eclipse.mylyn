@@ -58,7 +58,7 @@ public class IndexedTest {
 
 	@Test
 	public void testLineLocation() {
-		List<ILineLocation> orderable = new ArrayList<ILineLocation>();
+		List<ILineLocation> orderable = new ArrayList<>();
 		orderable.add(l1);
 		orderable.add(l2);
 		Collections.sort(orderable, IIndexed.COMPARATOR);
@@ -72,7 +72,7 @@ public class IndexedTest {
 		IComment c2 = ReviewsFactory.eINSTANCE.createComment();
 		c1.getLocations().add(l1);
 		c2.getLocations().add(l2);
-		List<IComment> orderable = new ArrayList<IComment>();
+		List<IComment> orderable = new ArrayList<>();
 		orderable.add(c1);
 		orderable.add(c2);
 

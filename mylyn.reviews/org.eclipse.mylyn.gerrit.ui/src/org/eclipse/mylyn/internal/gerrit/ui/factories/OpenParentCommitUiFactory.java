@@ -52,12 +52,7 @@ public class OpenParentCommitUiFactory extends OpenCommitUiFactory {
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					Display.getDefault().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							CommitEditor.openQuiet(job.getCommit());
-						}
-					});
+					Display.getDefault().asyncExec(() -> CommitEditor.openQuiet(job.getCommit()));
 				}
 			});
 		}

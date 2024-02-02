@@ -16,10 +16,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -30,15 +28,13 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRepository} object. <!--
- * begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRepository} object. <!-- begin-user-doc --> <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -73,8 +69,7 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This adds a property descriptor for the Task Repository Url feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This adds a property descriptor for the Task Repository Url feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -89,8 +84,7 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This adds a property descriptor for the Task Connector Kind feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This adds a property descriptor for the Task Connector Kind feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -151,8 +145,7 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -203,9 +196,8 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
-	 * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -214,24 +206,24 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IRepository.class)) {
-		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
-		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
-		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
-		case ReviewsPackage.REPOSITORY__DESCRIPTION:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-			return;
-		case ReviewsPackage.REPOSITORY__APPROVAL_TYPES:
-		case ReviewsPackage.REPOSITORY__REVIEWS:
-		case ReviewsPackage.REPOSITORY__USERS:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-			return;
+			case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+			case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+			case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			case ReviewsPackage.REPOSITORY__DESCRIPTION:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case ReviewsPackage.REPOSITORY__APPROVAL_TYPES:
+			case ReviewsPackage.REPOSITORY__REVIEWS:
+			case ReviewsPackage.REPOSITORY__USERS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
-	 * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

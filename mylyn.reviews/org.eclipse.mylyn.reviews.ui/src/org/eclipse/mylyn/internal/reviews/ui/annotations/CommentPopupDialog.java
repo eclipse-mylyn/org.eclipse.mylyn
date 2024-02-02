@@ -106,9 +106,9 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	public CommentPopupDialog(Shell parent, int shellStyle, IReviewItem reviewitm, LineRange range,
 			boolean isCommentNavigator) {
 		super(parent, shellStyle, false, false, false, false, false, null, null);
-		this.reviewItem = reviewitm;
+		reviewItem = reviewitm;
 		this.range = range;
-		this.editable = true;
+		editable = true;
 		this.isCommentNavigator = isCommentNavigator;
 	}
 
@@ -147,8 +147,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 * Closes the dialog
 	 *
 	 * @param force
-	 *            true if the dialog should close under all conditions, false if the dialog should check for edited text
-	 *            in the editor
+	 *            true if the dialog should close under all conditions, false if the dialog should check for edited text in the editor
 	 * @return true if the dialog has been closed, false otherwise
 	 */
 	protected boolean close(boolean force) {
@@ -165,8 +164,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 * Disposes the dialog
 	 *
 	 * @param force
-	 *            true if the dialog should be disposed under all conditions, false if the dialog should check for
-	 *            edited text in the editor
+	 *            true if the dialog should be disposed under all conditions, false if the dialog should check for edited text in the editor
 	 */
 	public void dispose(boolean force) {
 		if (force || !hasEdits()) {
@@ -291,7 +289,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	public void setSizeConstraints(int newMaxWidth, int newMaxHeight) {
-		this.maxWidth = newMaxWidth;
+		maxWidth = newMaxWidth;
 	}
 
 	/**
@@ -368,15 +366,15 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	/**
-	 * Initializes the comment dialog with the comments (and review item/line range if it wasn't provided on
-	 * construction) from the {@link CommentAnnotationHoverInput} provided
+	 * Initializes the comment dialog with the comments (and review item/line range if it wasn't provided on construction) from the
+	 * {@link CommentAnnotationHoverInput} provided
 	 *
 	 * @param input
 	 *            the input of the comment dialog
 	 */
 	public void setInput(Object input) {
 		if (input instanceof CommentAnnotationHoverInput) {
-			this.annotationInput = (CommentAnnotationHoverInput) input;
+			annotationInput = (CommentAnnotationHoverInput) input;
 
 			// clear the composite in case we are re-using it
 			for (Control control : composite.getChildren()) {
@@ -385,7 +383,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 			currentPopupDialog = this;
 
-			commentList = new ArrayList<IComment>();
+			commentList = new ArrayList<>();
 			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
 				if (reviewItem == null) {
 					if (annotation.getComment().getItem() instanceof IReviewItem) {
@@ -402,7 +400,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 					}
 				}
 
-				if ((reviewItem != null) && reviewItem.getReview() != null
+				if (reviewItem != null && reviewItem.getReview() != null
 						&& reviewItem.getReview().getRepository() != null
 						&& reviewItem.getReview().getRepository().getAccount() != null
 						&& reviewItem.getReview().getRepository().getAccount() != annotation.getComment().getAuthor()
@@ -435,7 +433,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 					helpText.setText(Messages.CommentPopupDialog_HelpText);
 				}
 			} else {
-				this.editable = false;
+				editable = false;
 			}
 
 			if (isCommentNavigator) {
@@ -451,7 +449,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 * @return the list of {@link Section} that are children of the dialog's scrolled composite
 	 */
 	protected List<Section> getScrolledCompositeSections() {
-		List<Section> sections = new ArrayList<Section>();
+		List<Section> sections = new ArrayList<>();
 		if (scrolledComposite.getChildren().length != 0 && scrolledComposite.getChildren()[0] instanceof Composite) {
 			Composite sectionContainer = (Composite) scrolledComposite.getChildren()[0];
 			sections = Arrays.asList(sectionContainer.getChildren())
@@ -501,8 +499,8 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	/**
-	 * Creates a mouse down {@link MouseAdapter} to add the comment editor to the dialog. It will attempt to get the
-	 * comment associated with the {@link Control} you clicked on.
+	 * Creates a mouse down {@link MouseAdapter} to add the comment editor to the dialog. It will attempt to get the comment associated with
+	 * the {@link Control} you clicked on.
 	 *
 	 * @return the {@link MouseAdapter} that can invoke the comment editor on mouse down events
 	 */
@@ -551,11 +549,10 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	/**
 	 * Helper method to get the last comment draft in the dialog's comment list
 	 *
-	 * @return the last {@link IComment} in the comment list if there is at least one draft in the comment list or null
-	 *         otherwise
+	 * @return the last {@link IComment} in the comment list if there is at least one draft in the comment list or null otherwise
 	 */
 	protected IComment getLastCommentDraft() {
-		return commentList.stream().filter(input -> input.isDraft()).reduce((first, second) -> second).orElse(null);
+		return commentList.stream().filter(IComment::isDraft).reduce((first, second) -> second).orElse(null);
 
 	}
 
@@ -569,6 +566,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	/**
 	 * Force closes the dialog when an action is about to run
 	 */
+	@Override
 	public void actionAboutToRun(Action action) {
 		close(true);
 	}
@@ -576,6 +574,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	/**
 	 * Force close the dialog when an action ran
 	 */
+	@Override
 	public void actionRan(Action action) {
 		close(true);
 	}
@@ -585,7 +584,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	public void setInformationControl(CommentInformationControl crucibleInformationControl) {
-		this.informationControl = crucibleInformationControl;
+		informationControl = crucibleInformationControl;
 	}
 
 	public CommentInformationControl getInformationControl() {

@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.Proxy;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Random;
@@ -35,7 +34,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -224,10 +222,10 @@ class ReviewHarness {
 		assertThat(targetCommit.toString(), is(commitId));
 
 		git.checkout()
-		.setCreateBranch(true)
-		.setName("change" + "/" + getReview().getId() + "/" + number)
-		.setStartPoint(targetCommit)
-		.call();
+				.setCreateBranch(true)
+				.setName("change" + "/" + getReview().getId() + "/" + number)
+				.setStartPoint(targetCommit)
+				.call();
 	}
 
 	private RevCommit parseCommit(ObjectId ref) throws IOException {
@@ -245,12 +243,7 @@ class ReviewHarness {
 			UserCredentials credentials = GerritFixture.current().getCredentials(PrivilegeLevel.ADMIN);
 
 			WebLocation location = new WebLocation(GerritFixture.current().getRepositoryUrl(),
-					credentials.getUserName(), credentials.getPassword(), new IProxyProvider() {
-				@Override
-				public Proxy getProxyForHost(String host, String proxyType) {
-					return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
-				}
-			});
+					credentials.getUserName(), credentials.getPassword(), (host, proxyType) -> WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl()));
 
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
 					.getRepository(GerritFixture.current().getRepositoryUrl());

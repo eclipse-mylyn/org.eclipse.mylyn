@@ -26,8 +26,7 @@ class RemoteNotification {
 	static final int REMOTE_UPDATE = 1;
 
 	/**
-	 * An {@link Notification#getEventType event type} indicating that the object is in the process of being updated
-	 * from a remote source.
+	 * An {@link Notification#getEventType event type} indicating that the object is in the process of being updated from a remote source.
 	 */
 	static final int REMOTE_UPDATING = 2;
 

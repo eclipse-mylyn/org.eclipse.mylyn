@@ -95,51 +95,45 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 			throw new RuntimeException(e);
 		}
 
-		final AtomicReference<OpenIdAuthenticationResponse> result = new AtomicReference<OpenIdAuthenticationResponse>();
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(),
-						Messages.GerritRepositoryLocationUi_Login, null,
-						Messages.GerritRepositoryLocationUi_Login_to_OpenID_Provider, MessageDialog.NONE,
-						new String[] { IDialogConstants.CANCEL_LABEL }, 0) {
-					@Override
-					protected Point getInitialSize() {
-						return new Point(780, 580);
-					}
-				};
-				dialog.create();
+		final AtomicReference<OpenIdAuthenticationResponse> result = new AtomicReference<>();
+		Display.getDefault().syncExec(() -> {
+			final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(),
+					Messages.GerritRepositoryLocationUi_Login, null,
+					Messages.GerritRepositoryLocationUi_Login_to_OpenID_Provider, MessageDialog.NONE,
+					new String[] { IDialogConstants.CANCEL_LABEL }, 0) {
+				@Override
+				protected Point getInitialSize() {
+					return new Point(780, 580);
+				}
+			};
+			dialog.create();
 
-				dialog.getBrowser().addLocationListener(new LocationAdapter() {
-					@Override
-					public void changing(LocationEvent event) {
-						if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
-							result.set(new OpenIdAuthenticationResponse(event.location, null));
-						}
-						// alternatively check cookies since IE does not notify listeners of redirects
-						String value = Browser.getCookie(request.getCookie(), request.getCookieUrl());
-						if (value != null) {
-							result.set(new OpenIdAuthenticationResponse(event.location, value));
-						}
-						if (result.get() != null) {
-							event.doit = false;
-							// delay execution to avoid IE crash
-							dialog.getBrowser().getDisplay().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									if (dialog.getShell() != null && !dialog.getShell().isDisposed()) {
-										dialog.close();
-									}
-								}
-							});
-						}
+			dialog.getBrowser().addLocationListener(new LocationAdapter() {
+				@Override
+				public void changing(LocationEvent event) {
+					if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
+						result.set(new OpenIdAuthenticationResponse(event.location, null));
 					}
-				});
+					// alternatively check cookies since IE does not notify listeners of redirects
+					String value = Browser.getCookie(request.getCookie(), request.getCookieUrl());
+					if (value != null) {
+						result.set(new OpenIdAuthenticationResponse(event.location, value));
+					}
+					if (result.get() != null) {
+						event.doit = false;
+						// delay execution to avoid IE crash
+						dialog.getBrowser().getDisplay().asyncExec(() -> {
+							if (dialog.getShell() != null && !dialog.getShell().isDisposed()) {
+								dialog.close();
+							}
+						});
+					}
+				}
+			});
 
-				// navigate to login page
-				dialog.getBrowser().setUrl(request.getRequestUrl() + "?" + sb.toString()); //$NON-NLS-1$
-				dialog.open();
-			}
+			// navigate to login page
+			dialog.getBrowser().setUrl(request.getRequestUrl() + "?" + sb.toString()); //$NON-NLS-1$
+			dialog.open();
 		});
 		return result.get();
 	}

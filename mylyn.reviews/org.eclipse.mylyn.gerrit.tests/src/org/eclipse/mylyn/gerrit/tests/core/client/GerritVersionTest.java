@@ -14,10 +14,11 @@ package org.eclipse.mylyn.gerrit.tests.core.client;
 
 import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion2112OrLater;
 import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.parseGerritVersion;
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.osgi.framework.Version;
+
+import junit.framework.TestCase;
 
 public class GerritVersionTest extends TestCase {
 

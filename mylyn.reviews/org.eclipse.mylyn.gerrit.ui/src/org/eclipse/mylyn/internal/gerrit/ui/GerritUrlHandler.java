@@ -102,9 +102,8 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 	}
 
 	/**
-	 * Returns the patch set number as encoded in a Gerrit URL. For example,
-	 * "http://review.mylyn.org/#/c/4698/5/foo/bar", "4698" -> 5. Returns -1 if the patch set number isn't specified or
-	 * is not an integer.
+	 * Returns the patch set number as encoded in a Gerrit URL. For example, "http://review.mylyn.org/#/c/4698/5/foo/bar", "4698" -> 5.
+	 * Returns -1 if the patch set number isn't specified or is not an integer.
 	 */
 	int getPatchSetNumber(TaskRepository repository, String url, String taskId) {
 		String[] fragments = StringUtils.split(extractUrlQualifiers(repository, url, taskId), "/"); //$NON-NLS-1$

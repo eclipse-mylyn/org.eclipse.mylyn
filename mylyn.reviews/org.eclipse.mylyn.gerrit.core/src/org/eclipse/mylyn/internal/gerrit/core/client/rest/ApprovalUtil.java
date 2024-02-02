@@ -37,7 +37,7 @@ public final class ApprovalUtil {
 		ApprovalCategory vrifCategory = new ApprovalCategory(new ApprovalCategory.Id("VRIF"), "Verified"); //$NON-NLS-1$ //$NON-NLS-2$
 		vrifCategory.setAbbreviatedName("V"); //$NON-NLS-1$
 		vrifCategory.setPosition((short) 0);
-		List<ApprovalCategoryValue> vrifValues = new ArrayList<ApprovalCategoryValue>(3);
+		List<ApprovalCategoryValue> vrifValues = new ArrayList<>(3);
 		vrifValues.add(
 				new ApprovalCategoryValue(new ApprovalCategoryValue.Id(vrifCategory.getId(), (short) -1), "Fails")); //$NON-NLS-1$
 		vrifValues.add(
@@ -49,7 +49,7 @@ public final class ApprovalUtil {
 		ApprovalCategory crvwCategory = new ApprovalCategory(new ApprovalCategory.Id("CRVW"), "Code Review"); //$NON-NLS-1$ //$NON-NLS-2$
 		crvwCategory.setAbbreviatedName("R"); //$NON-NLS-1$
 		crvwCategory.setPosition((short) 1);
-		List<ApprovalCategoryValue> crvwValues = new ArrayList<ApprovalCategoryValue>(5);
+		List<ApprovalCategoryValue> crvwValues = new ArrayList<>(5);
 		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) -2),
 				"Do not submit")); //$NON-NLS-1$
 		crvwValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(crvwCategory.getId(), (short) -1),
@@ -65,7 +65,7 @@ public final class ApprovalUtil {
 		ApprovalCategory ipclCategory = new ApprovalCategory(new ApprovalCategory.Id("IPCL"), "IP Clean"); //$NON-NLS-1$ //$NON-NLS-2$
 		ipclCategory.setAbbreviatedName("I"); //$NON-NLS-1$
 		ipclCategory.setPosition((short) 2);
-		List<ApprovalCategoryValue> ipclValues = new ArrayList<ApprovalCategoryValue>(3);
+		List<ApprovalCategoryValue> ipclValues = new ArrayList<>(3);
 		ipclValues.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(ipclCategory.getId(), (short) -1),
 				"Unclean IP, do not check in")); //$NON-NLS-1$
 		ipclValues.add(
@@ -74,12 +74,12 @@ public final class ApprovalUtil {
 				"IP review completed")); //$NON-NLS-1$
 		IPCL = new ApprovalType(ipclCategory, ipclValues);
 
-		BY_NAME = new HashMap<String, ApprovalType>(3);
+		BY_NAME = new HashMap<>(3);
 		BY_NAME.put(VRIF.getCategory().getName(), VRIF);
 		BY_NAME.put(CRVW.getCategory().getName(), CRVW);
 		BY_NAME.put(IPCL.getCategory().getName(), IPCL);
 
-		BY_ID = new HashMap<String, ApprovalType>(3);
+		BY_ID = new HashMap<>(3);
 		BY_ID.put(VRIF.getCategory().getId().get(), VRIF);
 		BY_ID.put(CRVW.getCategory().getId().get(), CRVW);
 		BY_ID.put(IPCL.getCategory().getId().get(), IPCL);

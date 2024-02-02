@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
@@ -57,7 +59,7 @@ public class CommentAnnotation extends Annotation {
 
 	@Override
 	public int hashCode() {
-		int result = ((position == null) ? 0 : position.hashCode());
+		int result = position == null ? 0 : position.hashCode();
 		return ModelUtil.ecoreHash(result, comment);
 	}
 
@@ -66,18 +68,11 @@ public class CommentAnnotation extends Annotation {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		CommentAnnotation other = (CommentAnnotation) obj;
-		if (position == null) {
-			if (other.position != null) {
-				return false;
-			}
-		} else if (!position.equals(other.position)) {
+		if (!Objects.equals(position, other.position)) {
 			return false;
 		}
 		if (comment != null && other.comment != null && comment.getId() != null && other.comment.getId() != null) {

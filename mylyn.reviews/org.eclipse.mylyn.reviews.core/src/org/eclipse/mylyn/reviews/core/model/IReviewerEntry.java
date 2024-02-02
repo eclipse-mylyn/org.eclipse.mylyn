@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -28,11 +29,11 @@ import org.eclipse.emf.ecore.EObject;
 public interface IReviewerEntry extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Approvals</b></em>' map. The key is of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}, and the value is of type {@link java.lang.Integer},
-	 * <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}, and the value is of type {@link java.lang.Integer}, <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Approvals</em>' containment reference list isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Approvals</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

@@ -20,9 +20,9 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Provides access to user interface and data elements needed by UI factory implementations. This allows the same
- * factory to be used in editors as well as other interface contexts such as handlers. Except where noted, all
- * implementors are expected to return valid values for all methods.
+ * Provides access to user interface and data elements needed by UI factory implementations. This allows the same factory to be used in
+ * editors as well as other interface contexts such as handlers. Except where noted, all implementors are expected to return valid values
+ * for all methods.
  * 
  * @author Miles Parker
  */

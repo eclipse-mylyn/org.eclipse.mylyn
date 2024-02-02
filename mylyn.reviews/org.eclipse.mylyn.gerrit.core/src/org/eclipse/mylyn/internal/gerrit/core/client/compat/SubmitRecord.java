@@ -102,7 +102,7 @@ public class SubmitRecord {
 	}
 
 	public List<Label> createLabel(SubmitRecord record, HashMap<String, AccountInfo> value, String status) {
-		List<Label> list = new ArrayList<Label>();
+		List<Label> list = new ArrayList<>();
 		if (value != null) {
 			for (Map.Entry<String, AccountInfo> info : value.entrySet()) {
 				Label label = new Label();

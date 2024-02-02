@@ -21,13 +21,8 @@ import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
 import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -93,19 +88,13 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		tv.setContentProvider(new GerritRepositorySearchPageContentProvider());
 		tv.setLabelProvider(new GerritRepositorySearchPageLabelProvider());
 		tv.setInput(this);
-		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				ITreeSelection selection = (ITreeSelection) event.getSelection();
-				GerritRepositorySearchPage.this.selectionChanged(tv, selection);
-			}
+		tv.addSelectionChangedListener(event -> {
+			ITreeSelection selection = (ITreeSelection) event.getSelection();
+			GerritRepositorySearchPage.this.selectionChanged(tv, selection);
 		});
-		tv.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				ITreeSelection selection = (ITreeSelection) event.getSelection();
-				GerritRepositorySearchPage.this.doubleClick(tv, selection);
-			}
+		tv.addDoubleClickListener(event -> {
+			ITreeSelection selection = (ITreeSelection) event.getSelection();
+			GerritRepositorySearchPage.this.doubleClick(tv, selection);
 		});
 		tv.getTree().addKeyListener(new KeyAdapter() {
 			@Override
@@ -250,18 +239,16 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		clearError();
 		try {
 			final GerritClient client = GerritCorePlugin.getGerritClient(repository);
-			getContainer().run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(
-							NLS.bind(Messages.GerritRepositorySearchPage_Refreshing_X, repository.getRepositoryLabel()),
-							IProgressMonitor.UNKNOWN);
-					try {
-						client.refreshConfig(monitor);
-					} catch (GerritException e) {
-						throw new InvocationTargetException(e, e.getMessage());
-					}
-					monitor.done();
+			getContainer().run(true, true, monitor -> {
+				monitor.beginTask(
+						NLS.bind(Messages.GerritRepositorySearchPage_Refreshing_X, repository.getRepositoryLabel()),
+						IProgressMonitor.UNKNOWN);
+				try {
+					client.refreshConfig(monitor);
+				} catch (GerritException e) {
+					throw new InvocationTargetException(e, e.getMessage());
 				}
+				monitor.done();
 			});
 			tv.refresh(repository);
 		} catch (InvocationTargetException e) {

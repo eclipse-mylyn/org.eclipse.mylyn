@@ -36,12 +36,15 @@ public class ActiveReviewManager {
 	private final List<IActiveReviewListener> reviewListeners = new ArrayList<>();
 
 	private final IPartListener editorPartListener = new IPartListener() {
+		@Override
 		public void partOpened(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPart part) {
 			if (part == currentPart) {
 				currentPart = null;
@@ -49,12 +52,13 @@ public class ActiveReviewManager {
 			}
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPart part) {
-			if (part instanceof TaskEditor && currentPart != part) {
-				TaskEditor editor = (TaskEditor) part;
+			if (part instanceof TaskEditor editor && currentPart != part) {
 				IFormPage page = editor.getActivePageInstance();
 				if (page instanceof AbstractReviewTaskEditorPage) {
 					currentPart = editor;
@@ -69,13 +73,16 @@ public class ActiveReviewManager {
 
 		private IWorkbenchPage activePage;
 
+		@Override
 		public void pageOpened(IWorkbenchPage page) {
 		}
 
+		@Override
 		public void pageClosed(IWorkbenchPage page) {
 			pageActivated(null);
 		}
 
+		@Override
 		public void pageActivated(IWorkbenchPage page) {
 			if (page != activePage) {
 				if (activePage != null) {
@@ -92,16 +99,20 @@ public class ActiveReviewManager {
 
 	private final IWindowListener windowListener = new IWindowListener() {
 
+		@Override
 		public void windowOpened(IWorkbenchWindow window) {
 		}
 
+		@Override
 		public void windowDeactivated(IWorkbenchWindow window) {
 			window.removePageListener(pageListener);
 		}
 
+		@Override
 		public void windowClosed(IWorkbenchWindow window) {
 		}
 
+		@Override
 		public void windowActivated(IWorkbenchWindow window) {
 			window.addPageListener(pageListener);
 			pageListener.pageActivated(window.getActivePage());

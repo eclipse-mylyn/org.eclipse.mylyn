@@ -26,37 +26,46 @@ import org.eclipse.swt.graphics.Image;
  */
 public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 
+	@Override
 	public Image getImage(Object element) {
 		return null; //Not used
 	}
 
+	@Override
 	public String getText(Object element) {
 		return null; //Not used
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		//Not supported for now
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false; //Not supported for now
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		//Not supported for now
 	}
 
+	@Override
 	public String getAncestorLabel(Object input) {
 		return null; //Not supported
 	}
 
+	@Override
 	public Image getAncestorImage(Object input) {
 		return null; //Not supported
 	}
 
+	@Override
 	public String getLeftLabel(Object input) {
 		if (((FileItemNode) input).getLeft() instanceof FileRevisionTypedElement) {
 			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getBase().getDescription(), //$NON-NLS-1$
@@ -66,6 +75,7 @@ public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 				((FileItemNode) input).getFileItem().getName());
 	}
 
+	@Override
 	public Image getLeftImage(Object input) {
 		if (((FileItemNode) input).getLeft() instanceof FileRevisionTypedElement) {
 			return ((FileItemNode) input).getImage();
@@ -74,6 +84,7 @@ public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 		}
 	}
 
+	@Override
 	public String getRightLabel(Object input) {
 		if (((FileItemNode) input).getRight() instanceof FileRevisionTypedElement) {
 			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getTarget().getDescription(), //$NON-NLS-1$
@@ -83,6 +94,7 @@ public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 				((FileItemNode) input).getFileItem().getName());
 	}
 
+	@Override
 	public Image getRightImage(Object input) {
 		if (((FileItemNode) input).getRight() instanceof FileRevisionTypedElement) {
 			return ((FileItemNode) input).getImage();

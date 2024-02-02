@@ -45,8 +45,8 @@ public class GerritTaskDataCollector extends TaskDataCollector {
 	 * Default constructor
 	 */
 	public GerritTaskDataCollector() {
-		fResults = new ArrayList<TaskData>();
-		fFailureByTaskId = new HashMap<String, IStatus>();
+		fResults = new ArrayList<>();
+		fFailureByTaskId = new HashMap<>();
 	}
 
 	//-------------------------------------------------------------------------

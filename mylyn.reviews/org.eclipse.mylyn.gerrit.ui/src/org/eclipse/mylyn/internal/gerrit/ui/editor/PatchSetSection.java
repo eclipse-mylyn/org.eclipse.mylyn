@@ -8,8 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
- *     (Much of original functionality has been factored out, see new classes for 
- *     relevant contributor credits.) 
+ *     (Much of original functionality has been factored out, see new classes for
+ *     relevant contributor credits.)
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;

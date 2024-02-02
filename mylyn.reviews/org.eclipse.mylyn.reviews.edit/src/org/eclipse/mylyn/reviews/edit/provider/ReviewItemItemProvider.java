@@ -16,19 +16,16 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewItem} object. <!--
- * begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewItem} object. <!-- begin-user-doc --> <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -172,9 +169,8 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
-	 * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -183,18 +179,18 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IReviewItem.class)) {
-		case ReviewsPackage.REVIEW_ITEM__NAME:
-		case ReviewsPackage.REVIEW_ITEM__ID:
-		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-			return;
+			case ReviewsPackage.REVIEW_ITEM__NAME:
+			case ReviewsPackage.REVIEW_ITEM__ID:
+			case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
-	 * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -204,8 +200,8 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	}
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */

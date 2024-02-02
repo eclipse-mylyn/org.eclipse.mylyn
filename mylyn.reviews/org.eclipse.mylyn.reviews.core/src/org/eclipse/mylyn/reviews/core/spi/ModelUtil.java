@@ -28,7 +28,7 @@ public class ModelUtil {
 	}
 
 	public static int ecoreHash(int current, EObject object) {
-		return ecoreHash(current, object, new HashSet<EObject>());
+		return ecoreHash(current, object, new HashSet<>());
 	}
 
 	private static int ecoreHash(int current, EObject object, Set<EObject> references) {

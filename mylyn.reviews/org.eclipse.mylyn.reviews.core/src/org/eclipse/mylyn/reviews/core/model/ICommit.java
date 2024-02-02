@@ -40,8 +40,8 @@ public interface ICommit extends EObject {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getId <em>Id</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getId <em>Id</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
@@ -53,8 +53,7 @@ public interface ICommit extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Subject</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Subject</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Subject</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -65,8 +64,8 @@ public interface ICommit extends EObject {
 	String getSubject();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getSubject <em>Subject</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getSubject <em>Subject</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Subject</em>' attribute.

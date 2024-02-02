@@ -49,12 +49,12 @@ public class GerritChange {
 	}
 
 	void setPatchSets(List<PatchSetDetail> patchSets) {
-		this.patchSetDetails = patchSets;
+		patchSetDetails = patchSets;
 	}
 
 	void setPatchSetPublishDetailByPatchSetId(
 			Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId) {
-		this.publishDetailByPatchSetId = patchSetPublishDetailByPatchSetId;
+		publishDetailByPatchSetId = patchSetPublishDetailByPatchSetId;
 	}
 
 }

@@ -19,8 +19,8 @@ public enum DownloadSchemeX {
 
 	private final DownloadScheme downloadScheme;
 
-	private DownloadSchemeX(DownloadScheme scheme) {
-		this.downloadScheme = scheme;
+	DownloadSchemeX(DownloadScheme scheme) {
+		downloadScheme = scheme;
 	}
 
 	public DownloadScheme toDownloadScheme() {

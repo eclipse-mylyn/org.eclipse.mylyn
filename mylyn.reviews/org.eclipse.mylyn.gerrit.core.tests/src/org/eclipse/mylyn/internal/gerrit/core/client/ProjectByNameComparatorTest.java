@@ -27,8 +27,8 @@ public class ProjectByNameComparatorTest {
 
 	@Test
 	public void testCompare() {
-		String[] initialOrder = new String[] { "a", null, "bf", "Ba", "de", "f", "1" };
-		String[] expectedOrder = new String[] { "1", "a", "Ba", "bf", "de", "f", null };
+		String[] initialOrder = { "a", null, "bf", "Ba", "de", "f", "1" };
+		String[] expectedOrder = { "1", "a", "Ba", "bf", "de", "f", null };
 
 		Project[] projects = fromNames(initialOrder);
 		Arrays.sort(projects, new ProjectByNameComparator());

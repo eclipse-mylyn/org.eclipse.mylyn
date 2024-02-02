@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Review Status</b></em>', and
- * utility methods for working with them. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Review Status</b></em>', and utility methods for
+ * working with them. <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewStatus()
  * @generated
@@ -71,8 +71,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	/**
 	 * The '<em><b>New</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>New</b></em>' literal object isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of '<em><b>New</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -85,8 +84,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	/**
 	 * The '<em><b>Submitted</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Submitted</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Submitted</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -99,8 +97,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	/**
 	 * The '<em><b>Merged</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Merged</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Merged</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -113,8 +110,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	/**
 	 * The '<em><b>Abandoned</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Abandoned</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Abandoned</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -127,8 +123,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	/**
 	 * The '<em><b>Draft</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Draft</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Draft</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -143,19 +138,17 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * 
 	 * @generated
 	 */
-	private static final ReviewStatus[] VALUES_ARRAY = new ReviewStatus[] { NEW, SUBMITTED, MERGED, ABANDONED, DRAFT, };
+	private static final ReviewStatus[] VALUES_ARRAY = { NEW, SUBMITTED, MERGED, ABANDONED, DRAFT, };
 
 	/**
-	 * A public read-only list of all the '<em><b>Review Status</b></em>' enumerators. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * A public read-only list of all the '<em><b>Review Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	public static final List<ReviewStatus> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Review Status</b></em>' literal with the specified literal value. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Review Status</b></em>' literal with the specified literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -169,8 +162,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	}
 
 	/**
-	 * Returns the '<em><b>Review Status</b></em>' literal with the specified name. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the '<em><b>Review Status</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -184,23 +176,22 @@ public enum ReviewStatus implements InternalReviewStatus {
 	}
 
 	/**
-	 * Returns the '<em><b>Review Status</b></em>' literal with the specified integer value. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Review Status</b></em>' literal with the specified integer value. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	public static ReviewStatus get(int value) {
 		switch (value) {
-		case NEW_VALUE:
-			return NEW;
-		case SUBMITTED_VALUE:
-			return SUBMITTED;
-		case MERGED_VALUE:
-			return MERGED;
-		case ABANDONED_VALUE:
-			return ABANDONED;
-		case DRAFT_VALUE:
-			return DRAFT;
+			case NEW_VALUE:
+				return NEW;
+			case SUBMITTED_VALUE:
+				return SUBMITTED;
+			case MERGED_VALUE:
+				return MERGED;
+			case ABANDONED_VALUE:
+				return ABANDONED;
+			case DRAFT_VALUE:
+				return DRAFT;
 		}
 		return null;
 	}
@@ -231,7 +222,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * 
 	 * @generated
 	 */
-	private ReviewStatus(int value, String name, String literal) {
+	ReviewStatus(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -242,6 +233,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -251,6 +243,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -260,13 +253,13 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -278,8 +271,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 } //ReviewStatus
 
 /**
- * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */

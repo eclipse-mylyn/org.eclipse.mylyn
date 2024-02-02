@@ -22,8 +22,7 @@ import org.eclipse.osgi.util.NLS;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input">ReviewInput</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input">ReviewInput</a>.
  */
 public class ReviewInput {
 
@@ -35,7 +34,7 @@ public class ReviewInput {
 
 	public ReviewInput(String msg) {
 		Assert.isLegal(msg != null);
-		this.message = msg;
+		message = msg;
 	}
 
 	public String getMessage() {
@@ -54,7 +53,7 @@ public class ReviewInput {
 		if (approvals == null || approvals.isEmpty()) {
 			return;
 		}
-		labels = new HashMap<String, Short>(approvals.size());
+		labels = new HashMap<>(approvals.size());
 		for (ApprovalCategoryValue.Id approval : approvals) {
 			String labelName = ApprovalUtil.findCategoryNameById(approval.getParentKey().get());
 			if (labelName == null) {
@@ -64,7 +63,7 @@ public class ReviewInput {
 				continue;
 			}
 			labelName = labelName.replace(' ', '-');
-			Short voteValue = Short.valueOf(approval.get());
+			Short voteValue = approval.get();
 			labels.put(labelName, voteValue);
 		}
 	}

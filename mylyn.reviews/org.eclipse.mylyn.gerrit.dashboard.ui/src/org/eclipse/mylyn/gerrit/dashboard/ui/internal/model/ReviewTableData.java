@@ -48,7 +48,7 @@ public class ReviewTableData {
 
 		// Create the new object
 		// if (fQuery != aQuery) {
-		fReviewList = new ConcurrentHashMap<String, GerritTask>();
+		fReviewList = new ConcurrentHashMap<>();
 		for (GerritTask review : aList) {
 			fReviewList.put(review.getAttribute(GerritTask.SHORT_CHANGE_ID), review);
 		}
@@ -62,7 +62,7 @@ public class ReviewTableData {
 	}
 
 	public void createReviewItem(String query, TaskRepository repository) {
-		fReviewList = new HashMap<String, GerritTask>();
+		fReviewList = new HashMap<>();
 		fTaskRepo = repository;
 		fQuery = query;
 	}
@@ -83,7 +83,7 @@ public class ReviewTableData {
 	 */
 	public GerritTask[] getReviews() {
 		if (fReviewList == null) {
-			fReviewList = new HashMap<String, GerritTask>();
+			fReviewList = new HashMap<>();
 		}
 		return fReviewList.values().toArray(new GerritTask[0]);
 	}

@@ -23,8 +23,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import com.google.gerrit.common.data.PatchSetDetail;
 
 /**
- * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API,
- * supporting key based retrieval of single patch sets.
+ * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API, supporting key based
+ * retrieval of single patch sets.
  * 
  * @author Miles Parker
  */

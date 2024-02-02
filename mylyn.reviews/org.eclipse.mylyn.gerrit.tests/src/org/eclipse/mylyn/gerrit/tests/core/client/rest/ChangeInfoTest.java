@@ -356,6 +356,7 @@ public class ChangeInfoTest extends TestCase {
 	private static class ApprovalCategoryValueComparator implements Comparator<ApprovalCategoryValue> {
 		private final static Comparator<ApprovalCategoryValue> INSTANCE = new ApprovalCategoryValueComparator();
 
+		@Override
 		public int compare(ApprovalCategoryValue acv1, ApprovalCategoryValue acv2) {
 			return acv1.format().compareTo(acv2.format());
 		}

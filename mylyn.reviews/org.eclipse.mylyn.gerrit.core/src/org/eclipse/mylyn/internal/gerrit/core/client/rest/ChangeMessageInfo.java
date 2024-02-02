@@ -15,8 +15,7 @@ import java.sql.Timestamp;
 
 /**
  * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info"
- * >ChangeMessageInfo</a>.
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info" >ChangeMessageInfo</a>.
  */
 public class ChangeMessageInfo {
 
@@ -36,8 +35,7 @@ public class ChangeMessageInfo {
 
 	/**
 	 * Author of the message as an AccountInfo entity. <b>Unset if written by the Gerrit system</b>.<br>
-	 * See <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info"
-	 * >ChangeMessageInfo</a>.
+	 * See <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info" >ChangeMessageInfo</a>.
 	 */
 	public AccountInfo getAuthor() {
 		return author;

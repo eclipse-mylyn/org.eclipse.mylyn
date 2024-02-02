@@ -207,7 +207,7 @@ public abstract class GerritClient extends ReviewsClient {
 	protected void initialize(AbstractWebLocation location, GerritConfiguration config,
 			GerritAuthenticationState authState, String xsrfKey, final GerritClientStateListener stateListener) {
 		this.stateListener = stateListener;
-		this.client = new GerritHttpClient(location, version) {
+		client = new GerritHttpClient(location, version) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
 				GerritAuthenticationState authState = new GerritAuthenticationState();
@@ -223,9 +223,9 @@ public abstract class GerritClient extends ReviewsClient {
 		if (xsrfKey != null) {
 			client.setXsrfKey(xsrfKey);
 		}
-		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
+		serviceByClass = new HashMap<>();
 		this.config = config;
-		this.restClient = new GerritRestClient(client);
+		restClient = new GerritRestClient(client);
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
@@ -271,8 +271,7 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	/**
-	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
-	 * portion of the page.
+	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript portion of the page.
 	 */
 	private GerritConfigX refreshGerritConfig(final IProgressMonitor monitor) throws GerritException {
 		try {
@@ -285,12 +284,10 @@ public abstract class GerritClient extends ReviewsClient {
 				@Override
 				public GerritConfigX process(HttpMethodBase method) throws IOException {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-					try {
+					try (in) {
 						GerritHtmlProcessor processor = new GerritHtmlProcessor();
 						processor.parse(in, method.getResponseCharSet());
 						return processor.getConfig();
-					} finally {
-						in.close();
 					}
 				}
 			}, monitor);
@@ -348,7 +345,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 	private List<Project> getVisibleProjects(IProgressMonitor monitor, GerritConfig gerritConfig)
 			throws GerritException {
-		List<Project> result = new ArrayList<Project>();
+		List<Project> result = new ArrayList<>();
 		try {
 			for (ProjectDetailX projectDetail : getProjectDetails(monitor, gerritConfig, result)) {
 				if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
@@ -396,8 +393,8 @@ public abstract class GerritClient extends ReviewsClient {
 			}
 		}
 		ChangeDetailX changeDetail = getChangeDetail(id, monitor);
-		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
-		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetailX>();
+		List<PatchSetDetail> patchSets = new ArrayList<>(changeDetail.getPatchSets().size());
+		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
 			try {
 				PatchSetDetail patchSetDetail = getPatchSetDetail(null, patchSet.getId(), monitor);
@@ -422,7 +419,7 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
-		Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
+		Id baseId = patchSetContent.getBase() != null ? patchSetContent.getBase().getId() : null;
 		Id targetId = patchSetContent.getTarget().getId();
 		if (patchSetContent.getTargetDetail() == null) {
 			PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
@@ -496,7 +493,7 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	protected byte[] fetchBinaryContent(String url, IProgressMonitor monitor) throws GerritException {
-		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
+		final TypeToken<Byte[]> byteArrayType = new TypeToken<>() {
 		};
 		byte[] bin = restClient.executeGetRestRequest("/cat/" + url, byteArrayType.getType(), monitor); //$NON-NLS-1$
 		if (isZippedContent(bin)) {
@@ -563,7 +560,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 	protected List<ReviewerInfo> listReviewers(final int reviewId, IProgressMonitor monitor) throws GerritException {
 		final String uri = "/changes/" + reviewId + "/reviewers/"; //$NON-NLS-1$ //$NON-NLS-2$
-		TypeToken<List<ReviewerInfo>> reviewersListType = new TypeToken<List<ReviewerInfo>>() {
+		TypeToken<List<ReviewerInfo>> reviewersListType = new TypeToken<>() {
 		};
 		return restClient.executeGetRestRequest(uri, reviewersListType.getType(), monitor);
 	}
@@ -585,7 +582,7 @@ public abstract class GerritClient extends ReviewsClient {
 		final String uri;
 		uri = "/a/changes/" + id.get() + "/reviewers"; //$NON-NLS-1$ //$NON-NLS-2$
 
-		Set<ReviewerInfo> reviewerInfos = new HashSet<ReviewerInfo>(reviewers.size());
+		Set<ReviewerInfo> reviewerInfos = new HashSet<>(reviewers.size());
 		ReviewerResult reviewerResult = new ReviewerResult();
 		for (final String reviewerId : reviewers) {
 			try {
@@ -601,7 +598,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 		ChangeDetail changeDetail = getChangeDetail(id.get(), monitor);
 
-		List<ApprovalDetail> approvalDetails = new ArrayList<ApprovalDetail>(reviewerInfos.size());
+		List<ApprovalDetail> approvalDetails = new ArrayList<>(reviewerInfos.size());
 		for (ReviewerInfo reviewerInfo : reviewerInfos) {
 			approvalDetails.add(reviewerInfo.toApprovalDetail(changeDetail.getCurrentPatchSet()));
 		}
@@ -644,7 +641,7 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	protected void merge(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
-		Set<com.google.gerrit.common.data.AccountInfo> accountInfos = new HashSet<com.google.gerrit.common.data.AccountInfo>(
+		Set<com.google.gerrit.common.data.AccountInfo> accountInfos = new HashSet<>(
 				reviewers.size());
 		for (ReviewerInfo reviewer : reviewers) {
 			accountInfos.add(reviewer.toAccountInfo());
@@ -700,7 +697,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 	private Map<String, ProjectInfo> listProjects(IProgressMonitor monitor) throws GerritException {
 		final String uri = "/projects/"; //$NON-NLS-1$
-		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<Map<String, ProjectInfo>>() {
+		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<>() {
 		};
 		return restClient.executeGetRestRequest(uri, resultType.getType(), monitor);
 	}
@@ -742,7 +739,7 @@ public abstract class GerritClient extends ReviewsClient {
 					CommitInfo commit = revision.getCommit();
 					if (commit.getParents().length >= 1) {
 						if (changeDetail.getParents() == null) {
-							changeDetail.setParents(new HashMap<Integer, CommitInfo[]>());
+							changeDetail.setParents(new HashMap<>());
 						}
 						changeDetail.getParents().put(revision.getNumber(), commit.getParents());
 					}
@@ -752,8 +749,7 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	/**
-	 * Contains different information than the ChangeInfo returned by {@link #getChangeInfo(int, IProgressMonitor)}.
-	 * Introduced in 2.8.
+	 * Contains different information than the ChangeInfo returned by {@link #getChangeInfo(int, IProgressMonitor)}. Introduced in 2.8.
 	 */
 	protected ChangeInfo28 getAdditionalChangeInfo(int reviewId, IProgressMonitor monitor) {
 		ChangeInfo28 changeInfo28 = null;
@@ -781,7 +777,7 @@ public abstract class GerritClient extends ReviewsClient {
 	private Set<String> getBranchNames(Project.NameKey project, IProgressMonitor monitor) throws GerritException {
 		return Arrays.asList(getRemoteProjectBranches(project.get(), monitor))
 				.stream()
-				.map(b -> b.getRef())
+				.map(BranchInfo::getRef)
 				.collect(Collectors.toUnmodifiableSet());
 	}
 
@@ -928,11 +924,8 @@ public abstract class GerritClient extends ReviewsClient {
 	}
 
 	private ErrorHandler createErrorHandler() {
-		return new ErrorHandler() {
-			@Override
-			public void handleError(HttpMethodBase method) throws GerritException {
-				throw new GerritException(method.getStatusLine().getReasonPhrase());
-			}
+		return method -> {
+			throw new GerritException(method.getStatusLine().getReasonPhrase());
 		};
 	}
 
@@ -997,7 +990,7 @@ public abstract class GerritClient extends ReviewsClient {
 	private Map<String, CommentInput[]> listDrafts(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
 		String uri = "/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/drafts/"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		TypeToken<Map<String, CommentInput[]>> resultType = new TypeToken<Map<String, CommentInput[]>>() {
+		TypeToken<Map<String, CommentInput[]>> resultType = new TypeToken<>() {
 		};
 
 		return restClient.executeGetRestRequest(uri, resultType.getType(), monitor);
@@ -1012,7 +1005,7 @@ public abstract class GerritClient extends ReviewsClient {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				try {
-					Request<String> request = new Request<String>() {
+					Request<String> request = new Request<>() {
 						@Override
 						public HttpMethodBase createMethod() throws IOException {
 							return new GetMethod(client.getUrl() + "/tools/hooks/"); //$NON-NLS-1$

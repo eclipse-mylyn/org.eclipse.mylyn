@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -81,7 +80,7 @@ public class GerritServerUtility {
 
 	private static GerritServerUtility fInstance = null;
 
-	private Map<TaskRepository, String> fResultTask = new HashMap<TaskRepository, String>();
+	private Map<TaskRepository, String> fResultTask = new HashMap<>();
 
 	// ------------------------------------------------------------------------
 	// Constructors
@@ -109,7 +108,7 @@ public class GerritServerUtility {
 	private void adjustTemplatemanager(TaskRepository aTaskRepo) {
 		RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
 		//Verify to only add once in the repository template
-		Boolean found = false;
+		boolean found = false;
 		//	printTaskRepository(aTaskRepo);
 		for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
 			String convertedRemoteURL = aTaskRepo.getRepositoryUrl();
@@ -126,7 +125,7 @@ public class GerritServerUtility {
 		if (!found) {
 			//Set each parameter of the Gerrit server
 			String userName = aTaskRepo.getUserName();
-			Boolean anonymous = (userName != null && !userName.isEmpty()) ? false : true;
+			Boolean anonymous = userName != null && !userName.isEmpty() ? false : true;
 
 			//Create a repository template
 			RepositoryTemplate templateTest = new RepositoryTemplate(aTaskRepo.getRepositoryLabel(),
@@ -232,7 +231,7 @@ public class GerritServerUtility {
 	 */
 	public Map<TaskRepository, String> getGerritMapping() {
 		if (fResultTask == null) {
-			fResultTask = new HashMap<TaskRepository, String>();
+			fResultTask = new HashMap<>();
 		}
 
 		//Reset the list of Gerrit server
@@ -267,7 +266,7 @@ public class GerritServerUtility {
 	 * @return Boolean
 	 */
 	public Boolean saveLastGerritServer(String aURL) {
-		Boolean ok = true;
+		boolean ok = true;
 		File file = getLastGerritFile(LAST_GERRIT_FILE);
 		try {
 			FileWriter fw = new FileWriter(file);
@@ -394,14 +393,12 @@ public class GerritServerUtility {
 	 * @return Boolean
 	 */
 	public Boolean saveLastCommandList(Set<String> aCommands) {
-		Boolean ok = true;
+		boolean ok = true;
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		try {
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(fw);
-			Iterator<String> iter = aCommands.iterator();
-			while (iter.hasNext()) {
-				String s = iter.next();
+			for (String s : aCommands) {
 				out.write(s);
 				out.newLine();
 			}
@@ -420,7 +417,7 @@ public class GerritServerUtility {
 	 * @return Set
 	 */
 	public Set<String> getListLastCommands() {
-		LinkedHashSet<String> lastCommands = new LinkedHashSet<String>();
+		LinkedHashSet<String> lastCommands = new LinkedHashSet<>();
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		if (file != null) {
 			try {

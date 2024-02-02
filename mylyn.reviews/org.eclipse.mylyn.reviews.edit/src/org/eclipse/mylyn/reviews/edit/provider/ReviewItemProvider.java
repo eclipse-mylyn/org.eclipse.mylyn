@@ -28,8 +28,8 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReview} object. <!--
- * begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReview} object. <!-- begin-user-doc --> <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -168,8 +168,7 @@ public class ReviewItemProvider extends CommentContainerItemProvider {
 	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -223,9 +222,8 @@ public class ReviewItemProvider extends CommentContainerItemProvider {
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
-	 * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -234,29 +232,29 @@ public class ReviewItemProvider extends CommentContainerItemProvider {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IReview.class)) {
-		case ReviewsPackage.REVIEW__CREATION_DATE:
-		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-		case ReviewsPackage.REVIEW__ID:
-		case ReviewsPackage.REVIEW__KEY:
-		case ReviewsPackage.REVIEW__SUBJECT:
-		case ReviewsPackage.REVIEW__MESSAGE:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-			return;
-		case ReviewsPackage.REVIEW__STATE:
-		case ReviewsPackage.REVIEW__SETS:
-		case ReviewsPackage.REVIEW__PARENTS:
-		case ReviewsPackage.REVIEW__CHILDREN:
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-			return;
+			case ReviewsPackage.REVIEW__CREATION_DATE:
+			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
+			case ReviewsPackage.REVIEW__ID:
+			case ReviewsPackage.REVIEW__KEY:
+			case ReviewsPackage.REVIEW__SUBJECT:
+			case ReviewsPackage.REVIEW__MESSAGE:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case ReviewsPackage.REVIEW__STATE:
+			case ReviewsPackage.REVIEW__SETS:
+			case ReviewsPackage.REVIEW__PARENTS:
+			case ReviewsPackage.REVIEW__CHILDREN:
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
-	 * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -289,8 +287,8 @@ public class ReviewItemProvider extends CommentContainerItemProvider {
 	}
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */

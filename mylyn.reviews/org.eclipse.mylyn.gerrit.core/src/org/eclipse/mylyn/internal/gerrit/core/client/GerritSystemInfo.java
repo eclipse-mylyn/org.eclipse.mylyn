@@ -45,13 +45,13 @@ public class GerritSystemInfo {
 	}
 
 	public String getFullName() {
-		return (account != null)
+		return account != null
 				? getAccountName()
 				: org.eclipse.mylyn.internal.gerrit.core.Messages.GerritUtil_Anonymous;
 	}
 
 	private String getAccountName() {
-		return (account.getFullName() != null) ? account.getFullName() : account.getUserName();
+		return account.getFullName() != null ? account.getFullName() : account.getUserName();
 	}
 
 	public GerritCapabilities getCapabilities() {

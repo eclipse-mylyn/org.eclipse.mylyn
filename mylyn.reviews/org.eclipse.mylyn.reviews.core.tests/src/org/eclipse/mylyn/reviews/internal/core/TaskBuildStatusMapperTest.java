@@ -38,7 +38,7 @@ public class TaskBuildStatusMapperTest {
 	}
 
 	private TaskAttribute createBuildAttribute(String url) {
-		List<BuildResult> results = new ArrayList<BuildResult>();
+		List<BuildResult> results = new ArrayList<>();
 		final String JOB_NAME = "SameJob";
 		results.add(new BuildResult(0, url, BuildStatus.STARTED, 1, JOB_NAME));
 		TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(results);
@@ -49,7 +49,7 @@ public class TaskBuildStatusMapperTest {
 
 	@Test
 	public void emptyCollectionReturnsRootWithNoChildren() {
-		List<BuildResult> results = new ArrayList<BuildResult>();
+		List<BuildResult> results = new ArrayList<>();
 		TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(results);
 		TaskAttribute root = createRootAttribute();
 
@@ -59,7 +59,7 @@ public class TaskBuildStatusMapperTest {
 
 	@Test
 	public void collectionWithSameJobNameShouldTakeHighestJobNumber() throws Exception {
-		List<BuildResult> results = new ArrayList<BuildResult>();
+		List<BuildResult> results = new ArrayList<>();
 
 		final String HUDSON_BUILD_URL = "https://hudson.eclipse.org/mylyn/job/gerrit-mylyn-tasks/1066/";
 		final String JOB_NAME = "SameJob";
@@ -86,7 +86,7 @@ public class TaskBuildStatusMapperTest {
 	@Test
 	// FIXME Assumes a specific order returned by mapper.applyTo()
 	public void collectionWithDifferentJobNamesProducesUnqiueEntries() {
-		List<BuildResult> results = new ArrayList<BuildResult>();
+		List<BuildResult> results = new ArrayList<>();
 
 		String buildUrl = "http://hudson.someurl.com/";
 		results.add(new BuildResult(0, buildUrl, BuildStatus.STARTED, 1, "SameJob"));

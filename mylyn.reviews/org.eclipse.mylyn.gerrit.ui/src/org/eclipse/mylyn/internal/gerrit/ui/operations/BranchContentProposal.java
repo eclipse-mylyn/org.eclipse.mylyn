@@ -22,12 +22,12 @@ public class BranchContentProposal implements IContentProposal, Comparable<Branc
 
 	public BranchContentProposal(String branch) {
 		this.branch = branch;
-		this.cursorPosition = branch.length();
+		cursorPosition = branch.length();
 	}
 
 	@Override
 	public int compareTo(BranchContentProposal otherBranchProposal) {
-		return this.branch.compareTo(otherBranchProposal.getContent());
+		return branch.compareTo(otherBranchProposal.getContent());
 	}
 
 	@Override

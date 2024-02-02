@@ -69,7 +69,7 @@ public class GerritToGitMappingTest {
 	}
 
 	private Repository[] createRepositories(String... projects) {
-		List<Repository> repos = new ArrayList<Repository>();
+		List<Repository> repos = new ArrayList<>();
 		for (String project : projects) {
 			repos.add(createRepository(project));
 		}
@@ -78,7 +78,7 @@ public class GerritToGitMappingTest {
 
 	private Repository createRepository(String project) {
 		StoredConfig config = mock(StoredConfig.class);
-		Set<String> configSubSections = new HashSet<String>();
+		Set<String> configSubSections = new HashSet<>();
 		String remoteName = "remotename"; //$NON-NLS-1$
 		configSubSections.add(remoteName);
 		String remoteSection = "remote"; //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class GerritToGitMappingTest {
 	}
 
 	private List<String> createRepositoryDirList(int length) {
-		List<String> repoList = new ArrayList<String>(length);
+		List<String> repoList = new ArrayList<>(length);
 		for (int i = 0; i < length; i++) {
 			repoList.add(new String() + i);
 		}

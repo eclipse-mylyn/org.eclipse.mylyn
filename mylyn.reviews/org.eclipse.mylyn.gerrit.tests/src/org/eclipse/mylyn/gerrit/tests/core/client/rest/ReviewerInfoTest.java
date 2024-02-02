@@ -16,8 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
@@ -30,6 +28,8 @@ import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
+
+import junit.framework.TestCase;
 
 public class ReviewerInfoTest extends TestCase {
 	@Test

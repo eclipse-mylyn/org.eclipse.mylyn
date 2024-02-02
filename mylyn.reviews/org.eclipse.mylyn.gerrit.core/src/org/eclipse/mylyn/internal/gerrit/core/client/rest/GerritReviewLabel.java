@@ -26,7 +26,7 @@ public class GerritReviewLabel {
 	/*
 	 * When specifying the "LABELS" option on the gerrit changes query, the result
 	 * has the following form:
-	 *  
+	 * 
 	 * {
 	 *    "project": "demo",
 	 *    "branch": "master",

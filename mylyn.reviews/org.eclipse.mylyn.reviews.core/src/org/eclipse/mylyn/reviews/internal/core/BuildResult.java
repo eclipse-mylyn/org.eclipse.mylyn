@@ -37,15 +37,15 @@ public class BuildResult {
 	}
 
 	public int getBuildNumber() {
-		return this.buildNumber;
+		return buildNumber;
 	}
 
 	public String getBuildUrl() {
-		return this.buildUrl;
+		return buildUrl;
 	}
 
 	public BuildStatus getBuildStatus() {
-		return this.buildStatus;
+		return buildStatus;
 	}
 
 	public int getPatchSetNumber() {

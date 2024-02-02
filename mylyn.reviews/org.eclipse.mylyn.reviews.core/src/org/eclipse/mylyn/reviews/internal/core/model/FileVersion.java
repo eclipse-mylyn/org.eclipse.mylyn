@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
-import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.team.core.history.IFileRevision;
 
@@ -39,8 +38,7 @@ import org.eclipse.team.core.history.IFileRevision;
  */
 public class FileVersion extends ReviewItem implements IFileVersion {
 	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPath()
 	 * @generated
@@ -49,8 +47,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected static final String PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPath()
 	 * @generated
@@ -59,8 +56,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected String path = PATH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -69,8 +65,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -79,8 +74,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getContent()
 	 * @generated
@@ -89,8 +83,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected static final String CONTENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getContent()
 	 * @generated
@@ -99,8 +92,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected String content = CONTENT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getFile() <em>File</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getFile() <em>File</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFile()
 	 * @generated
@@ -109,8 +101,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected IFileItem file;
 
 	/**
-	 * The default value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFileRevision()
 	 * @generated
@@ -119,8 +110,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected static final IFileRevision FILE_REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFileRevision()
 	 * @generated
@@ -129,8 +119,8 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected IFileRevision fileRevision = FILE_REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getBinaryContent()
 	 * @generated
@@ -139,8 +129,8 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	protected static final byte[] BINARY_CONTENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getBinaryContent()
 	 * @generated
@@ -154,7 +144,6 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * @generated
 	 */
 	protected FileVersion() {
-		super();
 	}
 
 	/**
@@ -172,6 +161,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getPath() {
 		return path;
 	}
@@ -181,6 +171,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setPath(String newPath) {
 		String oldPath = path;
 		path = newPath;
@@ -194,6 +185,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -203,6 +195,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -217,6 +210,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getContent() {
 		return content;
 	}
@@ -226,6 +220,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setContent(String newContent) {
 		String oldContent = content;
 		content = newContent;
@@ -240,6 +235,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileItem getFile() {
 		if (file != null && file.eIsProxy()) {
 			InternalEObject oldFile = (InternalEObject) file;
@@ -278,6 +274,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setFile(IFileItem newFile) {
 		IFileItem oldFile = file;
 		file = newFile;
@@ -291,6 +288,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileRevision getFileRevision() {
 		return fileRevision;
 	}
@@ -300,6 +298,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setFileRevision(IFileRevision newFileRevision) {
 		IFileRevision oldFileRevision = fileRevision;
 		fileRevision = newFileRevision;
@@ -314,6 +313,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public byte[] getBinaryContent() {
 		return binaryContent;
 	}
@@ -323,6 +323,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBinaryContent(byte[] newBinaryContent) {
 		byte[] oldBinaryContent = binaryContent;
 		binaryContent = newBinaryContent;
@@ -340,21 +341,21 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_VERSION__PATH:
-			return getPath();
-		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
-			return getDescription();
-		case ReviewsPackage.FILE_VERSION__CONTENT:
-			return getContent();
-		case ReviewsPackage.FILE_VERSION__FILE:
-			if (resolve) {
-				return getFile();
-			}
-			return basicGetFile();
-		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
-			return getFileRevision();
-		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
-			return getBinaryContent();
+			case ReviewsPackage.FILE_VERSION__PATH:
+				return getPath();
+			case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+				return getDescription();
+			case ReviewsPackage.FILE_VERSION__CONTENT:
+				return getContent();
+			case ReviewsPackage.FILE_VERSION__FILE:
+				if (resolve) {
+					return getFile();
+				}
+				return basicGetFile();
+			case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+				return getFileRevision();
+			case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+				return getBinaryContent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -367,24 +368,24 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_VERSION__PATH:
-			setPath((String) newValue);
-			return;
-		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
-			setDescription((String) newValue);
-			return;
-		case ReviewsPackage.FILE_VERSION__CONTENT:
-			setContent((String) newValue);
-			return;
-		case ReviewsPackage.FILE_VERSION__FILE:
-			setFile((IFileItem) newValue);
-			return;
-		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
-			setFileRevision((IFileRevision) newValue);
-			return;
-		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
-			setBinaryContent((byte[]) newValue);
-			return;
+			case ReviewsPackage.FILE_VERSION__PATH:
+				setPath((String) newValue);
+				return;
+			case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+				setDescription((String) newValue);
+				return;
+			case ReviewsPackage.FILE_VERSION__CONTENT:
+				setContent((String) newValue);
+				return;
+			case ReviewsPackage.FILE_VERSION__FILE:
+				setFile((IFileItem) newValue);
+				return;
+			case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+				setFileRevision((IFileRevision) newValue);
+				return;
+			case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+				setBinaryContent((byte[]) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -397,24 +398,24 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_VERSION__PATH:
-			setPath(PATH_EDEFAULT);
-			return;
-		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
-			setDescription(DESCRIPTION_EDEFAULT);
-			return;
-		case ReviewsPackage.FILE_VERSION__CONTENT:
-			setContent(CONTENT_EDEFAULT);
-			return;
-		case ReviewsPackage.FILE_VERSION__FILE:
-			setFile((IFileItem) null);
-			return;
-		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
-			setFileRevision(FILE_REVISION_EDEFAULT);
-			return;
-		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
-			setBinaryContent(BINARY_CONTENT_EDEFAULT);
-			return;
+			case ReviewsPackage.FILE_VERSION__PATH:
+				setPath(PATH_EDEFAULT);
+				return;
+			case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+				setDescription(DESCRIPTION_EDEFAULT);
+				return;
+			case ReviewsPackage.FILE_VERSION__CONTENT:
+				setContent(CONTENT_EDEFAULT);
+				return;
+			case ReviewsPackage.FILE_VERSION__FILE:
+				setFile((IFileItem) null);
+				return;
+			case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+				setFileRevision(FILE_REVISION_EDEFAULT);
+				return;
+			case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+				setBinaryContent(BINARY_CONTENT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -427,20 +428,22 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_VERSION__PATH:
-			return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
-		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
-			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-		case ReviewsPackage.FILE_VERSION__CONTENT:
-			return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
-		case ReviewsPackage.FILE_VERSION__FILE:
-			return file != null;
-		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
-			return FILE_REVISION_EDEFAULT == null ? fileRevision != null : !FILE_REVISION_EDEFAULT.equals(fileRevision);
-		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
-			return BINARY_CONTENT_EDEFAULT == null
-					? binaryContent != null
-					: !BINARY_CONTENT_EDEFAULT.equals(binaryContent);
+			case ReviewsPackage.FILE_VERSION__PATH:
+				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+			case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case ReviewsPackage.FILE_VERSION__CONTENT:
+				return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
+			case ReviewsPackage.FILE_VERSION__FILE:
+				return file != null;
+			case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+				return FILE_REVISION_EDEFAULT == null
+						? fileRevision != null
+						: !FILE_REVISION_EDEFAULT.equals(fileRevision);
+			case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+				return BINARY_CONTENT_EDEFAULT == null
+						? binaryContent != null
+						: !BINARY_CONTENT_EDEFAULT.equals(binaryContent);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -456,7 +459,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (path: "); //$NON-NLS-1$
 		result.append(path);
 		result.append(", description: "); //$NON-NLS-1$

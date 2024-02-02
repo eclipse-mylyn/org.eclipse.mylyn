@@ -12,14 +12,14 @@
 
 package org.eclipse.mylyn.reviews.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProviderTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewAnnotationModelTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewCompareAnnotationSupportTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewUiTest;
 import org.eclipse.mylyn.reviews.tests.ui.UiDataLocatorTest;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel

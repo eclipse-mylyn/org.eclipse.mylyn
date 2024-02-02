@@ -64,12 +64,7 @@ public class TaskBuildStatusMapper {
 		for (Entry<String, Collection<BuildResult>> jobEntry : buildsByJobName.asMap().entrySet()) {
 
 			// We'll take the biggest entry build number and use that for mapping right now
-			BuildResult result = Collections.max(jobEntry.getValue(), new Comparator<BuildResult>() {
-				@Override
-				public int compare(BuildResult o1, BuildResult o2) {
-					return Integer.compare(o1.getBuildNumber(), o2.getBuildNumber());
-				}
-			});
+			BuildResult result = Collections.max(jobEntry.getValue(), Comparator.comparing(BuildResult::getBuildNumber));
 
 			TaskAttribute buildAttribute = taskAttribute.createAttribute(ATTR_ID_BUILD_RESULT + i);
 			buildAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
@@ -110,11 +105,7 @@ public class TaskBuildStatusMapper {
 	}
 
 	private static Function<TaskAttribute, Object> toValue() {
-		return new Function<TaskAttribute, Object>() {
-			public Object apply(TaskAttribute o) {
-				return o.getValue();
-			}
-		};
+		return TaskAttribute::getValue;
 	}
 
 }

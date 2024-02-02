@@ -19,8 +19,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.IManagedForm;
@@ -39,7 +37,7 @@ public class SelectionDialog extends FormDialog {
 
 	public SelectionDialog(Shell parent, List<TaskRepository> listTaskRepository) {
 		super(parent);
-		this.fListTaskRepository = listTaskRepository;
+		fListTaskRepository = listTaskRepository;
 	}
 
 	@Override
@@ -61,12 +59,7 @@ public class SelectionDialog extends FormDialog {
 			button.setText(fListTaskRepository.get(index).toString());
 			button.setSelection(false);
 
-			button.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					setSelection(button.getText());
-				}
-			});
+			button.addListener(SWT.Selection, event -> setSelection(button.getText()));
 
 			GridDataFactory.fillDefaults().span(1, 1).applyTo(button);
 		}

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -69,7 +70,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  */
 @SuppressWarnings("restriction")
 public class ReviewCompareAnnotationSupport {
-	public static enum Side {
+	public enum Side {
 		LEFT_SIDE, RIGHT_SIDE
 	}
 
@@ -88,7 +89,7 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	public class MonitorObject {
-	};
+	}
 
 	MonitorObject myMonitorObject = new MonitorObject();
 
@@ -107,8 +108,8 @@ public class ReviewCompareAnnotationSupport {
 	private MergeSourceViewer rightSourceViewer;
 
 	public ReviewCompareAnnotationSupport(Viewer contentViewer) {
-		this.leftAnnotationModel = new ReviewAnnotationModel();
-		this.rightAnnotationModel = new ReviewAnnotationModel();
+		leftAnnotationModel = new ReviewAnnotationModel();
+		rightAnnotationModel = new ReviewAnnotationModel();
 		install(contentViewer);
 		contentViewer.setData(KEY_ANNOTAION_SUPPORT, this);
 	}
@@ -118,25 +119,14 @@ public class ReviewCompareAnnotationSupport {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		ReviewCompareAnnotationSupport other = (ReviewCompareAnnotationSupport) obj;
-		if (leftAnnotationModel == null) {
-			if (other.leftAnnotationModel != null) {
-				return false;
-			}
-		} else if (!leftAnnotationModel.equals(other.leftAnnotationModel)) {
+		if (!Objects.equals(leftAnnotationModel, other.leftAnnotationModel)) {
 			return false;
 		}
-		if (rightAnnotationModel == null) {
-			if (other.rightAnnotationModel != null) {
-				return false;
-			}
-		} else if (!rightAnnotationModel.equals(other.rightAnnotationModel)) {
+		if (!Objects.equals(rightAnnotationModel, other.rightAnnotationModel)) {
 			return false;
 		}
 		return true;
@@ -148,17 +138,12 @@ public class ReviewCompareAnnotationSupport {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((leftAnnotationModel == null) ? 0 : leftAnnotationModel.hashCode());
-		result = prime * result + ((rightAnnotationModel == null) ? 0 : rightAnnotationModel.hashCode());
-		return result;
+		return Objects.hash(leftAnnotationModel, rightAnnotationModel);
 	}
 
 	public void install(Viewer contentViewer) {
 		// FIXME: hack
-		if (contentViewer instanceof TextMergeViewer) {
-			TextMergeViewer textMergeViewer = (TextMergeViewer) contentViewer;
+		if (contentViewer instanceof TextMergeViewer textMergeViewer) {
 			try {
 				Class<TextMergeViewer> clazz = TextMergeViewer.class;
 				Field declaredField = clazz.getDeclaredField("fLeft"); //$NON-NLS-1$
@@ -270,16 +255,16 @@ public class ReviewCompareAnnotationSupport {
 				rightSourceViewer.getSourceViewer()
 						.setSelectedRange(nextLeftPosition.offset - 1, nextLeftPosition.length - 1);
 				return LEFT_SIDE;
-			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)
-					|| (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
-				if ((nextLeftPosition.offset < nextRightPosition.offset)) {
+			} else if (nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset
+					|| nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset) {
+				if (nextLeftPosition.offset < nextRightPosition.offset) {
 					return moveToLeftAnnotation(nextLeftPosition);
 				} else {
 					return moveToRightAnnotation(nextRightPosition);
 				}
-			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
+			} else if (nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset) {
 				return moveToRightAnnotation(nextRightPosition);
-			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
+			} else if (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset) {
 				return moveToLeftAnnotation(nextLeftPosition);
 			} else if (nextRightPosition.offset == currentLeftOffset) {
 				return moveToLeftAnnotation(nextLeftPosition);
@@ -287,30 +272,27 @@ public class ReviewCompareAnnotationSupport {
 				return moveToRightAnnotation(nextRightPosition);
 			}
 
-		} else { // backwards
-			if (nextLeftPosition.offset == nextRightPosition.offset) {
-				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				Position position = getNextLine(nextRightPosition.offset);
-				leftSourceViewer.getSourceViewer().revealRange(position.offset, position.length);
-				leftSourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
-				return RIGHT_SIDE;
-			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)
-					|| (nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
-				if ((nextLeftPosition.offset > nextRightPosition.offset)) {
-					return moveToLeftAnnotation(nextLeftPosition);
-				} else {
-					return moveToRightAnnotation(nextRightPosition);
-				}
-			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
-				return moveToRightAnnotation(nextRightPosition);
-			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
-				return moveToLeftAnnotation(nextLeftPosition);
-			} else if (nextRightPosition.offset == currentLeftOffset) {
+		} else if (nextLeftPosition.offset == nextRightPosition.offset) {
+			moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
+			Position position = getNextLine(nextRightPosition.offset);
+			leftSourceViewer.getSourceViewer().revealRange(position.offset, position.length);
+			leftSourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
+			return RIGHT_SIDE;
+		} else if (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset
+				|| nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset) {
+			if (nextLeftPosition.offset > nextRightPosition.offset) {
 				return moveToLeftAnnotation(nextLeftPosition);
 			} else {
 				return moveToRightAnnotation(nextRightPosition);
 			}
-
+		} else if (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset) {
+			return moveToRightAnnotation(nextRightPosition);
+		} else if (nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset) {
+			return moveToLeftAnnotation(nextLeftPosition);
+		} else if (nextRightPosition.offset == currentLeftOffset) {
+			return moveToLeftAnnotation(nextLeftPosition);
+		} else {
+			return moveToRightAnnotation(nextRightPosition);
 		}
 	}
 
@@ -399,7 +381,7 @@ public class ReviewCompareAnnotationSupport {
 			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error fetching line", e1)); //$NON-NLS-1$
 		}
 
-		List<CommentAnnotation> commentAnnotations = new ArrayList<CommentAnnotation>();
+		List<CommentAnnotation> commentAnnotations = new ArrayList<>();
 
 		for (Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext();) {
 			Annotation annotation = it.next();
@@ -407,8 +389,7 @@ public class ReviewCompareAnnotationSupport {
 			if (position == null || !isPositionOnLine(position, line, document)) {
 				continue;
 			}
-			if (annotation instanceof AnnotationBag) {
-				AnnotationBag bag = (AnnotationBag) annotation;
+			if (annotation instanceof AnnotationBag bag) {
 				Iterator<Annotation> e = bag.iterator();
 				while (e.hasNext()) {
 					annotation = e.next();
@@ -442,8 +423,7 @@ public class ReviewCompareAnnotationSupport {
 
 // adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
 	protected void adjustHighlightRange(SourceViewer sourceViewer, int offset, int length) {
-		if (sourceViewer instanceof ITextViewerExtension5) {
-			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+		if (sourceViewer instanceof ITextViewerExtension5 extension) {
 			extension.exposeModelRange(new Region(offset, length));
 		} else if (!isVisible(sourceViewer, offset, length)) {
 			sourceViewer.resetVisibleRegion();
@@ -452,8 +432,7 @@ public class ReviewCompareAnnotationSupport {
 
 // adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
 	private boolean isVisible(SourceViewer viewer, int offset, int length) {
-		if (viewer instanceof ITextViewerExtension5) {
-			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
+		if (viewer instanceof ITextViewerExtension5 extension) {
 			IRegion overlap = extension.modelRange2WidgetRange(new Region(offset, length));
 			return overlap != null;
 		}
@@ -463,20 +442,18 @@ public class ReviewCompareAnnotationSupport {
 	public void setReviewItem(IFileItem item, ReviewBehavior behavior) {
 		leftAnnotationModel.setItem(item.getBase(), behavior);
 		rightAnnotationModel.setItem(item.getTarget(), behavior);
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					// if listeners exist, just make sure the hover hack is in there
-					if (leftViewerListener != null) {
-						leftViewerListener.forceCustomAnnotationHover();
-					}
-					if (rightViewerListener != null) {
-						rightViewerListener.forceCustomAnnotationHover();
-					}
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error attaching annotation hover", e)); //$NON-NLS-1$
+		Display.getDefault().asyncExec(() -> {
+			try {
+				// if listeners exist, just make sure the hover hack is in there
+				if (leftViewerListener != null) {
+					leftViewerListener.forceCustomAnnotationHover();
 				}
+				if (rightViewerListener != null) {
+					rightViewerListener.forceCustomAnnotationHover();
+				}
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+						"Error attaching annotation hover", e)); //$NON-NLS-1$
 			}
 		});
 	}
@@ -493,8 +470,8 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	/**
-	 * Returns the annotation closest to the given range respecting the given direction. If an annotation is found, the
-	 * annotations current position is copied into the provided annotation position.
+	 * Returns the annotation closest to the given range respecting the given direction. If an annotation is found, the annotations current
+	 * position is copied into the provided annotation position.
 	 *
 	 * @param viewer
 	 *            the viewer
@@ -542,9 +519,9 @@ public class ReviewCompareAnnotationSupport {
 
 			if (direction == Direction.FORWARDS && p.offset == offset
 					|| direction == Direction.BACKWARDS && p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
-				if (containingAnnotation == null || (direction == Direction.FORWARDS
-						&& p.length >= containingAnnotationPosition.length
-						|| direction == Direction.BACKWARDS && p.length >= containingAnnotationPosition.length)) {
+				if (containingAnnotation == null
+						|| direction == Direction.FORWARDS && p.length >= containingAnnotationPosition.length
+						|| direction == Direction.BACKWARDS && p.length >= containingAnnotationPosition.length) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
 					currentAnnotation = p.length == length;

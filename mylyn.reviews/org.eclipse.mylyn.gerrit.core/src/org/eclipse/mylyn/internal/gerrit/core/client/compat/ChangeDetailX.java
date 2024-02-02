@@ -120,7 +120,7 @@ public class ChangeDetailX extends ChangeDetail {
 	}
 
 	public Iterable<BuildResult> getPatchSetBuildStatuses() {
-		return Set.copyOf(this.patchSetBuildStatuses.values());
+		return Set.copyOf(patchSetBuildStatuses.values());
 	}
 
 	public void convertSubmitRecordsToApprovalTypes(ApprovalTypes knownApprovalTypes) {
@@ -130,7 +130,7 @@ public class ChangeDetailX extends ChangeDetail {
 		if (submitRecords == null) {
 			return;
 		}
-		approvalTypes = new LinkedHashSet<ApprovalType>();
+		approvalTypes = new LinkedHashSet<>();
 		for (SubmitRecord record : submitRecords) {
 			for (Label label : record.getLabels()) {
 				ApprovalType approvalType = findTypeByLabel(knownApprovalTypes, label.getLabel());
@@ -149,9 +149,9 @@ public class ChangeDetailX extends ChangeDetail {
 	public List<ChangeMessage> getMessages() {
 		HudsonCommentParser commentParser = new HudsonCommentParser();
 		List<ChangeMessage> allMessages = super.getMessages();
-		List<ChangeMessage> filteredMessages = new ArrayList<ChangeMessage>();
+		List<ChangeMessage> filteredMessages = new ArrayList<>();
 		// Builds up a map of the results
-		LinkedHashMap<String, BuildResult> patchSetBuildResults = new LinkedHashMap<String, BuildResult>();
+		LinkedHashMap<String, BuildResult> patchSetBuildResults = new LinkedHashMap<>();
 		for (ChangeMessage message : allMessages) {
 			List<BuildResult> results = commentParser.getBuildResult(message.getMessage());
 			if (results.size() == 0) {
@@ -162,7 +162,7 @@ public class ChangeDetailX extends ChangeDetail {
 				}
 			}
 		}
-		this.patchSetBuildStatuses = patchSetBuildResults;
+		patchSetBuildStatuses = patchSetBuildResults;
 		return filteredMessages;
 	}
 

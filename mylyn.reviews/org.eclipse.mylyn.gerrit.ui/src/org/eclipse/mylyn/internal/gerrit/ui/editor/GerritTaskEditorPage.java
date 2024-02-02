@@ -47,7 +47,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 		@Override
 		protected List<TaskAttribute> getOverlayAttributes() {
 			TaskAttribute root = getModel().getTaskData().getRoot();
-			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>();
+			List<TaskAttribute> attributes = new ArrayList<>();
 			TaskAttribute project = root.getAttribute(GerritQueryResultSchema.getDefault().PROJECT.getKey());
 			TaskAttribute branch = root.getAttribute(GerritQueryResultSchema.getDefault().BRANCH.getKey());
 			if (project != null) {
@@ -104,7 +104,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
+		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<>();
 		Set<TaskEditorPartDescriptor> superDescriptors = super.createPartDescriptors();
 		TaskEditorPartDescriptor commentsDescriptor = null;
 		TaskEditorPartDescriptor newCommentsDescriptor = null;

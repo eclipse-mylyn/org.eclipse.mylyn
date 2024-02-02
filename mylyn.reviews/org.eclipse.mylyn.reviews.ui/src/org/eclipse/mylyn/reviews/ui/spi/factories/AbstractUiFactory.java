@@ -35,9 +35,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
- * Support UI context and implementation neutral creation of controls for a single component that modifies the state of
- * a model object and it's related remote objects. (For convenience, the factory delegates back to the supplied UI
- * context.)
+ * Support UI context and implementation neutral creation of controls for a single component that modifies the state of a model object and
+ * it's related remote objects. (For convenience, the factory delegates back to the supplied UI context.)
  * 
  * @author Miles Parker
  */
@@ -90,8 +89,8 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 				"Cannot {0}. Try re-synchronizing the review task. If that fails, there may be a problem with your repository connection.", //$NON-NLS-1$
 				StringUtils.removeEnd(name, "...")); //$NON-NLS-1$
 		StatusManager.getManager()
-		.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
-				StatusManager.SHOW | StatusManager.LOG);
+				.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
+						StatusManager.SHOW | StatusManager.LOG);
 	}
 
 	protected abstract boolean isExecutableStateKnown();

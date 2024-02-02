@@ -16,13 +16,11 @@ package org.eclipse.mylyn.internal.gerrit.ui.operations;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -113,13 +111,9 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 	}
 
 	private boolean performOperation(final GerritOperation<?> operation) {
-		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
+		final AtomicReference<IStatus> result = new AtomicReference<>();
 		try {
-			run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					result.set(operation.run(monitor));
-				}
-			});
+			run(true, true, monitor -> result.set(operation.run(monitor)));
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
 					.handle(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
@@ -173,7 +167,7 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		editor.setText(value);
 		editor.setSpellCheckingEnabled(true);
 		editor.createControl(composite, toolkit);
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		if (handlerService != null) {
 			textSupport = new CommonTextSupport(handlerService);
 			textSupport.install(editor.getViewer(), true);
@@ -182,9 +176,11 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		// HACK: this is to make sure that we can't have multiple things highlighted
 		editor.getViewer().getTextWidget().addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				editor.getViewer().getTextWidget().setSelection(0);
 			}

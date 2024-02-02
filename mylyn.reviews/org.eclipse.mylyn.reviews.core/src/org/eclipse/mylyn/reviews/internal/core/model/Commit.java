@@ -15,7 +15,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.ICommit;
 
 /**
@@ -50,8 +49,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSubject()
 	 * @generated
@@ -60,8 +58,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	protected static final String SUBJECT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSubject()
 	 * @generated
@@ -75,7 +72,6 @@ public class Commit extends EObjectImpl implements ICommit {
 	 * @generated
 	 */
 	protected Commit() {
-		super();
 	}
 
 	/**
@@ -93,6 +89,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -102,6 +99,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -115,6 +113,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getSubject() {
 		return subject;
 	}
@@ -124,6 +123,7 @@ public class Commit extends EObjectImpl implements ICommit {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setSubject(String newSubject) {
 		String oldSubject = subject;
 		subject = newSubject;
@@ -140,10 +140,10 @@ public class Commit extends EObjectImpl implements ICommit {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.COMMIT__ID:
-			return getId();
-		case ReviewsPackage.COMMIT__SUBJECT:
-			return getSubject();
+			case ReviewsPackage.COMMIT__ID:
+				return getId();
+			case ReviewsPackage.COMMIT__SUBJECT:
+				return getSubject();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -156,12 +156,12 @@ public class Commit extends EObjectImpl implements ICommit {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.COMMIT__ID:
-			setId((String) newValue);
-			return;
-		case ReviewsPackage.COMMIT__SUBJECT:
-			setSubject((String) newValue);
-			return;
+			case ReviewsPackage.COMMIT__ID:
+				setId((String) newValue);
+				return;
+			case ReviewsPackage.COMMIT__SUBJECT:
+				setSubject((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -174,12 +174,12 @@ public class Commit extends EObjectImpl implements ICommit {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMIT__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMIT__SUBJECT:
-			setSubject(SUBJECT_EDEFAULT);
-			return;
+			case ReviewsPackage.COMMIT__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMIT__SUBJECT:
+				setSubject(SUBJECT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,10 +192,10 @@ public class Commit extends EObjectImpl implements ICommit {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMIT__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ReviewsPackage.COMMIT__SUBJECT:
-			return SUBJECT_EDEFAULT == null ? subject != null : !SUBJECT_EDEFAULT.equals(subject);
+			case ReviewsPackage.COMMIT__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case ReviewsPackage.COMMIT__SUBJECT:
+				return SUBJECT_EDEFAULT == null ? subject != null : !SUBJECT_EDEFAULT.equals(subject);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -211,7 +211,7 @@ public class Commit extends EObjectImpl implements ICommit {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
 		result.append(", subject: "); //$NON-NLS-1$

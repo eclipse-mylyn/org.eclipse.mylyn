@@ -134,7 +134,7 @@ public class ChangeIdHyperlinkTest {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		checkLink(links[0]);
-		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$		
+		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class ChangeIdHyperlinkTest {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		checkLink(links[0]);
-		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$		
+		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$
 	}
 
 	@Test

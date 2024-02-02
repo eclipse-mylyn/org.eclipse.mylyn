@@ -41,7 +41,7 @@ public abstract class ReviewsRemoteEditFactoryProvider extends AbstractRemoteEdi
 	public ReviewsRemoteEditFactoryProvider(TaskRepository repository) {
 		super((EFactory) IReviewsFactory.INSTANCE, ReviewsPackage.Literals.REPOSITORY__REVIEWS,
 				ReviewsPackage.Literals.CHANGE__ID, ReviewsPackage.Literals.REVIEW);
-		this.taskRepository = repository;
+		taskRepository = repository;
 	}
 
 	@Override

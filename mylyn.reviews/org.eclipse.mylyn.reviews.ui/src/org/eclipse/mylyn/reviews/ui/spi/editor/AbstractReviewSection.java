@@ -78,8 +78,7 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 
 	public static void appendMessage(Section section, String message) {
 		Control textClient = section.getTextClient();
-		if (textClient instanceof Label && !textClient.isDisposed()) {
-			final Label textClientLabel = (Label) textClient;
+		if (textClient instanceof final Label textClientLabel && !textClient.isDisposed()) {
 			textClientLabel.setText("  " + message); //$NON-NLS-1$
 			textClientLabel.getParent().layout(true, true);
 		}
@@ -93,14 +92,17 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		return toolkit;
 	}
 
+	@Override
 	public TaskEditor getEditor() {
 		return getTaskEditorPage().getEditor();
 	}
 
+	@Override
 	public Shell getShell() {
 		return getTaskEditorPage().getSite().getShell();
 	}
 
+	@Override
 	public ITask getTask() {
 		return getTaskEditorPage().getTask();
 	}
@@ -109,6 +111,7 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		return getReviewEditorPage().getReview();
 	}
 
+	@Override
 	public TaskRepository getTaskRepository() {
 		return getReviewEditorPage().getTaskRepository();
 	}
@@ -117,6 +120,7 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		return getReview().getRepository();
 	}
 
+	@Override
 	public IReviewRemoteFactoryProvider getFactoryProvider() {
 		return getReviewEditorPage().getFactoryProvider();
 	}

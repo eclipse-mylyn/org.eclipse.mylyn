@@ -15,10 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.sql.Timestamp;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input">CommentInput</a>
- * and
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-info">CommentInfo</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input">CommentInput</a>
+ * and <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-info">CommentInfo</a>.
  */
 public class CommentInput {
 
@@ -64,7 +62,7 @@ public class CommentInput {
 	}
 
 	public void setLine(int number) {
-		this.line = number;
+		line = number;
 	}
 
 	public void setSide(String side) {

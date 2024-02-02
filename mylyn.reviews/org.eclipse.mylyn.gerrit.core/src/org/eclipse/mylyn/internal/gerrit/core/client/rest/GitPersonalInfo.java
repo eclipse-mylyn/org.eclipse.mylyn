@@ -13,8 +13,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
  * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#git-personal-info"
- * >GitPersonalInfo</a>.
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#git-personal-info" >GitPersonalInfo</a>.
  */
 public class GitPersonalInfo {
 

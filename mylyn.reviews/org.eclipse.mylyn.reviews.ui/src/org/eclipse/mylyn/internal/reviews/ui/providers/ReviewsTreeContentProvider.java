@@ -16,16 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 
 /**
- * Provides a common tree hierarchy similar to Gerrit Web UI hierarchy, except that when used with ReviewsSorter, global
- * comments appear as members of a single "Global" node. Hierarchy is:
+ * Provides a common tree hierarchy similar to Gerrit Web UI hierarchy, except that when used with ReviewsSorter, global comments appear as
+ * members of a single "Global" node. Hierarchy is:
  * <ol>
  * <li>Global Node</li>
  * <li>-Comments</li>
@@ -39,18 +39,18 @@ import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
  */
 public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 
+	@Override
 	public Object[] getElements(Object element) {
 		if (element instanceof GlobalCommentsNode) {
 			return ((GlobalCommentsNode) element).getReview().getComments().toArray();
 		} else if (element instanceof EObject) {
-			List<Object> children = new ArrayList<Object>();
+			List<Object> children = new ArrayList<>();
 			if (element instanceof IReview) {
 				children.add(new GlobalCommentsNode((IReview) element));
 				children.addAll(((IReview) element).getSets());
 				return children.toArray();
 			}
-			if (element instanceof IReviewItemSet) {
-				IReviewItemSet itemSet = (IReviewItemSet) element;
+			if (element instanceof IReviewItemSet itemSet) {
 				if (itemSet.getItems().size() > 0) {
 					children.addAll(itemSet.getComments());
 					children.addAll(itemSet.getItems());
@@ -58,18 +58,12 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 					children.add(new RetrievingContentsNode(itemSet));
 				}
 			}
-			if (element instanceof IComment) {
-				IComment comment = (IComment) element;
+			if (element instanceof IComment comment) {
 				children.addAll(comment.getReplies());
 			}
-			if (element instanceof IFileItem) {
-				IFileItem item = (IFileItem) element;
-				for (IComment comment : item.getBase().getComments()) {
-					children.add(comment);
-				}
-				for (IComment comment : item.getTarget().getComments()) {
-					children.add(comment);
-				}
+			if (element instanceof IFileItem item) {
+				children.addAll(item.getBase().getComments());
+				children.addAll(item.getTarget().getComments());
 			}
 			return children.toArray();
 		}
@@ -87,11 +81,10 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 		if (element instanceof GlobalCommentsNode) {
 			return ((GlobalCommentsNode) element).getReview().getComments().size() > 0;
 		}
-		return ((element instanceof ICommentContainer) && ((ICommentContainer) element).getAllComments().size() > 0)
-				|| (element instanceof IReview && ((IReview) element).getSets().size() > 0)
-				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview())
-						|| (element instanceof IReviewItemSet))
-				|| hasCollectionChildren(element);
+		return element instanceof ICommentContainer && ((ICommentContainer) element).getAllComments().size() > 0
+				|| element instanceof IReview && ((IReview) element).getSets().size() > 0
+				|| element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview())
+				|| element instanceof IReviewItemSet || hasCollectionChildren(element);
 	}
 
 	@Override

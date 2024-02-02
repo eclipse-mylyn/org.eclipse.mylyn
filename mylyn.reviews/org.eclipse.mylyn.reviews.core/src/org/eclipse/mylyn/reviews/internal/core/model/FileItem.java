@@ -42,8 +42,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  */
 public class FileItem extends ReviewItem implements IFileItem {
 	/**
-	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBase()
 	 * @generated
@@ -52,8 +51,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	protected IFileVersion base;
 
 	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTarget()
 	 * @generated
@@ -67,7 +65,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	protected FileItem() {
-		super();
 	}
 
 	/**
@@ -85,6 +82,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileVersion getBase() {
 		if (base != null && base.eIsProxy()) {
 			InternalEObject oldBase = (InternalEObject) base;
@@ -143,6 +141,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBase(IFileVersion newBase) {
 		if (newBase != base) {
 			NotificationChain msgs = null;
@@ -170,14 +169,14 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		List<IComment> all = new ArrayList<IComment>(getComments());
+		List<IComment> all = new ArrayList<>(getComments());
 		if (getBase() != null) {
 			all.addAll(getBase().getComments());
 		}
 		if (getTarget() != null) {
 			all.addAll(getTarget().getComments());
 		}
-		return new EObjectEList.UnmodifiableEList<IComment>(this,
+		return new EObjectEList.UnmodifiableEList<>(this,
 				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, all.size(), all.toArray());
 	}
 
@@ -186,6 +185,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileVersion getTarget() {
 		if (target != null && target.eIsProxy()) {
 			InternalEObject oldTarget = (InternalEObject) target;
@@ -244,6 +244,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setTarget(IFileVersion newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -270,6 +271,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReviewItemSet getSet() {
 		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET) {
 			return null;
@@ -282,6 +284,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public IReview getReview() {
 		if (getSet() != null) {
 			return getSet().getReview();
@@ -316,9 +319,10 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setSet(IReviewItemSet newSet) {
 		if (newSet != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET && newSet != null)) {
+				|| eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET && newSet != null) {
 			if (EcoreUtil.isAncestor(this, newSet)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
@@ -347,11 +351,11 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__SET:
-			if (eInternalContainer() != null) {
-				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			return basicSetSet((IReviewItemSet) otherEnd, msgs);
+			case ReviewsPackage.FILE_ITEM__SET:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetSet((IReviewItemSet) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -364,12 +368,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__BASE:
-			return basicSetBase(null, msgs);
-		case ReviewsPackage.FILE_ITEM__TARGET:
-			return basicSetTarget(null, msgs);
-		case ReviewsPackage.FILE_ITEM__SET:
-			return basicSetSet(null, msgs);
+			case ReviewsPackage.FILE_ITEM__BASE:
+				return basicSetBase(null, msgs);
+			case ReviewsPackage.FILE_ITEM__TARGET:
+				return basicSetTarget(null, msgs);
+			case ReviewsPackage.FILE_ITEM__SET:
+				return basicSetSet(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -382,9 +386,9 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case ReviewsPackage.FILE_ITEM__SET:
-			return eInternalContainer().eInverseRemove(this, ReviewsPackage.REVIEW_ITEM_SET__ITEMS,
-					IReviewItemSet.class, msgs);
+			case ReviewsPackage.FILE_ITEM__SET:
+				return eInternalContainer().eInverseRemove(this, ReviewsPackage.REVIEW_ITEM_SET__ITEMS,
+						IReviewItemSet.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -397,21 +401,21 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__BASE:
-			if (resolve) {
-				return getBase();
-			}
-			return basicGetBase();
-		case ReviewsPackage.FILE_ITEM__TARGET:
-			if (resolve) {
-				return getTarget();
-			}
-			return basicGetTarget();
-		case ReviewsPackage.FILE_ITEM__SET:
-			if (resolve) {
-				return getSet();
-			}
-			return basicGetSet();
+			case ReviewsPackage.FILE_ITEM__BASE:
+				if (resolve) {
+					return getBase();
+				}
+				return basicGetBase();
+			case ReviewsPackage.FILE_ITEM__TARGET:
+				if (resolve) {
+					return getTarget();
+				}
+				return basicGetTarget();
+			case ReviewsPackage.FILE_ITEM__SET:
+				if (resolve) {
+					return getSet();
+				}
+				return basicGetSet();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -424,15 +428,15 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__BASE:
-			setBase((IFileVersion) newValue);
-			return;
-		case ReviewsPackage.FILE_ITEM__TARGET:
-			setTarget((IFileVersion) newValue);
-			return;
-		case ReviewsPackage.FILE_ITEM__SET:
-			setSet((IReviewItemSet) newValue);
-			return;
+			case ReviewsPackage.FILE_ITEM__BASE:
+				setBase((IFileVersion) newValue);
+				return;
+			case ReviewsPackage.FILE_ITEM__TARGET:
+				setTarget((IFileVersion) newValue);
+				return;
+			case ReviewsPackage.FILE_ITEM__SET:
+				setSet((IReviewItemSet) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -445,15 +449,15 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__BASE:
-			setBase((IFileVersion) null);
-			return;
-		case ReviewsPackage.FILE_ITEM__TARGET:
-			setTarget((IFileVersion) null);
-			return;
-		case ReviewsPackage.FILE_ITEM__SET:
-			setSet((IReviewItemSet) null);
-			return;
+			case ReviewsPackage.FILE_ITEM__BASE:
+				setBase((IFileVersion) null);
+				return;
+			case ReviewsPackage.FILE_ITEM__TARGET:
+				setTarget((IFileVersion) null);
+				return;
+			case ReviewsPackage.FILE_ITEM__SET:
+				setSet((IReviewItemSet) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -466,12 +470,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__BASE:
-			return base != null;
-		case ReviewsPackage.FILE_ITEM__TARGET:
-			return target != null;
-		case ReviewsPackage.FILE_ITEM__SET:
-			return basicGetSet() != null;
+			case ReviewsPackage.FILE_ITEM__BASE:
+				return base != null;
+			case ReviewsPackage.FILE_ITEM__TARGET:
+				return target != null;
+			case ReviewsPackage.FILE_ITEM__SET:
+				return basicGetSet() != null;
 		}
 		return super.eIsSet(featureID);
 	}

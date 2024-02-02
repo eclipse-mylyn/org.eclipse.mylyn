@@ -36,8 +36,6 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.text.source.OverviewRuler;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.actions.AddLineCommentToFileAction;
@@ -53,8 +51,6 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -90,6 +86,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			initialize();
 		}
 
+		@Override
 		public void lineGetBackground(LineBackgroundEvent event) {
 			int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1;
 			Iterator<Annotation> it = annotationModel.getAnnotationIterator();
@@ -102,8 +99,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 					//TODO This code assumes that we have one comment per annotation. That won't work for r4E.
 					if (comment.getLocations().size() == 1) {
 						ILocation location = comment.getLocations().get(0);
-						if (location instanceof ILineLocation) {
-							ILineLocation lineLocation = (ILineLocation) location;
+						if (location instanceof ILineLocation lineLocation) {
 							startLine = lineLocation.getRangeMin();
 							endLine = lineLocation.getRangeMax();
 							if (lineNr >= startLine && lineNr <= endLine) {
@@ -120,8 +116,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		}
 
 		/**
-		 * Galileo hack to deal with slaveDocuments (when clicking on java structure elements). The styledText will not
-		 * contain the whole text anymore, so our line numbering is off
+		 * Galileo hack to deal with slaveDocuments (when clicking on java structure elements). The styledText will not contain the whole
+		 * text anymore, so our line numbering is off
 		 *
 		 * @param event
 		 * @return
@@ -152,7 +148,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 					String delimiter = ((StyledText) event.widget).getLineDelimiter();
 					for (String line : initialText.split(delimiter)) {
 						if (charoffset > 0) {
-							charoffset -= (line.length() + delimiter.length());
+							charoffset -= line.length() + delimiter.length();
 							lineOffset++;
 						} else {
 							break;
@@ -184,11 +180,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 			if (commentedPref != null) {
 				fDispatcher.addPropertyChangeListener(commentedPref.getColorPreferenceKey(),
-						new IPropertyChangeListener() {
-							public void propertyChange(PropertyChangeEvent event) {
-								updateCommentedColor(commentedPref, store);
-							}
-						});
+						event -> updateCommentedColor(commentedPref, store));
 			}
 		}
 
@@ -213,14 +205,14 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 	private final SourceViewer sourceViewer;
 
 	ReviewCompareInputListener(MergeSourceViewer mergeSourceViewer, ReviewAnnotationModel annotationModel) {
-		this.sourceViewer = CompareUtil.getSourceViewer(mergeSourceViewer);
+		sourceViewer = CompareUtil.getSourceViewer(mergeSourceViewer);
 		this.mergeSourceViewer = mergeSourceViewer;
 		this.annotationModel = annotationModel;
 	}
 
+	@Override
 	public void focusOnLines(ILocation range) {
-		if (range instanceof ILineLocation) {
-			ILineLocation lineLocation = (ILineLocation) range;
+		if (range instanceof ILineLocation lineLocation) {
 			// editors count lines from 0, Crucible counts from 1
 			final int startLine = lineLocation.getRangeMin() - 1;
 			final int endLine = lineLocation.getRangeMax() - 1;
@@ -282,10 +274,12 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		sourceViewer.showAnnotationsOverview(true);
 	}
 
+	@Override
 	public ReviewAnnotationModel getAnnotationModel() {
 		return annotationModel;
 	}
 
+	@Override
 	public LineRange getSelection() {
 		if (sourceViewer != null) {
 			TextSelection selection = (TextSelection) sourceViewer.getSelection();
@@ -294,10 +288,12 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		return null;
 	}
 
+	@Override
 	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 		// ignore
 	}
 
+	@Override
 	public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 		if (oldInput != null) {
 			annotationModel.disconnect(oldInput);
@@ -335,9 +331,10 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 	}
 
 	public boolean isListenerFor(MergeSourceViewer viewer, ReviewAnnotationModel annotationModel) {
-		return this.mergeSourceViewer == viewer && this.annotationModel == annotationModel;
+		return mergeSourceViewer == viewer && this.annotationModel == annotationModel;
 	}
 
+	@Override
 	public void registerContextMenu() {
 		addLineCommentAction = new AddLineCommentToFileAction(this);
 //				addLineCommentAction.setImageDescriptor(CrucibleImages.ADD_COMMENT);
@@ -391,11 +388,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			support.setAnnotationPreference((AnnotationPreference) e.next());
 		}
 		support.install(EditorsUI.getPreferenceStore());
-		sourceViewer.getControl().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				support.dispose();
-			}
-		});
+		sourceViewer.getControl().addDisposeListener(e1 -> support.dispose());
 
 		Field overViewRulerField = sourceViewerClazz.getDeclaredField("fOverviewRuler"); //$NON-NLS-1$
 		overViewRulerField.setAccessible(true);
@@ -421,7 +414,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		sourceViewer.showAnnotations(true);
 		sourceViewer.showAnnotationsOverview(true);
 
-		declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", new Class[] { Boolean.TYPE }); //$NON-NLS-1$
+		declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", Boolean.TYPE); //$NON-NLS-1$
 		declareMethod.setAccessible(true);
 	}
 
@@ -436,7 +429,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		CompositeRuler ruler = (CompositeRuler) declaredMethod2.invoke(sourceViewer);
 		boolean hasDecorator = false;
 
-		Iterator<?> iter = (ruler).getDecoratorIterator();
+		Iterator<?> iter = ruler.getDecoratorIterator();
 		while (iter.hasNext()) {
 			Object obj = iter.next();
 			if (obj instanceof AnnotationColumn) {

@@ -58,10 +58,9 @@ public class ReviewItemSetCompareEditorInput extends ReviewItemCompareEditorInpu
 
 		root = new DiffNode(Differencer.NO_CHANGE);
 		for (IReviewItem item : items.getItems()) {
-			if (!(item instanceof IFileItem)) {
+			if (!(item instanceof IFileItem fileItem)) {
 				continue;
 			}
-			IFileItem fileItem = (IFileItem) item;
 			if (fileItem.getBase().getContent() != null) {
 				FileItemNode node = new FileItemNode(behavior, fileItem, monitor);
 
@@ -136,8 +135,7 @@ public class ReviewItemSetCompareEditorInput extends ReviewItemCompareEditorInpu
 
 	//NOTE:  This is a temporary hack to work around the problem described in bug 402060.  It should be removed when the bug is fixed
 	protected void updateViewerConfig(Viewer aContentViewer, FileItemNode input) {
-		if (aContentViewer instanceof TextMergeViewer) {
-			final TextMergeViewer textMergeViewer = (TextMergeViewer) aContentViewer;
+		if (aContentViewer instanceof final TextMergeViewer textMergeViewer) {
 			try {
 				final Class<TextMergeViewer> clazz = TextMergeViewer.class;
 				Field declaredField = clazz.getDeclaredField("isConfigured"); //$NON-NLS-1$

@@ -59,6 +59,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 			return fill;
 		}
 
+		@Override
 		public StyledString getStyledText(Object element) {
 			String columnText = getText(element);
 			if (columnText == null) {
@@ -92,7 +93,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 				return targetProvider.getStyledText(columnObject);
 			}
 			return new StyledString();
-		};
+		}
 
 		@Override
 		public Image getImage(Object element) {
@@ -101,7 +102,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 				return targetProvider.getImage(columnObject);
 			}
 			return null;
-		};
+		}
 
 		@Override
 		public String getToolTipText(Object element) {
@@ -110,7 +111,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 				return targetProvider.getToolTipText(columnObject);
 			}
 			return targetProvider.getToolTipText(element);
-		};
+		}
 
 		@Override
 		public String getText(Object element) {
@@ -119,15 +120,15 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 				return targetProvider.getText(columnObject);
 			}
 			return ""; //$NON-NLS-1$
-		};
+		}
 
 		public abstract Object adapt(Object element);
 	}
 
 	/**
-	 * Noop. Note: Subclasses must manage disposal of any member resources by overriding {@link #doDispose()}. Viewers
-	 * are expected to call {@link #doDispose()} from viewer. This is necessary because internal delegating providers
-	 * and viewers will call dispose, preventing reuse of this label provider.
+	 * Noop. Note: Subclasses must manage disposal of any member resources by overriding {@link #doDispose()}. Viewers are expected to call
+	 * {@link #doDispose()} from viewer. This is necessary because internal delegating providers and viewers will call dispose, preventing
+	 * reuse of this label provider.
 	 */
 	@Override
 	public final void dispose() {
@@ -140,11 +141,13 @@ public abstract class TableStyledLabelProvider extends LabelProvider
 		super.dispose();
 	}
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		TableColumnProvider columnProvider = getColumnProviders()[columnIndex];
 		return columnProvider.getImage(element);
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		TableColumnProvider columnProvider = getColumnProviders()[columnIndex];
 		return columnProvider.getText(element);

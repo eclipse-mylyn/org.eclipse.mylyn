@@ -84,8 +84,8 @@ public class GerritHttpClient {
 		}
 	}
 
-	public static interface ErrorHandler {
-		public void handleError(HttpMethodBase method) throws GerritException;
+	public interface ErrorHandler {
+		void handleError(HttpMethodBase method) throws GerritException;
 	}
 
 	class JsonRequest extends Request<String> {
@@ -138,7 +138,7 @@ public class GerritHttpClient {
 			this.serviceUri = serviceUri;
 			this.input = input;
 			this.resultType = resultType;
-			this.errorHandler = handler;
+			errorHandler = handler;
 		}
 
 		@Override
@@ -240,7 +240,7 @@ public class GerritHttpClient {
 	public GerritHttpClient(AbstractWebLocation location, Version version) {
 		Assert.isNotNull(location, "Location must be not null."); //$NON-NLS-1$
 		this.location = location;
-		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
+		httpClient = new HttpClient(WebUtil.getConnectionManager());
 		this.version = version;
 	}
 
@@ -256,12 +256,12 @@ public class GerritHttpClient {
 		if (xsrfKey != null) {
 			return xsrfKey;
 		}
-		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
+		return xsrfCookie != null ? xsrfCookie.getValue() : null;
 	}
 
 	public synchronized void setXsrfKey(String xsrfKey) {
 		this.xsrfKey = xsrfKey;
-		this.obtainedXsrfKey = true;
+		obtainedXsrfKey = true;
 	}
 
 	/**
@@ -350,10 +350,7 @@ public class GerritHttpClient {
 			try {
 				// Execute the method.
 				execute(method, monitor);
-			} catch (IOException e) {
-				WebUtil.releaseConnection(method, monitor);
-				throw e;
-			} catch (RuntimeException e) {
+			} catch (IOException | RuntimeException e) {
 				WebUtil.releaseConnection(method, monitor);
 				throw e;
 			}
@@ -384,7 +381,7 @@ public class GerritHttpClient {
 					// login or re-authenticate due to an expired session, or resource that is specified by the URL is not found or is not visible to the calling user
 					authenticate(openIdProvider, monitor);
 
-					this.obtainedXsrfKey = false;
+					obtainedXsrfKey = false;
 				} else {
 					throw new GerritHttpException(code);
 				}
@@ -411,7 +408,7 @@ public class GerritHttpClient {
 				}
 
 				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-				try {
+				try (in) {
 					GerritHtmlProcessor processor = new GerritHtmlProcessor();
 					processor.parse(in, method.getResponseCharSet());
 					String xGerritAuth = processor.getXGerritAuth();
@@ -420,8 +417,6 @@ public class GerritHttpClient {
 					} else {
 						setXsrfKey(processor.getXsrfKey());
 					}
-				} finally {
-					in.close();
 				}
 			}
 		} finally {
@@ -436,10 +431,7 @@ public class GerritHttpClient {
 			// Execute the method.
 			execute(method, monitor);
 			return method;
-		} catch (IOException e) {
-			WebUtil.releaseConnection(method, monitor);
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			WebUtil.releaseConnection(method, monitor);
 			throw e;
 		}
@@ -506,7 +498,7 @@ public class GerritHttpClient {
 			throws IOException, GerritException {
 		JSonSupport json = new JSonSupport();
 
-		List<Object> args = new ArrayList<Object>(2);
+		List<Object> args = new ArrayList<>(2);
 		args.add(openIdProvider);
 		args.add(SignInMode.SIGN_IN);
 		args.add(Boolean.TRUE);
@@ -567,10 +559,7 @@ public class GerritHttpClient {
 			try {
 				// Execute the method.
 				execute(validateMethod, monitor);
-			} catch (IOException e) {
-				WebUtil.releaseConnection(method, monitor);
-				throw e;
-			} catch (RuntimeException e) {
+			} catch (IOException | RuntimeException e) {
 				WebUtil.releaseConnection(method, monitor);
 				throw e;
 			}
@@ -585,7 +574,7 @@ public class GerritHttpClient {
 			throws IOException, GerritException {
 		JSonSupport json = new JSonSupport();
 
-		List<Object> args = new ArrayList<Object>(2);
+		List<Object> args = new ArrayList<>(2);
 		args.add(credentials.getUserName());
 		args.add(credentials.getPassword());
 
@@ -724,7 +713,7 @@ public class GerritHttpClient {
 	}
 
 	private synchronized boolean needsAuthentication() {
-		return (xsrfCookie == null || xsrfCookie.isExpired());
+		return xsrfCookie == null || xsrfCookie.isExpired();
 	}
 
 	private boolean needsReauthentication(int code, IProgressMonitor monitor) throws IOException, GerritLoginException {
@@ -782,7 +771,7 @@ public class GerritHttpClient {
 			oldCookie = this.xsrfCookie;
 			this.xsrfCookie = xsrfCookie;
 			if (xsrfCookie == null) {
-				this.obtainedXsrfKey = false;
+				obtainedXsrfKey = false;
 			}
 		}
 		if (xsrfCookie != null) {
@@ -798,7 +787,7 @@ public class GerritHttpClient {
 	private void setXsrfCookie(String cookieName) throws GerritLoginException {
 		Optional<Cookie> cookie = findCookieWithName(cookieName, httpClient);
 		cookie.ifPresent(this::setXsrfCookie);
-		cookie.orElseThrow(() -> new GerritLoginException());
+		cookie.orElseThrow(GerritLoginException::new);
 	}
 
 	private Optional<Cookie> findCookieWithName(String cookieName, HttpClient httpClient) {

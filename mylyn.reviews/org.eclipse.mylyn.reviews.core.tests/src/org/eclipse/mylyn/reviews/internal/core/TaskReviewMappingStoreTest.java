@@ -71,9 +71,10 @@ public class TaskReviewMappingStoreTest {
 			+ " associated reviews " + reviewUrl2 + " Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed Task-Url: "
 			+ taskUrl1 + " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
 
-	final String descriptionWithNoTaskUrl = "477635: [UCOSP] contribute reviews section to task editor showing"
-			+ " associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed "
-			+ " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
+	final String descriptionWithNoTaskUrl = """
+			477635: [UCOSP] contribute reviews section to task editor showing\
+			 associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed\s\
+			 Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>""";
 
 	final String descriptionWithNotATaskUrl = "477635: [UCOSP] contribute reviews section to task editor showing"
 			+ " associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed " + notATaskUrl
@@ -302,14 +303,14 @@ public class TaskReviewMappingStoreTest {
 		@Override
 		ITask getTaskByUrl(String url) {
 			switch (url) {
-			case taskUrl1:
-				return task1;
-			case taskUrl2:
-				return task2;
-			case reviewUrl1:
-				return review1;
-			case reviewUrl2:
-				return review2;
+				case taskUrl1:
+					return task1;
+				case taskUrl2:
+					return task2;
+				case reviewUrl1:
+					return review1;
+				case reviewUrl2:
+					return review2;
 			}
 			return null;
 		}

@@ -56,6 +56,7 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 	 * @return Object
 	 * @see org.eclipse.core.commands.IHandler#execute(ExecutionEvent)
 	 */
+	@Override
 	public Object execute(final ExecutionEvent aEvent) {
 
 		GerritPlugin.Ftracer.traceInfo("Collecting the gerrit review locations"); //$NON-NLS-1$
@@ -87,7 +88,7 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 
 				} else {
 					IWorkbench workbench = GerritUi.getDefault().getWorkbench();
-					IHandlerService handlerService = (IHandlerService) workbench.getService(IHandlerService.class);
+					IHandlerService handlerService = workbench.getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(UIConstants.ADD_GERRIT_SITE_COMMAND_ID, null);
 					} catch (Exception ex) {

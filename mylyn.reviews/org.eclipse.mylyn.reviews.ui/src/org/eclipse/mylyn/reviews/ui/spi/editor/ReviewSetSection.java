@@ -45,7 +45,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
-		reviewSetSections = new ArrayList<ReviewSetContentSection>();
+		reviewSetSections = new ArrayList<>();
 		super.initialize(taskEditorPage);
 	}
 
@@ -64,8 +64,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		Control content = super.createContent(toolkit, parent);
 		for (IReviewItem item : getReview().getSets()) {
-			if (item instanceof IReviewItemSet) {
-				IReviewItemSet set = (IReviewItemSet) item;
+			if (item instanceof IReviewItemSet set) {
 				ReviewSetContentSection subSection = new ReviewSetContentSection(this, set, getTaskEditorPage());
 				reviewSetSections.add(subSection);
 			}

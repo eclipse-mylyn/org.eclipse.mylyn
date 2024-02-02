@@ -37,12 +37,14 @@ public abstract class AbstractReviewAction extends BaseSelectionListenerAction
 		super(text);
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
-		this.workbenchWindow = window;
+		workbenchWindow = window;
 	}
 
 	@Override
@@ -50,6 +52,7 @@ public abstract class AbstractReviewAction extends BaseSelectionListenerAction
 		run(this);
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (ReviewUi.getActiveReview() != null) {
 			action.setEnabled(true);
@@ -72,8 +75,7 @@ public abstract class AbstractReviewAction extends BaseSelectionListenerAction
 	}
 
 	protected IEditorInput getEditorInputFromSelection(ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = ((IStructuredSelection) selection);
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			if (structuredSelection.getFirstElement() instanceof IEditorInput) {
 				return (IEditorInput) structuredSelection.getFirstElement();
 			}

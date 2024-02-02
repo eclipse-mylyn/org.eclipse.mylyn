@@ -69,7 +69,7 @@ public class FileItemNode extends DiffNode {
 		setKind(kind);
 		IPath path = Path.fromPortableString(targetPath);
 		setPath(path);
-		this.name = path.lastSegment();
+		name = path.lastSegment();
 	}
 
 	//Check if we can match the reviewed file with the workspace history contents
@@ -81,7 +81,7 @@ public class FileItemNode extends DiffNode {
 			try {
 				repoFileContents = repoFileRevision.getStorage(monitor).getContents();
 				if (repoFileContents != null) {
-					//First option:  The file under review is in sync with a version in history for a workspace file, 
+					//First option:  The file under review is in sync with a version in history for a workspace file,
 					//open the file Revision.  Best effort navigability.
 					return new FileRevisionTypedElement(repoFileRevision, monitor);
 				}
@@ -96,7 +96,7 @@ public class FileItemNode extends DiffNode {
 	public FileItemNode(String name) {
 		super(Differencer.NO_CHANGE);
 		this.name = name;
-		this.fileItem = null;
+		fileItem = null;
 	}
 
 	public IFileItem getFileItem() {
@@ -110,7 +110,7 @@ public class FileItemNode extends DiffNode {
 		if (imageManger == null) {
 			imageManger = new CommonImageManger();
 		}
-		return (fileItem != null) ? imageManger.getFileImage(getName()) : imageManger.getFolderImage();
+		return fileItem != null ? imageManger.getFileImage(getName()) : imageManger.getFolderImage();
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class FileItemNode extends DiffNode {
 
 	@Override
 	public String getType() {
-		return (fileItem != null) ? super.getType() : FOLDER_TYPE;
+		return fileItem != null ? super.getType() : FOLDER_TYPE;
 	}
 
 	public void setPath(IPath path) {

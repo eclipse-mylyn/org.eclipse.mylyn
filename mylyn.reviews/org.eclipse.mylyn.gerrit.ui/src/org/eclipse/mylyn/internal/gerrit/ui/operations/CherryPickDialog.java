@@ -24,8 +24,6 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
@@ -39,8 +37,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -70,7 +66,7 @@ public class CherryPickDialog extends GerritOperationDialog {
 	public CherryPickDialog(Shell shell, ITask task, PatchSet patchSet, GerritChange gerritChange) {
 		super(shell, task);
 		this.patchSet = patchSet;
-		this.change = gerritChange;
+		change = gerritChange;
 	}
 
 	@Override
@@ -106,18 +102,8 @@ public class CherryPickDialog extends GerritOperationDialog {
 		GridDataFactory.fillDefaults().grab(true, true).hint(400, 100).applyTo(commitMessage.getControl());
 		commitMessage.setText(getCommitMessage());
 
-		destination.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				updateButtons();
-			}
-		});
-		commitMessage.getViewer().addTextListener(new ITextListener() {
-			@Override
-			public void textChanged(TextEvent event) {
-				updateButtons();
-			}
-		});
+		destination.addModifyListener(e -> updateButtons());
+		commitMessage.getViewer().addTextListener(event -> updateButtons());
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(destination, new TextContentAdapter(),
 				createContentProposalProvider(), ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, null, true);
@@ -145,7 +131,7 @@ public class CherryPickDialog extends GerritOperationDialog {
 		Control control = super.createContents(parent);
 		setOKButtonEnabled(false);
 		return control;
-	};
+	}
 
 	@Override
 	protected boolean processOperationResult(GerritOperation<?> operation) {

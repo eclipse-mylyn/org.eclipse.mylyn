@@ -36,7 +36,7 @@ public class AddReviewersRequest extends AbstractRequest<ReviewerResult> {
 		Assert.isNotNull(reviewId);
 		Assert.isNotNull(reviewers);
 		this.reviewId = reviewId;
-		this.reviewers = Collections.unmodifiableList(new ArrayList<String>(reviewers));
+		this.reviewers = Collections.unmodifiableList(new ArrayList<>(reviewers));
 	}
 
 	public List<String> getReviewers() {

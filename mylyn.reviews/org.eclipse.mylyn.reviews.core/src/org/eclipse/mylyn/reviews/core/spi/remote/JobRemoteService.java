@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.reviews.internal.core.ReviewsCoreConstants;
 
 /**
- * An implementation of a remote service using jobs to fulfill the remote service contract. (Future implementations will
- * support a more scalable approach to supporting multiple executions.)
+ * An implementation of a remote service using jobs to fulfill the remote service contract. (Future implementations will support a more
+ * scalable approach to supporting multiple executions.)
  * 
  * @author Miles Parker
  */
@@ -37,18 +37,18 @@ public class JobRemoteService extends AbstractRemoteService {
 	private final List<Job> jobs;
 
 	public JobRemoteService() {
-		jobs = new ArrayList<Job>();
+		jobs = new ArrayList<>();
 	}
 
 	/**
 	 * Fully implements the {@link AbstractRemoteService#retrieve(AbstractRemoteConsumer, boolean)} contract:
 	 * <ol>
 	 * <li>If {@link AbstractRemoteConsumer#isAsynchronous()}, creates and runs a job to
-	 * {@link AbstractRemoteConsumer#pull(boolean, org.eclipse.core.runtime.IProgressMonitor)} the remote API data.
-	 * Otherwise, simply calls retrieve.</li>
+	 * {@link AbstractRemoteConsumer#pull(boolean, org.eclipse.core.runtime.IProgressMonitor)} the remote API data. Otherwise, simply calls
+	 * retrieve.</li>
 	 * <li>If a failure occurs, calls {@link AbstractRemoteConsumer#notifyDone(org.eclipse.core.runtime.IStatus)}.</li>
-	 * <li>Invokes {@link AbstractRemoteConsumer#applyModel(boolean)} inside of a modelExec call, so that extending
-	 * classes can manage thread context.</li>
+	 * <li>Invokes {@link AbstractRemoteConsumer#applyModel(boolean)} inside of a modelExec call, so that extending classes can manage
+	 * thread context.</li>
 	 * <li>(No notification occurs in the case of an error while applying.)</li>
 	 * </ol>
 	 */
@@ -71,15 +71,12 @@ public class JobRemoteService extends AbstractRemoteService {
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(final IJobChangeEvent event) {
-					modelExec(new Runnable() {
-						@Override
-						public void run() {
-							final IStatus result = event.getResult();
-							if (result.isOK()) {
-								process.applyModel(force);
-							}
-							process.notifyDone(event.getResult());
+					modelExec(() -> {
+						final IStatus result = event.getResult();
+						if (result.isOK()) {
+							process.applyModel(force);
 						}
+						process.notifyDone(event.getResult());
 					}, false);
 				}
 			});
@@ -92,12 +89,9 @@ public class JobRemoteService extends AbstractRemoteService {
 				process.notifyDone(e.getStatus());
 				return;
 			}
-			modelExec(new Runnable() {
-				@Override
-				public void run() {
-					process.applyModel(force);
-					process.notifyDone(Status.OK_STATUS);
-				}
+			modelExec(() -> {
+				process.applyModel(force);
+				process.notifyDone(Status.OK_STATUS);
 			});
 		}
 	}

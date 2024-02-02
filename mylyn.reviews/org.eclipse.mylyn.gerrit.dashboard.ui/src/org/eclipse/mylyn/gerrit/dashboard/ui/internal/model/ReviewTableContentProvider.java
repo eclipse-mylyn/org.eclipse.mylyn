@@ -57,11 +57,10 @@ public class ReviewTableContentProvider implements IStructuredContentProvider {
 	@Override
 	public Object[] getElements(Object aInputElement) {
 		//GerritPlugin.Ftracer.traceInfo("getElements() content provider Object: " + aInputElement);
-		if (aInputElement instanceof GerritTask[]) {
-			GerritTask[] itemList = (GerritTask[]) aInputElement;
+		if (aInputElement instanceof GerritTask[] itemList) {
 			return itemList;
 		}
-		//This null will generate an error if we reach this point, may be we should log an error and 
+		//This null will generate an error if we reach this point, may be we should log an error and
 		// initiate an empty structure to return
 		//return null;
 		return new GerritTask[] {};

@@ -14,11 +14,12 @@ package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.getFile;
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.read;
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInput;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class SubmitInputTest extends TestCase {
 

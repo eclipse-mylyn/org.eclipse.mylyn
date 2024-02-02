@@ -99,7 +99,7 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 			buildText.setImage(getImageForBuildStatus(statusValue));
 
 			final ToolBarManager toolBarManager = new ToolBarManager();
-			IMenuService menuService = (IMenuService) locator.getService(IMenuService.class);
+			IMenuService menuService = locator.getService(IMenuService.class);
 			if (menuService != null) {
 				menuService.populateContributionManager(toolBarManager, "toolbar:org.eclipse.mylyn.build.toolbar"); //$NON-NLS-1$
 				toolBarManager.createControl(layoutComposite);
@@ -125,7 +125,7 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 			}
 			Composite layoutComposite = (Composite) getControl();
 
-			if (this.getModel().hasIncomingChanges(currentBuildAttribute)) {
+			if (getModel().hasIncomingChanges(currentBuildAttribute)) {
 				layoutComposite.getChildren()[3 * i].setBackground(color);
 				layoutComposite.getChildren()[3 * i + 1].setBackground(color);
 			}
@@ -135,7 +135,7 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public String getLabel() {
 		String label = Messages.ReviewSet_BuildHeader;
-		return (label != null) ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
+		return label != null ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
 	}
 
 	private Image getImageForBuildStatus(String status) {

@@ -29,8 +29,8 @@ import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IFileVersion} object. <!--
- * begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IFileVersion} object. <!-- begin-user-doc --> <!--
+ * end-user-doc -->
  * 
  * @generated
  */
@@ -162,9 +162,8 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
-	 * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -173,19 +172,19 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IFileVersion.class)) {
-		case ReviewsPackage.FILE_VERSION__PATH:
-		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
-		case ReviewsPackage.FILE_VERSION__CONTENT:
-		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-			return;
+			case ReviewsPackage.FILE_VERSION__PATH:
+			case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+			case ReviewsPackage.FILE_VERSION__CONTENT:
+			case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
-	 * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -195,8 +194,8 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	}
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */

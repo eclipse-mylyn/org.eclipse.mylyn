@@ -29,7 +29,7 @@ class TestEClassRemoteFactory
 
 	static TestRemoteEClass remote2 = new TestRemoteEClass("Remote Object 2");
 
-	static Map<String, TestRemoteEClass> remoteForKey = new HashMap<String, TestRemoteEClass>();
+	static Map<String, TestRemoteEClass> remoteForKey = new HashMap<>();
 
 	{
 		remoteForKey.put("remoteKeyFor Object 1", remote1);
@@ -49,7 +49,7 @@ class TestEClassRemoteFactory
 	@Override
 	protected EClass createModel(EPackage parent, TestRemoteEClass remoteObject) {
 		EClass clazz = EcoreFactory.eINSTANCE.createEClass();
-		clazz.setName(remoteObject.name.replaceAll("Remote", "Local"));
+		clazz.setName(remoteObject.name.replace("Remote", "Local"));
 		return clazz;
 	}
 

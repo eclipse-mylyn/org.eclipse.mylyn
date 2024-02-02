@@ -27,7 +27,7 @@ public class GerritReviewerUiFactoryProvider extends AbstractUiFactoryProvider<I
 
 	@Override
 	public List<AbstractUiFactory<IUser>> createFactories(IUiContext context, IUser type) {
-		List<AbstractUiFactory<IUser>> factories = new ArrayList<AbstractUiFactory<IUser>>();
+		List<AbstractUiFactory<IUser>> factories = new ArrayList<>();
 		factories.add(new RemoveReviewerUiFactory(context, type));
 		return factories;
 	}

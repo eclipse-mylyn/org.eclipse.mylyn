@@ -72,7 +72,7 @@ public class CommentAnnotationRulerHover
 	private static CommentAnnotationRulerHover currentAnnotationHover;
 
 	public CommentAnnotationRulerHover(CommentAnnotationRulerColumn column) {
-		this.rulerColumn = column;
+		rulerColumn = column;
 	}
 
 	public void dispose() {
@@ -80,25 +80,30 @@ public class CommentAnnotationRulerHover
 	}
 
 	/**
-	 * This is from {@link IAnnotationHover} but we also implement {@link IAnnotationHoverExtension} and
-	 * {@link IAnnotationHoverExtension2} which supersede this so there's no point in implementing it.
+	 * This is from {@link IAnnotationHover} but we also implement {@link IAnnotationHoverExtension} and {@link IAnnotationHoverExtension2}
+	 * which supersede this so there's no point in implementing it.
 	 */
+	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		throw new UnsupportedOperationException("This API should not be used"); //$NON-NLS-1$
 	}
 
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return informationControlCreator;
 	}
 
+	@Override
 	public boolean canHandleMouseCursor() {
 		return true;
 	}
 
+	@Override
 	public boolean canHandleMouseWheel() {
 		return true; // does not work on Ubuntu, but it should be here (maybe works on Windows ;))
 	}
 
+	@Override
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
 		List<CommentAnnotation> annotationsForLine = rulerColumn.getAnnotations(lineRange.getStartLine());
 		if (annotationsForLine != null && annotationsForLine.size() > 0) {
@@ -111,6 +116,7 @@ public class CommentAnnotationRulerHover
 		return null;
 	}
 
+	@Override
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		currentAnnotationHover = this;
 		currentSourceViewer = viewer;
@@ -187,8 +193,7 @@ public class CommentAnnotationRulerHover
 	}
 
 	private IAnnotationModel getAnnotationModel(ISourceViewer viewer) {
-		if (viewer instanceof ISourceViewerExtension2) {
-			ISourceViewerExtension2 extension = (ISourceViewerExtension2) viewer;
+		if (viewer instanceof ISourceViewerExtension2 extension) {
 			return extension.getVisualAnnotationModel();
 		}
 		return viewer.getAnnotationModel();
@@ -199,7 +204,7 @@ public class CommentAnnotationRulerHover
 			return false;
 		}
 
-		return (annotation != null && !annotations.contains(annotation));
+		return annotation != null && !annotations.contains(annotation);
 	}
 
 	private List<CommentAnnotation> getCommentAnnotationsForLine(ISourceViewer viewer, int line) {
@@ -209,23 +214,18 @@ public class CommentAnnotationRulerHover
 		}
 
 		IDocument document = viewer.getDocument();
-		List<CommentAnnotation> commentAnnotations = new ArrayList<CommentAnnotation>();
+		List<CommentAnnotation> commentAnnotations = new ArrayList<>();
 		Iterator<Annotation> iterator = model.getAnnotationIterator();
 
 		while (iterator.hasNext()) {
 			Annotation annotation = iterator.next();
 
 			Position position = model.getPosition(annotation);
-			if (position == null) {
+			if ((position == null) || !isRulerLine(position, document, line)) {
 				continue;
 			}
 
-			if (!isRulerLine(position, document, line)) {
-				continue;
-			}
-
-			if (annotation instanceof AnnotationBag) {
-				AnnotationBag bag = (AnnotationBag) annotation;
+			if (annotation instanceof AnnotationBag bag) {
 				Iterator<Annotation> e = bag.iterator();
 				while (e.hasNext()) {
 					annotation = e.next();
@@ -302,8 +302,7 @@ public class CommentAnnotationRulerHover
 			String contentType = TextUtilities.getContentType(document, partitioning, offset, true);
 
 			IInformationControlCreator controlCreator = null;
-			if (currentAnnotationHover instanceof IInformationProviderExtension2) {
-				IInformationProviderExtension2 provider = (IInformationProviderExtension2) currentAnnotationHover;
+			if (currentAnnotationHover instanceof IInformationProviderExtension2 provider) {
 				controlCreator = provider.getInformationPresenterControlCreator();
 			} else if (currentAnnotationHover instanceof IAnnotationHoverExtension) {
 				controlCreator = ((IAnnotationHoverExtension) currentAnnotationHover).getHoverControlCreator();
@@ -326,8 +325,7 @@ public class CommentAnnotationRulerHover
 				fInformationPresenter.showInformation();
 
 				// remove our own handler as F2 focus handler
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
+				ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 				Command showInfoCommand = commandService.getCommand(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
 				showInfoCommand.setHandler(null);
 
@@ -360,19 +358,23 @@ public class CommentAnnotationRulerHover
 			fControlCreator = controlCreator;
 		}
 
+		@Override
 		public IRegion getSubject(ITextViewer textViewer, int invocationOffset) {
 			return fHoverRegion;
 		}
 
+		@Override
 		@Deprecated
 		public String getInformation(ITextViewer textViewer, IRegion subject) {
 			return fHoverInfo.toString();
 		}
 
+		@Override
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 			return fHoverInfo;
 		}
 
+		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			return fControlCreator;
 		}

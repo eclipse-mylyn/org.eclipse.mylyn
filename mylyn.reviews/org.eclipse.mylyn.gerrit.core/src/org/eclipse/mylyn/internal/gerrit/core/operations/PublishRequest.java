@@ -38,7 +38,7 @@ public class PublishRequest extends AbstractRequest<Object> {
 		Assert.isNotNull(reviewId);
 		this.reviewId = reviewId;
 		this.patchSetId = patchSetId;
-		this.approvals = Collections.unmodifiableSet(new HashSet<ApprovalCategoryValue.Id>(approvals));
+		this.approvals = Collections.unmodifiableSet(new HashSet<>(approvals));
 	}
 
 	public int getPatchSetId() {

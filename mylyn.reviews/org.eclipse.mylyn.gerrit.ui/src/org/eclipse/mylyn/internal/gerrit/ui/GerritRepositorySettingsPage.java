@@ -98,7 +98,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 	private Combo openIdCombo;
 
-	private final List<OpenIdProvider> openIdProviders = new ArrayList<OpenIdProvider>();
+	private final List<OpenIdProvider> openIdProviders = new ArrayList<>();
 
 	public GerritRepositorySettingsPage(TaskRepository taskRepository) {
 		super(Messages.GerritRepositorySettingsPage_Gerrit_Repository_Settings,
@@ -195,7 +195,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 			openIdButton.setSelection(
 					Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED)));
 			String value = repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_PROVIDER);
-			openIdCombo.setText((value != null) ? value : ""); //$NON-NLS-1$
+			openIdCombo.setText(value != null ? value : ""); //$NON-NLS-1$
 
 			if (openIdButton.getSelection()) {
 				if (parent.getParent() instanceof ExpandableComposite) {

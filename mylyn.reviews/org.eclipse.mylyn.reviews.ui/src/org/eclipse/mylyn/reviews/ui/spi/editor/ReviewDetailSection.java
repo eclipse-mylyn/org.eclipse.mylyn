@@ -97,11 +97,11 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 		int numColumns = approvalTypesWithLabel.size() + 1;
 		GridLayoutFactory.fillDefaults()
-		.numColumns(numColumns)
-		.extendedMargins(0, 0, 0, 5)
-		.equalWidth(true)
-		.spacing(4, 5)
-		.applyTo(composite);
+				.numColumns(numColumns)
+				.extendedMargins(0, 0, 0, 5)
+				.equalWidth(true)
+				.spacing(4, 5)
+				.applyTo(composite);
 		subSection.setClient(composite);
 
 		if (!approvalTypesWithLabel.isEmpty()) {
@@ -248,7 +248,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 			String changeStatus = change.getState() != null
 					? NLS.bind(Messages.ReviewDetailSection_Bracket_X_bracket,
 							String.valueOf(change.getState().getName()))
-							: " "; //$NON-NLS-1$
+					: " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
 			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] {
 					StringUtils.left(change.getKey(), 9), change.getSubject(), changeStatus, ownerName }));

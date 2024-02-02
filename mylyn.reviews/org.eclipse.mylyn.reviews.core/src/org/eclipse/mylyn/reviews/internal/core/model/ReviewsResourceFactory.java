@@ -12,12 +12,8 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
-
-import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /**
  * <!-- begin-user-doc --> The <b>Resource Factory</b> associated with the package. <!-- end-user-doc -->
@@ -32,7 +28,6 @@ public class ReviewsResourceFactory extends ResourceFactoryImpl {
 	 * @generated
 	 */
 	public ReviewsResourceFactory() {
-		super();
 	}
 
 	/**

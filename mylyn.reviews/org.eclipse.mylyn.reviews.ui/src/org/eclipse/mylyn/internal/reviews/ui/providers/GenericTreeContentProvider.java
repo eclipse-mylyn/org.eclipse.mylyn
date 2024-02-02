@@ -19,8 +19,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * Provides common features for tree content providers including support for gathering children of collections
- * efficiently.
+ * Provides common features for tree content providers including support for gathering children of collections efficiently.
  * 
  * @author Miles Parker
  */

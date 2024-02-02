@@ -15,12 +15,12 @@ package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class AbandonInputTest extends TestCase {
 

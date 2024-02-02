@@ -197,7 +197,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		consumer.save();
 		if (!consumer.getStatus().isOK()) {
 			if (consumer.getStatus().getException() instanceof CoreException) {
-				throw ((CoreException) consumer.getStatus().getException());
+				throw (CoreException) consumer.getStatus().getException();
 			}
 			throw new CoreException(consumer.getStatus());
 		}
@@ -279,7 +279,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 					userName = accountName;
 				} else {
 					String email = author.getPreferredEmail();
-					userName = (email != null) ? email : id;
+					userName = email != null ? email : id;
 				}
 				IRepositoryPerson person = repository.createPerson(userName);
 				person.setName(author.getFullName());
@@ -344,7 +344,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private Short getStateValue(Short value, Short oldState) {
-		Short state = 0;
+		short state = 0;
 		if (value < 0) {
 			state = (short) Math.min(oldState, value);
 		} else {

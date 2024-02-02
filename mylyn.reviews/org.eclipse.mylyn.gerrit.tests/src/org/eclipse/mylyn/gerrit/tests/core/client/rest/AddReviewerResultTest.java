@@ -16,13 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInfo;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class AddReviewerResultTest extends TestCase {
 	@Test

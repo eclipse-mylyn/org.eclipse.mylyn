@@ -187,9 +187,8 @@ public class GerritTask extends AbstractTask {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Format the requested Gerrit Review attribute as a date string. As in the Gerrit web UI, the output format depends
-	 * on the date relation with 'today': Same day: 'hh:mm am/pm' Same year, different day: 'Mon DD' Different year:
-	 * 'Mon DD, YYYY' (not implemented)
+	 * Format the requested Gerrit Review attribute as a date string. As in the Gerrit web UI, the output format depends on the date
+	 * relation with 'today': Same day: 'hh:mm am/pm' Same year, different day: 'Mon DD' Different year: 'Mon DD, YYYY' (not implemented)
 	 * 
 	 * @param key
 	 *            one of { DATE_CREATION, DATE_MODIFICATION, DATE_COMPLETION }
@@ -230,8 +229,8 @@ public class GerritTask extends AbstractTask {
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(date);
 
-		boolean sameDay = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-				&& (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)));
+		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
 		return sameDay;
 	}
@@ -276,7 +275,7 @@ public class GerritTask extends AbstractTask {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(Messages.GerritTask_taskID).append(getAttribute(GerritTask.TASK_ID)).append('\n');
 		buffer.append(Messages.GerritTask_shortID).append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append('\n');
 		buffer.append(Messages.GerritTask_changeID).append(getAttribute(GerritTask.CHANGE_ID)).append('\n');

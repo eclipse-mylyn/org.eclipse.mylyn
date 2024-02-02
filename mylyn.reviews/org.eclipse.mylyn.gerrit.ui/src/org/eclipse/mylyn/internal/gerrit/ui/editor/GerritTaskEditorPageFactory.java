@@ -31,8 +31,8 @@ public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		return (input.getTask().getConnectorKind().equals(GerritConnector.CONNECTOR_KIND))
-				|| (TasksUiUtil.isOutgoingNewTask(input.getTask(), GerritConnector.CONNECTOR_KIND));
+		return input.getTask().getConnectorKind().equals(GerritConnector.CONNECTOR_KIND)
+				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), GerritConnector.CONNECTOR_KIND);
 	}
 
 	@Override

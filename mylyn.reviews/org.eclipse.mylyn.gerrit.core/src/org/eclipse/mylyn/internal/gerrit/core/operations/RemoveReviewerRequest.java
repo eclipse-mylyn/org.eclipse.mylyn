@@ -33,11 +33,11 @@ public class RemoveReviewerRequest extends AbstractRequest<ReviewerResult> {
 	}
 
 	public String getReviewerToRemove() {
-		return this.reviewer;
+		return reviewer;
 	}
 
 	public String getReviewId() {
-		return this.reviewId;
+		return reviewId;
 	}
 
 	@Override

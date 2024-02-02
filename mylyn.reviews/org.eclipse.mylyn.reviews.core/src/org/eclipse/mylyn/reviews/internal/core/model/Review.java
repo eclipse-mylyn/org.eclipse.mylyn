@@ -60,8 +60,7 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRepository <em>Repository</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getParents <em>Parents</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getChildren <em>Children</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewerApprovals <em>Reviewer
- * Approvals</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewerApprovals <em>Reviewer Approvals</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRequirements <em>Requirements</em>}</li>
  * </ul>
  * </p>
@@ -70,8 +69,7 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
  */
 public class Review extends CommentContainer implements IReview {
 	/**
-	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCreationDate()
 	 * @generated
@@ -80,8 +78,7 @@ public class Review extends CommentContainer implements IReview {
 	protected static final Date CREATION_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCreationDate()
 	 * @generated
@@ -90,8 +87,8 @@ public class Review extends CommentContainer implements IReview {
 	protected Date creationDate = CREATION_DATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getModificationDate()
 	 * @generated
@@ -100,8 +97,8 @@ public class Review extends CommentContainer implements IReview {
 	protected static final Date MODIFICATION_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getModificationDate()
 	 * @generated
@@ -128,8 +125,7 @@ public class Review extends CommentContainer implements IReview {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getKey()
 	 * @generated
@@ -147,8 +143,7 @@ public class Review extends CommentContainer implements IReview {
 	protected String key = KEY_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSubject()
 	 * @generated
@@ -157,8 +152,7 @@ public class Review extends CommentContainer implements IReview {
 	protected static final String SUBJECT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSubject()
 	 * @generated
@@ -167,8 +161,7 @@ public class Review extends CommentContainer implements IReview {
 	protected String subject = SUBJECT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -177,8 +170,7 @@ public class Review extends CommentContainer implements IReview {
 	protected static final String MESSAGE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -187,8 +179,7 @@ public class Review extends CommentContainer implements IReview {
 	protected String message = MESSAGE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOwner() <em>Owner</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getOwner() <em>Owner</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getOwner()
 	 * @generated
@@ -197,8 +188,7 @@ public class Review extends CommentContainer implements IReview {
 	protected IUser owner;
 
 	/**
-	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -207,8 +197,7 @@ public class Review extends CommentContainer implements IReview {
 	protected static final ReviewStatus STATE_EDEFAULT = ReviewStatus.NEW;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -217,8 +206,7 @@ public class Review extends CommentContainer implements IReview {
 	protected ReviewStatus state = STATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSets() <em>Sets</em>}' containment reference list. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSets() <em>Sets</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSets()
 	 * @generated
@@ -227,8 +215,8 @@ public class Review extends CommentContainer implements IReview {
 	protected EList<IReviewItemSet> sets;
 
 	/**
-	 * The cached value of the '{@link #getParents() <em>Parents</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getParents() <em>Parents</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getParents()
 	 * @generated
@@ -237,8 +225,8 @@ public class Review extends CommentContainer implements IReview {
 	protected EList<IChange> parents;
 
 	/**
-	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getChildren()
 	 * @generated
@@ -247,8 +235,8 @@ public class Review extends CommentContainer implements IReview {
 	protected EList<IChange> children;
 
 	/**
-	 * The cached value of the '{@link #getReviewerApprovals() <em>Reviewer Approvals</em>}' map. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReviewerApprovals() <em>Reviewer Approvals</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getReviewerApprovals()
 	 * @generated
@@ -257,8 +245,7 @@ public class Review extends CommentContainer implements IReview {
 	protected EMap<IUser, IReviewerEntry> reviewerApprovals;
 
 	/**
-	 * The cached value of the '{@link #getRequirements() <em>Requirements</em>}' map. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getRequirements() <em>Requirements</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRequirements()
 	 * @generated
@@ -272,7 +259,6 @@ public class Review extends CommentContainer implements IReview {
 	 * @generated
 	 */
 	protected Review() {
-		super();
 	}
 
 	/**
@@ -290,6 +276,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -299,6 +286,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
@@ -313,6 +301,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Date getModificationDate() {
 		return modificationDate;
 	}
@@ -322,6 +311,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
@@ -336,9 +326,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IReviewItemSet> getSets() {
 		if (sets == null) {
-			sets = new EObjectContainmentWithInverseEList.Resolving<IReviewItemSet>(IReviewItemSet.class, this,
+			sets = new EObjectContainmentWithInverseEList.Resolving<>(IReviewItemSet.class, this,
 					ReviewsPackage.REVIEW__SETS, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW);
 		}
 		return sets;
@@ -349,6 +340,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IRepository getRepository() {
 		if (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY) {
 			return null;
@@ -383,9 +375,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRepository(IRepository newRepository) {
 		if (newRepository != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY && newRepository != null)) {
+				|| eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY && newRepository != null) {
 			if (EcoreUtil.isAncestor(this, newRepository)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
@@ -426,11 +419,11 @@ public class Review extends CommentContainer implements IReview {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		List<IComment> all = new ArrayList<IComment>(getComments());
+		List<IComment> all = new ArrayList<>(getComments());
 		for (IReviewItemSet set : getSets()) {
 			all.addAll(set.getAllComments());
 		}
-		return new EObjectEList.UnmodifiableEList<IComment>(this,
+		return new EObjectEList.UnmodifiableEList<>(this,
 				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, all.size(), all.toArray());
 	}
 
@@ -439,6 +432,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ReviewStatus getState() {
 		return state;
 	}
@@ -448,6 +442,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setState(ReviewStatus newState) {
 		ReviewStatus oldState = state;
 		state = newState == null ? STATE_EDEFAULT : newState;
@@ -461,6 +456,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -470,6 +466,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -483,6 +480,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -492,6 +490,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
@@ -505,6 +504,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getSubject() {
 		return subject;
 	}
@@ -514,6 +514,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setSubject(String newSubject) {
 		String oldSubject = subject;
 		subject = newSubject;
@@ -527,6 +528,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getMessage() {
 		return message;
 	}
@@ -536,6 +538,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setMessage(String newMessage) {
 		String oldMessage = message;
 		message = newMessage;
@@ -549,6 +552,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getOwner() {
 		if (owner != null && owner.eIsProxy()) {
 			InternalEObject oldOwner = (InternalEObject) owner;
@@ -577,6 +581,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setOwner(IUser newOwner) {
 		IUser oldOwner = owner;
 		owner = newOwner;
@@ -590,9 +595,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IChange> getParents() {
 		if (parents == null) {
-			parents = new EObjectContainmentEList.Resolving<IChange>(IChange.class, this,
+			parents = new EObjectContainmentEList.Resolving<>(IChange.class, this,
 					ReviewsPackage.REVIEW__PARENTS);
 		}
 		return parents;
@@ -603,9 +609,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IChange> getChildren() {
 		if (children == null) {
-			children = new EObjectContainmentEList.Resolving<IChange>(IChange.class, this,
+			children = new EObjectContainmentEList.Resolving<>(IChange.class, this,
 					ReviewsPackage.REVIEW__CHILDREN);
 		}
 		return children;
@@ -616,9 +623,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Map<IUser, IReviewerEntry> getReviewerApprovals() {
 		if (reviewerApprovals == null) {
-			reviewerApprovals = new EcoreEMap<IUser, IReviewerEntry>(ReviewsPackage.Literals.USER_APPROVALS_MAP,
+			reviewerApprovals = new EcoreEMap<>(ReviewsPackage.Literals.USER_APPROVALS_MAP,
 					UserApprovalsMap.class, this, ReviewsPackage.REVIEW__REVIEWER_APPROVALS);
 		}
 		return reviewerApprovals.map();
@@ -629,9 +637,10 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Map<IApprovalType, IRequirementEntry> getRequirements() {
 		if (requirements == null) {
-			requirements = new EcoreEMap<IApprovalType, IRequirementEntry>(
+			requirements = new EcoreEMap<>(
 					ReviewsPackage.Literals.REVIEW_REQUIREMENTS_MAP, ReviewRequirementsMap.class, this,
 					ReviewsPackage.REVIEW__REQUIREMENTS);
 		}
@@ -647,13 +656,13 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__SETS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getSets()).basicAdd(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			if (eInternalContainer() != null) {
-				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			return basicSetRepository((IRepository) otherEnd, msgs);
+			case ReviewsPackage.REVIEW__SETS:
+				return ((InternalEList<InternalEObject>) (InternalEList<?>) getSets()).basicAdd(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetRepository((IRepository) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -666,20 +675,20 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__SETS:
-			return ((InternalEList<?>) getSets()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			return basicSetRepository(null, msgs);
-		case ReviewsPackage.REVIEW__PARENTS:
-			return ((InternalEList<?>) getParents()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__CHILDREN:
-			return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap())
-					.basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
-					.eMap()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__SETS:
+				return ((InternalEList<?>) getSets()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				return basicSetRepository(null, msgs);
+			case ReviewsPackage.REVIEW__PARENTS:
+				return ((InternalEList<?>) getParents()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__CHILDREN:
+				return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+				return ((InternalEList<?>) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals())
+						.eMap()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
+						.eMap()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -692,9 +701,9 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			return eInternalContainer().eInverseRemove(this, ReviewsPackage.REPOSITORY__REVIEWS, IRepository.class,
-					msgs);
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				return eInternalContainer().eInverseRemove(this, ReviewsPackage.REPOSITORY__REVIEWS, IRepository.class,
+						msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -707,48 +716,48 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__CREATION_DATE:
-			return getCreationDate();
-		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-			return getModificationDate();
-		case ReviewsPackage.REVIEW__ID:
-			return getId();
-		case ReviewsPackage.REVIEW__KEY:
-			return getKey();
-		case ReviewsPackage.REVIEW__SUBJECT:
-			return getSubject();
-		case ReviewsPackage.REVIEW__MESSAGE:
-			return getMessage();
-		case ReviewsPackage.REVIEW__OWNER:
-			if (resolve) {
-				return getOwner();
-			}
-			return basicGetOwner();
-		case ReviewsPackage.REVIEW__STATE:
-			return getState();
-		case ReviewsPackage.REVIEW__SETS:
-			return getSets();
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			if (resolve) {
-				return getRepository();
-			}
-			return basicGetRepository();
-		case ReviewsPackage.REVIEW__PARENTS:
-			return getParents();
-		case ReviewsPackage.REVIEW__CHILDREN:
-			return getChildren();
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			if (coreType) {
-				return ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap();
-			} else {
-				return getReviewerApprovals();
-			}
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			if (coreType) {
-				return ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements()).eMap();
-			} else {
-				return getRequirements();
-			}
+			case ReviewsPackage.REVIEW__CREATION_DATE:
+				return getCreationDate();
+			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
+				return getModificationDate();
+			case ReviewsPackage.REVIEW__ID:
+				return getId();
+			case ReviewsPackage.REVIEW__KEY:
+				return getKey();
+			case ReviewsPackage.REVIEW__SUBJECT:
+				return getSubject();
+			case ReviewsPackage.REVIEW__MESSAGE:
+				return getMessage();
+			case ReviewsPackage.REVIEW__OWNER:
+				if (resolve) {
+					return getOwner();
+				}
+				return basicGetOwner();
+			case ReviewsPackage.REVIEW__STATE:
+				return getState();
+			case ReviewsPackage.REVIEW__SETS:
+				return getSets();
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				if (resolve) {
+					return getRepository();
+				}
+				return basicGetRepository();
+			case ReviewsPackage.REVIEW__PARENTS:
+				return getParents();
+			case ReviewsPackage.REVIEW__CHILDREN:
+				return getChildren();
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+				if (coreType) {
+					return ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap();
+				} else {
+					return getReviewerApprovals();
+				}
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				if (coreType) {
+					return ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements()).eMap();
+				} else {
+					return getRequirements();
+				}
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -762,53 +771,53 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__CREATION_DATE:
-			setCreationDate((Date) newValue);
-			return;
-		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-			setModificationDate((Date) newValue);
-			return;
-		case ReviewsPackage.REVIEW__ID:
-			setId((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW__KEY:
-			setKey((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW__SUBJECT:
-			setSubject((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW__MESSAGE:
-			setMessage((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW__OWNER:
-			setOwner((IUser) newValue);
-			return;
-		case ReviewsPackage.REVIEW__STATE:
-			setState((ReviewStatus) newValue);
-			return;
-		case ReviewsPackage.REVIEW__SETS:
-			getSets().clear();
-			getSets().addAll((Collection<? extends IReviewItemSet>) newValue);
-			return;
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			setRepository((IRepository) newValue);
-			return;
-		case ReviewsPackage.REVIEW__PARENTS:
-			getParents().clear();
-			getParents().addAll((Collection<? extends IChange>) newValue);
-			return;
-		case ReviewsPackage.REVIEW__CHILDREN:
-			getChildren().clear();
-			getChildren().addAll((Collection<? extends IChange>) newValue);
-			return;
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap())
-					.set(newValue);
-			return;
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
-					.eMap()).set(newValue);
-			return;
+			case ReviewsPackage.REVIEW__CREATION_DATE:
+				setCreationDate((Date) newValue);
+				return;
+			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
+				setModificationDate((Date) newValue);
+				return;
+			case ReviewsPackage.REVIEW__ID:
+				setId((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW__KEY:
+				setKey((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW__SUBJECT:
+				setSubject((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW__MESSAGE:
+				setMessage((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW__OWNER:
+				setOwner((IUser) newValue);
+				return;
+			case ReviewsPackage.REVIEW__STATE:
+				setState((ReviewStatus) newValue);
+				return;
+			case ReviewsPackage.REVIEW__SETS:
+				getSets().clear();
+				getSets().addAll((Collection<? extends IReviewItemSet>) newValue);
+				return;
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				setRepository((IRepository) newValue);
+				return;
+			case ReviewsPackage.REVIEW__PARENTS:
+				getParents().clear();
+				getParents().addAll((Collection<? extends IChange>) newValue);
+				return;
+			case ReviewsPackage.REVIEW__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection<? extends IChange>) newValue);
+				return;
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+				((EStructuralFeature.Setting) ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals())
+						.eMap()).set(newValue);
+				return;
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements())
+						.eMap()).set(newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -821,48 +830,48 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__CREATION_DATE:
-			setCreationDate(CREATION_DATE_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-			setModificationDate(MODIFICATION_DATE_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__KEY:
-			setKey(KEY_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__SUBJECT:
-			setSubject(SUBJECT_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__MESSAGE:
-			setMessage(MESSAGE_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__OWNER:
-			setOwner((IUser) null);
-			return;
-		case ReviewsPackage.REVIEW__STATE:
-			setState(STATE_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW__SETS:
-			getSets().clear();
-			return;
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			setRepository((IRepository) null);
-			return;
-		case ReviewsPackage.REVIEW__PARENTS:
-			getParents().clear();
-			return;
-		case ReviewsPackage.REVIEW__CHILDREN:
-			getChildren().clear();
-			return;
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			getReviewerApprovals().clear();
-			return;
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			getRequirements().clear();
-			return;
+			case ReviewsPackage.REVIEW__CREATION_DATE:
+				setCreationDate(CREATION_DATE_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
+				setModificationDate(MODIFICATION_DATE_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__KEY:
+				setKey(KEY_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__SUBJECT:
+				setSubject(SUBJECT_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__MESSAGE:
+				setMessage(MESSAGE_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__OWNER:
+				setOwner((IUser) null);
+				return;
+			case ReviewsPackage.REVIEW__STATE:
+				setState(STATE_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW__SETS:
+				getSets().clear();
+				return;
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				setRepository((IRepository) null);
+				return;
+			case ReviewsPackage.REVIEW__PARENTS:
+				getParents().clear();
+				return;
+			case ReviewsPackage.REVIEW__CHILDREN:
+				getChildren().clear();
+				return;
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+				getReviewerApprovals().clear();
+				return;
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				getRequirements().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -875,36 +884,38 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__CREATION_DATE:
-			return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-			return MODIFICATION_DATE_EDEFAULT == null
-					? modificationDate != null
-					: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
-		case ReviewsPackage.REVIEW__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ReviewsPackage.REVIEW__KEY:
-			return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
-		case ReviewsPackage.REVIEW__SUBJECT:
-			return SUBJECT_EDEFAULT == null ? subject != null : !SUBJECT_EDEFAULT.equals(subject);
-		case ReviewsPackage.REVIEW__MESSAGE:
-			return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
-		case ReviewsPackage.REVIEW__OWNER:
-			return owner != null;
-		case ReviewsPackage.REVIEW__STATE:
-			return state != STATE_EDEFAULT;
-		case ReviewsPackage.REVIEW__SETS:
-			return sets != null && !sets.isEmpty();
-		case ReviewsPackage.REVIEW__REPOSITORY:
-			return basicGetRepository() != null;
-		case ReviewsPackage.REVIEW__PARENTS:
-			return parents != null && !parents.isEmpty();
-		case ReviewsPackage.REVIEW__CHILDREN:
-			return children != null && !children.isEmpty();
-		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			return reviewerApprovals != null && !reviewerApprovals.isEmpty();
-		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			return requirements != null && !requirements.isEmpty();
+			case ReviewsPackage.REVIEW__CREATION_DATE:
+				return CREATION_DATE_EDEFAULT == null
+						? creationDate != null
+						: !CREATION_DATE_EDEFAULT.equals(creationDate);
+			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
+				return MODIFICATION_DATE_EDEFAULT == null
+						? modificationDate != null
+						: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
+			case ReviewsPackage.REVIEW__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case ReviewsPackage.REVIEW__KEY:
+				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
+			case ReviewsPackage.REVIEW__SUBJECT:
+				return SUBJECT_EDEFAULT == null ? subject != null : !SUBJECT_EDEFAULT.equals(subject);
+			case ReviewsPackage.REVIEW__MESSAGE:
+				return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
+			case ReviewsPackage.REVIEW__OWNER:
+				return owner != null;
+			case ReviewsPackage.REVIEW__STATE:
+				return state != STATE_EDEFAULT;
+			case ReviewsPackage.REVIEW__SETS:
+				return sets != null && !sets.isEmpty();
+			case ReviewsPackage.REVIEW__REPOSITORY:
+				return basicGetRepository() != null;
+			case ReviewsPackage.REVIEW__PARENTS:
+				return parents != null && !parents.isEmpty();
+			case ReviewsPackage.REVIEW__CHILDREN:
+				return children != null && !children.isEmpty();
+			case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+				return reviewerApprovals != null && !reviewerApprovals.isEmpty();
+			case ReviewsPackage.REVIEW__REQUIREMENTS:
+				return requirements != null && !requirements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -917,32 +928,22 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == IDated.class) {
-			switch (derivedFeatureID) {
-			case ReviewsPackage.REVIEW__CREATION_DATE:
-				return ReviewsPackage.DATED__CREATION_DATE;
-			case ReviewsPackage.REVIEW__MODIFICATION_DATE:
-				return ReviewsPackage.DATED__MODIFICATION_DATE;
-			default:
-				return -1;
-			}
+			return switch (derivedFeatureID) {
+				case ReviewsPackage.REVIEW__CREATION_DATE -> ReviewsPackage.DATED__CREATION_DATE;
+				case ReviewsPackage.REVIEW__MODIFICATION_DATE -> ReviewsPackage.DATED__MODIFICATION_DATE;
+				default -> -1;
+			};
 		}
 		if (baseClass == IChange.class) {
-			switch (derivedFeatureID) {
-			case ReviewsPackage.REVIEW__ID:
-				return ReviewsPackage.CHANGE__ID;
-			case ReviewsPackage.REVIEW__KEY:
-				return ReviewsPackage.CHANGE__KEY;
-			case ReviewsPackage.REVIEW__SUBJECT:
-				return ReviewsPackage.CHANGE__SUBJECT;
-			case ReviewsPackage.REVIEW__MESSAGE:
-				return ReviewsPackage.CHANGE__MESSAGE;
-			case ReviewsPackage.REVIEW__OWNER:
-				return ReviewsPackage.CHANGE__OWNER;
-			case ReviewsPackage.REVIEW__STATE:
-				return ReviewsPackage.CHANGE__STATE;
-			default:
-				return -1;
-			}
+			return switch (derivedFeatureID) {
+				case ReviewsPackage.REVIEW__ID -> ReviewsPackage.CHANGE__ID;
+				case ReviewsPackage.REVIEW__KEY -> ReviewsPackage.CHANGE__KEY;
+				case ReviewsPackage.REVIEW__SUBJECT -> ReviewsPackage.CHANGE__SUBJECT;
+				case ReviewsPackage.REVIEW__MESSAGE -> ReviewsPackage.CHANGE__MESSAGE;
+				case ReviewsPackage.REVIEW__OWNER -> ReviewsPackage.CHANGE__OWNER;
+				case ReviewsPackage.REVIEW__STATE -> ReviewsPackage.CHANGE__STATE;
+				default -> -1;
+			};
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
@@ -955,32 +956,22 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == IDated.class) {
-			switch (baseFeatureID) {
-			case ReviewsPackage.DATED__CREATION_DATE:
-				return ReviewsPackage.REVIEW__CREATION_DATE;
-			case ReviewsPackage.DATED__MODIFICATION_DATE:
-				return ReviewsPackage.REVIEW__MODIFICATION_DATE;
-			default:
-				return -1;
-			}
+			return switch (baseFeatureID) {
+				case ReviewsPackage.DATED__CREATION_DATE -> ReviewsPackage.REVIEW__CREATION_DATE;
+				case ReviewsPackage.DATED__MODIFICATION_DATE -> ReviewsPackage.REVIEW__MODIFICATION_DATE;
+				default -> -1;
+			};
 		}
 		if (baseClass == IChange.class) {
-			switch (baseFeatureID) {
-			case ReviewsPackage.CHANGE__ID:
-				return ReviewsPackage.REVIEW__ID;
-			case ReviewsPackage.CHANGE__KEY:
-				return ReviewsPackage.REVIEW__KEY;
-			case ReviewsPackage.CHANGE__SUBJECT:
-				return ReviewsPackage.REVIEW__SUBJECT;
-			case ReviewsPackage.CHANGE__MESSAGE:
-				return ReviewsPackage.REVIEW__MESSAGE;
-			case ReviewsPackage.CHANGE__OWNER:
-				return ReviewsPackage.REVIEW__OWNER;
-			case ReviewsPackage.CHANGE__STATE:
-				return ReviewsPackage.REVIEW__STATE;
-			default:
-				return -1;
-			}
+			return switch (baseFeatureID) {
+				case ReviewsPackage.CHANGE__ID -> ReviewsPackage.REVIEW__ID;
+				case ReviewsPackage.CHANGE__KEY -> ReviewsPackage.REVIEW__KEY;
+				case ReviewsPackage.CHANGE__SUBJECT -> ReviewsPackage.REVIEW__SUBJECT;
+				case ReviewsPackage.CHANGE__MESSAGE -> ReviewsPackage.REVIEW__MESSAGE;
+				case ReviewsPackage.CHANGE__OWNER -> ReviewsPackage.REVIEW__OWNER;
+				case ReviewsPackage.CHANGE__STATE -> ReviewsPackage.REVIEW__STATE;
+				default -> -1;
+			};
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
@@ -996,7 +987,7 @@ public class Review extends CommentContainer implements IReview {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
 		result.append(creationDate);
 		result.append(", modificationDate: "); //$NON-NLS-1$

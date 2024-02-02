@@ -33,7 +33,7 @@ public class GerritCommentLinkDetectorTest {
 
 	TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
 
-	List<CommentLink> commentLinks = new ArrayList<CommentLink>();
+	List<CommentLink> commentLinks = new ArrayList<>();
 
 	private static CommentLink COMMENT_LINK_TASK = new CommentLink("([Tt]ask:\\s+)(\\d+)",
 			"$1<a href=\"http://tracker.mylyn.org/$2\">$2</a>");

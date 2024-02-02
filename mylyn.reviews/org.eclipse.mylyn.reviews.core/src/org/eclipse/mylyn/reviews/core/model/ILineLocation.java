@@ -31,8 +31,7 @@ public interface ILineLocation extends ILocation {
 	 * Returns the value of the '<em><b>Ranges</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.ILineRange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Ranges</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Ranges</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -44,8 +43,7 @@ public interface ILineLocation extends ILocation {
 	/**
 	 * Returns the value of the '<em><b>Range Min</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Range Min</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Range Min</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -57,8 +55,7 @@ public interface ILineLocation extends ILocation {
 	/**
 	 * Returns the value of the '<em><b>Range Max</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Range Max</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Range Max</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

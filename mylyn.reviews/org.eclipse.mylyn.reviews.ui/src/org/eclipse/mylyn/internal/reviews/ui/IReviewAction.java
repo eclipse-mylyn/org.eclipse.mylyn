@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.reviews.ui;
 import org.eclipse.jface.action.IAction;
 
 /**
- * An action that is used in a part for a review. This is used to notify other parts when the action has run (e.g. close
- * the annotation popup).
+ * An action that is used in a part for a review. This is used to notify other parts when the action has run (e.g. close the annotation
+ * popup).
  * 
  * @author Shawn Minto
  */

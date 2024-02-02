@@ -9,7 +9,7 @@
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
- *      GitHub Inc. - fixes for bug 355179      
+ *      GitHub Inc. - fixes for bug 355179
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -114,7 +114,7 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 				continue;
 			}
 			if (links == null) {
-				links = new ArrayList<IHyperlink>();
+				links = new ArrayList<>();
 			}
 			int start = matcher.start(1);
 			Region region = new Region(textOffset + start, matcher.end(1) - start);
@@ -128,7 +128,7 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 				List<IHyperlink> commentLinks = detector.findHyperlinks(text, index, textOffset);
 				if (commentLinks != null) {
 					if (links == null) {
-						links = new ArrayList<IHyperlink>();
+						links = new ArrayList<>();
 					}
 					links.addAll(commentLinks);
 				}

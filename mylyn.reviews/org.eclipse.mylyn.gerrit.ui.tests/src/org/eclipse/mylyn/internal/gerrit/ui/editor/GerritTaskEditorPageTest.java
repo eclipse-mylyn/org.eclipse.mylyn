@@ -91,7 +91,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		page = new TestGerritTaskEditorPage();
-		descriptors = new ArrayList<TaskEditorPartDescriptor>(page.createPartDescriptors());
+		descriptors = new ArrayList<>(page.createPartDescriptors());
 	}
 
 	public void testCreatePartDescriptorsCustomOrder() {
@@ -101,7 +101,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 				.collect(Collectors.toList()));
 		assertEquals(List.of(GerritReviewDetailSection.class, PatchSetSection.class, TaskEditorCommentPart.class,
 				TaskEditorNewCommentPart.class), partClasses);
-		List<String> ids = descriptors.stream().map(o -> o.getId()).collect(Collectors.toList());
+		List<String> ids = descriptors.stream().map(TaskEditorPartDescriptor::getId).collect(Collectors.toList());
 		assertTrue("Missing descriptors. Found " + ids, descriptors.size() >= 7);
 	}
 

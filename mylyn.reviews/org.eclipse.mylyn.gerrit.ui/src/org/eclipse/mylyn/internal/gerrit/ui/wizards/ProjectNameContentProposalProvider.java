@@ -69,7 +69,7 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		String contentsLowerCase = contents.toLowerCase(Locale.ENGLISH);
-		ArrayList<IContentProposal> proposals = new ArrayList<IContentProposal>();
+		ArrayList<IContentProposal> proposals = new ArrayList<>();
 		GerritClient client = connector.getClient(repository);
 		List<Project> projects = getProjects(client);
 		if (projects != null) {
