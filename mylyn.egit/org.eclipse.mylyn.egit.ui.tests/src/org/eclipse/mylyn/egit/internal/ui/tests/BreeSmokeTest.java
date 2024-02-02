@@ -18,8 +18,7 @@ import java.nio.ByteBuffer;
 import org.junit.Test;
 
 /**
- * Simple test to guard against build setup errors such as --release not being
- * effective.
+ * Simple test to guard against build setup errors such as --release not being effective.
  */
 public class BreeSmokeTest {
 

@@ -23,14 +23,12 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
- * A BranchNameProvider using description and title of the currently active task
- * to suggest a branch name.
+ * A BranchNameProvider using description and title of the currently active task to suggest a branch name.
  */
 public class ActiveTaskBranchNameProvider implements IBranchNameProvider {
 
 	/**
-	 * @return the currently activated task or <code>null</code> if no task is
-	 *         activated
+	 * @return the currently activated task or <code>null</code> if no task is activated
 	 */
 	protected ITask getCurrentTask() {
 		return TasksUi.getTaskActivityManager().getActiveTask();
@@ -39,12 +37,14 @@ public class ActiveTaskBranchNameProvider implements IBranchNameProvider {
 	@Override
 	public String getBranchNameSuggestion() {
 		ITask task = getCurrentTask();
-		if (task == null)
+		if (task == null) {
 			return null;
+		}
 
 		String taskKey = task.getTaskKey();
-		if (taskKey == null)
+		if (taskKey == null) {
 			taskKey = task.getTaskId();
+		}
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
@@ -55,13 +55,10 @@ public class ActiveTaskBranchNameProvider implements IBranchNameProvider {
 	}
 
 	private String normalizeBranchName(String name) {
-		String normalized = Repository
-				.normalizeBranchName(name.replaceAll("[#$!]", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+		String normalized = Repository.normalizeBranchName(name.replaceAll("[#$!]", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (normalized.length() > 30) {
-			normalized = Repository
-					.normalizeBranchName(normalized.substring(0, 30));
+			normalized = Repository.normalizeBranchName(normalized.substring(0, 30));
 		}
 		return normalized;
 	}
 }
-

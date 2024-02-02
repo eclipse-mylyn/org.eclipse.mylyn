@@ -16,8 +16,7 @@ package org.eclipse.mylyn.egit.internal.ui;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Text resources for the plugin. Strings here can be i18n-ed simpler and avoid
- * duplicating strings.
+ * Text resources for the plugin. Strings here can be i18n-ed simpler and avoid duplicating strings.
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.egit.internal.ui.messages"; //$NON-NLS-1$

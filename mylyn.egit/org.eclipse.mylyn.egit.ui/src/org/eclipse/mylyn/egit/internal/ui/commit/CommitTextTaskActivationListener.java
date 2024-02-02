@@ -22,8 +22,9 @@ public class CommitTextTaskActivationListener extends TaskActivationAdapter {
 	@Override
 	public void taskActivated(ITask task) {
 		StagingView view = (StagingView) PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage()
-					.findView(StagingView.VIEW_ID);
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.findView(StagingView.VIEW_ID);
 		if (view != null) {
 			view.resetCommitMessageComponent();
 		}

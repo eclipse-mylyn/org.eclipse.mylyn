@@ -31,21 +31,24 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class CommitHyperlinkDetectorTest {
 
 	private static final String OTHER_EXAMPLE_ID = "3de38c8898c74b867cb6f06f7907e0719d9d4c0c";
+
 	private static final String EXAMPLE_ID = "2de0ab486c66566ae1ad36b73bfc9d99e14eb195";
+
 	private TextViewer textViewer;
+
 	private CommitHyperlinkDetector detector;
 
 	@Test
 	public void testNoDocument() {
 		textViewer.setDocument(null);
-		IHyperlink[] hyperlinks = detectHyperlinks(0,0);
+		IHyperlink[] hyperlinks = detectHyperlinks(0, 0);
 		assertNull(hyperlinks);
 	}
 
 	@Test
 	public void testBadLocation() {
 		textViewer.setDocument(null);
-		IHyperlink[] hyperlinks = detectHyperlinks(10,0);
+		IHyperlink[] hyperlinks = detectHyperlinks(10, 0);
 		assertNull(hyperlinks);
 	}
 
@@ -108,7 +111,7 @@ public class CommitHyperlinkDetectorTest {
 	@Test
 	public void testOffsetMiddle() {
 		setText(EXAMPLE_ID);
-		IHyperlink[] hyperlinks = detectHyperlinks(3,0);
+		IHyperlink[] hyperlinks = detectHyperlinks(3, 0);
 		assertEquals(1, hyperlinks.length);
 		assertEquals(EXAMPLE_ID, hyperlinks[0].getHyperlinkText());
 	}
@@ -116,14 +119,14 @@ public class CommitHyperlinkDetectorTest {
 	@Test
 	public void testOffsetOff() {
 		setText("some bla " + EXAMPLE_ID);
-		IHyperlink[] hyperlinks = detectHyperlinks(3,0);
+		IHyperlink[] hyperlinks = detectHyperlinks(3, 0);
 		assertNull(hyperlinks);
 	}
 
 	@Test
 	public void testMultiLine() {
 		setText("Test multi-line text\n" + EXAMPLE_ID);
-		IHyperlink[] hyperlinks = detectHyperlinks(0,textViewer.getDocument().getLength());
+		IHyperlink[] hyperlinks = detectHyperlinks(0, textViewer.getDocument().getLength());
 		assertEquals(1, hyperlinks.length);
 		assertEquals(EXAMPLE_ID, hyperlinks[0].getHyperlinkText());
 		assertEquals(new Region(21, EXAMPLE_ID.length()), hyperlinks[0].getHyperlinkRegion());
@@ -132,25 +135,23 @@ public class CommitHyperlinkDetectorTest {
 	@Test
 	public void testGerritId() {
 		setText("I" + EXAMPLE_ID);
-		IHyperlink[] hyperlinks = detectHyperlinks(0,textViewer.getDocument().getLength());
+		IHyperlink[] hyperlinks = detectHyperlinks(0, textViewer.getDocument().getLength());
 		assertNull(hyperlinks);
 	}
 
 	@Test
 	public void testGerritIdWithinText() {
 		setText("abc I" + EXAMPLE_ID);
-		IHyperlink[] hyperlinks = detectHyperlinks(5,textViewer.getDocument().getLength());
+		IHyperlink[] hyperlinks = detectHyperlinks(5, textViewer.getDocument().getLength());
 		assertNull(hyperlinks);
 	}
-
 
 	private IHyperlink[] detectHyperlinks() {
 		return detectHyperlinks(0, textViewer.getDocument().getLength());
 	}
 
 	private IHyperlink[] detectHyperlinks(int offset, int length) {
-		return detector.detectHyperlinks(textViewer,
-				new Region(offset, length), false);
+		return detector.detectHyperlinks(textViewer, new Region(offset, length), false);
 	}
 
 	private void setText(String text) {
