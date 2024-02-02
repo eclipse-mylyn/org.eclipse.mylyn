@@ -164,8 +164,9 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
 		long startTime = 0, endTime = 0;
 		String traceExitResult = "";
-		if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+		if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
+		}
 		if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
 			getClient(repository);
 		}
@@ -182,8 +183,9 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			}
 			return result;
 		} finally {
-			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR)
+			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 				GitlabCoreActivator.DEBUG_TRACE.traceExit(null, traceExitResult);
+			}
 		}
 	}
 

@@ -106,8 +106,9 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		groups.setContentProvider(ArrayContentProvider.getInstance());
 		if (repository != null) {
 			String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
-			if (groupsValue != null)
+			if (groupsValue != null) {
 				groupList = new ArrayList<>(Arrays.asList(groupsValue.split(",")));
+			}
 		}
 		groups.setInput(groupList);
 		groupInput = new Text(aditionalContainer, SWT.NONE);
@@ -184,8 +185,9 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		projects.setContentProvider(ArrayContentProvider.getInstance());
 		if (repository != null) {
 			String projectsValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
-			if (projectsValue != null)
+			if (projectsValue != null) {
 				projectList = new ArrayList<>(Arrays.asList(projectsValue.split(",")));
+			}
 		}
 		projects.setInput(projectList);
 		projectInput = new Text(aditionalContainer, SWT.NONE);
@@ -292,8 +294,9 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		String accessTokenValue = getRepository() != null
 				? getRepository().getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN)
 				: null;
-		if (accessTokenValue == null)
+		if (accessTokenValue == null) {
 			accessTokenValue = "";
+		}
 		personalAccessTokenText.setText(accessTokenValue);
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;

@@ -58,11 +58,12 @@ public class GitlabQuerySchemaPage extends RepositoryQuerySchemaPage {
 		query.setSummary(this.getQueryTitle());
 		query.setUrl(getQueryUrl(getTaskRepository().getRepositoryUrl()));
 		for (Entry<String, AbstractAttributeEditor> entry : editorMap.entrySet()) {
-			if (entry.getValue() instanceof MultiSelectionAttributeEditor)
+			if (entry.getValue() instanceof MultiSelectionAttributeEditor) {
 				query.setAttribute(entry.getKey(),
 						String.join(",", ((MultiSelectionAttributeEditor) entry.getValue()).getValues()));
-			else
+			} else {
 				query.setAttribute(entry.getKey(), entry.getValue().getTaskAttribute().getValue());
+			}
 		}
 	}
 

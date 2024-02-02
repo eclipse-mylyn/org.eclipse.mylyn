@@ -232,8 +232,9 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 			ranges[i] = styleRange;
 			styleRange.start = gitlabActivityStyle.getStart();
 			styleRange.length = gitlabActivityStyle.getLength();
-			if (gitlabActivityStyle.getColor() != GitlabActivityStyle.COLOR_INHERIT_DEFAULT)
+			if (gitlabActivityStyle.getColor() != GitlabActivityStyle.COLOR_INHERIT_DEFAULT) {
 				styleRange.background = textControl.getDisplay().getSystemColor(gitlabActivityStyle.getColor());
+			}
 			if (gitlabActivityStyle.getFontStyle() == GitlabActivityStyle.UNDERLINE_LINK) {
 				styleRange.fontStyle = SWT.NORMAL;
 				styleRange.underline = true;
