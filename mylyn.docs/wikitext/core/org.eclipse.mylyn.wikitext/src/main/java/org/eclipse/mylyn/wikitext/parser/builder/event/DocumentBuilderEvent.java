@@ -17,8 +17,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 
 /**
- * Represents an invocation of a {@link DocumentBuilder} captured as an event which can be
- * {@link #invoke(DocumentBuilder) applied}.
+ * Represents an invocation of a {@link DocumentBuilder} captured as an event which can be {@link #invoke(DocumentBuilder) applied}.
  *
  * @author david.green
  * @see EventDocumentBuilder

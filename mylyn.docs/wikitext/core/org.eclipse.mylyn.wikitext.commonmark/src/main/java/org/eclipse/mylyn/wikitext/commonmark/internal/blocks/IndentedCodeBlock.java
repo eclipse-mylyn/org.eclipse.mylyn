@@ -50,7 +50,7 @@ public class IndentedCodeBlock extends SourceBlock {
 				}
 			} else {
 				String content = matcher.group(1);
-				if (!content.isEmpty() || (blockHasContent && iterator.hasNext())) {
+				if (!content.isEmpty() || blockHasContent && iterator.hasNext()) {
 					blockHasContent = true;
 					builder.characters(content);
 					builder.characters("\n");

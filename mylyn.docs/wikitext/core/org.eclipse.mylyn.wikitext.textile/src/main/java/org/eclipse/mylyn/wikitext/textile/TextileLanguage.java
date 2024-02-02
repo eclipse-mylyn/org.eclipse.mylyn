@@ -58,10 +58,9 @@ import org.eclipse.mylyn.wikitext.textile.internal.token.EntityReplacementToken;
 import org.eclipse.mylyn.wikitext.textile.internal.token.FootnoteReferenceReplacementToken;
 
 /**
- * A textile dialect that parses <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile markup</a>.
- * Based on the spec available at <a href="http://textile.thresholdstate.com/">http://textile.thresholdstate.com/</a>,
- * supports all current Textile markup constructs. Additionally supported are <code>{toc}</code> and
- * <code>{glossary}</code>.
+ * A textile dialect that parses <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile markup</a>. Based on the spec
+ * available at <a href="http://textile.thresholdstate.com/">http://textile.thresholdstate.com/</a>, supports all current Textile markup
+ * constructs. Additionally supported are <code>{toc}</code> and <code>{glossary}</code>.
  *
  * @author David Green
  * @since 3.0
@@ -79,8 +78,8 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired (glossary and table of contents).
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are desired (glossary and
+	 * table of contents).
 	 *
 	 * @param blocks
 	 *            the list of blocks to which extensions may be added
@@ -195,16 +194,16 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	/**
-	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used
-	 * inadvertently. The default is false.
+	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used inadvertently. The default is
+	 * false.
 	 */
 	public boolean isPreprocessFootnotes() {
 		return preprocessFootnotes;
 	}
 
 	/**
-	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used
-	 * inadvertently. The default is false.
+	 * indicate if footnotes should be preprocessed to avoid false-positives when footnote references are used inadvertently. The default is
+	 * false.
 	 */
 	public void setPreprocessFootnotes(boolean preprocessFootnotes) {
 		this.preprocessFootnotes = preprocessFootnotes;

@@ -104,8 +104,7 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 		char c = getText().charAt(0);
 		for (int index = indexOfThis - 1; index >= 0; --index) {
 			Inline inline = inlines.get(index);
-			if (inline instanceof PotentialEmphasisDelimiter) {
-				PotentialEmphasisDelimiter previousDelimiter = (PotentialEmphasisDelimiter) inline;
+			if (inline instanceof PotentialEmphasisDelimiter previousDelimiter) {
 				if (previousDelimiter.canOpen && previousDelimiter.getText().charAt(0) == c) {
 					return Optional.of(previousDelimiter);
 				}

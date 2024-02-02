@@ -29,8 +29,7 @@ import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
- * Creates menu items for each markup language that supports
- * {@link MarkupLanguage#createDocumentBuilder(java.io.Writer)}.
+ * Creates menu items for each markup language that supports {@link MarkupLanguage#createDocumentBuilder(java.io.Writer)}.
  */
 public class WikiMarkupGenerationContribution extends CompoundContributionItem implements IWorkbenchContribution {
 
@@ -49,7 +48,7 @@ public class WikiMarkupGenerationContribution extends CompoundContributionItem i
 				continue;
 			}
 			String commandId = ConvertMarkupToMarkup.COMMAND_ID;
-			String id = commandId + '.' + markupLanguage.getName().replaceAll("\\W", "_"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			String id = commandId + '.' + markupLanguage.getName().replaceAll("\\W", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 			HashMap<String, String> args = new HashMap<>();
 			args.put(ConvertMarkupToMarkup.PARAM_MARKUP_LANGUAGE, markupLanguage.getName());
 

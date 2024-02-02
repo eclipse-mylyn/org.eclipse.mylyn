@@ -30,15 +30,13 @@ public abstract class AbstractDocumentTest {
 
 		Reader reader = new BufferedReader(
 				new InputStreamReader(FastMarkupPartitionerTest.class.getResourceAsStream(resource)));
-		try {
+		try (reader) {
 			int i;
 			StringBuilder buf = new StringBuilder(4096);
 			while ((i = reader.read()) != -1) {
 				buf.append((char) i);
 			}
 			document.set(buf.toString());
-		} finally {
-			reader.close();
 		}
 		return document;
 	}

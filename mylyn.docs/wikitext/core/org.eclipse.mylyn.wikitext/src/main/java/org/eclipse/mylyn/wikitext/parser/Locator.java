@@ -13,8 +13,8 @@
 package org.eclipse.mylyn.wikitext.parser;
 
 /**
- * An interface that provides information about the location of the current parser activity. Note that parsers may make
- * a best-effort attempt at determining the location.
+ * An interface that provides information about the location of the current parser activity. Note that parsers may make a best-effort
+ * attempt at determining the location.
  *
  * @author David Green
  * @since 3.0
@@ -25,35 +25,35 @@ public interface Locator {
 	 *
 	 * @return the line number or -1 if unknown
 	 */
-	public int getLineNumber();
+	int getLineNumber();
 
 	/**
 	 * get the 0-based character offset of the current line from the start of the document
 	 *
 	 * @return the offset or -1 if unknown
 	 */
-	public int getLineDocumentOffset();
+	int getLineDocumentOffset();
 
 	/**
 	 * get the 0-based character offset of the current character from the start of the document. Equivalent to
 	 * <code>getLineDocumentOffset()+getLineCharacterOffset()</code>
 	 */
-	public int getDocumentOffset();
+	int getDocumentOffset();
 
 	/**
 	 * get the length of the current line in characters, not including the line terminator
 	 */
-	public int getLineLength();
+	int getLineLength();
 
 	/**
 	 * get the 0-based offset of the current character in the current line
 	 */
-	public int getLineCharacterOffset();
+	int getLineCharacterOffset();
 
 	/**
-	 * Get the 0-based offset of the end of the current line segment being processed, exclusive. Generally a phrase
-	 * modifier starts at {@link #getLineCharacterOffset()} and ends on the character preceding this offset,
-	 * <code>[s,e)</code> where s is the start and e is the end.
+	 * Get the 0-based offset of the end of the current line segment being processed, exclusive. Generally a phrase modifier starts at
+	 * {@link #getLineCharacterOffset()} and ends on the character preceding this offset, <code>[s,e)</code> where s is the start and e is
+	 * the end.
 	 */
-	public int getLineSegmentEndOffset();
+	int getLineSegmentEndOffset();
 }

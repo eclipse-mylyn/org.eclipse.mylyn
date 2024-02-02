@@ -144,8 +144,9 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 
 	private IEditorPart openEditor(IWorkbenchPage workbenchPage, IFile file) throws PartInitException {
 		IContentType contentType = IDE.getContentType(file);
-		IEditorDescriptor[] editorDescriptors = PlatformUI.getWorkbench().getEditorRegistry().getEditors(file.getName(),
-				contentType);
+		IEditorDescriptor[] editorDescriptors = PlatformUI.getWorkbench()
+				.getEditorRegistry()
+				.getEditors(file.getName(), contentType);
 		Optional<IEditorDescriptor> editorDescriptor = Arrays.asList(editorDescriptors)
 				.stream()
 				.filter(descriptor -> descriptor.getId().equals("org.eclipse.mylyn.wikitext.ui.editor.markupEditor"))

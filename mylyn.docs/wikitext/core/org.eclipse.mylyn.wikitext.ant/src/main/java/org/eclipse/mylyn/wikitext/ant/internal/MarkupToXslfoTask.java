@@ -38,7 +38,7 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
  */
 public class MarkupToXslfoTask extends MarkupTask {
 
-	private final List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<>();
 
 	protected String xslfoFilenameFormat = "$1.fo"; //$NON-NLS-1$
 
@@ -191,11 +191,11 @@ public class MarkupToXslfoTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the XSL-FO output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.fo</code>
+	 * The format of the XSL-FO output file. Consists of a pattern where the '$1' is replaced with the filename of the input file. Default
+	 * value is <code>$1.fo</code>
 	 */
 	public void setXslfoFilenameFormat(String filenameFormat) {
-		this.xslfoFilenameFormat = filenameFormat;
+		xslfoFilenameFormat = filenameFormat;
 	}
 
 	/**

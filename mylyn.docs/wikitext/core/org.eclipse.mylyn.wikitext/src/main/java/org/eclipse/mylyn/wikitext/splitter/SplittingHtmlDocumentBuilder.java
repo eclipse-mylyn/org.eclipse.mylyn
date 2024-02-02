@@ -316,8 +316,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		if (type == SpanType.LINK && attributes instanceof LinkAttributes) {
-			LinkAttributes linkAttributes = (LinkAttributes) attributes;
+		if (type == SpanType.LINK && attributes instanceof LinkAttributes linkAttributes) {
 			linkAttributes.setHref(adjustHref(linkAttributes.getHref()));
 		}
 		out.beginSpan(type, attributes);

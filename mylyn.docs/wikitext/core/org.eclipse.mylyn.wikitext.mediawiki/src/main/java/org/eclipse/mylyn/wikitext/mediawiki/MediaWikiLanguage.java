@@ -47,18 +47,18 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacemen
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
- * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a>
- * <a href="http://en.wikipedia.org/wiki/Wikitext">Wikitext markup</a>, which is the wiki format used by <a href=
- * "http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
+ * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a> <a href="http://en.wikipedia.org/wiki/Wikitext">Wikitext
+ * markup</a>, which is the wiki format used by <a href= "http://www.wikipedia.org>WikiPedia</a> and
+ * <a href="http://www.wikimedia.org/">several other major sites</a>.
  *
  * @author David Green
  * @since 3.0
  */
 public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
-	private List<Template> templates = new ArrayList<Template>();
+	private List<Template> templates = new ArrayList<>();
 
-	private List<TemplateResolver> templateProviders = new ArrayList<TemplateResolver>();
+	private List<TemplateResolver> templateProviders = new ArrayList<>();
 
 	private String templateExcludes;
 
@@ -132,7 +132,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
 
 		if (!escapingHtml) {
-			String[] allowedHtmlTags = new String[] { // HANDLED BY LineBreakToken "<br>",
+			String[] allowedHtmlTags = { // HANDLED BY LineBreakToken "<br>",
 					// HANDLED BY LineBreakToken "<br/>",
 					"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$//$NON-NLS-9$//$NON-NLS-10$//$NON-NLS-11$//$NON-NLS-12$//$NON-NLS-13$
 					"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$//$NON-NLS-9$//$NON-NLS-10$//$NON-NLS-11$//$NON-NLS-12$//$NON-NLS-13$//$NON-NLS-14$//$NON-NLS-15$//$NON-NLS-16$
@@ -209,8 +209,8 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	@Override
 	public MarkupLanguage clone() {
 		MediaWikiLanguage copy = (MediaWikiLanguage) super.clone();
-		copy.templates = new ArrayList<Template>(templates);
-		copy.templateProviders = new ArrayList<TemplateResolver>(templateProviders);
+		copy.templates = new ArrayList<>(templates);
+		copy.templateProviders = new ArrayList<>(templateProviders);
 		copy.templateExcludes = templateExcludes;
 		return copy;
 	}

@@ -137,8 +137,8 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
- * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable
- * content assist, validation, and cheat-sheet help content.
+ * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable content assist,
+ * validation, and cheat-sheet help content.
  *
  * @author David Green
  * @author Nicolas Bros
@@ -378,13 +378,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			private boolean isRelevantKeyCode(int keyCode) {
 				// for some reason not all key presses result in a selection change
 				switch (keyCode) {
-				case SWT.ARROW_DOWN:
-				case SWT.ARROW_LEFT:
-				case SWT.ARROW_RIGHT:
-				case SWT.ARROW_UP:
-				case SWT.PAGE_DOWN:
-				case SWT.PAGE_UP:
-					return true;
+					case SWT.ARROW_DOWN:
+					case SWT.ARROW_LEFT:
+					case SWT.ARROW_RIGHT:
+					case SWT.ARROW_UP:
+					case SWT.PAGE_DOWN:
+					case SWT.PAGE_UP:
+						return true;
 				}
 				return false;
 			}
@@ -623,13 +623,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	/**
 	 * JavaScript that returns the current top scroll position of the browser widget
 	 */
-	private static final String JAVASCRIPT_GETSCROLLTOP = "function getScrollTop() { " //$NON-NLS-1$
-			+ "  if(typeof pageYOffset!='undefined') return pageYOffset;" //$NON-NLS-1$
-			+ "  else{" + //$NON-NLS-1$
-			"var B=document.body;" + //$NON-NLS-1$
-			"var D=document.documentElement;" + //$NON-NLS-1$
-			"D=(D.clientHeight)?D:B;return D.scrollTop;}" //$NON-NLS-1$
-			+ "}; return getScrollTop();"; //$NON-NLS-1$
+	private static final String JAVASCRIPT_GETSCROLLTOP = """
+			function getScrollTop() {\s\
+			  if(typeof pageYOffset!='undefined') return pageYOffset;\
+			  else{\
+			var B=document.body;\
+			var D=document.documentElement;\
+			D=(D.clientHeight)?D:B;return D.scrollTop;}\
+			}; return getScrollTop();"""; //$NON-NLS-1$
 
 	/**
 	 * updates the preview
@@ -642,7 +643,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * updates the preview and optionally reveal the section that corresponds to the given outline item.
 	 *
 	 * @param outlineItem
-	 *                        the outline item, or null
+	 *            the outline item, or null
 	 */
 	private void updatePreview(final OutlineItem outlineItem) {
 		if (previewDirty && browser != null) {
@@ -850,10 +851,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void updateOutlineNow() {
-		if (!outlineDirty) {
-			return;
-		}
-		if (!isSourceViewerValid()) {
+		if (!outlineDirty || !isSourceViewerValid()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -875,10 +873,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void updateOutline() {
-		if (!outlineDirty) {
-			return;
-		}
-		if (!isSourceViewerValid()) {
+		if (!outlineDirty || !isSourceViewerValid()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -1195,7 +1190,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * lookup the markup language preference of a file based on the persisted preference.
 	 *
 	 * @param file
-	 *                 the file for which the preference should be looked up
+	 *            the file for which the preference should be looked up
 	 * @return the markup language preference, or null if it was not set or could not be loaded.
 	 */
 	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
@@ -1210,7 +1205,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * lookup the markup language preference of a file based on the persisted preference.
 	 *
 	 * @param file
-	 *                 the file for which the preference should be looked up
+	 *            the file for which the preference should be looked up
 	 * @return the markup language name, or null if no preference exists
 	 */
 	public static String getMarkupLanguagePreference(IFile file) {

@@ -36,7 +36,7 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void createEmpty() {
-		BlockStrategies strategies = new BlockStrategies(new HashSet<BlockType>());
+		BlockStrategies strategies = new BlockStrategies(new HashSet<>());
 		assertUnsupported(strategies, BlockType.PARAGRAPH);
 	}
 

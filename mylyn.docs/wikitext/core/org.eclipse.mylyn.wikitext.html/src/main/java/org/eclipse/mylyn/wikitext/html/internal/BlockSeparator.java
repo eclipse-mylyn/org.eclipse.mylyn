@@ -17,5 +17,5 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 public interface BlockSeparator {
 
-	public void emit(DocumentBuilder builder);
+	void emit(DocumentBuilder builder);
 }

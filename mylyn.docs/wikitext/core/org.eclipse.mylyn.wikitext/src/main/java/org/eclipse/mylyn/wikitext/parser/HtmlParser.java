@@ -22,8 +22,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * A parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be
- * well-formed XHTML.
+ * A parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be well-formed XHTML.
  *
  * @see DocumentBuilder
  * @author David Green
@@ -35,7 +34,7 @@ public class HtmlParser {
 	private final AbstractSaxHtmlParser delegate;
 
 	private HtmlParser(AbstractSaxHtmlParser parser) {
-		this.delegate = Objects.requireNonNull(parser);
+		delegate = Objects.requireNonNull(parser);
 
 	}
 
@@ -46,7 +45,7 @@ public class HtmlParser {
 		} else {
 			parser = new XHtmlParser();
 		}
-		this.delegate = parser;
+		delegate = parser;
 	}
 
 	/**
@@ -71,8 +70,8 @@ public class HtmlParser {
 	}
 
 	/**
-	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given
-	 * document builder. Equivalent to {@code parse(input,builder,true)}
+	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given document builder.
+	 * Equivalent to {@code parse(input,builder,true)}
 	 *
 	 * @param input
 	 *            the source input
@@ -86,8 +85,8 @@ public class HtmlParser {
 	}
 
 	/**
-	 * Parses well-formed XHTML or HTML from the given input, and emit an approximation of the source document to the
-	 * given document builder.
+	 * Parses well-formed XHTML or HTML from the given input, and emit an approximation of the source document to the given document
+	 * builder.
 	 *
 	 * @param input
 	 *            the source input

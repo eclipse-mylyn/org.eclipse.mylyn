@@ -27,5 +27,5 @@ public interface CommandManager {
 	 *            the command to perform
 	 * @throws CoreException
 	 */
-	public void perform(AbstractDocumentCommand command) throws CoreException;
+	void perform(AbstractDocumentCommand command) throws CoreException;
 }

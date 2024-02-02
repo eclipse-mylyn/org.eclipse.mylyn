@@ -40,11 +40,11 @@ public class ListWhitespaceValidationRule extends ValidationRule {
 		}
 		while (matcher.find()) {
 			String spaces = matcher.group(1);
-			if (spaces == null || spaces.length() == 0 || (spaces.length() % 3) != 0 || containsNonSpace(spaces)) {
+			if (spaces == null || spaces.length() == 0 || spaces.length() % 3 != 0 || containsNonSpace(spaces)) {
 				int problemOffset = matcher.start();
 				int problemLength = Math.max(2, matcher.end(2) - problemOffset);
-				return new ValidationProblem(Severity.WARNING,
-						Messages.getString("ListWhitespaceValidationRule.1"), problemOffset, problemLength); //$NON-NLS-1$
+				return new ValidationProblem(Severity.WARNING, Messages.getString("ListWhitespaceValidationRule.1"), //$NON-NLS-1$
+						problemOffset, problemLength);
 			}
 			String after = matcher.group(5);
 			if (after != null) {

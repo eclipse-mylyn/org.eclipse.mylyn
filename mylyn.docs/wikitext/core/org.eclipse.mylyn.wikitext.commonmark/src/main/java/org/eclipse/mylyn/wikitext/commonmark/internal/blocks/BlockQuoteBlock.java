@@ -87,7 +87,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		}
 
 		private Predicate<Line> blockStructureStart(final LineSequence lineSequence) {
-			return new Predicate<Line>() {
+			return new Predicate<>() {
 
 				@Override
 				public boolean test(Line line) {

@@ -34,7 +34,7 @@ import org.osgi.framework.FrameworkUtil;
  * @author David Green
  */
 public class ClassTraversal {
-	private static final Pattern BUNDLE_RESOURCE_35 = Pattern.compile("(\\d+)\\..*");;
+	private static final Pattern BUNDLE_RESOURCE_35 = Pattern.compile("(\\d+)\\..*");
 
 	public void visitClasses(Visitor visitor) {
 		visitClasses(ClassTraversal.class, visitor);
@@ -100,11 +100,7 @@ public class ClassTraversal {
 						Class<?> clazz;
 						try {
 							clazz = Class.forName(fqn, true, loader);
-						} catch (LinkageError e) {
-							// see bug 255568 comment 11
-							// can't load the class, so skip it.
-							continue;
-						} catch (Exception e) {
+						} catch (LinkageError | Exception e) {
 							// can't load the class, so skip it.
 							continue;
 						}
@@ -138,6 +134,6 @@ public class ClassTraversal {
 	}
 
 	public interface Visitor {
-		public void visit(Class<?> clazz);
+		void visit(Class<?> clazz);
 	}
 }

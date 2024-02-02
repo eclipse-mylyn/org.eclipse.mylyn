@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
- * A token that detects hyperlinks in the markup and emits them as a link. hyperlinks must use the HTTP or HTTPS
- * protocols to be detected. Url detection is based on RFC 3986.
+ * A token that detects hyperlinks in the markup and emits them as a link. hyperlinks must use the HTTP or HTTPS protocols to be detected.
+ * Url detection is based on RFC 3986.
  *
  * @author David Green
  * @since 3.0

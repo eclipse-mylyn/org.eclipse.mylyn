@@ -39,13 +39,13 @@ public class EntityReferences {
 	/**
 	 * Provides a string corresponding to the given entity reference.
 	 * <p>
-	 * Usually the equivalent string to an entity reference consists of a single character, however in some cases an
-	 * entity reference may correspond to more than one character.
+	 * Usually the equivalent string to an entity reference consists of a single character, however in some cases an entity reference may
+	 * correspond to more than one character.
 	 * </p>
 	 *
 	 * @param entityReference
-	 *            the entity reference, which may be of the form {@code "&apos;"}, {@code "&#x00027;"}, or
-	 *            {@code "&#39;"}, where the leading '&' and trailing ';' may be omitted
+	 *            the entity reference, which may be of the form {@code "&apos;"}, {@code "&#x00027;"}, or {@code "&#39;"}, where the
+	 *            leading '&' and trailing ';' may be omitted
 	 * @return the equivalent string, or null if no equivalent could be provided
 	 */
 	public String equivalentString(String entityReference) {

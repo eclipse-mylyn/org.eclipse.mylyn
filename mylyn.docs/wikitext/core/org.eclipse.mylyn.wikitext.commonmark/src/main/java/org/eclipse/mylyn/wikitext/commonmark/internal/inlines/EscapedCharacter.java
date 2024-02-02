@@ -24,7 +24,7 @@ public class EscapedCharacter extends Inline {
 
 	public EscapedCharacter(Line line, int offset, char c) {
 		super(line, offset, 2);
-		this.character = c;
+		character = c;
 	}
 
 	@Override

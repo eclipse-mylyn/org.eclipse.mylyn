@@ -18,8 +18,7 @@ import org.junit.Test;
 
 /**
  * Tests for Markdown overview and miscellaneous. Follows specification at
- * <a>http://daringfireball.net/projects/markdown/syntax#overview</a>.
- * <a>http://daringfireball.net/projects/markdown/syntax#misc</a>.
+ * <a>http://daringfireball.net/projects/markdown/syntax#overview</a>. <a>http://daringfireball.net/projects/markdown/syntax#misc</a>.
  *
  * @author Stefan Seelmann
  */

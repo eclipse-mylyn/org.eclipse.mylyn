@@ -266,13 +266,11 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 										}
 										content = content.replace("\\$", "$$"); //$NON-NLS-1$ //$NON-NLS-2$
 
-										markupLanguageTemplates
-												.addTemplate(
-														new Template(name, description,
-																MarkupTemplateCompletionProcessor.CONTEXT_ID, content,
-																autoInsert == null
-																		|| !"false".equalsIgnoreCase(autoInsert)), //$NON-NLS-1$
-														block != null && "true".equalsIgnoreCase(block)); //$NON-NLS-1$
+										markupLanguageTemplates.addTemplate(
+												new Template(name, description,
+														MarkupTemplateCompletionProcessor.CONTEXT_ID, content,
+														autoInsert == null || !"false".equalsIgnoreCase(autoInsert)), //$NON-NLS-1$
+												block != null && "true".equalsIgnoreCase(block)); //$NON-NLS-1$
 									} catch (Exception e) {
 										log(IStatus.ERROR,
 												NLS.bind(Messages.WikiTextUiPlugin_invalidExtension,

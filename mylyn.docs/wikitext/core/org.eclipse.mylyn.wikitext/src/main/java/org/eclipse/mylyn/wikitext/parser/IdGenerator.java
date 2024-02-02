@@ -40,8 +40,8 @@ public class IdGenerator {
 	}
 
 	/**
-	 * reserve the given id, ensuring that the generator will not generate the same id. An id can only be reserved if it
-	 * has not already been reserved and if it has not already been {@link #newId(String,String) generated}.
+	 * reserve the given id, ensuring that the generator will not generate the same id. An id can only be reserved if it has not already
+	 * been reserved and if it has not already been {@link #newId(String,String) generated}.
 	 *
 	 * @param id
 	 *            the id to reserve
@@ -52,12 +52,10 @@ public class IdGenerator {
 	}
 
 	/**
-	 * create a new ID based on the given type and label text. Guarantees to return an id once and only once; duplicates
-	 * are never created.
+	 * create a new ID based on the given type and label text. Guarantees to return an id once and only once; duplicates are never created.
 	 *
 	 * @param type
-	 *            the type of id to produce, usually an indication of what the id is created for. For example, 'h1', or
-	 *            'h2'. may be null.
+	 *            the type of id to produce, usually an indication of what the id is created for. For example, 'h1', or 'h2'. may be null.
 	 * @param text
 	 *            the label text for which the id is being produced. may be null.
 	 * @return a unique id
@@ -92,8 +90,7 @@ public class IdGenerator {
 	}
 
 	/**
-	 * get the set of anchor names that were either {@link #reserveId(String) reserved} or {@link #newId(String, String)
-	 * created}.
+	 * get the set of anchor names that were either {@link #reserveId(String) reserved} or {@link #newId(String, String) created}.
 	 *
 	 * @return the set of names
 	 */

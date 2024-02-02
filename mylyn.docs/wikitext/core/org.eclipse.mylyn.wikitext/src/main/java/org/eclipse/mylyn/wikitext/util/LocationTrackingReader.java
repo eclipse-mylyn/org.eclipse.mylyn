@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A reader class that tracks the character offset based on the number of characters read. Also provides a means for
- * reading lines of text, tracking the offset of the last line read.
+ * A reader class that tracks the character offset based on the number of characters read. Also provides a means for reading lines of text,
+ * tracking the offset of the last line read.
  *
  * @author David Green
  * @since 3.0
@@ -104,7 +104,7 @@ public class LocationTrackingReader extends Reader {
 		int lineBufOffset = bufOffset;
 		int c = -1;
 		for (int x = lineBufOffset;; ++x) {
-			if (x >= (bufOffset + bufLength)) {
+			if (x >= bufOffset + bufLength) {
 				if (bufOffset > 0 && bufLength > 0) {
 					System.arraycopy(buf, bufOffset, buf, 0, bufLength);
 					x -= bufOffset;
@@ -131,7 +131,7 @@ public class LocationTrackingReader extends Reader {
 					break;
 				}
 			}
-			if (x >= (bufOffset + bufLength)) {
+			if (x >= bufOffset + bufLength) {
 				// end of input
 				break;
 			}
@@ -178,8 +178,8 @@ public class LocationTrackingReader extends Reader {
 	}
 
 	/**
-	 * Get the character offset of the first character of the last line read. The result of calling this method is only
-	 * meaningful immediately after having called {@link #readLine()}.
+	 * Get the character offset of the first character of the last line read. The result of calling this method is only meaningful
+	 * immediately after having called {@link #readLine()}.
 	 *
 	 * @see #readLine()
 	 */
@@ -188,8 +188,8 @@ public class LocationTrackingReader extends Reader {
 	}
 
 	/**
-	 * get the 0-based line number of the last line read. The result of calling this method is only meaningful
-	 * immediately after having called {@link #readLine()}.
+	 * get the 0-based line number of the last line read. The result of calling this method is only meaningful immediately after having
+	 * called {@link #readLine()}.
 	 *
 	 * @see #readLine()
 	 */

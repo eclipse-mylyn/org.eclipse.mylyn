@@ -21,8 +21,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
- * A parser for creating an outline of a document based on the headings in the document. Uses {@link MarkupLanguage a
- * markup language} to determine where headings start and end.
+ * A parser for creating an outline of a document based on the headings in the document. Uses {@link MarkupLanguage a markup language} to
+ * determine where headings start and end.
  *
  * @see OutlineItem
  * @author David Green
@@ -75,8 +75,7 @@ public class OutlineParser {
 		root.setLength(markup.length());
 
 		MarkupLanguage markupLanguage = this.markupLanguage.clone();
-		if (markupLanguage instanceof AbstractMarkupLanguage) {
-			AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+		if (markupLanguage instanceof AbstractMarkupLanguage language) {
 			language.setFilterGenerativeContents(true);
 			language.setBlocksOnly(isBlocksOnly());
 		}
@@ -92,8 +91,7 @@ public class OutlineParser {
 	}
 
 	/**
-	 * normally outline parsing is performed only on blocks. Overriding classes may return false if they wish to process
-	 * all content.
+	 * normally outline parsing is performed only on blocks. Overriding classes may return false if they wish to process all content.
 	 */
 	protected boolean isBlocksOnly() {
 		return true;
@@ -132,8 +130,7 @@ public class OutlineParser {
 		private Attributes attributes;
 
 		public OutlineBuilder(OutlineItem root, int labelMaxLength) {
-			super();
-			this.currentItem = root;
+			currentItem = root;
 			rootItem = root;
 			this.labelMaxLength = labelMaxLength;
 		}
@@ -192,8 +189,7 @@ public class OutlineParser {
 		@Override
 		public void endHeading() {
 			boolean includeInToc = true;
-			if (attributes instanceof HeadingAttributes) {
-				HeadingAttributes headingAttributes = (HeadingAttributes) attributes;
+			if (attributes instanceof HeadingAttributes headingAttributes) {
 				if (headingAttributes.isOmitFromTableOfContents()) {
 					includeInToc = false;
 				}
@@ -203,10 +199,8 @@ public class OutlineParser {
 				String fullLabelText = label;
 				if (label == null) {
 					label = ""; //$NON-NLS-1$
-				} else {
-					if (labelMaxLength > 0 && label.length() > labelMaxLength) {
-						label = label.substring(0, labelMaxLength) + "..."; //$NON-NLS-1$
-					}
+				} else if (labelMaxLength > 0 && label.length() > labelMaxLength) {
+					label = label.substring(0, labelMaxLength) + "..."; //$NON-NLS-1$
 				}
 				String kind = "h" + level; //$NON-NLS-1$
 

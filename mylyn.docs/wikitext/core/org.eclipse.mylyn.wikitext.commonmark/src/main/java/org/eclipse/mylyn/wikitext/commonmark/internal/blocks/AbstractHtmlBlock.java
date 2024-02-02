@@ -68,8 +68,8 @@ abstract class AbstractHtmlBlock extends SourceBlock {
 	protected abstract Pattern closePattern();
 
 	/**
-	 * Provides a pattern that must be matched for the block to start. The pattern must provide a first group which
-	 * cannot match the close pattern.
+	 * Provides a pattern that must be matched for the block to start. The pattern must provide a first group which cannot match the close
+	 * pattern.
 	 * 
 	 * @return the pattern
 	 */

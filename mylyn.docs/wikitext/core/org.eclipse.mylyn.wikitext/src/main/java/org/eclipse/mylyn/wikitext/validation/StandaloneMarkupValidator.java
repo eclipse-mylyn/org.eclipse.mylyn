@@ -50,8 +50,8 @@ public class StandaloneMarkupValidator {
 	private boolean immutable;
 
 	/**
-	 * Get the default validator for the specified markup language. Validators that are returned by this method are
-	 * immutable and thread-safe
+	 * Get the default validator for the specified markup language. Validators that are returned by this method are immutable and
+	 * thread-safe
 	 *
 	 * @param markupLanguage
 	 *            the markup language for which a validator is desired
@@ -87,7 +87,7 @@ public class StandaloneMarkupValidator {
 
 	private void setImmutable() {
 		if (!immutable) {
-			this.immutable = true;
+			immutable = true;
 			rules = Collections.unmodifiableList(rules);
 		}
 	}

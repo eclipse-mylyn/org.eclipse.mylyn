@@ -74,13 +74,11 @@ public class LanguageSupport {
 				key = matcher.group(1);
 				value = matcher.group(2);
 				properties.put(key, value);
+			} else // could not parse key/value pairs
+			if (positionalParameters.isEmpty()) {
+				//no more positional items left - ignoring
 			} else {
-				// could not parse key/value pairs
-				if (positionalParameters.isEmpty()) {
-					//no more positional items left - ignoring
-				} else {
-					properties.put(positionalParameters.remove(0), pair.trim());
-				}
+				properties.put(positionalParameters.remove(0), pair.trim());
 			}
 		}
 
@@ -122,14 +120,12 @@ public class LanguageSupport {
 				} else if (">".equals(align)) { //$NON-NLS-1$
 					result.setValign("bottom"); //$NON-NLS-1$
 				}
-			} else {
-				if ("<".equals(align)) { //$NON-NLS-1$
-					result.setAlign("left"); //$NON-NLS-1$
-				} else if ("^".equals(align)) { //$NON-NLS-1$
-					result.setAlign("center"); //$NON-NLS-1$
-				} else if (">".equals(align)) { //$NON-NLS-1$
-					result.setAlign("right"); //$NON-NLS-1$
-				}
+			} else if ("<".equals(align)) { //$NON-NLS-1$
+				result.setAlign("left"); //$NON-NLS-1$
+			} else if ("^".equals(align)) { //$NON-NLS-1$
+				result.setAlign("center"); //$NON-NLS-1$
+			} else if (">".equals(align)) { //$NON-NLS-1$
+				result.setAlign("right"); //$NON-NLS-1$
 			}
 			start = alignMatcher.end();
 		}

@@ -54,7 +54,7 @@ public class AttributeDefinitionBlock extends Block {
 			((AsciiDocContentState) getState()).removeAttribute(key);
 		} else {
 			String newKey = key.trim();
-			String newValue = (value == null) ? "" : value.trim();
+			String newValue = value == null ? "" : value.trim();
 			((AsciiDocContentState) getState()).putAttribute(newKey, newValue);
 		}
 		setClosed(true);

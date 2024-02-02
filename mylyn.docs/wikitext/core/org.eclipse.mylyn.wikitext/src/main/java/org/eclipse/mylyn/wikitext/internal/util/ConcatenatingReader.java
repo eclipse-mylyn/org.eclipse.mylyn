@@ -48,8 +48,8 @@ public class ConcatenatingReader extends Reader {
 
 	@Override
 	public void close() throws IOException {
-		for (int x = 0; x < readers.length; ++x) {
-			readers[x].close();
+		for (Reader reader : readers) {
+			reader.close();
 		}
 	}
 

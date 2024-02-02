@@ -20,8 +20,8 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * Definition list block, matches blocks that follow trac list rules (item line: whitespace, item, '::' and definition
- * possibility to continue the definition on the next lines)
+ * Definition list block, matches blocks that follow trac list rules (item line: whitespace, item, '::' and definition possibility to
+ * continue the definition on the next lines)
  * 
  * @author Jeremie Bresson
  */

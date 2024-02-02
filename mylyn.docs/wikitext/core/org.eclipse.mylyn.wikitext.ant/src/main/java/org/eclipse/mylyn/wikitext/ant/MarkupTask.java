@@ -85,8 +85,7 @@ public abstract class MarkupTask extends Task {
 	}
 
 	/**
-	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup
-	 * language}.
+	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup language}.
 	 *
 	 * @return the markup language
 	 * @throws BuildException
@@ -222,7 +221,7 @@ public abstract class MarkupTask extends Task {
 			log(String.format("%s:%s %s", source.getName(), problem.getOffset(), problem.getMessage()), messageLevel); //$NON-NLS-1$
 		}
 
-		if ((errorCount > 0 && failOnValidationError) || (warningCount > 0 && failOnValidationWarning)) {
+		if (errorCount > 0 && failOnValidationError || warningCount > 0 && failOnValidationWarning) {
 			throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.3"), errorCount, //$NON-NLS-1$
 					warningCount, source));
 		}
@@ -253,7 +252,7 @@ public abstract class MarkupTask extends Task {
 		StringBuilder w = new StringBuilder((int) inputFile.length());
 		try {
 			InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
-			try {
+			try (input) {
 				Reader r = sourceEncoding == null
 						? new InputStreamReader(input)
 						: new InputStreamReader(input, sourceEncoding);
@@ -265,8 +264,6 @@ public abstract class MarkupTask extends Task {
 				} finally {
 					r.close();
 				}
-			} finally {
-				input.close();
 			}
 		} catch (IOException e) {
 			throw new BuildException(

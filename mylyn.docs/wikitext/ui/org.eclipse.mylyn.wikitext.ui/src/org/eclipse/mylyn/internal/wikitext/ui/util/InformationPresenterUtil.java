@@ -49,7 +49,6 @@ public class InformationPresenterUtil {
 		 */
 		public SizeConstraint(int horizontalWidthInChars, int verticalWidthInChars, boolean enforceAsMinimumSize,
 				boolean enforceAsMaximumSize) {
-			super();
 			this.horizontalWidthInChars = horizontalWidthInChars;
 			this.verticalWidthInChars = verticalWidthInChars;
 			this.enforceAsMinimumSize = enforceAsMinimumSize;
@@ -69,7 +68,7 @@ public class InformationPresenterUtil {
 
 		InformationProvider(IRegion hoverRegion, Object info, IInformationControlCreator controlCreator) {
 			this.hoverRegion = hoverRegion;
-			this.hoverInfo = info;
+			hoverInfo = info;
 			this.controlCreator = controlCreator;
 		}
 
@@ -101,8 +100,8 @@ public class InformationPresenterUtil {
 			+ "#informationControlCreator"; //$NON-NLS-1$
 
 	/**
-	 * Get an information presenter to present the provided HTML content. The returned presenter is ready for displaying
-	 * the information, all that is left to do is call {@link InformationPresenter#showInformation()}.
+	 * Get an information presenter to present the provided HTML content. The returned presenter is ready for displaying the information,
+	 * all that is left to do is call {@link InformationPresenter#showInformation()}.
 	 *
 	 * @param viewer
 	 *            the viewer for which the information control should be created
@@ -126,9 +125,7 @@ public class InformationPresenterUtil {
 		IInformationControlCreator informationControlCreator;
 		if (presenter == null) {
 
-			informationControlCreator = shell -> {
-					return new DefaultInformationControl(shell, toolBarManager, new HtmlTextPresenter());
-			};
+			informationControlCreator = shell -> new DefaultInformationControl(shell, toolBarManager, new HtmlTextPresenter());
 
 			presenter = new InformationPresenter(informationControlCreator) {
 				@Override

@@ -245,7 +245,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 	protected File createSimpleTextileMarkup() throws IOException {
 		StringWriter out = new StringWriter();
 		PrintWriter writer = new PrintWriter(out);
-		try {
+		try (writer) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");
@@ -253,8 +253,6 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
-		} finally {
-			writer.close();
 		}
 		return createTextileMarkupFile(out.toString());
 	}
@@ -262,10 +260,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 	protected File createTextileMarkupFile(String content) throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		Writer writer = new FileWriter(markupFile);
-		try {
+		try (writer) {
 			writer.write(content);
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}
@@ -273,10 +269,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 	protected File createSimpleTextileMarkupWithImage() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("some content with !image.png! an image");
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}

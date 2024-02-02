@@ -55,8 +55,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
-		process(context, builder, lineSequence, (context1, builder1, listMode, lineSequence1) -> emitListItem(context1,
-				builder1, listMode, lineSequence1));
+		process(context, builder, lineSequence, this::emitListItem);
 	}
 
 	@Override
@@ -150,7 +149,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 
 	private Predicate<BlockContext> listItemBlockContextPredicate() {
-		return new Predicate<SourceBlocks.BlockContext>() {
+		return new Predicate<>() {
 
 			@Override
 			public boolean test(BlockContext blockContext) {
@@ -169,14 +168,10 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 
 	private BlockType listBlockType(char bulletType) {
-		switch (bulletType) {
-		case '*':
-		case '+':
-		case '-':
-			return BlockType.BULLETED_LIST;
-		default:
-			return BlockType.NUMERIC_LIST;
-		}
+		return switch (bulletType) {
+			case '*', '+', '-' -> BlockType.BULLETED_LIST;
+			default -> BlockType.NUMERIC_LIST;
+		};
 	}
 
 	private void emitListItem(ProcessingContext context, DocumentBuilder builder, ListMode listMode,
@@ -195,8 +190,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 			}
 		}
 		for (SourceBlock block : blocks) {
-			if (listMode == ListMode.TIGHT && block instanceof ParagraphBlock) {
-				ParagraphBlock paragraphBlock = (ParagraphBlock) block;
+			if (listMode == ListMode.TIGHT && block instanceof ParagraphBlock paragraphBlock) {
 				paragraphBlock.processInlines(context, builder, contentLineSequence, false);
 			} else {
 				block.process(context, builder, contentLineSequence);

@@ -22,37 +22,43 @@ public class AsciiDocLanguagePreformattedBlockTest extends AsciiDocLanguageTestB
 
 	@Test
 	public void testSingleLinePreformattedBlock() {
-		String html = parseToHtml("" //
-				+ "    10 PRINT \"Hello World!\"\n" //
-				+ "\n" //
-				+ "Some Text");
-		assertEquals("<pre>" //
-				+ "10 PRINT \"Hello World!\"</pre>" //
-				+ "<p>Some Text</p>\n", html);
+		String html = parseToHtml("""
+				    10 PRINT "Hello World!"
+
+				Some Text""");
+		assertEquals("""
+				<pre>\
+				10 PRINT "Hello World!"</pre>\
+				<p>Some Text</p>
+				""", html);
 	}
 
 	@Test
 	public void testMultiLinePreformattedBlock() {
-		String html = parseToHtml("" //
-				+ "    10 PRINT \"Hello World!\"\n" //
-				+ "    20 GOTO 10\n");
-		assertEquals("<pre>" //
-				+ "10 PRINT \"Hello World!\"\n" //
-				+ "20 GOTO 10</pre>", html);
+		String html = parseToHtml("""
+				    10 PRINT "Hello World!"
+				    20 GOTO 10
+				""");
+		assertEquals("""
+				<pre>\
+				10 PRINT "Hello World!"
+				20 GOTO 10</pre>""", html);
 	}
 
 	@Test
 	public void testMultiLinePreformattedBlockAndContent() {
-		String html = parseToHtml("" //
-				+ "\tpublic static void main(String[] args) {\n" //
-				+ "\t\tSystem.out.println(\"Hello World!\");\n" //
-				+ "\t}\n" //
-				+ "\n" //
-				+ "Some Text");
-		assertEquals("<pre>" //
-				+ "public static void main(String[] args) {\n" //
-				+ "\tSystem.out.println(\"Hello World!\");\n" //
-				+ "}</pre>" //
-				+ "<p>Some Text</p>\n", html);
+		String html = parseToHtml("""
+					public static void main(String[] args) {
+						System.out.println("Hello World!");
+					}
+
+				Some Text""");
+		assertEquals("""
+				<pre>\
+				public static void main(String[] args) {
+					System.out.println("Hello World!");
+				}</pre>\
+				<p>Some Text</p>
+				""", html);
 	}
 }

@@ -22,7 +22,6 @@ import org.eclipse.mylyn.wikitext.textile.internal.TextileContentState;
 
 /**
  * @author David Green
- * 
  * @see SpanType#LINK
  */
 public class HyperlinkPhraseModifier extends PatternBasedElement {

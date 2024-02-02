@@ -52,7 +52,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 		}
 
 		public Event(SpanType type, Attributes attributes2) {
-			this.spanType = type;
+			spanType = type;
 			attributes = attributes2;
 		}
 

@@ -78,16 +78,16 @@ public class SimplePhraseModifier extends PatternBasedElement {
 			String content = group(1);
 			getBuilder().beginSpan(spanType, new Attributes());
 			switch (mode) {
-			case NORMAL:
-				getMarkupLanguage().emitMarkupText(parser, state, content);
-				break;
-			case NESTING:
-				int contentStart = start(1);
-				getMarkupLanguage().emitMarkupLine(parser, state, contentStart, content, 0);
-				break;
-			case SPECIAL:
-				getBuilder().charactersUnescaped(content);
-				break;
+				case NORMAL:
+					getMarkupLanguage().emitMarkupText(parser, state, content);
+					break;
+				case NESTING:
+					int contentStart = start(1);
+					getMarkupLanguage().emitMarkupLine(parser, state, contentStart, content, 0);
+					break;
+				case SPECIAL:
+					getBuilder().charactersUnescaped(content);
+					break;
 			}
 			getBuilder().endSpan();
 		}

@@ -13,7 +13,7 @@ import org.junit.runners.model.Statement;
 
 /**
  * A rule that performs an action on timeout.
- * 
+ *
  * @since 3.0
  */
 public abstract class TimeoutActionRule implements TestRule {

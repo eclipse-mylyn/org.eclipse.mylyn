@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.TemplateResolver;
 
 public class BuiltInTemplateResolver extends TemplateResolver {
 
-	private static Map<String, Template> builtInTemplates = new HashMap<String, Template>();
+	private static Map<String, Template> builtInTemplates = new HashMap<>();
 	static {
 		registerTemplate(new Template("mdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$
 		registerTemplate(new Template("mdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$

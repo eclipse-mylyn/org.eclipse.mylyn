@@ -46,8 +46,7 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 	 * @param container
 	 *            {@link IContainer} of the file being edited
 	 * @param hyperlinkPattern
-	 *            regular expression patterns with at least one group, which is supposed to contain the path to a
-	 *            resource in the workspace.
+	 *            regular expression patterns with at least one group, which is supposed to contain the path to a resource in the workspace.
 	 */
 	public FileRefHyperlinkDetector(IContainer container, List<String> hyperlinkPattern) {
 		this.container = container;

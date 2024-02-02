@@ -22,9 +22,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * An image cache that manages image lifecycle and maps images to URLs. The lifetime of the image cache is intended to
- * be short, as it keeps image widgets and image data in memory. Typically an ImageCache lifetime corresponds to the
- * lifetime of the object that is displaying the images.
+ * An image cache that manages image lifecycle and maps images to URLs. The lifetime of the image cache is intended to be short, as it keeps
+ * image widgets and image data in memory. Typically an ImageCache lifetime corresponds to the lifetime of the object that is displaying the
+ * images.
  * 
  * @author David Green
  */
@@ -43,8 +43,7 @@ public class ImageCache {
 	 * 
 	 * @param url
 	 *            the url which may be absolute or relative
-	 * @return the image, or the {@link ImageDescriptor#getMissingImageDescriptor() missing image} if the image cannot be
-	 *         found
+	 * @return the image, or the {@link ImageDescriptor#getMissingImageDescriptor() missing image} if the image cannot be found
 	 */
 	public Image getImage(String url) {
 		if (disposed) {

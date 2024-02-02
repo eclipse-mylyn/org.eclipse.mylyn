@@ -189,12 +189,12 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 				}
 				start = range.start + range.length + 1;
 			}
-			if (start < (damage.getOffset() + damage.getLength())) {
+			if (start < damage.getOffset() + damage.getLength()) {
 				StyleRange newRange = defaultStyleRange == null
 						? new StyleRange()
 						: (StyleRange) defaultStyleRange.clone();
 				newRange.start = start;
-				newRange.length = (damage.getOffset() + damage.getLength()) - start;
+				newRange.length = damage.getOffset() + damage.getLength() - start;
 				ranges.add(newRange);
 			}
 
@@ -228,8 +228,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	}
 
 	/**
-	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
-	 * activate hyperlinks when clicking.
+	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to activate hyperlinks
+	 * when clicking.
 	 *
 	 * @see #getHyperlinkStateMask(ISourceViewer)
 	 */
@@ -238,8 +238,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	}
 
 	/**
-	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
-	 * activate hyperlinks when clicking.
+	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to activate hyperlinks
+	 * when clicking.
 	 *
 	 * @see #getHyperlinkStateMask(ISourceViewer)
 	 */
@@ -248,8 +248,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	}
 
 	/**
-	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
-	 * used in a {@link TextEditor}. Defaults to false.
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not used in a
+	 * {@link TextEditor}. Defaults to false.
 	 *
 	 * @since 1.6
 	 */
@@ -258,8 +258,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	}
 
 	/**
-	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
-	 * used in a {@link TextEditor}.
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not used in a
+	 * {@link TextEditor}.
 	 *
 	 * @since 1.6
 	 */

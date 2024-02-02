@@ -87,15 +87,10 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 
 	@Override
 	BlockStrategy getUnsupportedElementStrategy(BlockType elementType) {
-		switch (elementType) {
-		case BULLETED_LIST:
-		case DEFINITION_LIST:
-		case NUMERIC_LIST:
-		case TABLE:
-			return NoOpBlockStrategy.instance;
-		default:
-			return UnsupportedBlockStrategy.instance;
-		}
+		return switch (elementType) {
+			case BULLETED_LIST, DEFINITION_LIST, NUMERIC_LIST, TABLE -> NoOpBlockStrategy.instance;
+			default -> UnsupportedBlockStrategy.instance;
+		};
 	}
 
 	@Override

@@ -51,12 +51,10 @@ public class ParagraphBlock extends Block {
 				if (matcher.matches()) {
 					Textile.configureAttributes(attributes, matcher, 1, true);
 					offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
-				} else {
-					if (line.charAt(0) == ' ') {
-						offset = 1;
-						if (enableUnwrapped) {
-							unwrapped = true;
-						}
+				} else if (line.charAt(0) == ' ') {
+					offset = 1;
+					if (enableUnwrapped) {
+						unwrapped = true;
 					}
 				}
 			}

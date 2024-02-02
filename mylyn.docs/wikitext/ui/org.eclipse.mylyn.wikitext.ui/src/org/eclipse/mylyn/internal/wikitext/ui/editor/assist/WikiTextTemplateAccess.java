@@ -58,8 +58,8 @@ public class WikiTextTemplateAccess {
 	public TemplateStore getTemplateStore() {
 		if (templateStore == null) {
 			if (WikiTextUiPlugin.getDefault() != null) {
-				templateStore = new ContributionTemplateStore(getContextTypeRegistry(), WikiTextUiPlugin.getDefault()
-						.getPreferenceStore(), CUSTOM_TEMPLATES_KEY);
+				templateStore = new ContributionTemplateStore(getContextTypeRegistry(),
+						WikiTextUiPlugin.getDefault().getPreferenceStore(), CUSTOM_TEMPLATES_KEY);
 				try {
 					templateStore.load();
 				} catch (IOException e) {

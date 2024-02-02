@@ -47,7 +47,7 @@ public class ListBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		boolean continuation = false;
 		if (blockLineCount == 0) {
-			listState = new Stack<ListState>();
+			listState = new Stack<>();
 			Attributes attributes = new Attributes();
 			String listSpec = matcher.group(1);
 			char lastChar = listSpec.charAt(listSpec.length() - 1);
@@ -193,26 +193,19 @@ public class ListBlock extends Block {
 	}
 
 	private BlockType calculateType(char lastChar) {
-		switch (lastChar) {
-		case '#':
-			return BlockType.NUMERIC_LIST;
-		case ':':
-		case ';':
-			return BlockType.DEFINITION_LIST;
-		default:
-			return BlockType.BULLETED_LIST;
-		}
+		return switch (lastChar) {
+			case '#' -> BlockType.NUMERIC_LIST;
+			case ':', ';' -> BlockType.DEFINITION_LIST;
+			default -> BlockType.BULLETED_LIST;
+		};
 	}
 
 	private BlockType calculateItemType(char lastChar) {
-		switch (lastChar) {
-		case ';':
-			return BlockType.DEFINITION_TERM;
-		case ':':
-			return BlockType.DEFINITION_ITEM;
-		default:
-			return BlockType.LIST_ITEM;
-		}
+		return switch (lastChar) {
+			case ';' -> BlockType.DEFINITION_TERM;
+			case ':' -> BlockType.DEFINITION_ITEM;
+			default -> BlockType.LIST_ITEM;
+		};
 	}
 
 	@Override
@@ -257,7 +250,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, BlockType type, BlockType itemType) {
-			super();
 			this.level = level;
 			this.type = type;
 			this.itemType = itemType;

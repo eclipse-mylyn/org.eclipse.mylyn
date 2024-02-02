@@ -33,6 +33,7 @@ public class DefaultSplittingStrategyTest {
 			return super.computeSplitTargetCandidate();
 		}
 
+		@Override
 		public String stripUnsafeCharacters(String candidate) {
 			return super.stripUnsafeCharacters(candidate);
 		}

@@ -46,8 +46,8 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 
 			int lineHeight = textWidget.getLineHeight(offset);
 
-			int vcenter = left.y + (baseline / 2) + (baseline / 4);
-			int hcenter = left.x + ((right.x - left.x) / 2);
+			int vcenter = left.y + baseline / 2 + baseline / 4;
+			int hcenter = left.x + (right.x - left.x) / 2;
 
 			gc.setLineWidth(0); // NOTE: 0 means width is 1 but with optimized performance
 			gc.setLineStyle(SWT.LINE_SOLID);
@@ -73,18 +73,18 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 
 			// now paint the bullet
 			switch (bullet.getIndentLevel()) {
-			case 1: // round solid bullet
-				gc.setBackground(color);
-				gc.fillOval(hcenter - 3, vcenter - 2, 5, 5);
-				break;
-			case 2: // round empty bullet
-				gc.setForeground(color);
-				gc.drawOval(hcenter - 3, vcenter - 3, 5, 5);
-				break;
-			default: // square bullet
-				gc.setBackground(color);
-				gc.fillRectangle(hcenter - 3, vcenter - 2, 5, 5);
-				break;
+				case 1: // round solid bullet
+					gc.setBackground(color);
+					gc.fillOval(hcenter - 3, vcenter - 2, 5, 5);
+					break;
+				case 2: // round empty bullet
+					gc.setForeground(color);
+					gc.drawOval(hcenter - 3, vcenter - 3, 5, 5);
+					break;
+				default: // square bullet
+					gc.setBackground(color);
+					gc.fillRectangle(hcenter - 3, vcenter - 2, 5, 5);
+					break;
 			}
 			gc.setForeground(foreground);
 			gc.setBackground(background);

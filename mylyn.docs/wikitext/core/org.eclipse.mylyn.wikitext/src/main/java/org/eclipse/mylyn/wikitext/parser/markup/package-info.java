@@ -11,6 +11,6 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * comopnents for implementing a parser in terms of a {@link MarkupLanguage} 
+ * comopnents for implementing a parser in terms of a {@link MarkupLanguage}
  */
 package org.eclipse.mylyn.wikitext.parser.markup;

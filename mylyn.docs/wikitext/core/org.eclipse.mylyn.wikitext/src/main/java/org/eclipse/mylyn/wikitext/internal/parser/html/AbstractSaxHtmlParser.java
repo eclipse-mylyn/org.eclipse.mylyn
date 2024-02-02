@@ -147,7 +147,7 @@ public abstract class AbstractSaxHtmlParser {
 			blockElement = blockElements.contains(elementName);
 			collapsesAdjacentWhitespace = blockElement || whitespaceCollapsingElements.contains(elementName);
 			noWhitespaceTextContainer = "body".equals(elementName); //$NON-NLS-1$
-			preserveWhitespace = (parent != null && parent.preserveWhitespace) || "pre".equals(elementName); //$NON-NLS-1$
+			preserveWhitespace = parent != null && parent.preserveWhitespace || "pre".equals(elementName); //$NON-NLS-1$
 			canHaveCharacterContent = !noCharacterContentElements.contains(elementName);
 			if (parent != null) {
 				parent.lastChild = this;
@@ -232,12 +232,10 @@ public abstract class AbstractSaxHtmlParser {
 				text = text.trim();
 			} else if (!elementState.preserveWhitespace) {
 				if (elementClosing) {
-					if (elementState.childCount == 0) {
-						if (elementState.blockElement) {
+					if (elementState.blockElement) {
+						if (elementState.childCount == 0) {
 							text = text.trim();
-						}
-					} else {
-						if (elementState.blockElement) {
+						} else {
 							text = trimRight(text);
 						}
 					}
@@ -265,11 +263,11 @@ public abstract class AbstractSaxHtmlParser {
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (processingContent) {
-				if ((elementState.noWhitespaceTextContainer
-						&& (elementState.lastChild == null || elementState.lastChild.blockElement))
-						|| (elementState.blockElement && !elementState.preserveWhitespace
-								&& elementState.textChildCount == 0 && elementState.childCount == 0)
-						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+				if (elementState.noWhitespaceTextContainer
+						&& (elementState.lastChild == null || elementState.lastChild.blockElement)
+						|| elementState.blockElement && !elementState.preserveWhitespace
+								&& elementState.textChildCount == 0 && elementState.childCount == 0
+						|| elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace) {
 					// trim left here
 					int skip = 0;
 					while (skip < length && Character.isWhitespace(ch[start + skip])) {
@@ -414,21 +412,21 @@ public abstract class AbstractSaxHtmlParser {
 					if (typeAttribute != null) {
 						String listCssType = null;
 						switch (typeAttribute) {
-						case "1":
-							listCssType = "decimal";
-							break;
-						case "a":
-							listCssType = "lower-alpha";
-							break;
-						case "i":
-							listCssType = "lower-roman";
-							break;
-						case "A":
-							listCssType = "upper-alpha";
-							break;
-						case "I":
-							listCssType = "upper-roman";
-							break;
+							case "1":
+								listCssType = "decimal";
+								break;
+							case "a":
+								listCssType = "lower-alpha";
+								break;
+							case "i":
+								listCssType = "lower-roman";
+								break;
+							case "A":
+								listCssType = "upper-alpha";
+								break;
+							case "I":
+								listCssType = "upper-roman";
+								break;
 						}
 						listAttributes.appendCssStyle("list-style-type: " + listCssType + ";");
 					}
@@ -714,7 +712,7 @@ public abstract class AbstractSaxHtmlParser {
 	private static String trimRight(String text) {
 		int len = text.length();
 
-		while (0 < len && (text.charAt(len - 1) <= ' ')) {
+		while (0 < len && text.charAt(len - 1) <= ' ') {
 			len--;
 		}
 		return len < text.length() ? text.substring(0, len) : text;
@@ -724,7 +722,7 @@ public abstract class AbstractSaxHtmlParser {
 		final int len = text.length();
 		int st = 0;
 
-		while ((st < len) && (text.charAt(st) <= ' ')) {
+		while (st < len && text.charAt(st) <= ' ') {
 			st++;
 		}
 		return st > 0 ? text.substring(st, len) : text;

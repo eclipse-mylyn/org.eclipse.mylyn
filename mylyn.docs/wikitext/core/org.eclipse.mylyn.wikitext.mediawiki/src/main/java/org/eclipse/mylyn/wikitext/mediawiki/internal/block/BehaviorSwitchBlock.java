@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * a block for MediaWiki <a href="http://www.mediawiki.org/wiki/Help:Magic_words#Behavior_switches">behavior
- * switches</a> (processed as empty string).
+ * a block for MediaWiki <a href="http://www.mediawiki.org/wiki/Help:Magic_words#Behavior_switches">behavior switches</a> (processed as
+ * empty string).
  *
  * @See also {@link TableOfContentsBlock}
  * @author Jeremie Bresson

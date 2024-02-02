@@ -58,7 +58,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private static final Comparator<ICompletionProposal> proposalComparator = new ProposalComparator();
 
-	private static final Template[] NO_TEMPLATES = new Template[0];
+	private static final Template[] NO_TEMPLATES = {};
 
 	private final SourceTemplateContextType contextType;
 

@@ -23,9 +23,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
- * "Block" which detects the optional titles for blocks. i.e. {@code .This is a title}. The title is stored in
- * {@link ContentState contentstate} to be used by the one that needs it. This blocks emits nothing in the resulting
- * document.
+ * "Block" which detects the optional titles for blocks. i.e. {@code .This is a title}. The title is stored in {@link ContentState
+ * contentstate} to be used by the one that needs it. This blocks emits nothing in the resulting document.
  *
  * @author Max Rydahl Andersen
  */

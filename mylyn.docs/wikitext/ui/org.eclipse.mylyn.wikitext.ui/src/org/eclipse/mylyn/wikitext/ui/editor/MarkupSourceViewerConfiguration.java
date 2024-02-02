@@ -126,7 +126,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, String textFontPreference,
 			String monospaceFontPreference) {
 		super(preferenceStore);
-		this.fontPreference = textFontPreference;
+		fontPreference = textFontPreference;
 		this.monospaceFontPreference = monospaceFontPreference;
 		initializeDefaultFonts();
 	}
@@ -161,8 +161,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * Initialize default fonts. Causes this to re-read font preferences from the preference store. Calling this method
-	 * should only be necessary if font preferences have changed, or if the font preference keys have changed.
+	 * Initialize default fonts. Causes this to re-read font preferences from the preference store. Calling this method should only be
+	 * necessary if font preferences have changed, or if the font preference keys have changed.
 	 *
 	 * @since 1.3
 	 * @see #getFontPreference()
@@ -207,7 +207,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 * @since 1.3
 	 */
 	public void setFontPreference(String textFontPreference) {
-		this.fontPreference = textFontPreference;
+		fontPreference = textFontPreference;
 	}
 
 	/**
@@ -306,9 +306,9 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * Set the markup language of the configuration. Causes the completion processor, validating reconciling strategy
-	 * and other configuration elements to be aware of the markup language in use. This may be called more than once
-	 * during the lifecycle of the editor.
+	 * Set the markup language of the configuration. Causes the completion processor, validating reconciling strategy and other
+	 * configuration elements to be aware of the markup language in use. This may be called more than once during the lifecycle of the
+	 * editor.
 	 *
 	 * @param markupLanguage
 	 *            the markup language
@@ -365,8 +365,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * Set the file being edited. If a file is being edited this allows for validation to create markers on the file.
-	 * Some editors are not file-based and thus need not invoke this method.
+	 * Set the file being edited. If a file is being edited this allows for validation to create markers on the file. Some editors are not
+	 * file-based and thus need not invoke this method.
 	 *
 	 * @param file
 	 *            the file, which may be null.
@@ -390,8 +390,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * provide access to an information presenter that can be used to pop-up a quick outline. Source viewers should
-	 * configure as follows:
+	 * provide access to an information presenter that can be used to pop-up a quick outline. Source viewers should configure as follows:
 	 *
 	 * <pre>
 	 * public void configure(SourceViewerConfiguration configuration) {
@@ -435,22 +434,19 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	protected IInformationControlCreator getOutlineInformationControlCreator() {
-		return parent -> {
-			return new QuickOutlinePopupDialog(parent, showInTarget);
-		};
+		return parent -> new QuickOutlinePopupDialog(parent, showInTarget);
 	}
 
 	/**
-	 * Set the outline on this configuration. Outlines are used for document-internal references as well as for quick
-	 * outline. Editors that call this method must keep the outline up to date as the source document changes. Editors
-	 * that do not maintain an outline need not call this method, since the outline will be computed as needed for the
-	 * quick outline.
+	 * Set the outline on this configuration. Outlines are used for document-internal references as well as for quick outline. Editors that
+	 * call this method must keep the outline up to date as the source document changes. Editors that do not maintain an outline need not
+	 * call this method, since the outline will be computed as needed for the quick outline.
 	 *
 	 * @param outlineModel
 	 * @since 3.0
 	 */
 	public void setOutline(OutlineItem outlineModel) {
-		this.outline = outlineModel;
+		outline = outlineModel;
 		if (anchorCompletionProcessor != null) {
 			anchorCompletionProcessor.setOutline(outline);
 		}
@@ -464,8 +460,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * The default font, as used by the {@link #getMarkupScanner() scanner}. Note that if a preference store is used
-	 * then {@link #setFontPreference(String)} should be used instead.
+	 * The default font, as used by the {@link #getMarkupScanner() scanner}. Note that if a preference store is used then
+	 * {@link #setFontPreference(String)} should be used instead.
 	 */
 	public void setDefaultFont(Font defaultFont) {
 		if (defaultFont == null) {
@@ -487,8 +483,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}. Note that if a
-	 * preference store is used then {@link #setMonospaceFontPreference(String)} should be used instead.
+	 * the default font for monospace text, as used by the {@link #getMarkupScanner() scanner}. Note that if a preference store is used then
+	 * {@link #setMonospaceFontPreference(String)} should be used instead.
 	 */
 	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
 		if (this.defaultMonospaceFont != defaultMonospaceFont) {
@@ -540,8 +536,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 						outlineParser.setMarkupLanguage(language.clone());
 						String markup = document.get();
 						final OutlineItem outline = outlineParser.parse(markup);
-						if (MarkupSourceViewerConfiguration.this.file != null) {
-							outline.setResourcePath(MarkupSourceViewerConfiguration.this.file.getFullPath().toString());
+						if (file != null) {
+							outline.setResourcePath(file.getFullPath().toString());
 						}
 						return outline;
 					}
@@ -581,8 +577,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
-	 * used in a {@link TextEditor}. Defaults to false.
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not used in a
+	 * {@link TextEditor}. Defaults to false.
 	 *
 	 * @since 1.6
 	 */
@@ -591,8 +587,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	/**
-	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
-	 * used in a {@link TextEditor}.
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not used in a
+	 * {@link TextEditor}.
 	 *
 	 * @since 1.6
 	 */

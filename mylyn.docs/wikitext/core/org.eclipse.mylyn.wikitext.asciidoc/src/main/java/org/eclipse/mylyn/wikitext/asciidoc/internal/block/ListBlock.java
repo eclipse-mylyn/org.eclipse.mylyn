@@ -215,13 +215,10 @@ public class ListBlock extends Block {
 	}
 
 	private BlockType calculateType(String listSpec) {
-		switch (listSpec.charAt(listSpec.length() - 1)) {
-		case '.':
-		case ')':
-			return BlockType.NUMERIC_LIST;
-		default:
-			return BlockType.BULLETED_LIST;
-		}
+		return switch (listSpec.charAt(listSpec.length() - 1)) {
+			case '.', ')' -> BlockType.NUMERIC_LIST;
+			default -> BlockType.BULLETED_LIST;
+		};
 	}
 
 	private void adjustLevel(Matcher matcher, BlockType type, String tag) {
@@ -306,7 +303,7 @@ public class ListBlock extends Block {
 	}
 
 	private boolean isInterruptibleNestedBlock(Block block) {
-		return block == null || (block instanceof ReadAheadDispatcher);
+		return block == null || block instanceof ReadAheadDispatcher;
 	}
 
 	@Override
@@ -330,7 +327,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(String tag, int level, BlockType type) {
-			super();
 			this.tag = tag;
 			this.level = level;
 			this.type = type;

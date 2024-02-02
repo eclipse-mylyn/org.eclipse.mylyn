@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Before;
 
 /**
- * 
+ *
  * @since 3.0
  */
 public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {

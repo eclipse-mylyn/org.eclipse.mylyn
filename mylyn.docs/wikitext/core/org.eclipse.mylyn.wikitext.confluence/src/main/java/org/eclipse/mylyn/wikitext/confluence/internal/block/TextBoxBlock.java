@@ -115,7 +115,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			builder.endBlock(); // the block	
+			builder.endBlock(); // the block
 		}
 		super.setClosed(closed);
 	}

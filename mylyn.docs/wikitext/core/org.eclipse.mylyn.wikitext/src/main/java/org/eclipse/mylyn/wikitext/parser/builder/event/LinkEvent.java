@@ -56,10 +56,9 @@ public class LinkEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof LinkEvent)) {
+		if (!(obj instanceof LinkEvent other)) {
 			return false;
 		}
-		LinkEvent other = (LinkEvent) obj;
 		return Objects.equals(hrefOrHashName, other.hrefOrHashName) && Objects.equals(text, other.text);
 	}
 

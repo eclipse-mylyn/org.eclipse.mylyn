@@ -39,8 +39,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
- * A properties page for IProject that allow for configuration of WikiText settings such as the presence of a
- * {@link WikiTextNature}.
+ * A properties page for IProject that allow for configuration of WikiText settings such as the presence of a {@link WikiTextNature}.
  *
  * @author David Green
  */

@@ -180,8 +180,8 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testSimplePhraseModifiers() throws IOException {
-		Object[][] pairs = new Object[][] { { "*", "strong" }, { "_", "em" }, { "??", "cite" }, { "-", "del" },
-				{ "+", "u" }, { "^", "sup" }, { "~", "sub" }, };
+		Object[][] pairs = { { "*", "strong" }, { "_", "em" }, { "??", "cite" }, { "-", "del" }, { "+", "u" },
+				{ "^", "sup" }, { "~", "sub" }, };
 		for (Object[] pair : pairs) {
 			initParser();
 			String html = parser.parseToHtml("a paragraph with " + pair[0] + "content foo bar baz" + pair[0]);
@@ -669,8 +669,8 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	/**
-	 * test scenario where we have a level-4 nested list, which happens to start with the same pattern as a horizontal
-	 * rule. We want to match as a list in this case.
+	 * test scenario where we have a level-4 nested list, which happens to start with the same pattern as a horizontal rule. We want to
+	 * match as a list in this case.
 	 */
 	@Test
 	public void testListWithHrPattern() throws IOException {
@@ -923,14 +923,20 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void testTableWithMultipleLists() {
 		// test for bug# 513661
-		assertMarkup("<table>" + //
-				"<tr><th>Bulleted list</th><th><ul><li>one thing</li><li>two things </li></ul></th></tr>" + //
-				"<tr><td>Numbered list</td><td><ol><li>one thing</li><li>two things </li></ol></td></tr>" + //
-				"<tr><td>Bulleted list</td><td><ul style=\"list-style: square\"><li>one thing<ul><li>two things </li></ul></li></ul></td></tr>"
-				+ //
-				"</table>", "||Bulleted list||* one thing\n* two things |\n" + //
-						"|Numbered list|# one thing\n# two things |\n" + //
-						"|Bulleted list|- one thing\n-- two things |");
+		assertMarkup(
+				"""
+						<table>\
+						<tr><th>Bulleted list</th><th><ul><li>one thing</li><li>two things </li></ul></th></tr>\
+						<tr><td>Numbered list</td><td><ol><li>one thing</li><li>two things </li></ol></td></tr>\
+						<tr><td>Bulleted list</td><td><ul style="list-style: square"><li>one thing<ul><li>two things </li></ul></li></ul></td></tr>\
+						</table>""",
+				"""
+						||Bulleted list||* one thing
+						* two things |
+						|Numbered list|# one thing
+						# two things |
+						|Bulleted list|- one thing
+						-- two things |""");
 	}
 
 	@Test
@@ -969,10 +975,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testNote() {
-		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{note:title=A Title}\n"
-				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"
-				+ "And may even have multiple paragraphs or *other* _textile_ ??markup??\n" + "{note}" + "\n"
-				+ "More text...");
+		String html = parser.parseToHtml("""
+				h1. a header
+
+				Some text
+				{note:title=A Title}
+				the body of the note
+				which may span multiple lines
+
+				And may even have multiple paragraphs or *other* _textile_ ??markup??
+				{note}\
+
+				More text...""");
 
 		assertTrue(html.contains("<p>Some text</p><div class=\"note\""));
 		assertTrue(html.contains("</p></div><p>More text...</p>"));
@@ -1021,10 +1035,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testInfo() {
-		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{info:title=A Title}\n"
-				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"
-				+ "And may even have multiple paragraphs or *other* _textile_ ??markup??\n" + "{info}" + "\n"
-				+ "More text...");
+		String html = parser.parseToHtml("""
+				h1. a header
+
+				Some text
+				{info:title=A Title}
+				the body of the note
+				which may span multiple lines
+
+				And may even have multiple paragraphs or *other* _textile_ ??markup??
+				{info}\
+
+				More text...""");
 
 		assertTrue(html.contains("<p>Some text</p><div class=\"info\""));
 		assertTrue(html.contains("</p></div><p>More text...</p>"));
@@ -1034,10 +1056,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testWarning() {
-		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{warning:title=A Title}\n"
-				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"
-				+ "And may even have multiple paragraphs or *other* _textile_ ??markup??\n" + "{warning}" + "\n"
-				+ "More text...");
+		String html = parser.parseToHtml("""
+				h1. a header
+
+				Some text
+				{warning:title=A Title}
+				the body of the note
+				which may span multiple lines
+
+				And may even have multiple paragraphs or *other* _textile_ ??markup??
+				{warning}\
+
+				More text...""");
 
 		assertTrue(html.contains("<p>Some text</p><div class=\"warning\""));
 		assertTrue(html.contains("</p></div><p>More text...</p>"));
@@ -1047,10 +1077,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testTip() {
-		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{tip:title=A Title}\n"
-				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"
-				+ "And may even have multiple paragraphs or *other* _textile_ ??markup??\n" + "{tip}" + "\n"
-				+ "More text...");
+		String html = parser.parseToHtml("""
+				h1. a header
+
+				Some text
+				{tip:title=A Title}
+				the body of the note
+				which may span multiple lines
+
+				And may even have multiple paragraphs or *other* _textile_ ??markup??
+				{tip}\
+
+				More text...""");
 
 		assertTrue(html.contains("<p>Some text</p><div class=\"tip\""));
 		assertTrue(html.contains("</p></div><p>More text...</p>"));
@@ -1062,10 +1100,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void testTipToDocBook() {
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new DocBookDocumentBuilder(out));
-		parser.parse("h1. a header\n" + "\n" + "Some text\n" + "{tip:title=A Title}\n" + "the body of the note\n"
-				+ "which may span multiple lines\n" + "\n"
-				+ "And may even have multiple paragraphs or *other* _textile_ ??markup??\n" + "{tip}" + "\n"
-				+ "More text...");
+		parser.parse("""
+				h1. a header
+
+				Some text
+				{tip:title=A Title}
+				the body of the note
+				which may span multiple lines
+
+				And may even have multiple paragraphs or *other* _textile_ ??markup??
+				{tip}\
+
+				More text...""");
 		String docbook = out.toString();
 
 		assertTrue(docbook.contains("<tip><title>A Title</title><para>the body of"));

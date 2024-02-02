@@ -54,7 +54,8 @@ public class EclipseServiceLocator extends ServiceLocator {
 					buf.append('\'');
 				}
 				throw new IllegalArgumentException(MessageFormat.format(Messages.getString("EclipseServiceLocator.1"), //$NON-NLS-1$
-						languageName, buf.length() == 0 ? Messages.getString("EclipseServiceLocator.2") //$NON-NLS-1$
+						languageName, buf.length() == 0
+								? Messages.getString("EclipseServiceLocator.2") //$NON-NLS-1$
 								: MessageFormat.format(Messages.getString("EclipseServiceLocator.3"), buf))); //$NON-NLS-1$
 			}
 		}

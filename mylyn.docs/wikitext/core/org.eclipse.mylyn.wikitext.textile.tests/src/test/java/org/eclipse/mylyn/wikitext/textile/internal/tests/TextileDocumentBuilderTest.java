@@ -33,7 +33,7 @@ import org.junit.Test;
  */
 public class TextileDocumentBuilderTest {
 
-	private static final String[] PLATFORM_NEWLINES = new String[] { //
+	private static final String[] PLATFORM_NEWLINES = { //
 			"\r\n", // Windows
 			"\r", // Mac
 			"\n", // Unix, Linux

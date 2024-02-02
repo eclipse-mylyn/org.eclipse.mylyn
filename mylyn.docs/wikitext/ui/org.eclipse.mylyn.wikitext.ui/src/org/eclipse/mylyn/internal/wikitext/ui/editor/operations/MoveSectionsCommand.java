@@ -51,10 +51,7 @@ public class MoveSectionsCommand extends AbstractDocumentCommand {
 	private final InsertLocation location;
 
 	public MoveSectionsCommand(OutlineItem target, List<OutlineItem> items, InsertLocation location) {
-		if (target == null || items == null || location == null) {
-			throw new IllegalArgumentException();
-		}
-		if (items.isEmpty()) {
+		if (target == null || items == null || location == null || items.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
 		this.target = target;

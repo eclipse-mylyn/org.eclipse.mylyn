@@ -116,7 +116,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 				} else if (p2.getLength() > p1.getLength()) {
 					return 1;
 				}
-				return Integer.valueOf(System.identityHashCode(p1)).compareTo(System.identityHashCode(p2));
+				return Integer.compare(System.identityHashCode(p1), System.identityHashCode(p2));
 			}
 		}
 

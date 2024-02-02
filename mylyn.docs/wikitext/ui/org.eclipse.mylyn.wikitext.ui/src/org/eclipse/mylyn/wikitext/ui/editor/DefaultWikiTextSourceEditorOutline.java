@@ -40,8 +40,8 @@ import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 /**
- * a default source editor outline view that presents a structured outline in a tree view based on the
- * {@link OutlineItem heading-based outline}.
+ * a default source editor outline view that presents a structured outline in a tree view based on the {@link OutlineItem heading-based
+ * outline}.
  *
  * @author David Green
  * @since 1.3

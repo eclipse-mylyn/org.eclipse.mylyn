@@ -38,7 +38,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * @author David Green
  */
 public class MarkupToDocbookTask extends MarkupTask {
-	private final List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<>();
 
 	private String docbookFilenameFormat = "$1.xml"; //$NON-NLS-1$
 
@@ -174,8 +174,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.xml</code>
+	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the input file. Default
+	 * value is <code>$1.xml</code>
 	 *
 	 * @see #setDocbookFilenameFormat(String)
 	 */
@@ -184,8 +184,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.xml</code>
+	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the input file. Default
+	 * value is <code>$1.xml</code>
 	 *
 	 * @param docbookFilenameFormat
 	 */

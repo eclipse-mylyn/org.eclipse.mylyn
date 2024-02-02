@@ -28,11 +28,10 @@ import org.osgi.framework.Bundle;
 import com.google.common.io.Resources;
 
 /**
- * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
- * locale-specific manner, much in the same way as resource bundles are. A resource path is used with the
- * {@link Locale#getDefault() default locale} to construct a search path. For example, the resource may be specified as
- * <code>help/cheatSheet.textile</code> and for the locale <tt>no_NO_NY</tt> the following resource paths would be
- * searched in the following order:
+ * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a locale-specific
+ * manner, much in the same way as resource bundles are. A resource path is used with the {@link Locale#getDefault() default locale} to
+ * construct a search path. For example, the resource may be specified as <code>help/cheatSheet.textile</code> and for the locale
+ * <tt>no_NO_NY</tt> the following resource paths would be searched in the following order:
  * <ul>
  * <li><code>help/cheatSheet_no_NO_NY.textile</code></li>
  * <li><code>help/cheatSheet_no_NO.textile</code></li>
@@ -69,7 +68,7 @@ public class HelpContent {
 		this.provider = provider;
 		this.resourcePath = resourcePath;
 		this.resourceContentLanguage = resourceContentLanguage;
-		this.markupLanguageName = markupLanguage;
+		markupLanguageName = markupLanguage;
 	}
 
 	/**
@@ -87,8 +86,7 @@ public class HelpContent {
 	}
 
 	/**
-	 * Get the help content, which may be formatted using HTML markup. If HTML markup is used, the content must be
-	 * well-formed HTML.
+	 * Get the help content, which may be formatted using HTML markup. If HTML markup is used, the content must be well-formed HTML.
 	 */
 	@SuppressWarnings("serial")
 	public String getContent() throws IOException {

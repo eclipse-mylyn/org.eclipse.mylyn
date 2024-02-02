@@ -52,7 +52,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 
 	public static final String ID = "org.eclipse.mylyn.wikitext.ui.wikiTextValidationBuilder"; //$NON-NLS-1$
 
-	private static final IProject[] NO_PROJECTS = new IProject[0];
+	private static final IProject[] NO_PROJECTS = {};
 
 	public ValidationProjectBuilder() {
 	}
@@ -70,7 +70,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 
 		// find files that need validating.  We do this first so that we can accurately represent progress
 		List<ValidationInfo> files = null;
-		if ((kind != IncrementalProjectBuilder.INCREMENTAL_BUILD && kind != IncrementalProjectBuilder.AUTO_BUILD)
+		if (kind != IncrementalProjectBuilder.INCREMENTAL_BUILD && kind != IncrementalProjectBuilder.AUTO_BUILD
 				|| resourceDelta == null) {
 			files = collect(project, monitor);
 		} else {

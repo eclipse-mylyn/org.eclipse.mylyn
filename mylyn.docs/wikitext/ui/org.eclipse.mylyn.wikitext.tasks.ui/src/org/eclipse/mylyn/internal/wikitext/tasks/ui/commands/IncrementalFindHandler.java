@@ -30,13 +30,13 @@ import org.eclipse.mylyn.commons.workbench.texteditor.AbstractTextViewerHandler;
  */
 public class IncrementalFindHandler extends AbstractTextViewerHandler implements IHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ITextViewer viewer = getTextViewer(event);
 		if (viewer != null) {
 			IFindReplaceTarget findReplaceTarget = viewer.getFindReplaceTarget();
 			if (findReplaceTarget.canPerformFind()) {
-				if (findReplaceTarget instanceof IFindReplaceTargetExtension) {
-					IFindReplaceTargetExtension extension = (IFindReplaceTargetExtension) findReplaceTarget;
+				if (findReplaceTarget instanceof IFindReplaceTargetExtension extension) {
 					extension.beginSession();
 				}
 			}

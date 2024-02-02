@@ -53,7 +53,7 @@ public class TextileTest {
 
 	@Test
 	public void testExplicitOtherStartsNewBlock() {
-		String[] types = new String[] { "pre", "bc", "bq", "p", "table", "###" };
+		String[] types = { "pre", "bc", "bq", "p", "table", "###" };
 		for (String type : types) {
 			assertTrue(Textile.explicitBlockBegins(type + ". ", 0));
 			assertTrue(Textile.explicitBlockBegins(type + ". asfsdfds", 0));
@@ -68,11 +68,11 @@ public class TextileTest {
 	@Test
 	public void testAttributes() {
 		Pattern pattern = Pattern.compile(Textile.REGEX_ATTRIBUTES);
-		String[] values = new String[] { "(someClass)", "(#someId)", "{someStyle}", "[someLanguage]",
+		String[] values = { "(someClass)", "(#someId)", "{someStyle}", "[someLanguage]",
 				"(someClass)(#someId){someStyle}", "{someStyle}(someClass)(#someId)" };
-		String[][] verify = new String[][] { { null, "someClass", null, null, null },
-				{ null, null, "someId", null, null }, { null, null, null, "someStyle", null },
-				{ null, null, null, null, "someLanguage" }, { null, "someClass", "someId", "someStyle", null },
+		String[][] verify = { { null, "someClass", null, null, null }, { null, null, "someId", null, null },
+				{ null, null, null, "someStyle", null }, { null, null, null, null, "someLanguage" },
+				{ null, "someClass", "someId", "someStyle", null },
 				{ null, "someClass", "someId", "someStyle", null } };
 
 		int i = 0;

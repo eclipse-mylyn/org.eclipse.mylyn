@@ -111,7 +111,7 @@ public class MarkupDocumentProvider extends TextFileDocumentProvider {
 			String platformEolMarker = Text.DELIMITER;
 			if (platformEolMarker.equals("\r")) { //$NON-NLS-1$
 				// bug 247777: store document with *nix line delimiter
-				// note that we don't modify the provided document here, we substitute another 
+				// note that we don't modify the provided document here, we substitute another
 				// document instead.
 				Document newDocument = new Document(document.get());
 				replaceLineDelimiters(newDocument, "\n"); //$NON-NLS-1$
@@ -122,11 +122,11 @@ public class MarkupDocumentProvider extends TextFileDocumentProvider {
 	}
 
 	/**
-	 * clean up EOL markers, since mixing markers can cause problems. For example, if the file has \n EOL markers, and
-	 * the current platform uses \r (eg on a mac) then the user adding a new line immediately before \n can result in
-	 * \r\n, which visually for the user appears to be two lines, but when the markup is parsed is treated as one line.
-	 * This can be confusing for the user as line markers affect how the markup is interpreted. Generally we want the
-	 * edited markup to render the same on all platforms, regardless of the platform-standard EOL marker.
+	 * clean up EOL markers, since mixing markers can cause problems. For example, if the file has \n EOL markers, and the current platform
+	 * uses \r (eg on a mac) then the user adding a new line immediately before \n can result in \r\n, which visually for the user appears
+	 * to be two lines, but when the markup is parsed is treated as one line. This can be confusing for the user as line markers affect how
+	 * the markup is interpreted. Generally we want the edited markup to render the same on all platforms, regardless of the
+	 * platform-standard EOL marker.
 	 */
 	public static void cleanUpEolMarkers(IDocument document) {
 		try {

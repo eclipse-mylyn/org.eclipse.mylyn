@@ -131,11 +131,9 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 						if (!isInRegion(region, hyperlinkRegion)) {
 							continue;
 						}
-					} else {
-						if (!(hyperlinkRegion.getOffset() <= region.getOffset()
-								&& (hyperlinkRegion.getOffset() + hyperlinkRegion.getLength()) >= region.getOffset())) {
-							continue;
-						}
+					} else if (!(hyperlinkRegion.getOffset() <= region.getOffset()
+							&& hyperlinkRegion.getOffset() + hyperlinkRegion.getLength() >= region.getOffset())) {
+						continue;
 					}
 					try {
 						IPath containerPath = file.getParent().getFullPath();

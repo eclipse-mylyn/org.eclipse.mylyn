@@ -16,8 +16,7 @@ package org.eclipse.mylyn.wikitext.parser;
 import java.util.Objects;
 
 /**
- * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are
- * optional.
+ * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are optional.
  *
  * @see DocumentBuilder
  * @author David Green

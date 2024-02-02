@@ -31,9 +31,9 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
- * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as
- * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.validation.problem</code>. NOTE: this
- * implementation may change in the future to use an {@link IAnnotationModel} instead of resource markers
+ * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as markers on the given
+ * resource, extending type <code>org.eclipse.mylyn.wikitext.validation.problem</code>. NOTE: this implementation may change in the future
+ * to use an {@link IAnnotationModel} instead of resource markers
  *
  * @author David Green
  * @see ValidationRule
@@ -94,7 +94,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 				IMarker marker = markerByOffset.get(problem.getOffset());
 				if (marker != null) {
 					int charEnd = marker.getAttribute(IMarker.CHAR_END, -1);
-					if ((problem.getOffset() + problem.getLength()) == charEnd) {
+					if (problem.getOffset() + problem.getLength() == charEnd) {
 						if (toMarkerSeverity(problem.getSeverity()) == marker.getAttribute(IMarker.SEVERITY, -1)) {
 							if (problem.getMessage().equals(marker.getAttribute(IMarker.MESSAGE, ""))) { //$NON-NLS-1$
 								problemIt.remove();
@@ -135,14 +135,11 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 	}
 
 	private int toMarkerSeverity(Severity severity) {
-		switch (severity) {
-		case ERROR:
-			return IMarker.SEVERITY_ERROR;
-		case WARNING:
-			return IMarker.SEVERITY_WARNING;
-		default:
-			throw new IllegalStateException(severity.name());
-		}
+		return switch (severity) {
+			case ERROR -> IMarker.SEVERITY_ERROR;
+			case WARNING -> IMarker.SEVERITY_WARNING;
+			default -> throw new IllegalStateException(severity.name());
+		};
 	}
 
 }

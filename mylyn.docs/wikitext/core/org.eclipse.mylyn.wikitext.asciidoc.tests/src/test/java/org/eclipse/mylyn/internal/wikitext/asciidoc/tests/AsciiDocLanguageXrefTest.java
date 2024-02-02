@@ -148,18 +148,20 @@ public class AsciiDocLanguageXrefTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void testInList() {
-		String text = "" //
-				+ "* <<xxx>>\n" //
-				+ "* <<file.adoc#yyy>>\n" //
-				+ "* xref:yyy[My link]\n";
+		String text = """
+				* <<xxx>>
+				* <<file.adoc#yyy>>
+				* xref:yyy[My link]
+				""";
 
 		String html = parseToHtml(text);
 
-		String expected = "<ul>" //
-				+ "<li><a href=\"#xxx\">[xxx]</a></li>"//
-				+ "<li><a href=\"file.adoc#yyy\">[file#yyy]</a></li>"//
-				+ "<li><a href=\"#yyy\">My link</a></li>"//
-				+ "</ul>";
+		String expected = """
+				<ul>\
+				<li><a href="#xxx">[xxx]</a></li>\
+				<li><a href="file.adoc#yyy">[file#yyy]</a></li>\
+				<li><a href="#yyy">My link</a></li>\
+				</ul>""";
 		assertEquals(expected, html);
 	}
 

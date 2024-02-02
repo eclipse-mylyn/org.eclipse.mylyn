@@ -22,23 +22,23 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
  */
 public class InlineHtmlBlock extends Block {
 
-   @Override
-   public boolean canStart(String line, int lineOffset) {
-       return line.startsWith("<"); //$NON-NLS-1$
-   }
+	@Override
+	public boolean canStart(String line, int lineOffset) {
+		return line.startsWith("<"); //$NON-NLS-1$
+	}
 
-   @Override
-   protected int processLineContent(String line, int offset) {
-       // empty line: start new block
-       if (markupLanguage.isEmptyLine(line)) {
-           setClosed(true);
-           return 0;
-       }
+	@Override
+	protected int processLineContent(String line, int offset) {
+		// empty line: start new block
+		if (markupLanguage.isEmptyLine(line)) {
+			setClosed(true);
+			return 0;
+		}
 
-       builder.charactersUnescaped(line);
-       builder.characters("\n"); //$NON-NLS-1$
+		builder.charactersUnescaped(line);
+		builder.characters("\n"); //$NON-NLS-1$
 
-       return -1;
-   }
+		return -1;
+	}
 
 }

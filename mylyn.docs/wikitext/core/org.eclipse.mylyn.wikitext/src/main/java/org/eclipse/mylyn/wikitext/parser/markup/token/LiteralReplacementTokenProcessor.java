@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
- * A processor that emits a literal unescaped. Useful for emitting markup that is not directly supported by the
- * {@link DocumentBuilder builder}.
+ * A processor that emits a literal unescaped. Useful for emitting markup that is not directly supported by the {@link DocumentBuilder
+ * builder}.
  *
  * @author David Green
  * @since 3.0

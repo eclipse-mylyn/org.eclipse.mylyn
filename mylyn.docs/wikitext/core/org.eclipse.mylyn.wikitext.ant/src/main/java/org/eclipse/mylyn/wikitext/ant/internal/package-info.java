@@ -14,4 +14,3 @@
  * Ant tasks that drive conversion of markup to various output formats.
  */
 package org.eclipse.mylyn.wikitext.ant.internal;
-

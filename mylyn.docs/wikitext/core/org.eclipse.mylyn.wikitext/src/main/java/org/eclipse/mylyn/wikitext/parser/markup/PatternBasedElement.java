@@ -13,9 +13,8 @@
 package org.eclipse.mylyn.wikitext.parser.markup;
 
 /**
- * An element of markup that is detected using a regular expression pattern. Serves as a means of detecting markup
- * elements and providing a factory for processors that can process the markup element. Implementations of this class
- * must be thread-safe (generally stateless).
+ * An element of markup that is detected using a regular expression pattern. Serves as a means of detecting markup elements and providing a
+ * factory for processors that can process the markup element. Implementations of this class must be thread-safe (generally stateless).
  *
  * @author David Green
  * @since 3.0
@@ -23,8 +22,8 @@ package org.eclipse.mylyn.wikitext.parser.markup;
 public abstract class PatternBasedElement implements Cloneable {
 
 	/**
-	 * Get the regular expression pattern that matches this element. Generally the pattern may be assembled into a
-	 * single larger regular expression.
+	 * Get the regular expression pattern that matches this element. Generally the pattern may be assembled into a single larger regular
+	 * expression.
 	 *
 	 * @param groupOffset
 	 *            the offset of the groups in the pattern, 0 indicating no offset
@@ -33,8 +32,8 @@ public abstract class PatternBasedElement implements Cloneable {
 	protected abstract String getPattern(int groupOffset);
 
 	/**
-	 * The number of capturing groups in the {@link #getPattern(int) pattern}. Note that implementations must take care
-	 * to return the correct value otherwise the markup language will not work correctly.
+	 * The number of capturing groups in the {@link #getPattern(int) pattern}. Note that implementations must take care to return the
+	 * correct value otherwise the markup language will not work correctly.
 	 */
 	protected abstract int getPatternGroupCount();
 

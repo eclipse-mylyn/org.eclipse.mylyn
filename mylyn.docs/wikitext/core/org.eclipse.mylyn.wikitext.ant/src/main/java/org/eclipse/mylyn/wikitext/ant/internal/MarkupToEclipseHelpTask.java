@@ -113,33 +113,32 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 	}
 
 	/**
-	 * The format of the XML table of contents output file. Consists of a pattern where the '$1' is replaced with the
-	 * filename of the input file. Default value is <code>$1-toc.xml</code>
+	 * The format of the XML table of contents output file. Consists of a pattern where the '$1' is replaced with the filename of the input
+	 * file. Default value is <code>$1-toc.xml</code>
 	 */
 	public void setXmlFilenameFormat(String xmlFilenameFormat) {
 		this.xmlFilenameFormat = xmlFilenameFormat;
 	}
 
 	/**
-	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if
-	 * the help file is in 'help/index.html' then the help prefix would be 'help'
+	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if the help file is in
+	 * 'help/index.html' then the help prefix would be 'help'
 	 */
 	public String getHelpPrefix() {
 		return helpPrefix;
 	}
 
 	/**
-	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if
-	 * the help file is in 'help/index.html' then the help prefix would be 'help'
+	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if the help file is in
+	 * 'help/index.html' then the help prefix would be 'help'
 	 */
 	public void setHelpPrefix(String helpPrefix) {
 		this.helpPrefix = helpPrefix;
 	}
 
 	/**
-	 * Indicates the heading level at which anchors of the form {@code &lt;anchor id="additions"/&gt;} should be
-	 * emitted. A level of 0 corresponds to the root of the document, and levels 1-6 correspond to heading levels h1,
-	 * h2...h6.
+	 * Indicates the heading level at which anchors of the form {@code &lt;anchor id="additions"/&gt;} should be emitted. A level of 0
+	 * corresponds to the root of the document, and levels 1-6 correspond to heading levels h1, h2...h6.
 	 * <p>
 	 * The default level is 0 (the document root)
 	 * </p>

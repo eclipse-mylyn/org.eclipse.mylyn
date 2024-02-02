@@ -14,7 +14,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tasks.ui.editor;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -68,8 +67,8 @@ import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
- * A task editor extension that uses a markup language to parse content. Provides a markup-aware source editor, and a
- * source viewer that displays markup in its intended formatted form.
+ * A task editor extension that uses a markup language to parse content. Provides a markup-aware source editor, and a source viewer that
+ * displays markup in its intended formatted form.
  *
  * @author David Green
  * @since 1.0
@@ -82,9 +81,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	private static final String MARKUP_VIEWER = "org.eclipse.mylyn.wikitext.tasks.ui.markupViewer"; //$NON-NLS-1$
 
 	/**
-	 * Provide a means to disable WikiWord linking. This feature is experimental and may be removed in a future release.
-	 * To enable this feature, set the system property <tt>MarkupTaskEditorExtension.wikiWordDisabled</tt> to
-	 * <tt>true</tt>. eg, <tt>-DMarkupTaskEditorExtension.wikiWordDisabled=true</tt>
+	 * Provide a means to disable WikiWord linking. This feature is experimental and may be removed in a future release. To enable this
+	 * feature, set the system property <tt>MarkupTaskEditorExtension.wikiWordDisabled</tt> to <tt>true</tt>. eg,
+	 * <tt>-DMarkupTaskEditorExtension.wikiWordDisabled=true</tt>
 	 */
 	private static final boolean DISABLE_WIKI_WORD = Boolean
 			.getBoolean(MarkupTaskEditorExtension.class.getSimpleName() + ".wikiWordDisabled"); //$NON-NLS-1$
@@ -246,10 +245,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null, annotationAccess,
 				EditorsUI.getSharedTextColors());
 
-		// hook the support up to the preference store
-		Iterator<AnnotationPreference> e = annotationPreferences.getAnnotationPreferences().iterator();
-		while (e.hasNext()) {
-			AnnotationPreference preference = e.next();
+		for (AnnotationPreference preference : annotationPreferences.getAnnotationPreferences()) {
 			support.setAnnotationPreference(preference);
 		}
 		support.setCursorLinePainterPreferenceKeys(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE,
@@ -273,8 +269,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	}
 
 	/**
-	 * Configures the markup language with settings from the task repository. Subclasses may override this method, but
-	 * should call <code>super.configureMarkupLanguage(taskRepository,markupLanguage)</code>.
+	 * Configures the markup language with settings from the task repository. Subclasses may override this method, but should call
+	 * <code>super.configureMarkupLanguage(taskRepository,markupLanguage)</code>.
 	 *
 	 * @param taskRepository
 	 *            the repository from which settings should be used
@@ -293,9 +289,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	}
 
 	/**
-	 * Overriding methods should set the {@link MarkupLanguage#getInternalLinkPattern() internal hyperlink pattern} of
-	 * the given markup language based on some default rules applied to the task repository URL. The default
-	 * implementation does nothing.
+	 * Overriding methods should set the {@link MarkupLanguage#getInternalLinkPattern() internal hyperlink pattern} of the given markup
+	 * language based on some default rules applied to the task repository URL. The default implementation does nothing.
 	 *
 	 * @param taskRepository
 	 *            the task repository from which settings may be obtained
@@ -439,6 +434,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	private static IAdaptable createDefaultHyperlinkDetectorContext(final TaskRepository repository) {
 		return new IAdaptable() {
+			@Override
 			@SuppressWarnings("unchecked")
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
@@ -456,8 +452,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	}
 
 	/**
-	 * bug 251657: wrap preferences so that we can alter the current line highlight based on the focus state of the
-	 * provided control. bug 273528: override workspace preferences to eliminate print margin in the task editor
+	 * bug 251657: wrap preferences so that we can alter the current line highlight based on the focus state of the provided control. bug
+	 * 273528: override workspace preferences to eliminate print margin in the task editor
 	 *
 	 * @author David Green
 	 */
@@ -470,11 +466,13 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			super(preferenceStore);
 			controlFocused = control.isFocusControl();
 			control.addFocusListener(new FocusListener() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					controlFocused = true;
 					focusChanged();
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					controlFocused = false;
 					focusChanged();
@@ -513,6 +511,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	/**
 	 * @since 1.6
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getAdapter(Class<T> adapter) {
 		if (MarkupLanguage.class == adapter) {

@@ -19,8 +19,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 import org.junit.Test;
 
 /**
- * Tests for Markdown span elements. Follows specification at
- * <a>http://daringfireball.net/projects/markdown/syntax#span</a>.
+ * Tests for Markdown span elements. Follows specification at <a>http://daringfireball.net/projects/markdown/syntax#span</a>.
  *
  * @author Stefan Seelmann
  */

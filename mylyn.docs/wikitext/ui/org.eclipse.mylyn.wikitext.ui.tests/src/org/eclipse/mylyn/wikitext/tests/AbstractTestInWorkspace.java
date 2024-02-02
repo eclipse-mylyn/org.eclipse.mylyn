@@ -80,7 +80,7 @@ public abstract class AbstractTestInWorkspace {
 
 		File folderParent = temporaryFolder.getRoot();
 
-		URI location = (new File(folderParent, projectName)).toURI();
+		URI location = new File(folderParent, projectName).toURI();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProjectDescription description = workspace.newProjectDescription(projectName);
 		description.setLocationURI(location);

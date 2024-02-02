@@ -53,8 +53,8 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
 		this.headingLevel = headingLevel;
-		this.supportedBlockTypes = Set.copyOf(requireNonNull(blockTypes));
-		this.supportedSpanTypes = Set.copyOf(requireNonNull(spanTypes));
+		supportedBlockTypes = Set.copyOf(requireNonNull(blockTypes));
+		supportedSpanTypes = Set.copyOf(requireNonNull(spanTypes));
 		this.tagNameSubstitutions = Map.copyOf(requireNonNull(tagNameSubstitutions));
 		this.spanElementStrategies = List.copyOf(requireNonNull(spanElementStrategies));
 		this.xhtmlStrict = xhtmlStrict;

@@ -15,8 +15,7 @@ package org.eclipse.mylyn.wikitext.parser;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 /**
- * Attributes that may used when creating blocks of type {@link BlockType#TABLE_CELL_HEADER} or
- * {@link BlockType#TABLE_CELL_NORMAL}.
+ * Attributes that may used when creating blocks of type {@link BlockType#TABLE_CELL_HEADER} or {@link BlockType#TABLE_CELL_NORMAL}.
  *
  * @author David Green
  * @since 3.0

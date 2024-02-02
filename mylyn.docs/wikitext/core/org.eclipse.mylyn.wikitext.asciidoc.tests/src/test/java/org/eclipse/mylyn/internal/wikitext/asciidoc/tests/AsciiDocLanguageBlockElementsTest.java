@@ -199,10 +199,12 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 	@Test
 	public void testIdWithAlternativeFormat() {
-		String text = ":idprefix: \n" + //
-				":idseparator: -\n" + //
-				"\n" + //
-				"== This is an H2\n";
+		String text = """
+				:idprefix:\s
+				:idseparator: -
+
+				== This is an H2
+				""";
 
 		String html = parseToHtml(text.toString());
 
@@ -211,16 +213,17 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 	@Test
 	public void testIdWithChangesInAlternativeFormat() {
-		String text = "" + //
-				":idprefix: .\n" + //
-				":idseparator: -\n" + //
-				"\n" + //
-				"== h2 title\n" + //
-				"\n" + //
-				":idprefix: -\n" + //
-				":idseparator: =\n" + //
-				"\n" + //
-				"=== SOME    H3\n";
+		String text = """
+				:idprefix: .
+				:idseparator: -
+
+				== h2 title
+
+				:idprefix: -
+				:idseparator: =
+
+				=== SOME    H3
+				""";
 
 		String html = parseToHtml(text.toString());
 
@@ -229,19 +232,26 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 	@Test
 	public void testMultipleTitleIds() {
-		String text = "" + //
-				"== Lorem Ipsum\n\n" + //
-				"== Lorem Ipsum\n\n" + //
-				"== Lorem Ipsum 2\n\n" + //
-				"== Lorem Ipsum 3\n\n" + //
-				"== Lorem Ipsum\n\n";
+		String text = """
+				== Lorem Ipsum
+
+				== Lorem Ipsum
+
+				== Lorem Ipsum 2
+
+				== Lorem Ipsum 3
+
+				== Lorem Ipsum
+
+				""";
 		String html = parseToHtml(text.toString());
 
-		String expected = "<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>" + //
-				"<h2 id=\"_lorem_ipsum_2\">Lorem Ipsum</h2>" + //
-				"<h2 id=\"_lorem_ipsum_2_2\">Lorem Ipsum 2</h2>" + //
-				"<h2 id=\"_lorem_ipsum_3\">Lorem Ipsum 3</h2>" + //
-				"<h2 id=\"_lorem_ipsum_4\">Lorem Ipsum</h2>";
+		String expected = """
+				<h2 id="_lorem_ipsum">Lorem Ipsum</h2>\
+				<h2 id="_lorem_ipsum_2">Lorem Ipsum</h2>\
+				<h2 id="_lorem_ipsum_2_2">Lorem Ipsum 2</h2>\
+				<h2 id="_lorem_ipsum_3">Lorem Ipsum 3</h2>\
+				<h2 id="_lorem_ipsum_4">Lorem Ipsum</h2>""";
 
 		assertEquals(expected, html);
 	}
@@ -624,13 +634,14 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 		String html = parseToHtml(
 				"= Title =\nSam One <sam.one@example.com>; Sam Two <https://example.com/samtwo[@samtwo]>\n");
 		String expectedHtml = //
-				"<h1 id=\"header\">Title</h1>" //
-						+ "<div class=\"details\">" //
-						+ "<span id=\"author\" class=\"author\">Sam One</span>" //
-						+ "<span id=\"email\" class=\"email\"><a href=\"mailto:sam.one@example.com\">sam.one@example.com</a></span>" //
-						+ "<span id=\"author2\" class=\"author\">Sam Two</span>" //
-						+ "<span id=\"email2\" class=\"email\"><a href=\"https://example.com/samtwo\">@samtwo</a></span>" //
-						+ "</div>";
+				"""
+						<h1 id="header">Title</h1>\
+						<div class="details">\
+						<span id="author" class="author">Sam One</span>\
+						<span id="email" class="email"><a href="mailto:sam.one@example.com">sam.one@example.com</a></span>\
+						<span id="author2" class="author">Sam Two</span>\
+						<span id="email2" class="email"><a href="https://example.com/samtwo">@samtwo</a></span>\
+						</div>""";
 		assertEquals(expectedHtml, html);
 	}
 
@@ -645,16 +656,17 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 				+ "----\n" //
 				+ "A block without title\n" //
 				+ "----\n");
-		assertEquals("<div class=\"listingblock\">" //
-				+ "<div class=\"title\">Title line</div>" //
-				+ "<div class=\"content\"><pre class=\"nowrap\">" //
-				+ "<code class=\"nowrap\">This block has a title<br/></code>" //
-				+ "</pre></div>" //
-				+ "</div>" //
-				+ "<div class=\"listingblock\">" //
-				+ "<div class=\"content\">" //
-				+ "<pre class=\"nowrap\">" //
-				+ "<code class=\"nowrap\">A block without title<br/></code></pre></div></div>", html);
+		assertEquals("""
+				<div class="listingblock">\
+				<div class="title">Title line</div>\
+				<div class="content"><pre class="nowrap">\
+				<code class="nowrap">This block has a title<br/></code>\
+				</pre></div>\
+				</div>\
+				<div class="listingblock">\
+				<div class="content">\
+				<pre class="nowrap">\
+				<code class="nowrap">A block without title<br/></code></pre></div></div>""", html);
 	}
 
 	@Test
@@ -671,15 +683,16 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 				+ "----\n" //
 				+ "A block without title\n" //
 				+ "----\n");
-		assertEquals("<div class=\"listingblock\">" //
-				+ "<div class=\"title\">Title line</div>" //
-				+ "<div class=\"content\"><pre class=\"nowrap\">" //
-				+ "<code class=\"nowrap\">This block has a title<br/></code>" //
-				+ "</pre></div>" //
-				+ "</div>" //
-				+ "<div class=\"listingblock\">" //
-				+ "<div class=\"content\">" //
-				+ "<pre class=\"nowrap\">" //
-				+ "<code class=\"nowrap\">A block without title<br/></code></pre></div></div>", html);
+		assertEquals("""
+				<div class="listingblock">\
+				<div class="title">Title line</div>\
+				<div class="content"><pre class="nowrap">\
+				<code class="nowrap">This block has a title<br/></code>\
+				</pre></div>\
+				</div>\
+				<div class="listingblock">\
+				<div class="content">\
+				<pre class="nowrap">\
+				<code class="nowrap">A block without title<br/></code></pre></div></div>""", html);
 	}
 }

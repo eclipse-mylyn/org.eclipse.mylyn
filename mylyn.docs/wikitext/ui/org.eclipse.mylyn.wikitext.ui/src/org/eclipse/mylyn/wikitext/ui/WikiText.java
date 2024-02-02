@@ -21,9 +21,9 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 
 /**
- * A utility class for accessing markup languages and validation. Use only in an Eclipse runtime environment. Programs
- * should use the {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those
- * programs that do not run in an Eclipse runtime) must not use this class.
+ * A utility class for accessing markup languages and validation. Use only in an Eclipse runtime environment. Programs should use the
+ * {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those programs that do not run in an Eclipse
+ * runtime) must not use this class.
  *
  * @see ServiceLocator
  * @noextend This class is not intended to be subclassed by clients.
@@ -41,8 +41,7 @@ public class WikiText {
 	}
 
 	/**
-	 * Get the file extensions that are registered for markup languages. File extensions are specified without the
-	 * leading dot.
+	 * Get the file extensions that are registered for markup languages. File extensions are specified without the leading dot.
 	 */
 	public static Set<String> getMarkupFileExtensions() {
 		return WikiTextExtensionPointReader.instance().getMarkupFileExtensions();
@@ -62,8 +61,7 @@ public class WikiText {
 	}
 
 	/**
-	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
-	 * expected file extensions.
+	 * Get a markup language for a file. A markup language is selected based on the registered languages and their expected file extensions.
 	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired
@@ -76,8 +74,8 @@ public class WikiText {
 	}
 
 	/**
-	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their
-	 * expected file extensions.
+	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their expected file
+	 * extensions.
 	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired

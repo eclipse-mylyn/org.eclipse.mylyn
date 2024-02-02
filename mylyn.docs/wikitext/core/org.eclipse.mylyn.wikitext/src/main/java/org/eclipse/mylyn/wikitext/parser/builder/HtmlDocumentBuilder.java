@@ -183,9 +183,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Copy the configuration of this builder to the provided one. After calling this method the configuration of the
-	 * other builder should be the same as this one, including stylesheets. Subclasses that have configurable settings
-	 * should override this method to ensure that those settings are properly copied.
+	 * Copy the configuration of this builder to the provided one. After calling this method the configuration of the other builder should
+	 * be the same as this one, including stylesheets. Subclasses that have configurable settings should override this method to ensure that
+	 * those settings are properly copied.
 	 *
 	 * @param other
 	 *            the builder to which settings are copied.
@@ -223,10 +223,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	public void addLinkUriProcessor(UriProcessor processor) {
 		Objects.requireNonNull(processor, "Must provide processor");
-		this.linkUriProcessors = ImmutableList.<UriProcessor> builder()
-				.addAll(linkUriProcessors)
-				.add(processor)
-				.build();
+		linkUriProcessors = ImmutableList.<UriProcessor> builder().addAll(linkUriProcessors).add(processor).build();
 	}
 
 	protected static XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
@@ -239,9 +236,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Provides an element name for the given {@code spanType} replacing the previous mapping. The new
-	 * {@code elementName} is used when the corresponding {@link SpanType} is {@link #beginSpan(SpanType, Attributes)
-	 * started}.
+	 * Provides an element name for the given {@code spanType} replacing the previous mapping. The new {@code elementName} is used when the
+	 * corresponding {@link SpanType} is {@link #beginSpan(SpanType, Attributes) started}.
 	 *
 	 * @param spanType
 	 *            the span type
@@ -297,50 +293,47 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included
-	 * in the output. Default value is true.
+	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included in the output.
+	 * Default value is true.
 	 */
 	public boolean isEmitAsDocument() {
 		return emitAsDocument;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included
-	 * in the output. Default value is true.
+	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included in the output.
+	 * Default value is true.
 	 */
 	public void setEmitAsDocument(boolean emitAsDocument) {
 		this.emitAsDocument = emitAsDocument;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is
-	 * false.
+	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is false.
 	 */
 	public boolean isEmitDtd() {
 		return emitDtd;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is
-	 * false.
+	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is false.
 	 */
 	public void setEmitDtd(boolean emitDtd) {
 		this.emitDtd = emitDtd;
 	}
 
 	/**
-	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as
-	 * <code>"utf-8"</code>: <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code> The
-	 * default is <code>"utf-8"</code>. Ignored unless {@link #isEmitAsDocument()}
+	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as <code>"utf-8"</code>:
+	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code> The default is <code>"utf-8"</code>. Ignored
+	 * unless {@link #isEmitAsDocument()}
 	 */
 	public String getEncoding() {
 		return encoding;
 	}
 
 	/**
-	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as
-	 * <code>"utf-8"</code>: <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code> The
-	 * default is <code>"utf-8"</code>.
+	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as <code>"utf-8"</code>:
+	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code> The default is <code>"utf-8"</code>.
 	 *
 	 * @param encoding
 	 *            the character encoding to use, or null if the HTML meta tag should not be emitted Ignored unless
@@ -351,8 +344,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
-	 * {@link #isEmitAsDocument()}
+	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless {@link #isEmitAsDocument()}
 	 *
 	 * @return the title or null if there is none
 	 */
@@ -361,8 +353,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
-	 * {@link #isEmitAsDocument()}
+	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless {@link #isEmitAsDocument()}
 	 *
 	 * @param title
 	 *            the title or null if there is none
@@ -372,18 +363,16 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
-	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
-	 * specified in a {@link LinkAttributes}.
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null. Setting this value will
+	 * cause all HTML anchors to have their target attribute set if it's not explicitly specified in a {@link LinkAttributes}.
 	 */
 	public String getDefaultAbsoluteLinkTarget() {
 		return defaultAbsoluteLinkTarget;
 	}
 
 	/**
-	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
-	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
-	 * specified in a {@link LinkAttributes}.
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null. Setting this value will
+	 * cause all HTML anchors to have their target attribute set if it's not explicitly specified in a {@link LinkAttributes}.
 	 */
 	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
 		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
@@ -404,9 +393,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Add a CSS stylesheet to the output document as an URL, where the CSS stylesheet is referenced as an HTML link.
-	 * Calling this method after {@link #beginDocument() starting the document} has no effect. Generates code similar to
-	 * the following: <code>
+	 * Add a CSS stylesheet to the output document as an URL, where the CSS stylesheet is referenced as an HTML link. Calling this method
+	 * after {@link #beginDocument() starting the document} has no effect. Generates code similar to the following: <code>
 	 *   &lt;link type="text/css" rel="stylesheet" href="url"/>
 	 * </code>
 	 *
@@ -422,9 +410,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Add a CSS stylesheet to the output document, where the contents of the CSS stylesheet are embedded in the HTML.
-	 * Calling this method after {@link #beginDocument() starting the document} has no effect. Generates code similar to
-	 * the following:
+	 * Add a CSS stylesheet to the output document, where the contents of the CSS stylesheet are embedded in the HTML. Calling this method
+	 * after {@link #beginDocument() starting the document} has no effect. Generates code similar to the following:
 	 *
 	 * <pre>
 	 * &lt;code&gt;
@@ -446,8 +433,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Add a CSS stylesheet to the output document. Calling this method after {@link #beginDocument() starting the
-	 * document} has no effect.
+	 * Add a CSS stylesheet to the output document. Calling this method after {@link #beginDocument() starting the document} has no effect.
 	 */
 	public void addCssStylesheet(Stylesheet stylesheet) {
 		if (stylesheet.file != null) {
@@ -473,10 +459,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are
-	 * suppressed and CSS classes are used instead, with the default styles emitted as a stylesheet in the document
-	 * head. If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as
-	 * {@link #isSuppressBuiltInStyles()}. The default is true.
+	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are suppressed and CSS
+	 * classes are used instead, with the default styles emitted as a stylesheet in the document head. If disabled and
+	 * {@link #isEmitAsDocument()} is false, this option has the same effect as {@link #isSuppressBuiltInStyles()}. The default is true.
 	 *
 	 * @see #isSuppressBuiltInStyles()
 	 */
@@ -485,19 +470,17 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are
-	 * suppressed and CSS classes are used instead, with the default styles emitted as a stylesheet in the document
-	 * head. If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as
-	 * {@link #isSuppressBuiltInStyles()}. The default is true.
+	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are suppressed and CSS
+	 * classes are used instead, with the default styles emitted as a stylesheet in the document head. If disabled and
+	 * {@link #isEmitAsDocument()} is false, this option has the same effect as {@link #isSuppressBuiltInStyles()}. The default is true.
 	 */
 	public void setUseInlineStyles(boolean useInlineStyles) {
 		this.useInlineStyles = useInlineStyles;
 	}
 
 	/**
-	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this
-	 * builder to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
-	 * the default is false.
+	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this builder to create
+	 * the desired visual effect when rendering certain types of elements, such as warnings or infos. the default is false.
 	 *
 	 * @see #isUseInlineStyles()
 	 */
@@ -506,19 +489,17 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this
-	 * builder to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
-	 * the default is false.
+	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this builder to create
+	 * the desired visual effect when rendering certain types of elements, such as warnings or infos. the default is false.
 	 */
 	public void setSuppressBuiltInStyles(boolean suppressBuiltInStyles) {
 		this.suppressBuiltInStyles = suppressBuiltInStyles;
 	}
 
 	/**
-	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
-	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
-	 * may add links, for example in a blog comment. See
-	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The default value is null.
+	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may add links, for example in a blog comment.
+	 * See <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 *
 	 * @return the rel or null if there is none.
 	 * @see LinkAttributes#getRel()
@@ -528,10 +509,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
-	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
-	 * may add links, for example in a blog comment. See
-	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The default value is null.
+	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may add links, for example in a blog comment.
+	 * See <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 *
 	 * @param linkRel
 	 *            the rel or null if there is none.
@@ -576,11 +556,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 				emitHead();
 				beginBody();
-			} else {
-				// sanity check
-				if (stylesheets != null && !stylesheets.isEmpty()) {
-					throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
-				}
+			} else // sanity check
+			if (stylesheets != null && !stylesheets.isEmpty()) {
+				throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
 			}
 		}
 
@@ -612,9 +590,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * emit the contents of the HTML head, excluding the head tag itself. Subclasses may override to change the contents
-	 * of the head. Subclasses should consider calling <code>super.emitHeadContents()</code> in order to preserve
-	 * features such as emitting the base, title and stylesheets.
+	 * emit the contents of the HTML head, excluding the head tag itself. Subclasses may override to change the contents of the head.
+	 * Subclasses should consider calling <code>super.emitHeadContents()</code> in order to preserve features such as emitting the base,
+	 * title and stylesheets.
 	 *
 	 * @see #emitHead()
 	 */
@@ -886,8 +864,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyListAttributes(Attributes attributes) {
 		applyAttributes(attributes);
-		if (attributes instanceof ListAttributes) {
-			ListAttributes listAttributes = (ListAttributes) attributes;
+		if (attributes instanceof ListAttributes listAttributes) {
 			if (listAttributes.getStart() != null) {
 				writer.writeAttribute("start", listAttributes.getStart()); //$NON-NLS-1$
 			}
@@ -896,8 +873,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyQuoteAttributes(Attributes attributes) {
 		applyAttributes(attributes);
-		if (attributes instanceof QuoteAttributes) {
-			QuoteAttributes quoteAttributes = (QuoteAttributes) attributes;
+		if (attributes instanceof QuoteAttributes quoteAttributes) {
 			if (quoteAttributes.getCitation() != null) {
 				writer.writeAttribute("cite", quoteAttributes.getCitation()); //$NON-NLS-1$
 			}
@@ -909,8 +885,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes.getTitle() != null) {
 			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
-		if (attributes instanceof TableAttributes) {
-			TableAttributes tableAttributes = (TableAttributes) attributes;
+		if (attributes instanceof TableAttributes tableAttributes) {
 			if (tableAttributes.getBgcolor() != null) {
 				writer.writeAttribute("bgcolor", tableAttributes.getBgcolor()); //$NON-NLS-1$
 			}
@@ -946,8 +921,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes.getTitle() != null) {
 			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
-		if (attributes instanceof TableRowAttributes) {
-			TableRowAttributes tableRowAttributes = (TableRowAttributes) attributes;
+		if (attributes instanceof TableRowAttributes tableRowAttributes) {
 			if (tableRowAttributes.getBgcolor() != null) {
 				writer.writeAttribute("bgcolor", tableRowAttributes.getBgcolor()); //$NON-NLS-1$
 			}
@@ -966,8 +940,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
 
-		if (attributes instanceof TableCellAttributes) {
-			TableCellAttributes tableCellAttributes = (TableCellAttributes) attributes;
+		if (attributes instanceof TableCellAttributes tableCellAttributes) {
 			if (tableCellAttributes.getScope() != null) {
 				writer.writeAttribute("scope", tableCellAttributes.getScope()); //$NON-NLS-1$
 			}
@@ -992,8 +965,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyImageAttributes(Attributes attributes) {
 		int border = 0;
 		Align align = null;
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttributes) {
 			border = imageAttributes.getBorder();
 			align = imageAttributes.getAlign();
 		}
@@ -1001,28 +973,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			String borderStyle = String.format("border-width: %spx;", border); //$NON-NLS-1$
 			String alignStyle = null;
 			if (align != null) {
-				switch (align) {
-				case Center:
-				case Right:
-				case Left:
-					alignStyle = "text-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case Bottom:
-				case Baseline:
-				case Top:
-				case Middle:
-					alignStyle = "vertical-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case Texttop:
-					alignStyle = "vertical-align: text-top;"; //$NON-NLS-1$
-					break;
-				case Absmiddle:
-					alignStyle = "vertical-align: middle;"; //$NON-NLS-1$
-					break;
-				case Absbottom:
-					alignStyle = "vertical-align: bottom;"; //$NON-NLS-1$
-					break;
-				}
+				alignStyle = switch (align) {
+					case Center, Right, Left -> "text-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+					case Bottom, Baseline, Top, Middle -> "vertical-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+					case Texttop -> "vertical-align: text-top;"; //$NON-NLS-1$
+					case Absmiddle -> "vertical-align: middle;"; //$NON-NLS-1$
+					case Absbottom -> "vertical-align: bottom;"; //$NON-NLS-1$
+				};
 			}
 			String additionalStyles = borderStyle;
 			if (alignStyle != null) {
@@ -1037,8 +994,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		applyAttributes(attributes);
 		boolean haveAlt = false;
 
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttributes) {
 			if (imageAttributes.getHeight() != -1) {
 				String val = Integer.toString(imageAttributes.getHeight());
 				if (imageAttributes.isHeightPercentage()) {
@@ -1083,8 +1039,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		applyAttributes(attributes);
 		boolean hasTarget = false;
 		String rel = linkRel;
-		if (attributes instanceof LinkAttributes) {
-			LinkAttributes linkAttributes = (LinkAttributes) attributes;
+		if (attributes instanceof LinkAttributes linkAttributes) {
 			if (linkAttributes.getTarget() != null) {
 				hasTarget = true;
 				writer.writeAttribute("target", linkAttributes.getTarget()); //$NON-NLS-1$
@@ -1147,9 +1102,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * emit the href attribute of an anchor. Subclasses may override to alter the default href or to add other
-	 * attributes such as <code>onclick</code>. Overriding classes should pass the href to
-	 * {@link #makeUrlAbsolute(String)} prior to writing it to the writer.
+	 * emit the href attribute of an anchor. Subclasses may override to alter the default href or to add other attributes such as
+	 * <code>onclick</code>. Overriding classes should pass the href to {@link #makeUrlAbsolute(String)} prior to writing it to the writer.
 	 *
 	 * @param href
 	 *            the url for the href attribute
@@ -1166,13 +1120,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Applies the {@link #getHtmlFilenameFormat() HTML filename format} to links that are missing a filename extension
-	 * using the format specified by {@link #getHtmlFilenameFormat()}.
+	 * Applies the {@link #getHtmlFilenameFormat() HTML filename format} to links that are missing a filename extension using the format
+	 * specified by {@link #getHtmlFilenameFormat()}.
 	 *
 	 * @param href
 	 *            the link
-	 * @return the given {@code href} with the {@link #getHtmlFilenameFormat() HTML filename format} applied, or the
-	 *         original {@code href} if the {@link #getHtmlFilenameFormat()} is null
+	 * @return the given {@code href} with the {@link #getHtmlFilenameFormat() HTML filename format} applied, or the original {@code href}
+	 *         if the {@link #getHtmlFilenameFormat()} is null
 	 * @see #getHtmlFilenameFormat()
 	 */
 	private String applyHtmlFilenameFormat(String href) {
@@ -1207,10 +1161,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Provides the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying
-	 * the HTML filename format enables content to have relative hyperlinks to generated files without having to specify
-	 * the filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
-	 * location of the filename. For example "$1.html". The default value is {@code null}.
+	 * Provides the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying the HTML filename
+	 * format enables content to have relative hyperlinks to generated files without having to specify the filename extension in the
+	 * hyperlink. If specified, the returned value is a pattern where "$1" indicates the location of the filename. For example "$1.html".
+	 * The default value is {@code null}.
 	 *
 	 * @see #setHtmlFilenameFormat(String)
 	 * @return the HTML filename format or {@code null}
@@ -1220,10 +1174,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Sets the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying the
-	 * HTML filename format enables content to have relative hyperlinks to generated files without having to specify the
-	 * filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
-	 * location of the filename. For example "$1.html". The default value is {@code null}.
+	 * Sets the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying the HTML filename
+	 * format enables content to have relative hyperlinks to generated files without having to specify the filename extension in the
+	 * hyperlink. If specified, the returned value is a pattern where "$1" indicates the location of the filename. For example "$1.html".
+	 * The default value is {@code null}.
 	 *
 	 * @param htmlFilenameFormat
 	 *            the HTML filename format or <code>null</code>
@@ -1236,10 +1190,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private String prependImageUrl(String imageUrl) {
-		if (prependImagePrefix == null || prependImagePrefix.length() == 0) {
-			return imageUrl;
-		}
-		if (isAbsoluteUrl(imageUrl) || imageUrl.contains("../")) { //$NON-NLS-1$
+		if (prependImagePrefix == null || prependImagePrefix.length() == 0 || isAbsoluteUrl(imageUrl) || imageUrl.contains("../")) { //$NON-NLS-1$
 			return imageUrl;
 		}
 		String url = prependImagePrefix;
@@ -1311,8 +1262,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		private final Map<String, String> attributes = new HashMap<>();
 
 		/**
-		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
-		 * similar to the following:
+		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code similar to the
+		 * following:
 		 *
 		 * <pre>
 		 * &lt;code&gt;
@@ -1335,9 +1286,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * Create a CSS stylesheet to the output document as an URL where the CSS stylesheet is referenced as an HTML
-		 * link. Calling this method after {@link #beginDocument() starting the document} has no effect. Generates code
-		 * similar to the following:
+		 * Create a CSS stylesheet to the output document as an URL where the CSS stylesheet is referenced as an HTML link. Calling this
+		 * method after {@link #beginDocument() starting the document} has no effect. Generates code similar to the following:
 		 *
 		 * <pre>
 		 *   &lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;url&quot;/&gt;
@@ -1356,8 +1306,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
-		 * similar to the following:
+		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code similar to the
+		 * following:
 		 *
 		 * <pre>
 		 * &lt;code&gt;
@@ -1382,8 +1332,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * the attributes of the stylesheet, which may be modified prior to adding to the document. Attributes
-		 * <code>href</code>, <code>type</code> and <code>rel</code> are all ignored.
+		 * the attributes of the stylesheet, which may be modified prior to adding to the document. Attributes <code>href</code>,
+		 * <code>type</code> and <code>rel</code> are all ignored.
 		 */
 		public Map<String, String> getAttributes() {
 			return attributes;
@@ -1449,9 +1399,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When
-	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
-	 * are emitted as plain text.
+	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When filtered, known HTML
+	 * entity references are converted to their numeric counterpart, and unknown entity references are emitted as plain text.
 	 *
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */
@@ -1460,9 +1409,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When
-	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
-	 * are emitted as plain text.
+	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When filtered, known HTML
+	 * entity references are converted to their numeric counterpart, and unknown entity references are emitted as plain text.
 	 *
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */

@@ -36,7 +36,7 @@ public class ReadAheadDispatcher extends NestableBlock {
 
 	public ReadAheadDispatcher(NestableBlock... blocks) {
 		this.blocks = cloneBlocks(Arrays.asList(blocks));
-		this.lookAheadReader = new LookAheadReader();
+		lookAheadReader = new LookAheadReader();
 	}
 
 	@Override
@@ -56,11 +56,9 @@ public class ReadAheadDispatcher extends NestableBlock {
 						dispatchedBlock = block;
 						break;
 					}
-				} else {
-					if (block.canStart(line, offset)) {
-						dispatchedBlock = block;
-						break;
-					}
+				} else if (block.canStart(line, offset)) {
+					dispatchedBlock = block;
+					break;
 				}
 			}
 		}

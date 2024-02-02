@@ -293,55 +293,55 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeBlock(BlockType type, Attributes attributes) {
 		switch (type) {
-		case PARAGRAPH:
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		case QUOTE:
-			return new PrefixedLineContentBlock(type, "> ", "", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
-		case BULLETED_LIST:
-		case NUMERIC_LIST:
-			if (currentBlock != null) {
-				BlockType currentBlockType = currentBlock.getBlockType();
-				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
-						|| currentBlockType == BlockType.DEFINITION_TERM) {
-					return new ListBlock(type, 1);
+			case PARAGRAPH:
+				return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case QUOTE:
+				return new PrefixedLineContentBlock(type, "> ", "", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
+			case BULLETED_LIST:
+			case NUMERIC_LIST:
+				if (currentBlock != null) {
+					BlockType currentBlockType = currentBlock.getBlockType();
+					if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+							|| currentBlockType == BlockType.DEFINITION_TERM) {
+						return new ListBlock(type, 1);
+					}
 				}
-			}
-			return new ListBlock(type, 2);
-		case LIST_ITEM:
-			if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
-				return new ListItemBlock("1. "); //$NON-NLS-1$
-			}
-			return new ListItemBlock("* "); //$NON-NLS-1$
-		case CODE:
-			return new PrefixedLineContentBlock(type, "    ", "", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ListBlock(type, 2);
+			case LIST_ITEM:
+				if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
+					return new ListItemBlock("1. "); //$NON-NLS-1$
+				}
+				return new ListItemBlock("* "); //$NON-NLS-1$
+			case CODE:
+				return new PrefixedLineContentBlock(type, "    ", "", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
-		case LINK:
-			if (attributes instanceof LinkAttributes) {
-				return new LinkBlock((LinkAttributes) attributes);
-			}
-			return new ContentBlock("<", ">", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case ITALIC:
-		case EMPHASIS:
-		case MARK:
-			return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case BOLD:
-		case STRONG:
-			return new ContentBlock("**", "**", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case CODE:
-			return new CodeSpan();
-		case DELETED:
-			return new ContentBlock("~", "~", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case LINK:
+				if (attributes instanceof LinkAttributes) {
+					return new LinkBlock((LinkAttributes) attributes);
+				}
+				return new ContentBlock("<", ">", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case ITALIC:
+			case EMPHASIS:
+			case MARK:
+				return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case BOLD:
+			case STRONG:
+				return new ContentBlock("**", "**", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case CODE:
+				return new CodeSpan();
+			case DELETED:
+				return new ContentBlock("~", "~", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -394,8 +394,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		// ![alt text](path/to/img.jpg "title")
 		String altText = ""; //$NON-NLS-1$
 		String title = ""; //$NON-NLS-1$
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttr = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttr) {
 			altText = Strings.nullToEmpty(imageAttr.getAlt());
 		}
 		if (!Strings.isNullOrEmpty(attributes.getTitle())) {

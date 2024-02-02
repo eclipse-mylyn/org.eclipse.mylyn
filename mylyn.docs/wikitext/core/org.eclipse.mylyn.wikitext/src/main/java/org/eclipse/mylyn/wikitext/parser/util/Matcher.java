@@ -20,9 +20,9 @@ package org.eclipse.mylyn.wikitext.parser.util;
  * @since 3.0
  */
 public interface Matcher {
-	public String group(int group);
+	String group(int group);
 
-	public int start(int group);
+	int start(int group);
 
-	public int end(int group);
+	int end(int group);
 }

@@ -77,7 +77,7 @@ public class CodeBlock extends NestableBlock {
 
 		// end code block
 		if (fencedBlock
-				? ((FENCED_BLOCK_END.matcher(line.substring(offset)).matches()) || !matcher.matches())
+				? FENCED_BLOCK_END.matcher(line.substring(offset)).matches() || !matcher.matches()
 				: !matcher.matches()) {
 			setClosed(true);
 			return fencedBlock ? -1 : offset;

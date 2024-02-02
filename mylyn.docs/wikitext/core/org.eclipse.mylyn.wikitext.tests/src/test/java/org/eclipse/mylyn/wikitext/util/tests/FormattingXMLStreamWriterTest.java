@@ -91,8 +91,11 @@ public class FormattingXMLStreamWriterTest {
 		writer.writeComment("test one two");
 		writer.writeEndElement();
 		writer.writeEndDocument();
-		assertEquals("<?xml version='1.0' encoding='utf-8' ?>\n" + "<root>\n" + "\t<!-- test one two -->\n" + "</root>",
-				out.toString());
+		assertEquals("""
+				<?xml version='1.0' encoding='utf-8' ?>
+				<root>
+					<!-- test one two -->
+				</root>""", out.toString());
 	}
 
 	@Test

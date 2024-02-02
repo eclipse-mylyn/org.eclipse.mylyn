@@ -39,7 +39,6 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 
 	private final class LocalReference {
 		public LocalReference(String name, int offset, int length) {
-			super();
 			this.name = name;
 			this.offset = offset;
 			this.length = length;
@@ -77,8 +76,7 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 			public void beginSpan(SpanType type, Attributes attributes) {
 				super.beginSpan(type, attributes);
 				if (type == SpanType.LINK) {
-					if (attributes instanceof LinkAttributes) {
-						LinkAttributes linkAttributes = (LinkAttributes) attributes;
+					if (attributes instanceof LinkAttributes linkAttributes) {
 						processLink(getLocator(), linkAttributes.getHref());
 					}
 				}
@@ -108,7 +106,7 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 		}
 
 		public void processLink(Locator locator, String href) {
-			if ((locator.getDocumentOffset() < offset) || (locator.getDocumentOffset() >= (offset + length))) {
+			if (locator.getDocumentOffset() < offset || locator.getDocumentOffset() >= offset + length) {
 				return;
 			}
 			if (href.length() > 0 && href.charAt(0) == '#') {

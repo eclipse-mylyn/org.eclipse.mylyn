@@ -24,8 +24,8 @@ import java.util.Map;
 import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
 
 /**
- * Extension of the {@link WikiTemplateResolver} for test purposes. You should set some content with
- * {@link #setServerContent(Map)} before using this class in your tests.
+ * Extension of the {@link WikiTemplateResolver} for test purposes. You should set some content with {@link #setServerContent(Map)} before
+ * using this class in your tests.
  */
 class TestWikiTemplateResolver extends WikiTemplateResolver {
 

@@ -44,22 +44,19 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 					if (childNodes.isEmpty() && !isHyperlinkWithTarget(element)) {
 						element.remove();
 						modifiedOne = true;
-					} else {
-						// a span with a single text child that is only whitespace is removed (text is retained)
-						if (childNodes.size() == 1) {
-							Node node = childNodes.get(0);
-							if (node instanceof TextNode) {
-								TextNode textNode = (TextNode) node;
-								String text = textNode.text();
-								if (text.trim().length() == 0) {
-									textNode.remove();
-									element.before(textNode);
-									element.remove();
-									modifiedOne = true;
-								}
-
-								normalizeTextNodes((Element) textNode.parent());
+					} else // a span with a single text child that is only whitespace is removed (text is retained)
+					if (childNodes.size() == 1) {
+						Node node = childNodes.get(0);
+						if (node instanceof TextNode textNode) {
+							String text = textNode.text();
+							if (text.trim().length() == 0) {
+								textNode.remove();
+								element.before(textNode);
+								element.remove();
+								modifiedOne = true;
 							}
+
+							normalizeTextNodes((Element) textNode.parent());
 						}
 					}
 				}

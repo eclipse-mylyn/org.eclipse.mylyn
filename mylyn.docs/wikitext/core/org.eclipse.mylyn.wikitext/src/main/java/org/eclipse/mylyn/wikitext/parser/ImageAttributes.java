@@ -79,8 +79,8 @@ public class ImageAttributes extends Attributes {
 	}
 
 	/**
-	 * Sets whether the value passed into {@link #setWidth(int)} should be treated as a percentage or as a number of
-	 * pixels. The default is false (pixels) to maintain backwards compatibility.
+	 * Sets whether the value passed into {@link #setWidth(int)} should be treated as a percentage or as a number of pixels. The default is
+	 * false (pixels) to maintain backwards compatibility.
 	 *
 	 * @param widthPercentage
 	 *            pass true if the width is specified as a percentage, false if the width is specified in pixels
@@ -92,16 +92,15 @@ public class ImageAttributes extends Attributes {
 	/**
 	 * Tells you whether the value returned from {@link #getWidth()} is the width as a percentage or in pixels.
 	 *
-	 * @return true if the width should be treated as a percentage, false if the width should be treated as an amount of
-	 *         pixels
+	 * @return true if the width should be treated as a percentage, false if the width should be treated as an amount of pixels
 	 */
 	public boolean isWidthPercentage() {
 		return widthPercentage;
 	}
 
 	/**
-	 * Sets whether the value passed into {@link #setHeight(int)} should be treated as a percentage or as a number of
-	 * pixels. The default is false (pixels) to maintain backwards compatibility.
+	 * Sets whether the value passed into {@link #setHeight(int)} should be treated as a percentage or as a number of pixels. The default is
+	 * false (pixels) to maintain backwards compatibility.
 	 *
 	 * @param heightPercentage
 	 *            pass true if the height is specified as a percentage, false if the height is specified in pixels
@@ -113,8 +112,7 @@ public class ImageAttributes extends Attributes {
 	/**
 	 * Tells you whether the value returned from {@link #getHeight()} is the height as a percentage or in pixels.
 	 *
-	 * @return true if the height should be treated as a percentage, false if the height should be treated as an amount
-	 *         of pixels
+	 * @return true if the height should be treated as a percentage, false if the height should be treated as an amount of pixels
 	 */
 	public boolean isHeightPercentage() {
 		return heightPercentage;

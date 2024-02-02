@@ -14,4 +14,3 @@
  * @author David Green
  */
 package org.eclipse.mylyn.internal.wikitext.twiki.ui;
-

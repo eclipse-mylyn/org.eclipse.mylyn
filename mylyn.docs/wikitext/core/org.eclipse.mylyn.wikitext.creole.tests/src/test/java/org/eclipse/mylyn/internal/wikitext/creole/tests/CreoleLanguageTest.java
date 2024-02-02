@@ -58,10 +58,9 @@ public class CreoleLanguageTest {
 		for (int level = 1; level <= 6; ++level) {
 			String delimiter = repeat(level, "=");
 
-			String[] headingMarkupSamples = new String[] { delimiter + " heading text ",
-					delimiter + "\t heading text \t", delimiter + "heading text" + delimiter,
-					delimiter + "\t heading text \t" + delimiter, delimiter + "heading text" + delimiter + " \t ",
-					"\t " + delimiter + "heading text", };
+			String[] headingMarkupSamples = { delimiter + " heading text ", delimiter + "\t heading text \t",
+					delimiter + "heading text" + delimiter, delimiter + "\t heading text \t" + delimiter,
+					delimiter + "heading text" + delimiter + " \t ", "\t " + delimiter + "heading text", };
 
 			for (String headingMarkup : headingMarkupSamples) {
 				String html = parser.parseToHtml(headingMarkup + "\n\npara");

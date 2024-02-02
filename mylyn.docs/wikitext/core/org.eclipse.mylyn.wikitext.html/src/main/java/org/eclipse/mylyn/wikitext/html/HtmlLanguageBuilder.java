@@ -88,9 +88,9 @@ public class HtmlLanguageBuilder {
 	/**
 	 * Adds the given {@link BlockType} to the supported syntax of the language created by this builder.
 	 * <p>
-	 * Adding {@link BlockType#TABLE}, {@link BlockType#BULLETED_LIST}, {@link BlockType#NUMERIC_LIST} or
-	 * {@link BlockType#DEFINITION_LIST} will cause the corresponding related blocks to be added. For example, adding
-	 * {@link BlockType#BULLETED_LIST} also adds {@link BlockType#LIST_ITEM}.
+	 * Adding {@link BlockType#TABLE}, {@link BlockType#BULLETED_LIST}, {@link BlockType#NUMERIC_LIST} or {@link BlockType#DEFINITION_LIST}
+	 * will cause the corresponding related blocks to be added. For example, adding {@link BlockType#BULLETED_LIST} also adds
+	 * {@link BlockType#LIST_ITEM}.
 	 * </p>
 	 *
 	 * @param blockType
@@ -115,8 +115,8 @@ public class HtmlLanguageBuilder {
 	}
 
 	/**
-	 * Adds to the syntax of the language created by this builder an {@code alternativeTagName} to be used when the
-	 * given {@link SpanType} is {@link DocumentBuilder#beginSpan(SpanType, Attributes) started}.
+	 * Adds to the syntax of the language created by this builder an {@code alternativeTagName} to be used when the given {@link SpanType}
+	 * is {@link DocumentBuilder#beginSpan(SpanType, Attributes) started}.
 	 *
 	 * @param spanType
 	 *            the span type
@@ -146,9 +146,8 @@ public class HtmlLanguageBuilder {
 	}
 
 	/**
-	 * Adds support for the {@code <font>} HTML tag as a {@link SpanType#SPAN}. The resulting document builder will
-	 * convert {@link SpanType#SPAN} with {@code size} or {@code colour} CSS rules to {@code <font>} when generating
-	 * HTML.
+	 * Adds support for the {@code <font>} HTML tag as a {@link SpanType#SPAN}. The resulting document builder will convert
+	 * {@link SpanType#SPAN} with {@code size} or {@code colour} CSS rules to {@code <font>} when generating HTML.
 	 *
 	 * @return
 	 */

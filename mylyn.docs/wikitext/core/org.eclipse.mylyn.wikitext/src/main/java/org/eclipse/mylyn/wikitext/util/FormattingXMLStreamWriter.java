@@ -284,7 +284,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	}
 
 	private void maybeIndent(boolean withNewline, boolean force) {
-		if ((childCount == 0 && !force) || preserveWhitespace()) {
+		if (childCount == 0 && !force || preserveWhitespace()) {
 			return;
 		}
 		StringBuilder buf = new StringBuilder();

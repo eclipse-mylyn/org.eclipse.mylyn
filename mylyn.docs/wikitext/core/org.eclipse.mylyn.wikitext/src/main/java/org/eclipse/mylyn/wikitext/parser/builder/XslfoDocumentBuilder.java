@@ -51,9 +51,9 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final String CSS_RULE_BORDER_STYLE = "border-style"; //$NON-NLS-1$
 
-	private static final String CSS_RULE_BORDER_WIDTH = "border-width";; //$NON-NLS-1$
+	private static final String CSS_RULE_BORDER_WIDTH = "border-width"; //$NON-NLS-1$
 
-	private static final String CSS_RULE_BORDER_COLOR = "border-color";; //$NON-NLS-1$
+	private static final String CSS_RULE_BORDER_COLOR = "border-color"; //$NON-NLS-1$
 
 	private static final String CSS_RULE_BACKGROUND_COLOR = "background-color"; //$NON-NLS-1$
 
@@ -73,7 +73,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final String CSS_RULE_FONT_STYLE = "font-style"; //$NON-NLS-1$
 
-	private static final char[] BULLET_CHARS = new char[] { '\u2022' };
+	private static final char[] BULLET_CHARS = { '\u2022' };
 
 	private static Map<BlockType, String> blockTypeToCssStyles = new HashMap<>();
 	static {
@@ -132,8 +132,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * If an outline item is set, the document builder will output XSL:FO bookmarks at the beginning of the resulting
-	 * document.
+	 * If an outline item is set, the document builder will output XSL:FO bookmarks at the beginning of the resulting document.
 	 *
 	 * @param outline
 	 *            the root outline item.
@@ -152,7 +151,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		final SpanType type;
 
 		public SpanInfo(SpanType type) {
-			super();
 			this.type = type;
 		}
 	}
@@ -187,210 +185,209 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		switch (type) {
-		case DEFINITION_LIST:
-		case BULLETED_LIST:
-		case NUMERIC_LIST:
-			writer.writeStartElement(foNamespaceUri, "list-block"); //$NON-NLS-1$
-			writer.writeAttribute("provisional-label-separation", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("provisional-distance-between-starts", "1.2em"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (findBlockInfo(BlockType.LIST_ITEM) == null) {
-				addSpaceBefore();
-			}
-			break;
-		case DEFINITION_ITEM:
-			if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
-				throw new IllegalStateException();
-			}
-			boolean firstItem = false;
-			if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_TERM) {
-				firstItem = true;
-				writer.writeEndElement(); // list-item-label
-				--parentBlock.size;
+			case DEFINITION_LIST:
+			case BULLETED_LIST:
+			case NUMERIC_LIST:
+				writer.writeStartElement(foNamespaceUri, "list-block"); //$NON-NLS-1$
+				writer.writeAttribute("provisional-label-separation", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("provisional-distance-between-starts", "1.2em"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (findBlockInfo(BlockType.LIST_ITEM) == null) {
+					addSpaceBefore();
+				}
+				break;
+			case DEFINITION_ITEM:
+				if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
+					throw new IllegalStateException();
+				}
+				boolean firstItem = false;
+				if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_TERM) {
+					firstItem = true;
+					writer.writeEndElement(); // list-item-label
+					--parentBlock.size;
 
-				writer.writeStartElement(foNamespaceUri, "list-item-body"); //$NON-NLS-1$
-				++parentBlock.size;
-				writer.writeAttribute("start-indent", "body-start()"); //$NON-NLS-1$ //$NON-NLS-2$
-				writer.writeEmptyElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			}
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			writer.writeAttribute("space-before", firstItem ? "1.2em" : "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			break;
-		case DEFINITION_TERM:
-			if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
-				throw new IllegalStateException();
-			}
-			if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_ITEM) {
-				writer.writeEndElement(); // list-item-body
-				--parentBlock.size;
-				writer.writeEndElement(); // list-item
-				--parentBlock.size;
-			}
-			if (parentBlock.previousChild == null || parentBlock.previousChild.type != BlockType.DEFINITION_TERM) {
+					writer.writeStartElement(foNamespaceUri, "list-item-body"); //$NON-NLS-1$
+					++parentBlock.size;
+					writer.writeAttribute("start-indent", "body-start()"); //$NON-NLS-1$ //$NON-NLS-2$
+					writer.writeEmptyElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				}
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				writer.writeAttribute("space-before", firstItem ? "1.2em" : "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				break;
+			case DEFINITION_TERM:
+				if (parentBlock == null || parentBlock.type != BlockType.DEFINITION_LIST) {
+					throw new IllegalStateException();
+				}
+				if (parentBlock.previousChild != null && parentBlock.previousChild.type == BlockType.DEFINITION_ITEM) {
+					writer.writeEndElement(); // list-item-body
+					--parentBlock.size;
+					writer.writeEndElement(); // list-item
+					--parentBlock.size;
+				}
+				if (parentBlock.previousChild == null || parentBlock.previousChild.type != BlockType.DEFINITION_TERM) {
+					writer.writeStartElement(foNamespaceUri, "list-item"); //$NON-NLS-1$
+					writer.writeAttribute("space-before", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$
+					++parentBlock.size;
+					writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
+					writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
+					++parentBlock.size;
+				}
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				if (attrs == null || !attrs.containsKey("font-weight")) { //$NON-NLS-1$
+					writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
+				}
+				break;
+			case LIST_ITEM:
+				BlockInfo listInfo = getListBlockInfo();
+				++listInfo.listItemCount;
 				writer.writeStartElement(foNamespaceUri, "list-item"); //$NON-NLS-1$
-				writer.writeAttribute("space-before", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$
-				++parentBlock.size;
-				writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
-				writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
-				++parentBlock.size;
-			}
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			if (attrs == null || !attrs.containsKey("font-weight")) { //$NON-NLS-1$
-				writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
-			}
-			break;
-		case LIST_ITEM:
-			BlockInfo listInfo = getListBlockInfo();
-			++listInfo.listItemCount;
-			writer.writeStartElement(foNamespaceUri, "list-item"); //$NON-NLS-1$
 //			addSpaceBefore();
 
-			writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
-			writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			configureFontSize(0);
-			// FIXME: nested list numbering, list style
-			if (listInfo.type == BlockType.NUMERIC_LIST) {
-				if (attributes instanceof ListAttributes) {
-					// start attribute
-					ListAttributes listAttributes = (ListAttributes) attributes;
-					if (listAttributes.getStart() != null) {
-						try {
-							thisInfo.listItemCount = Integer.parseInt(listAttributes.getStart(), 10) - 1;
-						} catch (NumberFormatException e) {
-							// ignore
+				writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
+				writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				configureFontSize(0);
+				// FIXME: nested list numbering, list style
+				if (listInfo.type == BlockType.NUMERIC_LIST) {
+					if (attributes instanceof ListAttributes listAttributes) {
+						// start attribute
+						if (listAttributes.getStart() != null) {
+							try {
+								thisInfo.listItemCount = Integer.parseInt(listAttributes.getStart(), 10) - 1;
+							} catch (NumberFormatException e) {
+								// ignore
+							}
 						}
 					}
-				}
-				writer.writeCharacters(String.format("%s.", listInfo.listItemCount)); //$NON-NLS-1$
-			} else {
-				writer.writeCharacters(BULLET_CHARS, 0, BULLET_CHARS.length);
-			}
-			writer.writeEndElement(); // block
-			writer.writeEndElement(); // list-item-label
-
-			writer.writeStartElement(foNamespaceUri, "list-item-body"); //$NON-NLS-1$
-			++thisInfo.size;
-			writer.writeAttribute("start-indent", "body-start()"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			configureFontSize(0);
-			++thisInfo.size;
-
-			break;
-		case FOOTNOTE:
-		case PARAGRAPH:
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			addSpaceBefore();
-			break;
-		case CODE:
-		case PREFORMATTED:
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			writer.writeAttribute("hyphenate", "false"); //$NON-NLS-1$ //$NON-NLS-2$
-//			writer.writeAttribute("wrap-option", "no-wrap"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("white-space-collapse", "false"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("white-space-treatment", "preserve"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("linefeed-treatment", "preserve"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("text-align", "start"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			addSpaceBefore();
-			break;
-		case QUOTE:
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			// indent
-			indentLeftAndRight(attrs, "2em"); //$NON-NLS-1$
-			addSpaceBefore();
-			break;
-		case DIV:
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			// no space before
-			break;
-		case INFORMATION:
-		case NOTE:
-		case TIP:
-		case WARNING:
-		case PANEL:
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
-				configureFontSize(0);
-			}
-			indentLeftAndRight(attrs, "2em"); //$NON-NLS-1$
-			addSpaceBefore();
-
-			// create the titled panel effect if a title is specified
-			if (attributes.getTitle() != null || configuration.panelText) {
-				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-				if (configuration.panelText) {
-					String text = null;
-					switch (type) {
-					case NOTE:
-						text = Messages.getString("XslfoDocumentBuilder.Note"); //$NON-NLS-1$
-						break;
-					case TIP:
-						text = Messages.getString("XslfoDocumentBuilder.Tip"); //$NON-NLS-1$
-						break;
-					case WARNING:
-						text = Messages.getString("XslfoDocumentBuilder.Warning"); //$NON-NLS-1$
-						break;
-					}
-					if (text != null) {
-						writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
-						writer.writeAttribute("font-style", "italic"); //$NON-NLS-1$//$NON-NLS-2$
-						characters(text);
-						writer.writeEndElement(); // inline
-					}
-				}
-				if (attributes.getTitle() != null) {
-					writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
-					writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
-					characters(attributes.getTitle());
-					writer.writeEndElement(); // inline
+					writer.writeCharacters(String.format("%s.", listInfo.listItemCount)); //$NON-NLS-1$
+				} else {
+					writer.writeCharacters(BULLET_CHARS, 0, BULLET_CHARS.length);
 				}
 				writer.writeEndElement(); // block
-			}
+				writer.writeEndElement(); // list-item-label
 
-			break;
-		case TABLE:
-			writer.writeStartElement(foNamespaceUri, "table"); //$NON-NLS-1$
-			applyTableAttributes(attributes);
-			writer.writeStartElement(foNamespaceUri, "table-body"); //$NON-NLS-1$
-			++thisInfo.size;
-			break;
-		case TABLE_CELL_HEADER:
-		case TABLE_CELL_NORMAL:
-			writer.writeStartElement(foNamespaceUri, "table-cell"); //$NON-NLS-1$
-			applyTableCellAttributes(attributes);
-			writer.writeAttribute("padding-left", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("padding-right", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("padding-top", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeAttribute("padding-bottom", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
-			writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
-			if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+				writer.writeStartElement(foNamespaceUri, "list-item-body"); //$NON-NLS-1$
+				++thisInfo.size;
+				writer.writeAttribute("start-indent", "body-start()"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
 				configureFontSize(0);
-			}
-			++thisInfo.size;
-			break;
-		case TABLE_ROW:
-			writer.writeStartElement(foNamespaceUri, "table-row"); //$NON-NLS-1$
-			applyTableRowAttributes(attributes);
-			break;
-		default:
-			throw new IllegalStateException(type.name());
+				++thisInfo.size;
+
+				break;
+			case FOOTNOTE:
+			case PARAGRAPH:
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				addSpaceBefore();
+				break;
+			case CODE:
+			case PREFORMATTED:
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				writer.writeAttribute("hyphenate", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+//			writer.writeAttribute("wrap-option", "no-wrap"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("white-space-collapse", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("white-space-treatment", "preserve"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("linefeed-treatment", "preserve"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("text-align", "start"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				addSpaceBefore();
+				break;
+			case QUOTE:
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				// indent
+				indentLeftAndRight(attrs, "2em"); //$NON-NLS-1$
+				addSpaceBefore();
+				break;
+			case DIV:
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				// no space before
+				break;
+			case INFORMATION:
+			case NOTE:
+			case TIP:
+			case WARNING:
+			case PANEL:
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				indentLeftAndRight(attrs, "2em"); //$NON-NLS-1$
+				addSpaceBefore();
+
+				// create the titled panel effect if a title is specified
+				if (attributes.getTitle() != null || configuration.panelText) {
+					writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+					if (configuration.panelText) {
+						String text = null;
+						switch (type) {
+							case NOTE:
+								text = Messages.getString("XslfoDocumentBuilder.Note"); //$NON-NLS-1$
+								break;
+							case TIP:
+								text = Messages.getString("XslfoDocumentBuilder.Tip"); //$NON-NLS-1$
+								break;
+							case WARNING:
+								text = Messages.getString("XslfoDocumentBuilder.Warning"); //$NON-NLS-1$
+								break;
+						}
+						if (text != null) {
+							writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
+							writer.writeAttribute("font-style", "italic"); //$NON-NLS-1$//$NON-NLS-2$
+							characters(text);
+							writer.writeEndElement(); // inline
+						}
+					}
+					if (attributes.getTitle() != null) {
+						writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
+						writer.writeAttribute("font-weight", "bold"); //$NON-NLS-1$//$NON-NLS-2$
+						characters(attributes.getTitle());
+						writer.writeEndElement(); // inline
+					}
+					writer.writeEndElement(); // block
+				}
+
+				break;
+			case TABLE:
+				writer.writeStartElement(foNamespaceUri, "table"); //$NON-NLS-1$
+				applyTableAttributes(attributes);
+				writer.writeStartElement(foNamespaceUri, "table-body"); //$NON-NLS-1$
+				++thisInfo.size;
+				break;
+			case TABLE_CELL_HEADER:
+			case TABLE_CELL_NORMAL:
+				writer.writeStartElement(foNamespaceUri, "table-cell"); //$NON-NLS-1$
+				applyTableCellAttributes(attributes);
+				writer.writeAttribute("padding-left", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("padding-right", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("padding-top", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("padding-bottom", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeStartElement(foNamespaceUri, "block"); //$NON-NLS-1$
+				if (attrs == null || !attrs.containsKey("font-size")) { //$NON-NLS-1$
+					configureFontSize(0);
+				}
+				++thisInfo.size;
+				break;
+			case TABLE_ROW:
+				writer.writeStartElement(foNamespaceUri, "table-row"); //$NON-NLS-1$
+				applyTableRowAttributes(attributes);
+				break;
+			default:
+				throw new IllegalStateException(type.name());
 		}
 
 		if (attrs != null) {
@@ -445,8 +442,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		// applyAttributes(attributes);
 
 		boolean haveWidth = false;
-		if (attributes instanceof TableAttributes) {
-			TableAttributes tableAttributes = (TableAttributes) attributes;
+		if (attributes instanceof TableAttributes tableAttributes) {
 			if (tableAttributes.getBgcolor() != null) {
 				writer.writeAttribute(CSS_RULE_BACKGROUND_COLOR, tableAttributes.getBgcolor());
 			}
@@ -483,8 +479,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void applyTableCellAttributes(Attributes attributes) {
-		if (attributes instanceof TableCellAttributes) {
-			TableCellAttributes cellAttributes = (TableCellAttributes) attributes;
+		if (attributes instanceof TableCellAttributes cellAttributes) {
 			if (cellAttributes.getBgcolor() != null) {
 				writer.writeAttribute(CSS_RULE_BACKGROUND_COLOR, cellAttributes.getBgcolor());
 			}
@@ -516,8 +511,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void applyTableRowAttributes(Attributes attributes) {
-		if (attributes instanceof TableRowAttributes) {
-			TableRowAttributes rowAttributes = (TableRowAttributes) attributes;
+		if (attributes instanceof TableRowAttributes rowAttributes) {
 			if (rowAttributes.getBgcolor() != null) {
 				writer.writeAttribute(CSS_RULE_BACKGROUND_COLOR, rowAttributes.getBgcolor());
 			}
@@ -541,8 +535,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private BlockInfo getListBlockInfo() {
 		for (int x = elementInfos.size() - 1; x >= 0; --x) {
 			ElementInfo elementInfo = elementInfos.get(x);
-			if (elementInfo instanceof BlockInfo) {
-				BlockInfo info = (BlockInfo) elementInfo;
+			if (elementInfo instanceof BlockInfo info) {
 				if (info.type == BlockType.BULLETED_LIST || info.type == BlockType.NUMERIC_LIST
 						|| info.type == BlockType.DEFINITION_LIST) {
 					return info;
@@ -555,8 +548,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private BlockInfo findBlockInfo(BlockType type) {
 		for (int x = elementInfos.size() - 1; x >= 0; --x) {
 			ElementInfo elementInfo = elementInfos.get(x);
-			if (elementInfo instanceof BlockInfo) {
-				BlockInfo info = (BlockInfo) elementInfo;
+			if (elementInfo instanceof BlockInfo info) {
 				if (info.type == type) {
 					return info;
 				}
@@ -932,8 +924,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyImageAttributes(Attributes attributes) {
 		boolean sizeSpecified = false;
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttributes) {
 			if (imageAttributes.getWidth() > 0) {
 				sizeSpecified = true;
 				emitImageSize("width", imageAttributes.getWidth(), imageAttributes.isWidthPercentage()); //$NON-NLS-1$
@@ -991,19 +982,16 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			writer.writeAttribute("internal-destination", destinationUrl.substring(1)); //$NON-NLS-1$
-		} else {
-			if (configuration.showExternalLinks) {
-				if (configuration.underlineLinks) {
-					writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
+		} else if (configuration.showExternalLinks) {
+			if (configuration.underlineLinks) {
+				writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 
 	/**
-	 * The current configuration of this builder. The returned value is mutable and changes to it affect this builder's
-	 * configuration.
+	 * The current configuration of this builder. The returned value is mutable and changes to it affect this builder's configuration.
 	 *
 	 * @see Configuration Configuration class for configurable settings
 	 */
@@ -1152,10 +1140,10 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 *            value of the right margin in cm
 		 */
 		public Margins(float top, float bottom, float left, float right) {
-			this.marginTop = top;
-			this.marginBottom = bottom;
-			this.marginLeft = left;
-			this.marginRight = right;
+			marginTop = top;
+			marginBottom = bottom;
+			marginLeft = left;
+			marginRight = right;
 		}
 
 		/**
@@ -1237,17 +1225,17 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * A class that encapsulates all configurable settings of the {@link XslfoDocumentBuilder}. This class implements
-	 * the template design pattern via {@link Configuration#clone()}.
+	 * A class that encapsulates all configurable settings of the {@link XslfoDocumentBuilder}. This class implements the template design
+	 * pattern via {@link Configuration#clone()}.
 	 *
 	 * @author David Green
 	 * @author Torkild U. Resheim, MARINTEK
 	 */
 	public static class Configuration implements Cloneable {
 
-		private float[] fontSizes = new float[] { 12.0f, 18.0f, 15.0f, 13.2f, 12.0f, 10.4f, 8.0f };
+		private float[] fontSizes = { 12.0f, 18.0f, 15.0f, 13.2f, 12.0f, 10.4f, 8.0f };
 
-		private final float[] fontSizeMultipliers = new float[] { 1.0f, 1.5f, 1.25f, 1.1f, 1.0f, 0.83f, 0.67f };
+		private final float[] fontSizeMultipliers = { 1.0f, 1.5f, 1.25f, 1.1f, 1.0f, 0.83f, 0.67f };
 
 		private boolean pageBreakOnHeading1 = true;
 
@@ -1341,8 +1329,8 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * The font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
-		 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
+		 * The font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the {@link #getFontSize()
+		 * base font size} by the multiplier to determine the size of a font for a heading.
 		 *
 		 * @return an array of size 7, where position 1-6 correspond to headings h1 to h6
 		 */
@@ -1423,16 +1411,16 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type
-		 * {@link BlockType#NOTE}, {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
+		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type {@link BlockType#NOTE},
+		 * {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
 		 */
 		public boolean isPanelText() {
 			return panelText;
 		}
 
 		/**
-		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type
-		 * {@link BlockType#NOTE}, {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
+		 * indicate if the text 'Note: ', 'Tip: ', and 'Warning: ' should be added to blocks of type {@link BlockType#NOTE},
+		 * {@link BlockType#TIP}, and {@link BlockType#WARNING} respectively.
 		 */
 		public void setPanelText(boolean panelText) {
 			this.panelText = panelText;
@@ -1613,7 +1601,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 */
 		public void setBodyBeforeRegion(Region region) {
 			region.setName("before"); //$NON-NLS-1$
-			this.bodyBeforeRegion = region;
+			bodyBeforeRegion = region;
 		}
 
 		/**
@@ -1628,7 +1616,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 */
 		public void setBodyAfterRegion(Region region) {
 			region.setName("after"); //$NON-NLS-1$
-			this.bodyAfterRegion = region;
+			bodyAfterRegion = region;
 		}
 
 		/**
@@ -1643,7 +1631,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 */
 		public void setBodyStartRegion(Region region) {
 			region.setName("start"); //$NON-NLS-1$
-			this.bodyStartRegion = region;
+			bodyStartRegion = region;
 		}
 
 		/**
@@ -1658,7 +1646,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 */
 		public void setBodyEndRegion(Region region) {
 			region.setName("end"); //$NON-NLS-1$
-			this.bodyEndRegion = region;
+			bodyEndRegion = region;
 		}
 
 		/**

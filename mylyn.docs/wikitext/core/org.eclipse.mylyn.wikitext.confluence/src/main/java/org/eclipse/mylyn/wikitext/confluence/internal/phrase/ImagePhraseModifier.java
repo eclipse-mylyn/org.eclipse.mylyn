@@ -56,6 +56,7 @@ public class ImagePhraseModifier extends PatternBasedElement {
 			final ImageAttributes attributes = new ImageAttributes();
 			if (imageOptions != null) {
 				Options.parseOptions(imageOptions, new Handler() {
+					@Override
 					public void setOption(String key, String value) {
 						if ("alt".equalsIgnoreCase(key)) { //$NON-NLS-1$
 							attributes.setAlt(value);
@@ -86,6 +87,7 @@ public class ImagePhraseModifier extends PatternBasedElement {
 						}
 					}
 
+					@Override
 					public void setOption(String option) {
 						// ignore
 					}

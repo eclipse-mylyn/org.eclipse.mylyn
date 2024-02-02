@@ -23,7 +23,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
  */
 public class HeadingBlock extends Block {
 
-	private static final Pattern pattern = Pattern.compile("\\s*(\\={1,6})\\s*([^=]*[^=\\s])\\s*\\1(?:\\s+\\#(\\S+)?)?\\s*"); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern
+			.compile("\\s*(\\={1,6})\\s*([^=]*[^=\\s])\\s*\\1(?:\\s+\\#(\\S+)?)?\\s*"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

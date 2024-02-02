@@ -25,7 +25,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  */
 public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 
-	private static final Object[] NO_CHILDREN = new Object[0];
+	private static final Object[] NO_CHILDREN = {};
 
 	private static OutlineItemWorkbenchAdapter instance = new OutlineItemWorkbenchAdapter();
 

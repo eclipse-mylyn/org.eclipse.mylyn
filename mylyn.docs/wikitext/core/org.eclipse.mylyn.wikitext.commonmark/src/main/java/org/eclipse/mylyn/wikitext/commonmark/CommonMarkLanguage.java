@@ -84,7 +84,7 @@ public class CommonMarkLanguage extends MarkupLanguage {
 	@Override
 	public CommonMarkLanguage clone() {
 		CommonMarkLanguage language = (CommonMarkLanguage) super.clone();
-		language.strictlyConforming = this.strictlyConforming;
+		language.strictlyConforming = strictlyConforming;
 		return language;
 	}
 }

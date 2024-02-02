@@ -54,9 +54,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 	public boolean acceptsObject(Object object) {
 		if (object instanceof OutlineItem) {
 			return true;
-		} else if (object instanceof IFile) {
-			IFile file = (IFile) object;
-
+		} else if (object instanceof IFile file) {
 			try {
 				IContentDescription description = file.getContentDescription();
 				if (description != null) {
@@ -101,10 +99,9 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) object;
+		if (object instanceof OutlineItem item) {
 			if (!item.getChildren().isEmpty()) {
-				List<String> handles = new ArrayList<String>(item.getChildren().size());
+				List<String> handles = new ArrayList<>(item.getChildren().size());
 				for (OutlineItem child : item.getChildren()) {
 					handles.add(getHandleIdentifier(child));
 				}
@@ -147,8 +144,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 		} catch (Exception e) {
 			return null;
 		}
-		if (resource instanceof IFile) {
-			IFile file = (IFile) resource;
+		if (resource instanceof IFile file) {
 			if (acceptsObject(file)) {
 				OutlineItem outline = getOutline(file);
 				if (outline != null) {
@@ -164,8 +160,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 
 	@Override
 	public String getLabel(Object object) {
-		if (object instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) object;
+		if (object instanceof OutlineItem item) {
 			if (item.getParent() == null) {
 				return getFile(item).getName();
 			} else {
@@ -210,8 +205,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 	@Override
 	public String getParentHandle(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) object;
+		if (object instanceof OutlineItem item) {
 			if (item.getParent() != null) {
 				return getHandleIdentifier(item.getParent());
 			} else {
@@ -227,8 +221,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 	@Override
 	public boolean isDocument(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) object;
+		if (object instanceof OutlineItem item) {
 			return item.getParent() == null;
 		}
 		return false;
@@ -236,8 +229,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 
 	@Override
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof OutlineItem) {
-			OutlineItem item = (OutlineItem) object;
+		if (object instanceof OutlineItem item) {
 			return item.getResourcePath() + HANDLE_FILE_SEPARATOR + item.getId();
 		} else if (object instanceof IFile && acceptsObject(object)) {
 			return ((IFile) object).getFullPath().toString();
@@ -254,7 +246,7 @@ public class WikiTextContextStructureBridge extends AbstractContextStructureBrid
 		// FIXME: is editor integration the way to go?? we probably need some kind of core model
 		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (editorPart != null) {
-			OutlineItem outline = (OutlineItem) editorPart.getAdapter(OutlineItem.class);
+			OutlineItem outline = editorPart.getAdapter(OutlineItem.class);
 			if (outline != null) {
 				return outline;
 			}

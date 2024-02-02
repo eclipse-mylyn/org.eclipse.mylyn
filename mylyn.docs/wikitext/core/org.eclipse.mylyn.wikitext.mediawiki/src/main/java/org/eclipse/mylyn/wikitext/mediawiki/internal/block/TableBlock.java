@@ -23,8 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * an implementation of MediaWiki tables, see <a
- * href="http://www.mediawiki.org/wiki/Help:Tables">MediaWiki:Help:Tables</a> for details
+ * an implementation of MediaWiki tables, see <a href="http://www.mediawiki.org/wiki/Help:Tables">MediaWiki:Help:Tables</a> for details
  * 
  * @author David Green
  * @author Daniel Migowski bug 274730 tables having mixed headers/normal cells
@@ -134,7 +133,7 @@ public class TableBlock extends Block {
 					Matcher cellMatcher = cellPattern.matcher(line);
 					if (cellMatcher.matches()) {
 						String kind = cellMatcher.group(1);
-						BlockType type = ("!".equals(kind)) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL; //$NON-NLS-1$
+						BlockType type = "!".equals(kind) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL; //$NON-NLS-1$
 
 						String contents = cellMatcher.group(2);
 						if (contents == null) {

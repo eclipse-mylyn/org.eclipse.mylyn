@@ -430,8 +430,15 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testBlockQuote_bug304765() {
 		assertMarkup(
 				"<blockquote><p>src/<br/>  main/<br/>    java/  (Java src folder)<br/>      META-INF<br/>     file.txt</p><p>a</p></blockquote>",
-				"bq.. src/\n" + "  main/\n" + "    java/  (Java src folder)\n" + "      META-INF\n"
-						+ "     file.txt\n\n  \na");
+				"""
+						bq.. src/
+						  main/
+						    java/  (Java src folder)
+						      META-INF
+						     file.txt
+
+						 \s
+						a""");
 
 	}
 
@@ -656,7 +663,10 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableWithAttributes2() throws IOException {
-		String html = parser.parseToHtml("table{border:1px solid black;}.\n" + "|This|is|a|row|\n" + "|This|is|a|row|");
+		String html = parser.parseToHtml("""
+				table{border:1px solid black;}.
+				|This|is|a|row|
+				|This|is|a|row|""");
 
 		assertTrue(html.contains(
 				"<table style=\"border:1px solid black;\"><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr></table>"));
@@ -702,9 +712,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testSimplePhraseModifiers() throws IOException {
-		String[][] pairs = new String[][] { { "**", "b" }, { "??", "cite" }, { "__", "i" }, { "_", "em" },
-				{ "*", "strong" }, { "-", "del" }, { "+", "ins" }, { "~", "sub" }, { "^", "sup" }, { "%", "span" },
-				{ "@", "code" }, };
+		String[][] pairs = { { "**", "b" }, { "??", "cite" }, { "__", "i" }, { "_", "em" }, { "*", "strong" },
+				{ "-", "del" }, { "+", "ins" }, { "~", "sub" }, { "^", "sup" }, { "%", "span" }, { "@", "code" }, };
 		for (String[] pair : pairs) {
 			initParser();
 			String html = parser.parseToHtml("a paragraph with " + pair[0] + "content foo bar baz" + pair[0]);
@@ -757,7 +766,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testDeletedBug338284() {
-		Map<String, String> markupAndExpected = new LinkedHashMap<String, String>();
+		Map<String, String> markupAndExpected = new LinkedHashMap<>();
 		markupAndExpected.put("Foo -one two-three four-", "<p>Foo <del>one two-three four</del></p>");
 		markupAndExpected.put("Foo -one two- three four-", "<p>Foo <del>one two</del> three four-</p>");
 		markupAndExpected.put("-one two-", "<p><del>one two</del></p>");
@@ -1003,8 +1012,10 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser
 				.parseToHtml("notextile.. foo <b>bar</b>\n<i>baz</i>\n\nnotextile *here*\n\np. textile *here*");
 
-		assertTrue(Pattern.compile("<body>foo <b>bar</b>\\s+<i>baz</i>" + "\\s*notextile \\*here\\*"
-				+ "\\s+<p>textile <strong>here</strong></p></body>").matcher(html).find());
+		assertTrue(Pattern.compile("""
+				<body>foo <b>bar</b>\\s+<i>baz</i>\
+				\\s*notextile \\*here\\*\
+				\\s+<p>textile <strong>here</strong></p></body>""").matcher(html).find());
 	}
 
 	@Test
@@ -1223,7 +1234,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testHyperlinkTailNegative() throws IOException {
-		String[] tails = new String[] { ",", ".", ":", ";" };
+		String[] tails = { ",", ".", ":", ";" };
 		for (String tail : tails) {
 			String html = parser
 					.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail + " to something");
@@ -1234,7 +1245,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testHyperlinkTailPositive() throws IOException {
-		String[] tails = new String[] { ")" };
+		String[] tails = { ")" };
 		for (String tail : tails) {
 			String html = parser
 					.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail + " to something");
@@ -1400,7 +1411,12 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testParagraphWithLeadingSpace() {
-		String markup = " <div>\n\n" + "some text\n\n" + " </div>";
+		String markup = """
+				 <div>
+
+				some text
+
+				 </div>""";
 		String html = parser.parseToHtml(markup);
 
 		assertTrue(html.contains("<body><div><p>some text</p></div></body>"));
@@ -1408,7 +1424,11 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testParagraphWithLeadingSpace2() {
-		String markup = " para text\n" + "para line 2\n" + "\n" + "new para";
+		String markup = """
+				 para text
+				para line 2
+
+				new para""";
 		String html = parser.parseToHtml(markup);
 
 		assertTrue(Pattern
@@ -1472,8 +1492,12 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testNamedLinks() {
-		String markup = "I am crazy about \"TextileJ\":textilej\n" + "and \"it's\":textilej \"all\":textilej I ever\n"
-				+ "\"link to\":textilej!\n\n" + "[textilej]https://textile-j.dev.java.net";
+		String markup = """
+				I am crazy about "TextileJ":textilej
+				and "it's":textilej "all":textilej I ever
+				"link to":textilej!
+
+				[textilej]https://textile-j.dev.java.net""";
 		String html = parser.parseToHtml(markup);
 
 		assertTrue(html.contains(
@@ -1596,7 +1620,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testEntityReferences() {
-		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
+		String[] entities = { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
 		for (String entity : entities) {
 			String markup = "text &" + entity + ";";
 			String html = parser.parseToHtml(markup);
@@ -1617,7 +1641,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testEntityReferences_NegativeMatch() {
-		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
+		String[] entities = { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
 		for (String entity : entities) {
 			String markup = "text &" + entity + " ;";
 			String html = parser.parseToHtml(markup);

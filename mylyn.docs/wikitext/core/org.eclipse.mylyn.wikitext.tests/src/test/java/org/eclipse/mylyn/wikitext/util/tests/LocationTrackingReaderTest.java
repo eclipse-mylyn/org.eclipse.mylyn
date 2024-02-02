@@ -46,7 +46,7 @@ public class LocationTrackingReaderTest {
 	public void testReadLine() throws IOException {
 		String content = "\rabc\ndef\r\rfoo bar";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] { 0, 1, 5, 9, 10, 17 };
+		int[] lineOffsets = { 0, 1, 5, 9, 10, 17 };
 
 		doTest(content, lineOffsets, bufSize);
 	}
@@ -76,7 +76,7 @@ public class LocationTrackingReaderTest {
 	public void testReadLineWithWindowsNewlines() throws IOException {
 		String content = "abc\r\ndef\r\n\r\nfoo bar";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] { 0, 5, 10, 12, 19 };
+		int[] lineOffsets = { 0, 5, 10, 12, 19 };
 
 		doTest(content, lineOffsets, bufSize);
 	}
@@ -85,7 +85,7 @@ public class LocationTrackingReaderTest {
 	public void testReadLineWithTerminatingEOLs() throws IOException {
 		String content = "abc\n";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] { 0, 4 };
+		int[] lineOffsets = { 0, 4 };
 
 		doTest(content, lineOffsets, bufSize);
 

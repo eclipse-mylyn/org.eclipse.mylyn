@@ -57,10 +57,9 @@ public class AcronymEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof AcronymEvent)) {
+		if (!(obj instanceof AcronymEvent other)) {
 			return false;
 		}
-		AcronymEvent other = (AcronymEvent) obj;
 		return Objects.equals(text, other.text) && Objects.equals(definition, other.definition);
 	}
 

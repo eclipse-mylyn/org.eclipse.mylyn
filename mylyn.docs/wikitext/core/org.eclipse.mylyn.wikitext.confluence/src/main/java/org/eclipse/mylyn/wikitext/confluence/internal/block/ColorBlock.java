@@ -38,7 +38,7 @@ public class ColorBlock extends ParameterizedBlock {
 	private String color;
 
 	public ColorBlock() {
-		this.blockType = BlockType.DIV;
+		blockType = BlockType.DIV;
 		startPattern = Pattern.compile("^\\{color(?::([^\\}]*))?\\}(.*)"); //$NON-NLS-1$
 		endPattern = Pattern.compile("(\\{color\\})(.*)"); //$NON-NLS-1$
 	}
@@ -120,7 +120,7 @@ public class ColorBlock extends ParameterizedBlock {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			builder.endBlock(); // the block	
+			builder.endBlock(); // the block
 		}
 		super.setClosed(closed);
 	}

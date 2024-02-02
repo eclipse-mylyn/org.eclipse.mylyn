@@ -13,9 +13,8 @@
 package org.eclipse.mylyn.wikitext.validation;
 
 /**
- * A validation problem is an indication of an error or warning that occurred while validating a document. A problem has
- * a marker id, severity, message, and optional offset and length. Default comparison semantics order problems by
- * increasing offset.
+ * A validation problem is an indication of an error or warning that occurred while validating a document. A problem has a marker id,
+ * severity, message, and optional offset and length. Default comparison semantics order problems by increasing offset.
  *
  * @author David Green
  * @since 3.0
@@ -140,23 +139,23 @@ public class ValidationProblem implements Comparable<ValidationProblem> {
 		if (this == o2) {
 			return 0;
 		}
-		int offset1 = this.getOffset();
+		int offset1 = getOffset();
 		int offset2 = o2.getOffset();
 		if (offset1 < offset2) {
 			return -1;
 		} else if (offset2 < offset1) {
 			return 1;
 		} else {
-			int length1 = this.getLength();
+			int length1 = getLength();
 			int length2 = o2.getLength();
 			if (length1 > length2) {
 				return -1;
 			} else if (length2 > length1) {
 				return 1;
 			} else {
-				int i = this.getMessage().compareTo(o2.getMessage());
+				int i = getMessage().compareTo(o2.getMessage());
 				if (i == 0) {
-					i = this.getMarkerId().compareTo(o2.getMarkerId());
+					i = getMarkerId().compareTo(o2.getMarkerId());
 				}
 				return i;
 			}

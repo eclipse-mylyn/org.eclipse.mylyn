@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Point;
 class FoldingStructure implements IFoldingStructure {
 
 	private interface AnnotationOperation {
-		public boolean operate(HeadingProjectionAnnotation annotation);
+		boolean operate(HeadingProjectionAnnotation annotation);
 	}
 
 	private static abstract class AbstractItemsAnnotationOperation implements AnnotationOperation {
@@ -110,10 +110,7 @@ class FoldingStructure implements IFoldingStructure {
 
 	@Override
 	public void collapseElements(Collection<OutlineItem> items, final boolean collapseRegionContainingCaret) {
-		if (!isFoldingEnabled()) {
-			return;
-		}
-		if (items == null || items.isEmpty()) {
+		if (!isFoldingEnabled() || items == null || items.isEmpty()) {
 			return;
 		}
 		operateOnAnnotations(new AbstractItemsAnnotationOperation(items) {
@@ -138,10 +135,7 @@ class FoldingStructure implements IFoldingStructure {
 
 	@Override
 	public void expandElements(Collection<OutlineItem> items) {
-		if (!isFoldingEnabled()) {
-			return;
-		}
-		if (items == null || items.isEmpty()) {
+		if (!isFoldingEnabled() || items == null || items.isEmpty()) {
 			return;
 		}
 		operateOnAnnotations(new AbstractItemsAnnotationOperation(items) {

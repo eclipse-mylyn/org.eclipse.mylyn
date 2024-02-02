@@ -29,7 +29,7 @@ public class NotextileBlock extends Block {
 
 	private static final int EXTENDED_GROUP = 1;
 
-	static final Pattern startPattern = Pattern.compile("notextile\\.(\\.)?\\s+(.*)"); //$NON-NLS-1$ 
+	static final Pattern startPattern = Pattern.compile("notextile\\.(\\.)?\\s+(.*)"); //$NON-NLS-1$
 
 	private boolean extended;
 

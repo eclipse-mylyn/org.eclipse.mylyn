@@ -137,7 +137,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 						if (referenceDefinition) {
 							referenceName = toReferenceName(referenceName(cursor, contents));
 						}
-						if ((referenceDefinition && referenceName != null) || !referenceDefinition) {
+						if (referenceDefinition && referenceName != null || !referenceDefinition) {
 							int closingLength = matcher.start(6) - matcher.start() + 1;
 							cursor.advance(closingLength);
 							int length = getOffset() - openingDelimiter.getOffset() + closingLength;
@@ -206,10 +206,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		if (startIndex > 0) {
 			for (int x = startIndex; x < indexOfContent; ++x) {
 				char c = cursor.getChar(x);
-				if (c == '\n') {
-					return false;
-				}
-				if (!Character.isWhitespace(c)) {
+				if ((c == '\n') || !Character.isWhitespace(c)) {
 					return false;
 				}
 			}
@@ -221,8 +218,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	private void truncatePrecedingWhitespace(List<Inline> inlines, int length) {
 		if (!inlines.isEmpty()) {
 			Inline last = inlines.get(inlines.size() - 1);
-			if (last instanceof Characters) {
-				Characters characters = (Characters) last;
+			if (last instanceof Characters characters) {
 				if (characters.getText().length() <= length
 						&& CharMatcher.whitespace().matchesAllOf(characters.getText())) {
 					inlines.remove(inlines.size() - 1);
@@ -326,7 +322,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			int indexOfHash = decoded.indexOf('#');
 			if (indexOfHash != -1) {
 				String uri = escaper.escape(decoded.substring(0, indexOfHash)) + '#';
-				if ((indexOfHash + 1) < decoded.length()) {
+				if (indexOfHash + 1 < decoded.length()) {
 					uri += escaper.escape(decoded.substring(indexOfHash + 1));
 				}
 				return uri;
@@ -353,7 +349,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			lastEnd = matcher.end(1);
 		}
 		if (lastEnd < text.length()) {
-			replaced += text.substring(lastEnd, text.length());
+			replaced += text.substring(lastEnd);
 		}
 		return replaced;
 	}
@@ -373,8 +369,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	private Optional<PotentialBracketDelimiter> findLastPotentialBracketDelimiter(List<Inline> inlines) {
 		for (int x = inlines.size() - 1; x >= 0; --x) {
 			Inline inline = inlines.get(x);
-			if (inline instanceof PotentialBracketDelimiter) {
-				PotentialBracketDelimiter delimiter = (PotentialBracketDelimiter) inline;
+			if (inline instanceof PotentialBracketDelimiter delimiter) {
 				return Optional.of(delimiter);
 			}
 		}

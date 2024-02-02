@@ -48,7 +48,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 	private File createSimpleTextileMarkup() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");
@@ -56,8 +56,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}
@@ -69,7 +67,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 	private File createTextileMarkupWithXref(int headingLevel) throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("h" + headingLevel + "(#Id1). First Heading");
 			writer.println();
 			writer.println("some content with a \"ref to 2\":#Id2");
@@ -77,8 +75,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 			writer.println("h" + headingLevel + "(#Id2). Second Heading");
 			writer.println();
 			writer.println("some more content with with a \"ref to 1\":#Id1 and a \"ref to 2\":#Id2");
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}
@@ -86,7 +82,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 	private File createSimpleTextileMarkupWithFQNHeadings() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("h1. " + MarkupToDitaTaskTest.class.getName());
 			writer.println();
 			writer.println("some content");
@@ -94,8 +90,6 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}

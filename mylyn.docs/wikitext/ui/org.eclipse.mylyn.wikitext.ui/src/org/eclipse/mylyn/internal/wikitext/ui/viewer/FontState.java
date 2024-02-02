@@ -15,6 +15,8 @@
  */
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
+import java.util.Objects;
+
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -59,10 +61,10 @@ public class FontState {
 	}
 
 	public FontState(FontState copy) {
-		this.foreground = copy.foreground;
-		this.background = copy.background;
-		this.state = copy.state;
-		this.sizeFactor = copy.sizeFactor;
+		foreground = copy.foreground;
+		background = copy.background;
+		state = copy.state;
+		sizeFactor = copy.sizeFactor;
 	}
 
 	public boolean isBold() {
@@ -159,13 +161,7 @@ public class FontState {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((background == null) ? 0 : background.hashCode());
-		result = prime * result + ((foreground == null) ? 0 : foreground.hashCode());
-		result = prime * result + Float.floatToIntBits(sizeFactor);
-		result = prime * result + state;
-		return result;
+		return Objects.hash(background, foreground, sizeFactor, state);
 	}
 
 	@Override
@@ -173,25 +169,14 @@ public class FontState {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		final FontState other = (FontState) obj;
-		if (background == null) {
-			if (other.background != null) {
-				return false;
-			}
-		} else if (!background.equals(other.background)) {
+		if (!Objects.equals(background, other.background)) {
 			return false;
 		}
-		if (foreground == null) {
-			if (other.foreground != null) {
-				return false;
-			}
-		} else if (!foreground.equals(other.foreground)) {
+		if (!Objects.equals(foreground, other.foreground)) {
 			return false;
 		}
 		if (Float.floatToIntBits(sizeFactor) != Float.floatToIntBits(other.sizeFactor)) {

@@ -49,10 +49,9 @@ public class CharactersUnescapedEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof CharactersUnescapedEvent)) {
+		if (!(obj instanceof CharactersUnescapedEvent other)) {
 			return false;
 		}
-		CharactersUnescapedEvent other = (CharactersUnescapedEvent) obj;
 		return Objects.equals(other.literal, literal);
 	}
 

@@ -101,7 +101,7 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 			} else {
 				element.removeAttr("style"); //$NON-NLS-1$
 
-				if (("span".equalsIgnoreCase(element.nodeName()) && (element.attr("class").trim().isEmpty())) //$NON-NLS-1$//$NON-NLS-2$
+				if ("span".equalsIgnoreCase(element.nodeName()) && element.attr("class").trim().isEmpty() //$NON-NLS-1$//$NON-NLS-2$
 						|| "font".equalsIgnoreCase(element.nodeName())) { //$NON-NLS-1$
 					removeElementPreserveChildren(element);
 				}

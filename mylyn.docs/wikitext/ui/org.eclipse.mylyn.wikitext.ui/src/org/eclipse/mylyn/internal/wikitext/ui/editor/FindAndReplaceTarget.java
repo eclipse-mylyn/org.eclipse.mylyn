@@ -449,39 +449,39 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 		}
 		if (event.character == 0) {
 			switch (event.keyCode) {
-			case SWT.ARROW_LEFT:
-			case SWT.ARROW_RIGHT:
-			case SWT.ARROW_UP:
-			case SWT.HOME:
-			case SWT.END:
-			case SWT.PAGE_DOWN:
-			case SWT.PAGE_UP:
-				stop();
-				break;
-			case SWT.ARROW_DOWN:
-				next();
-				event.doit = false;
-				break;
+				case SWT.ARROW_LEFT:
+				case SWT.ARROW_RIGHT:
+				case SWT.ARROW_UP:
+				case SWT.HOME:
+				case SWT.END:
+				case SWT.PAGE_DOWN:
+				case SWT.PAGE_UP:
+					stop();
+					break;
+				case SWT.ARROW_DOWN:
+					next();
+					event.doit = false;
+					break;
 			}
 		} else {
 			switch (event.character) {
-			case SWT.ESC:
-			case SWT.CR:
-				stop();
-				event.doit = false;
-				break;
-			case SWT.BS:
-			case SWT.DEL:
-				restoreState();
-				event.doit = false;
-				break;
-
-			default:
-				if (event.stateMask == 0 || event.stateMask == SWT.SHIFT) {
-					saveState();
-					addSearchCharacter(event.character);
+				case SWT.ESC:
+				case SWT.CR:
+					stop();
 					event.doit = false;
-				}
+					break;
+				case SWT.BS:
+				case SWT.DEL:
+					restoreState();
+					event.doit = false;
+					break;
+
+				default:
+					if (event.stateMask == 0 || event.stateMask == SWT.SHIFT) {
+						saveState();
+						addSearchCharacter(event.character);
+						event.doit = false;
+					}
 			}
 		}
 	}

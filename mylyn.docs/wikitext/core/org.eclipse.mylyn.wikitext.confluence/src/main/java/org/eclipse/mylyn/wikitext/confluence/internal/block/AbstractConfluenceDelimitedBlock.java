@@ -87,8 +87,8 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 	 *
 	 * @param line
 	 *            the markup line to process
-	 * @return a non-negative integer to indicate that processing of the block completed before the end of the line, or
-	 *         -1 if the entire line was processed.
+	 * @return a non-negative integer to indicate that processing of the block completed before the end of the line, or -1 if the entire
+	 *         line was processed.
 	 */
 	protected abstract int handleBlockContent(String content);
 

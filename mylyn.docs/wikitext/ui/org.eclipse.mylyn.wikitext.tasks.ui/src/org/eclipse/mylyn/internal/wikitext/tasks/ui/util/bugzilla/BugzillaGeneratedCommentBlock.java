@@ -19,7 +19,7 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla;
  * @deprecated instead use {@link org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock}
  */
 @Deprecated
-public class BugzillaGeneratedCommentBlock extends
-		org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock {
+public class BugzillaGeneratedCommentBlock
+		extends org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock {
 
 }

@@ -150,9 +150,13 @@ public class BugzillaTextileLanguageTest {
 
 	@Test
 	public void testJavaStackTraceDetection() {
-		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
-				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Test.main(Test.java:21)\n"
-				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		String html = parser.parseToHtml("""
+				text
+				java.lang.Exception: java.lang.IllegalStateException
+					at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Test.main(Test.java:21)
+				Caused by: java.lang.IllegalStateException
+					... 1 more
+				text""");
 
 		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
 		assertTrue(html.contains("</pre><p>text</p>"));
@@ -160,9 +164,13 @@ public class BugzillaTextileLanguageTest {
 
 	@Test
 	public void testJavaStackTraceDetection_bug280805() {
-		String html = parser.parseToHtml("text\n" + "java.lang.Exception: java.lang.IllegalStateException\n"
-				+ "	at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.test.main(Test.java:21)\n"
-				+ "Caused by: java.lang.IllegalStateException\n" + "	... 1 more\n" + "text");
+		String html = parser.parseToHtml("""
+				text
+				java.lang.Exception: java.lang.IllegalStateException
+					at org.eclipse.mylyn.internal.wikitext.tasks.ui.util.test.main(Test.java:21)
+				Caused by: java.lang.IllegalStateException
+					... 1 more
+				text""");
 
 		assertTrue(html.contains("<p>text</p><pre class=\"javaStackTrace\">java.lang.Exception"));
 		assertTrue(html.contains("</pre><p>text</p>"));
@@ -195,15 +203,18 @@ public class BugzillaTextileLanguageTest {
 
 	@Test
 	public void testJavaStackTraceDetection_bug391723() {
-		String markup = "java.lang.IllegalStateException: message\n" + //
-				"	at com.foo.Bar.baz(Bar.java:199)\n" + //
-				"	at $Proxy40.findProcessArea(Unknown Source)";
+		String markup = """
+				java.lang.IllegalStateException: message
+					at com.foo.Bar.baz(Bar.java:199)
+					at $Proxy40.findProcessArea(Unknown Source)""";
 
 		String html = parser.parseToHtml(markup);
 
-		assertEquals("<body><pre class=\"javaStackTrace\">java.lang.IllegalStateException: message\n"
-				+ "	at com.foo.Bar.baz(Bar.java:199)\n" + "	at $Proxy40.findProcessArea(Unknown Source)\n"
-				+ "</pre></body>", TestUtil.tagFragment("body", html));
+		assertEquals("""
+				<body><pre class="javaStackTrace">java.lang.IllegalStateException: message
+					at com.foo.Bar.baz(Bar.java:199)
+					at $Proxy40.findProcessArea(Unknown Source)
+				</pre></body>""", TestUtil.tagFragment("body", html));
 	}
 
 	@Test
@@ -212,9 +223,10 @@ public class BugzillaTextileLanguageTest {
 
 		String html = parser.parseToHtml(markup);
 
-		assertEquals("<body><pre class=\"javaStackTrace\">java.lang.Exception: message\n" //
-				+ "at com.sun.proxy.$Proxy0.refresh(Unknown Source)\n" //
-				+ "</pre></body>", TestUtil.tagFragment("body", html));
+		assertEquals("""
+				<body><pre class="javaStackTrace">java.lang.Exception: message
+				at com.sun.proxy.$Proxy0.refresh(Unknown Source)
+				</pre></body>""", TestUtil.tagFragment("body", html));
 	}
 
 	@Test

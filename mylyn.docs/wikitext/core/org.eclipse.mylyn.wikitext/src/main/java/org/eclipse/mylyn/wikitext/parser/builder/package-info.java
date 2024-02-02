@@ -11,7 +11,6 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * contains concrete implementations of {@link org.eclipse.mylyn.wikitext.parser.DocumentBuilder}. 
+ * contains concrete implementations of {@link org.eclipse.mylyn.wikitext.parser.DocumentBuilder}.
  */
 package org.eclipse.mylyn.wikitext.parser.builder;
-

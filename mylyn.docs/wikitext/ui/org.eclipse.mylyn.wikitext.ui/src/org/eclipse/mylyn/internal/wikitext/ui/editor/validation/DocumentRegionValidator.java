@@ -28,8 +28,8 @@ import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 
 /**
- * A validator that can be used to validate regions of a document in an editor. Delegates validation to a
- * {@link MarkupValidator} and coordinates the translation of errors and warnings to the editor framework.
+ * A validator that can be used to validate regions of a document in an editor. Delegates validation to a {@link MarkupValidator} and
+ * coordinates the translation of errors and warnings to the editor framework.
  *
  * @author David Green
  * @see MarkupValidator
@@ -44,8 +44,8 @@ public abstract class DocumentRegionValidator {
 	protected MarkupValidator delegate;
 
 	/**
-	 * Validate a region of a document. Validation results may be created as annotations on the annotation model, or as
-	 * markers on the resource.
+	 * Validate a region of a document. Validation results may be created as annotations on the annotation model, or as markers on the
+	 * resource.
 	 *
 	 * @param monitor
 	 *            the progress monitor
@@ -128,8 +128,8 @@ public abstract class DocumentRegionValidator {
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		if (markupLanguage == this.markupLanguage || (markupLanguage != null && this.markupLanguage != null
-				&& markupLanguage.getName().equals(this.markupLanguage.getName()))) {
+		if (markupLanguage == this.markupLanguage || markupLanguage != null && this.markupLanguage != null
+				&& markupLanguage.getName().equals(this.markupLanguage.getName())) {
 			return;
 		}
 		this.markupLanguage = markupLanguage;

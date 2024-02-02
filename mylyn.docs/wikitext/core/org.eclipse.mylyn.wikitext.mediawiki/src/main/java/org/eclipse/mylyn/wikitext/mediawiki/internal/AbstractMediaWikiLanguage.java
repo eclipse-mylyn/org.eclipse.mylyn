@@ -119,7 +119,7 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 		if (imageMapping == null) {
 			return Collections.emptySet();
 		}
-		return Collections.unmodifiableSet(new HashSet<String>(imageMapping.values()));
+		return Collections.unmodifiableSet(new HashSet<>(imageMapping.values()));
 	}
 
 	public void setImageNames(Set<String> imageNames) {
@@ -144,8 +144,8 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 	@Override
 	public MarkupLanguage clone() {
 		AbstractMediaWikiLanguage copy = (AbstractMediaWikiLanguage) super.clone();
-		copy.imageMapping = this.imageMapping;
-		copy.pageMapping = this.pageMapping;
+		copy.imageMapping = imageMapping;
+		copy.pageMapping = pageMapping;
 		return copy;
 	}
 }

@@ -34,7 +34,7 @@ public class TestResources {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static String convertToUnixLineEndings(String resource) {
 		return resource.replaceAll("\\r\\n?", "\n");
 	}

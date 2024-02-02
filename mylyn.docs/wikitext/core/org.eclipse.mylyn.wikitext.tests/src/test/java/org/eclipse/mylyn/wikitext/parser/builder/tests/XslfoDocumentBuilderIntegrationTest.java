@@ -64,8 +64,15 @@ public class XslfoDocumentBuilderIntegrationTest {
 		documentBuilder.getConfiguration().setTitle("Title");
 		parser.setMarkupLanguage(new MediaWikiLanguage());
 
-		parser.parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n{{NonExistantTemplate}}\n" + "\n" + "= H1 =\n" + "\n"
-				+ "== H2 ==\n" + "\n" + "some text");
+		parser.parse("""
+				<?xml version="1.0" encoding="UTF-8"?>
+				{{NonExistantTemplate}}
+
+				= H1 =
+
+				== H2 ==
+
+				some text""");
 		assertFalse(Pattern.compile("<static-content[^>]*></static-content>").matcher(out.toString()).find());
 	}
 
@@ -84,16 +91,27 @@ public class XslfoDocumentBuilderIntegrationTest {
 
 		assertTrue(Pattern.compile(
 				"<bookmark-tree>\\s*<bookmark internal-destination=\"Bookmark_H1\">\\s*<bookmark-title>Bookmark H1</bookmark-title>\\s*<bookmark internal-destination=\"Bookmark_H2\">\\s*<bookmark-title>Bookmark H2</bookmark-title>\\s*</bookmark>\\s*</bookmark>\\s*</bookmark-tree>")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 	}
 
 	@Test
 	public void testforTableCSSAttributes_bug336813() {
-		final String markup = "{| style=\"border-style: solid; border-color: #000; border-width: 1px;\"\n" + "|-\n"
-				+ "! header 1\n" + "! header 2\n" + "! header 3\n" + "|-\n" + "| row 1, cell 1\n" + "| row 1, cell 2\n"
-				+ "| row 1, cell 3\n" + "|- style=\"border-style: solid; border-color: #000; border-width: 1px;\" \n"
-				+ "| row 2, cell 1\n" + "| row 2, cell 2\n"
-				+ "| style=\"border-style: solid; border-color: #000; border-width: 1px;\" | row 2, cell 3\n" + "|}";
+		final String markup = """
+				{| style="border-style: solid; border-color: #000; border-width: 1px;"
+				|-
+				! header 1
+				! header 2
+				! header 3
+				|-
+				| row 1, cell 1
+				| row 1, cell 2
+				| row 1, cell 3
+				|- style="border-style: solid; border-color: #000; border-width: 1px;"\s
+				| row 2, cell 1
+				| row 2, cell 2
+				| style="border-style: solid; border-color: #000; border-width: 1px;" | row 2, cell 3
+				|}""";
 
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -106,22 +124,39 @@ public class XslfoDocumentBuilderIntegrationTest {
 
 		// Test for border attributes in table
 		assertTrue(Pattern.compile("<table-body border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 		// Test for border attributes in row
 		assertTrue(Pattern.compile("<table-row border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 		// Test for border attributes in cell
 		assertTrue(Pattern.compile(
 				"<block font-size=\"10.0pt\" border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 	}
 
 	@Test
 	public void testforTableSpan_bug336813() {
-		final String markup = "{|\n|-\n" + "| Column 1 || Column 2 || Column 3\n" + "|-\n" + "| rowspan=\"2\"| A\n"
-				+ "| colspan=\"2\" | B\n" + "|-\n" + "| C <!-- column 1 occupied by cell A -->\n" + "| D \n" + "|-\n"
-				+ "| E\n" + "| rowspan=\"2\" colspan=\"2\" | F\n" + "|- \n"
-				+ "| G <!-- column 2+3 occupied by cell F -->\n" + "|- \n" + "| colspan=\"3\" | H\n" + "|}";
+		final String markup = """
+				{|
+				|-
+				| Column 1 || Column 2 || Column 3
+				|-
+				| rowspan="2"| A
+				| colspan="2" | B
+				|-
+				| C <!-- column 1 occupied by cell A -->
+				| D\s
+				|-
+				| E
+				| rowspan="2" colspan="2" | F
+				|-\s
+				| G <!-- column 2+3 occupied by cell F -->
+				|-\s
+				| colspan="3" | H
+				|}""";
 
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -135,21 +170,30 @@ public class XslfoDocumentBuilderIntegrationTest {
 		// Test for rowspan
 		assertTrue(Pattern.compile(
 				"<table-cell number-rows-spanned=\"2\" padding-left=\"2pt\" padding-right=\"2pt\" padding-top=\"2pt\" padding-bottom=\"2pt\">")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 
 		// Test for colspan
 		assertTrue(Pattern.compile(
 				"<table-cell number-columns-spanned=\"2\" padding-left=\"2pt\" padding-right=\"2pt\" padding-top=\"2pt\" padding-bottom=\"2pt\">")
-				.matcher(xslfo).find());
+				.matcher(xslfo)
+				.find());
 
 	}
 
 	@Test
 	public void testforTableRowAlign_bug336813() {
-		final String markup = "{|\n" + "|- valign=\"top\"\n |'''Row heading'''\n"
-				+ "| A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
-				+ "|- style=\"vertical-align: bottom;\"\n |'''Row heading'''\n"
-				+ "|A longer piece of text. Lorem ipsum... \n |A shorter piece of text.\n" + "|}";
+		final String markup = """
+				{|
+				|- valign="top"
+				 |'''Row heading'''
+				| A longer piece of text. Lorem ipsum...
+				 |A shorter piece of text.
+				|- style="vertical-align: bottom;"
+				 |'''Row heading'''
+				|A longer piece of text. Lorem ipsum...\s
+				 |A shorter piece of text.
+				|}""";
 
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -169,11 +213,17 @@ public class XslfoDocumentBuilderIntegrationTest {
 
 	@Test
 	public void testforTableCellAlign_bug336813() {
-		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
-				+ "| valign=\"top\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
-				+ "|- \n |'''Row heading'''\n"
-				+ "| style=\"vertical-align: bottom;\" | A longer piece of text. Lorem ipsum... \n |A shorter piece of text.\n"
-				+ "|}";
+		final String markup = """
+				{|
+				|-\s
+				 |'''Row heading'''
+				| valign="top" | A longer piece of text. Lorem ipsum...
+				 |A shorter piece of text.
+				|-\s
+				 |'''Row heading'''
+				| style="vertical-align: bottom;" | A longer piece of text. Lorem ipsum...\s
+				 |A shorter piece of text.
+				|}""";
 
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -193,11 +243,17 @@ public class XslfoDocumentBuilderIntegrationTest {
 
 	@Test
 	public void testforTableCellTextAlign_bug336813() {
-		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
-				+ "| align=\"left\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
-				+ "|- \n |'''Row heading'''\n"
-				+ "| style=\"text-align: right;\" | A longer piece of text. Lorem ipsum... \n |A shorter piece of text.\n"
-				+ "|}";
+		final String markup = """
+				{|
+				|-\s
+				 |'''Row heading'''
+				| align="left" | A longer piece of text. Lorem ipsum...
+				 |A shorter piece of text.
+				|-\s
+				 |'''Row heading'''
+				| style="text-align: right;" | A longer piece of text. Lorem ipsum...\s
+				 |A shorter piece of text.
+				|}""";
 
 		documentBuilder.getConfiguration().setPageNumbering(true);
 		documentBuilder.getConfiguration().setTitle("Title");
@@ -217,8 +273,11 @@ public class XslfoDocumentBuilderIntegrationTest {
 
 	@Test
 	public void testforXslFoLinks() {
-		final String markup = "\"INTERN-LABEL\":#intern_label\n" + "\"*INTERN-BOLD-LABEL*\":#intern_bold_label\n"
-				+ "\"EXTERN-LABEL\":http://extern-label.com/\n";
+		final String markup = """
+				"INTERN-LABEL":#intern_label
+				"*INTERN-BOLD-LABEL*":#intern_bold_label
+				"EXTERN-LABEL":http://extern-label.com/
+				""";
 
 		documentBuilder.getConfiguration().setPageNumbering(false);
 		documentBuilder.getConfiguration().setTitle("Title");

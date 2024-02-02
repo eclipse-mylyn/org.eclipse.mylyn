@@ -20,7 +20,7 @@ public class TestMediaWikiImageFetcher extends MediaWikiImageFetcher {
 	private Map<String, String> imageServerContent;
 
 	public void setImageServerContent(Map<String, String> serverContent) {
-		this.imageServerContent = Map.copyOf(serverContent);
+		imageServerContent = Map.copyOf(serverContent);
 	}
 
 	@Override

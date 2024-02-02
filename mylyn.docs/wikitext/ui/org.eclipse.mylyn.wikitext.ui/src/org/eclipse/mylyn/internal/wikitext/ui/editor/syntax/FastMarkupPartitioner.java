@@ -44,7 +44,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	public static final String CONTENT_TYPE_MARKUP = "__markup_block"; //$NON-NLS-1$
 
-	public static final String[] ALL_CONTENT_TYPES = new String[] { CONTENT_TYPE_MARKUP };
+	public static final String[] ALL_CONTENT_TYPES = { CONTENT_TYPE_MARKUP };
 
 	static boolean debug = Boolean.getBoolean(FastMarkupPartitioner.class.getName() + ".debug"); //$NON-NLS-1$
 
@@ -94,7 +94,6 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			ITypedRegion[] partitions;
 
 			public PartitioningResult(int offset, int length, ITypedRegion[] partitions) {
-				super();
 				this.offset = offset;
 				this.length = length;
 				this.partitions = partitions;
@@ -102,7 +101,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 			public boolean overlapsWith(PartitioningResult other) {
 				int end = other.offset + other.length;
-				int thisEnd = this.offset + this.length;
+				int thisEnd = offset + length;
 
 				if (end > thisEnd) {
 					return other.offset < thisEnd;
@@ -116,7 +115,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 		public ITypedRegion[] computePartitions(IDocument document, int offset, int length) {
 			if (lastComputed != null && lastComputed.offset <= offset
-					&& (lastComputed.offset + lastComputed.length) >= (offset + length)) {
+					&& lastComputed.offset + lastComputed.length >= offset + length) {
 				return lastComputed.partitions;
 			} else {
 				PartitioningResult result = cachedPartitioning.get(offset);
@@ -141,7 +140,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			while (it.hasNext()) {
 				PartitioningResult result = it.next();
 
-				if (result.offset >= maxLength || (updated != null && result.overlapsWith(updated))) {
+				if (result.offset >= maxLength || updated != null && result.overlapsWith(updated)) {
 					it.remove();
 				}
 			}
@@ -159,8 +158,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 			boolean blocksOnly = partitionOffset != -1;
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
-			if (markupLanguage instanceof AbstractMarkupLanguage) {
-				AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+			if (markupLanguage instanceof AbstractMarkupLanguage language) {
 				language.setFilterGenerativeContents(true);
 				language.setBlocksOnly(blocksOnly);
 			}
@@ -185,7 +183,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 					// ignore 0-length partitions
 					continue;
 				}
-				if (previous != null && region.getOffset() < (previous.getOffset() + previous.getLength())) {
+				if (previous != null && region.getOffset() < previous.getOffset() + previous.getLength()) {
 					String message = NLS.bind(Messages.FastMarkupPartitioner_0,
 							new Object[] { region, previous, markupLanguage.getName() });
 					if (FastMarkupPartitioner.debug) {
@@ -197,7 +195,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 				previous = region;
 				if (region.getOffset() >= startOffset && region.getOffset() < endOffset) {
 					partitioning.add(region);
-				} else if (region.getOffset() >= (offset + length)) {
+				} else if (region.getOffset() >= offset + length) {
 					break;
 				}
 			}
@@ -298,7 +296,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 		private void getSpans(Block block, List<Span> spans) {
 			for (Segment<?> s : block.getChildren().asList()) {
-				if (s.getOffset() >= offset && s.getOffset() < (offset + length)) {
+				if (s.getOffset() >= offset && s.getOffset() < offset + length) {
 					if (s instanceof Span) {
 						spans.add((Span) s);
 					} else {
@@ -411,9 +409,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			if (segment.getLength() == 0) {
 				return parent;
 			}
-			if (segment instanceof Block) {
-				Block block = (Block) segment;
-
+			if (segment instanceof Block block) {
 				if (!filtered(block)) {
 					MarkupPartition partition = new MarkupPartition(block, segment.getOffset(), segment.getLength());
 					if (parent == null) {
@@ -435,22 +431,20 @@ public class FastMarkupPartitioner extends FastPartitioner {
 								parent.length -= partition.length;
 								partitions.add(parentIndex, partition);
 							}
+						} else if (partition.length + partition.offset == parent.length + parent.offset) {
+							// end on the same offset, so shrink the parent
+							parent.length = partition.offset - parent.offset;
+							partitions.add(parentIndex + 1, partition);
 						} else {
-							if (partition.length + partition.offset == parent.length + parent.offset) {
-								// end on the same offset, so shrink the parent
-								parent.length = partition.offset - parent.offset;
-								partitions.add(parentIndex + 1, partition);
-							} else {
-								// split the parent
-								int parentLength = parent.length;
-								parent.length = partition.offset - parent.offset;
-								final int splitOffset = partition.offset + partition.length;
-								MarkupPartition trailer = new MarkupPartition(parent.block, splitOffset,
-										parent.offset + parentLength - splitOffset);
-								partitions.add(parentIndex + 1, partition);
-								partitions.add(parentIndex + 2, trailer);
-								parent = trailer;
-							}
+							// split the parent
+							int parentLength = parent.length;
+							parent.length = partition.offset - parent.offset;
+							final int splitOffset = partition.offset + partition.length;
+							MarkupPartition trailer = new MarkupPartition(parent.block, splitOffset,
+									parent.offset + parentLength - splitOffset);
+							partitions.add(parentIndex + 1, partition);
+							partitions.add(parentIndex + 2, trailer);
+							parent = trailer;
 						}
 					}
 					if (!block.getChildren().isEmpty()) {
@@ -468,23 +462,23 @@ public class FastMarkupPartitioner extends FastPartitioner {
 				return false;
 			}
 			switch (block.getType()) {
-			case DEFINITION_ITEM:
-			case LIST_ITEM:
-			case TABLE_CELL_HEADER:
-			case TABLE_CELL_NORMAL:
-			case TABLE_ROW:
-				return true;
-			case PARAGRAPH:
-				// bug 249615: ignore paras that are nested inside a quote block
-				if (block.getParent() != null && block.getParent().getType() == BlockType.QUOTE) {
+				case DEFINITION_ITEM:
+				case LIST_ITEM:
+				case TABLE_CELL_HEADER:
+				case TABLE_CELL_NORMAL:
+				case TABLE_ROW:
 					return true;
-				}
-				break;
-			case BULLETED_LIST:
-			case NUMERIC_LIST:
-			case DEFINITION_LIST:
-			case DEFINITION_TERM:
-				return block.getParent() != null && filtered(block.getParent());
+				case PARAGRAPH:
+					// bug 249615: ignore paras that are nested inside a quote block
+					if (block.getParent() != null && block.getParent().getType() == BlockType.QUOTE) {
+						return true;
+					}
+					break;
+				case BULLETED_LIST:
+				case NUMERIC_LIST:
+				case DEFINITION_LIST:
+				case DEFINITION_TERM:
+					return block.getParent() != null && filtered(block.getParent());
 			}
 			return false;
 		}
@@ -533,8 +527,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	public void reparse(IDocument document, Block block) {
 		MarkupParser markupParser = new MarkupParser(markupLanguage);
-		if (markupLanguage instanceof AbstractMarkupLanguage) {
-			AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+		if (markupLanguage instanceof AbstractMarkupLanguage language) {
 			language.setFilterGenerativeContents(true);
 			language.setBlocksOnly(false);
 		}

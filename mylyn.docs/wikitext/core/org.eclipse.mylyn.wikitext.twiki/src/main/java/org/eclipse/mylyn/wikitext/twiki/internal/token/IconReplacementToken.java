@@ -18,8 +18,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.twiki.TWikiLanguage;
 
 /**
- * Token that replaces <code>%ICON{"<icon type>"}%</code> with the appropriate image tag. Supports %ICON{"help"}%,
- * %ICON{"tip"}%, and %ICON{"warning"}%
+ * Token that replaces <code>%ICON{"<icon type>"}%</code> with the appropriate image tag. Supports %ICON{"help"}%, %ICON{"tip"}%, and
+ * %ICON{"warning"}%
  * 
  * @author David Green
  */

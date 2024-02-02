@@ -23,8 +23,8 @@ import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * List block, matches blocks that follow trac list rules (optional whitespace, then '*' or '1.'. Possibility to add
- * content on the next line if the indentation is compatible)
+ * List block, matches blocks that follow trac list rules (optional whitespace, then '*' or '1.'. Possibility to add content on the next
+ * line if the indentation is compatible)
  * 
  * @author David Green
  */
@@ -40,7 +40,7 @@ public class ListBlock extends Block {
 
 	private Matcher matcher;
 
-	private final Stack<ListState> listState = new Stack<ListState>();
+	private final Stack<ListState> listState = new Stack<>();
 
 	public ListBlock() {
 	}
@@ -98,8 +98,9 @@ public class ListBlock extends Block {
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
-			for (ListState listState = this.listState.peek(); listState.level != level || listState.type != type; listState = this.listState.peek()) {
-				if (listState.level > level || (listState.level == level && listState.type != type)) {
+			for (ListState listState = this.listState.peek(); listState.level != level
+					|| listState.type != type; listState = this.listState.peek()) {
+				if (listState.level > level || listState.level == level && listState.type != type) {
 					closeOne();
 					if (this.listState.isEmpty()) {
 						this.listState.push(new ListState(1, spaces.length(), offset, type));
@@ -187,7 +188,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, int numSpaces, int lineRemainderStart, BlockType type) {
-			super();
 			this.level = level;
 			this.numSpaces = numSpaces;
 			this.lineRemainderStart = lineRemainderStart;

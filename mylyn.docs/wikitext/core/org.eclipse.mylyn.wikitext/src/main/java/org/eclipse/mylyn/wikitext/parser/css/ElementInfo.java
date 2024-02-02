@@ -23,22 +23,22 @@ public interface ElementInfo {
 	/**
 	 * get the local name of the element
 	 */
-	public String getLocalName();
+	String getLocalName();
 
 	/**
 	 * get the parent of this element
 	 *
 	 * @return the parent or null if this is the root element
 	 */
-	public ElementInfo getParent();
+	ElementInfo getParent();
 
 	/**
 	 * indicate if the elemet has the given CSS class
 	 */
-	public boolean hasCssClass(String cssClass);
+	boolean hasCssClass(String cssClass);
 
 	/**
 	 * indicate if the element has the given id
 	 */
-	public boolean hasId(String id);
+	boolean hasId(String id);
 }

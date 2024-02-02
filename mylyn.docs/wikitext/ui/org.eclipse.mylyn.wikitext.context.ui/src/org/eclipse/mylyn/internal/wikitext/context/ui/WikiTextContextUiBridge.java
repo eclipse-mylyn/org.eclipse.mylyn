@@ -56,14 +56,14 @@ public class WikiTextContextUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		List<TreeViewer> viewers = new ArrayList<>();
 		if (acceptsEditor(editorPart)) {
 			try {
-				IContentOutlinePage outlinePage = (IContentOutlinePage) editorPart.getAdapter(IContentOutlinePage.class);
+				IContentOutlinePage outlinePage = editorPart.getAdapter(IContentOutlinePage.class);
 				if (outlinePage != null) {
-					Method method = ContentOutlinePage.class.getDeclaredMethod("getTreeViewer", new Class[] {}); //$NON-NLS-1$
+					Method method = ContentOutlinePage.class.getDeclaredMethod("getTreeViewer"); //$NON-NLS-1$
 					method.setAccessible(true);
-					viewers.add((TreeViewer) method.invoke(outlinePage, new Object[] {}));
+					viewers.add((TreeViewer) method.invoke(outlinePage));
 				}
 			} catch (Exception e) {
 				// ignore
@@ -79,7 +79,7 @@ public class WikiTextContextUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
-		OutlineItem outline = (OutlineItem) editor.getAdapter(OutlineItem.class);
+		OutlineItem outline = editor.getAdapter(OutlineItem.class);
 		if (outline != null && selection != null) {
 			return outline.findNearestMatchingOffset(selection.getOffset());
 		}
@@ -98,7 +98,8 @@ public class WikiTextContextUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void open(IInteractionElement element) {
-		AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(WikiTextContextStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge structureBridge = ContextCore
+				.getStructureBridge(WikiTextContextStructureBridge.CONTENT_TYPE);
 		if (structureBridge instanceof WikiTextContextStructureBridge) {
 			Object object = structureBridge.getObjectForHandle(element.getHandleIdentifier());
 			OutlineItem item = null;
@@ -129,7 +130,7 @@ public class WikiTextContextUiBridge extends AbstractContextUiBridge {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				List<IEditorReference> editors = new ArrayList<IEditorReference>(4);
+				List<IEditorReference> editors = new ArrayList<>(4);
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
 						if (reference.getEditorInput() instanceof IFileEditorInput) {

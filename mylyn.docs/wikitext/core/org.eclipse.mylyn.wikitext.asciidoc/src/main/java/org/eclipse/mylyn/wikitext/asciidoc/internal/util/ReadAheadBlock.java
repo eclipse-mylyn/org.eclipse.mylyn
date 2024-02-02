@@ -19,14 +19,14 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 /**
  * Markup blocks that require additional context in order to decide if they can start with a markup line.
  * 
- * @author Stefan Seelmann 
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
 public interface ReadAheadBlock extends Cloneable {
 
 	/**
-	 * Indicate if the block can start with the given markup line at the provided offset. The
-	 * <code>lookAheadReader</code> can be used to ask for more context.
+	 * Indicate if the block can start with the given markup line at the provided offset. The <code>lookAheadReader</code> can be used to
+	 * ask for more context.
 	 * 
 	 * @param line
 	 *            the line of markup to test

@@ -131,7 +131,7 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 		private final Document document;
 
 		public DocumentHandler(Document doc) {
-			this.document = doc;
+			document = doc;
 		}
 
 		@Override

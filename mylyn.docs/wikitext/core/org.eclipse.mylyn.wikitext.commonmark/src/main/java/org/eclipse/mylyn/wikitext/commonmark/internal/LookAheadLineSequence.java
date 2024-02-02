@@ -27,16 +27,16 @@ class LookAheadLineSequence extends LineSequence {
 
 	public LookAheadLineSequence(ForwardLineSequence lineSequence) {
 		this.lineSequence = lineSequence;
-		this.currentLine = lineSequence.getCurrentLine();
-		this.referenceLine = currentLine;
-		this.index = -1;
+		currentLine = lineSequence.getCurrentLine();
+		referenceLine = currentLine;
+		index = -1;
 	}
 
 	public LookAheadLineSequence(LookAheadLineSequence lookAheadLineSequence) {
-		this.lineSequence = lookAheadLineSequence.lineSequence;
-		this.currentLine = lookAheadLineSequence.currentLine;
-		this.referenceLine = lookAheadLineSequence.referenceLine;
-		this.index = lookAheadLineSequence.index;
+		lineSequence = lookAheadLineSequence.lineSequence;
+		currentLine = lookAheadLineSequence.currentLine;
+		referenceLine = lookAheadLineSequence.referenceLine;
+		index = lookAheadLineSequence.index;
 	}
 
 	@Override

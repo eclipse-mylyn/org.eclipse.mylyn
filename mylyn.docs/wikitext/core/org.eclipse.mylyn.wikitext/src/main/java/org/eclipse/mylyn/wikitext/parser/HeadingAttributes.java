@@ -22,16 +22,14 @@ public class HeadingAttributes extends Attributes {
 	private boolean omitFromTableOfContents;
 
 	/**
-	 * a hint to document processors to indicate if this heading should participate in a table of contents. The default
-	 * is false.
+	 * a hint to document processors to indicate if this heading should participate in a table of contents. The default is false.
 	 */
 	public boolean isOmitFromTableOfContents() {
 		return omitFromTableOfContents;
 	}
 
 	/**
-	 * a hint to document processors to indicate if this heading should participate in a table of contents. The default
-	 * is false.
+	 * a hint to document processors to indicate if this heading should participate in a table of contents. The default is false.
 	 */
 	public void setOmitFromTableOfContents(boolean omitFromTableOfContents) {
 		this.omitFromTableOfContents = omitFromTableOfContents;

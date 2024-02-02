@@ -260,7 +260,7 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testHeadings() {
 		for (int x = 1; x <= 6; ++x) {
 			String delimiter = repeat(x, "=");
-			String[] headingMarkupSamples = new String[] { delimiter + "heading text" + delimiter,
+			String[] headingMarkupSamples = { delimiter + "heading text" + delimiter,
 					delimiter + "heading text" + delimiter + "  ", delimiter + "heading text" + delimiter + " \t " };
 			for (String headingMarkup : headingMarkupSamples) {
 				String html = parser.parseToHtml(
@@ -319,8 +319,12 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testListOrderedWithContinuation() throws IOException {
 		assertMarkup(
 				"<ol><li>a list<ol><li>a nested item<ol><li>another nested item</li></ol>continued</li></ol></li><li>another item</li></ol>",
-				"# a list\n" + "## a nested item\n" + "### another nested item\n" + "#: continued\n"
-						+ "# another item");
+				"""
+						# a list
+						## a nested item
+						### another nested item
+						#: continued
+						# another item""");
 	}
 
 	@Test
@@ -328,8 +332,12 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new DocBookDocumentBuilder(out));
 
-		parser.parse("# a list\n" + "## a nested item\n" + "### another nested item\n" + "#: continued\n"
-				+ "# another item");
+		parser.parse("""
+				# a list
+				## a nested item
+				### another nested item
+				#: continued
+				# another item""");
 
 		String docbook = out.toString();
 
@@ -544,9 +552,10 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testLinkInternalPageReferenceWithAltTextInTables() {
 		assertMarkup(
 				"<table><tr><td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td></tr></table>",
-				"{|\n" //
-						+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
-						+ "|}");
+				"""
+						{|
+						| [[Orion/Server_API/Preference API| Preference API]]
+						|}""");
 	}
 
 	@Test
@@ -742,32 +751,64 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testTable() {
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread</td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
-				"{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n" + "|Pie\n" + "|-\n" + "|Butter\n"
-						+ "|Ice cream \n" + "|}");
+				"""
+						{|
+						|Orange
+						|Apple
+						|-
+						|Bread
+						|Pie
+						|-
+						|Butter
+						|Ice cream\s
+						|}""");
 	}
 
 	@Test
 	public void testTable2() {
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td><td>more</td></tr><tr><td>Bread</td><td>Pie</td><td>more</td></tr><tr><td>Butter</td><td>Ice cream</td><td>and more</td></tr></table>",
-				"{|\n" + "|  Orange    ||   Apple   ||   more\n" + "|-\n" + "|   Bread    ||   Pie     ||   more\n"
-						+ "|-\n" + "|   Butter   || Ice cream ||  and more\n" + "|}\n");
+				"""
+						{|
+						|  Orange    ||   Apple   ||   more
+						|-
+						|   Bread    ||   Pie     ||   more
+						|-
+						|   Butter   || Ice cream ||  and more
+						|}
+						""");
 	}
 
 	@Test
 	public void testTableWithBlankLine() {
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread<p>More bread</p></td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
-				"{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n\nMore bread\n" + "|Pie\n" + "|-\n" + "|Butter\n"
-						+ "|Ice cream \n" + "|}");
+				"""
+						{|
+						|Orange
+						|Apple
+						|-
+						|Bread
+
+						More bread
+						|Pie
+						|-
+						|Butter
+						|Ice cream\s
+						|}""");
 	}
 
 	@Test
 	public void testTableHeadings() {
 		assertMarkup(
 				"<table><tr><th>Fruit</th><th>Quantity</th><th>Price</th></tr><tr><td>Apple</td><td>lb</td><td>0.99</td></tr></table>",
-				"{|\n" + "!  Fruit    !!   Quantity   !!  Price\n" + "|-\n" + "|   Apple    ||   lb     ||   0.99\n"
-						+ "|}\n");
+				"""
+						{|
+						!  Fruit    !!   Quantity   !!  Price
+						|-
+						|   Apple    ||   lb     ||   0.99
+						|}
+						""");
 	}
 
 	@Test
@@ -781,9 +822,15 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testTableLexicalOffsets() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
-		final String content = "{|\n" + "|  Orange    ||   Apple   ||   more\n" + "|-\n"
-				+ "|   Bread    ||   Pie     ||   more\n" + "|-\n" + "|   Butter   || Ice cream ||  and more\n"
-				+ "|}\n";
+		final String content = """
+				{|
+				|  Orange    ||   Apple   ||   more
+				|-
+				|   Bread    ||   Pie     ||   more
+				|-
+				|   Butter   || Ice cream ||  and more
+				|}
+				""";
 
 		parser.parse(content);
 
@@ -803,9 +850,15 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testTableIncomplete() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
-		final String content = "{|\n" + "|  Orange    ||   Apple   ||   more\n" + "|-\n"
-				+ "|   Bread    ||   Pie     ||   more\n" + "|-\n" + "|   Butter   || Ice cream ||  and more\n"
-				+ "| \n";
+		final String content = """
+				{|
+				|  Orange    ||   Apple   ||   more
+				|-
+				|   Bread    ||   Pie     ||   more
+				|-
+				|   Butter   || Ice cream ||  and more
+				|\s
+				""";
 
 		parser.parse(content);
 
@@ -825,7 +878,10 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testTableIncomplete2() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
-		final String content = "{|\n" + "| foo |\n" + "|}";
+		final String content = """
+				{|
+				| foo |
+				|}""";
 
 		parser.parse(content);
 
@@ -844,7 +900,10 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testTableWithSyntax() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
-		String content = "{|\n" + "| <nowiki>'''''bold italic'''''</nowiki> || '''''bold italic''''' ||\n" + "|}";
+		String content = """
+				{|
+				| <nowiki>'''''bold italic'''''</nowiki> || '''''bold italic''''' ||
+				|}""";
 
 		parser.parse(content);
 
@@ -861,8 +920,11 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 
 	@Test
 	public void testTableOptions() {
-		String html = parser.parseToHtml("{| border=\"1\"\n" + "|- style=\"font-style:italic;color:green;\"\n"
-				+ "| colspan=\"2\" | Orange || valign=\"top\" | Apple\n" + "|}");
+		String html = parser.parseToHtml("""
+				{| border="1"
+				|- style="font-style:italic;color:green;"
+				| colspan="2" | Orange || valign="top" | Apple
+				|}""");
 
 		assertTrue(html.contains("<table border=\"1\"><tr style=\"font-style:italic;color:green;\">"));
 		assertTrue(html.contains("<td colspan=\"2\">Orange</td>"));
@@ -1259,8 +1321,8 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 
 		OutlineItem outline = outlineParser.parse(readFully("sample.mediawiki"));
 
-		Set<String> topLevelLabels = new LinkedHashSet<String>();
-		Set<String> topLevelIds = new LinkedHashSet<String>();
+		Set<String> topLevelLabels = new LinkedHashSet<>();
+		Set<String> topLevelIds = new LinkedHashSet<>();
 		List<OutlineItem> children = outline.getChildren();
 		for (OutlineItem item : children) {
 			topLevelLabels.add(item.getLabel());
@@ -1385,7 +1447,7 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testImageFilenameCaseInsensitivity() {
 		assertMarkup("<p><img border=\"0\" src=\"foo.gif\"/></p>", "[[Image:foo.gif]]");
 
-		Set<String> imageNames = new HashSet<String>();
+		Set<String> imageNames = new HashSet<>();
 		imageNames.add("Foo.gif");
 		markupLanguage.setImageNames(imageNames);
 

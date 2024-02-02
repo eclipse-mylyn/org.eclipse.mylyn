@@ -127,8 +127,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * a block that provides default paragraph functionality, for emitting content when no explicit block has been
-	 * opened.
+	 * a block that provides default paragraph functionality, for emitting content when no explicit block has been opened.
 	 */
 	protected class ImplicitParagraphBlock extends Block {
 
@@ -261,7 +260,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	protected AbstractMarkupDocumentBuilder(final Writer out) {
-		this.writer = new MarkupWriter(out);
+		writer = new MarkupWriter(out);
 	}
 
 	protected void emitContent(int c) throws IOException {
@@ -298,11 +297,10 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Indicate that the next content to be emitted requires adjacent {@link #isSeparator(char) separator}. When
-	 * invoked, the next call to {@link #emitContent(int)} or {@link #emitContent(String)} will test to see if the
-	 * {@link #getLastChar() last character} is a separator character, or if the content to be emitted starts with a
-	 * separator. If neither are true, then a single space character is inserted into the content stream. Subsequent
-	 * calls to <code>emitContent</code> are not affected.
+	 * Indicate that the next content to be emitted requires adjacent {@link #isSeparator(char) separator}. When invoked, the next call to
+	 * {@link #emitContent(int)} or {@link #emitContent(String)} will test to see if the {@link #getLastChar() last character} is a
+	 * separator character, or if the content to be emitted starts with a separator. If neither are true, then a single space character is
+	 * inserted into the content stream. Subsequent calls to <code>emitContent</code> are not affected.
 	 *
 	 * @see #clearRequireAdjacentSeparator()
 	 */
@@ -322,21 +320,21 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		boolean separator = Character.isWhitespace(c);
 		if (!separator) {
 			switch (c) {
-			case ',':
-			case '.':
-			case '!':
-			case '?':
-			case ':':
-			case ';':
-			case ')':
-			case '(':
-			case '}':
-			case '{':
-			case '[':
-			case ']':
-			case '|':
-			case '"':
-				separator = true;
+				case ',':
+				case '.':
+				case '!':
+				case '?':
+				case ':':
+				case ';':
+				case ')':
+				case '(':
+				case '}':
+				case '{':
+				case '[':
+				case ']':
+				case '|':
+				case '"':
+					separator = true;
 			}
 		}
 		return separator;
@@ -360,8 +358,8 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Subclasses may push a writer in order to intercept emitted content. Calls to this method must be matched by
-	 * corresponding calls to {@link #popWriter()}.
+	 * Subclasses may push a writer in order to intercept emitted content. Calls to this method must be matched by corresponding calls to
+	 * {@link #popWriter()}.
 	 *
 	 * @see #popWriter()
 	 */
@@ -464,10 +462,10 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		while (b != null) {
 			if (b.getBlockType() != null) {
 				switch (b.getBlockType()) {
-				case BULLETED_LIST:
-				case NUMERIC_LIST:
-				case DEFINITION_LIST:
-					++level;
+					case BULLETED_LIST:
+					case NUMERIC_LIST:
+					case DEFINITION_LIST:
+						++level;
 				}
 			}
 			b = b.getPreviousBlock();
@@ -480,10 +478,10 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		while (b != null) {
 			if (b.getBlockType() != null) {
 				switch (b.getBlockType()) {
-				case BULLETED_LIST:
-				case NUMERIC_LIST:
-				case DEFINITION_LIST:
-					return b.getBlockType();
+					case BULLETED_LIST:
+					case NUMERIC_LIST:
+					case DEFINITION_LIST:
+						return b.getBlockType();
 				}
 			}
 			b = b.getPreviousBlock();
@@ -552,8 +550,8 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Creates paragraph blocks in cases where content is emitted but no block is currently open. Subclasses may
-	 * override to alter the default paragraph block implementation.
+	 * Creates paragraph blocks in cases where content is emitted but no block is currently open. Subclasses may override to alter the
+	 * default paragraph block implementation.
 	 */
 	protected Block createImplicitParagraphBlock() {
 		return new ImplicitParagraphBlock();

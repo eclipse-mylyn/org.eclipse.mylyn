@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
  */
 public class EntityReferenceReplacementToken extends PatternBasedElement {
 
-	private static final Set<String> allowedEntities = new HashSet<String>();
+	private static final Set<String> allowedEntities = new HashSet<>();
 	static {
 		allowedEntities.add(""); //$NON-NLS-1$
 	}

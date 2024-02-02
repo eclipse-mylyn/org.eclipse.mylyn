@@ -50,13 +50,9 @@ public class BeginHeadingEvent extends DocumentBuilderEvent {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || !(obj instanceof BeginHeadingEvent other)) {
 			return false;
 		}
-		if (!(obj instanceof BeginHeadingEvent)) {
-			return false;
-		}
-		BeginHeadingEvent other = (BeginHeadingEvent) obj;
 		return other.level == level;
 	}
 

@@ -58,10 +58,9 @@ public class CharactersEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof CharactersEvent)) {
+		if (!(obj instanceof CharactersEvent other)) {
 			return false;
 		}
-		CharactersEvent other = (CharactersEvent) obj;
 		return Objects.equals(other.text, text);
 	}
 

@@ -29,8 +29,8 @@ public abstract class DocumentProcessor {
 	public abstract void process(Document document);
 
 	/**
-	 * normalize text node children of the given parent element. Ensures that adjacent text nodes are combined into a
-	 * single text node, and whitespace is normalized.
+	 * normalize text node children of the given parent element. Ensures that adjacent text nodes are combined into a single text node, and
+	 * whitespace is normalized.
 	 *
 	 * @param parentElement
 	 *            the parent element whose children should be normalized
@@ -41,11 +41,9 @@ public abstract class DocumentProcessor {
 		if (!children.isEmpty()) {
 			children = new ArrayList<>(children);
 			for (Node child : children) {
-				if (child instanceof TextNode) {
-					TextNode childTextNode = (TextNode) child;
+				if (child instanceof TextNode childTextNode) {
 					Node previousSibling = child.previousSibling();
-					if (previousSibling instanceof TextNode) {
-						TextNode previousSiblingTextNode = (TextNode) previousSibling;
+					if (previousSibling instanceof TextNode previousSiblingTextNode) {
 						childTextNode.text(previousSiblingTextNode.text() + childTextNode.text());
 						previousSibling.remove();
 					}

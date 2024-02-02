@@ -56,8 +56,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  * A confluence language for parsing Confluence markup.
  *
  * @author David Green
- * @see <a href="http://confluence.atlassian.com/display/DOC/Confluence+Notation+Guide+Overview">Confluence Notation
- *      Guide Overview</a>
+ * @see <a href="http://confluence.atlassian.com/display/DOC/Confluence+Notation+Guide+Overview">Confluence Notation Guide Overview</a>
  * @since 3.0
  */
 public class ConfluenceLanguage extends AbstractMarkupLanguage {
@@ -66,7 +65,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	 *
 	 * @see ExtendedQuoteBlock
 	 */
-	private final List<Block> nestedBlocks = new ArrayList<Block>();
+	private final List<Block> nestedBlocks = new ArrayList<>();
 
 	private boolean parseRelativeLinks = true;
 

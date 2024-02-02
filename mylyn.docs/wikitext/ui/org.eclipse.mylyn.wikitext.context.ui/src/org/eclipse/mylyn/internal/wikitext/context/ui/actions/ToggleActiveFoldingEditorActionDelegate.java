@@ -24,6 +24,7 @@ import org.eclipse.ui.IEditorPart;
  */
 public class ToggleActiveFoldingEditorActionDelegate implements IEditorActionDelegate {
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		action.setChecked(isActiveFoldingEnabled());
 	}
@@ -34,12 +35,14 @@ public class ToggleActiveFoldingEditorActionDelegate implements IEditorActionDel
 				.getBoolean(WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
 	}
 
+	@Override
 	public void run(IAction action) {
 		WikiTextContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED, action.isChecked());
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 

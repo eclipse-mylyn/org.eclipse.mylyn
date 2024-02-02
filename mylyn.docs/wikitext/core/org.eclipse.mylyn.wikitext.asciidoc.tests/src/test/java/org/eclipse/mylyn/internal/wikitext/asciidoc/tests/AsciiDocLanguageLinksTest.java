@@ -33,7 +33,7 @@ public class AsciiDocLanguageLinksTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void implicitLinkWithSymbols() {
-		String[] problematicUrls = new String[] { "http://example.com/.", //
+		String[] problematicUrls = { "http://example.com/.", //
 				"http://example.com/.a", "http://example.com/)a", "http://example.com/(", "http://example.com/(a",
 				"http://example.com/,", "http://example.com/,a", "http://example.com/;", "http://example.com/;a",
 				"http://example.com/#", "http://example.com/#a", "http://example.com/%20", "http://example.com/%20a", };

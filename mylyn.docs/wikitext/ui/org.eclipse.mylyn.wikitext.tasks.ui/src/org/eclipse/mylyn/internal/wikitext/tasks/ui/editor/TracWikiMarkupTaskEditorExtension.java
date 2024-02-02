@@ -23,8 +23,8 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 /**
  * @author David Green
  */
-public class TracWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension<TracWikiLanguage> implements
-		HyperlinkDetectorDescriptorFilter {
+public class TracWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension<TracWikiLanguage>
+		implements HyperlinkDetectorDescriptorFilter {
 
 	public TracWikiMarkupTaskEditorExtension() {
 		setMarkupLanguage(new TracWikiLanguage());
@@ -53,6 +53,7 @@ public class TracWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension
 		return configuration;
 	}
 
+	@Override
 	public boolean filter(HyperlinkDetectorDescriptor descriptor) {
 		String id = descriptor.getId();
 		if ("org.eclipse.mylyn.trac.ui.hyperlinksDetectors.Trac".equals(id)) { //$NON-NLS-1$

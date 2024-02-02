@@ -23,12 +23,14 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 	@Test
 	public void underlinedHeadingsHaveIds() {
 		assertMarkup("<h1 id=\"heading-1\">Heading 1</h1><p>some content</p><h1 id=\"heading-2\">Heading 2</h1>", //
-				"" + //
-						"Heading 1\n" + //
-						"=========\n" + "\n" + //
-						"some content\n\n" + //
-						"Heading 2\n" + //
-						"===========");
+				"""
+						Heading 1
+						=========
+
+						some content
+
+						Heading 2
+						===========""");
 	}
 
 	@Test

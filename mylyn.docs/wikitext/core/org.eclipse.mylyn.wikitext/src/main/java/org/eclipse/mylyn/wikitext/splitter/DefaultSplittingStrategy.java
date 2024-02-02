@@ -45,7 +45,7 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 		}
 		this.label = label;
 		this.id = id;
-		this.headingLevel = level;
+		headingLevel = level;
 		++headingCount;
 		if (isSplit()) {
 			target = computeSplitTarget();

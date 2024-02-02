@@ -11,8 +11,6 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * An implementation of a markup parser specifically designed to build a model of the document outline
- * based on headers in the markup.  
+ * An implementation of a markup parser specifically designed to build a model of the document outline based on headers in the markup.
  */
 package org.eclipse.mylyn.wikitext.parser.outline;
-

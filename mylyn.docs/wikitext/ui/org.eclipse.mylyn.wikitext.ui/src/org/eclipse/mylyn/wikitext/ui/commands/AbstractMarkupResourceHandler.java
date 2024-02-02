@@ -96,8 +96,8 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	}
 
 	/**
-	 * Classes that need access to the {@code event} should override this method. The default implementation simply
-	 * calls {@link #handleFile(IFile, String)}
+	 * Classes that need access to the {@code event} should override this method. The default implementation simply calls
+	 * {@link #handleFile(IFile, String)}
 	 *
 	 * @since 1.9
 	 * @see #handleFile(IFile, String)
@@ -128,9 +128,9 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	 * Perform the command's function on the given file.
 	 *
 	 * @param file
-	 *                 the input file to process
+	 *            the input file to process
 	 * @param name
-	 *                 the name of the output file without file extension
+	 *            the name of the output file without file extension
 	 * @see #handleFile(ExecutionEvent, IFile, String)
 	 */
 	protected abstract void handleFile(IFile file, String name) throws ExecutionException;
