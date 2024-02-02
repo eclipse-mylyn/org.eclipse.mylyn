@@ -51,15 +51,15 @@ public class ContextCorePlugin extends Plugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.core"; //$NON-NLS-1$
 
-	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
+	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<>();
 
-	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<String, Set<String>>();
+	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<>();
 
-	private List<IContextContributor> contextContributor = new CopyOnWriteArrayList<IContextContributor>();
+	private List<IContextContributor> contextContributor = new CopyOnWriteArrayList<>();
 
 	// specifies that one content type should shadow another
 	// the <value> content type shadows the <key> content typee
-	private final Map<String, String> contentTypeToShadowMap = new ConcurrentHashMap<String, String>();
+	private final Map<String, String> contentTypeToShadowMap = new ConcurrentHashMap<>();
 
 	private AbstractContextStructureBridge defaultBridge = null;
 
@@ -69,7 +69,7 @@ public class ContextCorePlugin extends Plugin {
 
 	private static LocalContextStore contextStore;
 
-	private final Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
+	private final Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<>();
 
 	private final InteractionContextScaling commonContextScaling = new InteractionContextScaling();
 
@@ -187,7 +187,7 @@ public class ContextCorePlugin extends Plugin {
 	private void addRelationProvider(String contentType, AbstractRelationProvider provider) {
 		Set<AbstractRelationProvider> providers = relationProviders.get(contentType);
 		if (providers == null) {
-			providers = new HashSet<AbstractRelationProvider>();
+			providers = new HashSet<>();
 			relationProviders.put(contentType, providers);
 		}
 		providers.add(provider);
@@ -199,7 +199,7 @@ public class ContextCorePlugin extends Plugin {
 	 * @return all relation providers
 	 */
 	public Set<AbstractRelationProvider> getRelationProviders() {
-		Set<AbstractRelationProvider> allProviders = new HashSet<AbstractRelationProvider>();
+		Set<AbstractRelationProvider> allProviders = new HashSet<>();
 		for (Set<AbstractRelationProvider> providers : relationProviders.values()) {
 			allProviders.addAll(providers);
 		}
@@ -230,7 +230,7 @@ public class ContextCorePlugin extends Plugin {
 
 	void initContextContributor() {
 		if (!contextContributorInitialized) {
-			ExtensionPointReader<IContextContributor> extensionPointReader = new ExtensionPointReader<IContextContributor>(
+			ExtensionPointReader<IContextContributor> extensionPointReader = new ExtensionPointReader<>(
 					ContextCorePlugin.ID_PLUGIN, ContextCorePlugin.EXTENSION_ID_CONTRIBUTOR,
 					ContextCorePlugin.EXTENSION_ELEMENT_CONTRIBUTOR, IContextContributor.class);
 			extensionPointReader.read();
@@ -281,7 +281,7 @@ public class ContextCorePlugin extends Plugin {
 				return bridge;
 			}
 		}
-		return (defaultBridge == null) ? DEFAULT_BRIDGE : defaultBridge;
+		return defaultBridge == null ? DEFAULT_BRIDGE : defaultBridge;
 	}
 
 	public Set<String> getContentTypes() {
@@ -313,12 +313,12 @@ public class ContextCorePlugin extends Plugin {
 		}
 
 		// use the default if not found
-		return (defaultBridge != null && defaultBridge.acceptsObject(object)) ? defaultBridge : DEFAULT_BRIDGE;
+		return defaultBridge != null && defaultBridge.acceptsObject(object) ? defaultBridge : DEFAULT_BRIDGE;
 	}
 
 	/**
-	 * Recommended bridge registration is via extension point, but bridges can also be added at runtime. Note that only
-	 * one bridge per content type is supported. Overriding content types is not supported.
+	 * Recommended bridge registration is via extension point, but bridges can also be added at runtime. Note that only one bridge per
+	 * content type is supported. Overriding content types is not supported.
 	 */
 	public synchronized void addStructureBridge(AbstractContextStructureBridge bridge) {
 		if (bridge.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)) {
@@ -330,7 +330,7 @@ public class ContextCorePlugin extends Plugin {
 			Set<String> childContentTypes = childContentTypeMap.get(bridge.getParentContentType());
 			if (childContentTypes == null) {
 				// CopyOnWriteArrayList handles concurrent access to the content types
-				childContentTypes = new CopyOnWriteArraySet<String>();
+				childContentTypes = new CopyOnWriteArraySet<>();
 			}
 
 			childContentTypes.add(bridge.getContentType());
@@ -469,14 +469,13 @@ public class ContextCorePlugin extends Plugin {
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
-				if (!(object instanceof AbstractContextStructureBridge)) {
+				if (!(object instanceof AbstractContextStructureBridge bridge)) {
 					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
 									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
 
-				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
 				if (element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE) != null) {
 					String parentContentType = element
 							.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);

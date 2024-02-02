@@ -40,16 +40,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.IProgressConstants2;
 
 /**
- * GitHub issue task editor attribute part that display labels and milestone
- * attribute editors.
+ * GitHub issue task editor attribute part that display labels and milestone attribute editors.
  */
 @SuppressWarnings("restriction")
 public class IssueAttributePart extends AbstractTaskEditorSection {
@@ -68,33 +65,33 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	}
 
 	@Override
-	protected AbstractAttributeEditor createAttributeEditor(
-			TaskAttribute attribute) {
-		if (IssueAttribute.LABELS.getMetadata().getId()
-				.equals(attribute.getId()))
+	protected AbstractAttributeEditor createAttributeEditor(TaskAttribute attribute) {
+		if (IssueAttribute.LABELS.getMetadata().getId().equals(attribute.getId())) {
 			return new IssueLabelAttributeEditor(getModel(), attribute);
-		if (IssueAttribute.MILESTONE.getMetadata().getId()
-				.equals(attribute.getId()))
+		}
+		if (IssueAttribute.MILESTONE.getMetadata().getId().equals(attribute.getId())) {
 			return super.createAttributeEditor(attribute);
+		}
 		return null;
 	}
 
-	private void createAttributeControls(Composite attributesComposite,
-			FormToolkit toolkit) {
+	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit) {
 		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
-			if (attributeEditor.hasLabel())
-				attributeEditor
-						.createLabelControl(attributesComposite, toolkit);
+			if (attributeEditor.hasLabel()) {
+				attributeEditor.createLabelControl(attributesComposite, toolkit);
+			}
 			attributeEditor.createControl(attributesComposite, toolkit);
 			Object data = attributeEditor.getControl().getLayoutData();
 			if (data == null) {
 				data = GridDataFactory.swtDefaults().create();
 				attributeEditor.getControl().setLayoutData(data);
 			}
-			if (data instanceof GridData)
+			if (data instanceof GridData) {
 				((GridData) data).widthHint = 140;
-			getTaskEditorPage().getAttributeEditorToolkit().adapt(
-					attributeEditor);
+			}
+			getTaskEditorPage().getAttributeEditorToolkit()
+					.adapt(
+							attributeEditor);
 		}
 	}
 
@@ -117,13 +114,10 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	@Override
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		attributesComposite = toolkit.createComposite(parent);
-		attributesComposite.addListener(SWT.MouseDown, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				Control focus = event.display.getFocusControl();
-				if (focus instanceof Text
-						&& ((Text) focus).getEditable() == false)
-					getManagedForm().getForm().setFocus();
+		attributesComposite.addListener(SWT.MouseDown, event -> {
+			Control focus = event.display.getFocusControl();
+			if (focus instanceof Text && !((Text) focus).getEditable()) {
+				getManagedForm().getForm().setFocus();
 			}
 		});
 
@@ -152,41 +146,35 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 				getTaskEditorPage().showEditorBusy(true);
 				final TaskJob job = TasksUiInternal.getJobFactory()
 						.createUpdateRepositoryConfigurationJob(
-								getTaskEditorPage().getConnector(),
-								getTaskEditorPage().getTaskRepository(),
+								getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository(),
 								getTaskEditorPage().getTask());
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						PlatformUI.getWorkbench().getDisplay()
-								.asyncExec(() -> {
-									getTaskEditorPage().showEditorBusy(false);
-									if (job.getStatus() != null) {
-										getTaskEditorPage().getTaskEditor()
-												.setStatus(
-														Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
-														Messages.TaskEditorAttributePart_Update_Failed,
-														job.getStatus());
-									} else {
-										getTaskEditorPage().refresh();
-									}
-								});
+						PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+							getTaskEditorPage().showEditorBusy(false);
+							if (job.getStatus() != null) {
+								getTaskEditorPage().getTaskEditor()
+										.setStatus(
+												Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
+												Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
+							} else {
+								getTaskEditorPage().refresh();
+							}
+						});
 					}
 				});
 				job.setUser(true);
-				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY,
-						Boolean.TRUE);
+				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 				job.setPriority(Job.INTERACTIVE);
 				job.schedule();
 			}
 
 		};
-		repositoryConfigRefresh
-				.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(
 				getTaskEditorPage().getTaskRepository()));
-		repositoryConfigRefresh
-				.setToolTipText(Messages.TaskEditorAttributePart_Refresh_Attributes);
+		repositoryConfigRefresh.setToolTipText(Messages.TaskEditorAttributePart_Refresh_Attributes);
 		toolBar.add(repositoryConfigRefresh);
 	}
 
@@ -196,38 +184,39 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 
 		TaskAttribute root = getTaskData().getRoot();
 		List<TaskAttribute> attributes = new LinkedList<>();
-		TaskAttribute milestones = root.getAttribute(IssueAttribute.MILESTONE
-				.getMetadata().getId());
-		if (milestones != null)
+		TaskAttribute milestones = root.getAttribute(IssueAttribute.MILESTONE.getMetadata().getId());
+		if (milestones != null) {
 			attributes.add(milestones);
+		}
 
-		TaskAttribute labels = root.getAttribute(IssueAttribute.LABELS
-				.getMetadata().getId());
-		if (labels != null)
+		TaskAttribute labels = root.getAttribute(IssueAttribute.LABELS.getMetadata().getId());
+		if (labels != null) {
 			attributes.add(labels);
+		}
 
 		for (TaskAttribute attribute : attributes) {
 			AbstractAttributeEditor attributeEditor = createAttributeEditor(attribute);
 			if (attributeEditor != null) {
 				attributeEditors.add(attributeEditor);
-				if (getModel().hasIncomingChanges(attribute))
+				if (getModel().hasIncomingChanges(attribute)) {
 					hasIncoming = true;
+				}
 			}
 		}
 	}
 
 	@Override
 	public boolean setFormInput(Object input) {
-		if (input instanceof String) {
-			String text = (String) input;
-			Map<String, TaskAttribute> attributes = getTaskData().getRoot()
-					.getAttributes();
-			for (TaskAttribute attribute : attributes.values())
+		if (input instanceof String text) {
+			Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
+			for (TaskAttribute attribute : attributes.values()) {
 				if (text.equals(attribute.getId())) {
 					TaskAttributeMetaData properties = attribute.getMetaData();
-					if (TaskAttribute.KIND_DEFAULT.equals(properties.getKind()))
+					if (TaskAttribute.KIND_DEFAULT.equals(properties.getKind())) {
 						selectReveal(attribute);
+					}
 				}
+			}
 		}
 		return super.setFormInput(input);
 	}
@@ -239,14 +228,15 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	 *            to show
 	 */
 	public void selectReveal(TaskAttribute attribute) {
-		if (attribute == null)
+		if (attribute == null) {
 			return;
+		}
 
-		if (!getSection().isExpanded())
+		if (!getSection().isExpanded()) {
 			CommonFormUtil.setExpanded(getSection(), true);
+		}
 
-		EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(),
-				attribute.getId());
+		EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(), attribute.getId());
 	}
 
 }

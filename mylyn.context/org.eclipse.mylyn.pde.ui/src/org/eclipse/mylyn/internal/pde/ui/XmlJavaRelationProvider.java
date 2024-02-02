@@ -69,9 +69,9 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	public static final int DEFAULT_DEGREE = 3;
 
-	public static final List<Job> runningJobs = new ArrayList<Job>();
+	public static final List<Job> runningJobs = new ArrayList<>();
 
-	public static final Map<Match, XmlNodeHelper> nodeMap = new HashMap<Match, XmlNodeHelper>();
+	public static final Map<Match, XmlNodeHelper> nodeMap = new HashMap<>();
 
 	public XmlJavaRelationProvider() {
 		// TODO: should this be a generic XML extension?
@@ -80,7 +80,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		List<IDegreeOfSeparation> separations = new ArrayList<>();
 		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
 		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
 		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
@@ -96,10 +96,8 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 			return;
 		}
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
-		if (javaElement == null || javaElement instanceof ICompilationUnit || !javaElement.exists()) {
-			return;
-		}
-		if (!acceptElement(javaElement)) {
+		if (javaElement == null || javaElement instanceof ICompilationUnit || !javaElement.exists()
+				|| !acceptElement(javaElement)) {
 			return;
 		}
 
@@ -113,74 +111,75 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		Set<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 
 		switch (degreeOfSeparation) {
-		case 1:
-			// create a search scope for the projects of landmarks
-			Set<IResource> l = new HashSet<IResource>();
-			for (IInteractionElement landmark : landmarks) {
-				if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE)) {
-					// ||
-					// landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE))
-					// {
-					String handle = landmark.getHandleIdentifier();
-					IResource element = null;
-					int first = handle.indexOf(";"); //$NON-NLS-1$
-					String filename = handle;
-					if (first != -1) {
-						filename = handle.substring(0, first);
-					}
-					try {
-						// change the file into a document
-						IPath path = new Path(filename);
-						element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-					} catch (Exception e) {
-						StatusHandler.log(
-								new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Scope creation failed", e)); //$NON-NLS-1$
-					}
-					l.add(element);
-				}
-			}
-
-			IResource[] res = new IResource[l.size()];
-			res = l.toArray(res);
-			TextSearchScope doiScope = FileTextSearchScope.newSearchScope(res,
-					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
-			return l.isEmpty() ? null : doiScope;
-		case 2:
-			// create a search scope for the projects of landmarks
-			Set<IProject> projectsToSearch = new HashSet<IProject>();
-			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
-				IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(landmark, true);
-				IProject project = null;
-				if (resource != null) {
-					project = resource.getProject();
-				} else {
-					Object object = bridge.getObjectForHandle(landmark.getHandleIdentifier());
-					if (object instanceof IJavaElement) {
-						project = ((IJavaElement) object).getJavaProject().getProject();
+			case 1:
+				// create a search scope for the projects of landmarks
+				Set<IResource> l = new HashSet<>();
+				for (IInteractionElement landmark : landmarks) {
+					if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE)) {
+						// ||
+						// landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE))
+						// {
+						String handle = landmark.getHandleIdentifier();
+						IResource element = null;
+						int first = handle.indexOf(";"); //$NON-NLS-1$
+						String filename = handle;
+						if (first != -1) {
+							filename = handle.substring(0, first);
+						}
+						try {
+							// change the file into a document
+							IPath path = new Path(filename);
+							element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
+						} catch (Exception e) {
+							StatusHandler.log(
+									new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Scope creation failed", //$NON-NLS-1$
+											e));
+						}
+						l.add(element);
 					}
 				}
-				if (project != null) {
-					projectsToSearch.add(project);
+
+				IResource[] res = new IResource[l.size()];
+				res = l.toArray(res);
+				TextSearchScope doiScope = FileTextSearchScope.newSearchScope(res,
+						new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
+				return l.isEmpty() ? null : doiScope;
+			case 2:
+				// create a search scope for the projects of landmarks
+				Set<IProject> projectsToSearch = new HashSet<>();
+				for (IInteractionElement landmark : landmarks) {
+					AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
+					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(landmark, true);
+					IProject project = null;
+					if (resource != null) {
+						project = resource.getProject();
+					} else {
+						Object object = bridge.getObjectForHandle(landmark.getHandleIdentifier());
+						if (object instanceof IJavaElement) {
+							project = ((IJavaElement) object).getJavaProject().getProject();
+						}
+					}
+					if (project != null) {
+						projectsToSearch.add(project);
+					}
 				}
-			}
 
-			res = new IProject[projectsToSearch.size()];
-			res = projectsToSearch.toArray(res);
-			TextSearchScope projScope = FileTextSearchScope.newSearchScope(res,
-					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
+				res = new IProject[projectsToSearch.size()];
+				res = projectsToSearch.toArray(res);
+				TextSearchScope projScope = FileTextSearchScope.newSearchScope(res,
+						new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
 
-			return projectsToSearch.isEmpty() ? null : projScope;
-		case 3:
-			// create a search scope for the workspace
-			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
-					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
-		case 4:
-			// create a search scope for the workspace
-			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
-					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
-		default:
-			return null;
+				return projectsToSearch.isEmpty() ? null : projScope;
+			case 3:
+				// create a search scope for the workspace
+				return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
+						new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
+			case 4:
+				// create a search scope for the workspace
+				return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
+						new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
+			default:
+				return null;
 		}
 
 	}
@@ -207,13 +206,14 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 				private boolean gathered = false;
 
+				@Override
 				public void searchCompleted(List<?> l) {
 					// deal with File
 					if (l.isEmpty()) {
 						return;
 					}
 
-					Map<String, String> nodes = new HashMap<String, String>();
+					Map<String, String> nodes = new HashMap<>();
 
 					if (l.get(0) instanceof FileSearchResult) {
 						FileSearchResult fsr = (FileSearchResult) l.get(0);
@@ -222,8 +222,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 						for (Object element : far) {
 							Match[] mar = fsr.getMatches(element);
 
-							if (element instanceof File) {
-								File f = (File) element;
+							if (element instanceof File f) {
 
 								// change the file into a document
 								// FileEditorInput fei = new FileEditorInput(f);
@@ -261,6 +260,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 					XmlJavaRelationProvider.this.searchCompleted(node);
 				}
 
+				@Override
 				public boolean resultsGathered() {
 					return gathered;
 				}
@@ -285,11 +285,10 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 	}
 
 	private String getFullyQualifiedName(IJavaElement je) {
-		if (!(je instanceof IMember)) {
+		if (!(je instanceof IMember m)) {
 			return null;
 		}
 
-		IMember m = (IMember) je;
 		if (m.getDeclaringType() == null) {
 			return ((IType) m).getFullyQualifiedName();
 		} else {
@@ -347,7 +346,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				super.run(monitor);
 				ISearchResult result = getSearchResult();
 				if (result instanceof FileSearchResult) {
-					List<Object> l = new ArrayList<Object>();
+					List<Object> l = new ArrayList<>();
 					if (((FileSearchResult) result).getElements().length != 0) {
 						l.add(result);
 					}
@@ -371,7 +370,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		}
 
 		/** List of listeners wanting to know about the searches */
-		private final List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
+		private final List<IActiveSearchListener> listeners = new ArrayList<>();
 
 		/**
 		 * Add a listener for when the bugzilla search is completed
@@ -379,6 +378,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * @param l
 		 *            The listener to add
 		 */
+		@Override
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
 			listeners.add(l);
@@ -390,6 +390,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * @param l
 		 *            The listener to remove
 		 */
+		@Override
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
 			listeners.remove(l);

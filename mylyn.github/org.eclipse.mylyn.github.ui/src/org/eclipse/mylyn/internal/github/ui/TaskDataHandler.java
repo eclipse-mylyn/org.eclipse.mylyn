@@ -37,8 +37,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
-	 * POST_HANDLER_CALLBACK - variable for post handler callback that is a
-	 * {@link Runnable}
+	 * POST_HANDLER_CALLBACK - variable for post handler callback that is a {@link Runnable}
 	 */
 	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback"; //$NON-NLS-1$
 
@@ -49,8 +48,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 * @param handlerService
 	 * @return context
 	 */
-	public static IEvaluationContext createContext(
-			IStructuredSelection selection, IHandlerService handlerService) {
+	public static IEvaluationContext createContext(IStructuredSelection selection, IHandlerService handlerService) {
 		IEvaluationContext context = new EvaluationContext(
 				handlerService.createContextSnapshot(false), selection.toList());
 		context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, selection);
@@ -66,28 +64,29 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 */
 	protected TaskData getTaskData(ExecutionEvent event) {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection == null || selection.isEmpty())
+		if (selection == null || selection.isEmpty()) {
 			selection = HandlerUtil.getActiveMenuSelection(event);
+		}
 
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-			if (first instanceof TaskData)
+			if (first instanceof TaskData) {
 				return (TaskData) first;
-			else if (first instanceof ITask)
+			} else if (first instanceof ITask) {
 				try {
-					return TasksUi.getTaskDataManager().getTaskData(
-							(ITask) first);
+					return TasksUi.getTaskDataManager()
+							.getTaskData(
+									(ITask) first);
 				} catch (CoreException e) {
 					return null;
 				}
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * Should this handler be enabled for the given task data?
-	 *
-	 * Always returns true by default, sub-classes should override
+	 * Should this handler be enabled for the given task data? Always returns true by default, sub-classes should override
 	 *
 	 * @param data
 	 * @return true is enabled, false otherwise
@@ -105,17 +104,19 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	protected void schedule(Job job, ExecutionEvent event) {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
 		if (site == null) {
-			IWorkbenchPart part = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage().getActivePart();
-			if (part != null)
+			IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+			if (part != null) {
 				site = part.getSite();
+			}
 		}
-		IWorkbenchSiteProgressService progress = site != null ? (IWorkbenchSiteProgressService) site
-				.getService(IWorkbenchSiteProgressService.class) : null;
-		if (progress != null)
+		IWorkbenchSiteProgressService progress = site != null
+				? (IWorkbenchSiteProgressService) site.getService(IWorkbenchSiteProgressService.class)
+				: null;
+		if (progress != null) {
 			progress.schedule(job);
-		else
+		} else {
 			job.schedule();
+		}
 	}
 
 	/**
@@ -125,7 +126,8 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 */
 	protected void executeCallback(ExecutionEvent event) {
 		Object callback = HandlerUtil.getVariable(event, POST_HANDLER_CALLBACK);
-		if (callback instanceof Runnable)
+		if (callback instanceof Runnable) {
 			((Runnable) callback).run();
+		}
 	}
 }

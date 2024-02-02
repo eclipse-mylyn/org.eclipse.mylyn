@@ -23,33 +23,35 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class ContentOutlineManager implements IPartListener {
 
+	@Override
 	public void partBroughtToTop(final IWorkbenchPart part) {
 		// use the display async due to bug 261977: [context] outline view does not filter contents when new editor is opened
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (part instanceof IEditorPart) {
-					IEditorPart editorPart = (IEditorPart) part;
-					FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
-					if (applyAction != null) {
-						applyAction.update(editorPart);
-					}
+		Display.getDefault().asyncExec(() -> {
+			if (part instanceof IEditorPart editorPart) {
+				FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
+				if (applyAction != null) {
+					applyAction.update(editorPart);
 				}
 			}
 		});
 	}
 
+	@Override
 	public void partActivated(IWorkbenchPart part) {
 		// ignore
 	}
 
+	@Override
 	public void partOpened(IWorkbenchPart part) {
 		// ignore
 	}
 
+	@Override
 	public void partClosed(IWorkbenchPart partRef) {
 		// ignore
 	}
 
+	@Override
 	public void partDeactivated(IWorkbenchPart partRef) {
 		// ignore
 	}

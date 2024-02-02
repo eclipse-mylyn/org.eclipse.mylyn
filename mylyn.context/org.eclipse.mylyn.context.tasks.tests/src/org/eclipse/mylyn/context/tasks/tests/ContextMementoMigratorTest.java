@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
@@ -30,6 +28,8 @@ import org.eclipse.ui.IMemento;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

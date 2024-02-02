@@ -50,8 +50,7 @@ public class CredentialsWizardPage extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.swtDefaults().numColumns(2).equalWidth(false)
-				.applyTo(displayArea);
+		GridLayoutFactory.swtDefaults().numColumns(2).equalWidth(false).applyTo(displayArea);
 
 		new Label(displayArea, SWT.NONE).setText(Messages.CredentialsWizardPage_LabelUser);
 
@@ -61,8 +60,7 @@ public class CredentialsWizardPage extends WizardPage {
 
 		Label passwordLabel = new Label(displayArea, SWT.NONE);
 		passwordLabel.setText(Messages.CredentialsWizardPage_LabelPassword);
-		passwordText = new Text(displayArea, SWT.BORDER | SWT.SINGLE
-				| SWT.PASSWORD);
+		passwordText = new Text(displayArea, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
 		passwordText.addModifyListener(e -> validatePage());
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
 		useToken = new Button(displayArea, SWT.CHECK);
@@ -91,7 +89,6 @@ public class CredentialsWizardPage extends WizardPage {
 				widgetSelected(e);
 			}
 		});
-
 
 		setControl(displayArea);
 		setPageComplete(false);

@@ -57,10 +57,12 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			this.browseFilteredListener = browseFilteredListener;
 		}
 
+		@Override
 		public void mouseEnter(MouseEvent e) {
 			mouseMove(e);
 		}
 
+		@Override
 		public void mouseExit(MouseEvent e) {
 			if (lastItem != null && !lastItem.isDisposed()) {
 				lastItem.setData(ID_HOVER, NodeState.LESS);
@@ -88,6 +90,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			}
 		}
 
+		@Override
 		public void mouseHover(MouseEvent e) {
 
 			if (toolTip == null || toolTip.isDisposed()) {
@@ -121,6 +124,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			return selectedX > imageStartX && selectedX < imageEndX;
 		}
 
+		@Override
 		public void mouseMove(MouseEvent e) {
 			if (toolTip != null && !toolTip.isDisposed()) {
 				toolTip.setVisible(false);
@@ -128,10 +132,9 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				toolTip = null;
 			}
 
-			if (!(e.widget instanceof Tree) || e.widget.isDisposed()) {
+			if (!(e.widget instanceof Tree tree) || e.widget.isDisposed()) {
 				return;
 			}
-			Tree tree = (Tree) e.widget;
 			final TreeItem item = findItem(tree, e.y);
 			if (item != null && !item.isDisposed()) {
 				if (lastItem != null && !lastItem.isDisposed() && !lastItem.equals(item)) {
@@ -151,18 +154,16 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				lastMoveTime = currentTime;
 				// be responsive for small moves but delay more for bigger ones
 				int delay = Math.min(100, (int) ((currentTime - startMoveTime) / 4.0));
-				PlatformUI.getWorkbench().getDisplay().timerExec(delay, new Runnable() {
-					public void run() {// do nothing if we aren't using the most recent item
-						if (currentItem == item && !item.isDisposed()) {
-							if (item.getData(ID_HOVER) != NodeState.MORE_ERROR) {
-								item.setData(ID_HOVER, NodeState.MORE);
-							}
-							if (lastItem == null || (!lastItem.isDisposed() && !lastItem.equals(item))) {
-								redrawTree(lastItem);
-								redrawTree(item);
-							}
-							lastItem = item;
+				PlatformUI.getWorkbench().getDisplay().timerExec(delay, () -> {// do nothing if we aren't using the most recent item
+					if (currentItem == item && !item.isDisposed()) {
+						if (item.getData(ID_HOVER) != NodeState.MORE_ERROR) {
+							item.setData(ID_HOVER, NodeState.MORE);
 						}
+						if (lastItem == null || !lastItem.isDisposed() && !lastItem.equals(item)) {
+							redrawTree(lastItem);
+							redrawTree(item);
+						}
+						lastItem = item;
 					}
 				});
 			} else {
@@ -180,11 +181,13 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			}
 		}
 
+		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 			// ignore
 
 		}
 
+		@Override
 		public void mouseDown(MouseEvent e) {
 			if (toolTip != null && !toolTip.isDisposed()) {
 				toolTip.setVisible(false);
@@ -192,12 +195,11 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				toolTip = null;
 			}
 
-			if (!(e.widget instanceof Tree) || e.widget.isDisposed()) {
+			if (!(e.widget instanceof Tree tree) || e.widget.isDisposed()) {
 				// we only handle tree's
 				return;
 			}
 
-			Tree tree = (Tree) e.widget;
 			TreeItem item = findItem(tree, e.y);
 
 			if (item == null || item.isDisposed() || e.button != 1) {
@@ -222,6 +224,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			}
 		}
 
+		@Override
 		public void mouseUp(MouseEvent e) {
 			// ignore
 
@@ -237,7 +240,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 
 	enum NodeState {
 		MORE, LESS, MORE_ERROR
-	};
+	}
 
 	private static final String ID_HOVER = "mylyn-context-hover"; //$NON-NLS-1$
 
@@ -289,6 +292,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 	 * Therefore, it is critical for performance that these methods be as
 	 * efficient as possible.
 	 */
+	@Override
 	public void handleEvent(Event event) {
 
 		if (!(event.widget instanceof Tree)) {
@@ -297,40 +301,40 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		}
 
 		switch (event.type) {
-		case SWT.PaintItem: {
-			Tree tree = (Tree) event.widget;
-			if (tree.isDisposed() || event.index != 0) {
-				return;
-			}
-			TreeItem item = findItem(tree, event.y);
-			if (item == null || item.isDisposed()) {
-				return;
-			}
+			case SWT.PaintItem: {
+				Tree tree = (Tree) event.widget;
+				if (tree.isDisposed() || event.index != 0) {
+					return;
+				}
+				TreeItem item = findItem(tree, event.y);
+				if (item == null || item.isDisposed()) {
+					return;
+				}
 
-			int imageStartX = getImageStartX(event.x, event.width, tree);
+				int imageStartX = getImageStartX(event.x, event.width, tree);
 
-			NodeState value = (NodeState) item.getData(ID_HOVER);
+				NodeState value = (NodeState) item.getData(ID_HOVER);
 
-			int imageStartY = event.y;
-			int imageHeight = moreImage.getBounds().height;
-			if (value != null && value.equals(NodeState.MORE_ERROR)) {
-				imageHeight = moreErrorImage.getBounds().height;
-			}
+				int imageStartY = event.y;
+				int imageHeight = moreImage.getBounds().height;
+				if (value != null && value.equals(NodeState.MORE_ERROR)) {
+					imageHeight = moreErrorImage.getBounds().height;
+				}
 
-			int offset = Math.round(((float) event.height) / 2 - ((float) imageHeight) / 2);
-			imageStartY += offset;
-			Rectangle clipping = event.gc.getClipping();
-			if (clipping.width < imageStartX && clipping.width > 0) {
-				clipping.width += IMAGE_PADDING + moreImage.getBounds().width;
-				event.gc.setClipping(clipping);
+				int offset = Math.round((float) event.height / 2 - (float) imageHeight / 2);
+				imageStartY += offset;
+				Rectangle clipping = event.gc.getClipping();
+				if (clipping.width < imageStartX && clipping.width > 0) {
+					clipping.width += IMAGE_PADDING + moreImage.getBounds().width;
+					event.gc.setClipping(clipping);
+				}
+				if (value != null && value.equals(NodeState.MORE)) {
+					event.gc.drawImage(moreImage, imageStartX, imageStartY);
+				} else if (value != null && value.equals(NodeState.MORE_ERROR)) {
+					event.gc.drawImage(moreErrorImage, imageStartX, imageStartY);
+				}
+				break;
 			}
-			if (value != null && value.equals(NodeState.MORE)) {
-				event.gc.drawImage(moreImage, imageStartX, imageStartY);
-			} else if (value != null && value.equals(NodeState.MORE_ERROR)) {
-				event.gc.drawImage(moreErrorImage, imageStartX, imageStartY);
-			}
-			break;
-		}
 		}
 	}
 
@@ -357,7 +361,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		Point size = tree.getSize();
 		final int RATE = 17;
 		for (int i = 0; i <= RATE && item == null; i++) {
-			int position = size.x / RATE + (i * size.x / RATE);
+			int position = size.x / RATE + i * size.x / RATE;
 			item = tree.getItem(new Point(position, y));
 		}
 		return item;

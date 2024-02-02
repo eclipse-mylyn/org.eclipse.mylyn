@@ -54,7 +54,7 @@ public class JenkinsUrl {
 
 	public JenkinsUrl exclude(String exclude) {
 		if (this.exclude == null) {
-			this.exclude = new ArrayList<String>();
+			this.exclude = new ArrayList<>();
 		}
 		this.exclude.add(exclude);
 		return this;

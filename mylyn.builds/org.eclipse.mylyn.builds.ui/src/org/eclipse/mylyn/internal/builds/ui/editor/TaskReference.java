@@ -27,18 +27,22 @@ public class TaskReference extends AbstractTaskReference {
 
 	private String text;
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
 
+	@Override
 	public String getTaskId() {
 		return taskId;
 	}
 
+	@Override
 	public String getTaskUrl() {
 		return taskUrl;
 	}
 
+	@Override
 	public String getText() {
 		return text;
 	}

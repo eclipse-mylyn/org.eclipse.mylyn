@@ -36,7 +36,7 @@ public abstract class BuildJob extends Job {
 
 	public BuildJob(String name) {
 		super(name);
-		this.monitor = new DelegatingProgressMonitor();
+		monitor = new DelegatingProgressMonitor();
 	}
 
 	public IBuildElement getElement() {

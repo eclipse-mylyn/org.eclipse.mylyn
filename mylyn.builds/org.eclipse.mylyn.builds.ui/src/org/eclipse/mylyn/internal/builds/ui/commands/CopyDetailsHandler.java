@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
+import org.eclipse.mylyn.commons.ui.ClipboardCopier.TextProvider;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.osgi.util.NLS;
@@ -35,28 +36,21 @@ public class CopyDetailsHandler extends AbstractHandler {
 	public enum Mode {
 		KEY, SUMMARY, SUMMARY_URL, URL;
 
+		@Override
 		public String toString() {
-			switch (this) {
-			case KEY:
-				return "ID";
-			case URL:
-				return "URL";
-			case SUMMARY:
-				return "Summary";
-			case SUMMARY_URL:
-				return "Summary and URL";
-			}
-			return null;
+			return switch (this) {
+				case KEY -> "ID";
+				case URL -> "URL";
+				case SUMMARY -> "Summary";
+				case SUMMARY_URL -> "Summary and URL";
+				default -> null;
+			};
 		}
 
 	}
 
 	public static void copyDetails(List<IBuildElement> elements, final Mode mode) {
-		ClipboardCopier.getDefault().copy(elements, new ClipboardCopier.TextProvider() {
-			public String getTextForElement(Object element) {
-				return getTextFor(element, mode);
-			}
-		});
+		ClipboardCopier.getDefault().copy(elements, (TextProvider) element -> getTextFor(element, mode));
 	}
 
 	public static String getTextFor(Object object) {
@@ -64,58 +58,52 @@ public class CopyDetailsHandler extends AbstractHandler {
 	}
 
 	public static String getTextFor(Object object, Mode mode) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		switch (mode) {
-		case KEY:
-			if (object instanceof IBuild) {
-				IBuild build = (IBuild) object;
-				if (build.getId() != null) {
-					sb.append(build.getId());
+			case KEY:
+				if (object instanceof IBuild build) {
+					if (build.getId() != null) {
+						sb.append(build.getId());
+					}
+				} else if (object instanceof IBuildElement element) {
+					sb.append(element.getLabel());
 				}
-			} else if (object instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) object;
-				sb.append(element.getLabel());
-			}
-			break;
-		case URL:
-			if (object instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) object;
-				if (element.getUrl() != null) {
-					sb.append(element.getUrl());
+				break;
+			case URL:
+				if (object instanceof IBuildElement element) {
+					if (element.getUrl() != null) {
+						sb.append(element.getUrl());
+					}
 				}
-			}
-			break;
-		case SUMMARY:
-			if (object instanceof IBuild) {
-				IBuild build = (IBuild) object;
-				if (build.getLabel() != null) {
-					sb.append(NLS.bind("Build {0}", build.getLabel()));
-				}
-			} else if (object instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) object;
-				sb.append(element.getLabel());
-			}
-			break;
-		case SUMMARY_URL:
-			if (object instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) object;
-				if (object instanceof IBuild) {
-					IBuild build = (IBuild) object;
+				break;
+			case SUMMARY:
+				if (object instanceof IBuild build) {
 					if (build.getLabel() != null) {
 						sb.append(NLS.bind("Build {0}", build.getLabel()));
 					}
+				} else if (object instanceof IBuildElement element) {
+					sb.append(element.getLabel());
 				}
-				sb.append(element.getLabel());
-				if (TasksUiInternal.isValidUrl(element.getUrl())) {
-					sb.append(ClipboardCopier.LINE_SEPARATOR);
-					sb.append(element.getUrl());
+				break;
+			case SUMMARY_URL:
+				if (object instanceof IBuildElement element) {
+					if (object instanceof IBuild build) {
+						if (build.getLabel() != null) {
+							sb.append(NLS.bind("Build {0}", build.getLabel()));
+						}
+					}
+					sb.append(element.getLabel());
+					if (TasksUiInternal.isValidUrl(element.getUrl())) {
+						sb.append(ClipboardCopier.LINE_SEPARATOR);
+						sb.append(element.getUrl());
+					}
 				}
-			}
-			break;
+				break;
 		}
 		return sb.toString();
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {

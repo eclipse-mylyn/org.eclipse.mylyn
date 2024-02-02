@@ -29,8 +29,7 @@ public interface ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -41,8 +40,8 @@ public interface ITestElement {
 	String getLabel();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Label</em>' attribute.
@@ -54,8 +53,7 @@ public interface ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -66,8 +64,8 @@ public interface ITestElement {
 	long getDuration();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Duration</em>' attribute.
@@ -79,8 +77,7 @@ public interface ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Error Output</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Error Output</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Error Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -91,8 +88,8 @@ public interface ITestElement {
 	String getErrorOutput();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Error Output</em>' attribute.
@@ -104,8 +101,7 @@ public interface ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Output</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Output</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -116,8 +112,8 @@ public interface ITestElement {
 	String getOutput();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Output</em>' attribute.

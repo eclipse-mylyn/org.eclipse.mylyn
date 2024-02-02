@@ -62,8 +62,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getAdaptedParent(Object object) {
-		if (object instanceof IFile) {
-			IFile file = (IFile) object;
+		if (object instanceof IFile file) {
 			return JavaCore.create(file.getParent());
 		} else {
 			return super.getAdaptedParent(object);
@@ -83,14 +82,12 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
-		if (object instanceof IJavaElement) {
-			IJavaElement element = (IJavaElement) object;
-			if (element instanceof IParent) {
-				IParent parent = (IParent) element;
+		if (object instanceof IJavaElement element) {
+			if (element instanceof IParent parent) {
 				IJavaElement[] children;
 				try {
 					children = parent.getChildren();
-					List<String> childHandles = new ArrayList<String>();
+					List<String> childHandles = new ArrayList<>();
 					for (IJavaElement element2 : children) {
 						String childHandle = getHandleIdentifier(element2);
 						if (childHandle != null) {
@@ -141,15 +138,13 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getHandleIdentifier();
-		} else {
-			if (object instanceof IAdaptable) {
-				Object adapter = ((IAdaptable) object).getAdapter(IJavaElement.class);
-				if (adapter instanceof IJavaElement) {
-					return ((IJavaElement) adapter).getHandleIdentifier();
-				}
-			} else if (isWtpClass(object)) {
-				return getWtpElementHandle(object);
+		} else if (object instanceof IAdaptable) {
+			Object adapter = ((IAdaptable) object).getAdapter(IJavaElement.class);
+			if (adapter instanceof IJavaElement) {
+				return ((IJavaElement) adapter).getHandleIdentifier();
 			}
+		} else if (isWtpClass(object)) {
+			return getWtpElementHandle(object);
 		}
 		return null;
 	}
@@ -160,8 +155,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	private String getWtpElementHandle(Object object) {
 		Class<?> objectClass = object.getClass();
 		try {
-			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]); //$NON-NLS-1$
-			Object javaProject = getProjectMethod.invoke(object, new Object[0]);
+			Method getProjectMethod = objectClass.getMethod("getProject"); //$NON-NLS-1$
+			Object javaProject = getProjectMethod.invoke(object);
 			if (javaProject instanceof IJavaProject) {
 				return ((IJavaElement) javaProject).getHandleIdentifier();
 			}
@@ -218,21 +213,17 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * Uses special rules for classpath containers since these do not have an associated interest, i.e. they're not
-	 * IJavaElement(s).
+	 * Uses special rules for classpath containers since these do not have an associated interest, i.e. they're not IJavaElement(s).
 	 */
 	@Override
 	public boolean canFilter(Object object) {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
-		} else if (object instanceof PackageFragmentRootContainer) {
+		} else if (object instanceof PackageFragmentRootContainer container) {
 			// since not in model, check if it contains anything interesting
-			PackageFragmentRootContainer container = (PackageFragmentRootContainer) object;
-
 			Object[] children = container.getChildren();
 			for (Object element2 : children) {
-				if (element2 instanceof JarPackageFragmentRoot) {
-					JarPackageFragmentRoot element = (JarPackageFragmentRoot) element2;
+				if (element2 instanceof JarPackageFragmentRoot element) {
 					IInteractionElement node = ContextCore.getContextManager()
 							.getElement(element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
@@ -264,8 +255,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			ICompilationUnit compilationUnit = null;
 			IResource resource = marker.getResource();
-			if (resource instanceof IFile) {
-				IFile file = (IFile) resource;
+			if (resource instanceof IFile file) {
 				// TODO: get rid of file extension check
 				if (file.getFileExtension().equals("java")) { //$NON-NLS-1$
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
@@ -278,7 +268,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				int charStart = 0;
 				Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
 				if (attribute instanceof Integer) {
-					charStart = ((Integer) attribute).intValue();
+					charStart = (Integer) attribute;
 				}
 				IJavaElement javaElement = null;
 				if (charStart != -1) {
@@ -287,7 +277,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 					int lineNumber = 0;
 					Object lineNumberAttribute = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 					if (lineNumberAttribute instanceof Integer) {
-						lineNumber = ((Integer) lineNumberAttribute).intValue();
+						lineNumber = (Integer) lineNumberAttribute;
 					}
 					if (lineNumber != -1) {
 						// could do finer granularity by uncommenting what's below, see bug 132092
@@ -335,25 +325,25 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			IJavaElement element = (IJavaElement) getObjectForHandle(node.getHandleIdentifier());
 			switch (element.getElementType()) {
-			case IJavaElement.JAVA_PROJECT:
-			case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
-			case IJavaElement.PACKAGE_FRAGMENT:
-			case IJavaElement.COMPILATION_UNIT:
-			case IJavaElement.CLASS_FILE:
-				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-			case IJavaElement.PACKAGE_DECLARATION:
-			case IJavaElement.IMPORT_DECLARATION:
-			case IJavaElement.IMPORT_CONTAINER:
-			case IJavaElement.TYPE:
-			case IJavaElement.INITIALIZER:
-			case IJavaElement.METHOD:
-			case IJavaElement.FIELD:
-			case IJavaElement.LOCAL_VARIABLE:
-				ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
-				if (cu != null) {
+				case IJavaElement.JAVA_PROJECT:
+				case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
+				case IJavaElement.PACKAGE_FRAGMENT:
+				case IJavaElement.COMPILATION_UNIT:
+				case IJavaElement.CLASS_FILE:
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-				}
+				case IJavaElement.PACKAGE_DECLARATION:
+				case IJavaElement.IMPORT_DECLARATION:
+				case IJavaElement.IMPORT_CONTAINER:
+				case IJavaElement.TYPE:
+				case IJavaElement.INITIALIZER:
+				case IJavaElement.METHOD:
+				case IJavaElement.FIELD:
+				case IJavaElement.LOCAL_VARIABLE:
+					ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+					if (cu != null) {
+						return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
+					}
 			}
 		} catch (CoreException e) {
 			// ignore

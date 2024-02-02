@@ -40,8 +40,8 @@ public class BuildConnectorDescriptor {
 
 	public BuildConnectorDescriptor(IConfigurationElement element) {
 		this.element = element;
-		this.connectorKind = element.getAttribute("kind"); //$NON-NLS-1$
-		this.label = element.getAttribute("label"); //$NON-NLS-1$
+		connectorKind = element.getAttribute("kind"); //$NON-NLS-1$
+		label = element.getAttribute("label"); //$NON-NLS-1$
 	}
 
 	public IStatus createCore() {

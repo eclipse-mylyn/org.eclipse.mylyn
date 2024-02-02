@@ -84,7 +84,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 				layout.numColumns = 2;
 				bodyTop.setLayout(layout);
 
-				int numberTopParts = (fillBottomPart) ? parts.size() - 1 : parts.size();
+				int numberTopParts = fillBottomPart ? parts.size() - 1 : parts.size();
 				List<AbstractBuildEditorPart> topParts = parts.subList(0, numberTopParts);
 				for (AbstractBuildEditorPart part : topParts) {
 					createPart(bodyTop, part);
@@ -150,7 +150,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 
 	protected void createParts() {
 		if (getEditorInput().getBuildInfo() == BuildInfo.COMPLETE) {
-			parts = new ArrayList<AbstractBuildEditorPart>();
+			parts = new ArrayList<>();
 			parts.add(new HeaderPart());
 			parts.add(new SummaryPart());
 			parts.add(new ActionPart());

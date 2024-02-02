@@ -89,10 +89,9 @@ public class IssueConnector extends RepositoryConnector {
 	 *            whether the password is a token
 	 * @return the {@link TaskRepository}
 	 */
-	public static TaskRepository createTaskRepository(Repository repo,
-			String username, String password, boolean isToken) {
-		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(),
-				repo.getName());
+	public static TaskRepository createTaskRepository(Repository repo, String username, String password,
+			boolean isToken) {
+		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(), repo.getName());
 		TaskRepository repository = new TaskRepository(KIND, url);
 		repository.setRepositoryLabel(getRepositoryLabel(repo));
 		String loginName = username;
@@ -100,12 +99,11 @@ public class IssueConnector extends RepositoryConnector {
 			loginName = ""; //$NON-NLS-1$
 		}
 		if (loginName != null && password != null) {
-			repository.setCredentials(AuthenticationType.REPOSITORY,
-					new AuthenticationCredentials(loginName, password), true);
+			repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(loginName, password),
+					true);
 		}
 		repository.setCategory(TaskRepository.CATEGORY_BUGS);
-		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
-				Boolean.toString(isToken));
+		repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN, Boolean.toString(isToken));
 		return repository;
 	}
 
@@ -116,8 +114,7 @@ public class IssueConnector extends RepositoryConnector {
 	 * @return client
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = GitHubClient.createClient(repository
-				.getRepositoryUrl());
+		GitHubClient client = GitHubClient.createClient(repository.getRepositoryUrl());
 		GitHub.addCredentials(client, repository);
 		return GitHub.configureClient(client);
 	}
@@ -147,17 +144,15 @@ public class IssueConnector extends RepositoryConnector {
 	 * @return labels
 	 * @throws CoreException
 	 */
-	public List<Label> refreshLabels(TaskRepository repository)
-			throws CoreException {
+	public List<Label> refreshLabels(TaskRepository repository) throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		LabelService service = new LabelService(client);
 		try {
-			List<Label> labels = service.getLabels(repo.getOwner(),
-					repo.getName());
+			List<Label> labels = service.getLabels(repo.getOwner(), repo.getName());
 			Collections.sort(labels, new LabelComparator());
-			this.repositoryLabels.put(repository, labels);
+			repositoryLabels.put(repository, labels);
 			return labels;
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
@@ -173,9 +168,10 @@ public class IssueConnector extends RepositoryConnector {
 	public List<Label> getLabels(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		List<Label> labels = new LinkedList<>();
-		List<Label> cached = this.repositoryLabels.get(repository);
-		if (cached != null)
+		List<Label> cached = repositoryLabels.get(repository);
+		if (cached != null) {
 			labels.addAll(cached);
+		}
 		return labels;
 	}
 
@@ -196,18 +192,14 @@ public class IssueConnector extends RepositoryConnector {
 	 * @return milestones
 	 * @throws CoreException
 	 */
-	public List<Milestone> refreshMilestones(TaskRepository repository)
-			throws CoreException {
+	public List<Milestone> refreshMilestones(TaskRepository repository) throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
-			List<Milestone> milestones = new LinkedList<>();
-			milestones.addAll(service.getMilestones(repo.getOwner(),
-					repo.getName(), IssueService.STATE_OPEN));
-			milestones.addAll(service.getMilestones(repo.getOwner(),
-					repo.getName(), IssueService.STATE_CLOSED));
+			List<Milestone> milestones = new LinkedList<>(service.getMilestones(repo.getOwner(), repo.getName(), IssueService.STATE_OPEN));
+			milestones.addAll(service.getMilestones(repo.getOwner(), repo.getName(), IssueService.STATE_CLOSED));
 			Collections.sort(milestones, new MilestoneComparator());
 			repositoryMilestones.put(repository, milestones);
 			return milestones;
@@ -225,9 +217,10 @@ public class IssueConnector extends RepositoryConnector {
 	public List<Milestone> getMilestones(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		List<Milestone> milestones = new LinkedList<>();
-		List<Milestone> cached = this.repositoryMilestones.get(repository);
-		if (cached != null)
+		List<Milestone> cached = repositoryMilestones.get(repository);
+		if (cached != null) {
 			milestones.addAll(cached);
+		}
 		return milestones;
 	}
 
@@ -288,8 +281,7 @@ public class IssueConnector extends RepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository,
-			IRepositoryQuery query, TaskDataCollector collector,
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus result = Status.OK_STATUS;
 		List<String> statuses = QueryUtils.getAttributes(
@@ -297,51 +289,52 @@ public class IssueConnector extends RepositoryConnector {
 
 		monitor.beginTask(Messages.IssueConector_TaskQuerying, statuses.size());
 		try {
-			RepositoryId repo = GitHub.getRepository(repository
-					.getRepositoryUrl());
+			RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 
 			Map<String, String> filterData = new HashMap<>();
 			String mentions = query.getAttribute(IssueService.FILTER_MENTIONED);
-			if (mentions != null)
+			if (mentions != null) {
 				filterData.put(IssueService.FILTER_MENTIONED, mentions);
+			}
 
 			String assignee = query.getAttribute(IssueService.FILTER_ASSIGNEE);
-			if (assignee != null)
+			if (assignee != null) {
 				filterData.put(IssueService.FILTER_ASSIGNEE, assignee);
+			}
 
-			String milestone = query
-					.getAttribute(IssueService.FILTER_MILESTONE);
-			if (milestone != null)
+			String milestone = query.getAttribute(IssueService.FILTER_MILESTONE);
+			if (milestone != null) {
 				filterData.put(IssueService.FILTER_MILESTONE, milestone);
+			}
 
 			List<String> labels = QueryUtils.getAttributes(
 					IssueService.FILTER_LABELS, query);
 			if (!labels.isEmpty()) {
 				StringBuilder labelsQuery = new StringBuilder();
-				for (String label : labels)
+				for (String label : labels) {
 					labelsQuery.append(label).append(',');
-				filterData.put(IssueService.FILTER_LABELS,
-						labelsQuery.toString());
+				}
+				filterData.put(IssueService.FILTER_LABELS, labelsQuery.toString());
 			}
 
 			String owner = repo.getOwner();
 			String name = repo.getName();
 			for (String status : statuses) {
 				filterData.put(IssueService.FILTER_STATE, status);
-				List<Issue> issues = service.getIssues(repo.getOwner(),
-						repo.getName(), filterData);
+				List<Issue> issues = service.getIssues(repo.getOwner(), repo.getName(), filterData);
 
 				// collect task data
 				for (Issue issue : issues) {
-					if (isPullRequest(issue))
+					if (isPullRequest(issue)) {
 						continue;
+					}
 					List<Comment> comments = null;
-					if (issue.getComments() > 0)
-						comments = service.getComments(owner, name,
-								Integer.toString(issue.getNumber()));
+					if (issue.getComments() > 0) {
+						comments = service.getComments(owner, name, Integer.toString(issue.getNumber()));
+					}
 					TaskData taskData = taskDataHandler.createTaskData(
 							repository, monitor, owner, name, issue, comments);
 					collector.accept(taskData);
@@ -362,23 +355,23 @@ public class IssueConnector extends RepositoryConnector {
 	}
 
 	@Override
-	public TaskData getTaskData(TaskRepository repository, String taskId,
-			IProgressMonitor monitor) throws CoreException {
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 
 		try {
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
-			Issue issue = service.getIssue(repo.getOwner(), repo.getName(),
-					taskId);
-			if (isPullRequest(issue))
+			Issue issue = service.getIssue(repo.getOwner(), repo.getName(), taskId);
+			if (isPullRequest(issue)) {
 				return null;
+			}
 			List<Comment> comments = null;
-			if (issue.getComments() > 0)
-				comments = service.getComments(repo.getOwner(), repo.getName(),
-						taskId);
-			return taskDataHandler.createTaskData(repository, monitor,
-					repo.getOwner(), repo.getName(), issue, comments);
+			if (issue.getComments() > 0) {
+				comments = service.getComments(repo.getOwner(), repo.getName(), taskId);
+			}
+			return taskDataHandler.createTaskData(repository, monitor, repo.getOwner(), repo.getName(), issue,
+					comments);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
@@ -389,8 +382,9 @@ public class IssueConnector extends RepositoryConnector {
 		if (taskFullUrl != null) {
 			Matcher matcher = Pattern.compile(
 					"(http://.+?)/issues/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
-			if (matcher.matches())
+			if (matcher.matches()) {
 				return matcher.group(1);
+			}
 		}
 		return null;
 	}
@@ -398,10 +392,10 @@ public class IssueConnector extends RepositoryConnector {
 	@Override
 	public String getTaskIdFromTaskUrl(String taskFullUrl) {
 		if (taskFullUrl != null) {
-			Matcher matcher = Pattern
-					.compile(".+?/issues/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
-			if (matcher.matches())
+			Matcher matcher = Pattern.compile(".+?/issues/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
+			if (matcher.matches()) {
 				return matcher.group(1);
+			}
 		}
 		return null;
 	}
@@ -412,8 +406,8 @@ public class IssueConnector extends RepositoryConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository taskRepository,
-			IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
+			throws CoreException {
 		IProgressMonitor m = Policy.monitorFor(monitor);
 		m.beginTask("", 2); //$NON-NLS-1$
 		m.setTaskName(Messages.IssueConnector_TaskUpdatingLabels);

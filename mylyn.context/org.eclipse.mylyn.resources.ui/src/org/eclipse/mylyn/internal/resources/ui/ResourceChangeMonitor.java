@@ -59,10 +59,10 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 		public ResourceDeltaVisitor(List<IResourceExclusionStrategy> resourceExclusions) {
 			this.resourceExclusions = resourceExclusions;
-			this.addedResources = new HashSet<IResource>();
-			this.changedResources = new HashSet<IResource>();
+			addedResources = new HashSet<>();
+			changedResources = new HashSet<>();
 
-			// make sure that the exclusions are updated 
+			// make sure that the exclusions are updated
 			for (IResourceExclusionStrategy exclusion : exclusions) {
 				exclusion.update();
 			}
@@ -72,16 +72,13 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			return !haveTeamPrivateMember;
 		}
 
+		@Override
 		public boolean visit(IResourceDelta delta) {
 
 			IResource deltaResource = delta.getResource();
 			if (deltaResource instanceof IProject
-					&& (delta.getKind() == IResourceDelta.REMOVED || (delta.getFlags() & IResourceDelta.OPEN) != 0)) {
-				// the project was either opened, closed or deleted, so lets ignore this so that we don't add every file to the context
-				return false;
-			}
-
-			if (hasTeamPrivate(deltaResource)) {
+					&& (delta.getKind() == IResourceDelta.REMOVED || (delta.getFlags() & IResourceDelta.OPEN) != 0)
+					|| hasTeamPrivate(deltaResource)) {
 				return false;
 			}
 
@@ -111,7 +108,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
 			for (IResourceDelta element : changed) {
 				IResource resource = element.getResource();
-				// special rule for feature.xml files: bug 249856 
+				// special rule for feature.xml files: bug 249856
 				if (resource instanceof IFile && !isExcluded(resource) && !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
 					if (element.getKind() == IResourceDelta.CHANGED
 							&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
@@ -167,14 +164,14 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			return numAddedFolders;
 		}
 
-	};
+	}
 
 	private boolean enabled;
 
-	private final List<IResourceExclusionStrategy> exclusions = new ArrayList<IResourceExclusionStrategy>();
+	private final List<IResourceExclusionStrategy> exclusions = new ArrayList<>();
 
 	public ResourceChangeMonitor() {
-		this.enabled = true;
+		enabled = true;
 		// ant based pattern exclusion
 		exclusions.add(new ResourcePatternExclusionStrategy());
 		// exclude resources not modified while task active
@@ -193,11 +190,10 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	}
 
 	// TODO investigate moving computation to the background?
+	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
-			return;
-		}
-		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
+		if (!enabled || !ContextCore.getContextManager().isContextActive()
+				|| event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
 		}
 		IResourceDelta rootDelta = event.getDelta();

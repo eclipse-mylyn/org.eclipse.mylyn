@@ -36,11 +36,9 @@ public class AbortBuildAction extends BaseSelectionListenerAction {
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		Object element = selection.getFirstElement();
-		if (element instanceof IBuild) {
-			IBuild build = (IBuild) element;
+		if (element instanceof IBuild build) {
 			return build.getState() == BuildState.RUNNING;
-		} else if (element instanceof IBuildPlan) {
-			IBuildPlan buildPlan = (IBuildPlan) element;
+		} else if (element instanceof IBuildPlan buildPlan) {
 			return buildPlan.getState() == BuildState.RUNNING;
 		}
 		return false;
@@ -49,11 +47,9 @@ public class AbortBuildAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
-		if (selection instanceof IBuild) {
-			IBuild build = (IBuild) selection;
+		if (selection instanceof IBuild build) {
 			abortBuild(build);
-		} else if (selection instanceof IBuildPlan) {
-			IBuildPlan buildPlan = (IBuildPlan) selection;
+		} else if (selection instanceof IBuildPlan buildPlan) {
 			abortBuild(buildPlan.getLastBuild());
 		}
 	}
@@ -65,11 +61,7 @@ public class AbortBuildAction extends BaseSelectionListenerAction {
 			@Override
 			public void done(OperationChangeEvent event) {
 				if (event.getStatus().isOK()) {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							BuildsUiInternal.getFactory().getRefreshOperation(build.getPlan()).execute();
-						}
-					});
+					Display.getDefault().asyncExec(() -> BuildsUiInternal.getFactory().getRefreshOperation(build.getPlan()).execute());
 				}
 			}
 		});

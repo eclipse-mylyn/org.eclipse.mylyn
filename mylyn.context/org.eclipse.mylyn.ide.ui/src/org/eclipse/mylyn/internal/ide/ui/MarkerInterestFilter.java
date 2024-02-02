@@ -38,18 +38,18 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 				try {
 					if (markerCategoryMethod == null) {
 						Class<?> markerCategoryClass = Class
-								.forName("org.eclipse.ui.internal.views.markers.MarkerCategory"); //$NON-NLS-1$ 
-						markerCategoryMethod = markerCategoryClass.getDeclaredMethod("getChildren", new Class[] {}); //$NON-NLS-1$ 
+								.forName("org.eclipse.ui.internal.views.markers.MarkerCategory"); //$NON-NLS-1$
+						markerCategoryMethod = markerCategoryClass.getDeclaredMethod("getChildren"); //$NON-NLS-1$
 						markerCategoryMethod.setAccessible(true);
 					}
 
-					Object[] entries = (Object[]) markerCategoryMethod.invoke(element, new Object[] {});
+					Object[] entries = (Object[]) markerCategoryMethod.invoke(element);
 					if (entries != null && entries.length == 0) {
 						return false;
 					} else if (entries != null && entries.length != 0) {
 						// PERFORMANCE: need to look down children, so O(n^2) complexity
 						for (Object markerEntry : entries) {
-							if (markerEntry.getClass().getSimpleName().equals("MarkerEntry") //$NON-NLS-1$ 
+							if (markerEntry.getClass().getSimpleName().equals("MarkerEntry") //$NON-NLS-1$
 									&& isInteresting(((MarkerItem) markerEntry).getMarker(), viewer, parent)) {
 								return true;
 							}

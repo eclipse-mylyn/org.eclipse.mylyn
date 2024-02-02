@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class AbstractContextLabelProvider implements ILabelProvider {
 
+	@Override
 	public Image getImage(Object object) {
 		if (object instanceof IInteractionRelation) {
 			return getImage((IInteractionRelation) object);
@@ -35,6 +36,7 @@ public abstract class AbstractContextLabelProvider implements ILabelProvider {
 		}
 	}
 
+	@Override
 	public String getText(Object object) {
 		if (object instanceof IInteractionRelation) {
 			return getText((IInteractionRelation) object);
@@ -57,20 +59,24 @@ public abstract class AbstractContextLabelProvider implements ILabelProvider {
 
 	protected abstract String getText(IInteractionRelation edge);
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 

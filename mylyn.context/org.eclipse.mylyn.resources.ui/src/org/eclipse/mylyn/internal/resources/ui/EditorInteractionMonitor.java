@@ -42,8 +42,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {
 		Object object = part.getEditorInput().getAdapter(IResource.class);
-		if (object instanceof IResource) {
-			IResource resource = (IResource) object;
+		if (object instanceof IResource resource) {
 			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
@@ -57,7 +56,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			return;
 		}
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
-		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+		List<IEditorReference> toClose = new ArrayList<>();
 		for (IEditorReference editorReference : page.getEditorReferences()) {
 			try {
 				IInteractionElement element = null;
@@ -109,8 +108,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			// TODO: probably should be refactored into delegation
 			if (element == null) {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
-				if (adapter instanceof IResource) {
-					IResource resource = (IResource) adapter;
+				if (adapter instanceof IResource resource) {
 					AbstractContextStructureBridge resourceBridge = ContextCore.getStructureBridge(resource);
 					element = ContextCore.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
 				}
@@ -125,8 +123,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 
 	private boolean otherEditorsOpenForResource(IEditorPart editorPart) {
 		Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
-		if (adapter instanceof IResource) {
-			IResource resource = (IResource) adapter;
+		if (adapter instanceof IResource resource) {
 			IWorkbenchPage page = editorPart.getSite().getPage();
 			for (IEditorReference editorReference : page.getEditorReferences()) {
 				try {

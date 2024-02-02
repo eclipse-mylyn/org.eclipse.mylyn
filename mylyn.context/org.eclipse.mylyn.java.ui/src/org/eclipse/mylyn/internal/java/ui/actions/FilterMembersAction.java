@@ -30,17 +30,17 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 	public static final String PREF_ID = "org.eclipse.mylyn.java.ui.explorer.filter.members"; //$NON-NLS-1$
 
 	public FilterMembersAction() {
-		super();
 		// setChecked(true);
 		// try {
 		// boolean checked=
 		// ContextCore.getPreferenceStore().getBoolean(PREF_ID);
 		// valueChanged(true, true);
 		// } catch (Exception e) {
-		//            
+		//
 		// }
 	}
 
+	@Override
 	public void run(IAction action) {
 		valueChanged(isChecked(), true);
 
@@ -67,10 +67,12 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		}
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// don't need to do anything on init
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// don't care when the selection changes
 	}

@@ -67,9 +67,8 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 			List<IEditorReference> dirtyRefs = findDirtyEditors();
 			if (dirtyRefs.size() == 1) {
 				IWorkbenchPart part = dirtyRefs.get(0).getPart(false);
-				if (part instanceof TaskEditor) {
+				if (part instanceof TaskEditor editor) {
 					// If the only dirty editor is the active task and the editor is active, do not display the dialog below
-					TaskEditor editor = ((TaskEditor) part);
 					TaskEditorInput input = editor.getTaskEditorInput();
 					if (input != null && task.equals(input.getTask()) && editor.equals(
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor())) {
@@ -120,7 +119,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		}
 
 		public List<IEditorReference> findDirtyEditors() {
-			List<IEditorReference> dirtyRefs = new ArrayList<IEditorReference>();
+			List<IEditorReference> dirtyRefs = new ArrayList<>();
 			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 				for (IEditorReference ref : window.getActivePage().getEditorReferences()) {
 					if (ref.isDirty()) {
@@ -153,13 +152,13 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case INTEREST_CHANGED:
-				List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
-				if (events.size() > 0) {
-					InteractionEvent interactionEvent = events.get(events.size() - 1);
-					parseInteractionEvent(interactionEvent, false);
-				}
-				break;
+				case INTEREST_CHANGED:
+					List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
+					if (events.size() > 0) {
+						InteractionEvent interactionEvent = events.get(events.size() - 1);
+						parseInteractionEvent(interactionEvent, false);
+					}
+					break;
 			}
 		}
 	};
@@ -177,9 +176,9 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 	private ActivityExternalizationParticipant externalizationParticipant;
 
 	public TaskActivityMonitor() {
-		this.contextManager = ContextCorePlugin.getContextManager();
-		this.taskList = TasksUiPlugin.getTaskList();
-		this.activationHistory = new ArrayList<ITask>();
+		contextManager = ContextCorePlugin.getContextManager();
+		taskList = TasksUiPlugin.getTaskList();
+		activationHistory = new ArrayList<>();
 	}
 
 	@Override
@@ -200,7 +199,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 	public boolean parseInteractionEvent(InteractionEvent event, boolean isReloading) {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
-				if ((event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
+				if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
 						activationHistory.add(activatedTask);
@@ -208,7 +207,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 					}
 				}
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
-				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (event.getDelta().equals("added") || event.getDelta().equals("add")) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (event.getDate().getTime() > 0 && event.getEndDate().getTime() > 0) {
 						if (event.getStructureKind()
 								.equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
@@ -256,12 +255,12 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 	}
 
 	public void setExternalizationParticipant(ActivityExternalizationParticipant participant) {
-		this.externalizationParticipant = participant;
+		externalizationParticipant = participant;
 	}
 
 	@Override
 	public List<ITask> getActivationHistory() {
-		return new ArrayList<ITask>(activationHistory);
+		return new ArrayList<>(activationHistory);
 	}
 
 	@Override

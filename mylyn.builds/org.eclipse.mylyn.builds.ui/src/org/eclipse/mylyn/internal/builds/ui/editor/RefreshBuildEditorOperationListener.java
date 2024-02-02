@@ -64,17 +64,14 @@ public class RefreshBuildEditorOperationListener extends OperationChangeListener
 	}
 
 	private void updateBuildInfo(IBuild updatedBuild, BuildInfo buildInfo) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (handle.getPart() instanceof BuildEditor) {
-					BuildEditor editor = (BuildEditor) handle.getPart();
-					if (shouldUpdate(editor)) {
-						editor.getEditorInput().updateBuildInfo(updatedBuild, buildInfo);
-						editor.refresh();
-					}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			if (handle.getPart() instanceof BuildEditor) {
+				BuildEditor editor = (BuildEditor) handle.getPart();
+				if (shouldUpdate(editor)) {
+					editor.getEditorInput().updateBuildInfo(updatedBuild, buildInfo);
+					editor.refresh();
 				}
 			}
-
 		});
 	}
 

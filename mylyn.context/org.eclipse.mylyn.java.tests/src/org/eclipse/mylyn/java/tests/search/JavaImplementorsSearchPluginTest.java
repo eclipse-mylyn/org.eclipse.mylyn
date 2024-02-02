@@ -14,14 +14,14 @@ package org.eclipse.mylyn.java.tests.search;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -42,23 +42,24 @@ public class JavaImplementorsSearchPluginTest extends TestCase implements ISearc
 		// List<?> results = search(1);
 	}
 
-	//	
+	//
 	// public void testJavaImplementorsSearchDOS2(){
 	// List<?> results = search(2);
 	// }
-	//	
+	//
 	// public void testJavaImplementorsSearchDOS3(){
 	// List<?> results = search(3);
 	// }
-	//	
+	//
 	// public void testJavaImplementorsSearchDOS4(){
 	// List<?> results = search(4);
 	// }
-	//	
+	//
 	// public void testJavaImplementorsSearchDOS5(){
 	// List<?> results = search(5);
 	// }
 
+	@Override
 	public List<?> search(int dos, IInteractionElement node) {
 		if (node == null) {
 			return null;

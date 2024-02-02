@@ -15,14 +15,14 @@ package org.eclipse.mylyn.builds.tests.core;
 import java.io.File;
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.BuildModelManager;
 import org.eclipse.mylyn.builds.tests.support.MockBuildLoader;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

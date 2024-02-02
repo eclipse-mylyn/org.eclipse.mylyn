@@ -46,7 +46,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 			refreshOperation.addFlag(OperationFlag.BACKGROUND);
 			return refreshOperation.doExecute(progress);
 		}
-	};
+	}
 
 	private boolean running;
 
@@ -69,6 +69,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 		return running && preferenceStore.getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED)
 				|| event.getProperty().equals(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL)) {
@@ -86,8 +87,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 	}
 
 	/**
-	 * Performs an immediate one-shot refresh of build server data regardless of the automatic refresh preference
-	 * setting.
+	 * Performs an immediate one-shot refresh of build server data regardless of the automatic refresh preference setting.
 	 */
 	void refresh() {
 		if (refreshJob == null) {
@@ -112,10 +112,8 @@ public class BuildRefresher implements IPropertyChangeListener {
 				});
 			}
 			scheduler.schedule(refreshJob, delay);
-		} else {
-			if (refreshJob != null) {
-				refreshJob.cancel();
-			}
+		} else if (refreshJob != null) {
+			refreshJob.cancel();
 		}
 	}
 

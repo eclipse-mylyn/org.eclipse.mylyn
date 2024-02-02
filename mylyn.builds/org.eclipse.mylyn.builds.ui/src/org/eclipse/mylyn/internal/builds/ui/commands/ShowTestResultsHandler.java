@@ -28,6 +28,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class ShowTestResultsHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		IWorkbenchPage page = window.getActivePage();
@@ -38,8 +39,7 @@ public class ShowTestResultsHandler extends AbstractHandler {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
-			if (item instanceof IBuildPlan) {
-				IBuildPlan plan = (IBuildPlan) item;
+			if (item instanceof IBuildPlan plan) {
 				TestResultManager.showInJUnitView(plan);
 			}
 		}

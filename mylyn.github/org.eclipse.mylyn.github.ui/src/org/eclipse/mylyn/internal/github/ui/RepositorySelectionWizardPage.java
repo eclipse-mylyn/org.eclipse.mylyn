@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -29,13 +28,10 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.ui.internal.components.FilteredCheckboxTree;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StyledString;
@@ -68,8 +64,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  */
 public class RepositorySelectionWizardPage extends WizardPage {
 
-	private static class RepositoryStyledLabelProvider implements
-			IStyledLabelProvider, ILabelProvider {
+	private static class RepositoryStyledLabelProvider implements IStyledLabelProvider, ILabelProvider {
 		private final WorkbenchLabelProvider wrapped = new WorkbenchLabelProvider();
 
 		@Override
@@ -101,10 +96,12 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		public StyledString getStyledText(Object element) {
 			// TODO Replace with use of IWorkbenchAdapter3 when 3.6 is no longer
 			// supported
-			if (element instanceof RepositoryAdapter)
+			if (element instanceof RepositoryAdapter) {
 				return ((RepositoryAdapter) element).getStyledText(element);
-			if (element instanceof OrganizationAdapter)
+			}
+			if (element instanceof OrganizationAdapter) {
 				return ((OrganizationAdapter) element).getStyledText(element);
+			}
 
 			return new StyledString(wrapped.getText(element));
 		}
@@ -116,8 +113,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	}
 
-	private static class RepositoryLabelProvider extends
-			DelegatingStyledCellLabelProvider implements ILabelProvider {
+	private static class RepositoryLabelProvider extends DelegatingStyledCellLabelProvider implements ILabelProvider {
 
 		private final RepositoryStyledLabelProvider wrapped;
 
@@ -148,7 +144,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 		@Override
 		public String getLabel(Object object) {
-			String label = this.repo.generateId();
+			String label = repo.generateId();
 			return label != null ? label : ""; //$NON-NLS-1$
 		}
 
@@ -169,8 +165,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			this.org = org;
 			this.repos = new RepositoryAdapter[repos.size()];
 			final int length = this.repos.length;
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				this.repos[i] = new RepositoryAdapter(repos.get(i));
+			}
 		}
 
 		@Override
@@ -201,10 +198,15 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	}
 
 	private Button addGistRepoButton;
+
 	private Label selectedLabel;
+
 	private FilteredCheckboxTree tree;
+
 	private int repoCount = 0;
+
 	private String user;
+
 	private String password;
 
 	private boolean isToken;
@@ -240,17 +242,16 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	/** @return true to create gists repository, false otherwise */
 	public boolean createGistRepository() {
-		return this.addGistRepoButton.getSelection()
-				&& this.addGistRepoButton.isVisible();
+		return addGistRepoButton.getSelection() && addGistRepoButton.isVisible();
 	}
 
 	/** @return array of selected repositories */
 	public Repository[] getRepositories() {
-		Object[] checked = tree.getCheckboxTreeViewer()
-				.getCheckedLeafElements();
+		Object[] checked = tree.getCheckboxTreeViewer().getCheckedLeafElements();
 		Repository[] repos = new Repository[checked.length];
-		for (int i = 0; i < repos.length; i++)
+		for (int i = 0; i < repos.length; i++) {
 			repos[i] = ((RepositoryAdapter) checked[i]).repo;
+		}
 		return repos;
 	}
 
@@ -262,11 +263,10 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 		Label repoLabel = new Label(displayArea, SWT.NONE);
 		repoLabel.setText(Messages.RepositorySelectionWizardPage_LabelRepos);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(repoLabel);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(repoLabel);
 
-		tree = new FilteredCheckboxTree(displayArea, null, SWT.V_SCROLL
-				| SWT.H_SCROLL | SWT.BORDER, new PatternFilter());
+		tree = new FilteredCheckboxTree(displayArea, null, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER,
+				new PatternFilter());
 		CheckboxTreeViewer viewer = tree.getCheckboxTreeViewer();
 		viewer.setContentProvider(new WorkbenchContentProvider());
 		viewer.setLabelProvider(new RepositoryLabelProvider());
@@ -274,56 +274,50 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 			@Override
 			public int compare(Viewer v, Object e1, Object e2) {
-				if (e1 instanceof OrganizationAdapter)
-					if (e2 instanceof OrganizationAdapter)
-						return ((OrganizationAdapter) e1)
-								.getLabel(e1)
+				if (e1 instanceof OrganizationAdapter) {
+					if (e2 instanceof OrganizationAdapter) {
+						return ((OrganizationAdapter) e1).getLabel(e1)
 								.compareToIgnoreCase(
 										((OrganizationAdapter) e2).getLabel(e2));
-					else if (e2 instanceof RepositoryAdapter)
+					} else if (e2 instanceof RepositoryAdapter) {
 						return 1;
-				if (e1 instanceof RepositoryAdapter)
-					if (e2 instanceof RepositoryAdapter)
+					}
+				}
+				if (e1 instanceof RepositoryAdapter) {
+					if (e2 instanceof RepositoryAdapter) {
 						return ((RepositoryAdapter) e1).getLabel(e1)
 								.compareToIgnoreCase(
 										((RepositoryAdapter) e2).getLabel(e2));
-					else if (e2 instanceof OrganizationAdapter)
+					} else if (e2 instanceof OrganizationAdapter) {
 						return -1;
+					}
+				}
 				return super.compare(v, e1, e2);
 			}
 
 		});
-		viewer.addCheckStateListener(new ICheckStateListener() {
-
-			@Override
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				updateSelectionLabel();
-			}
-		});
+		viewer.addCheckStateListener(event -> updateSelectionLabel());
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(tree);
 
 		ToolBar toolbar = new ToolBar(displayArea, SWT.FLAT | SWT.VERTICAL);
 		GridDataFactory.fillDefaults().grab(false, true).applyTo(toolbar);
 		ToolItem checkItem = new ToolItem(toolbar, SWT.PUSH);
 		checkItem.setImage(GitHubImages.get(GitHubImages.GITHUB_CHECKALL_OBJ));
-		checkItem
-				.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipCheckAll);
+		checkItem.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipCheckAll);
 		checkItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tree.getCheckboxTreeViewer().setAllChecked(true);
-				for (Object leaf : tree.getCheckboxTreeViewer()
-						.getCheckedLeafElements())
+				for (Object leaf : tree.getCheckboxTreeViewer().getCheckedLeafElements()) {
 					tree.getCheckboxTreeViewer().setChecked(leaf, true);
+				}
 				updateSelectionLabel();
 			}
 		});
 		ToolItem uncheckItem = new ToolItem(toolbar, SWT.PUSH);
-		uncheckItem.setImage(GitHubImages
-				.get(GitHubImages.GITHUB_UNCHECKALL_OBJ));
-		uncheckItem
-				.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipUncheckAll);
+		uncheckItem.setImage(GitHubImages.get(GitHubImages.GITHUB_UNCHECKALL_OBJ));
+		uncheckItem.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipUncheckAll);
 		uncheckItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -334,12 +328,10 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		});
 
 		selectedLabel = new Label(displayArea, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(selectedLabel);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(selectedLabel);
 
 		addGistRepoButton = new Button(displayArea, SWT.CHECK);
-		addGistRepoButton
-				.setText(Messages.RepositorySelectionWizardPage_LabelAddGist);
+		addGistRepoButton.setText(Messages.RepositorySelectionWizardPage_LabelAddGist);
 		addGistRepoButton.setSelection(true);
 		GridDataFactory.swtDefaults().span(2, 1).applyTo(addGistRepoButton);
 		addGistRepoButton.addSelectionListener(new SelectionAdapter() {
@@ -357,8 +349,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	private void updateSelectionLabel() {
 		selectedLabel.setText(MessageFormat.format(
-				Messages.RepositorySelectionWizardPage_LabelSelectionCount,
-				Integer.valueOf(
+				Messages.RepositorySelectionWizardPage_LabelSelectionCount, Integer.valueOf(
 						tree.getCheckboxTreeViewer().getCheckedLeafCount()),
 				Integer.valueOf(repoCount)));
 		selectedLabel.getParent().layout(true, true);
@@ -367,28 +358,26 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	private void validatePage() {
 		setPageComplete(getRepositories().length > 0 || createGistRepository());
-		if (isPageComplete())
+		if (isPageComplete()) {
 			setErrorMessage(null);
+		}
 	}
 
 	private void updateInput(final List<Object> repos) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				if (getControl().isDisposed())
-					return;
-				tree.getCheckboxTreeViewer().setCheckedElements(new Object[0]);
-				tree.getViewer().setInput(new WorkbenchAdapter() {
-
-					@Override
-					public Object[] getChildren(Object object) {
-						return repos.toArray();
-					}
-
-				});
-				updateSelectionLabel();
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+			if (getControl().isDisposed()) {
+				return;
 			}
+			tree.getCheckboxTreeViewer().setCheckedElements(new Object[0]);
+			tree.getViewer().setInput(new WorkbenchAdapter() {
+
+				@Override
+				public Object[] getChildren(Object object) {
+					return repos.toArray();
+				}
+
+			});
+			updateSelectionLabel();
 		});
 	}
 
@@ -396,8 +385,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		Iterator<Repository> iter = repos.iterator();
 		while (iter.hasNext()) {
 			String id = iter.next().generateId();
-			if (id == null || existing.contains(id))
+			if (id == null || existing.contains(id)) {
 				iter.remove();
+			}
 		}
 	}
 
@@ -410,66 +400,59 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		}
 		// For gists a user name is needed.
 		addGistRepoButton.setVisible(user != null && !user.isEmpty()
-				&& TasksUi.getRepositoryManager()
-						.getRepositories(GistConnector.KIND).isEmpty());
+				&& TasksUi.getRepositoryManager().getRepositories(GistConnector.KIND).isEmpty());
 		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
-
-				@Override
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-					GitHubClient client = GitHub
-							.configureClient(new GitHubClient());
-					if (isToken) {
-						client.setOAuth2Token(password);
-					} else {
-						client.setCredentials(user, password);
+			getContainer().run(true, true, monitor -> {
+				GitHubClient client = GitHub.configureClient(new GitHubClient());
+				if (isToken) {
+					client.setOAuth2Token(password);
+				} else {
+					client.setCredentials(user, password);
+				}
+				RepositoryService service = new RepositoryService(client);
+				OrganizationService orgs = new OrganizationService(client);
+				repoCount = 0;
+				List<Object> repos = new ArrayList<>();
+				List<String> existing = new ArrayList<>();
+				for (TaskRepository repo : TasksUi.getRepositoryManager().getRepositories(GitHub.CONNECTOR_KIND)) {
+					String id = GitHub.getRepository(
+							repo.getRepositoryUrl()).generateId();
+					if (id != null) {
+						existing.add(id);
 					}
-					RepositoryService service = new RepositoryService(client);
-					OrganizationService orgs = new OrganizationService(client);
-					repoCount = 0;
-					List<Object> repos = new ArrayList<>();
-					List<String> existing = new ArrayList<>();
-					for (TaskRepository repo : TasksUi.getRepositoryManager()
-							.getRepositories(GitHub.CONNECTOR_KIND)) {
-						String id = GitHub.getRepository(
-								repo.getRepositoryUrl()).generateId();
-						if (id != null)
-							existing.add(id);
+				}
+				try {
+					monitor.beginTask("", 2); //$NON-NLS-1$
+					monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingRepositories);
+					List<Repository> userRepos = service.getRepositories();
+					removeExisting(userRepos, existing);
+					repoCount += userRepos.size();
+					for (Repository repo : userRepos) {
+						repos.add(new RepositoryAdapter(repo));
 					}
-					try {
-						monitor.beginTask("", 2); //$NON-NLS-1$
-						monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingRepositories);
-						List<Repository> userRepos = service.getRepositories();
-						removeExisting(userRepos, existing);
-						repoCount += userRepos.size();
-						for (Repository repo : userRepos)
-							repos.add(new RepositoryAdapter(repo));
-						monitor.worked(1);
-						monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingOrganizationRepositories);
-						for (User org : orgs.getOrganizations()) {
-							List<Repository> orgRepos = service
-									.getOrgRepositories(org.getLogin());
-							removeExisting(orgRepos, existing);
-							repoCount += orgRepos.size();
-							repos.add(new OrganizationAdapter(org, orgRepos));
-						}
-						updateInput(repos);
-					} catch (IOException e) {
-						throw new InvocationTargetException(GitHubException
-								.wrap(e));
+					monitor.worked(1);
+					monitor.setTaskName(
+							Messages.RepositorySelectionWizardPage_TaskFetchingOrganizationRepositories);
+					for (User org : orgs.getOrganizations()) {
+						List<Repository> orgRepos = service.getOrgRepositories(org.getLogin());
+						removeExisting(orgRepos, existing);
+						repoCount += orgRepos.size();
+						repos.add(new OrganizationAdapter(org, orgRepos));
 					}
+					updateInput(repos);
+				} catch (IOException e) {
+					throw new InvocationTargetException(GitHubException.wrap(e));
 				}
 			});
 			setErrorMessage(null);
 		} catch (InvocationTargetException e) {
 			updateInput(Collections.emptyList());
 			Throwable cause = e.getCause();
-			if (cause == null)
+			if (cause == null) {
 				cause = e;
+			}
 			setErrorMessage(MessageFormat.format(
-					Messages.RepositorySelectionWizardPage_ErrorLoading,
-					cause.getLocalizedMessage()));
+					Messages.RepositorySelectionWizardPage_ErrorLoading, cause.getLocalizedMessage()));
 		} catch (InterruptedException ignored) {
 			// Ignored
 		}

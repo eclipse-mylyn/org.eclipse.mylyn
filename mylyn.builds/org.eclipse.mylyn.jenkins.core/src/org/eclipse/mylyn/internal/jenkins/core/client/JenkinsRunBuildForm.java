@@ -48,8 +48,8 @@ public class JenkinsRunBuildForm {
 	List<NameValue> params;
 
 	public JenkinsRunBuildForm() {
-		this.requestParameters = new ArrayList<NameValuePair>();
-		this.params = new ArrayList<NameValue>();
+		requestParameters = new ArrayList<>();
+		params = new ArrayList<>();
 	}
 
 	public void add(String key, String value) {

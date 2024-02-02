@@ -31,14 +31,17 @@ public class MockOperationService implements IOperationService {
 		this.realm = realm;
 	}
 
+	@Override
 	public BuildScheduler getScheduler() {
 		return null;
 	}
 
+	@Override
 	public void handleResult(AbstractOperation operation, IStatus result) {
 		this.result = result;
 	}
 
+	@Override
 	public IBuildModelRealm getRealm() {
 		return realm;
 	}

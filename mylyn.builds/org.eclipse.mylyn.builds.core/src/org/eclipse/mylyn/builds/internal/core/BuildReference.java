@@ -31,8 +31,7 @@ import org.eclipse.mylyn.builds.core.IBuildReference;
  */
 public class BuildReference extends EObjectImpl implements IBuildReference {
 	/**
-	 * The default value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -41,8 +40,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected static final String PLAN_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -51,8 +49,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected String plan = PLAN_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuild()
 	 * @generated
@@ -61,8 +58,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected static final String BUILD_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuild()
 	 * @generated
@@ -76,7 +72,6 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 * @generated
 	 */
 	protected BuildReference() {
-		super();
 	}
 
 	/**
@@ -94,6 +89,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getPlan() {
 		return plan;
 	}
@@ -103,11 +99,13 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setPlan(String newPlan) {
 		String oldPlan = plan;
 		plan = newPlan;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_REFERENCE__PLAN, oldPlan, plan));
+		}
 	}
 
 	/**
@@ -115,6 +113,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getBuild() {
 		return build;
 	}
@@ -124,12 +123,14 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBuild(String newBuild) {
 		String oldBuild = build;
 		build = newBuild;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_REFERENCE__BUILD, oldBuild,
 					build));
+		}
 	}
 
 	/**
@@ -140,10 +141,10 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_REFERENCE__PLAN:
-			return getPlan();
-		case BuildPackage.BUILD_REFERENCE__BUILD:
-			return getBuild();
+			case BuildPackage.BUILD_REFERENCE__PLAN:
+				return getPlan();
+			case BuildPackage.BUILD_REFERENCE__BUILD:
+				return getBuild();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -156,12 +157,12 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_REFERENCE__PLAN:
-			setPlan((String) newValue);
-			return;
-		case BuildPackage.BUILD_REFERENCE__BUILD:
-			setBuild((String) newValue);
-			return;
+			case BuildPackage.BUILD_REFERENCE__PLAN:
+				setPlan((String) newValue);
+				return;
+			case BuildPackage.BUILD_REFERENCE__BUILD:
+				setBuild((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -174,12 +175,12 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_REFERENCE__PLAN:
-			setPlan(PLAN_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_REFERENCE__BUILD:
-			setBuild(BUILD_EDEFAULT);
-			return;
+			case BuildPackage.BUILD_REFERENCE__PLAN:
+				setPlan(PLAN_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_REFERENCE__BUILD:
+				setBuild(BUILD_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,10 +193,10 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_REFERENCE__PLAN:
-			return PLAN_EDEFAULT == null ? plan != null : !PLAN_EDEFAULT.equals(plan);
-		case BuildPackage.BUILD_REFERENCE__BUILD:
-			return BUILD_EDEFAULT == null ? build != null : !BUILD_EDEFAULT.equals(build);
+			case BuildPackage.BUILD_REFERENCE__PLAN:
+				return PLAN_EDEFAULT == null ? plan != null : !PLAN_EDEFAULT.equals(plan);
+			case BuildPackage.BUILD_REFERENCE__BUILD:
+				return BUILD_EDEFAULT == null ? build != null : !BUILD_EDEFAULT.equals(build);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -207,10 +208,11 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (plan: "); //$NON-NLS-1$
 		result.append(plan);
 		result.append(", build: "); //$NON-NLS-1$

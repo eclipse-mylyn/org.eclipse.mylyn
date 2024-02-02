@@ -36,8 +36,7 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 
 /**
- * Manages refreshes for plans and builds. Each server has one associated session that may process several requests
- * concurrently.
+ * Manages refreshes for plans and builds. Each server has one associated session that may process several requests concurrently.
  *
  * @author Steffen Pingel
  */
@@ -118,13 +117,11 @@ public class RefreshSession {
 
 		// merge builds into model
 		final BuildServer original = server.getOriginal();
-		original.getLoader().getRealm().syncExec(new Runnable() {
-			public void run() {
-				Date refreshDate = new Date();
-				for (IBuildPlan modelPlan : request.getModel().getPlans()) {
-					if (modelPlan.getServer() == original && modelPlan.getId().equals(buildRequest.getPlan().getId())) {
-						updateLastBuild(request, modelPlan, result.get(0), refreshDate);
-					}
+		original.getLoader().getRealm().syncExec(() -> {
+			Date refreshDate = new Date();
+			for (IBuildPlan modelPlan : request.getModel().getPlans()) {
+				if (modelPlan.getServer() == original && modelPlan.getId().equals(buildRequest.getPlan().getId())) {
+					updateLastBuild(request, modelPlan, result.get(0), refreshDate);
 				}
 			}
 		});
@@ -145,26 +142,24 @@ public class RefreshSession {
 		final BuildServer original = server.getOriginal();
 
 		// prepare
-		final AtomicReference<List<String>> input = new AtomicReference<List<String>>();
+		final AtomicReference<List<String>> input = new AtomicReference<>();
 		if (request.plansToRefresh != null) {
 			// refresh selected plans
-			List<String> planIds = new ArrayList<String>();
+			List<String> planIds = new ArrayList<>();
 			for (IBuildPlan plan : request.plansToRefresh) {
 				planIds.add(plan.getId());
 			}
 			input.set(planIds);
 		} else {
 			// refresh all plans for server
-			original.getLoader().getRealm().syncExec(new Runnable() {
-				public void run() {
-					List<String> planIds = new ArrayList<String>();
-					for (IBuildPlan oldPlan : request.getModel().getPlans()) {
-						if (oldPlan.getServer() == original) {
-							planIds.add(oldPlan.getId());
-						}
+			original.getLoader().getRealm().syncExec(() -> {
+				List<String> planIds = new ArrayList<String>();
+				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
+					if (oldPlan.getServer() == original) {
+						planIds.add(oldPlan.getId());
 					}
-					input.set(planIds);
 				}
+				input.set(planIds);
 			});
 		}
 
@@ -184,20 +179,18 @@ public class RefreshSession {
 			throw new CoreException(
 					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "Server did not provide any plans."));
 		}
-		original.getLoader().getRealm().syncExec(new Runnable() {
-			public void run() {
-				Date refreshDate = new Date();
-				original.setRefreshDate(refreshDate);
-				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
-					if (oldPlan.getServer() == original) {
-						BuildPlan newPlan = getPlanById(result, oldPlan.getId());
-						if (newPlan != null) {
-							newPlan.setRefreshDate(refreshDate);
-							update(request, oldPlan, newPlan, monitor);
-						} else {
-							((BuildPlan) oldPlan).setOperationStatus(
-									new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
-						}
+		original.getLoader().getRealm().syncExec(() -> {
+			Date refreshDate = new Date();
+			original.setRefreshDate(refreshDate);
+			for (IBuildPlan oldPlan : request.getModel().getPlans()) {
+				if (oldPlan.getServer() == original) {
+					BuildPlan newPlan = getPlanById(result, oldPlan.getId());
+					if (newPlan != null) {
+						newPlan.setRefreshDate(refreshDate);
+						update(request, oldPlan, newPlan, monitor);
+					} else {
+						((BuildPlan) oldPlan).setOperationStatus(
+								new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
 					}
 				}
 			}

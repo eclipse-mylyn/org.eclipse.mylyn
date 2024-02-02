@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -47,6 +46,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	public static class ResourcesUiBridgeStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			ResourcesUiBridgePlugin.getDefault().lazyStart();
 		}
@@ -65,17 +65,11 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	private ResourceInterestUpdater interestUpdater;
 
-	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			updateResourceMonitorEnablement();
-		}
-
-	};
+	private final IPropertyChangeListener propertyChangeListener = event -> updateResourceMonitorEnablement();
 
 	private boolean started;
 
 	public ResourcesUiBridgePlugin() {
-		super();
 		INSTANCE = this;
 	}
 
@@ -137,7 +131,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
-		List<IResource> interestingResources = new ArrayList<IResource>();
+		List<IResource> interestingResources = new ArrayList<>();
 		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getActiveDocuments(context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);

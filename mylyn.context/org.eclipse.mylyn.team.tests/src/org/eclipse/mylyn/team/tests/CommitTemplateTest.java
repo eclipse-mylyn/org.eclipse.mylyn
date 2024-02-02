@@ -15,13 +15,13 @@ package org.eclipse.mylyn.team.tests;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

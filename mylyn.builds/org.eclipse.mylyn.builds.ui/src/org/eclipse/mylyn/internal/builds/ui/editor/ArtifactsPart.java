@@ -25,12 +25,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -54,9 +50,9 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 
 	static class ArtifactFolder {
 
-		final Map<String, ArtifactFolder> folders = new HashMap<String, ArtifactFolder>();
+		final Map<String, ArtifactFolder> folders = new HashMap<>();
 
-		final List<IArtifact> artifacts = new ArrayList<IArtifact>();
+		final List<IArtifact> artifacts = new ArrayList<>();
 
 		final String name;
 
@@ -65,7 +61,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		}
 
 		protected Object[] getChildren() {
-			List<Object> all = new ArrayList<Object>(artifacts.size() + folders.size());
+			List<Object> all = new ArrayList<>(artifacts.size() + folders.size());
 			all.addAll(artifacts);
 			all.addAll(folders.values());
 			return all.toArray();
@@ -100,6 +96,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			return add(artifact.getRelativePath(), artifact);
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
@@ -107,14 +104,16 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 
 	static class ArtifactsContentProvider implements ITreeContentProvider {
 
-		private static final Object[] NO_ELEMENTS = new Object[0];
+		private static final Object[] NO_ELEMENTS = {};
 
 		private ArtifactFolder input;
 
+		@Override
 		public void dispose() {
 			input = null;
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof ArtifactFolder) {
 				return ((ArtifactFolder) parentElement).getChildren();
@@ -122,6 +121,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement == input) {
 				return input.getChildren();
@@ -132,10 +132,12 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof ArtifactFolder) {
 				return ((ArtifactFolder) element).hasChildren();
@@ -143,6 +145,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 			return false;
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof ArtifactFolder) {
 				input = (ArtifactFolder) newInput;
@@ -174,19 +177,12 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ArtifactsContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), null, null));
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
-			}
-		});
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (item instanceof IArtifact) {
-					IArtifact artifact = (IArtifact) item;
-					if (artifact.getUrl() != null) {
-						BrowserUtil.openUrl(artifact.getUrl(), BrowserUtil.NO_RICH_EDITOR);
-					}
+		viewer.addSelectionChangedListener(event -> getPage().getSite().getSelectionProvider().setSelection(event.getSelection()));
+		viewer.addOpenListener(event -> {
+			Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (item instanceof IArtifact artifact) {
+				if (artifact.getUrl() != null) {
+					BrowserUtil.openUrl(artifact.getUrl(), BrowserUtil.NO_RICH_EDITOR);
 				}
 			}
 		});
@@ -248,6 +244,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 
 		toolBarManager.add(new Action("Collapse All", CommonImages.COLLAPSE_ALL) {
 
+			@Override
 			public void run() {
 				viewer.collapseAll();
 			}

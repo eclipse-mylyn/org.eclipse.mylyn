@@ -81,8 +81,7 @@ public class ContextChangeEvent {
 	}
 
 	/**
-	 * The handle of the context that was changed (Can be null if a composite context with multiple
-	 * IInteractionContext's is changed)
+	 * The handle of the context that was changed (Can be null if a composite context with multiple IInteractionContext's is changed)
 	 * 
 	 * @since 3.2
 	 */
@@ -111,9 +110,8 @@ public class ContextChangeEvent {
 	}
 
 	/**
-	 * Whether the event was a result of a users explicit manipulation of the context (i.e. mark as landmark) This can
-	 * only be true for {@link ContextChangeKind#LANDMARKS_ADDED},{@link ContextChangeKind#LANDMARKS_REMOVED} and
-	 * {@link ContextChangeKind#ELEMENTS_DELETED}
+	 * Whether the event was a result of a users explicit manipulation of the context (i.e. mark as landmark) This can only be true for
+	 * {@link ContextChangeKind#LANDMARKS_ADDED},{@link ContextChangeKind#LANDMARKS_REMOVED} and {@link ContextChangeKind#ELEMENTS_DELETED}
 	 * 
 	 * @since 3.3
 	 */

@@ -14,8 +14,6 @@ package org.eclipse.mylyn.java.tests.search;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
@@ -23,29 +21,32 @@ import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
 
+import junit.framework.TestCase;
+
 public class JavaWriteAccessSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 	public void testJavaWriteAccessSearchDOS1() {
 		// List<?> results = search(1);
 	}
 
-	//	
+	//
 	// public void testJavaWriteAccessSearchDOS2(){
 	// List<?> results = search(2);
 	// }
-	//	
+	//
 	// public void testJavaWriteAccessSearchDOS3(){
 	// List<?> results = search(3);
 	// }
-	//	
+	//
 	// public void testJavaWriteAccessSearchDOS4(){
 	// List<?> results = search(4);
 	// }
-	//	
+	//
 	// public void testJavaWriteAccessSearchDOS5(){
 	// List<?> results = search(5);
 	// }
 
+	@Override
 	public List<?> search(int dos, IInteractionElement node) {
 
 		if (node == null) {

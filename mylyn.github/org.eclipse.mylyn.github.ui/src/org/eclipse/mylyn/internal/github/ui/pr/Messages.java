@@ -23,74 +23,109 @@ public class Messages extends NLS {
 
 	/** */
 	public static String CheckoutPullRequestHandler_JobName;
+
 	/** */
 	public static String CheckoutPullRequestHandler_TaskAddRemote;
+
 	/** */
 	public static String CheckoutPullRequestHandler_TaskCheckoutBranch;
+
 	/** */
 	public static String CheckoutPullRequestHandler_TaskCreateBranch;
+
 	/** */
 	public static String CheckoutPullRequestHandler_TaskFetching;
+
 	/** */
 	public static String CheckoutPullRequestHandler_TaskMerging;
+
 	/** */
 	public static String CommitAttributePart_LabelDestination;
+
 	/** */
 	public static String CommitAttributePart_LabelSource;
+
 	/** */
 	public static String CommitAttributePart_MessageFetch;
+
 	/** */
 	public static String CommitAttributePart_PartName;
+
 	/** */
 	public static String CommitAttributePart_SectionCommits;
+
 	/** */
 	public static String CommitAttributePart_TitleFetch;
+
 	/** */
 	public static String FetchPullRequestHandler_JobName;
+
 	/** */
 	public static String PullRequestConnectorUi_MessageRepositoryNotFound;
+
 	/** */
 	public static String PullRequestConnectorUi_TitleRepositoryNotFound;
+
 	/** */
 	public static String MergePullRequestHandler_MergeJob;
+
 	/** */
 	public static String MergePullRequestHandler_TaskCheckout;
+
 	/** */
 	public static String MergePullRequestHandler_TaskMerge;
+
 	/** */
 	public static String PullRequestCommitAdapter_AuthorWithDate;
+
 	/** */
 	public static String PullRequestConnectorUi_LabelKind;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_Description;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_LabelStatus;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_LabelTitle;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_MessageSelectStatus;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_StatusClosed;
+
 	/** */
 	public static String PullRequestRepositoryQueryPage_StatusOpen;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_Description;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_TaskContacting;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_TaskValidating;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_Title;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_ValidateError;
+
 	/** */
 	public static String PullRequestRepositorySettingsPage_ValidateSuccess;
+
 	/** */
 	public static String PullRequestTaskEditorPageFactory_PageText;
+
 	/** */
 	public static String RebasePullRequestHandler_RebaseJob;
+
 	/** */
 	public static String RebasePullRequestHandler_TaskCheckout;
+
 	/** */
 	public static String RebasePullRequestHandler_TaskRebase;
 

@@ -57,7 +57,6 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 	private ActiveFoldingEditorTracker activeFoldingEditorTracker;
 
 	public CDTUIBridgePlugin() {
-		super();
 	}
 
 	/**
@@ -70,6 +69,7 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 		initializeContentAssist();
 	}
 
+	@Override
 	public void lazyStartup() {
 
 		// TODO do in a UI JOB? and only on first run
@@ -132,8 +132,7 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin implements IContextUiSta
 				IEditorReference[] references = page.getEditorReferences();
 				for (IEditorReference reference : references) {
 					IEditorPart part = reference.getEditor(false);
-					if (part != null && part instanceof CEditor) {
-						CEditor editor = (CEditor) part;
+					if (part != null && part instanceof CEditor editor) {
 						activeFoldingEditorTracker.registerEditor(editor);
 						ActiveFoldingListener.resetProjection(editor);
 					}

@@ -22,6 +22,7 @@ import org.eclipse.core.internal.databinding.conversion.DateConversionSupport;
  */
 public class TimestampToStringConverter extends DateConversionSupport implements IConverter {
 
+	@Override
 	public Object convert(Object source) {
 		if (source != null) {
 			return format(new Date((Long) source));
@@ -29,10 +30,12 @@ public class TimestampToStringConverter extends DateConversionSupport implements
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	public Object getFromType() {
 		return Long.class;
 	}
 
+	@Override
 	public Object getToType() {
 		return String.class;
 	}

@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
  * @author Eike Stepper
  */
 public class TemplateHandlerContentProposalProvider implements IContentProposalProvider {
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		ProposalComputer proposalComputer = new ProposalComputer(contents, position);
 		return proposalComputer.computeProposals();
@@ -36,7 +37,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 
 		private final int position;
 
-		private final List<IContentProposal> result = new ArrayList<IContentProposal>();
+		private final List<IContentProposal> result = new ArrayList<>();
 
 		private String[] keywords;
 
@@ -112,18 +113,22 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 				this.description = description;
 			}
 
+			@Override
 			public String getContent() {
 				return proposal;
 			}
 
+			@Override
 			public int getCursorPosition() {
 				return proposal.length();
 			}
 
+			@Override
 			public String getDescription() {
 				return description;
 			}
 
+			@Override
 			public String getLabel() {
 				return "${" + keyword + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 			}

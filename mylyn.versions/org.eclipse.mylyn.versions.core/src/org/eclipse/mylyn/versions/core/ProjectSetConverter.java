@@ -22,9 +22,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,18 +60,14 @@ public class ProjectSetConverter {
 	 *             indicates that the team project set could not be created
 	 */
 	public static ByteArrayOutputStream exportProjectSet(List<IProject> projects) throws CoreException {
-		Map<String, Set<IProject>> map = new HashMap<String, Set<IProject>>();
+		Map<String, Set<IProject>> map = new HashMap<>();
 		for (IProject project : projects) {
 			RepositoryProvider provider = RepositoryProvider.getProvider(project);
 			if (provider != null) {
 				String id = provider.getID();
 				Set<IProject> list = map.get(id);
 				if (list == null) {
-					list = new TreeSet<IProject>(new Comparator<IProject>() {
-						public int compare(IProject o1, IProject o2) {
-							return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-						}
-					});
+					list = new TreeSet<>((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
 					map.put(id, list);
 				}
 				list.add(project);
@@ -86,9 +80,7 @@ public class ProjectSetConverter {
 			writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8")); //$NON-NLS-1$
 
 			XmlMemento xmlMemento = getXMLMementoRoot();
-			Iterator<String> it = map.keySet().iterator();
-			while (it.hasNext()) {
-				String id = it.next();
+			for (String id : map.keySet()) {
 				XmlMemento memento = xmlMemento.createChild("provider"); //$NON-NLS-1$
 				memento.putString("id", id); //$NON-NLS-1$
 				Set<IProject> list = map.get(id);
@@ -122,15 +114,14 @@ public class ProjectSetConverter {
 	}
 
 	/**
-	 * Returns a list of project names referenced in the team project set <code>input</code> for the provider
-	 * <code>prooviderType</code>.
+	 * Returns a list of project names referenced in the team project set <code>input</code> for the provider <code>prooviderType</code>.
 	 * 
 	 * @throws CoreException
 	 */
 	public static List<String> readProjectReferences(InputStream input, RepositoryProviderType providerType)
 			throws CoreException {
 		try {
-			List<String> referenceStrings = new ArrayList<String>();
+			List<String> referenceStrings = new ArrayList<>();
 			XmlMemento[] providers = importProjectSet(input);
 			for (XmlMemento provider : providers) {
 				if (provider.getString("id").equals(providerType.getID())) { //$NON-NLS-1$

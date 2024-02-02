@@ -37,6 +37,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 
 	private IStructuredSelection selection;
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
 			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
@@ -44,6 +45,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 		}
 	}
 
+	@Override
 	public void init(IViewPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
 			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
@@ -51,12 +53,14 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (selection != null) {
 			browseFilteredListener.unfilterSelection(treeViewer, selection);
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;

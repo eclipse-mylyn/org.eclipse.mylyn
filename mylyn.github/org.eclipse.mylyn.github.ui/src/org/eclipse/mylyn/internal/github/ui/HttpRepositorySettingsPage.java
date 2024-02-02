@@ -26,8 +26,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * Base HTTP-based task repository settings page
  */
-public abstract class HttpRepositorySettingsPage extends
-		AbstractRepositorySettingsPage {
+public abstract class HttpRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private boolean syncLabel = true;
 
@@ -41,8 +40,8 @@ public abstract class HttpRepositorySettingsPage extends
 	 * @param taskRepository
 	 *            - Object to populate
 	 */
-	public HttpRepositorySettingsPage(final String title,
-			final String description, final TaskRepository taskRepository) {
+	public HttpRepositorySettingsPage(final String title, final String description,
+			final TaskRepository taskRepository) {
 		super(title, description, taskRepository);
 		setHttpAuth(false);
 		setNeedsAdvanced(false);
@@ -67,12 +66,10 @@ public abstract class HttpRepositorySettingsPage extends
 
 	@Override
 	public boolean canValidate() {
-		return isPageComplete()
-				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
+		return isPageComplete() && (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
 	}
 
-	private void syncRepositoryLabel(
-			Function<RepositoryId, String> labelProvider) {
+	private void syncRepositoryLabel(Function<RepositoryId, String> labelProvider) {
 		if (syncLabel) {
 			String url = serverUrlCombo.getText();
 			RepositoryId repo = GitHub.getRepository(url);
@@ -83,15 +80,13 @@ public abstract class HttpRepositorySettingsPage extends
 	}
 
 	/**
-	 * Set up the {@link #serverUrlCombo} to have the initial Github URL as
-	 * content and to sync with the {@link #repositoryLabelEditor}.
+	 * Set up the {@link #serverUrlCombo} to have the initial Github URL as content and to sync with the {@link #repositoryLabelEditor}.
 	 *
 	 * @param labelProvider
 	 *            to provide a repository label
 	 */
 	protected void setInitialUrl(Function<RepositoryId, String> labelProvider) {
-		String fullUrlText = GitHub.HTTPS_GITHUB_COM
-				+ GitHub.REPOSITORY_SEGMENTS;
+		String fullUrlText = GitHub.HTTPS_GITHUB_COM + GitHub.REPOSITORY_SEGMENTS;
 		serverUrlCombo.setText(fullUrlText);
 		serverUrlCombo.setFocus();
 		// select the user/project part of the URL so that the user can just
@@ -110,18 +105,15 @@ public abstract class HttpRepositorySettingsPage extends
 			}
 		});
 
-		repositoryLabelEditor.getTextControl(compositeContainer)
-				.addModifyListener(e -> {
-					if (!editingUrl) {
-						syncLabel = false;
-					}
-				});
+		repositoryLabelEditor.getTextControl(compositeContainer).addModifyListener(e -> {
+			if (!editingUrl) {
+				syncLabel = false;
+			}
+		});
 	}
 
 	/**
-	 * Should the 'Use Token' check box be "checked"
-	 *
-	 * Here to not break existing repository definitions
+	 * Should the 'Use Token' check box be "checked" Here to not break existing repository definitions
 	 *
 	 * @param taskRepository
 	 */

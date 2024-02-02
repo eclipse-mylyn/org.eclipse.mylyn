@@ -15,13 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy;
 import org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy.Element;
+
+import junit.framework.TestCase;
 
 /**
  * Test for {@link JavaStackTraceContextComputationStrategy}.

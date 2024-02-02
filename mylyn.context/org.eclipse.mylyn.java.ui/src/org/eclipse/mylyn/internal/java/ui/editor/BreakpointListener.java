@@ -43,6 +43,7 @@ public class BreakpointListener implements IAnnotationModelListener, IAnnotation
 		this.model = model;
 	}
 
+	@Override
 	public void modelChanged(AnnotationModelEvent event) {
 		if (!ContextCore.getContextManager().isContextActive()) {
 			return;
@@ -61,13 +62,11 @@ public class BreakpointListener implements IAnnotationModelListener, IAnnotation
 					final AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element);
 					final String handleIdentifier = bridge.getHandleIdentifier(element);
 					if (handleIdentifier != null) {
-						PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-							public void run() {
-								ContextCore.getContextManager()
+						PlatformUI.getWorkbench()
+								.getDisplay()
+								.syncExec(() -> ContextCore.getContextManager()
 										.processInteractionEvent(new InteractionEvent(InteractionEvent.Kind.SELECTION,
-												bridge.getContentType(), handleIdentifier, editor.getSite().getId()));
-							}
-						});
+												bridge.getContentType(), handleIdentifier, editor.getSite().getId())));
 					}
 				} catch (JavaModelException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, e.getMessage(), e));
@@ -76,6 +75,7 @@ public class BreakpointListener implements IAnnotationModelListener, IAnnotation
 		}
 	}
 
+	@Override
 	public void modelChanged(IAnnotationModel model) {
 		// ignore
 	}

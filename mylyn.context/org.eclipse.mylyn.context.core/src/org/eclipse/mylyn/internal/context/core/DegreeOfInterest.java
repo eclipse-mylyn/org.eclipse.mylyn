@@ -27,9 +27,9 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 // TODO: make package-visible
 public class DegreeOfInterest implements IDegreeOfInterest {
 
-	private final List<InteractionEvent> events = new ArrayList<InteractionEvent>();
+	private final List<InteractionEvent> events = new ArrayList<>();
 
-	private final Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
+	private final Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<>();
 
 	protected IInteractionContextScaling contextScaling;
 
@@ -60,7 +60,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		} else {
 			this.eventCountOnCreation = eventCountOnCreation;
 		}
-		this.contextScaling = scaling;
+		contextScaling = scaling;
 	}
 
 	/**
@@ -90,27 +90,28 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	private void updateEventState(InteractionEvent event) {
 		switch (event.getKind()) {
-		case EDIT:
-			edits += event.getInterestContribution();
-			break;
-		case SELECTION:
-			selections += event.getInterestContribution();
-			break;
-		case COMMAND:
-			commands += event.getInterestContribution();
-			break;
-		case PREDICTION:
-			predictedBias += event.getInterestContribution();
-			break;
-		case PROPAGATION:
-			propagatedBias += event.getInterestContribution();
-			break;
-		case MANIPULATION:
-			manipulationBias += event.getInterestContribution();
-			break;
+			case EDIT:
+				edits += event.getInterestContribution();
+				break;
+			case SELECTION:
+				selections += event.getInterestContribution();
+				break;
+			case COMMAND:
+				commands += event.getInterestContribution();
+				break;
+			case PREDICTION:
+				predictedBias += event.getInterestContribution();
+				break;
+			case PROPAGATION:
+				propagatedBias += event.getInterestContribution();
+				break;
+			case MANIPULATION:
+				manipulationBias += event.getInterestContribution();
+				break;
 		}
 	}
 
+	@Override
 	public float getValue() {
 		float value = getEncodedValue();
 		value += predictedBias;
@@ -118,6 +119,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		return value;
 	}
 
+	@Override
 	public float getEncodedValue() {
 		float value = 0;
 		value += selections * contextScaling.get(InteractionEvent.Kind.SELECTION);
@@ -131,6 +133,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * @return a scaled decay count based on the number of events since the creation of this interest object
 	 */
+	@Override
 	public float getDecayValue() {
 		if (context != null) {
 			return (context.getUserEventCount() - eventCountOnCreation) * contextScaling.getDecay();
@@ -142,20 +145,24 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * Sums predicted and propagated values
 	 */
+	@Override
 	public boolean isPropagated() {
 		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION)
 				+ edits * contextScaling.get(InteractionEvent.Kind.EDIT);
 		return value <= 0 && propagatedBias > 0;
 	}
 
+	@Override
 	public boolean isPredicted() {
-		return (getValue() - predictedBias) <= 0 && predictedBias > 0;
+		return getValue() - predictedBias <= 0 && predictedBias > 0;
 	}
 
+	@Override
 	public boolean isLandmark() {
 		return getValue() >= contextScaling.getLandmark();
 	}
 
+	@Override
 	public boolean isInteresting() {
 		return getValue() > contextScaling.getInteresting();
 	}
@@ -169,19 +176,20 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * TODO: make unmodifiable? Clients should not muck with this list.
 	 */
+	@Override
 	public List<InteractionEvent> getEvents() {
 		return events;
 	}
 
 	public List<InteractionEvent> getCollapsedEvents() {
-		return new ArrayList<InteractionEvent>(collapsedEvents.values());
+		return new ArrayList<>(collapsedEvents.values());
 	}
 
 	// private void writeObject(ObjectOutputStream stream) throws IOException {
 	// stream.defaultWriteObject();
 	// stream.writeObject(events);
 	// }
-	//    
+	//
 	// @SuppressWarnings(value="unchecked")
 	// private void readObject(ObjectInputStream stream) throws IOException,
 	// ClassNotFoundException {

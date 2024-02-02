@@ -36,7 +36,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
@@ -48,7 +49,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 		job.setColor(HudsonModelBallColor.YELLOW);
@@ -62,7 +64,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
@@ -76,7 +79,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
@@ -92,7 +96,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
 		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
@@ -108,7 +113,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 
 		HudsonModelJob nestedJob = new HudsonModelJob();
 		String nestedJobUrl = baseUrl + "/test-folder/job/test-nested-one/";
@@ -122,7 +128,8 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
 		repositoryLocation.setUrl(baseUrl);
-		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation, new JenkinsConfigurationCache());
+		JenkinsServerBehaviour behaviour = new JenkinsServerBehaviour(repositoryLocation,
+				new JenkinsConfigurationCache());
 
 		HudsonModelJob topLevelJob = new HudsonModelJob();
 		String jobName = "test-succeeding";
@@ -133,7 +140,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 	}
 
 	private Set<HudsonModelBallColor> getRunningColors() {
-		Set<HudsonModelBallColor> result = new HashSet<HudsonModelBallColor>();
+		Set<HudsonModelBallColor> result = new HashSet<>();
 		for (HudsonModelBallColor color : HudsonModelBallColor.values()) {
 			if (color.value().endsWith("_anime")) {
 				result.add(color);
@@ -143,7 +150,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 	}
 
 	private Set<HudsonModelBallColor> getStoppedColors() {
-		Set<HudsonModelBallColor> result = new HashSet<HudsonModelBallColor>();
+		Set<HudsonModelBallColor> result = new HashSet<>();
 		for (HudsonModelBallColor color : HudsonModelBallColor.values()) {
 			if (!color.value().endsWith("_anime")) {
 				result.add(color);

@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -42,6 +40,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
+
+import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -332,7 +332,7 @@ public class TaskActivityTimingTest extends TestCase {
 //
 //		activityMonitor.parseInteractionEvent(event1);
 //		activityMonitor.parseInteractionEvent(event2);
-//		// one event blocked now by activity date filter so only half time collected 
+//		// one event blocked now by activity date filter so only half time collected
 //		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 //		assertFalse(activityManager.getActiveTasks(start, end).isEmpty());
 //		assertTrue(activityManager.getActiveTasks(start2, end2).isEmpty());
@@ -657,8 +657,8 @@ public class TaskActivityTimingTest extends TestCase {
 
 		activityMonitor.reloadActivityTime();
 		assertEquals(
-				(endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
-						+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()),
+				endTime1.getTimeInMillis() - startTime1.getTimeInMillis() + endTime2.getTimeInMillis()
+						- startTime2.getTimeInMillis(),
 				TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
@@ -682,7 +682,7 @@ public class TaskActivityTimingTest extends TestCase {
 		mockContext.parseEvent(activityEvent2);
 
 		// Since these event times are within same hour, normally they would get collapsed
-		// here we test that if the event belongs to two different tasks remain discrete 
+		// here we test that if the event belongs to two different tasks remain discrete
 
 		assertEquals(2, mockContext.getInteractionHistory().size());
 		mockContext = ContextCorePlugin.getContextManager().collapseActivityMetaContext(mockContext);
@@ -725,7 +725,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionEvent activityEvent3 = createTimingEvent(startTime3, endTime3, task1);
 
-		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
+		List<InteractionEvent> events = new ArrayList<>();
 		events.add(activityEvent1);
 		events.add(activityEvent2);
 		events.add(activityEvent3);
@@ -764,7 +764,7 @@ public class TaskActivityTimingTest extends TestCase {
 		activityMonitor.parseInteractionEvent(activityEvent, false);
 		activityMonitor.parseInteractionEvent(event2, false);
 
-		long expectedTotalTime = (activityEnd.getTime().getTime() - activityStart.getTime().getTime());
+		long expectedTotalTime = activityEnd.getTime().getTime() - activityStart.getTime().getTime();
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
@@ -924,7 +924,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
-// DND: OLD ACTIVITY TESTS - Will be using to test activity report/view 
+// DND: OLD ACTIVITY TESTS - Will be using to test activity report/view
 //	public void testInterleavedActivation() {
 //
 //		AbstractTask task1 = new LocalTask("task 1", "Task 1");
@@ -1031,7 +1031,7 @@ public class TaskActivityTimingTest extends TestCase {
 //
 //	/**
 //	 * Some 'attention' events when all tasks are inactive
-//	 * 
+//	 *
 //	 * @author Yuri Baburov (burchik@gmail.com)
 //	 */
 //	public void testTaskListManagerActivity2() {

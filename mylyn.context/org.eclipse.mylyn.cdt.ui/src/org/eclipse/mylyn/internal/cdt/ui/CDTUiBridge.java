@@ -69,10 +69,7 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				return;
 			}
 			EditorUtility.openInEditor(cElement);
-		} catch (CModelException t) {
-			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
-		} catch (PartInitException t) {
+		} catch (CModelException | PartInitException t) {
 			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
 					NLS.bind("Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
 		}
@@ -82,10 +79,10 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 	public void close(IInteractionElement node) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
-			List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
+			List<IEditorReference> toClose = new ArrayList<>(4);
 			for (IEditorReference reference : page.getEditorReferences()) {
 				try {
-					ICElement input = (ICElement) reference.getEditorInput().getAdapter(ICElement.class);
+					ICElement input = reference.getEditorInput().getAdapter(ICElement.class);
 					if (input != null
 							&& node.getHandleIdentifier().equals(CDTStructureBridge.getHandleForElement(input))) {
 						toClose.add(reference);
@@ -109,8 +106,7 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 	@Override
 	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(ICElement.class);
-		if (adapter instanceof ICElement) {
-			ICElement cElement = (ICElement) adapter;
+		if (adapter instanceof ICElement cElement) {
 			String handle = ContextCore.getStructureBridge(cElement).getHandleIdentifier(cElement);
 			return ContextCore.getContextManager().getElement(handle);
 		} else {
@@ -123,10 +119,9 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 		if (editorPart == null || cOutlineField == null) {
 			return null;
 		}
-		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		List<TreeViewer> viewers = new ArrayList<>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
-		if (out instanceof CContentOutlinePage) {
-			CContentOutlinePage page = (CContentOutlinePage) out;
+		if (out instanceof CContentOutlinePage page) {
 			if (page.getControl() != null) {
 				try {
 					viewers.add((TreeViewer) cOutlineField.get(page));
@@ -165,8 +160,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 	}
 
 	/**
-	 * The return type of CEditor.getInputCElement was changed from ICElement to IWorkingCopy, breaking binary
-	 * compatibility, so we have to call it using reflection.
+	 * The return type of CEditor.getInputCElement was changed from ICElement to IWorkingCopy, breaking binary compatibility, so we have to
+	 * call it using reflection.
 	 */
 	public static ICElement getInputCElement(CEditor editor) {
 		try {

@@ -34,9 +34,11 @@ public class PullRequestAdapter extends WorkbenchAdapter {
 	public PullRequestAdapter(PullRequestComposite request) {
 		List<PullRequestCommitAdapter> prCommits = new ArrayList<>();
 		List<RepositoryCommit> requestCommits = request.getCommits();
-		if (requestCommits != null)
-			for (RepositoryCommit commit : requestCommits)
+		if (requestCommits != null) {
+			for (RepositoryCommit commit : requestCommits) {
 				prCommits.add(new PullRequestCommitAdapter(commit));
+			}
+		}
 		commits = prCommits.toArray(new PullRequestCommitAdapter[0]);
 	}
 

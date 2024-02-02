@@ -15,8 +15,6 @@ package org.eclipse.mylyn.java.tests.xml;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -35,10 +33,12 @@ import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
 
+import junit.framework.TestCase;
+
 /**
- * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2.
- * different type of xml file with and without reference - shouldn't have result DEGREE OF SEPARATIONS 1 xml landmark
- * files 2 projects of any landmark 3 workspace 4 workspace 5 NONE
+ * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2. different type of xml file
+ * with and without reference - shouldn't have result DEGREE OF SEPARATIONS 1 xml landmark files 2 projects of any landmark 3 workspace 4
+ * workspace 5 NONE
  * 
  * @author Shawn Minto
  */
@@ -313,6 +313,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		//
 	}
 
+	@Override
 	public List<?> search(int dos, IInteractionElement node) throws IOException, CoreException {
 		if (node == null) {
 			return null;

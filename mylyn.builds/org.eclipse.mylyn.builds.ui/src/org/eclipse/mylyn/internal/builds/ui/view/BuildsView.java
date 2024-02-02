@@ -35,11 +35,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -83,7 +80,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -187,20 +183,19 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				}
 				return res;
 			}
-			if (e1 instanceof IBuildPlan && e2 instanceof IBuildPlan) {
-				IBuildPlan p1 = (IBuildPlan) e1;
+			if (e1 instanceof IBuildPlan p1 && e2 instanceof IBuildPlan) {
 				IBuildPlan p2 = (IBuildPlan) e2;
 				switch (columnIndex) {
-				case -1: // default
-					return CoreUtil.compare(p1.getLabel(), p2.getLabel());
-				case 0: // build
-					return CoreUtil.compare(p1.getStatus(), p2.getStatus());
-				case 1: // summary
-					return p1.getHealth() - p2.getHealth();
-				case 2: // last build
-					Long t1 = (p1.getLastBuild() != null) ? p1.getLastBuild().getTimestamp() : null;
-					Long t2 = (p2.getLastBuild() != null) ? p2.getLastBuild().getTimestamp() : null;
-					return CoreUtil.compare(t1, t2);
+					case -1: // default
+						return CoreUtil.compare(p1.getLabel(), p2.getLabel());
+					case 0: // build
+						return CoreUtil.compare(p1.getStatus(), p2.getStatus());
+					case 1: // summary
+						return p1.getHealth() - p2.getHealth();
+					case 2: // last build
+						Long t1 = p1.getLastBuild() != null ? p1.getLastBuild().getTimestamp() : null;
+						Long t2 = p2.getLastBuild() != null ? p2.getLastBuild().getTimestamp() : null;
+						return CoreUtil.compare(t1, t2);
 				}
 			}
 			return super.compare(viewer, e1, e2, columnIndex);
@@ -268,18 +263,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private BuildElementPropertiesAction propertiesAction;
 
-	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED
-					.equals(event.getProperty())) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (refreshAutomaticallyAction != null) {
-							refreshAutomaticallyAction.updateState();
-						}
-					}
-				});
-			}
+	private final IPropertyChangeListener propertyChangeListener = event -> {
+		if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED
+				.equals(event.getProperty())) {
+			Display.getDefault().asyncExec(() -> {
+				if (this.refreshAutomaticallyAction != null) {
+					this.refreshAutomaticallyAction.updateState();
+				}
+			});
 		}
 	};
 
@@ -401,19 +392,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	/**
-	 * Initializes automatic resize of the tree control columns. The size of these will be adjusted when a node is
-	 * expanded or collapsed and when the tree changes size.
+	 * Initializes automatic resize of the tree control columns. The size of these will be adjusted when a node is expanded or collapsed and
+	 * when the tree changes size.
 	 *
 	 * @param tree
 	 *            the tree to resize
 	 */
 	private void installAutomaticResize(final Tree tree) {
-		Listener listener = new Listener() {
-			public void handleEvent(Event e) {
-				packColumnsAsync(tree);
-			}
-
-		};
+		Listener listener = e -> packColumnsAsync(tree);
 		// Automatically resize columns when we expand tree nodes.
 		tree.addListener(SWT.Collapse, listener);
 		tree.addListener(SWT.Expand, listener);
@@ -421,15 +407,13 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	void packColumnsAsync(final Tree tree) {
-		tree.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (!tree.isDisposed()) {
-					try {
-						tree.setRedraw(false);
-						packColumns(tree);
-					} finally {
-						tree.setRedraw(true);
-					}
+		tree.getDisplay().asyncExec(() -> {
+			if (!tree.isDisposed()) {
+				try {
+					tree.setRedraw(false);
+					packColumns(tree);
+				} finally {
+					tree.setRedraw(true);
 				}
 			}
 		});
@@ -489,12 +473,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		contentProvider.setSelectedOnly(true);
 		viewer.setContentProvider(contentProvider);
 
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (element instanceof IBuildElement) {
-					OpenHandler.open(getSite().getPage(), Collections.singletonList((IBuildElement) element));
-				}
+		viewer.addOpenListener(event -> {
+			Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (element instanceof IBuildElement) {
+				OpenHandler.open(getSite().getPage(), Collections.singletonList((IBuildElement) element));
 			}
 		});
 	}
@@ -579,15 +561,15 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			for (IBuildPlan plan : getModel().getPlans()) {
 				if (plan.getStatus() != null) {
 					switch (plan.getStatus()) {
-					case SUCCESS:
-						buildsSummary.numSuccess++;
-						break;
-					case UNSTABLE:
-						buildsSummary.numUnstable++;
-						break;
-					case FAILED:
-						buildsSummary.numFailed++;
-						break;
+						case SUCCESS:
+							buildsSummary.numSuccess++;
+							break;
+						case UNSTABLE:
+							buildsSummary.numUnstable++;
+							break;
+						case FAILED:
+							buildsSummary.numFailed++;
+							break;
 					}
 				}
 			}
@@ -606,7 +588,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		BuildsUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
 
 		// defer restore until view is created
-		this.stateMemento = memento;
+		stateMemento = memento;
 	}
 
 	private void initActions() {
@@ -685,6 +667,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		}
 	}
 
+	@Override
 	public boolean show(ShowInContext context) {
 		if (context.getSelection() != null) {
 			getViewer().setSelection(context.getSelection());
@@ -694,7 +677,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	private void updateContents(IStatus status) {
-		boolean isShowingViewer = (stackLayout.topControl == filteredTree);
+		boolean isShowingViewer = stackLayout.topControl == filteredTree;
 		boolean hasContents = false;
 		if (contentProvider != null) {
 			if (getModel().getPlans().size() > 0 || getModel().getServers().size() > 0) {
@@ -764,25 +747,16 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IShowInTargetList.class) {
-			return new IShowInTargetList() {
-				public String[] getShowInTargetIds() {
-					return new String[] { "org.eclipse.team.ui.GenericHistoryView" }; //$NON-NLS-1$
-				}
-
-			};
+			return (IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" };
 		} else if (adapter == IShowInSource.class) {
-			return new IShowInSource() {
-				public ShowInContext getShowInContext() {
-					return new ShowInContext(getViewer().getInput(), getViewer().getSelection());
-				}
-			};
+			return (IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection());
 		}
 		return super.getAdapter(adapter);
 	}
 
 	/**
-	 * Packs all columns so that they are able to display all content. If there is any space left, the second column
-	 * (summary) will be resized so that the entire width of the control is used.
+	 * Packs all columns so that they are able to display all content. If there is any space left, the second column (summary) will be
+	 * resized so that the entire width of the control is used.
 	 *
 	 * @param tree
 	 *            the tree to resize
@@ -800,7 +774,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		// Adjust the width of the "Summary" column unless it's not resizeable
 		// which case we adjust the width of the "Build" column instead.
-		TreeColumn column = (tree.getColumn(1).getResizable()) ? tree.getColumn(1) : tree.getColumn(0);
+		TreeColumn column = tree.getColumn(1).getResizable() ? tree.getColumn(1) : tree.getColumn(0);
 		int nw = column.getWidth() + tree.getClientArea().width - totalColumnWidth;
 		column.setWidth(nw);
 	}

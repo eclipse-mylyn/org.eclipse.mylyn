@@ -38,12 +38,14 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 
 	private boolean performingChange;
 
+	@Override
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		OperationHistoryFactory.getOperationHistory().removeOperationHistoryListener(this);
 	}
 
+	@Override
 	public void init() {
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		isEnabled = ResourcesUiBridgePlugin.getDefault()
@@ -56,6 +58,7 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		OperationHistoryFactory.getOperationHistory().addOperationHistoryListener(this);
 	}
 
+	@Override
 	public void update() {
 		// ignore
 	}
@@ -68,6 +71,7 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		this.isEnabled = isEnabled;
 	}
 
+	@Override
 	public boolean isExcluded(IResource resource) {
 		if (isEnabled() && !performingChange) {
 			return resource instanceof IFile && !wasModifiedAfter(resource, lastActivatedDate);
@@ -99,20 +103,21 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-			// some OS's round the file time down to the nearest second, so we need to round the 
-			// activation time down as well to ensure that modified files within the first second are 
-			// properly captured
-			long currentTime = new Date().getTime();
-			currentTime -= currentTime % 1000d;
-			lastActivatedDate = new Date(currentTime);
-			break;
-		case DEACTIVATED:
-			lastActivatedDate = null;
-			break;
+			case ACTIVATED:
+				// some OS's round the file time down to the nearest second, so we need to round the
+				// activation time down as well to ensure that modified files within the first second are
+				// properly captured
+				long currentTime = new Date().getTime();
+				currentTime -= currentTime % 1000d;
+				lastActivatedDate = new Date(currentTime);
+				break;
+			case DEACTIVATED:
+				lastActivatedDate = null;
+				break;
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS.equals(event.getProperty())) {
 			Object newValue = event.getNewValue();
@@ -124,6 +129,7 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		}
 	}
 
+	@Override
 	public void historyNotification(OperationHistoryEvent event) {
 		if (event.getEventType() == OperationHistoryEvent.ABOUT_TO_EXECUTE) {
 			performingChange = true;

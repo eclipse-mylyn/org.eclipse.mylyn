@@ -29,7 +29,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -106,7 +105,7 @@ public class InvisibleContextElementsPart {
 				result = value1.compareTo(value2);
 			}
 
-			return isDecending() ? (result * -1) : result;
+			return isDecending() ? result * -1 : result;
 		}
 
 		public boolean isDecending() {
@@ -128,14 +127,14 @@ public class InvisibleContextElementsPart {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case ACTIVATED:
-				if (isActiveTask()) {
-					addToolbarActions();
-				}
-				break;
-			case DEACTIVATED:
-				toolbarManager.removeAll();
-				toolbarManager.update(true);
+				case ACTIVATED:
+					if (isActiveTask()) {
+						addToolbarActions();
+					}
+					break;
+				case DEACTIVATED:
+					toolbarManager.removeAll();
+					toolbarManager.update(true);
 			}
 		}
 	};
@@ -149,10 +148,12 @@ public class InvisibleContextElementsPart {
 			return super.getText(element);
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof IInteractionElement) {
 				if (columnIndex == 0) {
@@ -188,31 +189,23 @@ public class InvisibleContextElementsPart {
 				if (ContextCore.getContextManager().isContextActive()) {
 					try {
 						final Collection<Object> allVisible = getAllVisibleElementsInContextPage();
-						PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+						PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+							monitor.beginTask(Messages.InvisibleContextElementsPart_Collecting_all_invisible,
+									IProgressMonitor.UNKNOWN);
+							if (allVisible != null) {
+								final List<IInteractionElement> allToRemove = getAllInvisibleElements(context,
+										allVisible);
+								Display.getDefault()
+										.asyncExec(() -> ContextCorePlugin.getContextManager()
+												.deleteElements(allToRemove, true));
 
-							public void run(IProgressMonitor monitor)
-									throws InvocationTargetException, InterruptedException {
-								monitor.beginTask(Messages.InvisibleContextElementsPart_Collecting_all_invisible,
-										IProgressMonitor.UNKNOWN);
-								if (allVisible != null) {
-									final List<IInteractionElement> allToRemove = getAllInvisibleElements(context,
-											allVisible);
-									Display.getDefault().asyncExec(new Runnable() {
-										public void run() {
-											ContextCorePlugin.getContextManager().deleteElements(allToRemove, true);
-										}
-									});
-
-								} else {
-									MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-											Messages.ContextEditorFormPage_Remove_Invisible,
-											Messages.ContextEditorFormPage_No_context_active);
-								}
+							} else {
+								MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+										Messages.ContextEditorFormPage_Remove_Invisible,
+										Messages.ContextEditorFormPage_No_context_active);
 							}
 						});
-					} catch (InvocationTargetException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, e.getMessage(), e));
-					} catch (InterruptedException e) {
+					} catch (InvocationTargetException | InterruptedException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, e.getMessage(), e));
 					}
 
@@ -290,14 +283,17 @@ public class InvisibleContextElementsPart {
 		invisibleTable.setLabelProvider(labelProvider);
 		invisibleTable.setContentProvider(new IStructuredContentProvider() {
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// ignore
 			}
 
+			@Override
 			public void dispose() {
 				// ignore
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (inputElement instanceof Collection<?>) {
 					return ((Collection<?>) inputElement).toArray();
@@ -326,7 +322,7 @@ public class InvisibleContextElementsPart {
 	private boolean isActiveTask() {
 		if (ContextCore.getContextManager().isContextActive()) {
 			IInteractionContext activeContext = ContextCore.getContextManager().getActiveContext();
-			if ((context instanceof ContextWrapper && ((ContextWrapper) context).isForSameTaskAs(activeContext))
+			if (context instanceof ContextWrapper && ((ContextWrapper) context).isForSameTaskAs(activeContext)
 					|| context.equals(activeContext)) {
 				return true;
 			}
@@ -382,29 +378,26 @@ public class InvisibleContextElementsPart {
 				monitor.beginTask(Messages.InvisibleContextElementsPart_Computing_invisible_elements,
 						IProgressMonitor.UNKNOWN);
 				final List<IInteractionElement> allInvisibleElements = getAllInvisibleElements(context, allVisible);
-				Display.getDefault().asyncExec(new Runnable() {
-
-					public void run() {
-						if (invisibleSection != null && !invisibleSection.isDisposed()) {
-							invisibleSection.setText(NLS.bind(Messages.InvisibleContextElementsPart_Invisible_elements,
-									allInvisibleElements.size()));
-							invisibleSection.layout();
-							if (allInvisibleElements.size() == 0) {
-								invisibleSection.setExpanded(false);
-								invisibleSection.setEnabled(false);
-							} else {
-								invisibleSection.setEnabled(true);
-							}
+				Display.getDefault().asyncExec(() -> {
+					if (invisibleSection != null && !invisibleSection.isDisposed()) {
+						invisibleSection.setText(NLS.bind(Messages.InvisibleContextElementsPart_Invisible_elements,
+								allInvisibleElements.size()));
+						invisibleSection.layout();
+						if (allInvisibleElements.size() == 0) {
+							invisibleSection.setExpanded(false);
+							invisibleSection.setEnabled(false);
+						} else {
+							invisibleSection.setEnabled(true);
 						}
+					}
 
-						if (invisibleTable != null && !invisibleTable.getTable().isDisposed()) {
-							invisibleTable.setInput(allInvisibleElements);
-						}
+					if (invisibleTable != null && !invisibleTable.getTable().isDisposed()) {
+						invisibleTable.setInput(allInvisibleElements);
 					}
 				});
 
 				return Status.OK_STATUS;
-			};
+			}
 		};
 		j.schedule();
 
@@ -417,7 +410,7 @@ public class InvisibleContextElementsPart {
 		}
 		List<IInteractionElement> allToRemove = context.getAllElements();
 
-		List<IInteractionElement> allVisibleElements = new ArrayList<IInteractionElement>();
+		List<IInteractionElement> allVisibleElements = new ArrayList<>();
 		for (Object visibleObject : allVisible) {
 			for (AbstractContextStructureBridge bridge : ContextCorePlugin.getDefault()
 					.getStructureBridges()
@@ -459,7 +452,7 @@ public class InvisibleContextElementsPart {
 		if (commonViewer == null || commonViewer.getTree() == null || commonViewer.getTree().isDisposed()) {
 			return null;
 		}
-		Set<Object> allVisible = new HashSet<Object>();
+		Set<Object> allVisible = new HashSet<>();
 		collectItemData(commonViewer.getTree().getItems(), allVisible);
 		return allVisible;
 	}

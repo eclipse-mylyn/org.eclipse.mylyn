@@ -224,7 +224,7 @@ public class ShadowsBridgeTest extends AbstractContextTest {
 	 * @throws Exception
 	 */
 	public void testShadowsStructureBridge() throws Exception {
-		// 1) Create mock bridge 
+		// 1) Create mock bridge
 		BaseContentStructureBridge baseBridge = new BaseContentStructureBridge();
 
 		// 2) Add it to ContextCorePlugin
@@ -246,7 +246,7 @@ public class ShadowsBridgeTest extends AbstractContextTest {
 		otherBridge = context.getStructureBridge(SHADOWS_OBJECT);
 		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
 
-		// 4) Create second mock bridge 
+		// 4) Create second mock bridge
 		ShadowsContentStructureBridge shadowsBridge = new ShadowsContentStructureBridge();
 
 		// 5) Add it to ContextCorePlugin

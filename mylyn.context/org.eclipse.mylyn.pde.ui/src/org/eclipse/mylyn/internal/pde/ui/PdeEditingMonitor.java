@@ -46,7 +46,6 @@ import org.eclipse.ui.part.FileEditorInput;
 public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 
 	public PdeEditingMonitor() {
-		super();
 	}
 
 	@Override
@@ -229,10 +228,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 				if (offset >= node.getOffset() && offset < node.getOffset() + node.getLength()) {
 					return node;
 				}
-			} else {
-				if (getStringOfNode(node).hashCode() == offset) {
-					return node;
-				}
+			} else if (getStringOfNode(node).hashCode() == offset) {
+				return node;
 			}
 		}
 		return null;
@@ -256,10 +253,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 				if (offset >= node.getOffset() && offset < node.getOffset() + node.getLength()) {
 					return node;
 				}
-			} else {
-				if (getStringOfNode(node).hashCode() == offset) {
-					return node;
-				}
+			} else if (getStringOfNode(node).hashCode() == offset) {
+				return node;
 			}
 		}
 		return null;
@@ -276,18 +271,18 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 // try{
 // // get the model for the xml elements
 // XMLReconciler rec = editor.getModel();
-//                    
+//
 // int start = textSelection.getStartLine();
 // int end = textSelection.getEndLine();
-//                    
+//
 // // get the node that was selected
 // XMLNode node = rec.getNodeFromLine(start);
-//                    
+//
 // ContextCorePlugin.getTaskscapeManager().handleElementSelected(
 // node.getHandle(), node.getCanName(),
 // IDegreeOfInterest.Value.Selections,
 // ITaskscapeNode.Kind.XML);
-//                              
+//
 // }catch(Exception e){
 // //handle properly
 // }

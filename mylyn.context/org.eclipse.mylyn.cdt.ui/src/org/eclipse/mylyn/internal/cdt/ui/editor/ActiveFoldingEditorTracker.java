@@ -24,18 +24,20 @@ import org.eclipse.ui.IEditorPart;
  */
 public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
-	protected Map<CEditor, ActiveFoldingListener> editorListenerMap = new HashMap<CEditor, ActiveFoldingListener>();
+	protected Map<CEditor, ActiveFoldingListener> editorListenerMap = new HashMap<>();
 
 	@Override
 	public void editorOpened(IEditorPart part) {
-		if (part instanceof CEditor)
+		if (part instanceof CEditor) {
 			registerEditor((CEditor) part);
+		}
 	}
 
 	@Override
 	public void editorClosed(IEditorPart part) {
-		if (part instanceof CEditor)
+		if (part instanceof CEditor) {
 			unregisterEditor((CEditor) part);
+		}
 	}
 
 	public void registerEditor(final CEditor editor) {

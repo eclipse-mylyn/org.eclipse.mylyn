@@ -20,8 +20,8 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
  */
 public interface IBuildLoader {
 
-	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException;
+	BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException;
 
-	public IBuildModelRealm getRealm();
+	IBuildModelRealm getRealm();
 
 }

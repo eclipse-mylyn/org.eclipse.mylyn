@@ -32,7 +32,7 @@ public class ShowBuildOutputAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return (selection.getFirstElement() instanceof IBuildPlan || selection.getFirstElement() instanceof IBuild);
+		return selection.getFirstElement() instanceof IBuildPlan || selection.getFirstElement() instanceof IBuild;
 	}
 
 	@Override

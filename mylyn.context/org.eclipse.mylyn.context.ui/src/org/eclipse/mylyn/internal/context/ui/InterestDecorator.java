@@ -45,30 +45,37 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return node;
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}
 
+	@Override
 	public void dispose() {
 		// don't care when we are disposed
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}
 
+	@Override
 	public Image decorateImage(Image image, Object element) {
 		return null;
 	}
 
+	@Override
 	public String decorateText(String text, Object element) {
 		return null;
 	}
 
+	@Override
 	public Font decorateFont(Object element) {
 		IInteractionElement node = getNode(element);
 		if (node != null) {
@@ -79,6 +86,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return null;
 	}
 
+	@Override
 	public Color decorateForeground(Object element) {
 		IInteractionElement node = getNode(element);
 		if (element instanceof InteractionContextRelation) {
@@ -89,6 +97,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return null;
 	}
 
+	@Override
 	public Color decorateBackground(Object element) {
 		return null;
 	}

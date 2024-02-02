@@ -20,6 +20,5 @@ import org.eclipse.mylyn.ide.ui.AbstractFocusMarkerViewAction;
 public class FocusBookmarkMarkersViewAction extends AbstractFocusMarkerViewAction {
 
 	public FocusBookmarkMarkersViewAction() {
-		super();
 	}
 }

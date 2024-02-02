@@ -36,8 +36,12 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  */
 public class CommitTemplateManager {
 
-	private static final Pattern ARGUMENT_PATTERN = Pattern.compile("(.+)" + "\\(\\s*\"" //$NON-NLS-1$ //$NON-NLS-2$
-			+ "(.+(?:\"\\s*,\\s*\".+)*)" + "\"\\s*\\)}" + "(.*)", Pattern.DOTALL); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Pattern ARGUMENT_PATTERN = Pattern.compile("""
+			(.+)\
+			\\(\\s*"\
+			(.+(?:"\\s*,\\s*".+)*)\
+			"\\s*\\)}\
+			(.*)""", Pattern.DOTALL); //$NON-NLS-1$
 
 	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
@@ -49,7 +53,7 @@ public class CommitTemplateManager {
 
 	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates"; //$NON-NLS-1$
 
-	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final String[] EMPTY_STRING_ARRAY = {};
 
 	public String generateComment(ITask task, String template) {
 		return processKeywords(task, template);
@@ -98,7 +102,7 @@ public class CommitTemplateManager {
 		template = replaceKeywords(template, KEYWORD_PLACEHOLDER);
 		template = quoteChars(template, META_CHARS);
 		template = template.replaceFirst(TASK_ID_PLACEHOLDER, "(\\\\d+)"); //$NON-NLS-1$
-		template = template.replaceAll(KEYWORD_PLACEHOLDER, ".*"); //$NON-NLS-1$
+		template = template.replace(KEYWORD_PLACEHOLDER, ".*"); //$NON-NLS-1$
 		return template;
 	}
 
@@ -123,7 +127,7 @@ public class CommitTemplateManager {
 	}
 
 	public String[] getRecognizedKeywords() {
-		final ArrayList<String> result = new ArrayList<String>();
+		final ArrayList<String> result = new ArrayList<>();
 		new ExtensionProcessor() {
 			@Override
 			protected Object processContribution(IConfigurationElement element, String keyword, String description,
@@ -175,7 +179,7 @@ public class CommitTemplateManager {
 
 	private String processKeywords(ITask task, String template) {
 		String[] segments = template.split("\\$\\{"); //$NON-NLS-1$
-		Stack<String> evaluated = new Stack<String>();
+		Stack<String> evaluated = new Stack<>();
 		evaluated.add(segments[0]);
 
 		for (int i = 1; i < segments.length; i++) {
@@ -208,7 +212,7 @@ public class CommitTemplateManager {
 //				buffer.append(segment);
 //			}
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (String string : evaluated) {
 			buffer.append(string);
 		}

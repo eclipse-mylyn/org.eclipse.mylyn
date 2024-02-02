@@ -23,6 +23,6 @@ public interface IContextUiStartup {
 	/**
 	 * Invoked before the first context activation.
 	 */
-	public abstract void lazyStartup();
+	void lazyStartup();
 
 }

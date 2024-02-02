@@ -30,8 +30,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  */
 public class Artifact extends BuildElement implements IArtifact {
 	/**
-	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
 	 * @generated
@@ -40,8 +39,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	protected static final String RELATIVE_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
 	 * @generated
@@ -55,7 +53,6 @@ public class Artifact extends BuildElement implements IArtifact {
 	 * @generated
 	 */
 	protected Artifact() {
-		super();
 	}
 
 	/**
@@ -71,13 +68,13 @@ public class Artifact extends BuildElement implements IArtifact {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getRelativePath() {
 		return relativePath;
 	}
@@ -87,12 +84,14 @@ public class Artifact extends BuildElement implements IArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRelativePath(String newRelativePath) {
 		String oldRelativePath = relativePath;
 		relativePath = newRelativePath;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.ARTIFACT__RELATIVE_PATH, oldRelativePath,
 					relativePath));
+		}
 	}
 
 	/**
@@ -103,8 +102,8 @@ public class Artifact extends BuildElement implements IArtifact {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.ARTIFACT__RELATIVE_PATH:
-			return getRelativePath();
+			case BuildPackage.ARTIFACT__RELATIVE_PATH:
+				return getRelativePath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -117,9 +116,9 @@ public class Artifact extends BuildElement implements IArtifact {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.ARTIFACT__RELATIVE_PATH:
-			setRelativePath((String) newValue);
-			return;
+			case BuildPackage.ARTIFACT__RELATIVE_PATH:
+				setRelativePath((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -132,9 +131,9 @@ public class Artifact extends BuildElement implements IArtifact {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.ARTIFACT__RELATIVE_PATH:
-			setRelativePath(RELATIVE_PATH_EDEFAULT);
-			return;
+			case BuildPackage.ARTIFACT__RELATIVE_PATH:
+				setRelativePath(RELATIVE_PATH_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -147,8 +146,10 @@ public class Artifact extends BuildElement implements IArtifact {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.ARTIFACT__RELATIVE_PATH:
-			return RELATIVE_PATH_EDEFAULT == null ? relativePath != null : !RELATIVE_PATH_EDEFAULT.equals(relativePath);
+			case BuildPackage.ARTIFACT__RELATIVE_PATH:
+				return RELATIVE_PATH_EDEFAULT == null
+						? relativePath != null
+						: !RELATIVE_PATH_EDEFAULT.equals(relativePath);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -160,10 +161,11 @@ public class Artifact extends BuildElement implements IArtifact {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (relativePath: "); //$NON-NLS-1$
 		result.append(relativePath);
 		result.append(')');

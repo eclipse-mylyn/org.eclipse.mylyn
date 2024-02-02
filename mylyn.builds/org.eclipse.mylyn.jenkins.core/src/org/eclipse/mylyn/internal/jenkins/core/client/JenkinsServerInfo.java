@@ -19,7 +19,7 @@ public class JenkinsServerInfo {
 
 	public enum Type {
 		HUDSON, JENKINS
-	};
+	}
 
 	private final String version;
 

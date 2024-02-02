@@ -36,7 +36,7 @@ public enum IssueOperation {
 
 	private final String label;
 
-	private IssueOperation(String label) {
+	IssueOperation(String label) {
 		this.label = label;
 	}
 
@@ -63,13 +63,14 @@ public enum IssueOperation {
 	 * 
 	 * @param opId
 	 *            the id, or null
-	 * @return the operation, or null if the id was null or did not match any
-	 *         operation
+	 * @return the operation, or null if the id was null or did not match any operation
 	 */
 	public static IssueOperation fromId(String opId) {
-		for (IssueOperation op : values())
-			if (op.getId().equals(opId))
+		for (IssueOperation op : values()) {
+			if (op.getId().equals(opId)) {
 				return op;
+			}
+		}
 		return null;
 	}
 

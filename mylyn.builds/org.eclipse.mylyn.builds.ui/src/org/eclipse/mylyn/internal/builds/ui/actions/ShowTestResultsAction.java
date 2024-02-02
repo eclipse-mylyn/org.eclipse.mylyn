@@ -50,11 +50,9 @@ public class ShowTestResultsAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
-		if (selection instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) selection;
+		if (selection instanceof IBuildPlan plan) {
 			TestResultManager.showInJUnitView(plan.getLastBuild());
-		} else if (selection instanceof IBuild) {
-			IBuild build = (IBuild) selection;
+		} else if (selection instanceof IBuild build) {
 			TestResultManager.showInJUnitView(build);
 		}
 	}

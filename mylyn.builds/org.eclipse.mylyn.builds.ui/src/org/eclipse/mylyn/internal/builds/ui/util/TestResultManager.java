@@ -44,7 +44,6 @@ import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.internal.core.util.JUnitResultGenerator;
-import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
@@ -111,20 +110,18 @@ public class TestResultManager {
 		}
 
 		public static void openInEditor(final String className, final String testName) {
-			final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
+			final AtomicReference<IJavaElement> result = new AtomicReference<>();
 			try {
-				WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
-					public void run(IProgressMonitor monitor) throws CoreException {
-						IType type = findType(className, monitor);
-						if (type == null) {
-							return;
-						}
-						result.set(type);
-						if (testName != null) {
-							IMethod method = type.getMethod(testName, new String[0]);
-							if (method != null && method.exists()) {
-								result.set(method);
-							}
+				WorkbenchUtil.busyCursorWhile(monitor -> {
+					IType type = findType(className, monitor);
+					if (type == null) {
+						return;
+					}
+					result.set(type);
+					if (testName != null) {
+						IMethod method = type.getMethod(testName, new String[0]);
+						if (method != null && method.exists()) {
+							result.set(method);
 						}
 					}
 				});
@@ -150,17 +147,15 @@ public class TestResultManager {
 		static void showInJUnitViewInternal(final IBuild build) {
 			final TestRunSession testRunSession = new TestResultSession(build);
 			try {
-				WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
-					public void run(IProgressMonitor monitor) throws CoreException {
-						JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
-						generator.setIncludeIgnored(jUnitSupportIgnoredTests());
-						TestRunHandler handler = new TestRunHandler(testRunSession);
-						try {
-							generator.write(handler);
-						} catch (SAXException e) {
-							throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-									"Unexpected parsing error while preparing test results", e)); //$NON-NLS-1$
-						}
+				WorkbenchUtil.busyCursorWhile(monitor -> {
+					JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
+					generator.setIncludeIgnored(jUnitSupportIgnoredTests());
+					TestRunHandler handler = new TestRunHandler(testRunSession);
+					try {
+						generator.write(handler);
+					} catch (SAXException e) {
+						throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+								"Unexpected parsing error while preparing test results", e)); //$NON-NLS-1$
 					}
 				});
 			} catch (OperationCanceledException e) {
@@ -249,11 +244,9 @@ public class TestResultManager {
 			operation.addOperationChangeListener(new OperationChangeListener() {
 				@Override
 				public void done(OperationChangeEvent event) {
-					event.getOperation().getService().getRealm().asyncExec(new Runnable() {
-						public void run() {
-							if (plan.getLastBuild() != null) {
-								showInJUnitView(plan.getLastBuild());
-							}
+					event.getOperation().getService().getRealm().asyncExec(() -> {
+						if (plan.getLastBuild() != null) {
+							showInJUnitView(plan.getLastBuild());
 						}
 					});
 				}

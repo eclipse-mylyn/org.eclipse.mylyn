@@ -22,8 +22,8 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
  */
 public interface IInteractionContextWriter {
 
-	public abstract void setOutputStream(OutputStream outputStream);
+	void setOutputStream(OutputStream outputStream);
 
-	public abstract void writeContextToStream(IInteractionContext context) throws IOException;
+	void writeContextToStream(IInteractionContext context) throws IOException;
 
 }

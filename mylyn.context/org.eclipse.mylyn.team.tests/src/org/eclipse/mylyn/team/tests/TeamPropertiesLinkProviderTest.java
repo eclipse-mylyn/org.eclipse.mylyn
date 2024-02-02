@@ -16,8 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -30,6 +28,8 @@ import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -53,7 +53,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		project2.create(null);
 		project2.open(null);
 
-		resources = new ArrayList<IResource>();
+		resources = new ArrayList<>();
 	}
 
 	@Override

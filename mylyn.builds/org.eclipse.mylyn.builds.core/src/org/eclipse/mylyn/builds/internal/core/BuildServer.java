@@ -6,7 +6,6 @@
  */
 package org.eclipse.mylyn.builds.internal.core;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
@@ -45,8 +44,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
  */
 public class BuildServer extends BuildElement implements IBuildServer {
 	/**
-	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLocation()
 	 * @generated
@@ -55,8 +53,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final RepositoryLocation LOCATION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLocation()
 	 * @generated
@@ -65,8 +62,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected RepositoryLocation location = LOCATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getConnectorKind()
 	 * @generated
@@ -75,8 +72,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final String CONNECTOR_KIND_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getConnectorKind()
 	 * @generated
@@ -85,8 +82,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected String connectorKind = CONNECTOR_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
@@ -95,8 +92,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final String REPOSITORY_URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getRepositoryUrl()
 	 * @generated
@@ -123,25 +120,26 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public RepositoryLocation getLocation() {
 		return location;
 	}
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Location</em>' attribute.
 	 * @see #getLocation()
 	 */
+	@Override
 	public void setLocation(RepositoryLocation newLocation) {
 		RepositoryLocation oldLocation = location;
 		if (oldLocation != null) {
@@ -160,13 +158,13 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getConnectorKind() {
 		return connectorKind;
 	}
@@ -176,6 +174,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
@@ -188,13 +187,13 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -204,6 +203,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
@@ -221,12 +221,12 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__LOCATION:
-			return getLocation();
-		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			return getConnectorKind();
-		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			return getRepositoryUrl();
+			case BuildPackage.BUILD_SERVER__LOCATION:
+				return getLocation();
+			case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
+				return getConnectorKind();
+			case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
+				return getRepositoryUrl();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -239,15 +239,15 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__LOCATION:
-			setLocation((RepositoryLocation) newValue);
-			return;
-		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			setConnectorKind((String) newValue);
-			return;
-		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			setRepositoryUrl((String) newValue);
-			return;
+			case BuildPackage.BUILD_SERVER__LOCATION:
+				setLocation((RepositoryLocation) newValue);
+				return;
+			case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
+				setConnectorKind((String) newValue);
+				return;
+			case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
+				setRepositoryUrl((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -260,15 +260,15 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__LOCATION:
-			setLocation(LOCATION_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			setConnectorKind(CONNECTOR_KIND_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			setRepositoryUrl(REPOSITORY_URL_EDEFAULT);
-			return;
+			case BuildPackage.BUILD_SERVER__LOCATION:
+				setLocation(LOCATION_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
+				setConnectorKind(CONNECTOR_KIND_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
+				setRepositoryUrl(REPOSITORY_URL_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -281,16 +281,16 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__LOCATION:
-			return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
-		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			return CONNECTOR_KIND_EDEFAULT == null
-					? connectorKind != null
-					: !CONNECTOR_KIND_EDEFAULT.equals(connectorKind);
-		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			return REPOSITORY_URL_EDEFAULT == null
-					? repositoryUrl != null
-					: !REPOSITORY_URL_EDEFAULT.equals(repositoryUrl);
+			case BuildPackage.BUILD_SERVER__LOCATION:
+				return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
+			case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
+				return CONNECTOR_KIND_EDEFAULT == null
+						? connectorKind != null
+						: !CONNECTOR_KIND_EDEFAULT.equals(connectorKind);
+			case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
+				return REPOSITORY_URL_EDEFAULT == null
+						? repositoryUrl != null
+						: !REPOSITORY_URL_EDEFAULT.equals(repositoryUrl);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -306,7 +306,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (location: "); //$NON-NLS-1$
 		result.append(location);
 		result.append(", connectorKind: "); //$NON-NLS-1$
@@ -319,25 +319,19 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	// --- non-generated methods ---
 
-	private final PropertyChangeListener locationChangeListener = new PropertyChangeListener() {
-		public void propertyChange(final PropertyChangeEvent event) {
-			getLoader().getRealm().asyncExec(new Runnable() {
-				public void run() {
-					if (event.getNewValue() == null) {
-						getAttributes().remove(event.getPropertyName());
-					}
-					if (event.getNewValue() instanceof String) {
-						getAttributes().put(event.getPropertyName(), (String) event.getNewValue());
-					}
-					if (RepositoryLocation.PROPERTY_LABEL.equals(event.getPropertyName())) {
-						setName((String) event.getNewValue());
-					} else if (RepositoryLocation.PROPERTY_URL.equals(event.getPropertyName())) {
-						setUrl(event.getNewValue().toString());
-					}
-				}
-			});
+	private final PropertyChangeListener locationChangeListener = event -> getLoader().getRealm().asyncExec(() -> {
+		if (event.getNewValue() == null) {
+			getAttributes().remove(event.getPropertyName());
 		}
-	};
+		if (event.getNewValue() instanceof String) {
+			getAttributes().put(event.getPropertyName(), (String) event.getNewValue());
+		}
+		if (RepositoryLocation.PROPERTY_LABEL.equals(event.getPropertyName())) {
+			setName((String) event.getNewValue());
+		} else if (RepositoryLocation.PROPERTY_URL.equals(event.getPropertyName())) {
+			setUrl(event.getNewValue().toString());
+		}
+	});
 
 	private RefreshSession refreshSession;
 
@@ -390,7 +384,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 			@Override
 			protected EObject createCopy(EObject source) {
 				return original;
-			};
+			}
 
 			@Override
 			protected void copyAttribute(EAttribute eAttribute, EObject eObject, EObject copyEObject) {
@@ -413,6 +407,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 		return plan;
 	}
 
+	@Override
 	public BuildServerConfiguration getConfiguration() throws CoreException {
 		return getBehaviour().getConfiguration();
 	}

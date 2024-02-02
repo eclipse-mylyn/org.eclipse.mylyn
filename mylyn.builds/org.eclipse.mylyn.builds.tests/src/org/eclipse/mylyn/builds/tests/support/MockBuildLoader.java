@@ -26,9 +26,10 @@ public class MockBuildLoader implements IBuildLoader {
 	private final MockBuildModelRealm realm;
 
 	public MockBuildLoader() {
-		this.realm = new MockBuildModelRealm();
+		realm = new MockBuildModelRealm();
 	}
 
+	@Override
 	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
 		if (server.getOriginal() != null && server.getOriginal().getBehaviour() != null) {
 			return server.getOriginal().getBehaviour();
@@ -36,6 +37,7 @@ public class MockBuildLoader implements IBuildLoader {
 		return new MockBuildServerBehaviour(server);
 	}
 
+	@Override
 	public IBuildModelRealm getRealm() {
 		return realm;
 	}

@@ -63,7 +63,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 		IBuild build = getInput(IBuild.class);
 
 		if (build.getCause().size() > 0) {
-			Set<String> causeDescriptions = new LinkedHashSet<String>();
+			Set<String> causeDescriptions = new LinkedHashSet<>();
 			for (IBuildCause cause : build.getCause()) {
 				if (cause.getDescription() != null) {
 					causeDescriptions.add(cause.getDescription());
@@ -85,6 +85,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 		return composite;
 	}
 
+	@Override
 	public Control createControl(Composite parent, FormToolkit toolkit) {
 		return createContent(parent, toolkit);
 	}

@@ -67,7 +67,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				for (IBuildElement element : data.elements) {
 					if (element instanceof IBuildPlan) {
 						if (plansToRefresh == null) {
-							plansToRefresh = new ArrayList<IBuildPlan>();
+							plansToRefresh = new ArrayList<>();
 						}
 						plansToRefresh.add((IBuildPlan) element);
 					}
@@ -85,8 +85,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
 		@Override
 		public boolean belongsTo(Object family) {
-			if (family instanceof RefreshJob) {
-				RefreshJob refreshJob = (RefreshJob) family;
+			if (family instanceof RefreshJob refreshJob) {
 				if (getElement().equals(refreshJob.getElement())) {
 					return true;
 				}
@@ -117,13 +116,13 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		Assert.isNotNull(model);
 		this.model = model;
 		if (elements != null) {
-			this.dataByServer = new LinkedHashMap<IBuildServer, RefreshOperation.RefreshData>();
+			dataByServer = new LinkedHashMap<>();
 			for (IBuildElement element : elements) {
 				RefreshData data = dataByServer.get(element.getServer());
 				if (data == null) {
 					data = new RefreshData();
 					data.server = element.getServer();
-					data.elements = new ArrayList<IBuildElement>();
+					data.elements = new ArrayList<>();
 					dataByServer.put(element.getServer(), data);
 				}
 				// add specific elements to refresh
@@ -132,7 +131,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				}
 			}
 		} else {
-			this.dataByServer = null;
+			dataByServer = null;
 		}
 	}
 
@@ -156,7 +155,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				register(Collections.singletonList(data.getKey()));
 				register(data.getValue().elements);
 			}
-			return new ArrayList<IBuildServer>(dataByServer.keySet());
+			return new ArrayList<>(dataByServer.keySet());
 		} else {
 			return super.doInitInput();
 		}
@@ -164,7 +163,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
 	@Override
 	protected List<IBuildServer> doSyncInitInput() {
-		List<IBuildServer> servers = new ArrayList<IBuildServer>(model.getServers().size());
+		List<IBuildServer> servers = new ArrayList<>(model.getServers().size());
 		for (IBuildServer server : model.getServers()) {
 			if (server.getLocation().isOffline()) {
 				continue;
@@ -179,19 +178,11 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		super.handleResult(job);
 		final IStatus status = job.getStatus();
 		if (status != Status.CANCEL_STATUS) {
-			getService().getRealm().exec(new Runnable() {
-				public void run() {
-					job.getElement().setElementStatus(status);
-				}
-			});
+			getService().getRealm().exec(() -> job.getElement().setElementStatus(status));
 		}
 		if (dataByServer != null) {
 			final RefreshData data = ((RefreshJob) job).data;
-			getService().getRealm().exec(new Runnable() {
-				public void run() {
-					unregister(data.elements);
-				}
-			});
+			getService().getRealm().exec(() -> unregister(data.elements));
 		}
 	}
 }

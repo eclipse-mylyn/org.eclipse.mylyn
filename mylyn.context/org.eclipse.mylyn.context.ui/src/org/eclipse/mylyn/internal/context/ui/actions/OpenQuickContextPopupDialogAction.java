@@ -29,14 +29,17 @@ public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowAction
 
 	private QuickContextPopupDialog inplaceDialog;
 
+	@Override
 	public void dispose() {
 		inplaceDialog = null;
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		inplaceDialog = new QuickContextPopupDialog(parent);
@@ -45,6 +48,7 @@ public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowAction
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

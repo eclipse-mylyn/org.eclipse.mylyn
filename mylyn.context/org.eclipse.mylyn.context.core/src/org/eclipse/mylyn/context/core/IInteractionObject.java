@@ -22,8 +22,8 @@ package org.eclipse.mylyn.context.core;
  */
 public interface IInteractionObject {
 
-	public abstract IDegreeOfInterest getInterest();
+	IDegreeOfInterest getInterest();
 
-	public abstract String getContentType();
+	String getContentType();
 
 }

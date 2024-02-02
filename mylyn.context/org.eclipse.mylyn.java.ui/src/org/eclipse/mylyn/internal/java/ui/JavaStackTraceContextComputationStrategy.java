@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -47,10 +48,10 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 
 	private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*((" + "((Caused by:\\s+)|(at\\s+))?" //$NON-NLS-1$//$NON-NLS-2$
 			+ FQN_PART + "((:\\s+\\w.*)|(\\.((\\<(?:cl)?init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))?" //$NON-NLS-1$
-			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$ 
+			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$
 
-	private final SortedSet<String> filteredPrefixes = new TreeSet<String>(Arrays.asList(new String[] { "java", //$NON-NLS-1$
-			"javax", "junit.framework", "sun.reflect" })); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+	private final SortedSet<String> filteredPrefixes = new TreeSet<>(
+			Arrays.asList("java", "javax", "junit.framework", "sun.reflect")); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
 	 * public for testing only
@@ -82,11 +83,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((fqn == null) ? 0 : fqn.hashCode());
-			result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
-			return result;
+			return Objects.hash(fqn, methodName);
 		}
 
 		@Override
@@ -94,25 +91,11 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 			if (this == obj) {
 				return true;
 			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
+			if (obj == null || getClass() != obj.getClass()) {
 				return false;
 			}
 			Element other = (Element) obj;
-			if (fqn == null) {
-				if (other.fqn != null) {
-					return false;
-				}
-			} else if (!fqn.equals(other.fqn)) {
-				return false;
-			}
-			if (methodName == null) {
-				if (other.methodName != null) {
-					return false;
-				}
-			} else if (!methodName.equals(other.methodName)) {
+			if (!Objects.equals(fqn, other.fqn) || !Objects.equals(methodName, other.methodName)) {
 				return false;
 			}
 			return true;
@@ -132,7 +115,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 	}
 
 	private String getText(IAdaptable input) {
-		String text = (String) input.getAdapter(String.class);
+		String text = input.getAdapter(String.class);
 		if (text != null) {
 			return text;
 		}
@@ -149,7 +132,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 						Messages.JavaStackTraceContextComputationStrategy_Finding_Java_Context_Element_Progress_Label,
 						elements.size());
 
-				final List<Object> javaElements = new ArrayList<Object>();
+				final List<Object> javaElements = new ArrayList<>();
 				try {
 					for (Element element : elements) {
 						if (progress.isCanceled()) {
@@ -192,7 +175,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 	 * Public for test purposes only
 	 */
 	public List<Element> computeElements(String description) throws IOException {
-		List<Element> elements = new ArrayList<Element>();
+		List<Element> elements = new ArrayList<>();
 
 		BufferedReader reader = new BufferedReader(new StringReader(description));
 		for (String line = reader.readLine(); line != null && elements.size() < maxElements; line = reader.readLine()) {

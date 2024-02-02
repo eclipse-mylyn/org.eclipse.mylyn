@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.team.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.team.internal.ui.synchronize.SynchronizeView;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -21,6 +19,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.MessagePage;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

@@ -12,9 +12,6 @@
 
 package org.eclipse.mylyn.java.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
@@ -24,6 +21,9 @@ import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.tasks.JavaTaskTemplateVariableResolverTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Mik Kersten

@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.jenkins.tests.client;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

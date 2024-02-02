@@ -44,8 +44,7 @@ public class User extends BuildElement implements IUser {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getEmail()
 	 * @generated
@@ -54,8 +53,7 @@ public class User extends BuildElement implements IUser {
 	protected static final String EMAIL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getEmail()
 	 * @generated
@@ -69,7 +67,6 @@ public class User extends BuildElement implements IUser {
 	 * @generated
 	 */
 	protected User() {
-		super();
 	}
 
 	/**
@@ -87,6 +84,7 @@ public class User extends BuildElement implements IUser {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -96,23 +94,25 @@ public class User extends BuildElement implements IUser {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.USER__ID, oldId, id));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getEmail() {
 		return email;
 	}
@@ -122,11 +122,13 @@ public class User extends BuildElement implements IUser {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setEmail(String newEmail) {
 		String oldEmail = email;
 		email = newEmail;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.USER__EMAIL, oldEmail, email));
+		}
 	}
 
 	/**
@@ -137,10 +139,10 @@ public class User extends BuildElement implements IUser {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.USER__ID:
-			return getId();
-		case BuildPackage.USER__EMAIL:
-			return getEmail();
+			case BuildPackage.USER__ID:
+				return getId();
+			case BuildPackage.USER__EMAIL:
+				return getEmail();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -153,12 +155,12 @@ public class User extends BuildElement implements IUser {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.USER__ID:
-			setId((String) newValue);
-			return;
-		case BuildPackage.USER__EMAIL:
-			setEmail((String) newValue);
-			return;
+			case BuildPackage.USER__ID:
+				setId((String) newValue);
+				return;
+			case BuildPackage.USER__EMAIL:
+				setEmail((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -171,12 +173,12 @@ public class User extends BuildElement implements IUser {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.USER__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case BuildPackage.USER__EMAIL:
-			setEmail(EMAIL_EDEFAULT);
-			return;
+			case BuildPackage.USER__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case BuildPackage.USER__EMAIL:
+				setEmail(EMAIL_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -189,10 +191,10 @@ public class User extends BuildElement implements IUser {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.USER__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case BuildPackage.USER__EMAIL:
-			return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
+			case BuildPackage.USER__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case BuildPackage.USER__EMAIL:
+				return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -204,10 +206,11 @@ public class User extends BuildElement implements IUser {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
 		result.append(", email: "); //$NON-NLS-1$

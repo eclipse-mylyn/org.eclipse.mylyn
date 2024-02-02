@@ -28,7 +28,7 @@ public abstract class ScmArtifact implements ScmInfoAttributes {
 
 	private final String path;
 
-	private final Map<String, String> fAtrributes = new HashMap<String, String>();
+	private final Map<String, String> fAtrributes = new HashMap<>();
 
 	private String fProjName = null;
 
@@ -56,6 +56,7 @@ public abstract class ScmArtifact implements ScmInfoAttributes {
 
 	public abstract IFileRevision[] getTargets(IProgressMonitor monitor);
 
+	@Override
 	public Map<String, String> getInfoAtrributes() {
 		return fAtrributes;
 	}

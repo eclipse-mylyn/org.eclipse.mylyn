@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -61,16 +60,14 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private boolean isDisposed = false;
 
-	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				if (Boolean.parseBoolean(event.getNewValue().toString())) {
-					enabled = true;
-				} else {
-					enabled = false;
-				}
-				updateFolding();
+	private final IPropertyChangeListener PREFERENCE_LISTENER = event -> {
+		if (event.getProperty().equals(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			if (Boolean.parseBoolean(event.getNewValue().toString())) {
+				enabled = true;
+			} else {
+				enabled = false;
 			}
+			updateFolding();
 		}
 	};
 
@@ -129,12 +126,11 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			return;
 		} else {
 			try {
-				List<ICElement> toExpand = new ArrayList<ICElement>();
-				List<ICElement> toCollapse = new ArrayList<ICElement>();
+				List<ICElement> toExpand = new ArrayList<>();
+				List<ICElement> toCollapse = new ArrayList<>();
 
 				ICElement element = CDTUiBridge.getInputCElement(editor);
-				if (element instanceof ITranslationUnit) {
-					ITranslationUnit compilationUnit = (ITranslationUnit) element;
+				if (element instanceof ITranslationUnit compilationUnit) {
 					List<ICElement> allChildren = getAllChildren(compilationUnit);
 					for (ICElement child : allChildren) {
 						IInteractionElement interactionElement = ContextCore.getContextManager()
@@ -188,9 +184,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private void expand(ICElement element) {
 		CSourceViewer viewer = (CSourceViewer) editor.getViewer();
-		if (element instanceof ISourceReference && !(element instanceof ITranslationUnit)) {
-			ISourceReference reference = (ISourceReference) element;
-
+		if (element instanceof ISourceReference reference && !(element instanceof ITranslationUnit)) {
 			try {
 				viewer.exposeModelRange(new Region(reference.getSourceRange().getIdStartPos(), 0));
 			} catch (CModelException e) {
@@ -204,7 +198,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	private static List<ICElement> getAllChildren(IParent parentElement) {
-		List<ICElement> allChildren = new ArrayList<ICElement>();
+		List<ICElement> allChildren = new ArrayList<>();
 		try {
 			for (ICElement child : parentElement.getChildren()) {
 				allChildren.add(child);
@@ -225,8 +219,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					return;
 				} else {
 					Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
-					if (object instanceof ICElement) {
-						ICElement member = (ICElement) object;
+					if (object instanceof ICElement member) {
 						if (element.getInterest().isInteresting()) {
 							expandElements(new ICElement[] { member });
 							// expand the next 2 children down (e.g. anonymous types)
@@ -257,26 +250,26 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-		case DEACTIVATED:
-			if (CDTUIBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				updateFolding();
-			}
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
+			case ACTIVATED:
+			case DEACTIVATED:
 				if (CDTUIBridgePlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 					updateFolding();
 				}
-			}
-			break;
-		case INTEREST_CHANGED:
-			updateFolding(event.getElements());
-			break;
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					if (CDTUIBridgePlugin.getDefault()
+							.getPreferenceStore()
+							.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
+						updateFolding();
+					}
+				}
+				break;
+			case INTEREST_CHANGED:
+				updateFolding(event.getElements());
+				break;
 		}
 	}
 

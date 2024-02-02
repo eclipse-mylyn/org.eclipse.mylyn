@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
  */
 public class ShowInBuildsViewHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		BuildsView.openInActivePerspective();
 		return null;

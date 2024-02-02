@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ParametersDialog extends TitleAreaDialog {
 
-	private final Map<String, Control> controls = new HashMap<String, Control>();
+	private final Map<String, Control> controls = new HashMap<>();
 
 	private final BuildPlan plan;
 
@@ -112,8 +112,7 @@ public class ParametersDialog extends TitleAreaDialog {
 	}
 
 	private Control addParameter(Composite pane, IParameterDefinition definition) {
-		if (definition instanceof ChoiceParameterDefinition) {
-			ChoiceParameterDefinition def = (ChoiceParameterDefinition) definition;
+		if (definition instanceof ChoiceParameterDefinition def) {
 			Combo control = new Combo(pane, SWT.SINGLE | SWT.BORDER);
 			for (String option : def.getOptions()) {
 				control.add(option);
@@ -125,24 +124,20 @@ public class ParametersDialog extends TitleAreaDialog {
 				}
 			}
 			return control;
-		} else if (definition instanceof BooleanParameterDefinition) {
-			BooleanParameterDefinition def = (BooleanParameterDefinition) definition;
+		} else if (definition instanceof BooleanParameterDefinition def) {
 			Button control = new Button(pane, SWT.CHECK | SWT.BORDER);
 			control.setSelection(def.isDefaultValue());
 			return control;
-		} else if (definition instanceof StringParameterDefinition) {
-			StringParameterDefinition def = (StringParameterDefinition) definition;
+		} else if (definition instanceof StringParameterDefinition def) {
 			Text control = new Text(pane, SWT.BORDER);
 			control.setText(toValue(def.getDefaultValue()));
 			return control;
-		} else if (definition instanceof PasswordParameterDefinition) {
-			PasswordParameterDefinition def = (PasswordParameterDefinition) definition;
+		} else if (definition instanceof PasswordParameterDefinition def) {
 			Text control = new Text(pane, SWT.BORDER);
 			control.setEchoChar('*');
 			control.setText(toValue(def.getDefaultValue()));
 			return control;
-		} else if (definition instanceof BuildParameterDefinition) {
-			BuildParameterDefinition def = (BuildParameterDefinition) definition;
+		} else if (definition instanceof BuildParameterDefinition def) {
 			Text control = new Text(pane, SWT.BORDER);
 			control.setText(toValue(def.getBuildPlanId()));
 			return control;
@@ -155,12 +150,12 @@ public class ParametersDialog extends TitleAreaDialog {
 	}
 
 	private String toValue(String defaultValue) {
-		return (defaultValue != null) ? defaultValue : "";
+		return defaultValue != null ? defaultValue : "";
 	}
 
 	@Override
 	protected void okPressed() {
-		parameters = new HashMap<String, String>();
+		parameters = new HashMap<>();
 		for (final IParameterDefinition definition : plan.getParameterDefinitions()) {
 			String name = definition.getName();
 			Control control = controls.get(name);
@@ -174,13 +169,11 @@ public class ParametersDialog extends TitleAreaDialog {
 	}
 
 	private String getParameter(Control control) {
-		if (control instanceof Combo) {
-			Combo combo = (Combo) control;
+		if (control instanceof Combo combo) {
 			return combo.getText();
 		}
 
-		if (control instanceof Button) {
-			Button button = (Button) control;
+		if (control instanceof Button button) {
 			if (button.getSelection()) {
 				return "on";
 			}
@@ -188,8 +181,7 @@ public class ParametersDialog extends TitleAreaDialog {
 			return null;
 		}
 
-		if (control instanceof Text) {
-			Text text = (Text) control;
+		if (control instanceof Text text) {
 			return text.getText();
 		}
 

@@ -49,9 +49,9 @@ public final class ResourcesUi {
 	 */
 	public static Set<IProject> getProjects(IInteractionContext context) {
 		List<IInteractionElement> allElements = context.getAllElements();
-		Set<IProject> projectsInContext = new HashSet<IProject>();
+		Set<IProject> projectsInContext = new HashSet<>();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		List<IProject> projectsInWorkspace = new LinkedList<IProject>();
+		List<IProject> projectsInWorkspace = new LinkedList<>();
 
 		for (IProject p : workspace.getRoot().getProjects()) {
 			if (p.exists()) {

@@ -26,14 +26,17 @@ public class UrlHyperLink implements IHyperlink {
 		this.url = url;
 	}
 
+	@Override
 	public void linkEntered() {
 		// ignore
 	}
 
+	@Override
 	public void linkExited() {
 		// ignore
 	}
 
+	@Override
 	public void linkActivated() {
 		BrowserUtil.openUrl(url);
 	}

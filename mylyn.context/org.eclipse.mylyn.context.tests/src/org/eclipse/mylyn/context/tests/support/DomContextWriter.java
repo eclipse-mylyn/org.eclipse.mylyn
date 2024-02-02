@@ -22,7 +22,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -58,6 +57,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		doc = dbf.newDocumentBuilder().newDocument();
 	}
 
+	@Override
 	public void writeContextToStream(IInteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
@@ -84,11 +84,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		try {
 			xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.transform(source, result);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
-		} catch (TransformerException e1) {
+		} catch (TransformerFactoryConfigurationError | TransformerException e1) {
 			e1.printStackTrace();
 		}
 	}
@@ -156,7 +152,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 
 	private void clearDocument() {
 		try {
-			this.doc = dbf.newDocumentBuilder().newDocument();
+			doc = dbf.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
 		}
@@ -167,6 +163,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		return outputStream;
 	}
 
+	@Override
 	public void setOutputStream(OutputStream outputStream) {
 		this.outputStream = outputStream;
 	}

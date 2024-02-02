@@ -28,7 +28,9 @@ import org.osgi.framework.Bundle;
 public class GitHubImages {
 
 	private static final String NAME_PREFIX = "org.eclipse.mylyn.github.ui"; //$NON-NLS-1$
+
 	private static final String ICONS_PATH = "icons/"; //$NON-NLS-1$
+
 	private static final String PATH_OBJ = ICONS_PATH + "obj16/"; //$NON-NLS-1$
 
 	private static final String PATH_TOOL = ICONS_PATH + "etool16/"; //$NON-NLS-1$
@@ -89,8 +91,9 @@ public class GitHubImages {
 	 * @return the {@link Image}, or {@code null} if not found
 	 */
 	public static Image get(String key) {
-		if (manager == null)
+		if (manager == null) {
 			initialize();
+		}
 		return manager.get(key);
 	}
 

@@ -49,12 +49,12 @@ public class MockBuildServerBehaviour extends BuildServerBehaviour {
 
 		IBuildPlan plan = createBuildPlan();
 		plan.setId("1");
-		this.plans = Collections.singletonList(plan);
+		plans = Collections.singletonList(plan);
 
 		IBuild build = createBuild();
 		build.setId("1");
 		build.setPlan(plan);
-		this.builds = Collections.singletonList(build);
+		builds = Collections.singletonList(build);
 	}
 
 	@Override

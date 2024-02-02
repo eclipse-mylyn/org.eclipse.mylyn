@@ -29,8 +29,7 @@ public class BuildTimeLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) element;
+		if (element instanceof IBuildPlan plan) {
 			if (plan.getLastBuild() != null) {
 				return getText(plan.getLastBuild());
 			}

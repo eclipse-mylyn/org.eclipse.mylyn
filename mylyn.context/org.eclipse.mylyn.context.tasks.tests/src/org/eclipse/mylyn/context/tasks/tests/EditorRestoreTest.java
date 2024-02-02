@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestProject;
@@ -46,6 +44,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.TestCase;
+
 /**
  * Verifies that editors are restored on task activation.
  *
@@ -63,13 +63,11 @@ public class EditorRestoreTest extends TestCase {
 
 	private IWorkbenchPage page;
 
-	Comparator<IEditorReference> comparator = new Comparator<IEditorReference>() {
-		public int compare(IEditorReference o1, IEditorReference o2) {
-			try {
-				return o1.getEditorInput().getName().compareTo(o2.getEditorInput().getName());
-			} catch (PartInitException e) {
-				throw new RuntimeException(e);
-			}
+	Comparator<IEditorReference> comparator = (o1, o2) -> {
+		try {
+			return o1.getEditorInput().getName().compareTo(o2.getEditorInput().getName());
+		} catch (PartInitException e) {
+			throw new RuntimeException(e);
 		}
 	};
 
@@ -79,7 +77,7 @@ public class EditorRestoreTest extends TestCase {
 
 	@Test
 	public void testCloseAllOnDeactivate() throws Exception {
-		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA) };
+		IEditorInput[] inputs = { new FileEditorInput(fileA) };
 		IEditorReference[] refs = openEditors(inputs);
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
@@ -104,8 +102,7 @@ public class EditorRestoreTest extends TestCase {
 
 	@Test
 	public void testCloseAllRestore() throws Exception {
-		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA), new FileEditorInput(fileB),
-				new FileEditorInput(fileC) };
+		IEditorInput[] inputs = { new FileEditorInput(fileA), new FileEditorInput(fileB), new FileEditorInput(fileC) };
 		IEditorReference[] refs = openEditors(inputs);
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
@@ -120,7 +117,7 @@ public class EditorRestoreTest extends TestCase {
 	@Test
 	public void testCloseAllRestoreContextAwareEditor() throws Exception {
 		FileEditorInput input = new FileEditorInput(fileA);
-		IEditorInput[] inputs = new IEditorInput[] { input, new FileEditorInput(fileB) {
+		IEditorInput[] inputs = { input, new FileEditorInput(fileB) {
 			@Override
 			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 				if (adapter == ContextAwareEditorInput.class) {
@@ -148,7 +145,7 @@ public class EditorRestoreTest extends TestCase {
 
 	private List<IEditorInput> asInputList(IEditorReference[] input) throws Exception {
 		List<IEditorReference> refs = asList(input);
-		List<IEditorInput> list = new ArrayList<IEditorInput>();
+		List<IEditorInput> list = new ArrayList<>();
 		for (IEditorReference ref : refs) {
 			list.add(ref.getEditorInput());
 		}
@@ -156,7 +153,7 @@ public class EditorRestoreTest extends TestCase {
 	}
 
 	private List<IEditorReference> asList(IEditorReference[] refs) {
-		List<IEditorReference> list = new ArrayList<IEditorReference>(Arrays.asList(refs));
+		List<IEditorReference> list = new ArrayList<>(Arrays.asList(refs));
 		Collections.sort(list, comparator);
 		return list;
 	}

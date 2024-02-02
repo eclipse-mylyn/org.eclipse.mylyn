@@ -29,7 +29,6 @@ public class JenkinsConfigurationCache extends AbstractConfigurationCache<Jenkin
 	}
 
 	public JenkinsConfigurationCache() {
-		super();
 	}
 
 	@Override

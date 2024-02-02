@@ -39,20 +39,17 @@ public class GitHubRepositoryConnectorUIHeadlessTest {
 	@Before
 	public void before() {
 		connectorUI = new IssueConnectorUi();
-		repository = new TaskRepository(GitHub.CONNECTOR_KIND,
-				GitHub.createGitHubUrl("foo", "bar"));
+		repository = new TaskRepository(GitHub.CONNECTOR_KIND, GitHub.createGitHubUrl("foo", "bar"));
 	}
 
 	@Test
 	public void testFindHyperlinksTaskRepositoryStringIntInt() {
-		IHyperlink[] hyperlinks = connectorUI.findHyperlinks(repository,
-				"one #2 three", -1, 0);
+		IHyperlink[] hyperlinks = connectorUI.findHyperlinks(repository, "one #2 three", -1, 0);
 		assertNotNull(hyperlinks);
 		assertEquals(1, hyperlinks.length);
 		assertEquals(new Region(4, 2), hyperlinks[0].getHyperlinkRegion());
 
-		hyperlinks = connectorUI.findHyperlinks(repository, "one #2 three", -1,
-				4);
+		hyperlinks = connectorUI.findHyperlinks(repository, "one #2 three", -1, 4);
 		assertNotNull(hyperlinks);
 		assertEquals(1, hyperlinks.length);
 		assertEquals(new Region(8, 2), hyperlinks[0].getHyperlinkRegion());

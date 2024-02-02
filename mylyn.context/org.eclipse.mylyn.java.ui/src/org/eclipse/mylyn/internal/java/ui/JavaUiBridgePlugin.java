@@ -87,7 +87,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		if (count < 1) {
 			getPreferenceStore().setValue(MYLYN_RUN_COUNT_3_1, count + 1);
 
-			// Mylyn 3.1 removes 2 computers, migrate JDT setting on first run to avoid prevent JDT from displaying a warning dialog 
+			// Mylyn 3.1 removes 2 computers, migrate JDT setting on first run to avoid prevent JDT from displaying a warning dialog
 			if (count == 0 && getPreferenceStore().contains(MYLYN_PREVIOUS_RUN)) {
 				changeProcessorCount(javaPrefs, -2);
 			}
@@ -114,7 +114,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			}
 		}
 
-		// the Task-Focused category should be disabled if the user reverts to the default 
+		// the Task-Focused category should be disabled if the user reverts to the default
 		String defaultValue = javaPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		javaPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
 				defaultValue + JavaUiUtil.ASSIST_MYLYN_ALL + JavaUiUtil.SEPARATOR_CODEASSIST);
@@ -191,8 +191,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 				IEditorReference[] references = page.getEditorReferences();
 				for (IEditorReference reference : references) {
 					IEditorPart part = reference.getEditor(false);
-					if (part != null && part instanceof JavaEditor) {
-						JavaEditor editor = (JavaEditor) part;
+					if (part != null && part instanceof JavaEditor editor) {
 						editorTracker.registerEditor(editor);
 						ActiveFoldingListener.resetProjection(editor);
 					}
@@ -228,6 +227,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	public static class JavaUiBridgeStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			JavaUiBridgePlugin.getDefault().lazyStart();
 		}

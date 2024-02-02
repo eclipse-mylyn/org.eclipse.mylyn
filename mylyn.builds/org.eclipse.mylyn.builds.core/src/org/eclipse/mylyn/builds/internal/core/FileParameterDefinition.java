@@ -10,8 +10,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>File Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>File Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  * 
@@ -24,7 +23,6 @@ public class FileParameterDefinition extends ParameterDefinition implements IFil
 	 * @generated
 	 */
 	protected FileParameterDefinition() {
-		super();
 	}
 
 	/**

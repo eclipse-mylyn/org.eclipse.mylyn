@@ -26,7 +26,7 @@ public interface IActiveSearchListener {
 	 * @param l
 	 *            The list of objects that were returned by the search
 	 */
-	public void searchCompleted(List<?> l);
+	void searchCompleted(List<?> l);
 
-	public boolean resultsGathered();
+	boolean resultsGathered();
 }

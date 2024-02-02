@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface IActiveSearchOperation {
 
-	public void addListener(IActiveSearchListener listener);
+	void addListener(IActiveSearchListener listener);
 
-	public void removeListener(IActiveSearchListener listener);
+	void removeListener(IActiveSearchListener listener);
 
-	public IStatus run(IProgressMonitor monitor);
+	IStatus run(IProgressMonitor monitor);
 }

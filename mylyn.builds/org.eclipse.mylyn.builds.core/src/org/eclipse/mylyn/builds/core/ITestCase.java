@@ -31,8 +31,7 @@ public interface ITestCase extends ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Class Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Class Name</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Class Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -43,8 +42,8 @@ public interface ITestCase extends ITestElement {
 	String getClassName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Class Name</em>' attribute.
@@ -56,8 +55,7 @@ public interface ITestCase extends ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Skipped</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Skipped</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Skipped</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -68,8 +66,8 @@ public interface ITestCase extends ITestElement {
 	boolean isSkipped();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Skipped</em>' attribute.
@@ -82,8 +80,7 @@ public interface ITestCase extends ITestElement {
 	 * Returns the value of the '<em><b>Suite</b></em>' container reference. It is bidirectional and its opposite is '
 	 * {@link org.eclipse.mylyn.builds.core.ITestSuite#getCases <em>Cases</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Suite</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Suite</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -95,8 +92,8 @@ public interface ITestCase extends ITestElement {
 	ITestSuite getSuite();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}' container
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}' container reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Suite</em>' container reference.
@@ -109,8 +106,7 @@ public interface ITestCase extends ITestElement {
 	 * Returns the value of the '<em><b>Status</b></em>' attribute. The literals are from the enumeration
 	 * {@link org.eclipse.mylyn.builds.core.TestCaseResult}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -122,8 +118,8 @@ public interface ITestCase extends ITestElement {
 	TestCaseResult getStatus();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Status</em>' attribute.
@@ -136,8 +132,7 @@ public interface ITestCase extends ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Message</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -148,8 +143,8 @@ public interface ITestCase extends ITestElement {
 	String getMessage();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getMessage <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getMessage <em>Message</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Message</em>' attribute.
@@ -161,8 +156,7 @@ public interface ITestCase extends ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Stack Trace</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Stack Trace</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Stack Trace</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -173,8 +167,8 @@ public interface ITestCase extends ITestElement {
 	String getStackTrace();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace <em>Stack Trace</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace <em>Stack Trace</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Stack Trace</em>' attribute.

@@ -57,6 +57,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		this(false);
 	}
 
+	@Override
 	public Font getFont(Object element) {
 		if (!decorateOperations) {
 			return null;
@@ -142,6 +143,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		return null;
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getText(element);
 		if (text != null) {

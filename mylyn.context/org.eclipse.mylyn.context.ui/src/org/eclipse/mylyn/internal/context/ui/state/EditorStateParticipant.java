@@ -88,7 +88,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	private String savedContextHandle;
 
 	public EditorStateParticipant() {
-		this.enabled = true;
+		enabled = true;
 	}
 
 	@Override
@@ -188,12 +188,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		boolean shouldRestoreUnknownWindowToActive = true; // TODO could add a preference here
 		boolean shouldRestoreActiveWindowToActive = true; // TODO could add a preference here
 
-		if (isActive && shouldRestoreActiveWindowToActive) {
-			// if the window that we are trying to restore was the active window, restore it to the active window
-			return (WorkbenchPage) activeWindow.getActivePage();
-		}
-
-		if (shouldRestoreUnknownWindowToActive) {
+		if (isActive && shouldRestoreActiveWindowToActive || shouldRestoreUnknownWindowToActive) {
 			// we can't find a good window, so restore it to the active one
 			return (WorkbenchPage) activeWindow.getActivePage();
 		}
@@ -276,6 +271,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		Method getInternalEditorReferences = WorkbenchPage.class.getDeclaredMethod("getInternalEditorReferences"); //$NON-NLS-1$
 		final List<EditorReference> editorReferences = (List<EditorReference>) getInternalEditorReferences.invoke(page);
 		SafeRunner.run(new SafeRunnable() {
+			@Override
 			public void run() {
 				for (EditorReference reference : editorReferences) {
 					// realize editor
@@ -353,7 +349,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	 * HACK: will fail to restore different parts with same name
 	 */
 	private void restoreEditors(WorkbenchPage page, IMemento memento, boolean isActiveWindow) {
-		final ArrayList<?> visibleEditors = new ArrayList<Object>(5);
+		final ArrayList<?> visibleEditors = new ArrayList<>(5);
 		final IEditorReference activeEditor[] = new IEditorReference[1];
 		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 
@@ -362,9 +358,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			if (editorMementos.length == 0) {
 				return;
 			}
-			Set<IMemento> editorMementoSet = new LinkedHashSet<IMemento>();
-			editorMementoSet.addAll(Arrays.asList(editorMementos));
-
+			Set<IMemento> editorMementoSet = new LinkedHashSet<>(Arrays.asList(editorMementos));
 			if (is_3_x()) {
 				restoreEditors_e_3_x(page, visibleEditors, activeEditor, result, editorMementoSet);
 			} else if (is_3_8_2()) {
@@ -434,7 +428,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 					IPath path = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(pathString)).getLocation();
 					for (IEditorReference existingReference : page.getEditorReferences()) {
 						if (existingReference.getEditorInput() instanceof IPathEditorInput
-								&& (((IPathEditorInput) existingReference.getEditorInput()).getPath().equals(path))) {
+								&& ((IPathEditorInput) existingReference.getEditorInput()).getPath().equals(path)) {
 							// there is already an editor showing the same file
 							found = true;
 							break;
@@ -468,7 +462,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 
 		List<IEditorReference> alreadyVisibleEditors = Arrays
 				.asList((IEditorReference[]) getEditorsMethod.invoke(editorManager));
-		Set<String> restoredPartNames = new HashSet<String>();
+		Set<String> restoredPartNames = new HashSet<>();
 		for (IEditorReference editorReference : alreadyVisibleEditors) {
 			restoredPartNames.add(editorReference.getPartName());
 		}
@@ -489,8 +483,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		Method setVisibleEditorMethod = editorManager.getClass()
 				.getDeclaredMethod("setVisibleEditor", //$NON-NLS-1$
 						IEditorReference.class, boolean.class);
-		for (int i = 0; i < visibleEditors.size(); i++) {
-			setVisibleEditorMethod.invoke(editorManager, visibleEditors.get(i), false);
+		for (Object visibleEditor : visibleEditors) {
+			setVisibleEditorMethod.invoke(editorManager, visibleEditor, false);
 		}
 	}
 
@@ -503,7 +497,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
-					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+					List<IEditorReference> toClose = new ArrayList<>();
 					for (IEditorReference reference : references) {
 						if (canClose(reference)) {
 							try {
@@ -533,7 +527,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
-					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+					List<IEditorReference> toClose = new ArrayList<>();
 					for (IEditorReference reference : references) {
 						if (canClose(reference)) {
 							toClose.add(reference);
@@ -550,12 +544,13 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	private boolean shouldForceClose(final IEditorInput input, final String contextHandle) {
 		final AtomicBoolean result = new AtomicBoolean();
 		SafeRunnable.run(new ISafeRunnable() {
+			@Override
 			public void run() throws Exception {
-				ContextAwareEditorInput inputContext = (ContextAwareEditorInput) input
-						.getAdapter(ContextAwareEditorInput.class);
+				ContextAwareEditorInput inputContext = input.getAdapter(ContextAwareEditorInput.class);
 				result.set(inputContext != null && inputContext.forceClose(contextHandle));
 			}
 
+			@Override
 			public void handleException(Throwable e) {
 				StatusHandler.log(
 						new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Failed to verify editor status", e)); //$NON-NLS-1$
@@ -570,18 +565,19 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			final boolean[] result = new boolean[1];
 			result[0] = true;
 			SafeRunnable.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					if (editor instanceof IContextAwareEditor) {
 						result[0] = ((IContextAwareEditor) editor).canClose();
 					} else {
-						IContextAwareEditor contextAware = (IContextAwareEditor) editor
-								.getAdapter(IContextAwareEditor.class);
+						IContextAwareEditor contextAware = editor.getAdapter(IContextAwareEditor.class);
 						if (contextAware != null) {
 							result[0] = contextAware.canClose();
 						}
 					}
 				}
 
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 							"Failed to verify editor status", e)); //$NON-NLS-1$

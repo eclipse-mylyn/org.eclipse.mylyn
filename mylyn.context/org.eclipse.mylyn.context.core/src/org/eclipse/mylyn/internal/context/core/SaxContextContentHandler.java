@@ -65,23 +65,23 @@ public class SaxContextContentHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch (state) {
-		case EXPECTING_ROOT:
-			context = new InteractionContext(contextHandleIdentifier, contextScaling);
-			String limitContentTo = attributes.getValue(ATTRIBUTE_CONTENT);
-			if (limitContentTo != null) {
-				context.setContentLimitedTo(limitContentTo);
-			}
-			state = EXPECTING_EVENT;
-			break;
-		case EXPECTING_EVENT:
-			try {
-				InteractionEvent ie = createEventFromAttributes(attributes);
-				context.parseEvent(ie);
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-						"Ignored unexpected activity event", e)); //$NON-NLS-1$
-			}
-			break;
+			case EXPECTING_ROOT:
+				context = new InteractionContext(contextHandleIdentifier, contextScaling);
+				String limitContentTo = attributes.getValue(ATTRIBUTE_CONTENT);
+				if (limitContentTo != null) {
+					context.setContentLimitedTo(limitContentTo);
+				}
+				state = EXPECTING_EVENT;
+				break;
+			case EXPECTING_EVENT:
+				try {
+					InteractionEvent ie = createEventFromAttributes(attributes);
+					context.parseEvent(ie);
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+							"Ignored unexpected activity event", e)); //$NON-NLS-1$
+				}
+				break;
 		}
 	}
 

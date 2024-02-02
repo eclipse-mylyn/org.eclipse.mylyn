@@ -12,8 +12,6 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -21,6 +19,8 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -47,10 +47,10 @@ public class InteractionContextListeningTest extends TestCase {
 				@Override
 				public void contextChanged(ContextChangeEvent event) {
 					switch (event.getEventKind()) {
-					case ACTIVATED:
-						contextManager.addListener(listener);
-						contextManager.removeListener(listener);
-						break;
+						case ACTIVATED:
+							contextManager.addListener(listener);
+							contextManager.removeListener(listener);
+							break;
 					}
 				}
 
@@ -74,10 +74,10 @@ public class InteractionContextListeningTest extends TestCase {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case ACTIVATED:
-				contextManager.removeListener(this);
-				activationEventCount++;
-				break;
+				case ACTIVATED:
+					contextManager.removeListener(this);
+					activationEventCount++;
+					break;
 			}
 		}
 

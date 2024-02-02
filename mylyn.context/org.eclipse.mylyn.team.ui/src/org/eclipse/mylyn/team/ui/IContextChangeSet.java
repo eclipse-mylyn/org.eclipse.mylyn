@@ -24,12 +24,12 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public interface IContextChangeSet {
 
-	public abstract ITask getTask();
+	ITask getTask();
 
-	public abstract void updateLabel();
+	void updateLabel();
 
-	public abstract void restoreResources(IResource[] resources) throws CoreException;
+	void restoreResources(IResource[] resources) throws CoreException;
 
-	public abstract String getComment(boolean checkTaskRepository);
+	String getComment(boolean checkTaskRepository);
 
 }

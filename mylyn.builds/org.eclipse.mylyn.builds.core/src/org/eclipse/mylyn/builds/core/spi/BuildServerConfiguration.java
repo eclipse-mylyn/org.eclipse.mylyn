@@ -28,9 +28,10 @@ public class BuildServerConfiguration implements IBuildServerConfiguration {
 	private final List<IBuildPlan> plans;
 
 	public BuildServerConfiguration(List<IBuildPlan> plans) {
-		this.plans = Collections.unmodifiableList(new ArrayList<IBuildPlan>(plans));
+		this.plans = Collections.unmodifiableList(new ArrayList<>(plans));
 	}
 
+	@Override
 	public List<IBuildPlan> getPlans() {
 		return plans;
 	}

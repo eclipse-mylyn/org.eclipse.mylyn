@@ -19,8 +19,7 @@ import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Change Artifact</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Change Artifact</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,8 +36,7 @@ import org.eclipse.mylyn.builds.core.IChangeArtifact;
  */
 public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	/**
-	 * The default value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFile()
 	 * @generated
@@ -47,8 +45,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String FILE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFile()
 	 * @generated
@@ -57,8 +54,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String file = FILE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
 	 * @generated
@@ -67,8 +63,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String RELATIVE_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
 	 * @generated
@@ -77,8 +72,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String relativePath = RELATIVE_PATH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPrevRevision()
 	 * @generated
@@ -87,8 +81,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String PREV_REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPrevRevision()
 	 * @generated
@@ -97,8 +90,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String prevRevision = PREV_REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -107,8 +99,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -117,8 +108,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String revision = REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDead()
 	 * @generated
@@ -127,8 +117,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final boolean DEAD_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDead()
 	 * @generated
@@ -137,8 +126,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected boolean dead = DEAD_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getEditType()
 	 * @generated
@@ -147,8 +135,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final EditType EDIT_TYPE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getEditType()
 	 * @generated
@@ -162,7 +149,6 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * @generated
 	 */
 	protected ChangeArtifact() {
-		super();
 	}
 
 	/**
@@ -180,6 +166,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getFile() {
 		return file;
 	}
@@ -189,11 +176,13 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setFile(String newFile) {
 		String oldFile = file;
 		file = newFile;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__FILE, oldFile, file));
+		}
 	}
 
 	/**
@@ -201,6 +190,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getRelativePath() {
 		return relativePath;
 	}
@@ -210,12 +200,14 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRelativePath(String newRelativePath) {
 		String oldRelativePath = relativePath;
 		relativePath = newRelativePath;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH,
 					oldRelativePath, relativePath));
+		}
 	}
 
 	/**
@@ -223,6 +215,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getPrevRevision() {
 		return prevRevision;
 	}
@@ -232,12 +225,14 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setPrevRevision(String newPrevRevision) {
 		String oldPrevRevision = prevRevision;
 		prevRevision = newPrevRevision;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__PREV_REVISION,
 					oldPrevRevision, prevRevision));
+		}
 	}
 
 	/**
@@ -245,6 +240,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getRevision() {
 		return revision;
 	}
@@ -254,12 +250,14 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setRevision(String newRevision) {
 		String oldRevision = revision;
 		revision = newRevision;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__REVISION, oldRevision,
 					revision));
+		}
 	}
 
 	/**
@@ -267,6 +265,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isDead() {
 		return dead;
 	}
@@ -276,11 +275,13 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDead(boolean newDead) {
 		boolean oldDead = dead;
 		dead = newDead;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__DEAD, oldDead, dead));
+		}
 	}
 
 	/**
@@ -288,6 +289,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public EditType getEditType() {
 		return editType;
 	}
@@ -297,12 +299,14 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setEditType(EditType newEditType) {
 		EditType oldEditType = editType;
 		editType = newEditType;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE, oldEditType,
 					editType));
+		}
 	}
 
 	/**
@@ -313,18 +317,18 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_ARTIFACT__FILE:
-			return getFile();
-		case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
-			return getRelativePath();
-		case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
-			return getPrevRevision();
-		case BuildPackage.CHANGE_ARTIFACT__REVISION:
-			return getRevision();
-		case BuildPackage.CHANGE_ARTIFACT__DEAD:
-			return isDead();
-		case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
-			return getEditType();
+			case BuildPackage.CHANGE_ARTIFACT__FILE:
+				return getFile();
+			case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
+				return getRelativePath();
+			case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
+				return getPrevRevision();
+			case BuildPackage.CHANGE_ARTIFACT__REVISION:
+				return getRevision();
+			case BuildPackage.CHANGE_ARTIFACT__DEAD:
+				return isDead();
+			case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
+				return getEditType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -337,24 +341,24 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_ARTIFACT__FILE:
-			setFile((String) newValue);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
-			setRelativePath((String) newValue);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
-			setPrevRevision((String) newValue);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__REVISION:
-			setRevision((String) newValue);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__DEAD:
-			setDead((Boolean) newValue);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
-			setEditType((EditType) newValue);
-			return;
+			case BuildPackage.CHANGE_ARTIFACT__FILE:
+				setFile((String) newValue);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
+				setRelativePath((String) newValue);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
+				setPrevRevision((String) newValue);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__REVISION:
+				setRevision((String) newValue);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__DEAD:
+				setDead((Boolean) newValue);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
+				setEditType((EditType) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -367,24 +371,24 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_ARTIFACT__FILE:
-			setFile(FILE_EDEFAULT);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
-			setRelativePath(RELATIVE_PATH_EDEFAULT);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
-			setPrevRevision(PREV_REVISION_EDEFAULT);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__REVISION:
-			setRevision(REVISION_EDEFAULT);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__DEAD:
-			setDead(DEAD_EDEFAULT);
-			return;
-		case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
-			setEditType(EDIT_TYPE_EDEFAULT);
-			return;
+			case BuildPackage.CHANGE_ARTIFACT__FILE:
+				setFile(FILE_EDEFAULT);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
+				setRelativePath(RELATIVE_PATH_EDEFAULT);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
+				setPrevRevision(PREV_REVISION_EDEFAULT);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__REVISION:
+				setRevision(REVISION_EDEFAULT);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__DEAD:
+				setDead(DEAD_EDEFAULT);
+				return;
+			case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
+				setEditType(EDIT_TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -397,18 +401,22 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.CHANGE_ARTIFACT__FILE:
-			return FILE_EDEFAULT == null ? file != null : !FILE_EDEFAULT.equals(file);
-		case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
-			return RELATIVE_PATH_EDEFAULT == null ? relativePath != null : !RELATIVE_PATH_EDEFAULT.equals(relativePath);
-		case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
-			return PREV_REVISION_EDEFAULT == null ? prevRevision != null : !PREV_REVISION_EDEFAULT.equals(prevRevision);
-		case BuildPackage.CHANGE_ARTIFACT__REVISION:
-			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
-		case BuildPackage.CHANGE_ARTIFACT__DEAD:
-			return dead != DEAD_EDEFAULT;
-		case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
-			return EDIT_TYPE_EDEFAULT == null ? editType != null : !EDIT_TYPE_EDEFAULT.equals(editType);
+			case BuildPackage.CHANGE_ARTIFACT__FILE:
+				return FILE_EDEFAULT == null ? file != null : !FILE_EDEFAULT.equals(file);
+			case BuildPackage.CHANGE_ARTIFACT__RELATIVE_PATH:
+				return RELATIVE_PATH_EDEFAULT == null
+						? relativePath != null
+						: !RELATIVE_PATH_EDEFAULT.equals(relativePath);
+			case BuildPackage.CHANGE_ARTIFACT__PREV_REVISION:
+				return PREV_REVISION_EDEFAULT == null
+						? prevRevision != null
+						: !PREV_REVISION_EDEFAULT.equals(prevRevision);
+			case BuildPackage.CHANGE_ARTIFACT__REVISION:
+				return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
+			case BuildPackage.CHANGE_ARTIFACT__DEAD:
+				return dead != DEAD_EDEFAULT;
+			case BuildPackage.CHANGE_ARTIFACT__EDIT_TYPE:
+				return EDIT_TYPE_EDEFAULT == null ? editType != null : !EDIT_TYPE_EDEFAULT.equals(editType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -420,10 +428,11 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (file: "); //$NON-NLS-1$
 		result.append(file);
 		result.append(", relativePath: "); //$NON-NLS-1$

@@ -30,6 +30,7 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 
 	public static class IdeUiBridgeStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			// ignore, it is sufficient that the bundle is activated on context ui startup
 		}

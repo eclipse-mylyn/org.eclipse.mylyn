@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.service.IssueService;
@@ -32,9 +31,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
@@ -46,10 +43,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -70,12 +63,19 @@ import org.eclipse.ui.PlatformUI;
 public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private Button openButton;
+
 	private Button closedButton;
+
 	private Text titleText;
+
 	private Text assigneeText;
+
 	private Text mentionText;
+
 	private Combo milestoneCombo;
+
 	private CheckboxTableViewer labelsViewer;
+
 	private List<Milestone> milestones;
 
 	private SelectionListener completeListener = new SelectionAdapter() {
@@ -92,8 +92,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public IssueRepositoryQueryPage(String pageName,
-			TaskRepository taskRepository, IRepositoryQuery query) {
+	public IssueRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName, taskRepository, query);
 		setDescription(Messages.IssueRepositoryQueryPage_Description);
 		setPageComplete(false);
@@ -103,8 +102,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public IssueRepositoryQueryPage(TaskRepository taskRepository,
-			IRepositoryQuery query) {
+	public IssueRepositoryQueryPage(TaskRepository taskRepository, IRepositoryQuery query) {
 		this("issueQueryPage", taskRepository, query); //$NON-NLS-1$
 	}
 
@@ -114,10 +112,8 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(labelsArea);
 		GridLayoutFactory.swtDefaults().applyTo(labelsArea);
 
-		labelsViewer = CheckboxTableViewer.newCheckList(labelsArea, SWT.BORDER
-				| SWT.V_SCROLL | SWT.H_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(100, 80)
-				.applyTo(labelsViewer.getControl());
+		labelsViewer = CheckboxTableViewer.newCheckList(labelsArea, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridDataFactory.fillDefaults().grab(true, true).hint(100, 80).applyTo(labelsViewer.getControl());
 		labelsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		labelsViewer.setLabelProvider(new LabelProvider() {
 
@@ -127,14 +123,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			}
 
 		});
-		labelsViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						setPageComplete(isPageComplete());
-					}
-				});
+		labelsViewer.addSelectionChangedListener(event -> setPageComplete(isPageComplete()));
 	}
 
 	private void createOptionsArea(Composite parent) {
@@ -143,13 +132,10 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(optionsArea);
 
 		Composite statusArea = new Composite(optionsArea, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(4).equalWidth(false)
-				.applyTo(statusArea);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(statusArea);
+		GridLayoutFactory.fillDefaults().numColumns(4).equalWidth(false).applyTo(statusArea);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(statusArea);
 
-		new Label(statusArea, SWT.NONE)
-				.setText(Messages.IssueRepositoryQueryPage_StatusLabel);
+		new Label(statusArea, SWT.NONE).setText(Messages.IssueRepositoryQueryPage_StatusLabel);
 
 		openButton = new Button(statusArea, SWT.CHECK);
 		openButton.setSelection(true);
@@ -163,20 +149,11 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 		ToolBar toolbar = new ToolBar(statusArea, SWT.FLAT);
 		ToolItem updateItem = new ToolItem(toolbar, SWT.PUSH);
-		final Image updateImage = TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION
-				.createImage();
-		toolbar.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				updateImage.dispose();
-			}
-		});
+		final Image updateImage = TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION.createImage();
+		toolbar.addDisposeListener(e -> updateImage.dispose());
 		updateItem.setImage(updateImage);
-		updateItem
-				.setToolTipText(Messages.IssueRepositoryQueryPage_TooltipUpdateRepository);
-		GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL)
-				.grab(true, false).applyTo(toolbar);
+		updateItem.setToolTipText(Messages.IssueRepositoryQueryPage_TooltipUpdateRepository);
+		GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).applyTo(toolbar);
 		updateItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -187,12 +164,10 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		});
 
 		Label milestonesLabel = new Label(optionsArea, SWT.NONE);
-		milestonesLabel
-				.setText(Messages.IssueRepositoryQueryPage_MilestoneLabel);
+		milestonesLabel.setText(Messages.IssueRepositoryQueryPage_MilestoneLabel);
 
 		milestoneCombo = new Combo(optionsArea, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridDataFactory.fillDefaults().grab(true, false)
-				.applyTo(milestoneCombo);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(milestoneCombo);
 
 		Label assigneeLabel = new Label(optionsArea, SWT.NONE);
 		assigneeLabel.setText(Messages.IssueRepositoryQueryPage_AssigneeLabel);
@@ -214,27 +189,18 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
-				.applyTo(displayArea);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).applyTo(displayArea);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(displayArea);
 
 		if (!inSearchContainer()) {
 			Composite titleArea = new Composite(displayArea, SWT.NONE);
 			GridLayoutFactory.fillDefaults().numColumns(2).applyTo(titleArea);
-			GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-					.applyTo(titleArea);
+			GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(titleArea);
 
-			new Label(titleArea, SWT.NONE)
-					.setText(Messages.IssueRepositoryQueryPage_TitleLabel);
+			new Label(titleArea, SWT.NONE).setText(Messages.IssueRepositoryQueryPage_TitleLabel);
 			titleText = new Text(titleArea, SWT.SINGLE | SWT.BORDER);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
-			titleText.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					setPageComplete(isPageComplete());
-				}
-			});
+			titleText.addModifyListener(e -> setPageComplete(isPageComplete()));
 		}
 
 		createOptionsArea(displayArea);
@@ -249,17 +215,16 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private void initialize() {
 		IRepositoryQuery query = getQuery();
-		if (query == null)
+		if (query == null) {
 			return;
+		}
 
-		String milestoneNumber = query
-				.getAttribute(IssueService.FILTER_MILESTONE);
+		String milestoneNumber = query.getAttribute(IssueService.FILTER_MILESTONE);
 		if (milestoneNumber != null && milestones != null) {
 			int index = 0;
 			for (Milestone milestone : milestones) {
 				index++;
-				if (milestoneNumber.equals(Integer.toString(milestone
-						.getNumber()))) {
+				if (milestoneNumber.equals(Integer.toString(milestone.getNumber()))) {
 					milestoneCombo.select(index);
 					break;
 				}
@@ -275,36 +240,40 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		openButton.setSelection(status.contains(IssueService.STATE_OPEN));
 
 		String assignee = query.getAttribute(IssueService.FILTER_ASSIGNEE);
-		if (assignee != null)
+		if (assignee != null) {
 			assigneeText.setText(assignee);
+		}
 
 		String mentioning = query.getAttribute(IssueService.FILTER_MENTIONED);
-		if (mentioning != null)
+		if (mentioning != null) {
 			mentionText.setText(mentioning);
+		}
 	}
 
 	private boolean updateLabels() {
-		if (labelsViewer.getControl().isDisposed())
+		if (labelsViewer.getControl().isDisposed()) {
 			return false;
+		}
 
 		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
 		boolean hasLabels = connector.hasCachedLabels(repository);
 		if (hasLabels) {
-			List<org.eclipse.egit.github.core.Label> labels = connector
-					.getLabels(repository);
+			List<org.eclipse.egit.github.core.Label> labels = connector.getLabels(repository);
 			Collections.sort(labels, new LabelComparator());
 			List<String> labelNames = new ArrayList<>(labels.size());
-			for (org.eclipse.egit.github.core.Label label : labels)
+			for (org.eclipse.egit.github.core.Label label : labels) {
 				labelNames.add(label.getName());
+			}
 			labelsViewer.setInput(labelNames);
 		}
 		return hasLabels;
 	}
 
 	private boolean updateMilestones() {
-		if (milestoneCombo.isDisposed())
+		if (milestoneCombo.isDisposed()) {
 			return false;
+		}
 
 		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
@@ -315,8 +284,9 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			milestoneCombo.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
 			Collections.sort(milestones, Comparator.comparing(
 					Milestone::getTitle, String.CASE_INSENSITIVE_ORDER));
-			for (Milestone milestone : milestones)
+			for (Milestone milestone : milestones) {
 				milestoneCombo.add(milestone.getTitle());
+			}
 
 			milestoneCombo.select(0);
 		}
@@ -325,56 +295,48 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private void refreshRepository() {
 		try {
-			ICoreRunnable runnable = new ICoreRunnable() {
+			ICoreRunnable runnable = monitor -> {
+				Policy.monitorFor(monitor);
+				monitor.beginTask("", 2); //$NON-NLS-1$
+				IssueConnector connector = IssueConnectorUi.getCoreConnector();
+				TaskRepository repository = getTaskRepository();
 
-				@Override
-				public void run(IProgressMonitor monitor) throws CoreException {
-					Policy.monitorFor(monitor);
-					monitor.beginTask("", 2); //$NON-NLS-1$
-					IssueConnector connector = IssueConnectorUi
-							.getCoreConnector();
-					TaskRepository repository = getTaskRepository();
+				monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingLabels);
+				connector.refreshLabels(repository);
+				monitor.worked(1);
 
-					monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingLabels);
-					connector.refreshLabels(repository);
-					monitor.worked(1);
+				monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingMilestones);
+				connector.refreshMilestones(repository);
+				monitor.done();
 
-					monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingMilestones);
-					connector.refreshMilestones(repository);
-					monitor.done();
-
-					PlatformUI.getWorkbench().getDisplay()
-							.asyncExec(new Runnable() {
-
-								@Override
-								public void run() {
-									updateLabels();
-									updateMilestones();
-									initialize();
-								}
-							});
-				}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					updateLabels();
+					updateMilestones();
+					initialize();
+				});
 			};
 			IRunnableContext context = getContainer();
-			if (context == null)
-				if (inSearchContainer())
+			if (context == null) {
+				if (inSearchContainer()) {
 					context = getSearchContainer().getRunnableContext();
-				else
+				} else {
 					context = PlatformUI.getWorkbench().getProgressService();
+				}
+			}
 			CommonUiUtil.run(context, runnable);
 		} catch (CoreException e) {
 			IStatus status = e.getStatus();
-			ErrorDialog.openError(getShell(),
-					Messages.IssueRepositoryQueryPage_ErrorLoading,
-					e.getLocalizedMessage(), status);
+			ErrorDialog.openError(getShell(), Messages.IssueRepositoryQueryPage_ErrorLoading, e.getLocalizedMessage(),
+					status);
 		}
 	}
 
 	private void loadRepository() {
 		boolean labelsLoaded = updateLabels();
 		boolean milestonesLoaded = updateMilestones();
-		if (!labelsLoaded || !milestonesLoaded)
+		if (!labelsLoaded || !milestonesLoaded) {
 			refreshRepository();
+		}
 	}
 
 	/**
@@ -385,8 +347,9 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		boolean complete = inSearchContainer() ? true : super.isPageComplete();
 		if (complete) {
 			String message = null;
-			if (!openButton.getSelection() && !closedButton.getSelection())
+			if (!openButton.getSelection() && !closedButton.getSelection()) {
 				message = Messages.IssueRepositoryQueryPage_ErrorStatus;
+			}
 
 			setErrorMessage(message);
 			complete = message == null;
@@ -410,34 +373,40 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		query.setSummary(getQueryTitle());
 
 		List<String> statuses = new LinkedList<>();
-		if (openButton.getSelection())
+		if (openButton.getSelection()) {
 			statuses.add(IssueService.STATE_OPEN);
-		if (closedButton.getSelection())
+		}
+		if (closedButton.getSelection()) {
 			statuses.add(IssueService.STATE_CLOSED);
+		}
 		QueryUtils.setAttribute(IssueService.FILTER_STATE, statuses, query);
 
 		String assignee = assigneeText.getText().trim();
-		if (assignee.length() > 0)
+		if (assignee.length() > 0) {
 			query.setAttribute(IssueService.FILTER_ASSIGNEE, assignee);
-		else
+		} else {
 			query.setAttribute(IssueService.FILTER_ASSIGNEE, null);
+		}
 
 		String mentions = mentionText.getText().trim();
-		if (mentions.length() > 0)
+		if (mentions.length() > 0) {
 			query.setAttribute(IssueService.FILTER_MENTIONED, mentions);
-		else
+		} else {
 			query.setAttribute(IssueService.FILTER_MENTIONED, null);
+		}
 
 		int milestoneSelected = milestoneCombo.getSelectionIndex() - 1;
-		if (milestoneSelected >= 0)
-			query.setAttribute(IssueService.FILTER_MILESTONE, Integer
-					.toString(milestones.get(milestoneSelected).getNumber()));
-		else
+		if (milestoneSelected >= 0) {
+			query.setAttribute(IssueService.FILTER_MILESTONE,
+					Integer.toString(milestones.get(milestoneSelected).getNumber()));
+		} else {
 			query.setAttribute(IssueService.FILTER_MILESTONE, null);
+		}
 
 		List<String> labels = new LinkedList<>();
-		for (Object label : labelsViewer.getCheckedElements())
+		for (Object label : labelsViewer.getCheckedElements()) {
 			labels.add(label.toString());
+		}
 		QueryUtils.setAttribute(IssueService.FILTER_LABELS, labels, query);
 	}
 }

@@ -44,14 +44,13 @@ public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 			// Element passes the filter if the string matcher is undefined or
 			// the
 			// viewer is not a tree viewer
-			if ((stringMatcher == null) || ((viewer instanceof TreeViewer) == false)) {
+			if (stringMatcher == null || !(viewer instanceof TreeViewer treeViewer)) {
 				return true;
 			}
-			TreeViewer treeViewer = (TreeViewer) viewer;
 			// Match the pattern against the label of the given element
 			String matchName = ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
 			// Element passes the filter if it matches the pattern
-			if ((matchName != null) && stringMatcher.matches(matchName)) {
+			if (matchName != null && stringMatcher.matches(matchName)) {
 				return true;
 			}
 			// Determine whether the element has children that pass the filter

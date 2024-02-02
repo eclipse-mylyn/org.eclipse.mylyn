@@ -60,13 +60,13 @@ public class FocusedJavaProposalProcessor {
 
 	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
-	private final List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<>();
 
-	private final List<IJavaCompletionProposalComputer> alreadyComputedProposals = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> alreadyComputedProposals = new ArrayList<>();
 
-	private final List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<>();
 
-	private final List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<>();
 
 	private static FocusedJavaProposalProcessor INSTANCE = new FocusedJavaProposalProcessor();
 

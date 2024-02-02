@@ -27,7 +27,6 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -50,12 +49,10 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private boolean enabled = false;
 
-	private final IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				enabled = Boolean.parseBoolean(event.getNewValue().toString());
-				updateFolding();
-			}
+	private final IPropertyChangeListener preferenceListener = event -> {
+		if (event.getProperty().equals(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			enabled = Boolean.parseBoolean(event.getNewValue().toString());
+			updateFolding();
 		}
 	};
 
@@ -100,12 +97,11 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			return;
 		} else {
 			try {
-				List<IJavaElement> toExpand = new ArrayList<IJavaElement>();
-				List<IJavaElement> toCollapse = new ArrayList<IJavaElement>();
+				List<IJavaElement> toExpand = new ArrayList<>();
+				List<IJavaElement> toCollapse = new ArrayList<>();
 
 				IJavaElement element = JavaUI.getEditorInputJavaElement(editor.getEditorInput());
-				if (element instanceof ICompilationUnit) {
-					ICompilationUnit compilationUnit = (ICompilationUnit) element;
+				if (element instanceof ICompilationUnit compilationUnit) {
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
 						IInteractionElement interactionElement = ContextCore.getContextManager()
@@ -130,7 +126,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	private static List<IJavaElement> getAllChildren(IParent parentElement) {
-		List<IJavaElement> allChildren = new ArrayList<IJavaElement>();
+		List<IJavaElement> allChildren = new ArrayList<>();
 		try {
 			for (IJavaElement child : parentElement.getChildren()) {
 				allChildren.add(child);
@@ -150,8 +146,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				return;
 			} else {
 				Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
-				if (object instanceof IMember) {
-					IMember member = (IMember) object;
+				if (object instanceof IMember member) {
 					if (element.getInterest().isInteresting()) {
 						updater.expandElements(new IJavaElement[] { member });
 						// expand the next 2 children down (e.g. anonymous types)
@@ -180,26 +175,26 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-		case DEACTIVATED:
-			if (JavaUiBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				updateFolding();
-			}
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
+			case ACTIVATED:
+			case DEACTIVATED:
 				if (JavaUiBridgePlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 					updateFolding();
 				}
-			}
-			break;
-		case INTEREST_CHANGED:
-			updateFolding(event.getElements());
-			break;
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					if (JavaUiBridgePlugin.getDefault()
+							.getPreferenceStore()
+							.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+						updateFolding();
+					}
+				}
+				break;
+			case INTEREST_CHANGED:
+				updateFolding(event.getElements());
+				break;
 		}
 	}
 }

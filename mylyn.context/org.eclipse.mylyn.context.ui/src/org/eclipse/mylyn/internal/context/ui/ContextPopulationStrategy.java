@@ -65,7 +65,7 @@ public class ContextPopulationStrategy {
 					return Status.CANCEL_STATUS;
 				}
 
-				// add elements to context through simulating selection events  
+				// add elements to context through simulating selection events
 				if (!contextItems.isEmpty()) {
 					UIJob uiJob = new UIJob(Messages.ContextPopulationStrategy_Populate_Context_Job_Label) {
 						@Override

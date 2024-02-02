@@ -26,8 +26,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -72,8 +70,7 @@ public class TaskHistoryPage extends HistoryPage {
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof TaskRevision) {
-				TaskRevision entry = (TaskRevision) element;
+			if (element instanceof TaskRevision entry) {
 				return entry.getAuthor().toString();
 			} else if (element instanceof TaskRevision.Change) {
 				return null;
@@ -87,8 +84,7 @@ public class TaskHistoryPage extends HistoryPage {
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof TaskRevision) {
-				TaskRevision entry = (TaskRevision) element;
+			if (element instanceof TaskRevision entry) {
 				if (entry.getChanges().size() == 1) {
 					return getText(entry.getChanges().get(0));
 				}
@@ -127,9 +123,8 @@ public class TaskHistoryPage extends HistoryPage {
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof TaskRevision) {
-				TaskRevision entry = (TaskRevision) element;
-				return (entry.getDate() != null) ? formatter.format(entry.getDate()) : null;
+			if (element instanceof TaskRevision entry) {
+				return entry.getDate() != null ? formatter.format(entry.getDate()) : null;
 			} else if (element instanceof TaskRevision.Change) {
 				return null;
 			}
@@ -155,7 +150,7 @@ public class TaskHistoryPage extends HistoryPage {
 		if (object instanceof ITask) {
 			task = (ITask) object;
 		} else if (object instanceof IAdaptable) {
-			task = (ITask) ((IAdaptable) object).getAdapter(ITask.class);
+			task = ((IAdaptable) object).getAdapter(ITask.class);
 		}
 		return task;
 	}
@@ -209,38 +204,35 @@ public class TaskHistoryPage extends HistoryPage {
 		contentProvider = new TaskHistoryContentProvider();
 		viewer.setContentProvider(contentProvider);
 
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (item instanceof TaskRevision) {
-					final TaskRevision revision = (TaskRevision) item;
-					final TaskHistory history = (TaskHistory) viewer.getInput();
+		viewer.addDoubleClickListener(event -> {
+			Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (item instanceof final TaskRevision revision) {
+				final TaskHistory history = (TaskHistory) viewer.getInput();
 
-					CompareConfiguration configuration = new CompareConfiguration();
-					configuration.setProperty(CompareConfiguration.IGNORE_WHITESPACE, Boolean.valueOf(true));
-					configuration.setLeftEditable(false);
-					configuration.setLeftLabel(Messages.TaskHistoryPage_Old_Value_Label);
-					configuration.setRightEditable(false);
-					configuration.setRightLabel(Messages.TaskHistoryPage_New_Value_Label);
-					CompareEditorInput editorInput = new CompareEditorInput(configuration) {
-						@Override
-						protected Object prepareInput(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException {
-							try {
-								AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-										.getRepositoryConnector(history.getTask().getConnectorKind());
-								TaskData newData = connector.getTaskData(history.getRepository(),
-										history.getTask().getTaskId(), monitor);
-								TaskData oldData = TasksUiInternal.computeTaskData(newData, history, revision.getId(),
-										monitor);
-								return new TaskDataDiffNode(Differencer.CHANGE, oldData, newData);
-							} catch (CoreException e) {
-								throw new InvocationTargetException(e);
-							}
+				CompareConfiguration configuration = new CompareConfiguration();
+				configuration.setProperty(CompareConfiguration.IGNORE_WHITESPACE, Boolean.valueOf(true));
+				configuration.setLeftEditable(false);
+				configuration.setLeftLabel(Messages.TaskHistoryPage_Old_Value_Label);
+				configuration.setRightEditable(false);
+				configuration.setRightLabel(Messages.TaskHistoryPage_New_Value_Label);
+				CompareEditorInput editorInput = new CompareEditorInput(configuration) {
+					@Override
+					protected Object prepareInput(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException {
+						try {
+							AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+									.getRepositoryConnector(history.getTask().getConnectorKind());
+							TaskData newData = connector.getTaskData(history.getRepository(),
+									history.getTask().getTaskId(), monitor);
+							TaskData oldData = TasksUiInternal.computeTaskData(newData, history, revision.getId(),
+									monitor);
+							return new TaskDataDiffNode(Differencer.CHANGE, oldData, newData);
+						} catch (CoreException e) {
+							throw new InvocationTargetException(e);
 						}
-					};
-					CompareUI.openCompareEditor(editorInput);
-				}
+					}
+				};
+				CompareUI.openCompareEditor(editorInput);
 			}
 		});
 	}
@@ -251,6 +243,7 @@ public class TaskHistoryPage extends HistoryPage {
 		super.dispose();
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
@@ -260,13 +253,15 @@ public class TaskHistoryPage extends HistoryPage {
 		return viewer.getControl();
 	}
 
+	@Override
 	public String getDescription() {
 		return NLS.bind(Messages.TaskHistoryPage_Task_history_for_X_Desscription_Label, getName());
 	}
 
+	@Override
 	public String getName() {
 		ITask task = getTask();
-		return (task != null) ? task.getSummary() : null;
+		return task != null ? task.getSummary() : null;
 	}
 
 	public ITask getTask() {
@@ -291,18 +286,13 @@ public class TaskHistoryPage extends HistoryPage {
 			refreshOperation.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(final IJobChangeEvent event) {
-					if (!event.getResult().isOK()) {
+					if (!event.getResult().isOK() || Display.getDefault().isDisposed()) {
 						return;
 					}
-					if (Display.getDefault().isDisposed()) {
-						return;
-					}
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-								TaskHistory history = ((GetTaskHistoryJob) event.getJob()).getHistory();
-								viewer.setInput(history);
-							}
+					Display.getDefault().asyncExec(() -> {
+						if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+							TaskHistory history = ((GetTaskHistoryJob) event.getJob()).getHistory();
+							viewer.setInput(history);
 						}
 					});
 				}
@@ -313,10 +303,12 @@ public class TaskHistoryPage extends HistoryPage {
 		return false;
 	}
 
+	@Override
 	public boolean isValidInput(Object object) {
 		return canShowHistoryFor(object);
 	}
 
+	@Override
 	public void refresh() {
 		inputSet();
 	}
@@ -343,8 +335,7 @@ public class TaskHistoryPage extends HistoryPage {
 	private void schedule(final Job job) {
 		final IWorkbenchPartSite site = getWorkbenchSite();
 		if (site != null) {
-			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site
-					.getAdapter(IWorkbenchSiteProgressService.class);
+			IWorkbenchSiteProgressService progress = site.getAdapter(IWorkbenchSiteProgressService.class);
 			if (progress != null) {
 				progress.schedule(job, 0, true);
 				return;

@@ -27,14 +27,17 @@ public class OperationServiceUi implements IOperationService {
 
 	private final BuildScheduler scheduler = new BuildScheduler();
 
+	@Override
 	public IBuildModelRealm getRealm() {
 		return BuildsUiInternal.getModel().getLoader().getRealm();
 	}
 
+	@Override
 	public BuildScheduler getScheduler() {
 		return scheduler;
 	}
 
+	@Override
 	public void handleResult(AbstractOperation operation, IStatus status) {
 		int flags = StatusManager.LOG;
 		if (!operation.hasFlag(OperationFlag.BACKGROUND)) {

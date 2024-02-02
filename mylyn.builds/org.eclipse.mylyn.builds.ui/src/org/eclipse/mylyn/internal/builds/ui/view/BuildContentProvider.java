@@ -37,17 +37,15 @@ public class BuildContentProvider implements ITreeContentProvider {
 
 		@Override
 		public String toString() {
-			switch (this) {
-			case BY_SERVER:
-				return "Servers";
-			case BY_PLAN:
-				return "Plans";
-			}
-			throw new IllegalStateException();
-		};
-	};
+			return switch (this) {
+				case BY_SERVER -> "Servers";
+				case BY_PLAN -> "Plans";
+				default -> throw new IllegalStateException();
+			};
+		}
+	}
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	private Object input;
 
@@ -59,6 +57,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 			refresh();
 		}
 
+		@Override
 		protected boolean observing(Notifier notifier) {
 			// reduce the number of refreshes by limiting the number of monitored objects: refresh jobs trigger notifications
 			// on the server and model objects which is sufficient to monitor plan updates
@@ -80,33 +79,34 @@ public class BuildContentProvider implements ITreeContentProvider {
 		setPresentation(Presentation.BY_SERVER);
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IBuildServer) {
-			return getPlans(parentElement, model.getPlans(((IBuildServer) parentElement))).toArray();
+			return getPlans(parentElement, model.getPlans((IBuildServer) parentElement)).toArray();
 		} else if (parentElement instanceof IBuildPlan) {
 			return getPlans(parentElement, ((IBuildPlan) parentElement).getChildren()).toArray();
 		}
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IBuildServer) {
-			return getPlans(inputElement, model.getPlans(((IBuildServer) inputElement))).toArray();
+			return getPlans(inputElement, model.getPlans((IBuildServer) inputElement)).toArray();
 		} else if (inputElement instanceof List<?>) {
 			return ((List<?>) inputElement).toArray();
 		} else {
 			IBuildModel model = getModel(inputElement);
 			if (model != null) {
-				switch (presentation) {
-				case BY_SERVER:
-					return model.getServers().toArray();
-				case BY_PLAN:
-					return model.getPlans().toArray();
-				}
+				return switch (presentation) {
+					case BY_SERVER -> model.getServers().toArray();
+					case BY_PLAN -> model.getPlans().toArray();
+				};
 			}
 		}
 		return EMPTY_ARRAY;
@@ -114,18 +114,18 @@ public class BuildContentProvider implements ITreeContentProvider {
 
 	private IBuildModel getModel(Object inputElement) {
 		if (inputElement instanceof IBuildModel) {
-			return ((IBuildModel) inputElement);
+			return (IBuildModel) inputElement;
 		} else if (inputElement == input) {
 			return model;
 		}
 		return null;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof IBuildServer) {
 			return input;
-		} else if (element instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) element;
+		} else if (element instanceof IBuildPlan plan) {
 			if (plan.getParent() != null) {
 				return plan.getParent();
 			} else {
@@ -136,7 +136,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 	}
 
 	private List<IBuildPlan> getPlans(Object parent, List<IBuildPlan> plans) {
-		List<IBuildPlan> children = new ArrayList<IBuildPlan>(plans.size());
+		List<IBuildPlan> children = new ArrayList<>(plans.size());
 		for (IBuildPlan plan : plans) {
 			if (isSelectedOnly() && !plan.isSelected()) {
 				continue;
@@ -153,10 +153,12 @@ public class BuildContentProvider implements ITreeContentProvider {
 		return presentation;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = viewer;
 		if (model != null) {
@@ -168,7 +170,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 			model = BuildsUiInternal.getModel();
 		}
 		model.eAdapters().add(modelListener);
-		this.input = newInput;
+		input = newInput;
 	}
 
 	public final boolean isNestPlansEnabled() {

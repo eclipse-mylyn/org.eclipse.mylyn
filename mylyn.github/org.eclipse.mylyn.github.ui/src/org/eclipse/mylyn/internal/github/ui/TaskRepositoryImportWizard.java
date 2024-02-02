@@ -49,8 +49,8 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	 */
 	public TaskRepositoryImportWizard() {
 		setNeedsProgressMonitor(true);
-		setDefaultPageImageDescriptor(WorkbenchImages
-				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
+		setDefaultPageImageDescriptor(
+				WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
 		setWindowTitle(org.eclipse.mylyn.internal.github.ui.Messages.TaskRepositoryImportWizard_Title);
 	}
 
@@ -80,8 +80,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	}
 
 	/**
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 *      org.eclipse.jface.viewers.IStructuredSelection)
+	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
 	 */
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -98,23 +97,19 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 		boolean isToken = credentialsPage.isToken();
 		final IRepositoryManager manager = TasksUi.getRepositoryManager();
 		for (Repository repo : reposPage.getRepositories()) {
-			manager.addRepository(IssueConnector.createTaskRepository(repo,
-					user, password, isToken));
+			manager.addRepository(IssueConnector.createTaskRepository(repo, user, password, isToken));
 			manager.addRepository(PullRequestConnector.createTaskRepository(
 					repo, user, password, isToken));
 		}
 		if (reposPage.createGistRepository()) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(
 					user, password);
-			TaskRepository repository = new TaskRepository(GistConnector.KIND,
-					GistRepositorySettingsPage.URL);
+			TaskRepository repository = new TaskRepository(GistConnector.KIND, GistRepositorySettingsPage.URL);
 			repository.setRepositoryLabel(
 					Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
-			repository.setCredentials(AuthenticationType.REPOSITORY,
-					credentials, true);
+			repository.setCredentials(AuthenticationType.REPOSITORY, credentials, true);
 			repository.setCategory(TaskRepository.CATEGORY_REVIEW);
-			repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN,
-					Boolean.toString(isToken));
+			repository.setProperty(IRepositoryConstants.PROPERTY_USE_TOKEN, Boolean.toString(isToken));
 			manager.addRepository(repository);
 		}
 		return true;

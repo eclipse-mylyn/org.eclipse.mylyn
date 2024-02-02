@@ -14,8 +14,6 @@ package org.eclipse.mylyn.java.tests.search;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -24,6 +22,8 @@ import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+
+import junit.framework.Assert;
 
 /**
  * @author Shawn Minto
@@ -64,7 +64,7 @@ public class ActiveSearchNotifier {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager()
 				.processInteractionEvent(mockUserEvent(handle, kind, source,
-						(1 / ContextCore.getCommonContextScaling().getLandmark()) * -2), true);
+						1 / ContextCore.getCommonContextScaling().getLandmark() * -2), true);
 		return node;
 	}
 

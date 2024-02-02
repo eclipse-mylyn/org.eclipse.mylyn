@@ -47,6 +47,7 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 		this.context = context;
 	}
 
+	@Override
 	public void open(OpenEvent event) {
 		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 		Object object = selection.getFirstElement();
@@ -67,14 +68,17 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 		}
 	}
 
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		open(null);
 	}
 
+	@Override
 	public void mouseDoubleClick(MouseEvent event) {
 		setSelection(event);
 	}
 
+	@Override
 	public void mouseDown(MouseEvent event) {
 		setSelection(event);
 	}
@@ -89,6 +93,7 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 		}
 	}
 
+	@Override
 	public void mouseUp(MouseEvent e) {
 		// ignore
 	}

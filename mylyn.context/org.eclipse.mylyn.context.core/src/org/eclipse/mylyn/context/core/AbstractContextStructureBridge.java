@@ -28,15 +28,15 @@ public abstract class AbstractContextStructureBridge {
 	 * Used for delagating to when the parent of an element is known by another bridge.
 	 */
 	public void setParentContentType(String contentType) {
-		this.parentContentType = contentType;
+		parentContentType = contentType;
 	}
 
 	public abstract String getContentType();
 
 	/**
-	 * A workspace-unique and robust String identifier for a structured element. For example, in Java these are the
-	 * IJavaElement's handle identifier. For XML, this could be an xpath, but due to the fact that xpaths rely on
-	 * element ordering for identity they are not robust to element order switching.
+	 * A workspace-unique and robust String identifier for a structured element. For example, in Java these are the IJavaElement's handle
+	 * identifier. For XML, this could be an xpath, but due to the fact that xpaths rely on element ordering for identity they are not
+	 * robust to element order switching.
 	 * 
 	 * @return null if the given object does not participate in the task context
 	 */
@@ -45,16 +45,15 @@ public abstract class AbstractContextStructureBridge {
 	/**
 	 * @since 3.2
 	 * @param allowChildBridgeHandles
-	 *            true if the structure bridge can return the object handle for a child bridge (for the
-	 *            ResourceStructureBridge)
+	 *            true if the structure bridge can return the object handle for a child bridge (for the ResourceStructureBridge)
 	 */
 	public String getParentHandle(String handle, boolean allowChildBridgeHandles) {
 		return getParentHandle(handle);
 	}
 
 	/**
-	 * @return The handle identifier of the element that is the parent of this element in the containment hierarchy, or
-	 *         null if no such parent exists.
+	 * @return The handle identifier of the element that is the parent of this element in the containment hierarchy, or null if no such
+	 *         parent exists.
 	 */
 	public abstract String getParentHandle(String handle);
 
@@ -63,8 +62,7 @@ public abstract class AbstractContextStructureBridge {
 	public abstract List<String> getChildHandles(String handle);
 
 	/**
-	 * @return The name or a null String(""). Can't be null since the views displaying the context can't handle null
-	 *         names
+	 * @return The name or a null String(""). Can't be null since the views displaying the context can't handle null names
 	 */
 	public abstract String getLabel(Object object);
 

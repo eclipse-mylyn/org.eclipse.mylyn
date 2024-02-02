@@ -42,8 +42,7 @@ public class GitHubTaskAttributeMapper extends TaskAttributeMapper {
 	@Override
 	public List<String> getValueLabels(final TaskAttribute taskAttribute) {
 		final String type = taskAttribute.getMetaData().getType();
-		if (TaskAttribute.TYPE_DATE.equals(type)
-				|| TaskAttribute.TYPE_DATETIME.equals(type)) {
+		if (TaskAttribute.TYPE_DATE.equals(type) || TaskAttribute.TYPE_DATETIME.equals(type)) {
 			String value = taskAttribute.getValue();
 			if (value.length() > 0) {
 				final Date date = new Date(Long.parseLong(value));

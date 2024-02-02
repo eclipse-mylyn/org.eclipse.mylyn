@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.builds.ui.view.BuildModelContentAdapter;
  */
 public class BuildNavigatorContentProvider implements ITreeContentProvider {
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	private BuildModel model;
 
@@ -60,6 +60,7 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 			}
 		}
 
+		@Override
 		protected boolean observing(Notifier notifier) {
 			return notifier instanceof IBuildServer || notifier instanceof IBuildModel;
 		}
@@ -68,15 +69,16 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 	public BuildNavigatorContentProvider() {
 	}
 
+	@Override
 	public void dispose() {
 		if (model != null) {
 			model.eAdapters().remove(modelListener);
 		}
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof RepositoryCategory) {
-			RepositoryCategory category = (RepositoryCategory) parentElement;
+		if (parentElement instanceof RepositoryCategory category) {
 			if (RepositoryCategory.ID_CATEGORY_BUILDS.equals(category.getId())
 					|| RepositoryCategory.ID_CATEGORY_ALL.equals(category.getId())) {
 				return model.getServers().toArray();
@@ -85,18 +87,22 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = viewer;
 		if (model != null) {

@@ -31,7 +31,7 @@ public class CCompletionProposal extends org.eclipse.cdt.internal.ui.text.conten
 			String bindingName) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, idString, relevance,
 				viewer);
-		this.cElement = element;
+		cElement = element;
 		this.bindingName = bindingName;
 	}
 

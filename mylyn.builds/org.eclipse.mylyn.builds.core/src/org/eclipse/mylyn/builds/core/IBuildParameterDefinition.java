@@ -12,8 +12,7 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -28,8 +27,7 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	/**
 	 * Returns the value of the '<em><b>Build Plan Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Plan Id</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Build Plan Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -40,8 +38,8 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	String getBuildPlanId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build
-	 * Plan Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Build Plan Id</em>' attribute.
@@ -53,8 +51,7 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	/**
 	 * Returns the value of the '<em><b>Build Plan</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Plan</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Build Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

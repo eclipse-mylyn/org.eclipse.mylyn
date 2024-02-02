@@ -30,8 +30,7 @@ public interface IChangeSet {
 	 * Returns the value of the '<em><b>Changes</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.builds.core.IChange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Changes</em>' reference list isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Changes</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -54,8 +53,8 @@ public interface IChangeSet {
 	String getKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Kind</em>' attribute.

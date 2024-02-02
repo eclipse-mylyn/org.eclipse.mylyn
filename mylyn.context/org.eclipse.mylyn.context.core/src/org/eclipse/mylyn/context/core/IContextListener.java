@@ -27,6 +27,6 @@ public interface IContextListener {
 	 * @param ContextChangeEvent
 	 *            event containing the change details
 	 */
-	public void contextChanged(ContextChangeEvent event);
+	void contextChanged(ContextChangeEvent event);
 
 }

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.team.ui.actions;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
@@ -51,6 +50,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		setImageDescriptor(TasksUiImages.CONTEXT_ADD);
 	}
 
+	@Override
 	public void init(IViewPart view) {
 	}
 
@@ -61,9 +61,9 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
-		if (action instanceof ObjectPluginAction) {
-			ObjectPluginAction objectAction = (ObjectPluginAction) action;
+		if (action instanceof ObjectPluginAction objectAction) {
 			if (objectAction.getSelection() instanceof StructuredSelection) {
 				StructuredSelection selection = (StructuredSelection) objectAction.getSelection();
 				run(selection);
@@ -85,20 +85,18 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 			resources = ((ActiveChangeSet) element).getResources();
 		} else if (element instanceof DiffChangeSet) {
 			resources = ((DiffChangeSet) element).getResources();
-		} else if (element instanceof LinkedTaskInfo) {
-			LinkedTaskInfo linkedTaskInfo = (LinkedTaskInfo) element;
+		} else if (element instanceof LinkedTaskInfo linkedTaskInfo) {
 			ChangeSet changeSet = linkedTaskInfo.getChangeSet();
 			if (changeSet != null) {
 				resources = changeSet.getResources();
 			}
 		}
 
-		Set<IResource> resourcesToAdd = new HashSet<IResource>();
+		Set<IResource> resourcesToAdd = new HashSet<>();
 		if (resources != null) {
 			resourcesToAdd.addAll(Arrays.asList(resources));
 		} else {
-			for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
-				Object object = iterator.next();
+			for (Object object : selection) {
 				if (object instanceof IResource) {
 					resourcesToAdd.add((IResource) object);
 				} else if (object instanceof SynchronizeModelElement) {
@@ -121,6 +119,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

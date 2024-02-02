@@ -178,7 +178,7 @@ public class GetChangeSetDialog extends FormDialog {
 	/**
 	 * Field filteredChangeSets - The ChangeSets that will be displayed
 	 */
-	private final List<ChangeSet> filteredChangeSets = new ArrayList<ChangeSet>();
+	private final List<ChangeSet> filteredChangeSets = new ArrayList<>();
 
 	/**
 	 * Field currentChangeSetIndex - The current index in the fetched ChangeSet List
@@ -307,7 +307,7 @@ public class GetChangeSetDialog extends FormDialog {
 				}
 				if (repoProject != null && repoProject.equals(inputProject.getName())) {
 					String[] tokens = updatedChangeSet.getMessage().split(GIT_NEWLINE, 2);
-					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS)
+					commitList.add(tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS
 							? tokens[0].substring(0, DIALOG_COMBO_MAX_CHARACTERS - 3) + "..."
 							: tokens[0]);
 					filteredChangeSets.add(updatedChangeSet);
@@ -488,14 +488,17 @@ public class GetChangeSetDialog extends FormDialog {
 	private IFileRevision createFileRevision(final String changeSetId) {
 		IFileRevision fileRevision = new FileRevision() {
 
+			@Override
 			public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
 
+			@Override
 			public boolean isPropertyMissing() {
 				return false;
 			}
 
+			@Override
 			public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
@@ -505,6 +508,7 @@ public class GetChangeSetDialog extends FormDialog {
 				return changeSetId;
 			}
 
+			@Override
 			public String getName() {
 				return null;
 			}

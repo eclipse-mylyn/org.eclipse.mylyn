@@ -14,12 +14,12 @@ package org.eclipse.mylyn.ide.tests;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.context.core.IContextListener;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

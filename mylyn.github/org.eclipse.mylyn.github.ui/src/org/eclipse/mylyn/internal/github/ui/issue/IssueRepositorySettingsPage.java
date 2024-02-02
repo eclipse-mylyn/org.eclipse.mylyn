@@ -44,8 +44,7 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 	 *            - Object to populate
 	 */
 	public IssueRepositorySettingsPage(final TaskRepository taskRepository) {
-		super(Messages.IssueRepositorySettingsPage_Title,
-				Messages.IssueRepositorySettingsPage_Description,
+		super(Messages.IssueRepositorySettingsPage_Title, Messages.IssueRepositorySettingsPage_Description,
 				taskRepository);
 		setUseTokenForAuthentication(true);
 
@@ -73,24 +72,18 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask(
-						Messages.IssueRepositorySettingsPage_TaskValidating,
-						100);
+						Messages.IssueRepositorySettingsPage_TaskValidating, 100);
 				try {
 					monitor.subTask(Messages.IssueRepositorySettingsPage_TaskContactingServer);
 					try {
-						GitHubClient client = IssueConnector
-								.createClient(taskRepository);
+						GitHubClient client = IssueConnector.createClient(taskRepository);
 						IssueService service = new IssueService(client);
-						RepositoryId repo = GitHub.getRepository(taskRepository
-								.getRepositoryUrl());
+						RepositoryId repo = GitHub.getRepository(taskRepository.getRepositoryUrl());
 						monitor.worked(50);
-						service.pageIssues(repo.getOwner(), repo.getName(),
-								null, 1).next();
+						service.pageIssues(repo.getOwner(), repo.getName(), null, 1).next();
 					} catch (NoSuchPageException e) {
-						String message = MessageFormat
-								.format(Messages.IssueRepositorySettingsPage_StatusError,
-										GitHubException.wrap(e.getCause())
-												.getLocalizedMessage());
+						String message = MessageFormat.format(Messages.IssueRepositorySettingsPage_StatusError,
+								GitHubException.wrap(e.getCause()).getLocalizedMessage());
 						setStatus(GitHubUi.createErrorStatus(message));
 						return;
 					} finally {

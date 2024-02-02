@@ -25,6 +25,7 @@ public class AntUiBridgePlugin extends Plugin {
 
 	public static class AntUiBridgePluginStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			AntUiBridgePlugin.getDefault().lazyStart();
 		}

@@ -16,13 +16,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
@@ -68,6 +64,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 			this.task = task;
 		}
 
+		@Override
 		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			if (adapter == ITask.class) {
 				return task;
@@ -107,26 +104,26 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
-			case PRE_ACTIVATED:
-				ContextTasksStartupHandler.this.contextActivated(event);
-				break;
-			case ACTIVATED:
-				getStateHandler().activated(event.getContext());
-				PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getActivePage()
-						.showActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
-				break;
-			case DEACTIVATED:
-				getStateHandler().deactivated(event.getContext());
-				PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getActivePage()
-						.hideActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
-				break;
-			case CLEARED:
-				getStateHandler().clear(event.getContextHandle(), event.isActiveContext());
-				break;
+				case PRE_ACTIVATED:
+					ContextTasksStartupHandler.this.contextActivated(event);
+					break;
+				case ACTIVATED:
+					getStateHandler().activated(event.getContext());
+					PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow()
+							.getActivePage()
+							.showActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
+					break;
+				case DEACTIVATED:
+					getStateHandler().deactivated(event.getContext());
+					PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow()
+							.getActivePage()
+							.hideActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
+					break;
+				case CLEARED:
+					getStateHandler().clear(event.getContextHandle(), event.isActiveContext());
+					break;
 			}
 		}
 
@@ -173,6 +170,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		// ignore
 	}
 
+	@Override
 	public void lazyStartup() {
 		ExternalizationManager externalizationManager = TasksUiPlugin.getExternalizationManager();
 		ActiveContextExternalizationParticipant activeContextExternalizationParticipant = new ActiveContextExternalizationParticipant(
@@ -181,20 +179,18 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		activeContextExternalizationParticipant.registerListeners();
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						SubMonitor progress = SubMonitor.convert(monitor);
-						ContextMementoMigrator migrator = new ContextMementoMigrator(
-								ContextUiPlugin.getDefault().getStateManager());
-						migrator.setDeleteOldDataEnabled(true);
-						IStatus status = migrator.migrateContextMementos(progress);
-						if (!status.isOK()) {
-							StatusHandler.log(status);
-						}
-					} finally {
-						monitor.done();
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+				try {
+					SubMonitor progress = SubMonitor.convert(monitor);
+					ContextMementoMigrator migrator = new ContextMementoMigrator(
+							ContextUiPlugin.getDefault().getStateManager());
+					migrator.setDeleteOldDataEnabled(true);
+					IStatus status = migrator.migrateContextMementos(progress);
+					if (!status.isOK()) {
+						StatusHandler.log(status);
 					}
+				} finally {
+					monitor.done();
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -206,11 +202,9 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 
 		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 
-		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION.equals(event.getProperty())) {
-					updateAutoManageExpansionPreference();
-				}
+		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
+			if (IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION.equals(event.getProperty())) {
+				updateAutoManageExpansionPreference();
 			}
 		});
 		updateAutoManageExpansionPreference();

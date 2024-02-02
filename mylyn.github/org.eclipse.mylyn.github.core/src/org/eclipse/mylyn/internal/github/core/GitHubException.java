@@ -29,15 +29,16 @@ public class GitHubException extends IOException {
 	private static final long serialVersionUID = -1456910662911777231L;
 
 	/**
-	 * Wraps the given {@link IOException} with a {@link GitHubException} if it
-	 * is a {@link RequestException} instance.
+	 * Wraps the given {@link IOException} with a {@link GitHubException} if it is a {@link RequestException} instance.
 	 *
 	 * @param exception
 	 * @return wrapped exception
 	 */
 	public static IOException wrap(IOException exception) {
-		return exception instanceof RequestException ? new GitHubException(
-				(RequestException) exception) : exception;
+		return exception instanceof RequestException
+				? new GitHubException(
+						(RequestException) exception)
+				: exception;
 	}
 
 	/**
@@ -46,7 +47,6 @@ public class GitHubException extends IOException {
 	 * @param cause
 	 */
 	public GitHubException(RequestException cause) {
-		super();
 		initCause(cause);
 	}
 
@@ -54,14 +54,16 @@ public class GitHubException extends IOException {
 	public String getMessage() {
 		RequestError error = ((RequestException) getCause()).getError();
 		String errorMessage = error.getMessage();
-		if (errorMessage == null)
+		if (errorMessage == null) {
 			errorMessage = ""; //$NON-NLS-1$
+		}
 		StringBuilder message = new StringBuilder(errorMessage);
 		List<FieldError> errors = error.getErrors();
 		if (errors != null && errors.size() > 0) {
 			message.append(':');
-			for (FieldError fieldError : errors)
+			for (FieldError fieldError : errors) {
 				message.append(' ').append(format(fieldError)).append(',');
+			}
 			message.deleteCharAt(message.length() - 1);
 		}
 		return message.toString();
@@ -73,25 +75,23 @@ public class GitHubException extends IOException {
 		String field = error.getField();
 		String resource = error.getResource();
 
-		if (FieldError.CODE_INVALID.equals(code))
-			if (value != null)
-				return MessageFormat
-						.format(Messages.FieldError_InvalidFieldWithValue,
-								value, field);
-			else
-				return MessageFormat.format(Messages.FieldError_InvalidField,
-						field);
+		if (FieldError.CODE_INVALID.equals(code)) {
+			if (value != null) {
+				return MessageFormat.format(Messages.FieldError_InvalidFieldWithValue, value, field);
+			} else {
+				return MessageFormat.format(Messages.FieldError_InvalidField, field);
+			}
+		}
 
-		if (FieldError.CODE_MISSING_FIELD.equals(code))
-			return MessageFormat
-					.format(Messages.FieldError_MissingField, field);
+		if (FieldError.CODE_MISSING_FIELD.equals(code)) {
+			return MessageFormat.format(Messages.FieldError_MissingField, field);
+		}
 
-		if (FieldError.CODE_ALREADY_EXISTS.equals(code))
+		if (FieldError.CODE_ALREADY_EXISTS.equals(code)) {
 			return MessageFormat.format(
-					Messages.FieldError_AlreadyExists,
-					resource, field);
+					Messages.FieldError_AlreadyExists, resource, field);
+		}
 
-		return MessageFormat.format(Messages.FieldError_ResourceError, field,
-				resource);
+		return MessageFormat.format(Messages.FieldError_ResourceError, field, resource);
 	}
 }

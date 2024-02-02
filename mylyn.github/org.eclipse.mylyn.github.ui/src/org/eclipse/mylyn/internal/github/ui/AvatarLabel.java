@@ -18,8 +18,6 @@ import org.eclipse.mylyn.internal.github.ui.AvatarStore.IAvatarCallback;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
@@ -39,9 +37,13 @@ public class AvatarLabel implements IAvatarCallback {
 	public static final int AVATAR_SIZE = 42;
 
 	private Composite displayArea;
+
 	private Composite avatarImage;
+
 	private AvatarStore store;
+
 	private IRepositoryPerson person;
+
 	private TaskAttribute attribute;
 
 	/**
@@ -51,8 +53,7 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @param person
 	 * @param attribute
 	 */
-	public AvatarLabel(AvatarStore store, IRepositoryPerson person,
-			TaskAttribute attribute) {
+	public AvatarLabel(AvatarStore store, IRepositoryPerson person, TaskAttribute attribute) {
 		this.store = store;
 		this.person = person;
 		this.attribute = attribute;
@@ -65,8 +66,9 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @return this label
 	 */
 	public AvatarLabel setVisible(boolean visible) {
-		if (!displayArea.isDisposed())
+		if (!displayArea.isDisposed()) {
 			displayArea.setVisible(visible);
+		}
 		return this;
 	}
 
@@ -76,8 +78,9 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @return this label
 	 */
 	public AvatarLabel layout() {
-		if (!displayArea.isDisposed())
+		if (!displayArea.isDisposed()) {
 			displayArea.getParent().getParent().layout(true, true);
+		}
 		return this;
 	}
 
@@ -87,7 +90,7 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @return composite
 	 */
 	public Composite getControl() {
-		return this.displayArea;
+		return displayArea;
 	}
 
 	/**
@@ -99,29 +102,29 @@ public class AvatarLabel implements IAvatarCallback {
 	 */
 	public AvatarLabel create(Composite parent, FormToolkit toolkit) {
 		displayArea = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.fillDefaults().margins(2, 2).spacing(1, 1)
-				.applyTo(displayArea);
-		GridDataFactory.fillDefaults().span(1, 2).grab(false, false)
-				.applyTo(displayArea);
+		GridLayoutFactory.fillDefaults().margins(2, 2).spacing(1, 1).applyTo(displayArea);
+		GridDataFactory.fillDefaults().span(1, 2).grab(false, false).applyTo(displayArea);
 		toolkit.adapt(displayArea, false, false);
 
 		avatarImage = new Composite(displayArea, SWT.NONE);
-		if (person != null)
+		if (person != null) {
 			avatarImage.setToolTipText(person.getPersonId());
+		}
 
-		GridDataFactory.swtDefaults().grab(false, false)
-				.align(SWT.CENTER, SWT.CENTER).hint(AVATAR_SIZE, AVATAR_SIZE)
+		GridDataFactory.swtDefaults()
+				.grab(false, false)
+				.align(SWT.CENTER, SWT.CENTER)
+				.hint(AVATAR_SIZE, AVATAR_SIZE)
 				.applyTo(avatarImage);
 
-		Label label = toolkit.createLabel(displayArea, attribute.getMetaData()
-				.getLabel());
+		Label label = toolkit.createLabel(displayArea, attribute.getMetaData().getLabel());
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(avatarImage.getToolTipText());
 
 		ImageData data = store.getAvatar(attribute.getValue());
-		if (data != null)
+		if (data != null) {
 			setImage(store.getScaledImage(AVATAR_SIZE, data));
-		else {
+		} else {
 			store.loadAvatar(attribute.getValue(), this);
 			setVisible(false);
 		}
@@ -132,13 +135,7 @@ public class AvatarLabel implements IAvatarCallback {
 	private AvatarLabel setImage(final Image image) {
 		if (!avatarImage.isDisposed()) {
 			avatarImage.setBackgroundImage(image);
-			avatarImage.addDisposeListener(new DisposeListener() {
-
-				@Override
-				public void widgetDisposed(DisposeEvent e) {
-					image.dispose();
-				}
-			});
+			avatarImage.addDisposeListener(e -> image.dispose());
 		}
 		return this;
 	}
@@ -149,13 +146,9 @@ public class AvatarLabel implements IAvatarCallback {
 	 */
 	@Override
 	public void loaded(final ImageData data, final AvatarStore store) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				Image image = store.getScaledImage(AVATAR_SIZE, data);
-				setImage(image).setVisible(true).layout();
-			}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			Image image = store.getScaledImage(AVATAR_SIZE, data);
+			setImage(image).setVisible(true).layout();
 		});
 	}
 

@@ -22,11 +22,13 @@ public class TaskHistoryAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { IHistoryPageSource.class };
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
+	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object getAdapter(final Object adaptable, Class adapterType) {
 		if (adapterType.isAssignableFrom(IHistoryPageSource.class)) {

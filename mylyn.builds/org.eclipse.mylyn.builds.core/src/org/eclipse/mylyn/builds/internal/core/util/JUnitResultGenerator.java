@@ -130,7 +130,7 @@ public class JUnitResultGenerator {
 						//attributes.addAttribute(null, TYPE, TYPE, null, test.getFailureType());
 						attributes.addAttribute(null, null, MESSAGE, null, test.getMessage());
 
-						String element = (test.getMessage() != null) ? FAILURE : ERROR;
+						String element = test.getMessage() != null ? FAILURE : ERROR;
 						handler.startElement(null, null, element, attributes);
 
 						if (test.getStackTrace() != null) {

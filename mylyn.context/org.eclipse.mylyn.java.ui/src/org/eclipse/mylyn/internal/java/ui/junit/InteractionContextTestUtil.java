@@ -74,15 +74,14 @@ public class InteractionContextTestUtil {
 	}
 
 	public static Set<IType> getTestCasesInContext() {
-		Set<IType> testTypes = new HashSet<IType>();
+		Set<IType> testTypes = new HashSet<>();
 		List<IInteractionElement> interesting = ContextCore.getContextManager().getActiveContext().getInteresting();
 		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IInteractionElement element : interesting) {
 				if (element.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 					Object javaElement = bridge.getObjectForHandle(element.getHandleIdentifier());
-					if (javaElement instanceof IType) {
-						IType type = (IType) javaElement;
+					if (javaElement instanceof IType type) {
 						if (isTestType(type)) {
 							testTypes.add(type);
 						}
@@ -91,8 +90,7 @@ public class InteractionContextTestUtil {
 						if (relation.getRelationshipHandle().equals(JUnitReferencesProvider.ID)) {
 							IInteractionElement target = relation.getTarget();
 							Object targetObject = bridge.getObjectForHandle(target.getHandleIdentifier());
-							if (targetObject instanceof IMethod) {
-								IMethod testMethod = (IMethod) targetObject;
+							if (targetObject instanceof IMethod testMethod) {
 								if (isTestType((IType) testMethod.getParent())) {
 									testTypes.add((IType) testMethod.getParent());
 								}

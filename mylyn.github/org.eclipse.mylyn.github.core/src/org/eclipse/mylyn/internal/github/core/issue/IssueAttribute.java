@@ -25,59 +25,52 @@ public enum IssueAttribute {
 	/**
 	 * Issue key
 	 */
-	KEY(Messages.IssueAttribute_LabelKey, TaskAttribute.TASK_KEY,
-			TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	KEY(Messages.IssueAttribute_LabelKey, TaskAttribute.TASK_KEY, TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
 	/**
 	 * Issue title
 	 */
-	TITLE(Messages.IssueAttribute_LabekSummary, TaskAttribute.SUMMARY,
-			TaskAttribute.TYPE_SHORT_RICH_TEXT, false, true),
+	TITLE(Messages.IssueAttribute_LabekSummary, TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_RICH_TEXT, false, true),
 
 	/**
 	 * Issue description
 	 */
-	BODY(Messages.IssueAttribute_LabelDescription, TaskAttribute.DESCRIPTION,
-			TaskAttribute.TYPE_LONG_RICH_TEXT, false, true),
+	BODY(Messages.IssueAttribute_LabelDescription, TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT, false,
+			true),
 
 	/**
 	 * Issue creation date
 	 */
-	CREATION_DATE(Messages.IssueAttribute_LabelCreated,
-			TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATETIME, true,
+	CREATION_DATE(Messages.IssueAttribute_LabelCreated, TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATETIME, true,
 			false),
 
 	/**
 	 * Issue modification date
 	 */
-	MODIFICATION_DATE(Messages.IssueAttribute_LabelModified,
-			TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATETIME, true,
-			false),
+	MODIFICATION_DATE(Messages.IssueAttribute_LabelModified, TaskAttribute.DATE_MODIFICATION,
+			TaskAttribute.TYPE_DATETIME, true, false),
 
 	/**
 	 * Issue closed date
 	 */
-	CLOSED_DATE(Messages.IssueAttribute_LabelClosed,
-			TaskAttribute.DATE_COMPLETION, TaskAttribute.TYPE_DATETIME, true,
+	CLOSED_DATE(Messages.IssueAttribute_LabelClosed, TaskAttribute.DATE_COMPLETION, TaskAttribute.TYPE_DATETIME, true,
 			false),
 
 	/**
 	 * Issue status
 	 */
-	STATUS(Messages.IssueAttribute_LabelStatus, TaskAttribute.STATUS,
-			TaskAttribute.TYPE_SHORT_TEXT, false, true),
+	STATUS(Messages.IssueAttribute_LabelStatus, TaskAttribute.STATUS, TaskAttribute.TYPE_SHORT_TEXT, false, true),
 
 	/**
 	 * Issue reporter
 	 */
-	REPORTER(Messages.IssueAttribute_LabelReporter,
-			TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, false),
+	REPORTER(Messages.IssueAttribute_LabelReporter, TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true,
+			false),
 
 	/**
 	 * Comment being added to issue
 	 */
-	COMMENT_NEW(Messages.IssueAttribute_LabelComment,
-			TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT,
+	COMMENT_NEW(Messages.IssueAttribute_LabelComment, TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT,
 			false, false),
 
 	/**
@@ -89,42 +82,35 @@ public enum IssueAttribute {
 	/**
 	 * Issue assignee
 	 */
-	ASSIGNEE(Messages.IssueAttribute_LabelAssignee,
-			TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, false, true),
+	ASSIGNEE(Messages.IssueAttribute_LabelAssignee, TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, false,
+			true),
 
 	/**
 	 * Issue milestone
 	 */
-	MILESTONE(Messages.IssueAttribute_LabelMilestone,
-			"github.issue.milestone", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$
+	MILESTONE(Messages.IssueAttribute_LabelMilestone, "github.issue.milestone", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$
 			false, true),
 
 	/**
 	 * Issue assignee gravatar
 	 */
-	ASSIGNEE_GRAVATAR(Messages.IssueAttribute_LabelAssigneeGravatar,
-			"github.issue.assignee.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
-			false, true),
+	ASSIGNEE_GRAVATAR(Messages.IssueAttribute_LabelAssigneeGravatar, "github.issue.assignee.gravatar", //$NON-NLS-1$
+			TaskAttribute.TYPE_URL, null, false, true),
 
 	/**
 	 * Issue reporter gravatar
 	 */
-	REPORTER_GRAVATAR(Messages.IssueAttribute_LabelReporterGravatar,
-			"github.issue.reporter.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
-			true, false);
+	REPORTER_GRAVATAR(Messages.IssueAttribute_LabelReporterGravatar, "github.issue.reporter.gravatar", //$NON-NLS-1$
+			TaskAttribute.TYPE_URL, null, true, false);
 
 	private final GitHubAttributeMetadata metadata;
 
-	private IssueAttribute(String label, String id, String type,
-			boolean readOnly, boolean initTask) {
-		metadata = new GitHubAttributeMetadata(id, label, type, readOnly,
-				initTask);
+	IssueAttribute(String label, String id, String type, boolean readOnly, boolean initTask) {
+		metadata = new GitHubAttributeMetadata(id, label, type, readOnly, initTask);
 	}
 
-	private IssueAttribute(String label, String id, String type, String kind,
-			boolean readOnly, boolean initTask) {
-		metadata = new GitHubAttributeMetadata(id, label, kind, type, readOnly,
-				initTask);
+	IssueAttribute(String label, String id, String type, String kind, boolean readOnly, boolean initTask) {
+		metadata = new GitHubAttributeMetadata(id, label, kind, type, readOnly, initTask);
 	}
 
 	/**

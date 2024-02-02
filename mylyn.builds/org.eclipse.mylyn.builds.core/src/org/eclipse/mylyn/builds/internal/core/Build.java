@@ -80,8 +80,7 @@ public class Build extends BuildElement implements IBuild {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildNumber()
 	 * @generated
@@ -90,8 +89,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final int BUILD_NUMBER_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildNumber()
 	 * @generated
@@ -100,8 +98,7 @@ public class Build extends BuildElement implements IBuild {
 	protected int buildNumber = BUILD_NUMBER_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTimestamp()
 	 * @generated
@@ -110,8 +107,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final long TIMESTAMP_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTimestamp()
 	 * @generated
@@ -120,8 +116,7 @@ public class Build extends BuildElement implements IBuild {
 	protected long timestamp = TIMESTAMP_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -130,8 +125,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -140,8 +134,7 @@ public class Build extends BuildElement implements IBuild {
 	protected long duration = DURATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDisplayName()
 	 * @generated
@@ -150,8 +143,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String DISPLAY_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDisplayName()
 	 * @generated
@@ -160,8 +152,7 @@ public class Build extends BuildElement implements IBuild {
 	protected String displayName = DISPLAY_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -170,8 +161,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final BuildState STATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -180,8 +170,7 @@ public class Build extends BuildElement implements IBuild {
 	protected BuildState state = STATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -190,8 +179,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final BuildStatus STATUS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -200,8 +188,8 @@ public class Build extends BuildElement implements IBuild {
 	protected BuildStatus status = STATUS_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getArtifacts()
 	 * @generated
@@ -210,8 +198,8 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IArtifact> artifacts;
 
 	/**
-	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getChangeSet()
 	 * @generated
@@ -220,8 +208,7 @@ public class Build extends BuildElement implements IBuild {
 	protected IChangeSet changeSet;
 
 	/**
-	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -230,8 +217,7 @@ public class Build extends BuildElement implements IBuild {
 	protected IBuildPlan plan;
 
 	/**
-	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -240,8 +226,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String LABEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -250,8 +235,7 @@ public class Build extends BuildElement implements IBuild {
 	protected String label = LABEL_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getServer()
 	 * @generated
@@ -260,8 +244,8 @@ public class Build extends BuildElement implements IBuild {
 	protected IBuildServer server;
 
 	/**
-	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getTestResult()
 	 * @generated
@@ -270,8 +254,8 @@ public class Build extends BuildElement implements IBuild {
 	protected ITestResult testResult;
 
 	/**
-	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getCulprits()
 	 * @generated
@@ -280,8 +264,7 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IUser> culprits;
 
 	/**
-	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -290,8 +273,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String SUMMARY_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -300,8 +282,8 @@ public class Build extends BuildElement implements IBuild {
 	protected String summary = SUMMARY_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getCause()
 	 * @generated
@@ -315,7 +297,6 @@ public class Build extends BuildElement implements IBuild {
 	 * @generated
 	 */
 	protected Build() {
-		super();
 	}
 
 	/**
@@ -337,6 +318,7 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -346,23 +328,25 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__ID, oldId, id));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getBuildNumber() {
 		return buildNumber;
 	}
@@ -372,24 +356,26 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBuildNumber(int newBuildNumber) {
 		int oldBuildNumber = buildNumber;
 		buildNumber = newBuildNumber;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__BUILD_NUMBER, oldBuildNumber,
 					buildNumber));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -399,24 +385,26 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setTimestamp(long newTimestamp) {
 		long oldTimestamp = timestamp;
 		timestamp = newTimestamp;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TIMESTAMP, oldTimestamp,
 					timestamp));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public long getDuration() {
 		return duration;
 	}
@@ -426,23 +414,25 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DURATION, oldDuration, duration));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -452,24 +442,26 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__DISPLAY_NAME, oldDisplayName,
 					displayName));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public BuildState getState() {
 		return state;
 	}
@@ -479,23 +471,25 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATE, oldState, state));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public BuildStatus getStatus() {
 		return status;
 	}
@@ -505,26 +499,28 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__STATUS, oldStatus, status));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IArtifact> getArtifacts() {
 		if (artifacts == null) {
-			artifacts = new EObjectContainmentEList<IArtifact>(IArtifact.class, this, BuildPackage.BUILD__ARTIFACTS);
+			artifacts = new EObjectContainmentEList<>(IArtifact.class, this, BuildPackage.BUILD__ARTIFACTS);
 		}
 		return artifacts;
 	}
@@ -532,13 +528,13 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChangeSet getChangeSet() {
 		return changeSet;
 	}
@@ -554,10 +550,11 @@ public class Build extends BuildElement implements IBuild {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD__CHANGE_SET, oldChangeSet, newChangeSet);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -567,21 +564,26 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setChangeSet(IChangeSet newChangeSet) {
 		if (newChangeSet != changeSet) {
 			NotificationChain msgs = null;
-			if (changeSet != null)
+			if (changeSet != null) {
 				msgs = ((InternalEObject) changeSet).eInverseRemove(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD__CHANGE_SET, null, msgs);
-			if (newChangeSet != null)
+			}
+			if (newChangeSet != null) {
 				msgs = ((InternalEObject) newChangeSet).eInverseAdd(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD__CHANGE_SET, null, msgs);
+			}
 			msgs = basicSetChangeSet(newChangeSet, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__CHANGE_SET, newChangeSet,
 					newChangeSet));
+		}
 	}
 
 	/**
@@ -593,13 +595,15 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildPlan getPlan() {
 		if (plan != null && ((EObject) plan).eIsProxy()) {
 			InternalEObject oldPlan = (InternalEObject) plan;
 			plan = (IBuildPlan) eResolveProxy(oldPlan);
 			if (plan != oldPlan) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__PLAN, oldPlan, plan));
+				}
 			}
 		}
 		return plan;
@@ -619,18 +623,19 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setPlan(IBuildPlan newPlan) {
 		IBuildPlan oldPlan = plan;
 		plan = newPlan;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__PLAN, oldPlan, plan));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -646,18 +651,19 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setLabel(String newLabel) {
 		String oldLabel = label;
 		label = newLabel;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__LABEL, oldLabel, label));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -669,9 +675,10 @@ public class Build extends BuildElement implements IBuild {
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD__SERVER, oldServer,
 							server));
+				}
 			}
 		}
 		return server;
@@ -691,11 +698,13 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SERVER, oldServer, server));
+		}
 	}
 
 	/**
@@ -703,6 +712,7 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ITestResult getTestResult() {
 		return testResult;
 	}
@@ -718,10 +728,11 @@ public class Build extends BuildElement implements IBuild {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD__TEST_RESULT, oldTestResult, newTestResult);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -731,21 +742,26 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setTestResult(ITestResult newTestResult) {
 		if (newTestResult != testResult) {
 			NotificationChain msgs = null;
-			if (testResult != null)
+			if (testResult != null) {
 				msgs = ((InternalEObject) testResult).eInverseRemove(this, BuildPackage.TEST_RESULT__BUILD,
 						ITestResult.class, msgs);
-			if (newTestResult != null)
+			}
+			if (newTestResult != null) {
 				msgs = ((InternalEObject) newTestResult).eInverseAdd(this, BuildPackage.TEST_RESULT__BUILD,
 						ITestResult.class, msgs);
+			}
 			msgs = basicSetTestResult(newTestResult, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__TEST_RESULT, newTestResult,
 					newTestResult));
+		}
 	}
 
 	/**
@@ -753,9 +769,10 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IUser> getCulprits() {
 		if (culprits == null) {
-			culprits = new EObjectContainmentEList<IUser>(IUser.class, this, BuildPackage.BUILD__CULPRITS);
+			culprits = new EObjectContainmentEList<>(IUser.class, this, BuildPackage.BUILD__CULPRITS);
 		}
 		return culprits;
 	}
@@ -765,6 +782,7 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getSummary() {
 		return summary;
 	}
@@ -774,11 +792,13 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setSummary(String newSummary) {
 		String oldSummary = summary;
 		summary = newSummary;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD__SUMMARY, oldSummary, summary));
+		}
 	}
 
 	/**
@@ -786,9 +806,10 @@ public class Build extends BuildElement implements IBuild {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IBuildCause> getCause() {
 		if (cause == null) {
-			cause = new EObjectContainmentEList<IBuildCause>(IBuildCause.class, this, BuildPackage.BUILD__CAUSE);
+			cause = new EObjectContainmentEList<>(IBuildCause.class, this, BuildPackage.BUILD__CAUSE);
 		}
 		return cause;
 	}
@@ -801,11 +822,12 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD__TEST_RESULT:
-			if (testResult != null)
-				msgs = ((InternalEObject) testResult).eInverseRemove(this,
-						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD__TEST_RESULT, null, msgs);
-			return basicSetTestResult((ITestResult) otherEnd, msgs);
+			case BuildPackage.BUILD__TEST_RESULT:
+				if (testResult != null) {
+					msgs = ((InternalEObject) testResult).eInverseRemove(this,
+							EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD__TEST_RESULT, null, msgs);
+				}
+				return basicSetTestResult((ITestResult) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -818,16 +840,16 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD__ARTIFACTS:
-			return ((InternalEList<?>) getArtifacts()).basicRemove(otherEnd, msgs);
-		case BuildPackage.BUILD__CHANGE_SET:
-			return basicSetChangeSet(null, msgs);
-		case BuildPackage.BUILD__TEST_RESULT:
-			return basicSetTestResult(null, msgs);
-		case BuildPackage.BUILD__CULPRITS:
-			return ((InternalEList<?>) getCulprits()).basicRemove(otherEnd, msgs);
-		case BuildPackage.BUILD__CAUSE:
-			return ((InternalEList<?>) getCause()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD__ARTIFACTS:
+				return ((InternalEList<?>) getArtifacts()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD__CHANGE_SET:
+				return basicSetChangeSet(null, msgs);
+			case BuildPackage.BUILD__TEST_RESULT:
+				return basicSetTestResult(null, msgs);
+			case BuildPackage.BUILD__CULPRITS:
+				return ((InternalEList<?>) getCulprits()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD__CAUSE:
+				return ((InternalEList<?>) getCause()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -840,42 +862,44 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD__ID:
-			return getId();
-		case BuildPackage.BUILD__BUILD_NUMBER:
-			return getBuildNumber();
-		case BuildPackage.BUILD__TIMESTAMP:
-			return getTimestamp();
-		case BuildPackage.BUILD__DURATION:
-			return getDuration();
-		case BuildPackage.BUILD__DISPLAY_NAME:
-			return getDisplayName();
-		case BuildPackage.BUILD__STATE:
-			return getState();
-		case BuildPackage.BUILD__STATUS:
-			return getStatus();
-		case BuildPackage.BUILD__ARTIFACTS:
-			return getArtifacts();
-		case BuildPackage.BUILD__CHANGE_SET:
-			return getChangeSet();
-		case BuildPackage.BUILD__PLAN:
-			if (resolve)
-				return getPlan();
-			return basicGetPlan();
-		case BuildPackage.BUILD__LABEL:
-			return getLabel();
-		case BuildPackage.BUILD__SERVER:
-			if (resolve)
-				return getServer();
-			return basicGetServer();
-		case BuildPackage.BUILD__TEST_RESULT:
-			return getTestResult();
-		case BuildPackage.BUILD__CULPRITS:
-			return getCulprits();
-		case BuildPackage.BUILD__SUMMARY:
-			return getSummary();
-		case BuildPackage.BUILD__CAUSE:
-			return getCause();
+			case BuildPackage.BUILD__ID:
+				return getId();
+			case BuildPackage.BUILD__BUILD_NUMBER:
+				return getBuildNumber();
+			case BuildPackage.BUILD__TIMESTAMP:
+				return getTimestamp();
+			case BuildPackage.BUILD__DURATION:
+				return getDuration();
+			case BuildPackage.BUILD__DISPLAY_NAME:
+				return getDisplayName();
+			case BuildPackage.BUILD__STATE:
+				return getState();
+			case BuildPackage.BUILD__STATUS:
+				return getStatus();
+			case BuildPackage.BUILD__ARTIFACTS:
+				return getArtifacts();
+			case BuildPackage.BUILD__CHANGE_SET:
+				return getChangeSet();
+			case BuildPackage.BUILD__PLAN:
+				if (resolve) {
+					return getPlan();
+				}
+				return basicGetPlan();
+			case BuildPackage.BUILD__LABEL:
+				return getLabel();
+			case BuildPackage.BUILD__SERVER:
+				if (resolve) {
+					return getServer();
+				}
+				return basicGetServer();
+			case BuildPackage.BUILD__TEST_RESULT:
+				return getTestResult();
+			case BuildPackage.BUILD__CULPRITS:
+				return getCulprits();
+			case BuildPackage.BUILD__SUMMARY:
+				return getSummary();
+			case BuildPackage.BUILD__CAUSE:
+				return getCause();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -889,57 +913,57 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD__ID:
-			setId((String) newValue);
-			return;
-		case BuildPackage.BUILD__BUILD_NUMBER:
-			setBuildNumber((Integer) newValue);
-			return;
-		case BuildPackage.BUILD__TIMESTAMP:
-			setTimestamp((Long) newValue);
-			return;
-		case BuildPackage.BUILD__DURATION:
-			setDuration((Long) newValue);
-			return;
-		case BuildPackage.BUILD__DISPLAY_NAME:
-			setDisplayName((String) newValue);
-			return;
-		case BuildPackage.BUILD__STATE:
-			setState((BuildState) newValue);
-			return;
-		case BuildPackage.BUILD__STATUS:
-			setStatus((BuildStatus) newValue);
-			return;
-		case BuildPackage.BUILD__ARTIFACTS:
-			getArtifacts().clear();
-			getArtifacts().addAll((Collection<? extends IArtifact>) newValue);
-			return;
-		case BuildPackage.BUILD__CHANGE_SET:
-			setChangeSet((IChangeSet) newValue);
-			return;
-		case BuildPackage.BUILD__PLAN:
-			setPlan((IBuildPlan) newValue);
-			return;
-		case BuildPackage.BUILD__LABEL:
-			setLabel((String) newValue);
-			return;
-		case BuildPackage.BUILD__SERVER:
-			setServer((IBuildServer) newValue);
-			return;
-		case BuildPackage.BUILD__TEST_RESULT:
-			setTestResult((ITestResult) newValue);
-			return;
-		case BuildPackage.BUILD__CULPRITS:
-			getCulprits().clear();
-			getCulprits().addAll((Collection<? extends IUser>) newValue);
-			return;
-		case BuildPackage.BUILD__SUMMARY:
-			setSummary((String) newValue);
-			return;
-		case BuildPackage.BUILD__CAUSE:
-			getCause().clear();
-			getCause().addAll((Collection<? extends IBuildCause>) newValue);
-			return;
+			case BuildPackage.BUILD__ID:
+				setId((String) newValue);
+				return;
+			case BuildPackage.BUILD__BUILD_NUMBER:
+				setBuildNumber((Integer) newValue);
+				return;
+			case BuildPackage.BUILD__TIMESTAMP:
+				setTimestamp((Long) newValue);
+				return;
+			case BuildPackage.BUILD__DURATION:
+				setDuration((Long) newValue);
+				return;
+			case BuildPackage.BUILD__DISPLAY_NAME:
+				setDisplayName((String) newValue);
+				return;
+			case BuildPackage.BUILD__STATE:
+				setState((BuildState) newValue);
+				return;
+			case BuildPackage.BUILD__STATUS:
+				setStatus((BuildStatus) newValue);
+				return;
+			case BuildPackage.BUILD__ARTIFACTS:
+				getArtifacts().clear();
+				getArtifacts().addAll((Collection<? extends IArtifact>) newValue);
+				return;
+			case BuildPackage.BUILD__CHANGE_SET:
+				setChangeSet((IChangeSet) newValue);
+				return;
+			case BuildPackage.BUILD__PLAN:
+				setPlan((IBuildPlan) newValue);
+				return;
+			case BuildPackage.BUILD__LABEL:
+				setLabel((String) newValue);
+				return;
+			case BuildPackage.BUILD__SERVER:
+				setServer((IBuildServer) newValue);
+				return;
+			case BuildPackage.BUILD__TEST_RESULT:
+				setTestResult((ITestResult) newValue);
+				return;
+			case BuildPackage.BUILD__CULPRITS:
+				getCulprits().clear();
+				getCulprits().addAll((Collection<? extends IUser>) newValue);
+				return;
+			case BuildPackage.BUILD__SUMMARY:
+				setSummary((String) newValue);
+				return;
+			case BuildPackage.BUILD__CAUSE:
+				getCause().clear();
+				getCause().addAll((Collection<? extends IBuildCause>) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -952,54 +976,54 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__BUILD_NUMBER:
-			setBuildNumber(BUILD_NUMBER_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__TIMESTAMP:
-			setTimestamp(TIMESTAMP_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__DURATION:
-			setDuration(DURATION_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__DISPLAY_NAME:
-			setDisplayName(DISPLAY_NAME_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__STATE:
-			setState(STATE_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__STATUS:
-			setStatus(STATUS_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__ARTIFACTS:
-			getArtifacts().clear();
-			return;
-		case BuildPackage.BUILD__CHANGE_SET:
-			setChangeSet((IChangeSet) null);
-			return;
-		case BuildPackage.BUILD__PLAN:
-			setPlan((IBuildPlan) null);
-			return;
-		case BuildPackage.BUILD__LABEL:
-			setLabel(LABEL_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__SERVER:
-			setServer((IBuildServer) null);
-			return;
-		case BuildPackage.BUILD__TEST_RESULT:
-			setTestResult((ITestResult) null);
-			return;
-		case BuildPackage.BUILD__CULPRITS:
-			getCulprits().clear();
-			return;
-		case BuildPackage.BUILD__SUMMARY:
-			setSummary(SUMMARY_EDEFAULT);
-			return;
-		case BuildPackage.BUILD__CAUSE:
-			getCause().clear();
-			return;
+			case BuildPackage.BUILD__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__BUILD_NUMBER:
+				setBuildNumber(BUILD_NUMBER_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__TIMESTAMP:
+				setTimestamp(TIMESTAMP_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__DURATION:
+				setDuration(DURATION_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__DISPLAY_NAME:
+				setDisplayName(DISPLAY_NAME_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__STATE:
+				setState(STATE_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__STATUS:
+				setStatus(STATUS_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__ARTIFACTS:
+				getArtifacts().clear();
+				return;
+			case BuildPackage.BUILD__CHANGE_SET:
+				setChangeSet((IChangeSet) null);
+				return;
+			case BuildPackage.BUILD__PLAN:
+				setPlan((IBuildPlan) null);
+				return;
+			case BuildPackage.BUILD__LABEL:
+				setLabel(LABEL_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__SERVER:
+				setServer((IBuildServer) null);
+				return;
+			case BuildPackage.BUILD__TEST_RESULT:
+				setTestResult((ITestResult) null);
+				return;
+			case BuildPackage.BUILD__CULPRITS:
+				getCulprits().clear();
+				return;
+			case BuildPackage.BUILD__SUMMARY:
+				setSummary(SUMMARY_EDEFAULT);
+				return;
+			case BuildPackage.BUILD__CAUSE:
+				getCause().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1012,38 +1036,38 @@ public class Build extends BuildElement implements IBuild {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case BuildPackage.BUILD__BUILD_NUMBER:
-			return buildNumber != BUILD_NUMBER_EDEFAULT;
-		case BuildPackage.BUILD__TIMESTAMP:
-			return timestamp != TIMESTAMP_EDEFAULT;
-		case BuildPackage.BUILD__DURATION:
-			return duration != DURATION_EDEFAULT;
-		case BuildPackage.BUILD__DISPLAY_NAME:
-			return DISPLAY_NAME_EDEFAULT == null ? displayName != null : !DISPLAY_NAME_EDEFAULT.equals(displayName);
-		case BuildPackage.BUILD__STATE:
-			return STATE_EDEFAULT == null ? state != null : !STATE_EDEFAULT.equals(state);
-		case BuildPackage.BUILD__STATUS:
-			return STATUS_EDEFAULT == null ? status != null : !STATUS_EDEFAULT.equals(status);
-		case BuildPackage.BUILD__ARTIFACTS:
-			return artifacts != null && !artifacts.isEmpty();
-		case BuildPackage.BUILD__CHANGE_SET:
-			return changeSet != null;
-		case BuildPackage.BUILD__PLAN:
-			return plan != null;
-		case BuildPackage.BUILD__LABEL:
-			return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
-		case BuildPackage.BUILD__SERVER:
-			return server != null;
-		case BuildPackage.BUILD__TEST_RESULT:
-			return testResult != null;
-		case BuildPackage.BUILD__CULPRITS:
-			return culprits != null && !culprits.isEmpty();
-		case BuildPackage.BUILD__SUMMARY:
-			return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
-		case BuildPackage.BUILD__CAUSE:
-			return cause != null && !cause.isEmpty();
+			case BuildPackage.BUILD__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case BuildPackage.BUILD__BUILD_NUMBER:
+				return buildNumber != BUILD_NUMBER_EDEFAULT;
+			case BuildPackage.BUILD__TIMESTAMP:
+				return timestamp != TIMESTAMP_EDEFAULT;
+			case BuildPackage.BUILD__DURATION:
+				return duration != DURATION_EDEFAULT;
+			case BuildPackage.BUILD__DISPLAY_NAME:
+				return DISPLAY_NAME_EDEFAULT == null ? displayName != null : !DISPLAY_NAME_EDEFAULT.equals(displayName);
+			case BuildPackage.BUILD__STATE:
+				return STATE_EDEFAULT == null ? state != null : !STATE_EDEFAULT.equals(state);
+			case BuildPackage.BUILD__STATUS:
+				return STATUS_EDEFAULT == null ? status != null : !STATUS_EDEFAULT.equals(status);
+			case BuildPackage.BUILD__ARTIFACTS:
+				return artifacts != null && !artifacts.isEmpty();
+			case BuildPackage.BUILD__CHANGE_SET:
+				return changeSet != null;
+			case BuildPackage.BUILD__PLAN:
+				return plan != null;
+			case BuildPackage.BUILD__LABEL:
+				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+			case BuildPackage.BUILD__SERVER:
+				return server != null;
+			case BuildPackage.BUILD__TEST_RESULT:
+				return testResult != null;
+			case BuildPackage.BUILD__CULPRITS:
+				return culprits != null && !culprits.isEmpty();
+			case BuildPackage.BUILD__SUMMARY:
+				return SUMMARY_EDEFAULT == null ? summary != null : !SUMMARY_EDEFAULT.equals(summary);
+			case BuildPackage.BUILD__CAUSE:
+				return cause != null && !cause.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1055,10 +1079,11 @@ public class Build extends BuildElement implements IBuild {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
 		result.append(", buildNumber: "); //$NON-NLS-1$

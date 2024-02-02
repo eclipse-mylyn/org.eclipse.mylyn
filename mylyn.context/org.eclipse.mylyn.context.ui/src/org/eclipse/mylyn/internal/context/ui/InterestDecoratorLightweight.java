@@ -34,9 +34,9 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 public class InterestDecoratorLightweight implements ILightweightLabelDecorator {
 
 	public InterestDecoratorLightweight() {
-		super();
 	}
 
+	@Override
 	public void decorate(Object element, IDecoration decoration) {
 		if (ContextCore.getContextManager() != null && !ContextCore.getContextManager().isContextActive()) {
 			return;
@@ -59,10 +59,8 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 					decoration.setForegroundColor(ColorMap.RELATIONSHIP);
 				} else if (element instanceof IInteractionElement) {
 					node = (IInteractionElement) element;
-				} else {
-					if (bridge != null && bridge.getContentType() != null) {
-						node = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(element));
-					}
+				} else if (bridge != null && bridge.getContentType() != null) {
+					node = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(element));
 				}
 				if (node != null) {
 					decoration.setForegroundColor(ContextUi.getForeground(node));
@@ -78,18 +76,22 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 		}
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}
 
+	@Override
 	public void dispose() {
 		// don't care when we are disposed
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}

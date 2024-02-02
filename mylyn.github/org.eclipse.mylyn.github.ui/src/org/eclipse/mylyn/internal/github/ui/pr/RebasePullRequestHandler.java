@@ -48,48 +48,41 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
-		if (data == null)
+		if (data == null) {
 			return null;
+		}
 		Job job = new Job(MessageFormat.format(
 				Messages.RebasePullRequestHandler_RebaseJob, data.getTaskId())) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					PullRequestComposite prComp = PullRequestConnector
-							.getPullRequest(data);
-					if (prComp == null)
+					PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
+					if (prComp == null) {
 						return Status.CANCEL_STATUS;
+					}
 					PullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
-					if (repo == null)
+					if (repo == null) {
 						return Status.CANCEL_STATUS;
+					}
 					String branchName = PullRequestUtils.getBranchName(request);
 					try {
 						String target = request.getBase().getRef();
-						Ref targetRef = repo
-								.findRef(request.getBase().getRef());
+						Ref targetRef = repo.findRef(request.getBase().getRef());
 						if (targetRef != null) {
-							SubMonitor progress = SubMonitor.convert(monitor,
-									2);
-							if (!PullRequestUtils.isCurrentBranch(branchName,
-									repo)) {
+							SubMonitor progress = SubMonitor.convert(monitor, 2);
+							if (!PullRequestUtils.isCurrentBranch(branchName, repo)) {
 								progress.subTask(MessageFormat.format(
-										Messages.RebasePullRequestHandler_TaskCheckout,
-										branchName));
-								BranchOperationUI.checkout(repo, branchName)
-										.run(progress.newChild(1));
+										Messages.RebasePullRequestHandler_TaskCheckout, branchName));
+								BranchOperationUI.checkout(repo, branchName).run(progress.newChild(1));
 							}
 							progress.subTask(MessageFormat.format(
-									Messages.RebasePullRequestHandler_TaskRebase,
-									branchName, target));
-							new RebaseOperation(repo, targetRef)
-									.execute(progress.newChild(1));
+									Messages.RebasePullRequestHandler_TaskRebase, branchName, target));
+							new RebaseOperation(repo, targetRef).execute(progress.newChild(1));
 							executeCallback(event);
 						}
-					} catch (IOException e) {
-						GitHubUi.logError(e);
-					} catch (CoreException e) {
+					} catch (IOException | CoreException e) {
 						GitHubUi.logError(e);
 					}
 					return Status.OK_STATUS;

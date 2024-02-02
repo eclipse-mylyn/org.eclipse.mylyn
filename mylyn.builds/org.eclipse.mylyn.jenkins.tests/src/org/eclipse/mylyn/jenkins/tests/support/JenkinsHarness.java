@@ -14,8 +14,6 @@ package org.eclipse.mylyn.jenkins.tests.support;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.concurrent.Callable;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
@@ -149,12 +147,10 @@ public class JenkinsHarness {
 		HudsonModelJob job = getJob(privilegedClient, plan);
 		if (job.getLastCompletedBuild() == null) {
 			privilegedClient.runBuild(job, null, null);
-			job = JenkinsTestUtil.poll(new Callable<HudsonModelJob>() {
-				public HudsonModelJob call() throws Exception {
-					HudsonModelJob job = getJob(privilegedClient, plan);
-					assertNotNull(job.getLastCompletedBuild());
-					return job;
-				}
+			job = JenkinsTestUtil.poll(() -> {
+				HudsonModelJob job1 = getJob(privilegedClient, plan);
+				assertNotNull(job1.getLastCompletedBuild());
+				return job1;
 			});
 		}
 		return job;

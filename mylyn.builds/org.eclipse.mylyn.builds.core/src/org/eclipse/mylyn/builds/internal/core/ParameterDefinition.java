@@ -23,15 +23,13 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getName <em>Name</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getDescription <em>Description</em>}</li>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getContainingBuildPlan <em>Containing Build
- * Plan</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition#getContainingBuildPlan <em>Containing Build Plan</em>}</li>
  * </ul>
  * </p>
  * 
@@ -39,8 +37,7 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  */
 public abstract class ParameterDefinition extends EObjectImpl implements IParameterDefinition {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -49,8 +46,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -59,8 +55,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -69,8 +64,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -84,7 +78,6 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * @generated
 	 */
 	protected ParameterDefinition() {
-		super();
 	}
 
 	/**
@@ -106,6 +99,7 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -115,24 +109,26 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.PARAMETER_DEFINITION__NAME, oldName,
 					name));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -142,27 +138,31 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.PARAMETER_DEFINITION__DESCRIPTION,
 					oldDescription, description));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Containing Build Plan</em>' container reference isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Containing Build Plan</em>' container reference isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildPlan getContainingBuildPlan() {
-		if (eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN)
+		if (eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN) {
 			return null;
+		}
 		return (IBuildPlan) eContainer();
 	}
 
@@ -182,25 +182,31 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setContainingBuildPlan(IBuildPlan newContainingBuildPlan) {
 		if (newContainingBuildPlan != eInternalContainer()
-				|| (eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN
-						&& newContainingBuildPlan != null)) {
-			if (EcoreUtil.isAncestor(this, (EObject) newContainingBuildPlan))
+				|| eContainerFeatureID() != BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN
+						&& newContainingBuildPlan != null) {
+			if (EcoreUtil.isAncestor(this, (EObject) newContainingBuildPlan)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newContainingBuildPlan != null)
+			}
+			if (newContainingBuildPlan != null) {
 				msgs = ((InternalEObject) newContainingBuildPlan).eInverseAdd(this,
 						BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS, IBuildPlan.class, msgs);
+			}
 			msgs = basicSetContainingBuildPlan(newContainingBuildPlan, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN, newContainingBuildPlan,
 					newContainingBuildPlan));
+		}
 	}
 
 	/**
@@ -211,10 +217,11 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetContainingBuildPlan((IBuildPlan) otherEnd, msgs);
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetContainingBuildPlan((IBuildPlan) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -227,8 +234,8 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			return basicSetContainingBuildPlan(null, msgs);
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				return basicSetContainingBuildPlan(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -241,9 +248,9 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			return eInternalContainer().eInverseRemove(this, BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS,
-					IBuildPlan.class, msgs);
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				return eInternalContainer().eInverseRemove(this, BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS,
+						IBuildPlan.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -256,12 +263,12 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__NAME:
-			return getName();
-		case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
-			return getDescription();
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			return getContainingBuildPlan();
+			case BuildPackage.PARAMETER_DEFINITION__NAME:
+				return getName();
+			case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
+				return getDescription();
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				return getContainingBuildPlan();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -274,15 +281,15 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__NAME:
-			setName((String) newValue);
-			return;
-		case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
-			setDescription((String) newValue);
-			return;
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			setContainingBuildPlan((IBuildPlan) newValue);
-			return;
+			case BuildPackage.PARAMETER_DEFINITION__NAME:
+				setName((String) newValue);
+				return;
+			case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
+				setDescription((String) newValue);
+				return;
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				setContainingBuildPlan((IBuildPlan) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -295,15 +302,15 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__NAME:
-			setName(NAME_EDEFAULT);
-			return;
-		case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
-			setDescription(DESCRIPTION_EDEFAULT);
-			return;
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			setContainingBuildPlan((IBuildPlan) null);
-			return;
+			case BuildPackage.PARAMETER_DEFINITION__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
+				setDescription(DESCRIPTION_EDEFAULT);
+				return;
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				setContainingBuildPlan((IBuildPlan) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -316,12 +323,12 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.PARAMETER_DEFINITION__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
-			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-		case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
-			return getContainingBuildPlan() != null;
+			case BuildPackage.PARAMETER_DEFINITION__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case BuildPackage.PARAMETER_DEFINITION__DESCRIPTION:
+				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case BuildPackage.PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN:
+				return getContainingBuildPlan() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -333,10 +340,11 @@ public abstract class ParameterDefinition extends EObjectImpl implements IParame
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", description: "); //$NON-NLS-1$

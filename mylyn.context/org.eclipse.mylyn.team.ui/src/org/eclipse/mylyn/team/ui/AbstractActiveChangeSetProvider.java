@@ -35,16 +35,15 @@ public abstract class AbstractActiveChangeSetProvider {
 	private final ITask noTaskActiveProxy = new LocalTask(HANDLE_NO_TASK, LABEL_NO_TASK);
 
 	/**
-	 * Return the change set collector that manages the active change set for the participant associated with this
-	 * capability. A <code>null</code> is returned if active change sets are not supported. The default is to return
-	 * <code>null</code>. This method must be overridden by subclasses that support active change sets. Note that
-	 * {@link ActiveChangeSetManager} is an internal class of <code>org.eclipse.team.core</code>, but is required for
-	 * change set support (bug 116084). The current implementation will only work if a subtype of
-	 * {@link ActiveChangeSetManager} is returned. In the future, if a change set API becomes available, an additional
+	 * Return the change set collector that manages the active change set for the participant associated with this capability. A
+	 * <code>null</code> is returned if active change sets are not supported. The default is to return <code>null</code>. This method must
+	 * be overridden by subclasses that support active change sets. Note that {@link ActiveChangeSetManager} is an internal class of
+	 * <code>org.eclipse.team.core</code>, but is required for change set support (bug 116084). The current implementation will only work if
+	 * a subtype of {@link ActiveChangeSetManager} is returned. In the future, if a change set API becomes available, an additional
 	 * extensibility mechanism will be provided.
 	 * 
-	 * @return the change set collector that manages the active change set for the participant associated with this
-	 *         capability or <code>null</code> if active change sets are not supported.
+	 * @return the change set collector that manages the active change set for the participant associated with this capability or
+	 *         <code>null</code> if active change sets are not supported.
 	 * @since 3.0
 	 */
 	public ActiveChangeSetManager getActiveChangeSetManager() {
@@ -52,8 +51,8 @@ public abstract class AbstractActiveChangeSetProvider {
 	}
 
 	/**
-	 * Override if a custom change set class is needed, e.g. in order to support custom action and model mappings as is
-	 * the case with the CVS change set implementation used by org.eclipse.mylyn.team.cvs.
+	 * Override if a custom change set class is needed, e.g. in order to support custom action and model mappings as is the case with the
+	 * CVS change set implementation used by org.eclipse.mylyn.team.cvs.
 	 * 
 	 * @since 3.0
 	 */
@@ -72,7 +71,7 @@ public abstract class AbstractActiveChangeSetProvider {
 		if (manager != null) {
 			noTaskSet = manager.getSet(LABEL_NO_TASK);
 			if (noTaskSet == null) {
-				noTaskSet = (ActiveChangeSet) this.createChangeSet(noTaskActiveProxy);
+				noTaskSet = (ActiveChangeSet) createChangeSet(noTaskActiveProxy);
 				manager.add(noTaskSet);
 			}
 

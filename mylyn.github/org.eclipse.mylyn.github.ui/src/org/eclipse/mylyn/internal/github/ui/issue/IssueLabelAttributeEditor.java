@@ -18,11 +18,8 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -67,26 +64,21 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 	private class NewLabelAction extends Action {
 
 		public NewLabelAction() {
-			super(Messages.IssueLabelAttributeEditor_ActionNewLabel,
-					IAction.AS_PUSH_BUTTON);
+			super(Messages.IssueLabelAttributeEditor_ActionNewLabel, IAction.AS_PUSH_BUTTON);
 		}
 
 		@Override
 		public void run() {
 			InputDialog dialog = new InputDialog(getControl().getShell(),
 					Messages.IssueLabelAttributeEditor_TitleNewLabel,
-					Messages.IssueLabelAttributeEditor_DescriptionNewLabel,
-					"", new IInputValidator() { //$NON-NLS-1$
-
-						@Override
-						public String isValid(String newText) {
-							if (newText == null || newText.trim().length() == 0)
-								return Messages.IssueLabelAttributeEditor_MessageEnterName;
-							return null;
+					Messages.IssueLabelAttributeEditor_DescriptionNewLabel, "", newText -> {
+						if (newText == null || newText.trim().length() == 0) {
+							return Messages.IssueLabelAttributeEditor_MessageEnterName;
 						}
+						return null;
 					});
-			if (Window.OK == dialog.open()
-					&& !getTaskAttribute().getValues().contains(
+			if (Window.OK == dialog.open() && !getTaskAttribute().getValues()
+					.contains(
 							dialog.getValue())) {
 				getTaskAttribute().addValue(dialog.getValue());
 				markLabelsChanged();
@@ -101,8 +93,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 		private String label;
 
 		public RemoveLabelAction(String label) {
-			super(Messages.IssueLabelAttributeEditor_ActionRemoveLabel,
-					IAction.AS_PUSH_BUTTON);
+			super(Messages.IssueLabelAttributeEditor_ActionRemoveLabel, IAction.AS_PUSH_BUTTON);
 			this.label = label;
 		}
 
@@ -135,59 +126,57 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	private Composite displayArea;
+
 	private boolean layout = false;
+
 	private Composite labelsArea;
+
 	private List<CLabel> labelControls = new LinkedList<>();
+
 	private FormToolkit toolkit;
 
 	/**
 	 * @param manager
 	 * @param taskAttribute
 	 */
-	public IssueLabelAttributeEditor(TaskDataModel manager,
-			TaskAttribute taskAttribute) {
+	public IssueLabelAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 	}
 
 	private void refreshLabels() {
-		for (CLabel labelControl : this.labelControls)
+		for (CLabel labelControl : labelControls) {
 			labelControl.dispose();
-		this.labelControls.clear();
+		}
+		labelControls.clear();
 
-		Image labelImage = GitHubImages
-				.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
-		List<String> labels = new LinkedList<>(getTaskAttribute()
-				.getValues());
+		Image labelImage = GitHubImages.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
+		List<String> labels = new LinkedList<>(getTaskAttribute().getValues());
 		Collections.sort(labels, String.CASE_INSENSITIVE_ORDER);
-		if (!labels.isEmpty())
+		if (!labels.isEmpty()) {
 			for (final String label : labels) {
 				CLabel cLabel = new CLabel(labelsArea, SWT.NONE);
 				MenuManager manager = new MenuManager();
 				manager.setRemoveAllWhenShown(true);
-				manager.addMenuListener(new IMenuListener() {
-
-					@Override
-					public void menuAboutToShow(IMenuManager manager) {
-						manager.add(new RemoveLabelAction(label));
-					}
-				});
+				manager.addMenuListener(manager1 -> manager1.add(new RemoveLabelAction(label)));
 				Menu menu = manager.createContextMenu(cLabel);
 				cLabel.setMenu(menu);
-				String shortened = TaskDiffUtil.shortenText(displayArea, label,
-						LABEL_WIDTH);
+				String shortened = TaskDiffUtil.shortenText(displayArea, label, LABEL_WIDTH);
 				cLabel.setImage(labelImage);
 				cLabel.setText(shortened);
 				cLabel.setForeground(toolkit.getColors().getForeground());
-				if (!shortened.equals(label))
+				if (!shortened.equals(label)) {
 					cLabel.setToolTipText(label);
-				this.labelControls.add(cLabel);
+				}
+				labelControls.add(cLabel);
 			}
-		else
-			this.labelControls.add(new CLabel(labelsArea, SWT.NONE));
+		} else {
+			labelControls.add(new CLabel(labelsArea, SWT.NONE));
+		}
 
-		if (this.layout)
+		if (layout) {
 			displayArea.getParent().getParent().layout(true, true);
+		}
 	}
 
 	private void markLabelsChanged() {
@@ -214,19 +203,15 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 
 		MenuManager manager = new MenuManager();
 		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(new IMenuListener() {
-
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(new NewLabelAction());
-				manager.add(new Separator());
-				List<String> labels = new LinkedList<>(getTaskAttribute()
-						.getOptions().values());
-				labels.removeAll(getTaskAttribute().getValues());
-				for (String label : labels)
-					manager.add(new LabelAction(label));
-				manager.update();
+		manager.addMenuListener(manager1 -> {
+			manager1.add(new NewLabelAction());
+			manager1.add(new Separator());
+			List<String> labels = new LinkedList<>(getTaskAttribute().getOptions().values());
+			labels.removeAll(getTaskAttribute().getValues());
+			for (String label : labels) {
+				manager1.add(new LabelAction(label));
 			}
+			manager1.update();
 		});
 		final Menu menu = manager.createContextMenu(displayArea);
 		addItem.addSelectionListener(new SelectionAdapter() {
@@ -234,8 +219,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Rectangle toolItemBounds = addItem.getBounds();
-				Point location = toolbar.toDisplay(toolItemBounds.x,
-						toolItemBounds.y + toolItemBounds.height);
+				Point location = toolbar.toDisplay(toolItemBounds.x, toolItemBounds.y + toolItemBounds.height);
 				menu.setLocation(location);
 				menu.setVisible(true);
 			}
@@ -245,8 +229,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 		labelsArea = toolkit.createComposite(displayArea);
 		labelsArea.setBackgroundMode(SWT.INHERIT_FORCE);
 		labelsArea.setBackground(null);
-		GridLayoutFactory.fillDefaults().numColumns(LABEL_COLUMNS)
-				.applyTo(labelsArea);
+		GridLayoutFactory.fillDefaults().numColumns(LABEL_COLUMNS).applyTo(labelsArea);
 		GridDataFactory.swtDefaults().grab(true, true).applyTo(labelsArea);
 		refreshLabels();
 		setControl(displayArea);

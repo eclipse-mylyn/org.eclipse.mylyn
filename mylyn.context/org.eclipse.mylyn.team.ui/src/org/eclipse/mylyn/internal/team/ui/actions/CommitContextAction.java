@@ -22,10 +22,12 @@ import org.eclipse.ui.IViewPart;
  */
 public class CommitContextAction implements IViewActionDelegate {
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void run(IAction action) {
 //		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 //		// TODO: consider corresponding tasks to change set managers to avoid iteration
@@ -45,10 +47,11 @@ public class CommitContextAction implements IViewActionDelegate {
 //				}
 //			} catch (Exception e) {
 //				StatusHandler.fail(e, "Could not commit context.", false);
-//			}	
+//			}
 //		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}

@@ -136,22 +136,13 @@ public class TaskEditorRestoreTest extends TestCase {
 	}
 
 	private void assertOnlyTask1IsOpen() {
-		Set<String> editorSummaries = getOpenEditorsByType(TaskEditor.class, new Function<TaskEditor, String>() {
-			@Override
-			public String apply(TaskEditor editor) {
-				return editor.getTaskEditorInput().getTask().getSummary();
-			}
-		});
+		Set<String> editorSummaries = getOpenEditorsByType(TaskEditor.class,
+				editor -> editor.getTaskEditorInput().getTask().getSummary());
 		assertEquals(Set.of(task1.getSummary()), editorSummaries);
 	}
 
 	private void assertFilesAreOpen() {
-		Set<String> editorTitles = getOpenEditorsByType(TextEditor.class, new Function<TextEditor, String>() {
-			@Override
-			public String apply(TextEditor editor) {
-				return editor.getTitle();
-			}
-		});
+		Set<String> editorTitles = getOpenEditorsByType(TextEditor.class, TextEditor::getTitle);
 		assertEquals(Set.of(fileA.getName(), fileB.getName()), editorTitles);
 	}
 

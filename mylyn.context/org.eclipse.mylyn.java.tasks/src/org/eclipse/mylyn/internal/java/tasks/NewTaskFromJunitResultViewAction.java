@@ -40,6 +40,7 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 
 	private TestCaseElement testCaseElement;
 
+	@Override
 	public void run(IAction action) {
 		run();
 	}
@@ -72,19 +73,21 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 		TasksUiUtil.openNewTaskEditor(shell, taskMapping, null);
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		// ignore		
+		// ignore
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// ignore
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		traceString = null;
 		testCaseElement = null;
-		if (selection instanceof TreeSelection) {
-			TreeSelection t = (TreeSelection) selection;
+		if (selection instanceof TreeSelection t) {
 			TestElement testElement = (TestElement) t.getFirstElement();
 			if (testElement instanceof TestCaseElement) {
 				testCaseElement = (TestCaseElement) testElement;

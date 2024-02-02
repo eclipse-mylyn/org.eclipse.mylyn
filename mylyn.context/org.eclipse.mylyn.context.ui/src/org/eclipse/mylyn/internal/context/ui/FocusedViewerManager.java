@@ -52,20 +52,20 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FocusedViewerManager extends AbstractContextListener implements ISelectionListener {
 
-	private final CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
+	private final CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<>();
 
-	private final CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<StructuredViewer>();
+	private final CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<>();
 
-	private final Map<StructuredViewer, AbstractFocusViewAction> focusActions = new HashMap<StructuredViewer, AbstractFocusViewAction>();
+	private final Map<StructuredViewer, AbstractFocusViewAction> focusActions = new HashMap<>();
 
-	private final Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	private final Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<>();
 
-	private final Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<IWorkbenchPart, StructuredViewer>();
+	private final Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<>();
 
-	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> fullRefreshJobs = new HashMap<StructuredViewer, FocusedViewerDelayedRefreshJob>();
+	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> fullRefreshJobs = new HashMap<>();
 
 	// TODO: consider merging in order to discard minors when majors come in, see bug 209846
-	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> minorRefreshJobs = new HashMap<StructuredViewer, FocusedViewerDelayedRefreshJob>();
+	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> minorRefreshJobs = new HashMap<>();
 
 	private class FocusedViewerDelayedRefreshJob extends DelayedRefreshJob {
 
@@ -86,58 +86,52 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 					return;
 				} else if (viewer.getControl().isDisposed()) {
 					managedViewers.remove(viewer);
-				} else {
-					if (items == null || items.length == 0) {
-						if (!minor) {
-							viewer.refresh(false);
-							if (updateExpansion) {
-								FocusedViewerManager.this.updateExpansionState(viewer, null);
-							}
-						} else {
-							try {
-								viewer.getControl().setRedraw(false);
-								viewer.refresh(true);
-								if (updateExpansion) {
-									FocusedViewerManager.this.updateExpansionState(viewer, null);
-								}
-							} finally {
-								viewer.getControl().setRedraw(true);
-							}
+				} else if (items == null || items.length == 0) {
+					if (!minor) {
+						viewer.refresh(false);
+						if (updateExpansion) {
+							updateExpansionState(viewer, null);
 						}
 					} else {
-						if (filteredViewers.contains(viewer)) {
-							try {
-								viewer.getControl().setRedraw(false);
-								viewer.refresh(minor);
-								if (updateExpansion) {
-									FocusedViewerManager.this.updateExpansionState(viewer, null);
-								}
-							} finally {
-								viewer.getControl().setRedraw(true);
+						try {
+							viewer.getControl().setRedraw(false);
+							viewer.refresh(true);
+							if (updateExpansion) {
+								updateExpansionState(viewer, null);
 							}
-						} else { // don't need to worry about content changes
-							try {
-								viewer.getControl().setRedraw(false);
-								for (Object item : items) {
-									Object objectToRefresh = item;
-									if (item instanceof IInteractionElement) {
-										IInteractionElement node = (IInteractionElement) item;
-										AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
-												.getStructureBridge(node.getContentType());
-										objectToRefresh = structureBridge
-												.getObjectForHandle(node.getHandleIdentifier());
-									}
-									if (objectToRefresh != null) {
-										viewer.update(objectToRefresh, null);
-										if (updateExpansion) {
-											FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
-										}
-									}
+						} finally {
+							viewer.getControl().setRedraw(true);
+						}
+					}
+				} else if (filteredViewers.contains(viewer)) {
+					try {
+						viewer.getControl().setRedraw(false);
+						viewer.refresh(minor);
+						if (updateExpansion) {
+							updateExpansionState(viewer, null);
+						}
+					} finally {
+						viewer.getControl().setRedraw(true);
+					}
+				} else { // don't need to worry about content changes
+					try {
+						viewer.getControl().setRedraw(false);
+						for (Object item : items) {
+							Object objectToRefresh = item;
+							if (item instanceof IInteractionElement node) {
+								AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+										.getStructureBridge(node.getContentType());
+								objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+							}
+							if (objectToRefresh != null) {
+								viewer.update(objectToRefresh, null);
+								if (updateExpansion) {
+									updateExpansionState(viewer, objectToRefresh);
 								}
-							} finally {
-								viewer.getControl().setRedraw(true);
 							}
 						}
+					} finally {
+						viewer.getControl().setRedraw(true);
 					}
 				}
 			} finally {
@@ -173,6 +167,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 //		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// ignore
 	}
@@ -201,12 +196,10 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 	}
 
-	private final Map<TreeViewer, FilteredChildrenDecorationDrawer> decorationMap = new HashMap<TreeViewer, FilteredChildrenDecorationDrawer>();
+	private final Map<TreeViewer, FilteredChildrenDecorationDrawer> decorationMap = new HashMap<>();
 
 	private void removeFilterDecorations(StructuredViewer viewer) {
-		if (viewer instanceof TreeViewer) {
-			TreeViewer treeViewer = (TreeViewer) viewer;
-
+		if (viewer instanceof TreeViewer treeViewer) {
 			FilteredChildrenDecorationDrawer filterViewDrawer = decorationMap.remove(treeViewer);
 			if (filterViewDrawer != null) {
 				filterViewDrawer.dispose();
@@ -215,8 +208,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	private void addFilterDecorations(StructuredViewer viewer, BrowseFilteredListener listener) {
-		if (viewer instanceof TreeViewer) {
-			TreeViewer treeViewer = (TreeViewer) viewer;
+		if (viewer instanceof TreeViewer treeViewer) {
 			FilteredChildrenDecorationDrawer filteredViewDrawer = new FilteredChildrenDecorationDrawer(treeViewer,
 					listener);
 			if (filteredViewDrawer.applyToTreeViewer()) {
@@ -264,63 +256,63 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-			refreshViewers();
-			break;
-		case DEACTIVATED:
-			refreshViewers();
-			for (StructuredViewer structuredViewer : managedViewers) {
-				if (structuredViewer instanceof TreeViewer) {
-					((TreeViewer) structuredViewer).collapseAll();
-				}
-			}
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
-				// ensure we dont refresh the viewers if a context other than the active one is deleted or cleared
-				// bug #265688
+			case ACTIVATED:
+				refreshViewers();
+				break;
+			case DEACTIVATED:
 				refreshViewers();
 				for (StructuredViewer structuredViewer : managedViewers) {
 					if (structuredViewer instanceof TreeViewer) {
 						((TreeViewer) structuredViewer).collapseAll();
 					}
 				}
-			}
-			break;
-		case INTEREST_CHANGED:
-			if (event.isActiveContext()) {
-				refreshViewers(event.getElements(), false, true);
-			}
-			break;
-		case LANDMARKS_ADDED:
-			if (event.isActiveContext()) {
-				refreshViewers(event.getElements(), true, false);
-			}
-			break;
-		case LANDMARKS_REMOVED:
-			if (event.isActiveContext()) {
-				refreshViewers(event.getElements(), true, false);
-			}
-			break;
-		case ELEMENTS_DELETED:
-			if (event.isActiveContext()) {
-				/*
-				 * TODO: consider making this work per-element and parent
-				 * Should we collect all parents before calling refresh?
-				 */
-				ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
-				for (IInteractionElement interactionElement : event.getElements()) {
-					AbstractContextStructureBridge structureBridge = ContextCore
-							.getStructureBridge(interactionElement.getContentType());
-					IInteractionElement parent = ContextCore.getContextManager()
-							.getElement(structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
-					if (parent != null) {
-						toRefresh.add(parent);
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					// ensure we dont refresh the viewers if a context other than the active one is deleted or cleared
+					// bug #265688
+					refreshViewers();
+					for (StructuredViewer structuredViewer : managedViewers) {
+						if (structuredViewer instanceof TreeViewer) {
+							((TreeViewer) structuredViewer).collapseAll();
+						}
 					}
 				}
-				refreshViewers(toRefresh, false, false);
-			}
-			break;
+				break;
+			case INTEREST_CHANGED:
+				if (event.isActiveContext()) {
+					refreshViewers(event.getElements(), false, true);
+				}
+				break;
+			case LANDMARKS_ADDED:
+				if (event.isActiveContext()) {
+					refreshViewers(event.getElements(), true, false);
+				}
+				break;
+			case LANDMARKS_REMOVED:
+				if (event.isActiveContext()) {
+					refreshViewers(event.getElements(), true, false);
+				}
+				break;
+			case ELEMENTS_DELETED:
+				if (event.isActiveContext()) {
+					/*
+					 * TODO: consider making this work per-element and parent
+					 * Should we collect all parents before calling refresh?
+					 */
+					ArrayList<IInteractionElement> toRefresh = new ArrayList<>();
+					for (IInteractionElement interactionElement : event.getElements()) {
+						AbstractContextStructureBridge structureBridge = ContextCore
+								.getStructureBridge(interactionElement.getContentType());
+						IInteractionElement parent = ContextCore.getContextManager()
+								.getElement(structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
+						if (parent != null) {
+							toRefresh.add(parent);
+						}
+					}
+					refreshViewers(toRefresh, false, false);
+				}
+				break;
 		}
 	}
 
@@ -335,7 +327,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	protected void refreshViewers(IInteractionElement node, boolean updateLabels, boolean updateExpansion) {
-		List<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
+		List<IInteractionElement> toRefresh = new ArrayList<>();
 		toRefresh.add(node);
 		refreshViewers(toRefresh, updateLabels, updateExpansion);
 	}
@@ -353,13 +345,11 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 
 		if (syncRefreshMode) {
-			internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels, updateExpansion);
+			internalRefresh(new HashSet<>(nodesToRefresh), updateLabels, updateExpansion);
 		} else {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels, updateExpansion);
-				}
-			});
+			PlatformUI.getWorkbench()
+					.getDisplay()
+					.asyncExec(() -> internalRefresh(new HashSet<>(nodesToRefresh), updateLabels, updateExpansion));
 		}
 	}
 
@@ -399,12 +389,11 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	}
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
-		if (viewer instanceof TreeViewer && filteredViewers.contains(viewer) && hasInterestFilter(viewer, true)
+		if (viewer instanceof TreeViewer treeViewer && filteredViewers.contains(viewer)
+				&& hasInterestFilter(viewer, true)
 				&& ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
-			TreeViewer treeViewer = (TreeViewer) viewer;
-
 			// HACK to fix bug 278569: [context] errors with Markers view and active Mylyn task
 			if ("org.eclipse.ui.internal.views.markers.MarkersTreeViewer".equals(treeViewer.getClass() //$NON-NLS-1$
 					.getCanonicalName())) {

@@ -40,7 +40,7 @@ public class JenkinsStartup extends BuildsUiStartup {
 			discovery = new JenkinsDiscovery();
 			discovery.start();
 		} catch (LinkageError e) {
-			// occurs when the optional ECF dependency is not satisfied 
+			// occurs when the optional ECF dependency is not satisfied
 			discovery = null;
 		}
 	}

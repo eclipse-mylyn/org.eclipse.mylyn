@@ -37,7 +37,7 @@ public abstract class AbstractJavaContextComputationStrategy extends ContextComp
 			qualifications = null;
 			simpleName = typeName;
 		}
-		char[][] typeNames = new char[][] { simpleName.toCharArray() };
+		char[][] typeNames = { simpleName.toCharArray() };
 
 		class ResultException extends RuntimeException {
 			private static final long serialVersionUID = 1L;

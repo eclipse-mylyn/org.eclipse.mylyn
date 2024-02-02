@@ -26,12 +26,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewTaskFromBuildHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof IBuildPlan) {
-				IBuildPlan plan = (IBuildPlan) element;
+			if (element instanceof IBuildPlan plan) {
 				if (plan.getLastBuild() != null) {
 					return NewTaskFromBuildAction.createTask(plan.getLastBuild());
 				}

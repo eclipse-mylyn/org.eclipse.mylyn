@@ -15,7 +15,6 @@ package org.eclipse.mylyn.jenkins.tests.client;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
@@ -25,8 +24,8 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsResourceNotFoundException;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo;
-import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo.Type;
+import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient.BuildId;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
@@ -174,11 +173,9 @@ public class JenkinsClientTest extends TestCase {
 		ensureHasRunOnce(client, jobName, HudsonModelBallColor.RED);
 
 		runBuild(client, jobName);
-		JenkinsTestUtil.poll(new Callable<Object>() {
-			public Object call() throws Exception {
-				assertEquals(HudsonModelBallColor.RED_ANIME, harness.getJob(jobName).getColor());
-				return null;
-			}
+		JenkinsTestUtil.poll(() -> {
+			assertEquals(HudsonModelBallColor.RED_ANIME, harness.getJob(jobName).getColor());
+			return null;
 		});
 	}
 
@@ -186,11 +183,9 @@ public class JenkinsClientTest extends TestCase {
 			final HudsonModelBallColor expectedColor) throws Exception {
 		if (!expectedColor.equals(harness.getJob(jobName).getColor())) {
 			client.runBuild(harness.getJob(jobName), null, null);
-			JenkinsTestUtil.poll(new Callable<Object>() {
-				public Object call() throws Exception {
-					assertEquals(expectedColor, harness.getJob(jobName).getColor());
-					return null;
-				}
+			JenkinsTestUtil.poll(() -> {
+				assertEquals(expectedColor, harness.getJob(jobName).getColor());
+				return null;
 			});
 		}
 	}
@@ -206,11 +201,9 @@ public class JenkinsClientTest extends TestCase {
 		ensureHasRunOnce(client, jobName, harness.getSuccessColor());
 
 		runBuild(client, jobName);
-		JenkinsTestUtil.poll(new Callable<Object>() {
-			public Object call() throws Exception {
-				assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
-				return null;
-			}
+		JenkinsTestUtil.poll(() -> {
+			assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
+			return null;
 		});
 	}
 
@@ -234,20 +227,16 @@ public class JenkinsClientTest extends TestCase {
 		RestfulJenkinsClient client = harness.connect();
 
 		runBuild(client, jobName);
-		JenkinsTestUtil.poll(new Callable<Object>() {
-			public Object call() throws Exception {
-				HudsonModelRun run = harness.getJob(jobName).getLastBuild();
-				HudsonModelBuild build = harness.getBuild(jobName, run.getNumber());
-				assertTrue(build.isBuilding());
-				return null;
-			}
+		JenkinsTestUtil.poll(() -> {
+			HudsonModelRun run = harness.getJob(jobName).getLastBuild();
+			HudsonModelBuild build = harness.getBuild(jobName, run.getNumber());
+			assertTrue(build.isBuilding());
+			return null;
 		});
 		abortBuild(client, jobName);
-		JenkinsTestUtil.poll(new Callable<Object>() {
-			public Object call() throws Exception {
-				assertEquals(harness.getAbortedColor(), harness.getJob(jobName).getColor());
-				return null;
-			}
+		JenkinsTestUtil.poll(() -> {
+			assertEquals(harness.getAbortedColor(), harness.getJob(jobName).getColor());
+			return null;
 		});
 	}
 
@@ -287,11 +276,9 @@ public class JenkinsClientTest extends TestCase {
 		ensureHasRunOnce(client, jobName, harness.getSuccessAnimeColor());
 
 		client.runBuild(harness.getJob(jobName), null, null);
-		JenkinsTestUtil.poll(new Callable<Object>() {
-			public Object call() throws Exception {
-				assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
-				return null;
-			}
+		JenkinsTestUtil.poll(() -> {
+			assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
+			return null;
 		});
 	}
 }

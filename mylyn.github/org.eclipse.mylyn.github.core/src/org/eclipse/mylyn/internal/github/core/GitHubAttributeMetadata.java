@@ -21,10 +21,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 public class GitHubAttributeMetadata {
 
 	private String id;
+
 	private String label;
+
 	private String type;
+
 	private String kind;
+
 	private boolean readOnly;
+
 	private boolean initTask;
 
 	/**
@@ -35,8 +40,7 @@ public class GitHubAttributeMetadata {
 	 * @param type
 	 * @param readOnly
 	 */
-	public GitHubAttributeMetadata(final String id, final String label,
-			final String type, final boolean readOnly) {
+	public GitHubAttributeMetadata(final String id, final String label, final String type, final boolean readOnly) {
 		this(id, label, type, readOnly, false);
 	}
 
@@ -49,8 +53,8 @@ public class GitHubAttributeMetadata {
 	 * @param readOnly
 	 * @param initTask
 	 */
-	public GitHubAttributeMetadata(final String id, final String label,
-			final String type, final boolean readOnly, boolean initTask) {
+	public GitHubAttributeMetadata(final String id, final String label, final String type, final boolean readOnly,
+			boolean initTask) {
 		this(id, label, TaskAttribute.KIND_DEFAULT, type, readOnly, initTask);
 	}
 
@@ -64,9 +68,8 @@ public class GitHubAttributeMetadata {
 	 * @param readOnly
 	 * @param initTask
 	 */
-	public GitHubAttributeMetadata(final String id, final String label,
-			final String kind, final String type, final boolean readOnly,
-			boolean initTask) {
+	public GitHubAttributeMetadata(final String id, final String label, final String kind, final String type,
+			final boolean readOnly, boolean initTask) {
 		this.id = id;
 		this.label = label;
 		this.kind = kind;
@@ -135,14 +138,12 @@ public class GitHubAttributeMetadata {
 	 */
 	public TaskAttribute create(final TaskAttribute parent) {
 		final TaskAttribute attribute = new TaskAttribute(parent, id);
-		attribute.getMetaData().defaults().setLabel(label).setType(type)
-				.setKind(kind).setReadOnly(readOnly);
+		attribute.getMetaData().defaults().setLabel(label).setType(type).setKind(kind).setReadOnly(readOnly);
 		return attribute;
 	}
 
 	/**
-	 * Get value of this attribute from the task attribute under the root of the
-	 * given {@link TaskData}.
+	 * Get value of this attribute from the task attribute under the root of the given {@link TaskData}.
 	 *
 	 * @param data
 	 * @return value
@@ -150,13 +151,11 @@ public class GitHubAttributeMetadata {
 	public String getValue(TaskData data) {
 		TaskAttribute root = data.getRoot();
 		TaskAttribute attribute = root.getAttribute(id);
-		return attribute != null ? data.getAttributeMapper()
-				.getValue(attribute) : ""; //$NON-NLS-1$
+		return attribute != null ? data.getAttributeMapper().getValue(attribute) : ""; //$NON-NLS-1$
 	}
 
 	/**
-	 * Set the value of this attribute in the task attribute under the root of
-	 * the given {@link TaskData}.
+	 * Set the value of this attribute in the task attribute under the root of the given {@link TaskData}.
 	 *
 	 * @param data
 	 * @param value
@@ -164,8 +163,8 @@ public class GitHubAttributeMetadata {
 	public void setValue(TaskData data, String value) {
 		TaskAttribute root = data.getRoot();
 		TaskAttribute attribute = root.getAttribute(id);
-		if (attribute != null)
-			data.getAttributeMapper().setValue(attribute,
-					value == null ? "" : value); //$NON-NLS-1$
+		if (attribute != null) {
+			data.getAttributeMapper().setValue(attribute, value == null ? "" : value); //$NON-NLS-1$
+		}
 	}
 }

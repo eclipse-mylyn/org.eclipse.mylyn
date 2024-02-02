@@ -35,8 +35,9 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 
 	private boolean gathered = false;
 
+	@Override
 	public void searchCompleted(List<?> l) {
-		List<Object> accepted = new ArrayList<Object>(l.size());
+		List<Object> accepted = new ArrayList<>(l.size());
 		if (prov != null) {
 			for (Object o : l) {
 				if (prov.acceptResultElement(o)) {
@@ -50,6 +51,7 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 		gathered = true;
 	}
 
+	@Override
 	public boolean resultsGathered() {
 		return gathered;
 	}

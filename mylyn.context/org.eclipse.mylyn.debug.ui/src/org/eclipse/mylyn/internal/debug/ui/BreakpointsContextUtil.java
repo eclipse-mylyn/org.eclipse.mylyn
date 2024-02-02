@@ -58,7 +58,7 @@ public class BreakpointsContextUtil {
 		InputStream stream = ContextCore.getContextManager()
 				.getAdditionalContextData(context, DebugUiPlugin.CONTRIBUTOR_ID);
 		if (stream == null) {
-			return new ArrayList<IBreakpoint>();
+			return new ArrayList<>();
 		}
 		return importBreakpoints(stream, progressMonitor);
 	}
@@ -73,12 +73,12 @@ public class BreakpointsContextUtil {
 				new StringBuffer(breakpoints), true, false);
 		try {
 			importBreakpointOperation.run(progressMonitor);
-			return new ArrayList<IBreakpoint>(Arrays.asList(importBreakpointOperation.getImportedBreakpoints()));
+			return new ArrayList<>(Arrays.asList(importBreakpointOperation.getImportedBreakpoints()));
 		} catch (InvocationTargetException e) {
 			StatusHandler.log(
 					new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, "Could not import context breakpoints", e));//$NON-NLS-1$
 		}
-		return new ArrayList<IBreakpoint>();
+		return new ArrayList<>();
 	}
 
 	public static void removeBreakpoints(Collection<IBreakpoint> breakpoints) {

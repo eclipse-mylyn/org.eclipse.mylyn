@@ -19,13 +19,11 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan
- * Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition#getBuildPlan <em>Build Plan</em>}</li>
  * </ul>
  * </p>
@@ -34,8 +32,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  */
 public class BuildParameterDefinition extends ParameterDefinition implements IBuildParameterDefinition {
 	/**
-	 * The default value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildPlanId()
 	 * @generated
@@ -44,8 +41,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	protected static final String BUILD_PLAN_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildPlanId()
 	 * @generated
@@ -59,7 +55,6 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * @generated
 	 */
 	protected BuildParameterDefinition() {
-		super();
 	}
 
 	/**
@@ -75,13 +70,13 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Plan Id</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Build Plan Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getBuildPlanId() {
 		return buildPlanId;
 	}
@@ -91,24 +86,26 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBuildPlanId(String newBuildPlanId) {
 		String oldBuildPlanId = buildPlanId;
 		buildPlanId = newBuildPlanId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID, oldBuildPlanId, buildPlanId));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Plan</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Build Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildPlan getBuildPlan() {
 		IBuildPlan buildPlan = basicGetBuildPlan();
 		return buildPlan != null && ((EObject) buildPlan).eIsProxy()
@@ -154,12 +151,13 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
-			return getBuildPlanId();
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN:
-			if (resolve)
-				return getBuildPlan();
-			return basicGetBuildPlan();
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
+				return getBuildPlanId();
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN:
+				if (resolve) {
+					return getBuildPlan();
+				}
+				return basicGetBuildPlan();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -172,9 +170,9 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
-			setBuildPlanId((String) newValue);
-			return;
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
+				setBuildPlanId((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -187,9 +185,9 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
-			setBuildPlanId(BUILD_PLAN_ID_EDEFAULT);
-			return;
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
+				setBuildPlanId(BUILD_PLAN_ID_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -202,10 +200,12 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
-			return BUILD_PLAN_ID_EDEFAULT == null ? buildPlanId != null : !BUILD_PLAN_ID_EDEFAULT.equals(buildPlanId);
-		case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN:
-			return basicGetBuildPlan() != null;
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID:
+				return BUILD_PLAN_ID_EDEFAULT == null
+						? buildPlanId != null
+						: !BUILD_PLAN_ID_EDEFAULT.equals(buildPlanId);
+			case BuildPackage.BUILD_PARAMETER_DEFINITION__BUILD_PLAN:
+				return basicGetBuildPlan() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -217,10 +217,11 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (buildPlanId: "); //$NON-NLS-1$
 		result.append(buildPlanId);
 		result.append(')');

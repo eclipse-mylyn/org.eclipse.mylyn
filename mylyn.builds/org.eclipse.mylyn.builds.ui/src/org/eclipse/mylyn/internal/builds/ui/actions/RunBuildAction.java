@@ -46,14 +46,13 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return (selection.getFirstElement() instanceof IBuildPlan);
+		return selection.getFirstElement() instanceof IBuildPlan;
 	}
 
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
-		if (selection instanceof IBuildPlan) {
-			final IBuildPlan plan = (IBuildPlan) selection;
+		if (selection instanceof final IBuildPlan plan) {
 			askParametersAndRunBuild(plan);
 		}
 	}
@@ -78,11 +77,7 @@ public class RunBuildAction extends BaseSelectionListenerAction {
 			@Override
 			public void done(OperationChangeEvent event) {
 				if (event.getStatus().isOK()) {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							BuildsUiInternal.getFactory().getRefreshOperation(plan).execute();
-						}
-					});
+					Display.getDefault().asyncExec(() -> BuildsUiInternal.getFactory().getRefreshOperation(plan).execute());
 				}
 			}
 		});

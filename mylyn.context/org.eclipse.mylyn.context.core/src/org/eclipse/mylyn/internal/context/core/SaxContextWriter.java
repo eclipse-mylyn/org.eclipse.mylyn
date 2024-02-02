@@ -49,10 +49,12 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 	private OutputStream outputStream;
 
+	@Override
 	public void setOutputStream(OutputStream outputStream) {
 		this.outputStream = outputStream;
 	}
 
+	@Override
 	public void writeContextToStream(IInteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set"); //$NON-NLS-1$
@@ -78,7 +80,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 
 		public IInteractionContext getContext() {
-			return this.context;
+			return context;
 		}
 
 	}
@@ -89,53 +91,66 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 		private ErrorHandler errorHandler;
 
+		@Override
 		public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return false;
 		}
 
+		@Override
 		public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
 
 		}
 
+		@Override
 		public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 			return null;
 		}
 
+		@Override
 		public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		}
 
+		@Override
 		public void setEntityResolver(EntityResolver resolver) {
 		}
 
+		@Override
 		public EntityResolver getEntityResolver() {
 			return null;
 		}
 
+		@Override
 		public void setDTDHandler(DTDHandler handler) {
 		}
 
+		@Override
 		public DTDHandler getDTDHandler() {
 			return null;
 		}
 
+		@Override
 		public void setContentHandler(ContentHandler handler) {
 			this.handler = handler;
 
 		}
 
+		@Override
 		public ContentHandler getContentHandler() {
 			return handler;
 		}
 
+		@Override
 		public void setErrorHandler(ErrorHandler handler) {
-			this.errorHandler = handler;
+			errorHandler = handler;
 
 		}
 
+		@Override
 		public ErrorHandler getErrorHandler() {
 			return errorHandler;
 		}
 
+		@Override
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof InteractionContextInputSource)) {
 				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
@@ -170,6 +185,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 			handler.endDocument();
 		}
 
+		@Override
 		public void parse(String systemId) throws IOException, SAXException {
 			throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 		}

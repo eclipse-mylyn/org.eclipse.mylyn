@@ -28,15 +28,14 @@ public class ToggleFocusActiveViewHandler extends AbstractHandler {
 
 	private AbstractFocusViewAction focusAction;
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Object returnValue = false;
 
 		final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		final IWorkbenchPart activePart = activePage.getActivePart();
 
-		if (activePart instanceof IViewPart) {
-			final IViewPart viewPart = (IViewPart) activePart;
-
+		if (activePart instanceof final IViewPart viewPart) {
 			focusAction = AbstractFocusViewAction.getActionForPart(viewPart);
 
 			if (focusAction != null) {

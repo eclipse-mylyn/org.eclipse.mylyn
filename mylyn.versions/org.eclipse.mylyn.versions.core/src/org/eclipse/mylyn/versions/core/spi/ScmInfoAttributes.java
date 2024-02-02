@@ -26,6 +26,6 @@ public interface ScmInfoAttributes {
 	 * 
 	 * @return
 	 */
-	public Map<String, String> getInfoAtrributes();
+	Map<String, String> getInfoAtrributes();
 
 }

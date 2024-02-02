@@ -36,7 +36,7 @@ public class CompoundContextComputationStrategy extends ContextComputationStrate
 		if (delegates == null || delegates.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<Object> objects = new ArrayList<Object>();
+		List<Object> objects = new ArrayList<>();
 
 		SubMonitor progress = SubMonitor.convert(monitor);
 		int workPerDelegate = 1000;
