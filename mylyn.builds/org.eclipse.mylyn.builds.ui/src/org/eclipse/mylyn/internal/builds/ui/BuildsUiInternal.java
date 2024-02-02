@@ -56,49 +56,50 @@ public class BuildsUiInternal {
 
 		private volatile IBuildModelRealm realm;
 
+		@Override
 		public IBuildModelRealm getRealm() {
 			if (realm == null) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						realm = new IBuildModelRealm() {
+				Display.getDefault().syncExec(() -> realm = new IBuildModelRealm() {
 
-							Display display = Display.getDefault();
+					Display display = Display.getDefault();
 
-							public void asyncExec(Runnable runnable) {
-								checkDisplay();
-								display.asyncExec(runnable);
-							}
+					@Override
+					public void asyncExec(Runnable runnable) {
+						checkDisplay();
+						display.asyncExec(runnable);
+					}
 
-							public void exec(Runnable runnable) {
-								checkDisplay();
-								if (Display.getCurrent() != null) {
-									runnable.run();
-								} else {
-									display.asyncExec(runnable);
-								}
-							}
+					@Override
+					public void exec(Runnable runnable) {
+						checkDisplay();
+						if (Display.getCurrent() != null) {
+							runnable.run();
+						} else {
+							display.asyncExec(runnable);
+						}
+					}
 
-							public void syncExec(Runnable runnable) {
-								checkDisplay();
-								if (Display.getCurrent() != null) {
-									runnable.run();
-								} else {
-									display.syncExec(runnable);
-								}
-							}
+					@Override
+					public void syncExec(Runnable runnable) {
+						checkDisplay();
+						if (Display.getCurrent() != null) {
+							runnable.run();
+						} else {
+							display.syncExec(runnable);
+						}
+					}
 
-							protected void checkDisplay() {
-								if (display.isDisposed()) {
-									throw new OperationCanceledException();
-								}
-							}
-						};
+					protected void checkDisplay() {
+						if (display.isDisposed()) {
+							throw new OperationCanceledException();
+						}
 					}
 				});
 			}
 			return realm;
 		}
 
+		@Override
 		public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
@@ -115,15 +116,7 @@ public class BuildsUiInternal {
 			BuildServerBehaviour behaviour;
 			try {
 				behaviour = connector.getBehaviour(server.getLocation());
-			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
-						server.getName(), connectorKind), e));
-			} catch (LinkageError e) {
-				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
-						server.getName(), connectorKind), e));
-			} catch (AssertionError e) {
+			} catch (Exception | LinkageError | AssertionError e) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
 						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
 						server.getName(), connectorKind), e));
@@ -201,7 +194,7 @@ public class BuildsUiInternal {
 	}
 
 	public static Set<String> toSetOfIds(Collection<IBuildPlan> plans) {
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new HashSet<>();
 		for (IBuildPlan plan : plans) {
 			if (plan.isSelected()) {
 				ids.add(plan.getId());
@@ -223,10 +216,9 @@ public class BuildsUiInternal {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			List<?> items = ((IStructuredSelection) selection).toList();
-			List<IBuildElement> result = new ArrayList<IBuildElement>(items.size());
+			List<IBuildElement> result = new ArrayList<>(items.size());
 			for (Object item : items) {
-				if (item instanceof IBuildElement) {
-					IBuildElement element = (IBuildElement) item;
+				if (item instanceof IBuildElement element) {
 					if ("lastBuild".equals(selector)) { //$NON-NLS-1$
 						if (element instanceof IBuildPlan) {
 							element = ((IBuildPlan) element).getLastBuild();

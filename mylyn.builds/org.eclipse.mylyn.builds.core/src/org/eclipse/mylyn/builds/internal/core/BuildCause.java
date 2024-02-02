@@ -36,8 +36,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  */
 public class BuildCause extends EObjectImpl implements IBuildCause {
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -46,8 +45,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -56,8 +54,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getBuild() <em>Build</em>}' containment reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getBuild() <em>Build</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuild()
 	 * @generated
@@ -66,8 +63,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	protected IBuildReference build;
 
 	/**
-	 * The cached value of the '{@link #getUser() <em>User</em>}' containment reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getUser() <em>User</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getUser()
 	 * @generated
@@ -81,7 +77,6 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * @generated
 	 */
 	protected BuildCause() {
-		super();
 	}
 
 	/**
@@ -99,6 +94,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -108,12 +104,14 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_CAUSE__DESCRIPTION, oldDescription,
 					description));
+		}
 	}
 
 	/**
@@ -121,6 +119,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuildReference getBuild() {
 		return build;
 	}
@@ -136,10 +135,11 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_CAUSE__BUILD, oldBuild, newBuild);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -149,20 +149,25 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBuild(IBuildReference newBuild) {
 		if (newBuild != build) {
 			NotificationChain msgs = null;
-			if (build != null)
+			if (build != null) {
 				msgs = ((InternalEObject) build).eInverseRemove(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
-			if (newBuild != null)
+			}
+			if (newBuild != null) {
 				msgs = ((InternalEObject) newBuild).eInverseAdd(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__BUILD, null, msgs);
+			}
 			msgs = basicSetBuild(newBuild, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_CAUSE__BUILD, newBuild, newBuild));
+		}
 	}
 
 	/**
@@ -170,6 +175,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getUser() {
 		return user;
 	}
@@ -185,10 +191,11 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_CAUSE__USER, oldUser, newUser);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -198,20 +205,25 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setUser(IUser newUser) {
 		if (newUser != user) {
 			NotificationChain msgs = null;
-			if (user != null)
+			if (user != null) {
 				msgs = ((InternalEObject) user).eInverseRemove(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__USER, null, msgs);
-			if (newUser != null)
+			}
+			if (newUser != null) {
 				msgs = ((InternalEObject) newUser).eInverseAdd(this,
 						EOPPOSITE_FEATURE_BASE - BuildPackage.BUILD_CAUSE__USER, null, msgs);
+			}
 			msgs = basicSetUser(newUser, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_CAUSE__USER, newUser, newUser));
+		}
 	}
 
 	/**
@@ -222,10 +234,10 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_CAUSE__BUILD:
-			return basicSetBuild(null, msgs);
-		case BuildPackage.BUILD_CAUSE__USER:
-			return basicSetUser(null, msgs);
+			case BuildPackage.BUILD_CAUSE__BUILD:
+				return basicSetBuild(null, msgs);
+			case BuildPackage.BUILD_CAUSE__USER:
+				return basicSetUser(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -238,12 +250,12 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_CAUSE__DESCRIPTION:
-			return getDescription();
-		case BuildPackage.BUILD_CAUSE__BUILD:
-			return getBuild();
-		case BuildPackage.BUILD_CAUSE__USER:
-			return getUser();
+			case BuildPackage.BUILD_CAUSE__DESCRIPTION:
+				return getDescription();
+			case BuildPackage.BUILD_CAUSE__BUILD:
+				return getBuild();
+			case BuildPackage.BUILD_CAUSE__USER:
+				return getUser();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,15 +268,15 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_CAUSE__DESCRIPTION:
-			setDescription((String) newValue);
-			return;
-		case BuildPackage.BUILD_CAUSE__BUILD:
-			setBuild((IBuildReference) newValue);
-			return;
-		case BuildPackage.BUILD_CAUSE__USER:
-			setUser((IUser) newValue);
-			return;
+			case BuildPackage.BUILD_CAUSE__DESCRIPTION:
+				setDescription((String) newValue);
+				return;
+			case BuildPackage.BUILD_CAUSE__BUILD:
+				setBuild((IBuildReference) newValue);
+				return;
+			case BuildPackage.BUILD_CAUSE__USER:
+				setUser((IUser) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -277,15 +289,15 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_CAUSE__DESCRIPTION:
-			setDescription(DESCRIPTION_EDEFAULT);
-			return;
-		case BuildPackage.BUILD_CAUSE__BUILD:
-			setBuild((IBuildReference) null);
-			return;
-		case BuildPackage.BUILD_CAUSE__USER:
-			setUser((IUser) null);
-			return;
+			case BuildPackage.BUILD_CAUSE__DESCRIPTION:
+				setDescription(DESCRIPTION_EDEFAULT);
+				return;
+			case BuildPackage.BUILD_CAUSE__BUILD:
+				setBuild((IBuildReference) null);
+				return;
+			case BuildPackage.BUILD_CAUSE__USER:
+				setUser((IUser) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -298,12 +310,12 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_CAUSE__DESCRIPTION:
-			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-		case BuildPackage.BUILD_CAUSE__BUILD:
-			return build != null;
-		case BuildPackage.BUILD_CAUSE__USER:
-			return user != null;
+			case BuildPackage.BUILD_CAUSE__DESCRIPTION:
+				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case BuildPackage.BUILD_CAUSE__BUILD:
+				return build != null;
+			case BuildPackage.BUILD_CAUSE__USER:
+				return user != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -315,10 +327,11 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (description: "); //$NON-NLS-1$
 		result.append(description);
 		result.append(')');

@@ -56,12 +56,12 @@ public class BuildsUi {
 
 	public synchronized static BuildConnector getConnector(String connectorKind) {
 		BuildConnectorDescriptor descriptor = getConnectorDescriptorByKind().get(connectorKind);
-		return (descriptor != null) ? descriptor.getCoreDelegate() : null;
+		return descriptor != null ? descriptor.getCoreDelegate() : null;
 	}
 
 	public synchronized static BuildConnectorUi getConnectorUi(String connectorKind) {
 		BuildConnectorDescriptor descriptor = getConnectorDescriptorByKind().get(connectorKind);
-		return (descriptor != null) ? descriptor.getUiDelegate() : null;
+		return descriptor != null ? descriptor.getUiDelegate() : null;
 	}
 
 	public synchronized static IBuildModel getModel() {
@@ -73,7 +73,7 @@ public class BuildsUi {
 			return descriptorByKind;
 		}
 
-		descriptorByKind = new HashMap<String, BuildConnectorDescriptor>();
+		descriptorByKind = new HashMap<>();
 
 		MultiStatus result = new MultiStatus(BuildsUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
@@ -137,14 +137,12 @@ public class BuildsUi {
 	 * Returns a list of existing server locations. It is safe to call this method from any thread.
 	 */
 	public static List<RepositoryLocation> getServerLocations() {
-		final List<RepositoryLocation> locations = new ArrayList<RepositoryLocation>();
+		final List<RepositoryLocation> locations = new ArrayList<>();
 		final IBuildModel model = BuildsUi.getModel();
-		BuildsUiInternal.getOperationService().getRealm().syncExec(new Runnable() {
-			public void run() {
-				List<IBuildServer> servers = model.getServers();
-				for (IBuildServer server : servers) {
-					locations.add(server.getLocation());
-				}
+		BuildsUiInternal.getOperationService().getRealm().syncExec(() -> {
+			List<IBuildServer> servers = model.getServers();
+			for (IBuildServer server : servers) {
+				locations.add(server.getLocation());
 			}
 		});
 		return locations;

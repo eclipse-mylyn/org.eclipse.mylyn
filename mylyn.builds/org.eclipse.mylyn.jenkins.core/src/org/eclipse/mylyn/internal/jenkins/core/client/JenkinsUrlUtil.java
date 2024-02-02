@@ -73,8 +73,7 @@ public class JenkinsUrlUtil {
 	}
 
 	/**
-	 * Converts the given list of jobIds into a Map with job folder URL as key and list of job names within the folder
-	 * as value
+	 * Converts the given list of jobIds into a Map with job folder URL as key and list of job names within the folder as value
 	 *
 	 * @param jobIds
 	 * @return map with folderUrl as key and list of job names as value
@@ -82,11 +81,11 @@ public class JenkinsUrlUtil {
 	 */
 	public Map<String, List<String>> groupJobNamesByFolderUrl(List<String> jobIds) throws JenkinsException {
 
-		Map<String, List<String>> jobNamesByFolderUrl = new HashMap<String, List<String>>();
+		Map<String, List<String>> jobNamesByFolderUrl = new HashMap<>();
 
 		for (String jobId : jobIds) {
 
-			String folderUrl = this.getFolderUrlFromJobId(jobId);
+			String folderUrl = getFolderUrlFromJobId(jobId);
 			String jobName = getJobNameFromJobId(jobId);
 
 			if (jobNamesByFolderUrl.containsKey(folderUrl)) {
@@ -95,7 +94,7 @@ public class JenkinsUrlUtil {
 
 			} else {
 
-				List<String> jobNames = new ArrayList<String>();
+				List<String> jobNames = new ArrayList<>();
 				jobNames.add(jobName);
 				jobNamesByFolderUrl.put(folderUrl, jobNames);
 			}
@@ -113,11 +112,11 @@ public class JenkinsUrlUtil {
 	 */
 	private String getJobNameFromJobId(String jobId) throws JenkinsException {
 
-		Matcher matcher = this.jobNamePattern.matcher(jobId);
+		Matcher matcher = jobNamePattern.matcher(jobId);
 
 		if (matcher.find()) {
 
-			String jobName = jobId.substring(matcher.start(), jobId.length());
+			String jobName = jobId.substring(matcher.start());
 
 			try {
 				jobName = URLDecoder.decode(jobName, "UTF-8"); //$NON-NLS-1$
@@ -137,15 +136,14 @@ public class JenkinsUrlUtil {
 	}
 
 	/**
-	 * Returns the folder URL of the job identified by the given jobId. Returns the base URL if the given jobId
-	 * identifies a top level job
+	 * Returns the folder URL of the job identified by the given jobId. Returns the base URL if the given jobId identifies a top level job
 	 *
 	 * @param jobId
 	 * @return folderUrl
 	 */
 	private String getFolderUrlFromJobId(String jobId) {
 
-		Matcher matcher = this.jobUrlPattern.matcher(jobId);
+		Matcher matcher = jobUrlPattern.matcher(jobId);
 
 		if (matcher.find()) {
 
@@ -164,14 +162,14 @@ public class JenkinsUrlUtil {
 	 */
 	public String getJobUrlFromJobId(String jobId) throws JenkinsException {
 
-		Matcher matcher = this.jobUrlPattern.matcher(jobId);
+		Matcher matcher = jobUrlPattern.matcher(jobId);
 
 		if (matcher.find()) {
 
 			return jobId;
 		}
 
-		return this.assembleJobUrl(jobId, baseUrl());
+		return assembleJobUrl(jobId, baseUrl());
 	}
 
 	/**
@@ -196,7 +194,7 @@ public class JenkinsUrlUtil {
 	 */
 	public boolean isNestedJob(String jobId) {
 
-		return !this.getFolderUrlFromJobId(jobId).equals(baseUrl());
+		return !getFolderUrlFromJobId(jobId).equals(baseUrl());
 	}
 
 	/**
@@ -208,12 +206,12 @@ public class JenkinsUrlUtil {
 	 */
 	public String getDisplayName(String jobUrl) throws JenkinsException {
 
-		String displayName = jobUrl.substring(repositoryLocation.getUrl().length(), jobUrl.length());
+		String displayName = jobUrl.substring(repositoryLocation.getUrl().length());
 		if (!displayName.startsWith(SLASH)) {
 			displayName = SLASH + displayName;
 		}
 
-		displayName = displayName.replaceAll("/job/", SLASH); //$NON-NLS-1$
+		displayName = displayName.replace("/job/", SLASH); //$NON-NLS-1$
 
 		try {
 			displayName = URLDecoder.decode(displayName, "UTF-8"); //$NON-NLS-1$

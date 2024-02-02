@@ -26,12 +26,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class RunBuildHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
-			if (item instanceof IBuildPlan) {
-				IBuildPlan plan = (IBuildPlan) item;
+			if (item instanceof IBuildPlan plan) {
 				RunBuildAction.askParametersAndRunBuild(plan);
 			}
 		}

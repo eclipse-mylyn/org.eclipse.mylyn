@@ -108,7 +108,7 @@ public abstract class BuildServerBehaviour {
 
 	public void abortBuild(IBuild build, IOperationMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
-	};
+	}
 
 	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
 

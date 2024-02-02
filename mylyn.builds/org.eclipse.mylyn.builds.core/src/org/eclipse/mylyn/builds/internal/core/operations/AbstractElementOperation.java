@@ -40,14 +40,11 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 	protected abstract BuildJob doCreateJob(T element);
 
 	protected List<T> doInitInput() {
-		final AtomicReference<List<T>> input = new AtomicReference<List<T>>();
-		getService().getRealm().syncExec(new Runnable() {
-			public void run() {
-				List<T> elements = doSyncInitInput();
-				register(elements);
-				input.set(elements);
-			}
-
+		final AtomicReference<List<T>> input = new AtomicReference<>();
+		getService().getRealm().syncExec(() -> {
+			List<T> elements = doSyncInitInput();
+			register(elements);
+			input.set(elements);
 		});
 		return input.get();
 	}
@@ -73,7 +70,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 					boolean fireDone;
 					synchronized (latch) {
 						latch.countDown();
-						fireDone = (latch.getCount() == 0);
+						fireDone = latch.getCount() == 0;
 					}
 					job.removeJobChangeListener(this);
 					if (fireDone) {
@@ -92,7 +89,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 	public List<BuildJob> init() {
 		List<T> input = doInitInput();
 
-		List<BuildJob> jobs = new ArrayList<BuildJob>(input.size());
+		List<BuildJob> jobs = new ArrayList<>(input.size());
 		for (final T element : input) {
 			BuildJob job = doCreateJob(element);
 			connect(job, element);
@@ -111,11 +108,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 				handleResult(job);
 				final IBuildElement element = (IBuildElement) job.getAdapter(IBuildElement.class);
 				if (element != null) {
-					getService().getRealm().asyncExec(new Runnable() {
-						public void run() {
-							unregister(element);
-						}
-					});
+					getService().getRealm().asyncExec(() -> unregister(element));
 				}
 				if (status.getSeverity() == IStatus.CANCEL) {
 					return Status.CANCEL_STATUS;
@@ -124,11 +117,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 				}
 			}
 		} finally {
-			getService().getRealm().asyncExec(new Runnable() {
-				public void run() {
-					unregisterAll();
-				}
-			});
+			getService().getRealm().asyncExec(this::unregisterAll);
 		}
 		return result;
 	}

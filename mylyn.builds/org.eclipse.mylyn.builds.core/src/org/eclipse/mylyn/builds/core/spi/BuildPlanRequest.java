@@ -24,7 +24,7 @@ public class BuildPlanRequest {
 	private final List<String> planIds;
 
 	public BuildPlanRequest(List<String> planIds) {
-		this.planIds = Collections.unmodifiableList(new ArrayList<String>(planIds));
+		this.planIds = Collections.unmodifiableList(new ArrayList<>(planIds));
 	}
 
 	public List<String> getPlanIds() {

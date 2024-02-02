@@ -43,8 +43,7 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  */
 public class TestResult extends EObjectImpl implements ITestResult {
 	/**
-	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -53,8 +52,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -63,8 +61,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected long duration = DURATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFailCount()
 	 * @generated
@@ -73,8 +70,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int FAIL_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getFailCount()
 	 * @generated
@@ -83,8 +79,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int failCount = FAIL_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPassCount()
 	 * @generated
@@ -93,8 +88,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int PASS_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPassCount()
 	 * @generated
@@ -103,8 +97,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int passCount = PASS_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getIgnoredCount()
 	 * @generated
@@ -113,8 +106,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int IGNORED_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getIgnoredCount()
 	 * @generated
@@ -123,8 +115,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int ignoredCount = IGNORED_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getErrorCount()
 	 * @generated
@@ -133,8 +124,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int ERROR_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getErrorCount()
 	 * @generated
@@ -143,8 +133,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int errorCount = ERROR_COUNT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getSuites()
 	 * @generated
@@ -158,7 +148,6 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * @generated
 	 */
 	protected TestResult() {
-		super();
 	}
 
 	/**
@@ -174,16 +163,17 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Build</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IBuild getBuild() {
-		if (eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD)
+		if (eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD) {
 			return null;
+		}
 		return (IBuild) eContainer();
 	}
 
@@ -202,34 +192,40 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBuild(IBuild newBuild) {
 		if (newBuild != eInternalContainer()
-				|| (eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD && newBuild != null)) {
-			if (EcoreUtil.isAncestor(this, (EObject) newBuild))
+				|| eContainerFeatureID() != BuildPackage.TEST_RESULT__BUILD && newBuild != null) {
+			if (EcoreUtil.isAncestor(this, (EObject) newBuild)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newBuild != null)
+			}
+			if (newBuild != null) {
 				msgs = ((InternalEObject) newBuild).eInverseAdd(this, BuildPackage.BUILD__TEST_RESULT, IBuild.class,
 						msgs);
+			}
 			msgs = basicSetBuild(newBuild, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__BUILD, newBuild, newBuild));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public long getDuration() {
 		return duration;
 	}
@@ -239,24 +235,26 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__DURATION, oldDuration,
 					duration));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Fail Count</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Fail Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getFailCount() {
 		return failCount;
 	}
@@ -266,24 +264,26 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setFailCount(int newFailCount) {
 		int oldFailCount = failCount;
 		failCount = newFailCount;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__FAIL_COUNT, oldFailCount,
 					failCount));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Pass Count</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Pass Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getPassCount() {
 		return passCount;
 	}
@@ -293,12 +293,14 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setPassCount(int newPassCount) {
 		int oldPassCount = passCount;
 		passCount = newPassCount;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__PASS_COUNT, oldPassCount,
 					passCount));
+		}
 	}
 
 	/**
@@ -306,6 +308,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getIgnoredCount() {
 		return ignoredCount;
 	}
@@ -315,12 +318,14 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setIgnoredCount(int newIgnoredCount) {
 		int oldIgnoredCount = ignoredCount;
 		ignoredCount = newIgnoredCount;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__IGNORED_COUNT,
 					oldIgnoredCount, ignoredCount));
+		}
 	}
 
 	/**
@@ -328,6 +333,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getErrorCount() {
 		return errorCount;
 	}
@@ -337,27 +343,29 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setErrorCount(int newErrorCount) {
 		int oldErrorCount = errorCount;
 		errorCount = newErrorCount;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.TEST_RESULT__ERROR_COUNT, oldErrorCount,
 					errorCount));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<ITestSuite> getSuites() {
 		if (suites == null) {
-			suites = new EObjectContainmentWithInverseEList<ITestSuite>(ITestSuite.class, this,
+			suites = new EObjectContainmentWithInverseEList<>(ITestSuite.class, this,
 					BuildPackage.TEST_RESULT__SUITES, BuildPackage.TEST_SUITE__RESULT);
 		}
 		return suites;
@@ -372,12 +380,13 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetBuild((IBuild) otherEnd, msgs);
-		case BuildPackage.TEST_RESULT__SUITES:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getSuites()).basicAdd(otherEnd, msgs);
+			case BuildPackage.TEST_RESULT__BUILD:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetBuild((IBuild) otherEnd, msgs);
+			case BuildPackage.TEST_RESULT__SUITES:
+				return ((InternalEList<InternalEObject>) (InternalEList<?>) getSuites()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -390,10 +399,10 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			return basicSetBuild(null, msgs);
-		case BuildPackage.TEST_RESULT__SUITES:
-			return ((InternalEList<?>) getSuites()).basicRemove(otherEnd, msgs);
+			case BuildPackage.TEST_RESULT__BUILD:
+				return basicSetBuild(null, msgs);
+			case BuildPackage.TEST_RESULT__SUITES:
+				return ((InternalEList<?>) getSuites()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -406,8 +415,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			return eInternalContainer().eInverseRemove(this, BuildPackage.BUILD__TEST_RESULT, IBuild.class, msgs);
+			case BuildPackage.TEST_RESULT__BUILD:
+				return eInternalContainer().eInverseRemove(this, BuildPackage.BUILD__TEST_RESULT, IBuild.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -420,20 +429,20 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			return getBuild();
-		case BuildPackage.TEST_RESULT__DURATION:
-			return getDuration();
-		case BuildPackage.TEST_RESULT__FAIL_COUNT:
-			return getFailCount();
-		case BuildPackage.TEST_RESULT__PASS_COUNT:
-			return getPassCount();
-		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
-			return getIgnoredCount();
-		case BuildPackage.TEST_RESULT__ERROR_COUNT:
-			return getErrorCount();
-		case BuildPackage.TEST_RESULT__SUITES:
-			return getSuites();
+			case BuildPackage.TEST_RESULT__BUILD:
+				return getBuild();
+			case BuildPackage.TEST_RESULT__DURATION:
+				return getDuration();
+			case BuildPackage.TEST_RESULT__FAIL_COUNT:
+				return getFailCount();
+			case BuildPackage.TEST_RESULT__PASS_COUNT:
+				return getPassCount();
+			case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+				return getIgnoredCount();
+			case BuildPackage.TEST_RESULT__ERROR_COUNT:
+				return getErrorCount();
+			case BuildPackage.TEST_RESULT__SUITES:
+				return getSuites();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -447,28 +456,28 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			setBuild((IBuild) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__DURATION:
-			setDuration((Long) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__FAIL_COUNT:
-			setFailCount((Integer) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__PASS_COUNT:
-			setPassCount((Integer) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
-			setIgnoredCount((Integer) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__ERROR_COUNT:
-			setErrorCount((Integer) newValue);
-			return;
-		case BuildPackage.TEST_RESULT__SUITES:
-			getSuites().clear();
-			getSuites().addAll((Collection<? extends ITestSuite>) newValue);
-			return;
+			case BuildPackage.TEST_RESULT__BUILD:
+				setBuild((IBuild) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__DURATION:
+				setDuration((Long) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__FAIL_COUNT:
+				setFailCount((Integer) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__PASS_COUNT:
+				setPassCount((Integer) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+				setIgnoredCount((Integer) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__ERROR_COUNT:
+				setErrorCount((Integer) newValue);
+				return;
+			case BuildPackage.TEST_RESULT__SUITES:
+				getSuites().clear();
+				getSuites().addAll((Collection<? extends ITestSuite>) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -481,27 +490,27 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			setBuild((IBuild) null);
-			return;
-		case BuildPackage.TEST_RESULT__DURATION:
-			setDuration(DURATION_EDEFAULT);
-			return;
-		case BuildPackage.TEST_RESULT__FAIL_COUNT:
-			setFailCount(FAIL_COUNT_EDEFAULT);
-			return;
-		case BuildPackage.TEST_RESULT__PASS_COUNT:
-			setPassCount(PASS_COUNT_EDEFAULT);
-			return;
-		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
-			setIgnoredCount(IGNORED_COUNT_EDEFAULT);
-			return;
-		case BuildPackage.TEST_RESULT__ERROR_COUNT:
-			setErrorCount(ERROR_COUNT_EDEFAULT);
-			return;
-		case BuildPackage.TEST_RESULT__SUITES:
-			getSuites().clear();
-			return;
+			case BuildPackage.TEST_RESULT__BUILD:
+				setBuild((IBuild) null);
+				return;
+			case BuildPackage.TEST_RESULT__DURATION:
+				setDuration(DURATION_EDEFAULT);
+				return;
+			case BuildPackage.TEST_RESULT__FAIL_COUNT:
+				setFailCount(FAIL_COUNT_EDEFAULT);
+				return;
+			case BuildPackage.TEST_RESULT__PASS_COUNT:
+				setPassCount(PASS_COUNT_EDEFAULT);
+				return;
+			case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+				setIgnoredCount(IGNORED_COUNT_EDEFAULT);
+				return;
+			case BuildPackage.TEST_RESULT__ERROR_COUNT:
+				setErrorCount(ERROR_COUNT_EDEFAULT);
+				return;
+			case BuildPackage.TEST_RESULT__SUITES:
+				getSuites().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -514,20 +523,20 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.TEST_RESULT__BUILD:
-			return getBuild() != null;
-		case BuildPackage.TEST_RESULT__DURATION:
-			return duration != DURATION_EDEFAULT;
-		case BuildPackage.TEST_RESULT__FAIL_COUNT:
-			return failCount != FAIL_COUNT_EDEFAULT;
-		case BuildPackage.TEST_RESULT__PASS_COUNT:
-			return passCount != PASS_COUNT_EDEFAULT;
-		case BuildPackage.TEST_RESULT__IGNORED_COUNT:
-			return ignoredCount != IGNORED_COUNT_EDEFAULT;
-		case BuildPackage.TEST_RESULT__ERROR_COUNT:
-			return errorCount != ERROR_COUNT_EDEFAULT;
-		case BuildPackage.TEST_RESULT__SUITES:
-			return suites != null && !suites.isEmpty();
+			case BuildPackage.TEST_RESULT__BUILD:
+				return getBuild() != null;
+			case BuildPackage.TEST_RESULT__DURATION:
+				return duration != DURATION_EDEFAULT;
+			case BuildPackage.TEST_RESULT__FAIL_COUNT:
+				return failCount != FAIL_COUNT_EDEFAULT;
+			case BuildPackage.TEST_RESULT__PASS_COUNT:
+				return passCount != PASS_COUNT_EDEFAULT;
+			case BuildPackage.TEST_RESULT__IGNORED_COUNT:
+				return ignoredCount != IGNORED_COUNT_EDEFAULT;
+			case BuildPackage.TEST_RESULT__ERROR_COUNT:
+				return errorCount != ERROR_COUNT_EDEFAULT;
+			case BuildPackage.TEST_RESULT__SUITES:
+				return suites != null && !suites.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -539,10 +548,11 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (duration: "); //$NON-NLS-1$
 		result.append(duration);
 		result.append(", failCount: "); //$NON-NLS-1$

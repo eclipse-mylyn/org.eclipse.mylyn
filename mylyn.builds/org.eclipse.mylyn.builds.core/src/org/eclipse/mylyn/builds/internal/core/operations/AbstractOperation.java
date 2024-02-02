@@ -28,8 +28,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IOperation;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
-import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 
 /**
  * @author Steffen Pingel
@@ -38,7 +38,7 @@ public class AbstractOperation implements IOperation {
 
 	private EnumSet<OperationFlag> flags;
 
-	private final List<OperationChangeListener> listeners = new CopyOnWriteArrayList<OperationChangeListener>();
+	private final List<OperationChangeListener> listeners = new CopyOnWriteArrayList<>();
 
 	private List<IBuildElement> registeredElements;
 
@@ -68,11 +68,7 @@ public class AbstractOperation implements IOperation {
 				if (event.getJob() instanceof BuildJob) {
 					handleResult((BuildJob) event.getJob());
 				}
-				getService().getRealm().asyncExec(new Runnable() {
-					public void run() {
-						unregister(element);
-					}
-				});
+				getService().getRealm().asyncExec(() -> unregister(element));
 				event.getJob().removeJobChangeListener(this);
 			}
 
@@ -83,11 +79,13 @@ public class AbstractOperation implements IOperation {
 	protected void fireDone(final MultiStatus result) {
 		for (final OperationChangeListener listener : listeners.toArray(new OperationChangeListener[0])) {
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.WARNING, BuildsCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), e));
 				}
 
+				@Override
 				public void run() throws Exception {
 					OperationChangeEvent event = new OperationChangeEvent(AbstractOperation.this);
 					event.setStatus(result);
@@ -117,7 +115,7 @@ public class AbstractOperation implements IOperation {
 
 	protected void register(List<? extends IBuildElement> elements) {
 		if (registeredElements == null) {
-			registeredElements = new ArrayList<IBuildElement>(elements.size());
+			registeredElements = new ArrayList<>(elements.size());
 		}
 		for (IBuildElement element : elements) {
 			element.getOperations().add(this);

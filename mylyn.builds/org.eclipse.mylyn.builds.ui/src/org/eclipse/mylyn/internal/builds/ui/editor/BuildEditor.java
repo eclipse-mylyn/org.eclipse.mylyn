@@ -118,8 +118,8 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 		super.init(site, input);
 
-		this.plan = ((BuildEditorInput) input).getPlan();
-		this.build = ((BuildEditorInput) input).getBuild();
+		plan = ((BuildEditorInput) input).getPlan();
+		build = ((BuildEditorInput) input).getBuild();
 		setPartName(input.getName());
 	}
 
@@ -140,13 +140,13 @@ public class BuildEditor extends SharedHeaderFormEditor {
 			title = Messages.BuildEditor_Build;
 		}
 		switch (getEditorInput().getBuildInfo()) {
-		case PARTIAL:
-			title = NLS.bind(Messages.BuildEditor_X_Retrieving_Build, title);
-			break;
-		case ERROR:
-			title = NLS.bind(Messages.BuildEditor_X_Failed_Retrieve_Build_Information, title);
-			image = CommonImages.getImage(CommonImages.ERROR);
-			break;
+			case PARTIAL:
+				title = NLS.bind(Messages.BuildEditor_X_Retrieving_Build, title);
+				break;
+			case ERROR:
+				title = NLS.bind(Messages.BuildEditor_X_Failed_Retrieve_Build_Information, title);
+				image = CommonImages.getImage(CommonImages.ERROR);
+				break;
 		}
 		getHeaderForm().getForm().setText(title);
 		getHeaderForm().getForm().setImage(image);
@@ -209,8 +209,8 @@ public class BuildEditor extends SharedHeaderFormEditor {
 	}
 
 	public void refresh() {
-		this.build = getEditorInput().getBuild();
-		this.plan = getEditorInput().getPlan();
+		build = getEditorInput().getBuild();
+		plan = getEditorInput().getPlan();
 		buildDetailsPage.refresh();
 		updateHeader();
 		updateToolBarActions();

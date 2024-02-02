@@ -17,21 +17,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -64,14 +58,16 @@ public class ChangesPart extends AbstractBuildEditorPart {
 
 	static class ChangesContentProvider implements ITreeContentProvider {
 
-		private static final Object[] NO_ELEMENTS = new Object[0];
+		private static final Object[] NO_ELEMENTS = {};
 
 		private IChangeSet input;
 
+		@Override
 		public void dispose() {
 			input = null;
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof IChangeSet) {
 				input = (IChangeSet) newInput;
@@ -80,6 +76,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			}
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement == input) {
 				return input.getChanges().toArray();
@@ -89,6 +86,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof IChange) {
 				return ((IChange) parentElement).getArtifacts().toArray();
@@ -96,6 +94,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (element instanceof EObject) {
 				return ((EObject) element).eContainer();
@@ -103,6 +102,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof IChangeSet) {
 				return !((IChangeSet) element).getChanges().isEmpty();
@@ -125,7 +125,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Changes");
 		setExpandVertically(true);
-		this.span = 2;
+		span = 2;
 	}
 
 	@Override
@@ -143,27 +143,20 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		GridDataFactory.fillDefaults().hint(500, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ChangesContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ChangesLabelProvider(), null, null));
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());
-			}
-		});
+		viewer.addSelectionChangedListener(event -> getPage().getSite().getSelectionProvider().setSelection(event.getSelection()));
 
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (selection instanceof Change) {
-					ChangesPart.this.open((Change) selection);
-				}
-				if (selection instanceof ChangeArtifact) {
-					try {
-						ChangesPart.this.open((ChangeArtifact) selection);
-					} catch (CoreException e) {
-						e.printStackTrace();
-					}
+		viewer.addOpenListener(event -> {
+			Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			if (selection instanceof Change) {
+				ChangesPart.this.open((Change) selection);
+			}
+			if (selection instanceof ChangeArtifact) {
+				try {
+					ChangesPart.this.open((ChangeArtifact) selection);
+				} catch (CoreException e) {
+					e.printStackTrace();
 				}
 			}
-
 		});
 
 		menuManager = new MenuManager();
@@ -197,7 +190,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		}
 
 		final String prevRevision = changeArtifact.getPrevRevision();
-		final String revision = (changeArtifact.getRevision() != null)
+		final String revision = changeArtifact.getRevision() != null
 				? changeArtifact.getRevision()
 				: ((IChange) ((ChangeArtifact) changeArtifact).eContainer()).getRevision();
 		if (revision == null) {
@@ -206,31 +199,29 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		}
 
 		try {
-			final AtomicReference<IFileRevision> left = new AtomicReference<IFileRevision>();
-			final AtomicReference<IFileRevision> right = new AtomicReference<IFileRevision>();
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						ScmArtifact rightArtifact = connector.getArtifact(resource, revision);
-						right.set(rightArtifact.getFileRevision(monitor));
+			final AtomicReference<IFileRevision> left = new AtomicReference<>();
+			final AtomicReference<IFileRevision> right = new AtomicReference<>();
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+				try {
+					ScmArtifact rightArtifact = connector.getArtifact(resource, revision);
+					right.set(rightArtifact.getFileRevision(monitor));
 
-						if (prevRevision != null) {
-							ScmArtifact leftArtifact = connector.getArtifact(resource, prevRevision);
-							left.set(leftArtifact.getFileRevision(monitor));
-						}
-						if (left.get() == null) {
-							try {
-								IFileRevision[] contributors = rightArtifact.getContributors(monitor);
-								if (contributors != null && contributors.length > 0) {
-									left.set(contributors[0]);
-								}
-							} catch (UnsupportedOperationException e) {
-								// ignore
-							}
-						}
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
+					if (prevRevision != null) {
+						ScmArtifact leftArtifact = connector.getArtifact(resource, prevRevision);
+						left.set(leftArtifact.getFileRevision(monitor));
 					}
+					if (left.get() == null) {
+						try {
+							IFileRevision[] contributors = rightArtifact.getContributors(monitor);
+							if (contributors != null && contributors.length > 0) {
+								left.set(contributors[0]);
+							}
+						} catch (UnsupportedOperationException e) {
+							// ignore
+						}
+					}
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
 				}
 			});
 			if (right.get() != null) {

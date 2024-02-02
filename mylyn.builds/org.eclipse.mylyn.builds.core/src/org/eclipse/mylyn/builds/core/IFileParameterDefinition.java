@@ -12,8 +12,7 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>File Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>File Parameter Definition</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */

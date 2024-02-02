@@ -38,11 +38,13 @@ public class BuildConsoleManager {
 
 	private final IConsoleListener listener = new IConsoleListener() {
 
+		@Override
 		public void consolesAdded(IConsole[] consoles) {
 			// ignore
 
 		}
 
+		@Override
 		public void consolesRemoved(IConsole[] consoles) {
 			for (IConsole console : consoles) {
 				if (BuildConsole.CONSOLE_TYPE.equals(console.getType())) {
@@ -56,7 +58,7 @@ public class BuildConsoleManager {
 	};
 
 	public BuildConsoleManager() {
-		consoleByBuild = new HashMap<IBuild, BuildConsole>();
+		consoleByBuild = new HashMap<>();
 		consoleManager = ConsolePlugin.getDefault().getConsoleManager();
 		consoleManager.addConsoleListener(listener);
 	}
@@ -88,11 +90,9 @@ public class BuildConsoleManager {
 			operation.addOperationChangeListener(new OperationChangeListener() {
 				@Override
 				public void done(OperationChangeEvent event) {
-					event.getOperation().getService().getRealm().asyncExec(new Runnable() {
-						public void run() {
-							if (plan.getLastBuild() != null) {
-								showConsole(plan.getLastBuild());
-							}
+					event.getOperation().getService().getRealm().asyncExec(() -> {
+						if (plan.getLastBuild() != null) {
+							showConsole(plan.getLastBuild());
 						}
 					});
 				}

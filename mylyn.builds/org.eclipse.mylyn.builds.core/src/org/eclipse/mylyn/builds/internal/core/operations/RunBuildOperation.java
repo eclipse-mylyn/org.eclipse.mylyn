@@ -43,7 +43,7 @@ public class RunBuildOperation extends AbstractElementOperation<IBuildPlan> {
 		super(service);
 		Assert.isNotNull(request);
 		this.request = request;
-		this.server = (BuildServer) request.getPlan().getServer();
+		server = (BuildServer) request.getPlan().getServer();
 	}
 
 	@Override

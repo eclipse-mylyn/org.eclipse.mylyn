@@ -41,10 +41,11 @@ public class BuildsServiceNotification extends AbstractUiNotification {
 		super(EVENT_ID);
 		this.label = label;
 		this.description = description;
-		this.notificationImage = null;
-		this.notificationKindImage = Dialog.DLG_IMG_MESSAGE_INFO;
+		notificationImage = null;
+		notificationKindImage = Dialog.DLG_IMG_MESSAGE_INFO;
 	}
 
+	@Override
 	public int compareTo(AbstractNotification o) {
 		if (o != null && o.getLabel() != null) {
 			return o.getLabel().compareTo(label);
@@ -77,6 +78,7 @@ public class BuildsServiceNotification extends AbstractUiNotification {
 		return Dialog.getImage(notificationKindImage);
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}

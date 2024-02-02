@@ -33,12 +33,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class DeleteBuildElementHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
-			if (item instanceof IBuildServer) {
-				IBuildServer server = (IBuildServer) item;
+			if (item instanceof IBuildServer server) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete Build Server",
 						NLS.bind(

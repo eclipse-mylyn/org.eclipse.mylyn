@@ -21,10 +21,10 @@ import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
  */
 public interface IOperationService {
 
-	public abstract BuildScheduler getScheduler();
+	BuildScheduler getScheduler();
 
-	public abstract void handleResult(AbstractOperation operation, IStatus result);
+	void handleResult(AbstractOperation operation, IStatus result);
 
-	public abstract IBuildModelRealm getRealm();
+	IBuildModelRealm getRealm();
 
 }

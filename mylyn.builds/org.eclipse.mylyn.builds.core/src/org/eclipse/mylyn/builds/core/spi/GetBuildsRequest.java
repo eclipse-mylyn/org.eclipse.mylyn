@@ -44,7 +44,7 @@ public class GetBuildsRequest {
 	public GetBuildsRequest(IBuildPlan plan, Collection<String> ids, Scope scope) {
 		this(plan, Kind.SELECTED, Scope.FULL);
 		Assert.isNotNull(ids);
-		this.ids = Collections.unmodifiableSet(new HashSet<String>(ids));
+		this.ids = Collections.unmodifiableSet(new HashSet<>(ids));
 	}
 
 	public GetBuildsRequest(IBuildPlan plan, Kind kind) {

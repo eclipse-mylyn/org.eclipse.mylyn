@@ -26,9 +26,9 @@ public class BuildPlanPropertyTester extends PropertyTester {
 		// ignore
 	}
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) receiver;
+		if (receiver instanceof IBuildPlan plan) {
 			if ("hasBuild".equals(property)) {
 				return CoreUtil.propertyEquals(plan.getLastBuild() != null, expectedValue);
 			}

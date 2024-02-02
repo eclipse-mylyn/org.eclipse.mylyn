@@ -26,7 +26,7 @@ import org.eclipse.ui.IPersistableElement;
  * @author Steffen Pingel
  */
 public class BuildEditorInput implements IEditorInput {
-	public static enum BuildInfo {
+	public enum BuildInfo {
 		PARTIAL, COMPLETE, ERROR;
 	}
 
@@ -39,27 +39,27 @@ public class BuildEditorInput implements IEditorInput {
 	public BuildEditorInput(IBuildPlan plan) {
 		Assert.isNotNull(plan);
 		this.plan = plan;
-		this.build = null;
+		build = null;
 	}
 
 	public BuildEditorInput(IBuild build) {
 		Assert.isNotNull(build);
 		Assert.isNotNull(build.getPlan());
-		this.plan = build.getPlan();
+		plan = build.getPlan();
 		this.build = build;
 	}
 
 	public BuildEditorInput(IBuildPlan plan, boolean partial) {
 		this(plan);
 		if (partial) {
-			this.buildInfo = BuildInfo.PARTIAL;
+			buildInfo = BuildInfo.PARTIAL;
 		}
 	}
 
 	public BuildEditorInput(IBuild build, boolean partial) {
 		this(build);
 		if (partial) {
-			this.buildInfo = BuildInfo.PARTIAL;
+			buildInfo = BuildInfo.PARTIAL;
 		}
 	}
 
@@ -71,6 +71,7 @@ public class BuildEditorInput implements IEditorInput {
 		return plan;
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;
@@ -78,14 +79,17 @@ public class BuildEditorInput implements IEditorInput {
 		return null;
 	}
 
+	@Override
 	public boolean exists() {
 		return true;
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		if (build != null) {
 			return NLS.bind("{0}#{1}", plan.getLabel(), build.getLabel()); //$NON-NLS-1$
@@ -94,10 +98,12 @@ public class BuildEditorInput implements IEditorInput {
 		}
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
+	@Override
 	public String getToolTipText() {
 		return ""; //$NON-NLS-1$
 	}
@@ -108,7 +114,7 @@ public class BuildEditorInput implements IEditorInput {
 
 	public void updateBuildInfo(IBuild build, BuildInfo buildInfo) {
 		this.build = build;
-		this.plan = build.getPlan();
+		plan = build.getPlan();
 		this.buildInfo = buildInfo;
 	}
 

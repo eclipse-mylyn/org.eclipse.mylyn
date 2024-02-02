@@ -27,8 +27,7 @@ public interface IArtifact extends IBuildElement {
 	/**
 	 * Returns the value of the '<em><b>Relative Path</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -39,8 +38,8 @@ public interface IArtifact extends IBuildElement {
 	String getRelativePath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Relative Path</em>' attribute.

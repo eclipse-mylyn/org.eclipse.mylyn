@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.jenkins.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.internal.jenkins.core.JenkinsConnector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

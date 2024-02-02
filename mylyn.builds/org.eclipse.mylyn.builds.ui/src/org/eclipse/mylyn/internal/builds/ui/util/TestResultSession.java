@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.builds.ui.util;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
@@ -25,7 +24,6 @@ import org.eclipse.jdt.internal.junit.model.TestRunSession;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
-import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.osgi.util.NLS;
@@ -45,20 +43,18 @@ class TestResultSession extends TestRunSession {
 	// Eclipse 3.6 and later
 	public boolean rerunTest(String testId, final String className, final String testName, String launchMode,
 			boolean buildBeforeLaunch) throws CoreException {
-		final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
-		WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				IType type = TestResultManager.Runner.findType(className, monitor);
-				if (type == null) {
-					return;
-				}
-				if (testName != null) {
-					IMethod method = type.getMethod(testName, new String[0]);
-					if (method != null && method.exists()) {
-						result.set(method);
-					} else {
-						result.set(type);
-					}
+		final AtomicReference<IJavaElement> result = new AtomicReference<>();
+		WorkbenchUtil.busyCursorWhile(monitor -> {
+			IType type = TestResultManager.Runner.findType(className, monitor);
+			if (type == null) {
+				return;
+			}
+			if (testName != null) {
+				IMethod method = type.getMethod(testName, new String[0]);
+				if (method != null && method.exists()) {
+					result.set(method);
+				} else {
+					result.set(type);
 				}
 			}
 		});

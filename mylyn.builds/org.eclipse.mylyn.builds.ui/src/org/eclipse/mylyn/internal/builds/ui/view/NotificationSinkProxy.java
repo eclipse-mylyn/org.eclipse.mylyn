@@ -17,8 +17,8 @@ import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
 import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceMessageControl;
 
 /**
- * The notification mechanism should never create instances of the builds view when notifications are being sent. Hence
- * we're using this proxy in between.
+ * The notification mechanism should never create instances of the builds view when notifications are being sent. Hence we're using this
+ * proxy in between.
  * 
  * @author Torkild U. Resheim
  */
@@ -29,6 +29,7 @@ public class NotificationSinkProxy extends NotificationSink {
 	public NotificationSinkProxy() {
 	}
 
+	@Override
 	public void notify(NotificationSinkEvent event) {
 		if (control != null) {
 			control.notify(event);

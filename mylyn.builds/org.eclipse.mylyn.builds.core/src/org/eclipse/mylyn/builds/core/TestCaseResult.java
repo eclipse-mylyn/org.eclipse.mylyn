@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Test Case Result</b></em>', and
- * utility methods for working with them. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Test Case Result</b></em>', and utility methods for
+ * working with them. <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCaseResult()
  * @generated
@@ -71,8 +71,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>PASSED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>PASSED</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>PASSED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -85,8 +84,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>SKIPPED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>SKIPPED</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>SKIPPED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -99,8 +97,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>FAILED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -113,8 +110,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>FIXED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -127,8 +123,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>REGRESSION</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>REGRESSION</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>REGRESSION</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -143,26 +138,23 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * 
 	 * @generated
 	 */
-	private static final TestCaseResult[] VALUES_ARRAY = new TestCaseResult[] { PASSED, SKIPPED, FAILED, FIXED,
-			REGRESSION, };
+	private static final TestCaseResult[] VALUES_ARRAY = { PASSED, SKIPPED, FAILED, FIXED, REGRESSION, };
 
 	/**
-	 * A public read-only list of all the '<em><b>Test Case Result</b></em>' enumerators. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * A public read-only list of all the '<em><b>Test Case Result</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	public static final List<TestCaseResult> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified literal value. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified literal value. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
 	public static TestCaseResult get(String literal) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			TestCaseResult result = VALUES_ARRAY[i];
+		for (TestCaseResult result : VALUES_ARRAY) {
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -171,14 +163,12 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	}
 
 	/**
-	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified name. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	public static TestCaseResult getByName(String name) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			TestCaseResult result = VALUES_ARRAY[i];
+		for (TestCaseResult result : VALUES_ARRAY) {
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -187,23 +177,23 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	}
 
 	/**
-	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified integer value. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified integer value. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
 	public static TestCaseResult get(int value) {
 		switch (value) {
-		case PASSED_VALUE:
-			return PASSED;
-		case SKIPPED_VALUE:
-			return SKIPPED;
-		case FAILED_VALUE:
-			return FAILED;
-		case FIXED_VALUE:
-			return FIXED;
-		case REGRESSION_VALUE:
-			return REGRESSION;
+			case PASSED_VALUE:
+				return PASSED;
+			case SKIPPED_VALUE:
+				return SKIPPED;
+			case FAILED_VALUE:
+				return FAILED;
+			case FIXED_VALUE:
+				return FIXED;
+			case REGRESSION_VALUE:
+				return REGRESSION;
 		}
 		return null;
 	}
@@ -234,7 +224,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * 
 	 * @generated
 	 */
-	private TestCaseResult(int value, String name, String literal) {
+	TestCaseResult(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -245,6 +235,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -254,6 +245,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -263,13 +255,13 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -281,11 +273,10 @@ public enum TestCaseResult implements InternalTestCaseResult {
 } //TestCaseResult
 
 /**
- * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
 interface InternalTestCaseResult extends org.eclipse.emf.common.util.Enumerator {
-	// Empty 
+	// Empty
 }

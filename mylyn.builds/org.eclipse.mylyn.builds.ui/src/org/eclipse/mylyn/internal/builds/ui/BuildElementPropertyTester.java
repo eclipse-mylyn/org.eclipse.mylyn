@@ -28,6 +28,7 @@ public class BuildElementPropertyTester extends PropertyTester {
 	/**
 	 *
 	 */
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if ("available".equals(property)) {
 			if (args.length > 0) {

@@ -122,13 +122,13 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 						getClient().setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
 					} else {
 						throw new AuthenticationException(AUTHENTICATION_FAILED,
-								new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+								new AuthenticationRequest<>(
 										getClient().getLocation(), AuthenticationType.REPOSITORY));
 					}
 				}
 			} else if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				throw new AuthenticationException(response.getStatusLine().getReasonPhrase(),
-						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+						new AuthenticationRequest<>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
 				legacyAuthentication(monitor, credentials); // Needed for unit tests against https://mylyn.org/hudson-3.3.3
@@ -136,7 +136,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 				validate(response, monitor); // Check for proxy errors and such
 
 				throw new AuthenticationException(AUTHENTICATION_FAILED,
-						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+						new AuthenticationRequest<>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			}
 		} finally {
@@ -176,7 +176,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 			if (header != null && header.getValue().endsWith("/loginError")) { //$NON-NLS-1$
 				getClient().setAuthenticated(false);
 				throw new AuthenticationException(AUTHENTICATION_FAILED,
-						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+						new AuthenticationRequest<>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			}
 
@@ -209,7 +209,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 			try {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
 				try (BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in, (charSet != null) ? charSet : "UTF-8"))) {
+						new InputStreamReader(in, charSet != null ? charSet : "UTF-8"))) {
 					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer
 							.nextToken()) {
@@ -242,9 +242,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 	public T run() throws JenkinsException {
 		try {
 			return execute();
-		} catch (IOException e) {
-			throw new JenkinsException(e);
-		} catch (JAXBException e) {
+		} catch (IOException | JAXBException e) {
 			throw new JenkinsException(e);
 		}
 	}
@@ -266,16 +264,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
-		} catch (IOException e) {
-			response.release();
-			throw e;
-		} catch (JenkinsException e) {
-			response.release();
-			throw e;
-		} catch (JAXBException e) {
-			response.release();
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | JenkinsException | JAXBException | RuntimeException e) {
 			response.release();
 			throw e;
 		}
@@ -349,7 +338,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 	}
 
 	private boolean hasValidatAuthenticationState() {
-		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
+		List<Cookie> cookies = new ArrayList<>(getClient().getHttpClient().getCookieStore().getCookies());
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (JSESSIONID.equals(cookie.getName()) || cookie.getName().startsWith(JSESSIONID)) {
@@ -367,7 +356,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode == HttpStatus.SC_FORBIDDEN) {
-			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<>(
 					getClient().getLocation(), AuthenticationType.REPOSITORY);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request, true);
 		}

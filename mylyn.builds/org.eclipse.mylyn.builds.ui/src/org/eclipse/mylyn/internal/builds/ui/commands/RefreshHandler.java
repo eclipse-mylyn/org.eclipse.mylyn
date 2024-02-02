@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
  */
 public class RefreshHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
 		if (elements.isEmpty()) {

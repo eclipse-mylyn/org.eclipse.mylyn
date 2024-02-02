@@ -75,7 +75,8 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGroupJobNamesByFolderUrlWithoutJobUrls() throws JenkinsException {
 
-		Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil.groupJobNamesByFolderUrl(new ArrayList<String>());
+		Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil
+				.groupJobNamesByFolderUrl(new ArrayList<>());
 
 		Assert.assertNotNull(jobNamesByFolderUrl);
 		Assert.assertTrue(jobNamesByFolderUrl.isEmpty());
@@ -87,7 +88,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 		String folderUrl = baseUrl + "job/test-folder/";
 		String subFolderUrl = folderUrl + "job/test-sub-folder/";
 
-		List<String> jobIds = new ArrayList<String>();
+		List<String> jobIds = new ArrayList<>();
 		jobIds.add(baseUrl + "job/test-succeeding/");
 		jobIds.add(baseUrl + "job/test-white%20space/");
 		jobIds.add(folderUrl + "job/test-nested-one/");
@@ -96,7 +97,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 		Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil.groupJobNamesByFolderUrl(jobIds);
 
 		Assert.assertNotNull(jobNamesByFolderUrl);
-		Assert.assertEquals(3, jobNamesByFolderUrl.keySet().size());
+		Assert.assertEquals(3, jobNamesByFolderUrl.size());
 
 		Assert.assertTrue(jobNamesByFolderUrl.containsKey(baseUrl));
 		List<String> baseUrlJobs = jobNamesByFolderUrl.get(baseUrl);
@@ -119,14 +120,14 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 		String baseUrl = repositoryLocation.getUrl();
 
-		List<String> jobIds = new ArrayList<String>();
+		List<String> jobIds = new ArrayList<>();
 		jobIds.add(harness.getPlanGit());
 		jobIds.add(harness.getPlanWhitespace());
 
 		Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil.groupJobNamesByFolderUrl(jobIds);
 
 		Assert.assertNotNull(jobNamesByFolderUrl);
-		Assert.assertEquals(1, jobNamesByFolderUrl.keySet().size());
+		Assert.assertEquals(1, jobNamesByFolderUrl.size());
 		List<String> baseUrlJobs = jobNamesByFolderUrl.get(baseUrl);
 		Assert.assertNotNull(baseUrlJobs);
 		Assert.assertTrue(baseUrlJobs.contains(harness.getPlanGit()));
@@ -138,7 +139,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 		String baseUrl = repositoryLocation.getUrl();
 		String folderUrl = baseUrl + "job/test-folder/";
 
-		List<String> jobIds = new ArrayList<String>();
+		List<String> jobIds = new ArrayList<>();
 		jobIds.add(harness.getPlanGit());
 		jobIds.add(harness.getPlanWhitespace());
 		jobIds.add(baseUrl + "job/test-succeeding/");
@@ -147,7 +148,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 		Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil.groupJobNamesByFolderUrl(jobIds);
 
 		Assert.assertNotNull(jobNamesByFolderUrl);
-		Assert.assertEquals(2, jobNamesByFolderUrl.keySet().size());
+		Assert.assertEquals(2, jobNamesByFolderUrl.size());
 
 		List<String> baseUrlJobs = jobNamesByFolderUrl.get(baseUrl);
 		Assert.assertNotNull(baseUrlJobs);
@@ -172,7 +173,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetJobUrlFromJobIdWithJobUrl() throws JenkinsException {
 
-		String jobId = this.repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
+		String jobId = repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
 
 		String jobUrl = jenkinsUrlUtil.getJobUrlFromJobId(jobId);
 
@@ -181,7 +182,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetJobUrlFromJobIdWithNestedJobUrl() throws JenkinsException {
 
-		String jobId = this.repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
+		String jobId = repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
 				+ harness.getPlanNestedOne() + "/";
 
 		String jobUrl = jenkinsUrlUtil.getJobUrlFromJobId(jobId);
@@ -191,7 +192,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testIsNestedJobWithNestedJob() {
 
-		String nestedJobId = this.repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
+		String nestedJobId = repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
 				+ harness.getPlanNestedOne() + "/";
 
 		Assert.assertTrue(jenkinsUrlUtil.isNestedJob(nestedJobId));
@@ -199,14 +200,14 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testIsNestedJobWithTopLevelJob() {
 
-		String topLevelJobId = this.repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
+		String topLevelJobId = repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
 
 		Assert.assertFalse(jenkinsUrlUtil.isNestedJob(topLevelJobId));
 	}
 
 	public void testGetDisplayNameWithTopLevelJob() throws JenkinsException {
 
-		String nestedJobUrl = this.repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
+		String nestedJobUrl = repositoryLocation.getUrl() + "job/" + harness.getPlanSucceeding() + "/";
 		String expectedDisplayName = harness.getPlanSucceeding();
 
 		Assert.assertEquals(expectedDisplayName, jenkinsUrlUtil.getDisplayName(nestedJobUrl));
@@ -214,7 +215,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetDisplayNameWithNestedJob() throws JenkinsException {
 
-		String nestedJobUrl = this.repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
+		String nestedJobUrl = repositoryLocation.getUrl() + "job/" + harness.getPlanFolder() + "/job/"
 				+ harness.getPlanNestedOne() + "/";
 		String expectedDisplayName = harness.getPlanFolder() + "/" + harness.getPlanNestedOne();
 
@@ -223,7 +224,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetDisplayNameWithJobNamedJob() throws JenkinsException {
 
-		String nestedJobUrl = this.repositoryLocation.getUrl() + "job/job/";
+		String nestedJobUrl = repositoryLocation.getUrl() + "job/job/";
 		String expectedDisplayName = "job";
 
 		Assert.assertEquals(expectedDisplayName, jenkinsUrlUtil.getDisplayName(nestedJobUrl));
@@ -231,7 +232,7 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetDisplayNameWithFolderAndJobNamedJob() throws JenkinsException {
 
-		String nestedJobUrl = this.repositoryLocation.getUrl() + "job/job/job/job/";
+		String nestedJobUrl = repositoryLocation.getUrl() + "job/job/job/job/";
 		String expectedDisplayName = "job/job";
 
 		Assert.assertEquals(expectedDisplayName, jenkinsUrlUtil.getDisplayName(nestedJobUrl));
@@ -239,8 +240,8 @@ public class JenkinsUrlUtilTest extends TestCase {
 
 	public void testGetDisplayNameWithWhitespace() throws URISyntaxException, JenkinsException {
 
-		String jobUrl = new URI(null, this.repositoryLocation.getUrl() + "job/" + harness.getPlanWhitespace() + "/",
-				null).toASCIIString();
+		String jobUrl = new URI(null, repositoryLocation.getUrl() + "job/" + harness.getPlanWhitespace() + "/", null)
+				.toASCIIString();
 		String expectedDisplayName = harness.getPlanWhitespace();
 
 		Assert.assertEquals(expectedDisplayName, jenkinsUrlUtil.getDisplayName(jobUrl));

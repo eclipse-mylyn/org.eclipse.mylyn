@@ -19,14 +19,14 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.ITestCase;
 import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.JUnitResultGenerator;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

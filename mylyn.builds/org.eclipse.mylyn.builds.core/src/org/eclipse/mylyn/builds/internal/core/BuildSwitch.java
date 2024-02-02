@@ -38,10 +38,9 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.core.IUser;
 
 /**
- * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance hierarchy. It supports the call
- * {@link #doSwitch(EObject) doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the model,
- * starting with the actual class of the object and proceeding up the inheritance hierarchy until a non-null result is
- * returned, which is the result of the switch. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance hierarchy. It supports the call {@link #doSwitch(EObject)
+ * doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the model, starting with the actual class of the object and
+ * proceeding up the inheritance hierarchy until a non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.builds.internal.core.BuildPackage
  * @generated
@@ -66,8 +65,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that
-	 * result. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
@@ -77,8 +76,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that
-	 * result. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
@@ -93,233 +92,273 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that
-	 * result. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case BuildPackage.STRING_TO_STRING_MAP: {
-			@SuppressWarnings("unchecked")
-			Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>) theEObject;
-			T result = caseStringToStringMap(stringToStringMap);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.ARTIFACT: {
-			IArtifact artifact = (IArtifact) theEObject;
-			T result = caseArtifact(artifact);
-			if (result == null)
-				result = caseBuildElement(artifact);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD: {
-			IBuild build = (IBuild) theEObject;
-			T result = caseBuild(build);
-			if (result == null)
-				result = caseBuildElement(build);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_CAUSE: {
-			IBuildCause buildCause = (IBuildCause) theEObject;
-			T result = caseBuildCause(buildCause);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_REFERENCE: {
-			IBuildReference buildReference = (IBuildReference) theEObject;
-			T result = caseBuildReference(buildReference);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_ELEMENT: {
-			IBuildElement buildElement = (IBuildElement) theEObject;
-			T result = caseBuildElement(buildElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_PLAN: {
-			IBuildPlan buildPlan = (IBuildPlan) theEObject;
-			T result = caseBuildPlan(buildPlan);
-			if (result == null)
-				result = caseBuildElement(buildPlan);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.HEALTH_REPORT: {
-			IHealthReport healthReport = (IHealthReport) theEObject;
-			T result = caseHealthReport(healthReport);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_MODEL: {
-			IBuildModel buildModel = (IBuildModel) theEObject;
-			T result = caseBuildModel(buildModel);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_SERVER: {
-			IBuildServer buildServer = (IBuildServer) theEObject;
-			T result = caseBuildServer(buildServer);
-			if (result == null)
-				result = caseBuildElement(buildServer);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.CHANGE: {
-			IChange change = (IChange) theEObject;
-			T result = caseChange(change);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.CHANGE_SET: {
-			IChangeSet changeSet = (IChangeSet) theEObject;
-			T result = caseChangeSet(changeSet);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.CHANGE_ARTIFACT: {
-			IChangeArtifact changeArtifact = (IChangeArtifact) theEObject;
-			T result = caseChangeArtifact(changeArtifact);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.USER: {
-			IUser user = (IUser) theEObject;
-			T result = caseUser(user);
-			if (result == null)
-				result = caseBuildElement(user);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.PARAMETER_DEFINITION: {
-			IParameterDefinition parameterDefinition = (IParameterDefinition) theEObject;
-			T result = caseParameterDefinition(parameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.CHOICE_PARAMETER_DEFINITION: {
-			IChoiceParameterDefinition choiceParameterDefinition = (IChoiceParameterDefinition) theEObject;
-			T result = caseChoiceParameterDefinition(choiceParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(choiceParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BOOLEAN_PARAMETER_DEFINITION: {
-			IBooleanParameterDefinition booleanParameterDefinition = (IBooleanParameterDefinition) theEObject;
-			T result = caseBooleanParameterDefinition(booleanParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(booleanParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.FILE_PARAMETER_DEFINITION: {
-			IFileParameterDefinition fileParameterDefinition = (IFileParameterDefinition) theEObject;
-			T result = caseFileParameterDefinition(fileParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(fileParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.PLAN_PARAMETER_DEFINITION: {
-			IPlanParameterDefinition planParameterDefinition = (IPlanParameterDefinition) theEObject;
-			T result = casePlanParameterDefinition(planParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(planParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION: {
-			IPasswordParameterDefinition passwordParameterDefinition = (IPasswordParameterDefinition) theEObject;
-			T result = casePasswordParameterDefinition(passwordParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(passwordParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.BUILD_PARAMETER_DEFINITION: {
-			IBuildParameterDefinition buildParameterDefinition = (IBuildParameterDefinition) theEObject;
-			T result = caseBuildParameterDefinition(buildParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(buildParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.STRING_PARAMETER_DEFINITION: {
-			IStringParameterDefinition stringParameterDefinition = (IStringParameterDefinition) theEObject;
-			T result = caseStringParameterDefinition(stringParameterDefinition);
-			if (result == null)
-				result = caseParameterDefinition(stringParameterDefinition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.TEST_RESULT: {
-			ITestResult testResult = (ITestResult) theEObject;
-			T result = caseTestResult(testResult);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.TEST_ELEMENT: {
-			ITestElement testElement = (ITestElement) theEObject;
-			T result = caseTestElement(testElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.TEST_SUITE: {
-			ITestSuite testSuite = (ITestSuite) theEObject;
-			T result = caseTestSuite(testSuite);
-			if (result == null)
-				result = caseTestElement(testSuite);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case BuildPackage.TEST_CASE: {
-			ITestCase testCase = (ITestCase) theEObject;
-			T result = caseTestCase(testCase);
-			if (result == null)
-				result = caseTestElement(testCase);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		default:
-			return defaultCase(theEObject);
+			case BuildPackage.STRING_TO_STRING_MAP: {
+				@SuppressWarnings("unchecked")
+				Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>) theEObject;
+				T result = caseStringToStringMap(stringToStringMap);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.ARTIFACT: {
+				IArtifact artifact = (IArtifact) theEObject;
+				T result = caseArtifact(artifact);
+				if (result == null) {
+					result = caseBuildElement(artifact);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD: {
+				IBuild build = (IBuild) theEObject;
+				T result = caseBuild(build);
+				if (result == null) {
+					result = caseBuildElement(build);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_CAUSE: {
+				IBuildCause buildCause = (IBuildCause) theEObject;
+				T result = caseBuildCause(buildCause);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_REFERENCE: {
+				IBuildReference buildReference = (IBuildReference) theEObject;
+				T result = caseBuildReference(buildReference);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_ELEMENT: {
+				IBuildElement buildElement = (IBuildElement) theEObject;
+				T result = caseBuildElement(buildElement);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_PLAN: {
+				IBuildPlan buildPlan = (IBuildPlan) theEObject;
+				T result = caseBuildPlan(buildPlan);
+				if (result == null) {
+					result = caseBuildElement(buildPlan);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.HEALTH_REPORT: {
+				IHealthReport healthReport = (IHealthReport) theEObject;
+				T result = caseHealthReport(healthReport);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_MODEL: {
+				IBuildModel buildModel = (IBuildModel) theEObject;
+				T result = caseBuildModel(buildModel);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_SERVER: {
+				IBuildServer buildServer = (IBuildServer) theEObject;
+				T result = caseBuildServer(buildServer);
+				if (result == null) {
+					result = caseBuildElement(buildServer);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.CHANGE: {
+				IChange change = (IChange) theEObject;
+				T result = caseChange(change);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.CHANGE_SET: {
+				IChangeSet changeSet = (IChangeSet) theEObject;
+				T result = caseChangeSet(changeSet);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.CHANGE_ARTIFACT: {
+				IChangeArtifact changeArtifact = (IChangeArtifact) theEObject;
+				T result = caseChangeArtifact(changeArtifact);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.USER: {
+				IUser user = (IUser) theEObject;
+				T result = caseUser(user);
+				if (result == null) {
+					result = caseBuildElement(user);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.PARAMETER_DEFINITION: {
+				IParameterDefinition parameterDefinition = (IParameterDefinition) theEObject;
+				T result = caseParameterDefinition(parameterDefinition);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.CHOICE_PARAMETER_DEFINITION: {
+				IChoiceParameterDefinition choiceParameterDefinition = (IChoiceParameterDefinition) theEObject;
+				T result = caseChoiceParameterDefinition(choiceParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(choiceParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BOOLEAN_PARAMETER_DEFINITION: {
+				IBooleanParameterDefinition booleanParameterDefinition = (IBooleanParameterDefinition) theEObject;
+				T result = caseBooleanParameterDefinition(booleanParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(booleanParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.FILE_PARAMETER_DEFINITION: {
+				IFileParameterDefinition fileParameterDefinition = (IFileParameterDefinition) theEObject;
+				T result = caseFileParameterDefinition(fileParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(fileParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.PLAN_PARAMETER_DEFINITION: {
+				IPlanParameterDefinition planParameterDefinition = (IPlanParameterDefinition) theEObject;
+				T result = casePlanParameterDefinition(planParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(planParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION: {
+				IPasswordParameterDefinition passwordParameterDefinition = (IPasswordParameterDefinition) theEObject;
+				T result = casePasswordParameterDefinition(passwordParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(passwordParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.BUILD_PARAMETER_DEFINITION: {
+				IBuildParameterDefinition buildParameterDefinition = (IBuildParameterDefinition) theEObject;
+				T result = caseBuildParameterDefinition(buildParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(buildParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.STRING_PARAMETER_DEFINITION: {
+				IStringParameterDefinition stringParameterDefinition = (IStringParameterDefinition) theEObject;
+				T result = caseStringParameterDefinition(stringParameterDefinition);
+				if (result == null) {
+					result = caseParameterDefinition(stringParameterDefinition);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.TEST_RESULT: {
+				ITestResult testResult = (ITestResult) theEObject;
+				T result = caseTestResult(testResult);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.TEST_ELEMENT: {
+				ITestElement testElement = (ITestElement) theEObject;
+				T result = caseTestElement(testElement);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.TEST_SUITE: {
+				ITestSuite testSuite = (ITestSuite) theEObject;
+				T result = caseTestSuite(testSuite);
+				if (result == null) {
+					result = caseTestElement(testSuite);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case BuildPackage.TEST_CASE: {
+				ITestCase testCase = (ITestCase) theEObject;
+				T result = caseTestCase(testCase);
+				if (result == null) {
+					result = caseTestElement(testCase);
+				}
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			default:
+				return defaultCase(theEObject);
 		}
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -332,8 +371,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Artifact</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Artifact</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -346,8 +385,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Build</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Build</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -360,8 +399,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Cause</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Cause</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -374,8 +413,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Reference</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Reference</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -388,8 +427,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Plan</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Plan</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -402,8 +441,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Health Report</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Health Report</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -416,8 +455,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Server</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Server</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -430,8 +469,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -444,8 +483,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Change</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Change</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -458,8 +497,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Change Set</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Change Set</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -472,9 +511,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Change Artifact</em>'. <!-- begin-user-doc
-	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
-	 * -->
+	 * Returns the result of interpreting the object as an instance of '<em>Change Artifact</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -487,9 +525,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>String To String Map</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>String To String Map</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -502,8 +539,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>User</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>User</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -516,9 +553,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -531,9 +567,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -546,9 +581,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -561,9 +595,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -576,9 +609,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -591,9 +623,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'. <!-- begin-user-doc -->
+	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -606,9 +637,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -621,9 +651,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
-	 * end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -636,8 +665,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Test Result</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Test Result</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -650,8 +679,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Test Element</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Test Element</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -664,8 +693,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Test Suite</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Test Suite</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -678,8 +707,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Test Case</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Test Case</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
@@ -692,9 +721,8 @@ public class BuildSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch, but this is the last case
-	 * anyway. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch, but this is the last case anyway. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.

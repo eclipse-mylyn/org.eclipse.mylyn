@@ -51,15 +51,18 @@ public class PresentationMenuAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 
 	}
 
+	@Override
 	public Menu getMenu(Control parent) {
 		return null;
 	}
 
+	@Override
 	public Menu getMenu(Menu parent) {
 		final Menu menu = new Menu(parent);
 		menu.addMenuListener(new MenuAdapter() {

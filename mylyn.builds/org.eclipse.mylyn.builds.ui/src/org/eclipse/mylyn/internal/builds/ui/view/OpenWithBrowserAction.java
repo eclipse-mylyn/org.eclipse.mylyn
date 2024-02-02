@@ -47,10 +47,9 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 	}
 
 	public List<URI> getUris(IStructuredSelection selection) {
-		List<URI> uris = new ArrayList<URI>(selection.size());
+		List<URI> uris = new ArrayList<>(selection.size());
 		for (Object object : selection.toList()) {
-			if (object instanceof IBuildElement) {
-				IBuildElement element = (IBuildElement) object;
+			if (object instanceof IBuildElement element) {
 				if (element.getUrl() != null) {
 					try {
 						uris.add(new URI(element.getUrl()));

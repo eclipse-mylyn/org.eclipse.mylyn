@@ -86,6 +86,7 @@ public class BuildToolTip extends RichToolTip {
 		if (data instanceof IBuildPlan) {
 			StyledString ss = new StyledString();
 			ss.append(data.getLabel(), new Styler() {
+				@Override
 				public void applyStyles(TextStyle textStyle) {
 					textStyle.font = CommonFonts.BOLD;
 					textStyle.foreground = getTitleColor();
@@ -101,23 +102,23 @@ public class BuildToolTip extends RichToolTip {
 					sb.append(NLS.bind("queued, ", null));
 				}
 				switch (plan.getStatus()) {
-				case SUCCESS:
-					sb.append(NLS.bind("success", null));
-					break;
-				case FAILED:
-					sb.append(NLS.bind("failed", null));
-					break;
-				case UNSTABLE:
-					sb.append(NLS.bind("unstable", null));
-					break;
-				case ABORTED:
-					sb.append(NLS.bind("aborted", null));
-					break;
-				case DISABLED:
-					sb.append(NLS.bind("disabled", null));
-					break;
-				default:
-					break;
+					case SUCCESS:
+						sb.append(NLS.bind("success", null));
+						break;
+					case FAILED:
+						sb.append(NLS.bind("failed", null));
+						break;
+					case UNSTABLE:
+						sb.append(NLS.bind("unstable", null));
+						break;
+					case ABORTED:
+						sb.append(NLS.bind("aborted", null));
+						break;
+					case DISABLED:
+						sb.append(NLS.bind("disabled", null));
+						break;
+					default:
+						break;
 				}
 				sb.append(']');
 				ss.append(sb.toString(), StyledString.DECORATIONS_STYLER);
@@ -133,8 +134,7 @@ public class BuildToolTip extends RichToolTip {
 			addIconAndLabel(parent, null, NLS.bind("Refreshed {0}", refreshString), false);
 		}
 
-		if (data instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) data;
+		if (data instanceof IBuildPlan plan) {
 			if (plan.getLastBuild() != null) {
 				addBuild(parent, plan.getLastBuild());
 			}
@@ -154,22 +154,22 @@ public class BuildToolTip extends RichToolTip {
 			for (IBuildPlan iBuildPlan : plans) {
 				if (iBuildPlan.isSelected() && iBuildPlan.getStatus() != null) {
 					switch (iBuildPlan.getStatus()) {
-					case SUCCESS:
-						passed++;
-						break;
-					case FAILED:
-						failed++;
-						break;
-					case UNSTABLE:
-						unstable++;
-						break;
-					case ABORTED:
-						break;
-					case DISABLED:
-						disabled++;
-						break;
-					default:
-						break;
+						case SUCCESS:
+							passed++;
+							break;
+						case FAILED:
+							failed++;
+							break;
+						case UNSTABLE:
+							unstable++;
+							break;
+						case ABORTED:
+							break;
+						case DISABLED:
+							disabled++;
+							break;
+						default:
+							break;
 					}
 				}
 			}

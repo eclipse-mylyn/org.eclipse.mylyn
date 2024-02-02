@@ -21,6 +21,6 @@ import java.util.List;
  */
 public interface IBuildServerConfiguration {
 
-	public List<IBuildPlan> getPlans();
+	List<IBuildPlan> getPlans();
 
 }

@@ -39,8 +39,8 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
  */
 public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
-	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 *
 	 * @see #getServers()
 	 * @generated
@@ -49,8 +49,8 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	protected EList<IBuildServer> servers;
 
 	/**
-	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 *
 	 * @see #getPlans()
 	 * @generated
@@ -59,8 +59,8 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	protected EList<IBuildPlan> plans;
 
 	/**
-	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 *
 	 * @see #getBuilds()
 	 * @generated
@@ -76,7 +76,6 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * @generated
 	 */
 	protected BuildModel() {
-		super();
 	}
 
 	/**
@@ -92,16 +91,16 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 *
 	 * @generated
 	 */
+	@Override
 	public List<IBuildServer> getServers() {
 		if (servers == null) {
-			servers = new EObjectContainmentEList<IBuildServer>(IBuildServer.class, this,
+			servers = new EObjectContainmentEList<>(IBuildServer.class, this,
 					BuildPackage.BUILD_MODEL__SERVERS);
 		}
 		return servers;
@@ -110,16 +109,16 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 *
 	 * @generated
 	 */
+	@Override
 	public List<IBuildPlan> getPlans() {
 		if (plans == null) {
-			plans = new EObjectContainmentEList<IBuildPlan>(IBuildPlan.class, this, BuildPackage.BUILD_MODEL__PLANS);
+			plans = new EObjectContainmentEList<>(IBuildPlan.class, this, BuildPackage.BUILD_MODEL__PLANS);
 		}
 		return plans;
 	}
@@ -127,16 +126,16 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 *
 	 * @generated
 	 */
+	@Override
 	public List<IBuild> getBuilds() {
 		if (builds == null) {
-			builds = new EObjectContainmentEList<IBuild>(IBuild.class, this, BuildPackage.BUILD_MODEL__BUILDS);
+			builds = new EObjectContainmentEList<>(IBuild.class, this, BuildPackage.BUILD_MODEL__BUILDS);
 		}
 		return builds;
 	}
@@ -149,12 +148,12 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case BuildPackage.BUILD_MODEL__SERVERS:
-			return ((InternalEList<?>) getServers()).basicRemove(otherEnd, msgs);
-		case BuildPackage.BUILD_MODEL__PLANS:
-			return ((InternalEList<?>) getPlans()).basicRemove(otherEnd, msgs);
-		case BuildPackage.BUILD_MODEL__BUILDS:
-			return ((InternalEList<?>) getBuilds()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD_MODEL__SERVERS:
+				return ((InternalEList<?>) getServers()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD_MODEL__PLANS:
+				return ((InternalEList<?>) getPlans()).basicRemove(otherEnd, msgs);
+			case BuildPackage.BUILD_MODEL__BUILDS:
+				return ((InternalEList<?>) getBuilds()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -167,12 +166,12 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_MODEL__SERVERS:
-			return getServers();
-		case BuildPackage.BUILD_MODEL__PLANS:
-			return getPlans();
-		case BuildPackage.BUILD_MODEL__BUILDS:
-			return getBuilds();
+			case BuildPackage.BUILD_MODEL__SERVERS:
+				return getServers();
+			case BuildPackage.BUILD_MODEL__PLANS:
+				return getPlans();
+			case BuildPackage.BUILD_MODEL__BUILDS:
+				return getBuilds();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -186,18 +185,18 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_MODEL__SERVERS:
-			getServers().clear();
-			getServers().addAll((Collection<? extends IBuildServer>) newValue);
-			return;
-		case BuildPackage.BUILD_MODEL__PLANS:
-			getPlans().clear();
-			getPlans().addAll((Collection<? extends IBuildPlan>) newValue);
-			return;
-		case BuildPackage.BUILD_MODEL__BUILDS:
-			getBuilds().clear();
-			getBuilds().addAll((Collection<? extends IBuild>) newValue);
-			return;
+			case BuildPackage.BUILD_MODEL__SERVERS:
+				getServers().clear();
+				getServers().addAll((Collection<? extends IBuildServer>) newValue);
+				return;
+			case BuildPackage.BUILD_MODEL__PLANS:
+				getPlans().clear();
+				getPlans().addAll((Collection<? extends IBuildPlan>) newValue);
+				return;
+			case BuildPackage.BUILD_MODEL__BUILDS:
+				getBuilds().clear();
+				getBuilds().addAll((Collection<? extends IBuild>) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -210,15 +209,15 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_MODEL__SERVERS:
-			getServers().clear();
-			return;
-		case BuildPackage.BUILD_MODEL__PLANS:
-			getPlans().clear();
-			return;
-		case BuildPackage.BUILD_MODEL__BUILDS:
-			getBuilds().clear();
-			return;
+			case BuildPackage.BUILD_MODEL__SERVERS:
+				getServers().clear();
+				return;
+			case BuildPackage.BUILD_MODEL__PLANS:
+				getPlans().clear();
+				return;
+			case BuildPackage.BUILD_MODEL__BUILDS:
+				getBuilds().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -231,12 +230,12 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_MODEL__SERVERS:
-			return servers != null && !servers.isEmpty();
-		case BuildPackage.BUILD_MODEL__PLANS:
-			return plans != null && !plans.isEmpty();
-		case BuildPackage.BUILD_MODEL__BUILDS:
-			return builds != null && !builds.isEmpty();
+			case BuildPackage.BUILD_MODEL__SERVERS:
+				return servers != null && !servers.isEmpty();
+			case BuildPackage.BUILD_MODEL__PLANS:
+				return plans != null && !plans.isEmpty();
+			case BuildPackage.BUILD_MODEL__BUILDS:
+				return builds != null && !builds.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -258,7 +257,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	public List<IBuildPlan> getPlans(IBuildServer server) {
-		List<IBuildPlan> result = new ArrayList<IBuildPlan>();
+		List<IBuildPlan> result = new ArrayList<>();
 		for (IBuildPlan plan : getPlans()) {
 			if (plan.getServer() == server) {
 				result.add(plan);

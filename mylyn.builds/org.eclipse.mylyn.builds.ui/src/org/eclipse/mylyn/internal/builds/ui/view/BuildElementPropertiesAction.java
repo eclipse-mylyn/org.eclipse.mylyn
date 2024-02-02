@@ -30,7 +30,7 @@ public class BuildElementPropertiesAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return (selection.getFirstElement() instanceof IBuildElement);
+		return selection.getFirstElement() instanceof IBuildElement;
 	}
 
 	@Override

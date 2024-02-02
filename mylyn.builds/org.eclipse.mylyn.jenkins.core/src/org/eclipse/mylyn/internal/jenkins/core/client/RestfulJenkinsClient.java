@@ -79,15 +79,15 @@ public class RestfulJenkinsClient {
 		private HudsonModelBuild build;
 
 		BuildId(int id) {
-			this.build = new HudsonModelBuild();
-			this.build.setNumber(id);
+			build = new HudsonModelBuild();
+			build.setNumber(id);
 		}
 
 		public HudsonModelBuild getBuild() {
 			return build;
 		}
 
-	};
+	}
 
 	private static final String URL_API = "/api/xml"; //$NON-NLS-1$
 
@@ -249,7 +249,7 @@ public class RestfulJenkinsClient {
 			return Collections.emptyList();
 		}
 
-		List<HudsonModelJob> jobs = new ArrayList<HudsonModelJob>();
+		List<HudsonModelJob> jobs = new ArrayList<>();
 
 		if (ids != null) {
 			Map<String, List<String>> jobNamesByFolderUrl = jenkinsUrlUtil.groupJobNamesByFolderUrl(ids);
@@ -260,12 +260,12 @@ public class RestfulJenkinsClient {
 						.size(); batchStartIndex += JOB_RETRIEVE_BATCH_SIZE) {
 					List<String> jobNamesBatch = jobNames.subList(batchStartIndex,
 							Math.min(batchStartIndex + JOB_RETRIEVE_BATCH_SIZE, jobNames.size()));
-					jobs.addAll(this.getJobsFromFolder(folderUrl, jobNamesBatch, monitor));
+					jobs.addAll(getJobsFromFolder(folderUrl, jobNamesBatch, monitor));
 				}
 			}
 		} else {
-			jobs = this.getJobsFromFolder(jenkinsUrlUtil.baseUrl(), ids, monitor);
-			this.updateConfiguration(jobs);
+			jobs = getJobsFromFolder(jenkinsUrlUtil.baseUrl(), ids, monitor);
+			updateConfiguration(jobs);
 		}
 
 		return jobs;
@@ -273,7 +273,7 @@ public class RestfulJenkinsClient {
 
 	private void updateConfiguration(List<HudsonModelJob> jobs) throws JenkinsException {
 
-		Map<String, String> jobNameById = new HashMap<String, String>();
+		Map<String, String> jobNameById = new HashMap<>();
 
 		for (HudsonModelJob job : jobs) {
 			String jobUrl = job.getUrl();
@@ -317,7 +317,7 @@ public class RestfulJenkinsClient {
 
 				HudsonModelHudson hudson = unmarshal(parse(in, response.getRequestPath()), HudsonModelHudson.class);
 
-				List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
+				List<HudsonModelJob> buildPlans = new ArrayList<>();
 				List<Object> jobsNodes = hudson.getJob();
 				Set<String> urls = new HashSet<>();
 				for (Object jobNode : jobsNodes) {
@@ -347,7 +347,7 @@ public class RestfulJenkinsClient {
 			return url;
 		}
 
-		return this.jenkinsUrlUtil.getJobUrlFromJobId(job.getName());
+		return jenkinsUrlUtil.getJobUrlFromJobId(job.getName());
 	}
 
 	Element parse(InputStream in, String url) throws JenkinsException {
@@ -355,8 +355,6 @@ public class RestfulJenkinsClient {
 			return getDocumentBuilder().parse(in).getDocumentElement();
 		} catch (OperationCanceledException e) {
 			throw e;
-		} catch (SAXException e) {
-			throw new JenkinsException(NLS.bind("Failed to parse response from {0}", url), e); //$NON-NLS-1$
 		} catch (Exception e) {
 			throw new JenkinsException(NLS.bind("Failed to parse response from {0}", url), e); //$NON-NLS-1$
 		}
@@ -378,9 +376,7 @@ public class RestfulJenkinsClient {
 				try {
 					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					return builder.parse(in); // TODO Enhance progress monitoring
-				} catch (ParserConfigurationException e) {
-					throw new JenkinsException(e);
-				} catch (SAXException e) {
+				} catch (ParserConfigurationException | SAXException e) {
 					throw new JenkinsException(e);
 				}
 			}
@@ -389,7 +385,7 @@ public class RestfulJenkinsClient {
 
 	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters,
 			final IOperationMonitor monitor) throws JenkinsException {
-		new JenkinsOperation<Object>(client) {
+		new JenkinsOperation<>(client) {
 			@Override
 			public Object execute() throws IOException, JenkinsException, JAXBException {
 				HttpPost request = createPostRequest(getJobUrl(job) + "/build"); //$NON-NLS-1$
@@ -414,13 +410,13 @@ public class RestfulJenkinsClient {
 					throw new JenkinsException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", //$NON-NLS-1$
 							response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 				}
-			};
+			}
 		}.run();
 	}
 
 	public void abortBuild(final HudsonModelJob job, final HudsonModelBuild build, final IOperationMonitor monitor)
 			throws JenkinsException {
-		new JenkinsOperation<Object>(client) {
+		new JenkinsOperation<>(client) {
 			@Override
 			public Object execute() throws IOException, JenkinsException, JAXBException {
 				HttpPost request = createPostRequest(getJobUrl(job) + build.getNumber() + "/stop"); //$NON-NLS-1$
@@ -438,7 +434,7 @@ public class RestfulJenkinsClient {
 					throw new JenkinsException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", //$NON-NLS-1$
 							response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 				}
-			};
+			}
 		}.run();
 	}
 

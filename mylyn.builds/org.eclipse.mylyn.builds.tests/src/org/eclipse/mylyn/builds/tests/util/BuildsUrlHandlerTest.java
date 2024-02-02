@@ -14,8 +14,6 @@ package org.eclipse.mylyn.builds.tests.util;
 
 import java.util.concurrent.TimeUnit;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.tests.support.BuildHarness;
@@ -25,6 +23,8 @@ import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

@@ -12,13 +12,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Password Parameter Definition</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Password Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition#getDefaultValue <em>Default Value</em>}
- * </li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
  * 
@@ -26,8 +24,7 @@ import org.eclipse.mylyn.builds.core.IPasswordParameterDefinition;
  */
 public class PasswordParameterDefinition extends ParameterDefinition implements IPasswordParameterDefinition {
 	/**
-	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDefaultValue()
 	 * @generated
@@ -36,8 +33,7 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	protected static final String DEFAULT_VALUE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDefaultValue()
 	 * @generated
@@ -51,7 +47,6 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 * @generated
 	 */
 	protected PasswordParameterDefinition() {
-		super();
 	}
 
 	/**
@@ -67,13 +62,13 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDefaultValue() {
 		return defaultValue;
 	}
@@ -83,12 +78,14 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDefaultValue(String newDefaultValue) {
 		String oldDefaultValue = defaultValue;
 		defaultValue = newDefaultValue;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE, oldDefaultValue, defaultValue));
+		}
 	}
 
 	/**
@@ -99,8 +96,8 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			return getDefaultValue();
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				return getDefaultValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,9 +110,9 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			setDefaultValue((String) newValue);
-			return;
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				setDefaultValue((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -128,9 +125,9 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			setDefaultValue(DEFAULT_VALUE_EDEFAULT);
-			return;
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				setDefaultValue(DEFAULT_VALUE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -143,8 +140,10 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
-			return DEFAULT_VALUE_EDEFAULT == null ? defaultValue != null : !DEFAULT_VALUE_EDEFAULT.equals(defaultValue);
+			case BuildPackage.PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE:
+				return DEFAULT_VALUE_EDEFAULT == null
+						? defaultValue != null
+						: !DEFAULT_VALUE_EDEFAULT.equals(defaultValue);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -156,10 +155,11 @@ public class PasswordParameterDefinition extends ParameterDefinition implements 
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (defaultValue: "); //$NON-NLS-1$
 		result.append(defaultValue);
 		result.append(')');

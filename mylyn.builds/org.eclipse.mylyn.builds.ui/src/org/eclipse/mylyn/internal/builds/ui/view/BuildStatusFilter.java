@@ -59,7 +59,7 @@ public class BuildStatusFilter extends ViewerFilter {
 	}
 
 	public void setFiltered(EnumSet<BuildStatus> statuses) {
-		filtered = new HashSet<BuildStatus>(statuses);
+		filtered = new HashSet<>(statuses);
 	}
 
 }

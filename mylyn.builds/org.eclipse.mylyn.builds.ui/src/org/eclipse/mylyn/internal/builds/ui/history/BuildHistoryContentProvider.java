@@ -22,19 +22,22 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class BuildHistoryContentProvider implements ITreeContentProvider {
 
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = {};
 
 	public BuildHistoryContentProvider() {
 	}
 
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof List<?>) {
 			return ((List<?>) inputElement).toArray();
@@ -42,14 +45,17 @@ public class BuildHistoryContentProvider implements ITreeContentProvider {
 		return EMPTY_ARRAY;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 

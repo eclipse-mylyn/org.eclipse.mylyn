@@ -32,8 +32,7 @@ public interface IBuildModel {
 	 * Returns the value of the '<em><b>Servers</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.builds.core.IBuildServer}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -46,8 +45,7 @@ public interface IBuildModel {
 	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.builds.core.IBuildPlan}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -60,8 +58,7 @@ public interface IBuildModel {
 	 * Returns the value of the '<em><b>Builds</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.builds.core.IBuild}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

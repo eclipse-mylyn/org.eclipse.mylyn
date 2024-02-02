@@ -27,8 +27,7 @@ public interface IHealthReport {
 	/**
 	 * Returns the value of the '<em><b>Health</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -39,8 +38,8 @@ public interface IHealthReport {
 	int getHealth();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getHealth <em>Health</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getHealth <em>Health</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Health</em>' attribute.
@@ -52,8 +51,7 @@ public interface IHealthReport {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -64,8 +62,8 @@ public interface IHealthReport {
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getDescription <em>Description</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getDescription <em>Description</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
