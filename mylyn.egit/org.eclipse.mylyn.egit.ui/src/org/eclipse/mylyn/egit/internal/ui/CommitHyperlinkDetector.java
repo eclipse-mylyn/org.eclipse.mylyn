@@ -44,14 +44,12 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Detects Git commit ids in task descriptions and allows users to open them in
- * the commit editor.
+ * Detects Git commit ids in task descriptions and allows users to open them in the commit editor.
  */
 @SuppressWarnings("restriction")
 public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	private static final Pattern PATTERN_COMMIT_ID = Pattern
-			.compile("(?<!\\w)([0-9a-f]{8}([0-9a-f]{32})?)"); //$NON-NLS-1$
+	private static final Pattern PATTERN_COMMIT_ID = Pattern.compile("(?<!\\w)([0-9a-f]{8}([0-9a-f]{32})?)"); //$NON-NLS-1$
 
 	private static class CommitHyperlink implements IHyperlink {
 
@@ -91,34 +89,30 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 			try {
 				RepositoryCommit commit;
 				commit = searchCommit();
-				if (commit != null)
+				if (commit != null) {
 					CommitEditor.openQuiet(commit);
-				else
+				} else {
 					informCommitNotFound();
+				}
 			} catch (IOException e) {
 				// ignore
 			}
 		}
 
 		private void informCommitNotFound() {
-			MessageDialog
-					.openWarning(
-							shell,
-							Messages.CommitHyperlinkDetector_CommitNotFound,
-							NLS.bind(
-									Messages.CommitHyperlinkDetector_CommitNotFoundInRepositories,
-									objectId));
+			MessageDialog.openWarning(
+					shell, Messages.CommitHyperlinkDetector_CommitNotFound, NLS.bind(
+							Messages.CommitHyperlinkDetector_CommitNotFoundInRepositories, objectId));
 		}
 
 		private RepositoryCommit searchCommit() throws IOException {
-			List<String> configuredRepositories = RepositoryUtil.INSTANCE
-					.getConfiguredRepositories();
+			List<String> configuredRepositories = RepositoryUtil.INSTANCE.getConfiguredRepositories();
 			for (String repoDir : configuredRepositories) {
-				Repository repository = RepositoryCache.INSTANCE
-						.lookupRepository(new File(repoDir));
+				Repository repository = RepositoryCache.INSTANCE.lookupRepository(new File(repoDir));
 				RevCommit commit = getCommit(repository);
-				if (commit != null)
+				if (commit != null) {
 					return new RepositoryCommit(repository, commit);
+				}
 			}
 
 			return null;
@@ -127,10 +121,7 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 		private RevCommit getCommit(Repository repository) throws IOException {
 			try (RevWalk revWalk = new RevWalk(repository)) {
 				return revWalk.parseCommit(ObjectId.fromString(objectId));
-			} catch (MissingObjectException e) {
-				// ignore
-				return null;
-			} catch (IncorrectObjectTypeException e) {
+			} catch (MissingObjectException | IncorrectObjectTypeException e) {
 				// ignore
 				return null;
 			}
@@ -150,12 +141,11 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 	}
 
 	/**
-	 * Detects and returns all available hyperlinks for the given
-	 * {@link TextViewer} which link to a Git commit.
+	 * Detects and returns all available hyperlinks for the given {@link TextViewer} which link to a Git commit.
 	 */
 	@Override
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			final IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region,
+			boolean canShowMultipleHyperlinks) {
 		IDocument document = textViewer.getDocument();
 		if (document == null || document.getLength() == 0) {
 			return null;
@@ -167,22 +157,19 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 		try {
 			if (region.getLength() == 0) {
 				// expand the region to include the whole line
-				IRegion lineInfo = document.getLineInformationOfOffset(region
-						.getOffset());
+				IRegion lineInfo = document.getLineInformationOfOffset(region.getOffset());
 				int lineLength = lineInfo.getLength();
 				int lineOffset = lineInfo.getOffset();
 				int lineEnd = lineOffset + lineLength;
 				int regionEnd = region.getOffset() + region.getLength();
 				if (lineOffset < region.getOffset()) {
-					int regionLength = Math.max(regionEnd, lineEnd)
-							- lineOffset;
+					int regionLength = Math.max(regionEnd, lineEnd) - lineOffset;
 					contentOffset = lineOffset;
 					content = document.get(lineOffset, regionLength);
 					index = region.getOffset() - lineOffset;
 				} else {
 					// the line starts after region, may never happen
-					int regionLength = Math.max(regionEnd, lineEnd)
-							- region.getOffset();
+					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
 					contentOffset = region.getOffset();
 					content = document.get(contentOffset, regionLength);
 					index = 0;
@@ -196,8 +183,7 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		List<IHyperlink> hyperlinks = detectHyperlinks(textViewer, content,
-				index, contentOffset);
+		List<IHyperlink> hyperlinks = detectHyperlinks(textViewer, content, index, contentOffset);
 		if (hyperlinks == null) {
 			return null;
 		}
@@ -218,25 +204,21 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 		return hyperlinks.toArray(new IHyperlink[0]);
 	}
 
-	private List<IHyperlink> detectHyperlinks(ITextViewer textViewer,
-			String content, int index, int contentOffset) {
+	private List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int index, int contentOffset) {
 		Shell shell = textViewer.getTextWidget().getShell();
 		List<IHyperlink> links = null;
 		Matcher matcher = PATTERN_COMMIT_ID.matcher(content);
 		while (matcher.find()) {
-			if (index != -1
-					&& (index < matcher.start() || index > matcher.end())) {
+			if (index != -1 && (index < matcher.start() || index > matcher.end())) {
 				continue;
 			}
 			if (links == null) {
 				links = new ArrayList<>();
 			}
 			int start = matcher.start(1);
-			Region region = new Region(contentOffset + start, matcher.end(1)
-					- start);
+			Region region = new Region(contentOffset + start, matcher.end(1) - start);
 
-			CommitHyperlink hyperlink = new CommitHyperlink(region,
-					matcher.group(1), shell);
+			CommitHyperlink hyperlink = new CommitHyperlink(region, matcher.group(1), shell);
 			links.add(hyperlink);
 		}
 		return links;
@@ -244,8 +226,7 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private boolean isInRegion(IRegion detectInRegion, IRegion hyperlinkRegion) {
 		return detectInRegion.getOffset() >= hyperlinkRegion.getOffset()
-				&& detectInRegion.getOffset() <= hyperlinkRegion.getOffset()
-						+ hyperlinkRegion.getLength();
+				&& detectInRegion.getOffset() <= hyperlinkRegion.getOffset() + hyperlinkRegion.getLength();
 	}
 
 }

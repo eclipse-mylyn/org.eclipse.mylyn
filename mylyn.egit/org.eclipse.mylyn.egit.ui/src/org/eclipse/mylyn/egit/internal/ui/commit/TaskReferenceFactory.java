@@ -47,6 +47,7 @@ public class TaskReferenceFactory implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
 	private static final String BUGTRACK_SECTION = "bugtracker"; //$NON-NLS-1$
+
 	private static final String BUGTRACK_URL = "url"; //$NON-NLS-1$
 
 	private static final String LOCALHOST = "localhost"; //$NON-NLS-1$
@@ -75,14 +76,12 @@ public class TaskReferenceFactory implements IAdapterFactory {
 	}
 
 	/**
-	 * Finds the {@link TaskRepository} for the provided
-	 * {@link IRepositoryCommit} object and returns new {@link LinkedTaskInfo}
-	 * object or <code>null</code> if nothing found.
+	 * Finds the {@link TaskRepository} for the provided {@link IRepositoryCommit} object and returns new {@link LinkedTaskInfo} object or
+	 * <code>null</code> if nothing found.
 	 *
 	 * @param commit
 	 *            an {@link IRepositoryCommit} object to find the task info for
-	 * @return {@link LinkedTaskInfo} object, or <code>null</code> if repository
-	 *         not found
+	 * @return {@link LinkedTaskInfo} object, or <code>null</code> if repository not found
 	 */
 	private AbstractTaskReference adaptFromCommit(IRepositoryCommit commit) {
 		Repository r = commit.getRepository();
@@ -104,18 +103,17 @@ public class TaskReferenceFactory implements IAdapterFactory {
 		if (message == null || message.trim().isEmpty()) {
 			return null;
 		}
-		return new LinkedTaskInfo(taskRepositoryUrl, null, null, message,
-				timestamp);
+		return new LinkedTaskInfo(taskRepositoryUrl, null, null, message, timestamp);
 	}
 
 	private static IRepositoryCommit getCommitForElement(Object element) {
 		if (element instanceof IRepositoryCommit) {
 			// plugin.xml references SWTCommit, but that's internal
 			return (IRepositoryCommit) element;
-		} else if (element instanceof GitModelCommit) {
-			GitModelCommit modelCommit = (GitModelCommit) element;
-			if (!(modelCommit.getParent() instanceof GitModelRepository))
+		} else if (element instanceof GitModelCommit modelCommit) {
+			if (!(modelCommit.getParent() instanceof GitModelRepository)) {
 				return null; // should never happen
+			}
 
 			GitModelRepository parent = (GitModelRepository) modelCommit.getParent();
 			Repository repo = parent.getRepository();
@@ -144,8 +142,7 @@ public class TaskReferenceFactory implements IAdapterFactory {
 	 *
 	 * @param repository
 	 *            git repository to find a task repository for
-	 * @return {@link TaskRepository} associated with this git repository or
-	 *         {@code null} if none found
+	 * @return {@link TaskRepository} associated with this git repository or {@code null} if none found
 	 */
 	private TaskRepository getTaskRepository(Repository repository) {
 		Config config = repository.getConfig();
@@ -154,35 +151,37 @@ public class TaskReferenceFactory implements IAdapterFactory {
 			return TasksUiPlugin.getRepositoryManager().getRepository(url);
 		}
 		// Try to find any that uses the same host as the configured origin URL
-		url = config.getString(ConfigConstants.CONFIG_REMOTE_SECTION,
-				Constants.DEFAULT_REMOTE_NAME, ConfigConstants.CONFIG_KEY_URL);
+		url = config.getString(ConfigConstants.CONFIG_REMOTE_SECTION, Constants.DEFAULT_REMOTE_NAME,
+				ConfigConstants.CONFIG_KEY_URL);
 		if (url == null) {
 			return null;
 		}
 		try {
 			return getTaskRepositoryByHost(new URIish(url).getHost());
 		} catch (Exception ex) {
-			Platform.getLog(getClass()).log(new Status(IStatus.ERROR,
-					getClass(), "failed to get repo url", ex)); //$NON-NLS-1$
+			Platform.getLog(getClass()).log(new Status(IStatus.ERROR, getClass(), "failed to get repo url", ex)); //$NON-NLS-1$
 		}
 		return null;
 	}
 
 	private TaskRepository getTaskRepositoryByHost(String host) {
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
-		if (repositories == null || repositories.isEmpty())
+		if (repositories == null || repositories.isEmpty()) {
 			return null;
+		}
 
-		if (repositories.size() == 1)
+		if (repositories.size() == 1) {
 			return repositories.iterator().next();
+		}
 
 		for (TaskRepository repository : repositories) {
 			if (!repository.isOffline()) {
 				try {
 					URL url = new URL(repository.getRepositoryUrl());
 
-					if (isSameHosts(host, url.getHost()))
+					if (isSameHosts(host, url.getHost())) {
 						return repository;
+					}
 				} catch (MalformedURLException e) {
 					// We cannot do anything.
 				}
