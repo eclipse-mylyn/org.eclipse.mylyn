@@ -43,8 +43,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
 /**
- * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by
- * name.
+ * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by name.
  * <p>
  * Markup languages may be dynamically discovered by adding a Java service file in one of the following locations:
  * <ul>
@@ -111,8 +110,8 @@ public class ServiceLocator {
 	 * get a markup language by name
 	 *
 	 * @param languageName
-	 *            the {@link MarkupLanguage#getName() name} of the markup language, or the fully qualified name of the
-	 *            class that implements the language
+	 *            the {@link MarkupLanguage#getName() name} of the markup language, or the fully qualified name of the class that implements
+	 *            the language
 	 * @return the language implementation
 	 * @throws IllegalArgumentException
 	 *             if the provided language name is null or if no implementation is available for the given language
@@ -212,7 +211,7 @@ public class ServiceLocator {
 	}
 
 	interface MarkupLanguageVisitor {
-		public boolean accept(MarkupLanguage language);
+		boolean accept(MarkupLanguage language);
 	}
 
 	void loadMarkupLanguages(MarkupLanguageVisitor visitor) {

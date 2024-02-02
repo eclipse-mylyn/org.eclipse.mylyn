@@ -61,10 +61,7 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	protected String makeUrlAbsolute(String url) {
-		if (base == null || baseInHead || url == null) {
-			return url;
-		}
-		if (ABSOLUTE_URL_PATTERN.matcher(url).matches()) {
+		if (base == null || baseInHead || url == null || ABSOLUTE_URL_PATTERN.matcher(url).matches()) {
 			return url;
 		}
 		if (url.startsWith("#")) { //$NON-NLS-1$
@@ -105,8 +102,8 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Set the base URI of the HTML document. Causes all relative URLs to be prefixed with the base URI. The base URI is
-	 * assumed to refer to a folder-like resource.
+	 * Set the base URI of the HTML document. Causes all relative URLs to be prefixed with the base URI. The base URI is assumed to refer to
+	 * a folder-like resource.
 	 *
 	 * @param uri
 	 *            the URI, or null
@@ -116,24 +113,24 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Get the base URI of the HTML document. A not-null value causes all relative URLs to be prefixed with the base
-	 * URI. The base URI is assumed to refer to a folder-like resource.
+	 * Get the base URI of the HTML document. A not-null value causes all relative URLs to be prefixed with the base URI. The base URI is
+	 * assumed to refer to a folder-like resource.
 	 */
 	public URI getBase() {
 		return base;
 	}
 
 	/**
-	 * Indicate if the {@link #getBase() base URI} should be emitted into the &lt;head&gt; of the document. The default
-	 * value is false. Ignored unless {@link #isEmitAsDocument()}
+	 * Indicate if the {@link #getBase() base URI} should be emitted into the &lt;head&gt; of the document. The default value is false.
+	 * Ignored unless {@link #isEmitAsDocument()}
 	 */
 	public boolean isBaseInHead() {
 		return baseInHead;
 	}
 
 	/**
-	 * Indicate if the {@link #getBase() base URI} should be emitted into the &lt;head&gt; of the document. The default
-	 * value is false. Ignored unless {@link #isEmitAsDocument()}
+	 * Indicate if the {@link #getBase() base URI} should be emitted into the &lt;head&gt; of the document. The default value is false.
+	 * Ignored unless {@link #isEmitAsDocument()}
 	 */
 	public void setBaseInHead(boolean baseInHead) {
 		this.baseInHead = baseInHead;

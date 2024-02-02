@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
-	static final String BR = System.getProperty("line.separator");
+	static final String BR = System.lineSeparator();
 
 	@Test
 	public void testUnorderedList() {
@@ -163,15 +163,15 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "** second item level 2" + BR //
 				+ "* item level 3" + BR //
 				+ "- item level 1" + BR);
-		assertEquals("testMixedLevels", "" //
-				+ "<ul>"//
-				+ "<li>item level 1<ul>" //
-				+ "<li>first item level 2</li>" //
-				+ "<li>second item level 2<ul>" //
-				+ "<li>item level 3</li>" //
-				+ "</ul></li></ul></li>" //
-				+ "<li>item level 1</li>" //
-				+ "</ul>", html);
+		assertEquals("testMixedLevels", """
+				<ul>\
+				<li>item level 1<ul>\
+				<li>first item level 2</li>\
+				<li>second item level 2<ul>\
+				<li>item level 3</li>\
+				</ul></li></ul></li>\
+				<li>item level 1</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -206,12 +206,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "" + BR //
 				+ "first list done" + BR //
 				+ "- item 3" + BR);
-		assertEquals("" //
-				+ "<ul>" //
-				+ "<li>item 1</li>" //
-				+ "<li>item 2</li></ul>" //
-				+ "<p>first list done</p>\n" //
-				+ "<ul><li>item 3</li></ul>", html);
+		assertEquals("""
+				<ul>\
+				<li>item 1</li>\
+				<li>item 2</li></ul>\
+				<p>first list done</p>
+				<ul><li>item 3</li></ul>""", html);
 	}
 
 	@Test
@@ -222,16 +222,16 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "    - item a" + BR //
 				+ "    - item b" + BR //
 		);
-		assertEquals("" //
-				+ "<ul>" //
-				+ "<li>item 1</li>" //
-				+ "<li>item 2</li>" //
-				+ "</ul>" //
-				+ "<p>end of first list</p>\n" //
-				+ "<ul>" //
-				+ "<li>item a</li>" //
-				+ "<li>item b</li>" //
-				+ "</ul>", html);
+		assertEquals("""
+				<ul>\
+				<li>item 1</li>\
+				<li>item 2</li>\
+				</ul>\
+				<p>end of first list</p>
+				<ul>\
+				<li>item a</li>\
+				<li>item b</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -240,12 +240,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "dolor" + BR //
 				+ "* other" + BR); //
-		assertEquals("" //
-				+ "<ul>" //
-				+ "<li>lorem ipsum dolor</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("""
+				<ul>\
+				<li>lorem ipsum dolor</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -253,12 +252,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml("* lorem" + BR //
 				+ "  ipsum" + BR //
 				+ "* other" + BR); //
-		assertEquals("" //
-				+ "<ul>" //
-				+ "<li>lorem ipsum</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("""
+				<ul>\
+				<li>lorem ipsum</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -266,12 +264,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml("- lorem" + BR //
 				+ "-- ipsum" + BR //this is not a valid list item
 				+ "- other" + BR); //
-		assertEquals("" //
-				+ "<ul>" //
-				+ "<li>lorem -- ipsum</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("""
+				<ul>\
+				<li>lorem -- ipsum</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -287,12 +284,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml(".. lorem" + BR //
 				+ "...... ipsum" + BR //this is not a valid list item
 				+ ".. other" + BR); //
-		assertEquals("testListBreak", "" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>lorem ...... ipsum</li>" //
-				+ "<li>other</li>" //
-				+ "</ol>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ol style="list-style-type:decimal;">\
+				<li>lorem ...... ipsum</li>\
+				<li>other</li>\
+				</ol>""", html);
 	}
 
 	@Test
@@ -301,13 +297,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "+" + BR //
 				+ "ipsum" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>lorem<p>ipsum</p>\n" //
-				+ "</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>lorem<p>ipsum</p>
+				</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -317,13 +312,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "+" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>lorem<p>ipsum</p>\n" //
-				+ "</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>lorem<p>ipsum</p>
+				</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -333,13 +327,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>lorem<p>ipsum</p>\n" //
-				+ "</li>" //
-				+ "<li>other</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>lorem<p>ipsum</p>
+				</li>\
+				<li>other</li>\
+				</ul>""", html);
 	}
 
 	@Test
@@ -354,445 +347,483 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "other code" + BR //
 				+ "----" + BR //
 		); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>lorem"
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "some code<br/>" //
-				+ "</code></pre></div></div>" //
-				+ "</li>" //
-				+ "<li>other" //
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "other code<br/>" //
-				+ "</code></pre></div></div>" //
-				+ "</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>lorem\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				some code<br/>\
+				</code></pre></div></div>\
+				</li>\
+				<li>other\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				other code<br/>\
+				</code></pre></div></div>\
+				</li>\
+				</ul>""", html);
 	}
 
 	@Test
 	public void testListWithContinuationAndNestedBlocks() {
-		String html = parseToHtml("* item 1\n" //
-				+ "+\n" //
-				+ "----\n" //
-				+ "code block 1\n" //
-				+ "----\n" //
-				+ "+\n" //
-				+ "|===\n" //
-				+ "|cell 1|cell 2\n" //
-				+ "|cell 3|cell 4\n" //
-				+ "|===\n" //
-				+ "* item 2\n" //
-				+ "+\n" //
-				+ "----\n" //
-				+ "code block 2\n" //
-				+ "----\n" //
+		String html = parseToHtml("""
+				* item 1
+				+
+				----
+				code block 1
+				----
+				+
+				|===
+				|cell 1|cell 2
+				|cell 3|cell 4
+				|===
+				* item 2
+				+
+				----
+				code block 2
+				----
+				"""
 		); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>item 1"
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "code block 1<br/>" //
-				+ "</code></pre></div></div>" //
-				+ "<table><tr>" //
-				+ "<td>cell 1</td><td>cell 2</td>" //
-				+ "</tr><tr>" //
-				+ "<td>cell 3</td><td>cell 4</td>" //
-				+ "</tr></table>" //
-				+ "</li>" //
-				+ "<li>item 2" //
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "code block 2<br/>" //
-				+ "</code></pre></div></div>" //
-				+ "</li>" //
-				+ "</ul>" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>item 1\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				code block 1<br/>\
+				</code></pre></div></div>\
+				<table><tr>\
+				<td>cell 1</td><td>cell 2</td>\
+				</tr><tr>\
+				<td>cell 3</td><td>cell 4</td>\
+				</tr></table>\
+				</li>\
+				<li>item 2\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				code block 2<br/>\
+				</code></pre></div></div>\
+				</li>\
+				</ul>""", html);
 	}
 
 	@Test
 	public void testListWithNestedCodeBlockContainingEmptyLine() {
-		String html = parseToHtml("* item 1\n" //
-				+ "+\n" //
-				+ "----\n" //
-				+ "code block with empty line\n" //
-				+ "\n" //
-				+ "----\n" //
-				+ "\n" //
-				+ "end of list" //
+		String html = parseToHtml("""
+				* item 1
+				+
+				----
+				code block with empty line
+
+				----
+
+				end of list"""
 		); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>item 1"
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "code block with empty line<br/><br/>" //
-				+ "</code></pre></div></div>" //
-				+ "</li>" //
-				+ "</ul>" //
-				+ "<p>end of list</p>\n" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>item 1\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				code block with empty line<br/><br/>\
+				</code></pre></div></div>\
+				</li>\
+				</ul>\
+				<p>end of list</p>
+				""", html);
 	}
 
 	@Test
 	public void testListWithNestedCodeBlockContainingContinuation() {
-		String html = parseToHtml("* item 1\n" //
-				+ "+\n" //
-				+ "----\n" //
-				+ "code block with continuation\n" //
-				+ "+\n" //
-				+ "----\n" //
-				+ "\n" //
-				+ "end of list" //
+		String html = parseToHtml("""
+				* item 1
+				+
+				----
+				code block with continuation
+				+
+				----
+
+				end of list"""
 		); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>item 1"
-				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
-				+ "code block with continuation<br/>" //
-				+ "+<br/>" //
-				+ "</code></pre></div></div>" //
-				+ "</li>" //
-				+ "</ul>" //
-				+ "<p>end of list</p>\n" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>item 1\
+				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
+				code block with continuation<br/>\
+				+<br/>\
+				</code></pre></div></div>\
+				</li>\
+				</ul>\
+				<p>end of list</p>
+				""", html);
 	}
 
 	@Test
 	public void testListWithNestedTableContainingEmptyLine() {
-		String html = parseToHtml("* item 1\n" //
-				+ "+\n" //
-				+ "|===\n" //
-				+ "|one | two\n" //
-				+ "\n" //
-				+ "|===\n" //
-				+ "\n" //
-				+ "end of list" //
+		String html = parseToHtml("""
+				* item 1
+				+
+				|===
+				|one | two
+
+				|===
+
+				end of list"""
 		); //
-		assertEquals("testListBreak", "" //
-				+ "<ul>" //
-				+ "<li>item 1" //
-				+ "<table><tr><td>one</td><td>two</td></tr></table>" //
-				+ "</li>" //
-				+ "</ul>" //
-				+ "<p>end of list</p>\n" //
-				, html);
+		assertEquals("testListBreak", """
+				<ul>\
+				<li>item 1\
+				<table><tr><td>one</td><td>two</td></tr></table>\
+				</li>\
+				</ul>\
+				<p>end of list</p>
+				""", html);
 	}
 
 	@Test
 	public void testListWithStart() {
-		String html = parseToHtml("[start=\"5\"]\n" //
-				+ ". item 5\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:decimal;\" start=\"5\">" //
-				+ "<li>item 5</li>" //
-				+ "</ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[start="5"]
+				. item 5
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:decimal;" start="5">\
+				<li>item 5</li>\
+				</ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleLoweralpha() {
-		String html = parseToHtml("[style=\"loweralpha\"]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[style="loweralpha"]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:lower-alpha;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleUpperalpha() {
-		String html = parseToHtml("[style=\"upperalpha\"]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:upper-alpha;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[style="upperalpha"]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:upper-alpha;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleLowerroman() {
-		String html = parseToHtml("[style=\"lowerroman\"]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:lower-roman;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[style="lowerroman"]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:lower-roman;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleUpperroman() {
-		String html = parseToHtml("[style=\"upperroman\"]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:upper-roman;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[style="upperroman"]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:upper-roman;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleArabicAsPositionalParam() {
-		String html = parseToHtml("[arabic]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[arabic]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:decimal;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleLoweralphaAsPositionalParam() {
-		String html = parseToHtml("[loweralpha]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[loweralpha]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:lower-alpha;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleUpperalphaAsPositionalParam() {
-		String html = parseToHtml("[upperalpha]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:upper-alpha;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[upperalpha]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:upper-alpha;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleLowerromanAsPositionalParam() {
-		String html = parseToHtml("[lowerroman]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:lower-roman;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[lowerroman]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:lower-roman;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithStyleUpperromanAsPositionalParam() {
-		String html = parseToHtml("[upperroman]\n" //
-				+ ". item\n" //
-				+ ".. item\n" //
-				+ "\n" //
-				+ "another\n" //
-				+ ". item");
-		assertEquals("<ol style=\"list-style-type:upper-roman;\">" //
-				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>item</li>" //
-				+ "</ol></li></ol><p>another</p>\n" //
-				+ "<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>item</li></ol>", //
+		String html = parseToHtml("""
+				[upperroman]
+				. item
+				.. item
+
+				another
+				. item""");
+		assertEquals("""
+				<ol style="list-style-type:upper-roman;">\
+				<li>item<ol style="list-style-type:lower-alpha;">\
+				<li>item</li>\
+				</ol></li></ol><p>another</p>
+				<ol style="list-style-type:decimal;">\
+				<li>item</li></ol>""", //
 				html);
 	}
 
 	@Test
 	public void testListWithExplicitNumbering() {
-		String html = parseToHtml("\n" //
-				+ "MDCLXIV) level 1\n" //
-				+ "AZ. level 2\n" //
-				+ "13. level 3\n" //
-				+ "iv) level 4\n" //
-				+ "ab. level 5\n" //
-				+ "I) level 1\n" //
+		String html = parseToHtml("""
+
+				MDCLXIV) level 1
+				AZ. level 2
+				13. level 3
+				iv) level 4
+				ab. level 5
+				I) level 1
+				"""
 		);
-		assertEquals("" //
-				+ "<ol style=\"list-style-type:upper-roman;\">" //
-				+ "<li>level 1<ol style=\"list-style-type:upper-alpha;\">" //
-				+ "<li>level 2<ol style=\"list-style-type:decimal;\">" //
-				+ "<li>level 3<ol style=\"list-style-type:lower-roman;\">" //
-				+ "<li>level 4<ol style=\"list-style-type:lower-alpha;\">" //
-				+ "<li>level 5</li>" //
-				+ "</ol></li>" //
-				+ "</ol></li>" //
-				+ "</ol></li>" //
-				+ "</ol></li>" //
-				+ "<li>level 1</li>" //
-				+ "</ol>", html);
+		assertEquals("""
+				<ol style="list-style-type:upper-roman;">\
+				<li>level 1<ol style="list-style-type:upper-alpha;">\
+				<li>level 2<ol style="list-style-type:decimal;">\
+				<li>level 3<ol style="list-style-type:lower-roman;">\
+				<li>level 4<ol style="list-style-type:lower-alpha;">\
+				<li>level 5</li>\
+				</ol></li>\
+				</ol></li>\
+				</ol></li>\
+				</ol></li>\
+				<li>level 1</li>\
+				</ol>""", html);
 	}
 
 	@Test
 	public void testDefinitionListSimple() {
-		String html = parseToHtml("" //
-				+ "First Item:: first description\n" //
-				+ "Second Item:: second description\n");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First Item</dt>" //
-				+ "<dd>first description</dd>" //
-				+ "<dt class=\"hdlist1\">Second Item</dt>" //
-				+ "<dd>second description</dd>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First Item:: first description
+				Second Item:: second description
+				""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First Item</dt>\
+				<dd>first description</dd>\
+				<dt class="hdlist1">Second Item</dt>\
+				<dd>second description</dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListFormattedText() {
-		String html = parseToHtml("" //
-				+ "First Item:: *first* _description_\n" //
-				+ "Second Item:: `second` description\n");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First Item</dt>" //
-				+ "<dd><strong>first</strong> <em>description</em></dd>" //
-				+ "<dt class=\"hdlist1\">Second Item</dt>" //
-				+ "<dd><code>second</code> description</dd>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First Item:: *first* _description_
+				Second Item:: `second` description
+				""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First Item</dt>\
+				<dd><strong>first</strong> <em>description</em></dd>\
+				<dt class="hdlist1">Second Item</dt>\
+				<dd><code>second</code> description</dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListSplitLines() {
-		String html = parseToHtml("" //
-				+ "First Item::\n" //
-				+ "first description\n" //
-				+ "Second Item::\n" //
-				+ "second description\n");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First Item</dt>" //
-				+ "<dd>first description</dd>" //
-				+ "<dt class=\"hdlist1\">Second Item</dt>" //
-				+ "<dd>second description</dd>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First Item::
+				first description
+				Second Item::
+				second description
+				""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First Item</dt>\
+				<dd>first description</dd>\
+				<dt class="hdlist1">Second Item</dt>\
+				<dd>second description</dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListWithBlankLines() {
-		String html = parseToHtml("" //
-				+ "First Item:: first description\n\n" //
-				+ "Second Item::\n\n" //
-				+ "second description\n");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First Item</dt>" //
-				+ "<dd>first description</dd>" //
-				+ "<dt class=\"hdlist1\">Second Item</dt>" //
-				+ "<dd>second description</dd>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First Item:: first description
+
+				Second Item::
+
+				second description
+				""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First Item</dt>\
+				<dd>first description</dd>\
+				<dt class="hdlist1">Second Item</dt>\
+				<dd>second description</dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListNested() {
-		String html = parseToHtml("" //
-				+ "First:: description\n\n" //
-				+ "Sub First 1::: description\n" //
-				+ "Sub First 2::: description\n" //
-				+ "Second:: description\n");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First</dt>" //
-				+ "<dd>description" //
-				+ "<dl>" //
-				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
-				+ "<dd>description</dd>" //
-				+ "<dt class=\"hdlist1\">Sub First 2</dt>" //
-				+ "<dd>description</dd>" //
-				+ "</dl></dd>" //
-				+ "<dt class=\"hdlist1\">Second</dt>" //
-				+ "<dd>description</dd>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First:: description
+
+				Sub First 1::: description
+				Sub First 2::: description
+				Second:: description
+				""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First</dt>\
+				<dd>description\
+				<dl>\
+				<dt class="hdlist1">Sub First 1</dt>\
+				<dd>description</dd>\
+				<dt class="hdlist1">Sub First 2</dt>\
+				<dd>description</dd>\
+				</dl></dd>\
+				<dt class="hdlist1">Second</dt>\
+				<dd>description</dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListNestedStopped() {
-		String html = parseToHtml("" //
-				+ "First:: description\n\n" //
-				+ "Sub First 1::: description\n" //
+		String html = parseToHtml("""
+				First:: description
+
+				Sub First 1::: description
+				"""
 		);
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First</dt>" //
-				+ "<dd>description" //
-				+ "<dl>" //
-				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
-				+ "<dd>description</dd>" //
-				+ "</dl></dd>" //
-				+ "</dl>" //
-				, html);
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First</dt>\
+				<dd>description\
+				<dl>\
+				<dt class="hdlist1">Sub First 1</dt>\
+				<dd>description</dd>\
+				</dl></dd>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListNestedIncomplete() {
-		String html = parseToHtml("" //
-				+ "First:: description\n\n" //
-				+ "Sub First 1::: description\n" //
-				+ "Second::");
-		assertEquals("<dl>" //
-				+ "<dt class=\"hdlist1\">First</dt>" //
-				+ "<dd>description" //
-				+ "<dl>" //
-				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
-				+ "<dd>description</dd>" //
-				+ "</dl></dd>" //
-				+ "<dt class=\"hdlist1\">Second</dt>" //
-				+ "</dl>" //
-				, html);
+		String html = parseToHtml("""
+				First:: description
+
+				Sub First 1::: description
+				Second::""");
+		assertEquals("""
+				<dl>\
+				<dt class="hdlist1">First</dt>\
+				<dd>description\
+				<dl>\
+				<dt class="hdlist1">Sub First 1</dt>\
+				<dd>description</dd>\
+				</dl></dd>\
+				<dt class="hdlist1">Second</dt>\
+				</dl>""", html);
 	}
 
 	@Test
 	public void testDefinitionListTextRanges() {
-		List<Event> events = parseToEvents("" //
-				+ "First:: description\n\n" //
-				+ "Sub First 1::: description\n" //
-				+ "Sub First 2::: description\n" //
-				+ "Second:: description\n");
+		List<Event> events = parseToEvents("""
+				First:: description
+
+				Sub First 1::: description
+				Sub First 2::: description
+				Second:: description
+				""");
 
 		assertEquals(18, events.size());
 		assertBlockRange(events.get(0), BlockType.DEFINITION_LIST, 0, 0);

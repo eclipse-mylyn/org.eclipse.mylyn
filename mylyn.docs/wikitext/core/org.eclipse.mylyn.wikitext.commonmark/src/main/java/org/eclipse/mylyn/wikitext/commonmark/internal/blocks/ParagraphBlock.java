@@ -74,7 +74,7 @@ public class ParagraphBlock extends SourceBlock {
 	}
 
 	private TextSegment extractTextSegment(LineSequence lineSequence) {
-		List<Line> lines = new ArrayList<Line>();
+		List<Line> lines = new ArrayList<>();
 		while (lineSequence.getCurrentLine() != null && notEmptyLine(lineSequence)
 				&& !anotherBlockStart(lineSequence)) {
 			lines.add(lineSequence.getCurrentLine());

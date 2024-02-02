@@ -85,7 +85,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 			}
 			// detect trailing text that wasn't detected as a CSS rule.
 			if (offset < value.length() - 1) {
-				String gap = value.substring(offset, value.length());
+				String gap = value.substring(offset);
 				if (gap.trim().length() != 0) {
 					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unexpectedToken,
 							new Object[] { gap.trim(), offset }));

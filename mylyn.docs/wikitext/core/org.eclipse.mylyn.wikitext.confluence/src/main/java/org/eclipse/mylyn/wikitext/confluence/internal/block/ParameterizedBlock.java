@@ -25,10 +25,12 @@ public abstract class ParameterizedBlock extends Block {
 			return;
 		}
 		Options.parseOptions(options, new Options.Handler() {
+			@Override
 			public void setOption(String key, String value) {
 				ParameterizedBlock.this.setOption(key, value);
 			}
 
+			@Override
 			public void setOption(String key) {
 				ParameterizedBlock.this.setOption(key);
 			}

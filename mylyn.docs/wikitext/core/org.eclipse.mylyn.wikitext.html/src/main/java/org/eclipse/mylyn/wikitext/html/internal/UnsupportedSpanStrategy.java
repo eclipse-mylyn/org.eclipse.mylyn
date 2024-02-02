@@ -28,7 +28,7 @@ class UnsupportedSpanStrategy implements SpanStrategy {
 
 	@Override
 	public void endSpan(DocumentBuilder builder) {
-		// nothing to do		
+		// nothing to do
 	}
 
 }

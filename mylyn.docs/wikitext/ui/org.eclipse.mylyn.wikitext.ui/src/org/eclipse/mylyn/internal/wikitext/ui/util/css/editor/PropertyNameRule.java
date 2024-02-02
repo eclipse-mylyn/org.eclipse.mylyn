@@ -19,8 +19,8 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 /**
- * detects property name by finding word characters that are terminated by whitespace followed by a colon. the trailing
- * colon is not included in the name.
+ * detects property name by finding word characters that are terminated by whitespace followed by a colon. the trailing colon is not
+ * included in the name.
  *
  * @author David Green
  */
@@ -46,11 +46,9 @@ class PropertyNameRule implements IPredicateRule {
 			if (endSequenceDetected(scanner)) {
 				return token;
 			}
-		} else {
-			if (startSequenceDetected(scanner)) {
-				if (endSequenceDetected(scanner)) {
-					return token;
-				}
+		} else if (startSequenceDetected(scanner)) {
+			if (endSequenceDetected(scanner)) {
+				return token;
 			}
 		}
 		while (readCount > 0) {

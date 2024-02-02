@@ -150,7 +150,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private interface ContentEmitter {
-		public void emit();
+		void emit();
 	}
 
 	@Override
@@ -170,92 +170,92 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		switch (type) {
-		case BULLETED_LIST:
-			elementName = "itemizedlist"; //$NON-NLS-1$
-			break;
-		case NUMERIC_LIST:
-			elementName = "orderedlist"; //$NON-NLS-1$
-			break;
-		case DEFINITION_LIST:
-			elementName = "variablelist"; //$NON-NLS-1$
+			case BULLETED_LIST:
+				elementName = "itemizedlist"; //$NON-NLS-1$
+				break;
+			case NUMERIC_LIST:
+				elementName = "orderedlist"; //$NON-NLS-1$
+				break;
+			case DEFINITION_LIST:
+				elementName = "variablelist"; //$NON-NLS-1$
 
-			//			variablelist
-			//				varlistentry+
-			//					term+
-			//					listitem
-			//
-			break;
-		case DEFINITION_TERM:
+				//			variablelist
+				//				varlistentry+
+				//					term+
+				//					listitem
+				//
+				break;
+			case DEFINITION_TERM:
 
-			BlockDescription blockDescription = findBlockDescription(BlockType.DEFINITION_LIST);
-			if (blockDescription.entrySize > 0) {
-				endBlockEntry(blockDescription);
-			}
-			openBlockEntry(blockDescription, new String[] { "varlistentry" }); //$NON-NLS-1$
+				BlockDescription blockDescription = findBlockDescription(BlockType.DEFINITION_LIST);
+				if (blockDescription.entrySize > 0) {
+					endBlockEntry(blockDescription);
+				}
+				openBlockEntry(blockDescription, new String[] { "varlistentry" }); //$NON-NLS-1$
 
-			elementName = "term"; //$NON-NLS-1$
-			break;
-		case DEFINITION_ITEM:
-			elementName = "listitem"; //$NON-NLS-1$
-			elementNames = new String[] { "para" }; //$NON-NLS-1$
-			closeElementsOnBlockStart = true;
-			break;
-		case FOOTNOTE:
-		case PARAGRAPH:
-			elementName = "para"; //$NON-NLS-1$
-			break;
-		case CODE:
-			elementName = "literallayout"; //$NON-NLS-1$
-			elementNames = new String[] { "code" }; //$NON-NLS-1$
-			break;
-		case PREFORMATTED:
-			elementName = "literallayout"; //$NON-NLS-1$
-			break;
-		case QUOTE:
-			elementName = "blockquote"; //$NON-NLS-1$
-			break;
-		case LIST_ITEM:
-			elementName = "listitem"; //$NON-NLS-1$
-			elementNames = new String[] { "para" }; //$NON-NLS-1$
-			closeElementsOnBlockStart = true;
-			break;
-		case TABLE:
-			elementName = "informaltable"; //$NON-NLS-1$
-			break;
-		case TABLE_CELL_HEADER:
-			elementName = "th"; //$NON-NLS-1$
-			break;
-		case TABLE_CELL_NORMAL:
-			elementName = "td"; //$NON-NLS-1$
-			break;
-		case TABLE_ROW:
-			elementName = "tr"; //$NON-NLS-1$
-			break;
-		case INFORMATION:
-			elementName = "important"; //$NON-NLS-1$
-			allowTitle = true;
-			break;
-		case NOTE:
-			elementName = "note"; //$NON-NLS-1$
-			allowTitle = true;
-			break;
-		case WARNING:
-			elementName = "warning"; //$NON-NLS-1$
-			allowTitle = true;
-			break;
-		case TIP:
-			elementName = "tip"; //$NON-NLS-1$
-			allowTitle = true;
-			break;
-		case PANEL:
-			elementName = "note"; // docbook has nothing better for 'note' //$NON-NLS-1$
-			allowTitle = true;
-			break;
-		case DIV:
-			elementName = null;
-			break;
-		default:
-			throw new IllegalStateException(type.name());
+				elementName = "term"; //$NON-NLS-1$
+				break;
+			case DEFINITION_ITEM:
+				elementName = "listitem"; //$NON-NLS-1$
+				elementNames = new String[] { "para" }; //$NON-NLS-1$
+				closeElementsOnBlockStart = true;
+				break;
+			case FOOTNOTE:
+			case PARAGRAPH:
+				elementName = "para"; //$NON-NLS-1$
+				break;
+			case CODE:
+				elementName = "literallayout"; //$NON-NLS-1$
+				elementNames = new String[] { "code" }; //$NON-NLS-1$
+				break;
+			case PREFORMATTED:
+				elementName = "literallayout"; //$NON-NLS-1$
+				break;
+			case QUOTE:
+				elementName = "blockquote"; //$NON-NLS-1$
+				break;
+			case LIST_ITEM:
+				elementName = "listitem"; //$NON-NLS-1$
+				elementNames = new String[] { "para" }; //$NON-NLS-1$
+				closeElementsOnBlockStart = true;
+				break;
+			case TABLE:
+				elementName = "informaltable"; //$NON-NLS-1$
+				break;
+			case TABLE_CELL_HEADER:
+				elementName = "th"; //$NON-NLS-1$
+				break;
+			case TABLE_CELL_NORMAL:
+				elementName = "td"; //$NON-NLS-1$
+				break;
+			case TABLE_ROW:
+				elementName = "tr"; //$NON-NLS-1$
+				break;
+			case INFORMATION:
+				elementName = "important"; //$NON-NLS-1$
+				allowTitle = true;
+				break;
+			case NOTE:
+				elementName = "note"; //$NON-NLS-1$
+				allowTitle = true;
+				break;
+			case WARNING:
+				elementName = "warning"; //$NON-NLS-1$
+				allowTitle = true;
+				break;
+			case TIP:
+				elementName = "tip"; //$NON-NLS-1$
+				allowTitle = true;
+				break;
+			case PANEL:
+				elementName = "note"; // docbook has nothing better for 'note' //$NON-NLS-1$
+				allowTitle = true;
+				break;
+			case DIV:
+				elementName = null;
+				break;
+			default:
+				throw new IllegalStateException(type.name());
 		}
 
 		int blockSize;
@@ -350,75 +350,75 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void beginSpan(SpanType type, Attributes attributes) {
 		ensureBlockElementsOpen();
 		switch (type) {
-		case BOLD:
-		case STRONG:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			writer.writeAttribute("role", "bold"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case CITATION:
-			writer.writeStartElement("citation"); //$NON-NLS-1$
-			break;
-		case CODE:
-			writer.writeStartElement("code"); //$NON-NLS-1$
-			break;
-		case DELETED:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			writer.writeAttribute("role", "del"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case EMPHASIS:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			break;
-		case INSERTED:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			writer.writeAttribute("role", "ins"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case UNDERLINED:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			writer.writeAttribute("role", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case ITALIC:
-			writer.writeStartElement("emphasis"); //$NON-NLS-1$
-			writer.writeAttribute("role", "italic"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case QUOTE:
-			writer.writeStartElement("quote"); //$NON-NLS-1$
-			break;
-		case SPAN:
-			writer.writeStartElement("phrase"); //$NON-NLS-1$
-			break;
-		case SUBSCRIPT:
-			writer.writeStartElement("subscript"); //$NON-NLS-1$
-			break;
-		case SUPERSCRIPT:
-			writer.writeStartElement("superscript"); //$NON-NLS-1$
-			break;
-		case MONOSPACE:
-			writer.writeStartElement("literal"); //$NON-NLS-1$
-			break;
-		case LINK: {
-			LinkAttributes linkAttributes = (LinkAttributes) attributes;
-			String href = linkAttributes.getHref();
-			if (href == null) {
-				writer.writeStartElement("anchor"); //$NON-NLS-1$
-			} else if (href.startsWith("#")) { //$NON-NLS-1$
-				writer.writeStartElement("link"); //$NON-NLS-1$
-				if (href.length() > 1) {
-					writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
+			case BOLD:
+			case STRONG:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "bold"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case CITATION:
+				writer.writeStartElement("citation"); //$NON-NLS-1$
+				break;
+			case CODE:
+				writer.writeStartElement("code"); //$NON-NLS-1$
+				break;
+			case DELETED:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "del"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case EMPHASIS:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				break;
+			case INSERTED:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "ins"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case UNDERLINED:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case ITALIC:
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "italic"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case QUOTE:
+				writer.writeStartElement("quote"); //$NON-NLS-1$
+				break;
+			case SPAN:
+				writer.writeStartElement("phrase"); //$NON-NLS-1$
+				break;
+			case SUBSCRIPT:
+				writer.writeStartElement("subscript"); //$NON-NLS-1$
+				break;
+			case SUPERSCRIPT:
+				writer.writeStartElement("superscript"); //$NON-NLS-1$
+				break;
+			case MONOSPACE:
+				writer.writeStartElement("literal"); //$NON-NLS-1$
+				break;
+			case LINK: {
+				LinkAttributes linkAttributes = (LinkAttributes) attributes;
+				String href = linkAttributes.getHref();
+				if (href == null) {
+					writer.writeStartElement("anchor"); //$NON-NLS-1$
+				} else if (href.startsWith("#")) { //$NON-NLS-1$
+					writer.writeStartElement("link"); //$NON-NLS-1$
+					if (href.length() > 1) {
+						writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
+					}
+				} else {
+					writer.writeStartElement("ulink"); //$NON-NLS-1$
+					writer.writeAttribute("url", href); //$NON-NLS-1$
 				}
-			} else {
-				writer.writeStartElement("ulink"); //$NON-NLS-1$
-				writer.writeAttribute("url", href); //$NON-NLS-1$
 			}
-		}
-			break;
-		case MARK:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "marked");
-			break;
-		default:
-			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
-			writer.writeStartElement("phrase"); //$NON-NLS-1$
-			break;
+				break;
+			case MARK:
+				writer.writeStartElement("emphasis");
+				writer.writeAttribute("role", "marked");
+				break;
+			default:
+				Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
+				writer.writeStartElement("phrase"); //$NON-NLS-1$
+				break;
 		}
 		applyAttributes(attributes);
 	}
@@ -437,23 +437,23 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 				if (typeMatcher.find()) {
 					String type = typeMatcher.group(1);
 					switch (type) {
-					case "decimal":
-						type = "arabic";
-						break;
-					case "lower-alpha":
-						type = "loweralpha";
-						break;
-					case "upper-alpha":
-						type = "upperalpha";
-						break;
-					case "upper-roman":
-						type = "upperroman";
-						break;
-					case "lower-roman":
-						type = "lowerroman";
-						break;
-					default:
-						break;
+						case "decimal":
+							type = "arabic";
+							break;
+						case "lower-alpha":
+							type = "loweralpha";
+							break;
+						case "upper-alpha":
+							type = "upperalpha";
+							break;
+						case "upper-roman":
+							type = "upperroman";
+							break;
+						case "lower-roman":
+							type = "lowerroman";
+							break;
+						default:
+							break;
 					}
 					writer.writeAttribute("numeration", type);
 				}
@@ -554,7 +554,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			int unicodeValue = Integer.parseInt(numeric, base);
 			if (entityReferenceToUnicode.contains(unicodeValue)) {
-				writer.writeCharacters("" + ((char) unicodeValue)); //$NON-NLS-1$
+				writer.writeCharacters("" + (char) unicodeValue); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -646,7 +646,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		public BlockDescription(BlockType type, int size, String[] nestedElementNames,
 				boolean closeElementsOnBlockStart) {
 			this.size = size;
-			this.entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
+			entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
 			this.type = type;
 			this.nestedElementNames = nestedElementNames;
 			this.closeElementsOnBlockStart = closeElementsOnBlockStart;
@@ -654,20 +654,18 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
-	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
-	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document. The
-	 * default is true.
+	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary is enabled and
+	 * acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to the document, with a
+	 * <code>glosslist</code> generated for all of the acronyms that appear in the document. The default is true.
 	 */
 	public boolean isAutomaticGlossary() {
 		return automaticGlossary;
 	}
 
 	/**
-	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
-	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
-	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document. The
-	 * default is true.
+	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary is enabled and
+	 * acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to the document, with a
+	 * <code>glosslist</code> generated for all of the acronyms that appear in the document. The default is true.
 	 */
 	public void setAutomaticGlossary(boolean automaticGlossary) {
 		this.automaticGlossary = automaticGlossary;

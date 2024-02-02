@@ -21,8 +21,8 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 public class CssPartitioner extends FastPartitioner {
 
 	public CssPartitioner() {
-		super(new CssPartitionScanner(), new String[] { CssPartitionScanner.CONTENT_TYPE_BLOCK,
-				CssPartitionScanner.CONTENT_TYPE_COMMENT });
+		super(new CssPartitionScanner(),
+				new String[] { CssPartitionScanner.CONTENT_TYPE_BLOCK, CssPartitionScanner.CONTENT_TYPE_COMMENT });
 	}
 
 }

@@ -19,8 +19,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.textile.internal.Textile;
 
 /**
- * A simple phrase modifier implementation that matches a pattern in text and emits a {@link SpanType span} containing
- * the content of the matched region.
+ * A simple phrase modifier implementation that matches a pattern in text and emits a {@link SpanType span} containing the content of the
+ * matched region.
  * 
  * @author David Green
  */
@@ -61,15 +61,15 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 			configureAttributes(this, attributes);
 			getBuilder().beginSpan(spanType, attributes);
 			switch (mode) {
-			case NESTING:
-				getMarkupLanguage().emitMarkupLine(parser, state, getStart(this), getContent(this), 0);
-				break;
-			case NORMAL:
-				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
-				break;
-			case SPECIAL:
-				getBuilder().characters(getContent(this));
-				break;
+				case NESTING:
+					getMarkupLanguage().emitMarkupLine(parser, state, getStart(this), getContent(this), 0);
+					break;
+				case NORMAL:
+					getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+					break;
+				case SPECIAL:
+					getBuilder().characters(getContent(this));
+					break;
 			}
 			getBuilder().endSpan();
 		}
@@ -100,9 +100,8 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 		String quotedDelimiter = quoteLite(getDelimiter());
 		String firstCharacterOfDelimiter = quoteLite(getDelimiter().substring(0, 1));
 
-		return quotedDelimiter
-				+ "(?!" + firstCharacterOfDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ 
+		return quotedDelimiter + "(?!" + firstCharacterOfDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				+ quotedDelimiter + "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$
 				"(?<!" + firstCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -114,12 +113,12 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 		for (int x = 0; x < literal.length(); ++x) {
 			char c = literal.charAt(x);
 			switch (c) {
-			case '^':
-			case '*':
-			case '?':
-			case '+':
-			case '-':
-				buf.append('\\');
+				case '^':
+				case '*':
+				case '?':
+				case '+':
+				case '-':
+					buf.append('\\');
 			}
 			buf.append(c);
 		}

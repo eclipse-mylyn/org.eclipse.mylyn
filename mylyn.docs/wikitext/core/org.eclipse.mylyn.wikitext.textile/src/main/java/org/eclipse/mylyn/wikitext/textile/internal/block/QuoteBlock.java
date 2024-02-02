@@ -22,8 +22,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.textile.internal.Textile;
 
 /**
- * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of
- * {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */

@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class WikiTextUiResources {
 
-	// IMPOARTANT IMPLEMENTATION NOTE: 
-	//   these resources must work in a stand-alone SWT application.  See bug# 245759 
+	// IMPOARTANT IMPLEMENTATION NOTE:
+	//   these resources must work in a stand-alone SWT application.  See bug# 245759
 
 	private static final String KEY_COLOR_REGISTRY = WikiTextUiResources.class.getName() + "#colorRegistry"; //$NON-NLS-1$
 

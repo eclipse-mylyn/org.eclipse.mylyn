@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.tracwiki.TracWikiLanguage;
 
 /**
- * recognizes links to Trac changesets, eg: <code>r1</code> or <code>[1]</code> or <code>[1/trunk]</code> or
- * <code>changeset:1</code> or <code>changeset:1/trunk</code>
+ * recognizes links to Trac changesets, eg: <code>r1</code> or <code>[1]</code> or <code>[1/trunk]</code> or <code>changeset:1</code> or
+ * <code>changeset:1/trunk</code>
  * 
  * @author David Green
  */

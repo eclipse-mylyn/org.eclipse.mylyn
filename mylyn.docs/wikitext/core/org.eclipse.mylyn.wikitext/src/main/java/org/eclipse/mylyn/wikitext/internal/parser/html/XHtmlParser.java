@@ -32,17 +32,13 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * 
  * @see DocumentBuilder
  * @author David Green
- * 
  */
 public class XHtmlParser extends AbstractSaxHtmlParser {
 
 	@Override
-	protected void parse(InputSource input, DocumentBuilder builder, ContentHandler contentHandler) throws IOException,
-			SAXException {
-		if (input == null) {
-			throw new IllegalArgumentException();
-		}
-		if (builder == null) {
+	protected void parse(InputSource input, DocumentBuilder builder, ContentHandler contentHandler)
+			throws IOException, SAXException {
+		if ((input == null) || (builder == null)) {
 			throw new IllegalArgumentException();
 		}
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
@@ -58,7 +54,8 @@ public class XHtmlParser extends AbstractSaxHtmlParser {
 		}
 		reader = new ConcatenatingReader(
 				new StringReader(
-						"<?xml version='1.0'?><!DOCTYPE html [ <!ENTITY nbsp \"&#160;\"> <!ENTITY copy \"&#169;\"> <!ENTITY reg \"&#174;\"> <!ENTITY euro \"&#8364;\"> ]>"), reader); //$NON-NLS-1$
+						"<?xml version='1.0'?><!DOCTYPE html [ <!ENTITY nbsp \"&#160;\"> <!ENTITY copy \"&#169;\"> <!ENTITY reg \"&#174;\"> <!ENTITY euro \"&#8364;\"> ]>"), //$NON-NLS-1$
+				reader);
 
 		input = new InputSource(reader);
 		xmlReader.parse(input);

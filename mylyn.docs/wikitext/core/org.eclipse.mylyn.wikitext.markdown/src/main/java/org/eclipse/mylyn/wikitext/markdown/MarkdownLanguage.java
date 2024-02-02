@@ -72,8 +72,8 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 	}
 
 	/**
-	 * Constructs an instance of MarkdownLanguage, with the choice to enable heuristic features. Currently only extended
-	 * hyperlink detection (without delimiters) is supported as a heuristic feature
+	 * Constructs an instance of MarkdownLanguage, with the choice to enable heuristic features. Currently only extended hyperlink detection
+	 * (without delimiters) is supported as a heuristic feature
 	 *
 	 * @param enableHeuristicFeatures
 	 *            if {@code true} enables heristic features.

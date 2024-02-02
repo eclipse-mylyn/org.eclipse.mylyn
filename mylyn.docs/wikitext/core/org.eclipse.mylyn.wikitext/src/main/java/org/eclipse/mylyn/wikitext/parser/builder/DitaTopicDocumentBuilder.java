@@ -69,8 +69,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private String rootTitle;
 
 	/**
-	 * Create a DitaTopicDocumentBuilder that writes formatted output to the given writer. Output without formatting can
-	 * be created using {@link #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)}.
+	 * Create a DitaTopicDocumentBuilder that writes formatted output to the given writer. Output without formatting can be created using
+	 * {@link #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)}.
 	 *
 	 * @param out
 	 *            the writer to which formatted XML content output
@@ -159,7 +159,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		public BlockDescription(BlockType type, int size, String[] nestedElementNames,
 				boolean closeElementsOnBlockStart) {
 			this.size = size;
-			this.entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
+			entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
 			this.type = type;
 			this.nestedElementNames = nestedElementNames;
 			this.closeElementsOnBlockStart = closeElementsOnBlockStart;
@@ -181,77 +181,77 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		boolean phraseTitle = false;
 
 		switch (type) {
-		case BULLETED_LIST:
-			elementName = "ul"; //$NON-NLS-1$
-			break;
-		case NUMERIC_LIST:
-			elementName = "ol"; //$NON-NLS-1$
-			break;
-		case DEFINITION_LIST:
-			elementName = "dl"; //$NON-NLS-1$
-			break;
-		case DEFINITION_TERM:
+			case BULLETED_LIST:
+				elementName = "ul"; //$NON-NLS-1$
+				break;
+			case NUMERIC_LIST:
+				elementName = "ol"; //$NON-NLS-1$
+				break;
+			case DEFINITION_LIST:
+				elementName = "dl"; //$NON-NLS-1$
+				break;
+			case DEFINITION_TERM:
 
-			BlockDescription blockDescription = findBlockDescription(BlockType.DEFINITION_LIST);
-			if (blockDescription.entrySize > 0) {
-				endBlockEntry(blockDescription);
-			}
-			openBlockEntry(blockDescription, new String[] { "dlentry" }); //$NON-NLS-1$
+				BlockDescription blockDescription = findBlockDescription(BlockType.DEFINITION_LIST);
+				if (blockDescription.entrySize > 0) {
+					endBlockEntry(blockDescription);
+				}
+				openBlockEntry(blockDescription, new String[] { "dlentry" }); //$NON-NLS-1$
 
-			elementName = "dt"; //$NON-NLS-1$
-			break;
-		case DEFINITION_ITEM:
-			elementName = "dd"; //$NON-NLS-1$
-			elementNames = new String[] { "p" }; //$NON-NLS-1$
-			closeElementsOnBlockStart = true;
-			break;
-		case FOOTNOTE:
-		case PARAGRAPH:
-			elementName = "p"; //$NON-NLS-1$
-			break;
-		case CODE:
-			elementName = "pre"; //$NON-NLS-1$
-			elementNames = new String[] { "codeph" }; //$NON-NLS-1$
-			break;
-		case PREFORMATTED:
-			elementName = "pre"; //$NON-NLS-1$
-			break;
-		case QUOTE:
-			elementName = "lq"; //$NON-NLS-1$
-			break;
-		case LIST_ITEM:
-			elementName = "li"; //$NON-NLS-1$
-			elementNames = new String[] { "p" }; //$NON-NLS-1$
-			closeElementsOnBlockStart = true;
-			break;
-		case TABLE:
-			elementName = "simpletable"; //$NON-NLS-1$
-			break;
-		case TABLE_CELL_HEADER:
-			// TODO: no such thing as header cells in DITA, only header rows
-			//       need a way to detect beforehand if we're about to emit a header row
-			elementName = "stentry"; //$NON-NLS-1$
-			break;
-		case TABLE_CELL_NORMAL:
-			elementName = "stentry"; //$NON-NLS-1$
-			break;
-		case TABLE_ROW:
-			elementName = "strow"; //$NON-NLS-1$
-			break;
-		case INFORMATION:
-		case NOTE:
-		case WARNING:
-		case TIP:
-		case PANEL:
-			elementName = "note"; //$NON-NLS-1$
-			allowTitle = true;
-			phraseTitle = true;
-			break;
-		case DIV:
-			elementName = null;
-			break;
-		default:
-			throw new IllegalStateException(type.name());
+				elementName = "dt"; //$NON-NLS-1$
+				break;
+			case DEFINITION_ITEM:
+				elementName = "dd"; //$NON-NLS-1$
+				elementNames = new String[] { "p" }; //$NON-NLS-1$
+				closeElementsOnBlockStart = true;
+				break;
+			case FOOTNOTE:
+			case PARAGRAPH:
+				elementName = "p"; //$NON-NLS-1$
+				break;
+			case CODE:
+				elementName = "pre"; //$NON-NLS-1$
+				elementNames = new String[] { "codeph" }; //$NON-NLS-1$
+				break;
+			case PREFORMATTED:
+				elementName = "pre"; //$NON-NLS-1$
+				break;
+			case QUOTE:
+				elementName = "lq"; //$NON-NLS-1$
+				break;
+			case LIST_ITEM:
+				elementName = "li"; //$NON-NLS-1$
+				elementNames = new String[] { "p" }; //$NON-NLS-1$
+				closeElementsOnBlockStart = true;
+				break;
+			case TABLE:
+				elementName = "simpletable"; //$NON-NLS-1$
+				break;
+			case TABLE_CELL_HEADER:
+				// TODO: no such thing as header cells in DITA, only header rows
+				//       need a way to detect beforehand if we're about to emit a header row
+				elementName = "stentry"; //$NON-NLS-1$
+				break;
+			case TABLE_CELL_NORMAL:
+				elementName = "stentry"; //$NON-NLS-1$
+				break;
+			case TABLE_ROW:
+				elementName = "strow"; //$NON-NLS-1$
+				break;
+			case INFORMATION:
+			case NOTE:
+			case WARNING:
+			case TIP:
+			case PANEL:
+				elementName = "note"; //$NON-NLS-1$
+				allowTitle = true;
+				phraseTitle = true;
+				break;
+			case DIV:
+				elementName = null;
+				break;
+			default:
+				throw new IllegalStateException(type.name());
 		}
 
 		int blockSize;
@@ -263,21 +263,21 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			writer.writeStartElement(elementName);
 			switch (type) {
-			case INFORMATION:
-				writer.writeAttribute("type", "important"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case NOTE:
-				writer.writeAttribute("type", "note"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case WARNING:
-				writer.writeAttribute("type", "caution"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case TIP:
-				writer.writeAttribute("type", "tip"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case PANEL:
-				writer.writeAttribute("type", "other"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
+				case INFORMATION:
+					writer.writeAttribute("type", "important"); //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case NOTE:
+					writer.writeAttribute("type", "note"); //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case WARNING:
+					writer.writeAttribute("type", "caution"); //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case TIP:
+					writer.writeAttribute("type", "tip"); //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case PANEL:
+					writer.writeAttribute("type", "other"); //$NON-NLS-1$ //$NON-NLS-2$
+					break;
 			}
 			applyAttributes(attributes);
 
@@ -375,64 +375,64 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void beginSpan(SpanType type, Attributes attributes) {
 		ensureOpenTopic();
 		switch (type) {
-		case BOLD:
-		case STRONG:
-			writer.writeStartElement("b"); //$NON-NLS-1$
-			break;
-		case CITATION:
-			writer.writeStartElement("cite"); //$NON-NLS-1$
-			break;
-		case CODE:
-			writer.writeStartElement("codeph"); //$NON-NLS-1$
-			break;
-		case DELETED:
-			// no equivalent?
-			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes
-					.setCssClass(attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case EMPHASIS:
-			writer.writeStartElement("i"); //$NON-NLS-1$
-			break;
-		case INSERTED:
-			// no equivalent?
-			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes.setCssClass(attributes.getCssClass() == null
-					? "inserted" //$NON-NLS-1$
-					: attributes.getCssClass() + " inserted"); //$NON-NLS-1$
-			break;
-		case UNDERLINED:
-			writer.writeStartElement("u"); //$NON-NLS-1$
-			break;
-		case ITALIC:
-		case MARK:
-			writer.writeStartElement("i"); //$NON-NLS-1$
-			break;
-		case SPAN:
-			writer.writeStartElement("ph"); //$NON-NLS-1$
-			break;
-		case SUBSCRIPT:
-			writer.writeStartElement("sub"); //$NON-NLS-1$
-			break;
-		case SUPERSCRIPT:
-			writer.writeStartElement("sup"); //$NON-NLS-1$
-			break;
-		case MONOSPACE:
-			writer.writeStartElement("tt"); //$NON-NLS-1$
-			break;
-		case QUOTE:
-			writer.writeStartElement("q"); //$NON-NLS-1$
-			break;
-		case LINK: {
-			LinkAttributes linkAttributes = (LinkAttributes) attributes;
-			writer.writeStartElement("xref"); //$NON-NLS-1$
-			writer.writeAttribute("href", computeDitaXref(linkAttributes.getHref())); //$NON-NLS-1$
-		}
-			break;
-		default:
-			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No DITA topic mapping for " + type); //$NON-NLS-1$
-			writer.writeStartElement("ph"); //$NON-NLS-1$
-			break;
+			case BOLD:
+			case STRONG:
+				writer.writeStartElement("b"); //$NON-NLS-1$
+				break;
+			case CITATION:
+				writer.writeStartElement("cite"); //$NON-NLS-1$
+				break;
+			case CODE:
+				writer.writeStartElement("codeph"); //$NON-NLS-1$
+				break;
+			case DELETED:
+				// no equivalent?
+				writer.writeStartElement("ph"); //$NON-NLS-1$
+				attributes.setCssClass(
+						attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted"); //$NON-NLS-1$ //$NON-NLS-2$
+				break;
+			case EMPHASIS:
+				writer.writeStartElement("i"); //$NON-NLS-1$
+				break;
+			case INSERTED:
+				// no equivalent?
+				writer.writeStartElement("ph"); //$NON-NLS-1$
+				attributes.setCssClass(attributes.getCssClass() == null
+						? "inserted" //$NON-NLS-1$
+						: attributes.getCssClass() + " inserted"); //$NON-NLS-1$
+				break;
+			case UNDERLINED:
+				writer.writeStartElement("u"); //$NON-NLS-1$
+				break;
+			case ITALIC:
+			case MARK:
+				writer.writeStartElement("i"); //$NON-NLS-1$
+				break;
+			case SPAN:
+				writer.writeStartElement("ph"); //$NON-NLS-1$
+				break;
+			case SUBSCRIPT:
+				writer.writeStartElement("sub"); //$NON-NLS-1$
+				break;
+			case SUPERSCRIPT:
+				writer.writeStartElement("sup"); //$NON-NLS-1$
+				break;
+			case MONOSPACE:
+				writer.writeStartElement("tt"); //$NON-NLS-1$
+				break;
+			case QUOTE:
+				writer.writeStartElement("q"); //$NON-NLS-1$
+				break;
+			case LINK: {
+				LinkAttributes linkAttributes = (LinkAttributes) attributes;
+				writer.writeStartElement("xref"); //$NON-NLS-1$
+				writer.writeAttribute("href", computeDitaXref(linkAttributes.getHref())); //$NON-NLS-1$
+			}
+				break;
+			default:
+				Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No DITA topic mapping for " + type); //$NON-NLS-1$
+				writer.writeStartElement("ph"); //$NON-NLS-1$
+				break;
 		}
 		applyAttributes(attributes);
 	}
@@ -523,8 +523,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyImageAttributes(Attributes imageAttributes) {
 		applyAttributes(imageAttributes);
-		if (imageAttributes instanceof ImageAttributes) {
-			ImageAttributes attributes = (ImageAttributes) imageAttributes;
+		if (imageAttributes instanceof ImageAttributes attributes) {
 			if (attributes.getAlt() != null) {
 				writer.writeAttribute("alt", attributes.getAlt()); //$NON-NLS-1$
 			}
@@ -536,15 +535,15 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			if (attributes.getAlign() != null) {
 				switch (attributes.getAlign()) {
-				case Left:
-					writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case Right:
-					writer.writeAttribute("align", "right"); //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case Center:
-					writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
-					break;
+					case Left:
+						writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
+						break;
+					case Right:
+						writer.writeAttribute("align", "right"); //$NON-NLS-1$ //$NON-NLS-2$
+						break;
+					case Center:
+						writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
+						break;
 				}
 				writer.writeAttribute("placement", "break"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -585,7 +584,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			int unicodeValue = Integer.parseInt(numeric, base);
 			if (entityReferenceToUnicode.contains(unicodeValue)) {
-				writer.writeCharacters("" + ((char) unicodeValue)); //$NON-NLS-1$
+				writer.writeCharacters("" + (char) unicodeValue); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -600,8 +599,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Set the outline of the document being parsed if xref URLs are to be correctly computed. OASIS DITA has its own
-	 * URL syntax for DITA-specific links, which need some translation at the time that we build the document.
+	 * Set the outline of the document being parsed if xref URLs are to be correctly computed. OASIS DITA has its own URL syntax for
+	 * DITA-specific links, which need some translation at the time that we build the document.
 	 */
 	public void setOutline(OutlineItem outline) {
 		this.outline = outline;
@@ -616,8 +615,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * According to the DITA documentation, DITA content URLs use special syntax. this method translates internal URLs
-	 * correctly according to the DITA rules.
+	 * According to the DITA documentation, DITA content URLs use special syntax. this method translates internal URLs correctly according
+	 * to the DITA rules.
 	 *
 	 * @return the href adjusted, or the original href if the given URL appears to be to non-document content
 	 */
@@ -654,7 +653,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private OutlineItem computeTopicFileItem(OutlineItem item) {
 		while (item.getLevel() > topicBreakLevel && item.getParent() != null
-				&& item.getParent().getLevel() > (topicBreakLevel - 1)) {
+				&& item.getParent().getLevel() > topicBreakLevel - 1) {
 			item = item.getParent();
 		}
 		return item;
@@ -675,16 +674,16 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root
-	 * topic with the given title.
+	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root topic with the
+	 * given title.
 	 */
 	public void setRootTopicTitle(String rootTitle) {
 		this.rootTitle = rootTitle;
 	}
 
 	/**
-	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root
-	 * topic with the given title.
+	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root topic with the
+	 * given title.
 	 */
 	public String getRootTopicTitle() {
 		return rootTitle;

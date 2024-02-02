@@ -18,8 +18,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Drawable;
 
 /**
- * An information presenter that supports markup. Uses the {@link MarkupParser} to parse the markup to HTML, and passes
- * the HTML to the superclass.
+ * An information presenter that supports markup. Uses the {@link MarkupParser} to parse the markup to HTML, and passes the HTML to the
+ * superclass.
  *
  * @author David Green
  * @since 1.0

@@ -30,9 +30,9 @@ import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
- * a document builder that can produce OASIS DITA output in the form of a book map and multiple topic output files, one
- * for each level-1 heading. This document builder differs from others in that it implements {@link Closeable} and
- * therefore must be closed after use. Also this document builder produces multiple output files.
+ * a document builder that can produce OASIS DITA output in the form of a book map and multiple topic output files, one for each level-1
+ * heading. This document builder differs from others in that it implements {@link Closeable} and therefore must be closed after use. Also
+ * this document builder produces multiple output files.
  *
  * @author David Green
  * @see DocBookDocumentBuilder
@@ -134,32 +134,32 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	}
 
 	/**
-	 * the filename suffix to use when producing topics. Should include the leading dot '.', for example '.dita'. The
-	 * default value is <code>.dita</code>.
+	 * the filename suffix to use when producing topics. Should include the leading dot '.', for example '.dita'. The default value is
+	 * <code>.dita</code>.
 	 */
 	public String getTopicFilenameSuffix() {
 		return topicFilenameSuffix;
 	}
 
 	/**
-	 * the filename suffix to use when producing topics. Should include the leading dot '.', for example '.dita'. The
-	 * default value is <code>.dita</code>.
+	 * the filename suffix to use when producing topics. Should include the leading dot '.', for example '.dita'. The default value is
+	 * <code>.dita</code>.
 	 */
 	public void setTopicFilenameSuffix(String topicFilenameSuffix) {
 		this.topicFilenameSuffix = topicFilenameSuffix;
 	}
 
 	/**
-	 * the relative folder name of the folder in which topic files should be produced, or null if the files should be
-	 * created within the same folder as the bookmap.
+	 * the relative folder name of the folder in which topic files should be produced, or null if the files should be created within the
+	 * same folder as the bookmap.
 	 */
 	public String getTopicFolder() {
 		return topicFolder;
 	}
 
 	/**
-	 * the relative folder name of the folder in which topic files should be produced, or null if the files should be
-	 * created within the same folder as the bookmap.
+	 * the relative folder name of the folder in which topic files should be produced, or null if the files should be created within the
+	 * same folder as the bookmap.
 	 */
 	public void setTopicFolder(String topicFolder) {
 		this.topicFolder = topicFolder;
@@ -370,8 +370,8 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	}
 
 	/**
-	 * Set the outline of the document being parsed if xref URLs are to be correctly computed. OASIS DITA has its own
-	 * URL syntax for DITA-specific links, which need some translation at the time that we build the document.
+	 * Set the outline of the document being parsed if xref URLs are to be correctly computed. OASIS DITA has its own URL syntax for
+	 * DITA-specific links, which need some translation at the time that we build the document.
 	 */
 	public void setOutline(OutlineItem outline) {
 		this.outline = outline;

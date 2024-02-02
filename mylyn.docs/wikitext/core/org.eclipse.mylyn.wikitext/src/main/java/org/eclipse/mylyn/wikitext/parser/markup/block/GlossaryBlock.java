@@ -22,9 +22,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
- * An abstract implementation of a glossary. Emits a definition list containing all terms
- * {@link ContentState#getGlossaryTerms() defined} in the document. Subclasses need only define {Block
- * {@link #canStart(String, int)}.
+ * An abstract implementation of a glossary. Emits a definition list containing all terms {@link ContentState#getGlossaryTerms() defined} in
+ * the document. Subclasses need only define {Block {@link #canStart(String, int)}.
  *
  * @author David Green
  * @since 3.0

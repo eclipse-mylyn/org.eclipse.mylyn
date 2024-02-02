@@ -24,7 +24,8 @@ import org.eclipse.mylyn.wikitext.markdown.internal.token.AutomaticLinkReplaceme
  */
 public class InlineHtmlBlock extends NestableBlock {
 
-	private static final Pattern AUTOMATIC_LINK_PATTERN = Pattern.compile(AutomaticLinkReplacementToken.AUTOMATIC_LINK_REGEX);
+	private static final Pattern AUTOMATIC_LINK_PATTERN = Pattern
+			.compile(AutomaticLinkReplacementToken.AUTOMATIC_LINK_REGEX);
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {

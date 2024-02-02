@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,9 +62,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 	 * Reset the fonts used by this token scanner.
 	 *
 	 * @param defaultFont
-	 *                                 the default font, must not be null.
+	 *            the default font, must not be null.
 	 * @param defaultMonospaceFont
-	 *                                 the default monospace font, or null if a suitable default should be selected
+	 *            the default monospace font, or null if a suitable default should be selected
 	 */
 	public void resetFonts(Font defaultFont, Font defaultMonospaceFont) {
 		if (defaultFont == null) {
@@ -125,10 +126,10 @@ public class MarkupTokenScanner implements ITokenScanner {
 				}
 				if (partitions != null) {
 					for (ITypedRegion region : partitions) {
-						if (region.getOffset() >= (offset + length)) {
+						if (region.getOffset() >= offset + length) {
 							break;
 						}
-						if ((region.getOffset() + region.getLength()) < offset) {
+						if (region.getOffset() + region.getLength() < offset) {
 							continue;
 						}
 						if (region instanceof MarkupPartition partition) {
@@ -183,7 +184,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 							final int partitionEnd = partition.getOffset() + partition.getLength();
 							if (lastEnd < partitionEnd) {
 								final int realLastEnd = Math.max(lastEnd, partition.getOffset());
-								int diff = (partitionEnd) - realLastEnd;
+								int diff = partitionEnd - realLastEnd;
 								if (diff > 0) {
 									int blockTokenStartOffset = realLastEnd;
 									int blockTokenLength = diff;
@@ -199,7 +200,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 						}
 					}
 				}
-				if (lastEnd < (offset + length)) {
+				if (lastEnd < offset + length) {
 					addToken(tokens, new Token(defaultToken.fontState, defaultToken.getData(), lastEnd,
 							length - (lastEnd - offset)));
 				}
@@ -215,7 +216,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 				Token next = it.next();
 				if (next.getOffset() < offset) {
 					it.remove();
-				} else if (next.getOffset() + next.getLength() > (offset + length)) {
+				} else if (next.getOffset() + next.getLength() > offset + length) {
 					it.remove();
 				}
 			}
@@ -236,8 +237,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 	}
 
 	/**
-	 * handle nested spans: given a token for a specific span, split it into one or more tokens based on analyzing its
-	 * children
+	 * handle nested spans: given a token for a specific span, split it into one or more tokens based on analyzing its children
 	 *
 	 * @return an array of tokens that contiguously cover the region represented by the original span.
 	 */
@@ -259,9 +259,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 				tokens.add(childToken);
 			} else {
 				// recursively apply to children
-				for (Token t : splitSpan(childToken, child, defaultToken)) {
-					tokens.add(t);
-				}
+				Collections.addAll(tokens, splitSpan(childToken, child, defaultToken));
 			}
 			previousEnd = child.getEndOffset();
 		}
@@ -303,51 +301,51 @@ public class MarkupTokenScanner implements ITokenScanner {
 		String cssStyles = null;
 		String key = null;
 		switch (span.getType()) {
-		case BOLD:
-			key = Preferences.PHRASE_BOLD;
-			break;
-		case CITATION:
-			key = Preferences.PHRASE_CITATION;
-			break;
-		case CODE:
-			key = Preferences.PHRASE_CODE;
-			break;
-		case DELETED:
-			key = Preferences.PHRASE_DELETED_TEXT;
-			break;
-		case EMPHASIS:
-			key = Preferences.PHRASE_EMPHASIS;
-			break;
-		case INSERTED:
-			key = Preferences.PHRASE_INSERTED_TEXT;
-			break;
-		case ITALIC:
-			key = Preferences.PHRASE_ITALIC;
-			break;
-		case MONOSPACE:
-			key = Preferences.PHRASE_MONOSPACE;
-			break;
-		case QUOTE:
-			key = Preferences.PHRASE_QUOTE;
-			break;
-		case SPAN:
-			key = Preferences.PHRASE_SPAN;
-			break;
-		case STRONG:
-			key = Preferences.PHRASE_STRONG;
-			break;
-		case SUBSCRIPT:
-			key = Preferences.PHRASE_SUBSCRIPT;
-			break;
-		case SUPERSCRIPT:
-			key = Preferences.PHRASE_SUPERSCRIPT;
-			break;
-		case UNDERLINED:
-			key = Preferences.PHRASE_UNDERLINED;
-			break;
-		case MARK:
-			key = Preferences.PHRASE_MARK;
-			break;
+			case BOLD:
+				key = Preferences.PHRASE_BOLD;
+				break;
+			case CITATION:
+				key = Preferences.PHRASE_CITATION;
+				break;
+			case CODE:
+				key = Preferences.PHRASE_CODE;
+				break;
+			case DELETED:
+				key = Preferences.PHRASE_DELETED_TEXT;
+				break;
+			case EMPHASIS:
+				key = Preferences.PHRASE_EMPHASIS;
+				break;
+			case INSERTED:
+				key = Preferences.PHRASE_INSERTED_TEXT;
+				break;
+			case ITALIC:
+				key = Preferences.PHRASE_ITALIC;
+				break;
+			case MONOSPACE:
+				key = Preferences.PHRASE_MONOSPACE;
+				break;
+			case QUOTE:
+				key = Preferences.PHRASE_QUOTE;
+				break;
+			case SPAN:
+				key = Preferences.PHRASE_SPAN;
+				break;
+			case STRONG:
+				key = Preferences.PHRASE_STRONG;
+				break;
+			case SUBSCRIPT:
+				key = Preferences.PHRASE_SUBSCRIPT;
+				break;
+			case SUPERSCRIPT:
+				key = Preferences.PHRASE_SUPERSCRIPT;
+				break;
+			case UNDERLINED:
+				key = Preferences.PHRASE_UNDERLINED;
+				break;
+			case MARK:
+				key = Preferences.PHRASE_MARK;
+				break;
 		}
 		cssStyles = preferences.getCssByPhraseModifierType().get(key);
 		if (cssStyles == null && span.getAttributes().getCssStyle() == null && span.getChildren().isEmpty()) {
@@ -375,10 +373,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 		if (partition.getBlock().getAttributes().getCssStyle() != null) {
 			processCssStyles(fontState, defaultState, partition.getBlock().getAttributes().getCssStyle());
-		} else {
-			if (!hasStyles) {
-				return null;
-			}
+		} else if (!hasStyles) {
+			return null;
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
@@ -407,18 +403,18 @@ public class MarkupTokenScanner implements ITokenScanner {
 		} else if (block.getType() != null) {
 			String key = null;
 			switch (block.getType()) {
-			case CODE:
-				key = Preferences.BLOCK_BC;
-				break;
-			case QUOTE:
-				key = Preferences.BLOCK_QUOTE;
-				break;
-			case PREFORMATTED:
-				key = Preferences.BLOCK_PRE;
-				break;
-			case DEFINITION_TERM:
-				key = Preferences.BLOCK_DT;
-				break;
+				case CODE:
+					key = Preferences.BLOCK_BC;
+					break;
+				case QUOTE:
+					key = Preferences.BLOCK_QUOTE;
+					break;
+				case PREFORMATTED:
+					key = Preferences.BLOCK_PRE;
+					break;
+				case DEFINITION_TERM:
+					key = Preferences.BLOCK_DT;
+					break;
 			}
 			cssStyles = preferences.getCssByBlockModifierType().get(key);
 		}
@@ -446,10 +442,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		public Token(FontState fontState, TextAttribute attribute, int offset, int length) {
 			super(attribute);
 			this.fontState = fontState;
-			if (offset < 0) {
-				throw new IllegalArgumentException();
-			}
-			if (length < 0) {
+			if ((offset < 0) || (length < 0)) {
 				throw new IllegalArgumentException();
 			}
 			this.offset = offset;

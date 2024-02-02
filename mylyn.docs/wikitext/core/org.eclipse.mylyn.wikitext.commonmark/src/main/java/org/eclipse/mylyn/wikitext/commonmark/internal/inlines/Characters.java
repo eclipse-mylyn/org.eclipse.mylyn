@@ -35,8 +35,7 @@ public class Characters extends InlineWithText {
 		cursor.advance(getLength());
 		if (!inlines.isEmpty()) {
 			Inline last = inlines.get(inlines.size() - 1);
-			if (last instanceof Characters) {
-				Characters lastCharacters = (Characters) last;
+			if (last instanceof Characters lastCharacters) {
 				int newLength = lastCharacters.getLength() + getLength();
 				String newText = lastCharacters.getText() + getText();
 				Characters substitution = new Characters(lastCharacters.getLine(), lastCharacters.getOffset(),

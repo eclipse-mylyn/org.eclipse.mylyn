@@ -169,20 +169,22 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		String markup = out.toString();
 
 		assertEquals(//
-				"* item 1\n" + //
-						"** item 1.A.\n" + //
-						"** item 1.B.\n" + //
-						"* item 2\n" + //
-						"## item 2.A.\n" + //
-						"## item 2.B.\n" + //
-						"\n" + //
-						"# item 3\n" + //
-						"** item 3.A.\n" + //
-						"** item 3.B.\n" + //
-						"### item 3.B.i.\n" + //
-						"### item 3.B.ii.\n" + //
-						"** item 3.C." + //
-						"\\\\item 3.C. line 2\n", //
+				"""
+						* item 1
+						** item 1.A.
+						** item 1.B.
+						* item 2
+						## item 2.A.
+						## item 2.B.
+
+						# item 3
+						** item 3.A.
+						** item 3.B.
+						### item 3.B.i.
+						### item 3.B.ii.
+						** item 3.C.\
+						\\\\item 3.C. line 2
+						""", //
 				markup);
 	}
 

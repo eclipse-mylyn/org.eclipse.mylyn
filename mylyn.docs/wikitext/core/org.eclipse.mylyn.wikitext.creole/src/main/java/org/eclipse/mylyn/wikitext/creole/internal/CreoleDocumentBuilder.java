@@ -183,29 +183,22 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected Block computeBlock(BlockType type, Attributes attributes) {
-		switch (type) {
-		case BULLETED_LIST:
-		case NUMERIC_LIST:
-			return new NewlineDelimitedBlock(type, doubleNewlineDelimiterCount(), 1);
-		case LIST_ITEM:
-			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
-		case PARAGRAPH:
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		case PREFORMATTED:
-		case CODE:
-			return new ContentBlock(type, "{{{\n", "\n}}}", 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
-		case TABLE:
-			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
-		case TABLE_CELL_HEADER:
-		case TABLE_CELL_NORMAL:
-			return new TableCellBlock(type);
-		case TABLE_ROW:
-			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (type) {
+			case BULLETED_LIST, NUMERIC_LIST -> new NewlineDelimitedBlock(type, doubleNewlineDelimiterCount(), 1);
+			case LIST_ITEM -> {
+				char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
+				yield new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
+			}
+			case PARAGRAPH -> new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case PREFORMATTED, CODE -> new ContentBlock(type, "{{{\n", "\n}}}", 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			case TABLE -> new SuffixBlock(type, "\n"); //$NON-NLS-1$
+			case TABLE_CELL_HEADER, TABLE_CELL_NORMAL -> new TableCellBlock(type);
+			case TABLE_ROW -> new SuffixBlock(type, "|\n"); //$NON-NLS-1$
+			default -> {
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				yield new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		};
 	}
 
 	private int doubleNewlineDelimiterCount() {
@@ -222,27 +215,27 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
-		case LINK:
-			if (attributes instanceof LinkAttributes) {
-				return new LinkBlock((LinkAttributes) attributes);
-			}
-			return new ContentBlock("[[", "]]", 0, 0);
-		case ITALIC:
-		case EMPHASIS:
-		case MARK:
-			return new ContentBlock("//", "//"); //$NON-NLS-1$ //$NON-NLS-2$
-		case BOLD:
-		case STRONG:
-			return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
-		case DELETED:
-			return new ContentBlock("--", "--"); //$NON-NLS-1$ //$NON-NLS-2$
-		case CODE:
-			return new ContentBlock(null, "{{{", "}}}", 0, 0, false, false); //$NON-NLS-1$ //$NON-NLS-2$
-		case UNDERLINED:
-			return new ContentBlock("__", "__"); //$NON-NLS-1$ //$NON-NLS-2$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected span type: " + type); //$NON-NLS-1$
-			return new ContentBlock("", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case LINK:
+				if (attributes instanceof LinkAttributes) {
+					return new LinkBlock((LinkAttributes) attributes);
+				}
+				return new ContentBlock("[[", "]]", 0, 0);
+			case ITALIC:
+			case EMPHASIS:
+			case MARK:
+				return new ContentBlock("//", "//"); //$NON-NLS-1$ //$NON-NLS-2$
+			case BOLD:
+			case STRONG:
+				return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
+			case DELETED:
+				return new ContentBlock("--", "--"); //$NON-NLS-1$ //$NON-NLS-2$
+			case CODE:
+				return new ContentBlock(null, "{{{", "}}}", 0, 0, false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			case UNDERLINED:
+				return new ContentBlock("__", "__"); //$NON-NLS-1$ //$NON-NLS-2$
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected span type: " + type); //$NON-NLS-1$
+				return new ContentBlock("", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

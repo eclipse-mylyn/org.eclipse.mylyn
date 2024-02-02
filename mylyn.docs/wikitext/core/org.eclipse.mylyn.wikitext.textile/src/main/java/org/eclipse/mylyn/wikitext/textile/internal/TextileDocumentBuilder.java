@@ -40,7 +40,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
 
-	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+	private final Map<String, String> entityToLiteral = new HashMap<>();
 
 	{
 		entityToLiteral.put("nbsp", " "); //$NON-NLS-1$//$NON-NLS-2$
@@ -86,6 +86,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					trailingNewlines);
 		}
 
+		@Override
 		public void lineBreak() throws IOException {
 			write('\n');
 		}
@@ -164,10 +165,10 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private boolean isExtended(String content) {
 			if (getBlockType() != null) {
 				switch (getBlockType()) {
-				case CODE:
-				case PREFORMATTED:
-				case QUOTE:
-					return PATTERN_MULTIPLE_NEWLINES.matcher(content).find();
+					case CODE:
+					case PREFORMATTED:
+					case QUOTE:
+						return PATTERN_MULTIPLE_NEWLINES.matcher(content).find();
 				}
 			}
 			return false;
@@ -303,63 +304,65 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeBlock(BlockType type, Attributes attributes) {
 		switch (type) {
-		case BULLETED_LIST:
-		case DEFINITION_LIST:
-		case NUMERIC_LIST:
-			if (currentBlock != null) {
-				BlockType currentBlockType = currentBlock.getBlockType();
-				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
-						|| currentBlockType == BlockType.DEFINITION_TERM) {
-					return new NewlineDelimitedBlock(type, 1, 1);
+			case BULLETED_LIST:
+			case DEFINITION_LIST:
+			case NUMERIC_LIST:
+				if (currentBlock != null) {
+					BlockType currentBlockType = currentBlock.getBlockType();
+					if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+							|| currentBlockType == BlockType.DEFINITION_TERM) {
+						return new NewlineDelimitedBlock(type, 1, 1);
+					}
 				}
-			}
-			return new NewlineDelimitedBlock(type, 2, 1);
-		case CODE:
-			return new ContentBlock(type, "bc. ", "", false, false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		case DEFINITION_ITEM:
-			return new DefinitionItemBlock();
-		case DEFINITION_TERM:
-			return new ContentBlock(type, "- ", "", false, true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-		case LIST_ITEM:
-			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, true, 1, //$NON-NLS-1$//$NON-NLS-2$
-					1);
-		case DIV:
-			if (currentBlock == null) {
-				return new ParagraphBlock(type, "", false, false, true, 2, 2); //$NON-NLS-1$
-			} else {
-				return new ParagraphBlock(type, "", true, false, true, 0, 0); //$NON-NLS-1$
-			}
-		case FOOTNOTE:
-			return new ParagraphBlock(type, "fn1. ", false, false, true, 2, 2); //$NON-NLS-1$
-		case INFORMATION:
-		case NOTE:
-		case PANEL:
-		case TIP:
-		case WARNING:
-			attributes.appendCssClass(type.name().toLowerCase());
-		case PARAGRAPH:
-			String attributesMarkup = computeAttributes(attributes);
+				return new NewlineDelimitedBlock(type, 2, 1);
+			case CODE:
+				return new ContentBlock(type, "bc. ", "", false, false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case DEFINITION_ITEM:
+				return new DefinitionItemBlock();
+			case DEFINITION_TERM:
+				return new ContentBlock(type, "- ", "", false, true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			case LIST_ITEM:
+				char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
+				return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, //$NON-NLS-1$//$NON-NLS-2$
+						true, 1, 1);
+			case DIV:
+				if (currentBlock == null) {
+					return new ParagraphBlock(type, "", false, false, true, 2, 2); //$NON-NLS-1$
+				} else {
+					return new ParagraphBlock(type, "", true, false, true, 0, 0); //$NON-NLS-1$
+				}
+			case FOOTNOTE:
+				return new ParagraphBlock(type, "fn1. ", false, false, true, 2, 2); //$NON-NLS-1$
+			case INFORMATION:
+			case NOTE:
+			case PANEL:
+			case TIP:
+			case WARNING:
+				attributes.appendCssClass(type.name().toLowerCase());
+			case PARAGRAPH:
+				String attributesMarkup = computeAttributes(attributes);
 
-			return new ParagraphBlock(type,
-					attributesMarkup.length() > 0 || previousWasExtended
-							? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
-							: attributesMarkup,
-					false, false, true, 2, 2);
-		case PREFORMATTED:
-			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "", false, false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		case QUOTE:
-			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "", false, false, true, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		case TABLE:
-			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
-		case TABLE_CELL_HEADER:
-		case TABLE_CELL_NORMAL:
-			return new TableCellBlock(type);
-		case TABLE_ROW:
-			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", false, false, true, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ParagraphBlock(type,
+						attributesMarkup.length() > 0 || previousWasExtended
+								? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
+								: attributesMarkup,
+						false, false, true, 2, 2);
+			case PREFORMATTED:
+				return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "", false, false, false, 2, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						2);
+			case QUOTE:
+				return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "", false, false, true, 2, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						2);
+			case TABLE:
+				return new SuffixBlock(type, "\n"); //$NON-NLS-1$
+			case TABLE_CELL_HEADER:
+			case TABLE_CELL_NORMAL:
+				return new TableCellBlock(type);
+			case TABLE_ROW:
+				return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				return new ContentBlock(type, "", "", false, false, true, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -367,12 +370,12 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		String appendStyle = null;
 		switch (type) {
-		case UNDERLINED:
-			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
-			break;
-		case MONOSPACE:
-			appendStyle = "font-family:monospace;";//$NON-NLS-1$
-			break;
+			case UNDERLINED:
+				appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+				break;
+			case MONOSPACE:
+				appendStyle = "font-family:monospace;";//$NON-NLS-1$
+				break;
 		}
 		if (appendStyle != null) {
 			attributes = new Attributes(attributes.getId(), attributes.getCssClass(), attributes.getCssStyle(),
@@ -382,58 +385,58 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		Block block;
 		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
-		case BOLD:
-			block = new ContentBlock("**" + spanAttributes, "**", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case CITATION:
-			block = new ContentBlock("??" + spanAttributes, "??", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case DELETED:
-			block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case MARK:
-		case EMPHASIS:
-			block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case INSERTED:
-			block = new ContentBlock("+" + spanAttributes, "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case CODE:
-			block = new ContentBlock("@" + spanAttributes, "@", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case ITALIC:
-			block = new ContentBlock("__" + spanAttributes, "__", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case LINK:
-			if (attributes instanceof LinkAttributes) {
-				block = new LinkBlock((LinkAttributes) attributes);
-			} else {
+			case BOLD:
+				block = new ContentBlock("**" + spanAttributes, "**", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case CITATION:
+				block = new ContentBlock("??" + spanAttributes, "??", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case DELETED:
+				block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case MARK:
+			case EMPHASIS:
+				block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case INSERTED:
+				block = new ContentBlock("+" + spanAttributes, "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case CODE:
+				block = new ContentBlock("@" + spanAttributes, "@", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case ITALIC:
+				block = new ContentBlock("__" + spanAttributes, "__", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case LINK:
+				if (attributes instanceof LinkAttributes) {
+					block = new LinkBlock((LinkAttributes) attributes);
+				} else {
+					block = new SpanBlock(spanAttributes, true, false);
+				}
+				break;
+			case MONOSPACE:
 				block = new SpanBlock(spanAttributes, true, false);
-			}
-			break;
-		case MONOSPACE:
-			block = new SpanBlock(spanAttributes, true, false);
-			break;
-		case STRONG:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case SUPERSCRIPT:
-			block = new ContentBlock("^" + spanAttributes, "^", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case SUBSCRIPT:
-			block = new ContentBlock("~" + spanAttributes, "~", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-			break;
+				break;
+			case STRONG:
+				block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case SUPERSCRIPT:
+				block = new ContentBlock("^" + spanAttributes, "^", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
+			case SUBSCRIPT:
+				block = new ContentBlock("~" + spanAttributes, "~", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				break;
 
 //			case QUOTE: not supported by Textile
-		case UNDERLINED:
-		case SPAN:
-		default:
-			if (spanAttributes.length() == 0) {
-				block = new SpanBlock("", true, false); //$NON-NLS-1$
-			} else {
-				block = new SpanBlock(spanAttributes, true, false);
-			}
-			break;
+			case UNDERLINED:
+			case SPAN:
+			default:
+				if (spanAttributes.length() == 0) {
+					block = new SpanBlock("", true, false); //$NON-NLS-1$
+				} else {
+					block = new SpanBlock(spanAttributes, true, false);
+				}
+				break;
 		}
 		return block;
 	}
@@ -470,18 +473,18 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			for (int x = 0; x < text.length(); ++x) {
 				char c = text.charAt(x);
 				switch (c) {
-				case '\u00A0':// &nbsp;
-					currentBlock.write(' ');
-					break;
-				case '\u00A9': // &copy;
-					currentBlock.write("(c)"); //$NON-NLS-1$
-					break;
-				case '\u00AE': // &reg;
-					currentBlock.write("(r)"); //$NON-NLS-1$
-					break;
-				default:
-					currentBlock.write(c);
-					break;
+					case '\u00A0':// &nbsp;
+						currentBlock.write(' ');
+						break;
+					case '\u00A9': // &copy;
+						currentBlock.write("(c)"); //$NON-NLS-1$
+						break;
+					case '\u00AE': // &reg;
+						currentBlock.write("(r)"); //$NON-NLS-1$
+						break;
+					default:
+						currentBlock.write(c);
+						break;
 				}
 			}
 		} catch (IOException e) {
@@ -592,16 +595,14 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	/**
-	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
-	 * Defaults to true.
+	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup. Defaults to true.
 	 */
 	public boolean isEmitAttributes() {
 		return emitAttributes;
 	}
 
 	/**
-	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
-	 * Defaults to true.
+	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup. Defaults to true.
 	 */
 	public void setEmitAttributes(boolean emitAttributes) {
 		this.emitAttributes = emitAttributes;
@@ -613,6 +614,6 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private boolean consecutiveNewline(final char lastChar, final char nextChar) {
-		return ((nextChar == '\n' || nextChar == '\r') && lastChar == '\n') || (nextChar == '\r' && lastChar == '\r');
+		return (nextChar == '\n' || nextChar == '\r') && lastChar == '\n' || nextChar == '\r' && lastChar == '\r';
 	}
 }

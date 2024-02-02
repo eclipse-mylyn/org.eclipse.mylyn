@@ -32,8 +32,8 @@ public class Cursor {
 
 	public Cursor(TextSegment segment) {
 		this.segment = Objects.requireNonNull(segment);
-		this.text = segment.getText();
-		this.textOffset = 0;
+		text = segment.getText();
+		textOffset = 0;
 	}
 
 	/**
@@ -65,8 +65,7 @@ public class Cursor {
 	}
 
 	/**
-	 * Provides the character at the cursor's 0-based offset, where the given offset is not affected by the position of
-	 * the cursor.
+	 * Provides the character at the cursor's 0-based offset, where the given offset is not affected by the position of the cursor.
 	 * 
 	 * @param offset
 	 *            the absolute offset of the character relative to this cursor
@@ -81,8 +80,7 @@ public class Cursor {
 	}
 
 	/**
-	 * Provides the string at the cursor's 0-based offset, where the given offset is not affected by the position of the
-	 * cursor.
+	 * Provides the string at the cursor's 0-based offset, where the given offset is not affected by the position of the cursor.
 	 * 
 	 * @param offset
 	 *            the absolute offset of the character relative to this cursor
@@ -122,7 +120,7 @@ public class Cursor {
 	}
 
 	public String getTextAtOffset() {
-		return text.substring(textOffset, text.length());
+		return text.substring(textOffset);
 	}
 
 	public String getTextAtOffset(int length) {
@@ -144,7 +142,7 @@ public class Cursor {
 	}
 
 	public Matcher matcher(int offset, Pattern pattern) {
-		checkArgument(offset >= 0 && (offset + textOffset < text.length()));
+		checkArgument(offset >= 0 && offset + textOffset < text.length());
 		Objects.requireNonNull(pattern);
 		Matcher matcher = pattern.matcher(text);
 		matcher.region(textOffset + offset, text.length());

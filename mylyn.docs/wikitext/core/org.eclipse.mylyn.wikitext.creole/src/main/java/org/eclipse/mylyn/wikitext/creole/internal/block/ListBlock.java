@@ -42,7 +42,7 @@ public class ListBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		boolean continuation = false;
 		if (blockLineCount == 0) {
-			listState = new Stack<ListState>();
+			listState = new Stack<>();
 			String listSpec = matcher.group(1);
 			int level = calculateLevel(listSpec);
 			BlockType type = calculateType(listSpec.charAt(0));
@@ -90,7 +90,8 @@ public class ListBlock extends Block {
 	private boolean adjustLevel(int lineLevel, BlockType type) {
 		boolean continuation = false;
 
-		for (ListState previousState = listState.peek(); lineLevel != previousState.level || previousState.type != type; previousState = listState.peek()) {
+		for (ListState previousState = listState.peek(); lineLevel != previousState.level
+				|| previousState.type != type; previousState = listState.peek()) {
 			if (lineLevel > previousState.level) {
 				if (!previousState.openItem) {
 					builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
@@ -121,7 +122,7 @@ public class ListBlock extends Block {
 	}
 
 	private BlockType calculateType(char ch) {
-		return (ch == '#') ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
+		return ch == '#' ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
 	}
 
 	@Override
@@ -168,7 +169,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, BlockType type) {
-			super();
 			this.level = level;
 			this.type = type;
 		}

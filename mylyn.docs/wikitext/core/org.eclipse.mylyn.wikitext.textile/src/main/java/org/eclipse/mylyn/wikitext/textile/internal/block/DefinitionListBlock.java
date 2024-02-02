@@ -23,7 +23,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 public class DefinitionListBlock extends Block {
 
-	private static final Pattern START_PATTERN = Pattern.compile("(?:(;\\s+(.+))|(-\\s+(.+?)\\s*(:=)\\s*((.+?)\\s*(=:)?)?))"); //$NON-NLS-1$
+	private static final Pattern START_PATTERN = Pattern
+			.compile("(?:(;\\s+(.+))|(-\\s+(.+?)\\s*(:=)\\s*((.+?)\\s*(=:)?)?))"); //$NON-NLS-1$
 
 	private static final Pattern END_ITEM_PATTERN = Pattern.compile("(.*?)\\s*(=:)\\s*"); //$NON-NLS-1$
 
@@ -120,7 +121,7 @@ public class DefinitionListBlock extends Block {
 		endBlock();
 
 		if (definition != null) {
-			// since it's a mid-line block, we must set the offsets here 
+			// since it's a mid-line block, we must set the offsets here
 			state.setLineCharacterOffset(definitionSegmentOffset);
 			beginBlock(BlockType.DEFINITION_ITEM, new Attributes());
 

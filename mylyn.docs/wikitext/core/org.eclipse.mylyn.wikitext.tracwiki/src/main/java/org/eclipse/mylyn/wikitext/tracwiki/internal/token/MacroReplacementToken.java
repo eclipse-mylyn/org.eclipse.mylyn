@@ -61,8 +61,8 @@ public class MacroReplacementToken extends PatternBasedElement {
 		}
 
 		/**
-		 * Process the image macro. The first argument is a mandatory file specification. Remaining arguments specify
-		 * optional attributes and styles.
+		 * Process the image macro. The first argument is a mandatory file specification. Remaining arguments specify optional attributes
+		 * and styles.
 		 * 
 		 * @param args
 		 *            list of arguments passed into the macro
@@ -107,7 +107,7 @@ public class MacroReplacementToken extends PatternBasedElement {
 					continue;
 				}
 				// Floating alignment attribute
-				// (to create nice layouts, Trac translates the "align" parameter to a float CSS style 
+				// (to create nice layouts, Trac translates the "align" parameter to a float CSS style
 				// instead of text-align or vertical-align, so we should emulate that here)
 				m = alignPattern.matcher(arg);
 				if (m.matches()) {

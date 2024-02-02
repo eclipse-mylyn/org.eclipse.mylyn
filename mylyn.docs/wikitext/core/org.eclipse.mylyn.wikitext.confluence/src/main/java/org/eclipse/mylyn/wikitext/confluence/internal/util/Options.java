@@ -33,7 +33,7 @@ public class Options {
 		 *            the value of the option
 		 * @see #setOption(String)
 		 */
-		public void setOption(String key, String value);
+		void setOption(String key, String value);
 
 		/**
 		 * Set an option that is specified without a value. The default implementation does nothing.
@@ -42,7 +42,7 @@ public class Options {
 		 *            the option to set
 		 * @see #setOption(String, String)
 		 */
-		public void setOption(String option);
+		void setOption(String option);
 	}
 
 	public static void parseOptions(String options, Handler handler) {

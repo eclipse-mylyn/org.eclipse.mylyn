@@ -38,8 +38,8 @@ import org.eclipse.mylyn.wikitext.twiki.internal.token.LinkReplacementToken;
 import org.eclipse.mylyn.wikitext.twiki.internal.token.WikiWordReplacementToken;
 
 /**
- * a markup language implementing TWiki syntax. See
- * <a href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
+ * a markup language implementing TWiki syntax. See <a href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting
+ * Rules</a> for details.
  *
  * @author David Green
  * @since 3.0

@@ -255,7 +255,7 @@ public class TemplateProcessorTest {
 	@Test
 	public void testCaseSensitivity() {
 		// bug 323224
-		final Set<String> templateNames = new HashSet<String>();
+		final Set<String> templateNames = new HashSet<>();
 		markupLanguage.getTemplateProviders().add(new TemplateResolver() {
 
 			@Override
@@ -267,7 +267,7 @@ public class TemplateProcessorTest {
 				return template;
 			}
 		});
-		String[] names = new String[] { "One", "one", "OneTwo", "onetwo", "oneTwo" };
+		String[] names = { "One", "one", "OneTwo", "onetwo", "oneTwo" };
 		for (String name : names) {
 			templateNames.clear();
 

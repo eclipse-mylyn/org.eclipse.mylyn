@@ -45,11 +45,9 @@ class SelectorRule implements IPredicateRule {
 			if (endSequenceDetected(scanner)) {
 				return token;
 			}
-		} else {
-			if (startSequenceDetected(scanner)) {
-				if (endSequenceDetected(scanner)) {
-					return token;
-				}
+		} else if (startSequenceDetected(scanner)) {
+			if (endSequenceDetected(scanner)) {
+				return token;
 			}
 		}
 		while (readCount > 0) {

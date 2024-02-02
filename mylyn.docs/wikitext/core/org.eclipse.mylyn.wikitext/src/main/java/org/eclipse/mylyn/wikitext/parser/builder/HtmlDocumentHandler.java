@@ -16,9 +16,8 @@ package org.eclipse.mylyn.wikitext.parser.builder;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
- * An extension of {@link HtmlDocumentBuilder} which is responsible for emitting the HTML document tags and content
- * which wrap the body's content. Normally this would include the {@code <html>} and {@code <body>} tags, however
- * implementations may emit any content.
+ * An extension of {@link HtmlDocumentBuilder} which is responsible for emitting the HTML document tags and content which wrap the body's
+ * content. Normally this would include the {@code <html>} and {@code <body>} tags, however implementations may emit any content.
  * <p>
  * Example implementation:
  * </p>

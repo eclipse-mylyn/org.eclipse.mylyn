@@ -106,8 +106,7 @@ import org.xml.sax.SAXException;
  * <li>{@link SpanType#MARK} maps to HTML tag {@mark <u>}</li>
  * </ul>
  * <p>
- * {@link HtmlLanguage} variants created using {@link HtmlLanguageBuilder} may map {@link SpanType} and
- * {@link BlockType} differently.
+ * {@link HtmlLanguage} variants created using {@link HtmlLanguageBuilder} may map {@link SpanType} and {@link BlockType} differently.
  * </p>
  *
  * @author david.green
@@ -127,8 +126,8 @@ public class HtmlLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * Indicates if {@link #processContent(MarkupParser, String, boolean) parsing} is run with cleanup rules for HTML.
-	 * Defaults to {@code true}.
+	 * Indicates if {@link #processContent(MarkupParser, String, boolean) parsing} is run with cleanup rules for HTML. Defaults to
+	 * {@code true}.
 	 *
 	 * @return true if cleanup rules are used when parsing, otherwise false
 	 * @see HtmlParser#instanceWithHtmlCleanupRules()
@@ -155,9 +154,7 @@ public class HtmlLanguage extends MarkupLanguage {
 		InputSource source = new InputSource(new StringReader(markupContent));
 		try {
 			htmlParser.parse(source, parser.getBuilder(), asDocument);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (SAXException e) {
+		} catch (IOException | SAXException e) {
 			throw new RuntimeException(e);
 		}
 	}

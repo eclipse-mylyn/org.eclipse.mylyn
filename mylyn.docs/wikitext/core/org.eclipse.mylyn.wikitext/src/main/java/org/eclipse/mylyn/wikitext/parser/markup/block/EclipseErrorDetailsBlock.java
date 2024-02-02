@@ -21,9 +21,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
- * A block that starts a preformatted section that begins with <tt>-- Error Details --</tt>, which is the prefix for
- * error information inserted into a bug description by Mylyn when creating bugs from the Eclipse Error Log view. The
- * block terminates with the first {@link MarkupLanguage#isEmptyLine(String) empty line}.
+ * A block that starts a preformatted section that begins with <tt>-- Error Details --</tt>, which is the prefix for error information
+ * inserted into a bug description by Mylyn when creating bugs from the Eclipse Error Log view. The block terminates with the first
+ * {@link MarkupLanguage#isEmptyLine(String) empty line}.
  *
  * @author David Green
  * @since 3.0
@@ -49,11 +49,9 @@ public class EclipseErrorDetailsBlock extends Block {
 			Attributes attributes = new Attributes();
 			attributes.setCssClass("eclipseErrorDetails"); //$NON-NLS-1$
 			builder.beginBlock(BlockType.PREFORMATTED, attributes);
-		} else {
-			if (markupLanguage.isEmptyLine(line)) {
-				setClosed(true);
-				return 0;
-			}
+		} else if (markupLanguage.isEmptyLine(line)) {
+			setClosed(true);
+			return 0;
 		}
 
 		builder.characters(offset > 0 ? line.substring(offset) : line);

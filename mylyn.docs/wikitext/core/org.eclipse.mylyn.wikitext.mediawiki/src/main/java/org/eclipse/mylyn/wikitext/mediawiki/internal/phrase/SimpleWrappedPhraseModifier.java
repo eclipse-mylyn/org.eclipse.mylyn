@@ -89,12 +89,12 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		for (int x = 0; x < literal.length(); ++x) {
 			char c = literal.charAt(x);
 			switch (c) {
-			case '^':
-			case '*':
-			case '?':
-			case '+':
-			case '-':
-				buf.append('\\');
+				case '^':
+				case '*':
+				case '?':
+				case '+':
+				case '-':
+					buf.append('\\');
 			}
 			buf.append(c);
 		}

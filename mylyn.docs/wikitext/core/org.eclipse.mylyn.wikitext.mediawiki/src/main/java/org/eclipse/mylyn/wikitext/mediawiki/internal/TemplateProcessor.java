@@ -45,12 +45,12 @@ public class TemplateProcessor {
 
 	private final AbstractMediaWikiLanguage mediaWikiLanguage;
 
-	private final Map<String, Template> templateByName = new HashMap<String, Template>();
+	private final Map<String, Template> templateByName = new HashMap<>();
 
-	private final List<Pattern> excludePatterns = new ArrayList<Pattern>();
+	private final List<Pattern> excludePatterns = new ArrayList<>();
 
 	public TemplateProcessor(AbstractMediaWikiLanguage abstractMediaWikiLanguage) {
-		this.mediaWikiLanguage = abstractMediaWikiLanguage;
+		mediaWikiLanguage = abstractMediaWikiLanguage;
 
 		for (Template template : mediaWikiLanguage.getTemplates()) {
 			templateByName.put(template.getName(), normalize(template));
@@ -59,7 +59,7 @@ public class TemplateProcessor {
 		if (templateExcludes != null) {
 			String[] split = templateExcludes.split("\\s*,\\s*"); //$NON-NLS-1$
 			for (String exclude : split) {
-				String pattern = exclude.replaceAll("([^a-zA-Z:\\*])", "\\\\$1").replaceAll("\\*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				String pattern = exclude.replaceAll("([^a-zA-Z:\\*])", "\\\\$1").replace("*", ".*?"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				excludePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
 			}
 		}
@@ -94,7 +94,7 @@ public class TemplateProcessor {
 					String parameters = matcher.group(3);
 					replacementText = processTemplate(template, parameters);
 					//The replacementText might contain other templates. Add the current template to the set of used template and call recursively this function again:
-					Set<String> templates = new HashSet<String>(usedTemplates);
+					Set<String> templates = new HashSet<>(usedTemplates);
 					templates.add(templateName);
 					replacementText = processTemplates(replacementText, templates);
 				}
@@ -159,7 +159,7 @@ public class TemplateProcessor {
 	}
 
 	private List<Parameter> processParameters(String parametersText) {
-		List<Parameter> parameters = new ArrayList<TemplateProcessor.Parameter>();
+		List<Parameter> parameters = new ArrayList<>();
 		if (parametersText != null && parametersText.length() > 0) {
 			Matcher matcher = parameterSpec.matcher(parametersText);
 			while (matcher.find()) {

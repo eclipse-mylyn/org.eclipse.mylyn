@@ -33,7 +33,7 @@ public interface IFoldingStructure {
 	 * @param collapseRegionContainingCaret
 	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void collapseElements(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
+	void collapseElements(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
 
 	/**
 	 * expand the given items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
@@ -43,18 +43,17 @@ public interface IFoldingStructure {
 	 * @param collapseRegionContainingCaret
 	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void expandElements(Collection<OutlineItem> items);
+	void expandElements(Collection<OutlineItem> items);
 
 	/**
-	 * expand the given items and collapse all others. Does nothing if folding is not {@link #isFoldingEnabled()
-	 * enabled}.
+	 * expand the given items and collapse all others. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
 	 * 
 	 * @param items
 	 *            the items to expand
 	 * @param collapseRegionContainingCaret
 	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void expandElementsExclusive(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
+	void expandElementsExclusive(Collection<OutlineItem> items, boolean collapseRegionContainingCaret);
 
 	/**
 	 * collapse all items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
@@ -62,17 +61,17 @@ public interface IFoldingStructure {
 	 * @param collapseRegionContainingCaret
 	 *            indicate if the region containing the caret should be collapsed
 	 */
-	public void collapseAll(boolean collapseRegionContainingCaret);
+	void collapseAll(boolean collapseRegionContainingCaret);
 
 	/**
 	 * expand all items. Does nothing if folding is not {@link #isFoldingEnabled() enabled}.
 	 */
-	public void expandAll();
+	void expandAll();
 
 	/**
 	 * indicate if folding is enabled.
 	 * 
 	 * @return true if folding is enabled, otherwise false
 	 */
-	public boolean isFoldingEnabled();
+	boolean isFoldingEnabled();
 }

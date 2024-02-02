@@ -64,11 +64,9 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 	private File createSimpleHtmlMarkup() throws IOException {
 		File htmlFile = new File(tempFolder, "markup.html");
 		PrintWriter writer = new PrintWriter(new FileWriter(htmlFile));
-		try {
+		try (writer) {
 			writer.println(
 					"<html><body>\n<h1>First Heading</h1>\n\n<p>some content</p>\n<h1>Second Heading</h1>\n<p>some more content</p></body></html>");
-		} finally {
-			writer.close();
 		}
 		return htmlFile;
 	}

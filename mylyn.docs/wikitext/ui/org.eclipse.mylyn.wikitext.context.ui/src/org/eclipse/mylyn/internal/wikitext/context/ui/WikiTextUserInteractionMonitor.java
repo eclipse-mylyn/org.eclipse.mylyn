@@ -26,9 +26,10 @@ import org.eclipse.ui.IWorkbenchPart;
 class WikiTextUserInteractionMonitor extends AbstractUserInteractionMonitor {
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext) {
 		if (selection instanceof ITextSelection) {
-			OutlineItem item = (OutlineItem) part.getAdapter(OutlineItem.class);
+			OutlineItem item = part.getAdapter(OutlineItem.class);
 			if (item != null) {
 				OutlineItem relevantItem = item.findNearestMatchingOffset(((ITextSelection) selection).getOffset());
 				if (relevantItem == null) {

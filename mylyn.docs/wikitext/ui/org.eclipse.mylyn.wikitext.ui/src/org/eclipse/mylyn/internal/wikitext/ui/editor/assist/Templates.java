@@ -55,17 +55,17 @@ public class Templates {
 	public void addTemplate(Template template, boolean block) {
 		this.template.add(template);
 		if (block) {
-			this.blockTemplates.add(template);
+			blockTemplates.add(template);
 		}
 	}
 
 	public void addAll(Templates other) {
-		this.template.addAll(other.template);
-		this.blockTemplates.addAll(other.template);
+		template.addAll(other.template);
+		blockTemplates.addAll(other.template);
 	}
 
 	public boolean isBlock(Template template) {
-		return blockTemplates.contains(template) || (parent != null && parent.isBlock(template));
+		return blockTemplates.contains(template) || parent != null && parent.isBlock(template);
 	}
 
 	public Templates getParent() {

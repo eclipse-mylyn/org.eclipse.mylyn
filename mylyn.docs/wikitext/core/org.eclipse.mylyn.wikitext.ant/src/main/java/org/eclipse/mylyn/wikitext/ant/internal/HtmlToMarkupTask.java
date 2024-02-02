@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  */
 public class HtmlToMarkupTask extends MarkupTask {
 
-	private final List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<>();
 
 	protected File file;
 
@@ -175,16 +175,16 @@ public class HtmlToMarkupTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file, $2 is replaced with the markup language name (in lower-case). Default value is <code>$1.$2</code>
+	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the input file, $2 is
+	 * replaced with the markup language name (in lower-case). Default value is <code>$1.$2</code>
 	 */
 	public String getOutputFilenameFormat() {
 		return outputFilenameFormat;
 	}
 
 	/**
-	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file, $2 is replaced with the markup language name (in lower-case). Default value is <code>$1.$2</code>
+	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the input file, $2 is
+	 * replaced with the markup language name (in lower-case). Default value is <code>$1.$2</code>
 	 */
 	public void setOutputFilenameFormat(String outputFilenameFormat) {
 		this.outputFilenameFormat = outputFilenameFormat;

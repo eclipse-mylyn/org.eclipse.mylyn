@@ -21,24 +21,24 @@ import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProc
 /**
  * A phrase modifier that detects HTML and XML entities in the source.
  * 
- * @author Stefan Seelmann 
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
 public class PreserverHtmlEntityToken extends PatternBasedElement {
 
-   @Override
-   protected String getPattern(int groupOffset) {
-       return "(&[A-Za-z]{1,32}+;)"; //$NON-NLS-1$
-   }
+	@Override
+	protected String getPattern(int groupOffset) {
+		return "(&[A-Za-z]{1,32}+;)"; //$NON-NLS-1$
+	}
 
-   @Override
-   protected PatternBasedElementProcessor newProcessor() {
-       return new LiteralPhraseModifierProcessor(false);
-   }
+	@Override
+	protected PatternBasedElementProcessor newProcessor() {
+		return new LiteralPhraseModifierProcessor(false);
+	}
 
-   @Override
-   protected int getPatternGroupCount() {
-       return 1;
-   }
+	@Override
+	protected int getPatternGroupCount() {
+		return 1;
+	}
 
 }

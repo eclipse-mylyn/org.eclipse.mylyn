@@ -81,8 +81,8 @@ public abstract class AbstractHtmlBlock extends Block {
 	}
 
 	/**
-	 * handle attributes of the opening tag. The default implementation processes XML-style attributes however
-	 * subclasses may override this method to provide special attribute processing.
+	 * handle attributes of the opening tag. The default implementation processes XML-style attributes however subclasses may override this
+	 * method to provide special attribute processing.
 	 *
 	 * @param attributes
 	 *            the attributes, or null if there are none

@@ -35,8 +35,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacemen
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
 
 /**
- * A markup language implementing Creole syntax. See <a href="http://www.wikicreole.org/wiki/Creole1.0">Creole
- * Formatting Rules</a> and <a href="http://www.wikicreole.org/wiki/CreoleAdditions">Creole Additions</a> for details.
+ * A markup language implementing Creole syntax. See <a href="http://www.wikicreole.org/wiki/Creole1.0">Creole Formatting Rules</a> and
+ * <a href="http://www.wikicreole.org/wiki/CreoleAdditions">Creole Additions</a> for details.
  *
  * @author Igor Malinin
  * @since 3.0

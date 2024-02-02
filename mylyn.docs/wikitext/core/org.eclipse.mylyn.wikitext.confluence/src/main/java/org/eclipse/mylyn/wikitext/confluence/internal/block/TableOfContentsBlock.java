@@ -56,10 +56,7 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 	}
 
 	private void emitToc(OutlineItem item) {
-		if (item.getChildren().isEmpty()) {
-			return;
-		}
-		if ((item.getLevel() + 1) > maxLevel) {
+		if (item.getChildren().isEmpty() || (item.getLevel() + 1 > maxLevel)) {
 			return;
 		}
 		Attributes nullAttributes = new Attributes();

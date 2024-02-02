@@ -21,9 +21,8 @@ import java.util.Locale;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage.PatternBasedSyntax;
 
 /**
- * A configuration for a markup language, which enables client code to modify the syntax of the markup language by
- * adding blocks, phrase modifiers, and tokens. Also provides a mechanism for disabling some common markup language
- * features.
+ * A configuration for a markup language, which enables client code to modify the syntax of the markup language by adding blocks, phrase
+ * modifiers, and tokens. Also provides a mechanism for disabling some common markup language features.
  *
  * @author David Green
  * @since 3.0
@@ -61,8 +60,8 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	}
 
 	/**
-	 * Indicate if the given block should break paragraph content even if there is no blank line preceding it. The
-	 * default implementation returns true.
+	 * Indicate if the given block should break paragraph content even if there is no blank line preceding it. The default implementation
+	 * returns true.
 	 *
 	 * @param block
 	 *            the block
@@ -73,48 +72,48 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	}
 
 	/**
-	 * Indicate if this language should escape HTML and XML tags. When HTML and XML tags are escaped they appear as
-	 * literals in the page, rather than affecting the presentation. The default is false.
+	 * Indicate if this language should escape HTML and XML tags. When HTML and XML tags are escaped they appear as literals in the page,
+	 * rather than affecting the presentation. The default is false.
 	 */
 	public boolean isEscapingHtmlAndXml() {
 		return escapingHtmlAndXml;
 	}
 
 	/**
-	 * Indicate if this language should escape HTML and XML tags. When HTML and XML tags are escaped they appear as
-	 * literals in the page, rather than affecting the presentation. The default is false.
+	 * Indicate if this language should escape HTML and XML tags. When HTML and XML tags are escaped they appear as literals in the page,
+	 * rather than affecting the presentation. The default is false.
 	 */
 	public void setEscapingHtmlAndXml(boolean escapingHtmlAndXml) {
 		this.escapingHtmlAndXml = escapingHtmlAndXml;
 	}
 
 	/**
-	 * indicate if unwrapped paragraphs should be supported. Unwrapped paragraphs are those that are not nested in
-	 * &lt;p&gt; or &lt;div&gt; tags. The default is true.
+	 * indicate if unwrapped paragraphs should be supported. Unwrapped paragraphs are those that are not nested in &lt;p&gt; or &lt;div&gt;
+	 * tags. The default is true.
 	 */
 	public boolean isEnableUnwrappedParagraphs() {
 		return enableUnwrappedParagraphs;
 	}
 
 	/**
-	 * indicate if unwrapped paragraphs should be supported. Unwrapped paragraphs are those that are not nested in
-	 * &lt;p&gt; or &lt;div&gt; tags. The default is true.
+	 * indicate if unwrapped paragraphs should be supported. Unwrapped paragraphs are those that are not nested in &lt;p&gt; or &lt;div&gt;
+	 * tags. The default is true.
 	 */
 	public void setEnableUnwrappedParagraphs(boolean enableUnwrappedParagraphs) {
 		this.enableUnwrappedParagraphs = enableUnwrappedParagraphs;
 	}
 
 	/**
-	 * Indicate if newlines in the markup must cause a line break. If false, then the default markup language behaviour
-	 * should be observed. The default is false.
+	 * Indicate if newlines in the markup must cause a line break. If false, then the default markup language behaviour should be observed.
+	 * The default is false.
 	 */
 	public boolean isNewlinesMustCauseLineBreak() {
 		return newlinesMustCauseLineBreak;
 	}
 
 	/**
-	 * Indicate if newlines in the markup must cause a line break. If false, then the default markup language behaviour
-	 * should be observed. The default is false.
+	 * Indicate if newlines in the markup must cause a line break. If false, then the default markup language behaviour should be observed.
+	 * The default is false.
 	 */
 	public void setNewlinesMustCauseLineBreak(boolean newlinesMustCauseLineBreak) {
 		this.newlinesMustCauseLineBreak = newlinesMustCauseLineBreak;
@@ -132,32 +131,32 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	}
 
 	/**
-	 * Indicates if the markup syntax should be optimized for use with a task repository. Some markup languages may
-	 * enable/disable specific markup constructs to be more suitable for use in a task description or comment.
+	 * Indicates if the markup syntax should be optimized for use with a task repository. Some markup languages may enable/disable specific
+	 * markup constructs to be more suitable for use in a task description or comment.
 	 */
 	public boolean isOptimizeForRepositoryUsage() {
 		return optimizeForRepositoryUsage;
 	}
 
 	/**
-	 * Indicate if the markup syntax should be optimized for use with a task repository. Some markup languages may
-	 * enable/disable specific markup constructs to be more suitable for use in a task description or comment.
+	 * Indicate if the markup syntax should be optimized for use with a task repository. Some markup languages may enable/disable specific
+	 * markup constructs to be more suitable for use in a task description or comment.
 	 */
 	public void setOptimizeForRepositoryUsage(boolean optimizeForRepositoryUsage) {
 		this.optimizeForRepositoryUsage = optimizeForRepositoryUsage;
 	}
 
 	/**
-	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
-	 * markup language behaviour should be observed.
+	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default markup language behaviour
+	 * should be observed.
 	 */
 	public Boolean isWikiWordLinking() {
 		return wikiWordLinking;
 	}
 
 	/**
-	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
-	 * markup language behaviour should be observed.
+	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default markup language behaviour
+	 * should be observed.
 	 */
 	public void setWikiWordLinking(Boolean wikiWordLinking) {
 		this.wikiWordLinking = wikiWordLinking;

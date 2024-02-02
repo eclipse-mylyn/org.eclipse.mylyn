@@ -29,7 +29,7 @@ class CssPartitionScanner extends RuleBasedPartitionScanner {
 	public CssPartitionScanner() {
 
 		setPredicateRules(new IPredicateRule[] {
-				// 
+				//
 				new MultiLineRule("/*", "*/", new Token(CONTENT_TYPE_COMMENT)), //$NON-NLS-1$ //$NON-NLS-2$
 				new MultiLineRule("{", "}", new Token(CONTENT_TYPE_BLOCK)), //$NON-NLS-1$ //$NON-NLS-2$
 		});

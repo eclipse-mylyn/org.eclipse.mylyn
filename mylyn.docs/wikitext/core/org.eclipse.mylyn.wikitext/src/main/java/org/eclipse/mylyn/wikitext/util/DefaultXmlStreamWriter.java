@@ -349,7 +349,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	 *
 	 */
 	public void setXmlHeaderQuoteChar(char xmlHederQuoteChar) {
-		this.xmlHeaderQuoteChar = xmlHederQuoteChar;
+		xmlHeaderQuoteChar = xmlHederQuoteChar;
 	}
 
 	/**
@@ -386,26 +386,26 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		// references.
 		// These five are defined by default for all XML documents.
 		switch (ch) {
-		case '<':
-			return "lt"; //$NON-NLS-1$
-		case '>':
-			if (!attribute) {
-				// bug 302291: text containing CDATA produces invalid HTML
-				return "gt"; //$NON-NLS-1$
-			}
-		case '"':
-			if (attribute) {
-				return "quot"; //$NON-NLS-1$
-			}
-			break;
-		case '&':
-			return "amp"; //$NON-NLS-1$
+			case '<':
+				return "lt"; //$NON-NLS-1$
+			case '>':
+				if (!attribute) {
+					// bug 302291: text containing CDATA produces invalid HTML
+					return "gt"; //$NON-NLS-1$
+				}
+			case '"':
+				if (attribute) {
+					return "quot"; //$NON-NLS-1$
+				}
+				break;
+			case '&':
+				return "amp"; //$NON-NLS-1$
 
-		// WARN: there is no need to encode apostrophe, and doing so has an
-		// adverse
-		// effect on XHTML documents containing javascript with some browsers.
-		// case '\'':
-		// return "apos";
+			// WARN: there is no need to encode apostrophe, and doing so has an
+			// adverse
+			// effect on XHTML documents containing javascript with some browsers.
+			// case '\'':
+			// return "apos";
 		}
 		return null;
 	}
@@ -416,7 +416,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Deprecated
 	protected static boolean isUtf8Printable(char ch) {
 		// fall-back method here.
-		if ((ch >= ' ' && ch <= 0x10FFFF && ch != 0xF7) || ch == '\n' || ch == '\r' || ch == '\t') {
+		if (ch >= ' ' && ch <= 0x10FFFF && ch != 0xF7 || ch == '\n' || ch == '\r' || ch == '\t') {
 			// If the character is not printable, print as character reference.
 			// Non printables are below ASCII space but not tab or line
 			// terminator, ASCII delete, or above a certain Unicode threshold.

@@ -21,8 +21,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
- * a test markup validation rule that creates errors for text matching "ERROR"
- * or "WARNING".
+ * a test markup validation rule that creates errors for text matching "ERROR" or "WARNING".
  *
  * @author David Green
  */

@@ -54,10 +54,9 @@ public class BeginSpanEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof BeginSpanEvent)) {
+		if (!(obj instanceof BeginSpanEvent other)) {
 			return false;
 		}
-		BeginSpanEvent other = (BeginSpanEvent) obj;
 		return type == other.type;
 	}
 

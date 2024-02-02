@@ -22,7 +22,6 @@ public class DescendantSelector extends Selector {
 	private final Selector ancestorSelector;
 
 	public DescendantSelector(Selector ancestorSelector) {
-		super();
 		this.ancestorSelector = ancestorSelector;
 	}
 

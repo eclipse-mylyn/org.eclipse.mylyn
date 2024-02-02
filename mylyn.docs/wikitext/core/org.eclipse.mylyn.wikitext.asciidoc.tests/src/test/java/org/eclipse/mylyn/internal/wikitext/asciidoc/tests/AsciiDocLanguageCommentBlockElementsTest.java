@@ -27,60 +27,66 @@ public class AsciiDocLanguageCommentBlockElementsTest extends AsciiDocLanguageTe
 
 	@Test
 	public void blockComment() {
-		String html = parseToHtml("////\n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////");
+		String html = parseToHtml("""
+				////
+				ignore this
+				ignore that
+				////""");
 		assertEquals("", html);
 	}
 
 	@Test
 	public void blockCommentAndContent() {
-		String html = parseToHtml("////\n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////\n" //
-				+ "some content");
+		String html = parseToHtml("""
+				////
+				ignore this
+				ignore that
+				////
+				some content""");
 		assertEquals("<p>some content</p>\n", html);
 	}
 
 	@Test
 	public void blockCommentWithWhiteSpace() {
-		String html = parseToHtml("//// \n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////");
+		String html = parseToHtml("""
+				////\s
+				ignore this
+				ignore that
+				////""");
 		assertEquals("", html);
 	}
 
 	@Test
 	public void blockCommentWithWhiteSpaceAndContent() {
-		String html = parseToHtml("//// \n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////\n" //
-				+ "some content");
+		String html = parseToHtml("""
+				////\s
+				ignore this
+				ignore that
+				////
+				some content""");
 		assertEquals("<p>some content</p>\n", html);
 	}
 
 	@Test
 	public void blockCommentWithWhiteSpacesAtEndAndContent() {
-		String html = parseToHtml("////\n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////    \n" //
-				+ "some content");
+		String html = parseToHtml("""
+				////
+				ignore this
+				ignore that
+				////\s\s\s\s
+				some content""");
 		assertEquals("<p>some content</p>\n", html);
 	}
 
 	@Test
 	public void blockCommentWithContent() {
-		String html = parseToHtml("This is\n" //
-				+ "////\n" //
-				+ "ignore this\n" //
-				+ "ignore that\n" //
-				+ "////\n" //
-				+ "two lines");
+		String html = parseToHtml("""
+				This is
+				////
+				ignore this
+				ignore that
+				////
+				two lines""");
 		assertEquals("<p>This is</p>\n<p>two lines</p>\n", html);
 	}
 

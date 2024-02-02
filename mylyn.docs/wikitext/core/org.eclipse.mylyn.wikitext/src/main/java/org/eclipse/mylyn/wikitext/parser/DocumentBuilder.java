@@ -13,11 +13,10 @@
 package org.eclipse.mylyn.wikitext.parser;
 
 /**
- * The 'Builder' design pattern, for documents. Implementations can build a specific kind of document (such as HTML, or
- * DocBook).
+ * The 'Builder' design pattern, for documents. Implementations can build a specific kind of document (such as HTML, or DocBook).
  * <p>
- * Note that many methods take {@link Attributes} to specify attributes of the element, however most of these methods
- * may take a more specific subclass of {@link Attributes}.
+ * Note that many methods take {@link Attributes} to specify attributes of the element, however most of these methods may take a more
+ * specific subclass of {@link Attributes}.
  * </p>
  *
  * @author David Green
@@ -70,16 +69,16 @@ public abstract class DocumentBuilder {
 	}
 
 	/**
-	 * Begin a document. Calling this method is optional for some builders, however if called then it must be matched by
-	 * a corresponding call to {@link #endDocument()}.
+	 * Begin a document. Calling this method is optional for some builders, however if called then it must be matched by a corresponding
+	 * call to {@link #endDocument()}.
 	 *
 	 * @see #endDocument()
 	 */
 	public abstract void beginDocument();
 
 	/**
-	 * Flushes the content of the builder. {@link #flush()} should be called when done with a builder in cases where
-	 * {@link #endDocument()} is not called. Calling {@link #flush()} after {@link #endDocument()} has no effect.
+	 * Flushes the content of the builder. {@link #flush()} should be called when done with a builder in cases where {@link #endDocument()}
+	 * is not called. Calling {@link #flush()} after {@link #endDocument()} has no effect.
 	 * <p>
 	 * Subclasses should override to provide behaviour; the default implementation does nothing.
 	 * </p>
@@ -96,29 +95,27 @@ public abstract class DocumentBuilder {
 	public abstract void endDocument();
 
 	/**
-	 * Begin a block of the specified type. Builder implementations may do a best-effort application of the provided
-	 * attributes. Note that the provided attributes *may* be a subclass of the {@link Attributes} class, in which case
-	 * the builder may attempt to apply the attributes specified. Builders may choose to ignore attributes, and should
-	 * fail silently if the given attributes are not as expected. Each call to this method must be matched by a
-	 * corresponding call to {@link #endBlock()}.
+	 * Begin a block of the specified type. Builder implementations may do a best-effort application of the provided attributes. Note that
+	 * the provided attributes *may* be a subclass of the {@link Attributes} class, in which case the builder may attempt to apply the
+	 * attributes specified. Builders may choose to ignore attributes, and should fail silently if the given attributes are not as expected.
+	 * Each call to this method must be matched by a corresponding call to {@link #endBlock()}.
 	 *
 	 * @param type
 	 * @param attributes
-	 *            the attributes to apply to the block. Callers may choose to specify a more specialized set of
-	 *            attributes by providing a subclass instance.
+	 *            the attributes to apply to the block. Callers may choose to specify a more specialized set of attributes by providing a
+	 *            subclass instance.
 	 * @see #endBlock()
 	 */
 	public abstract void beginBlock(BlockType type, Attributes attributes);
 
 	/**
-	 * End a block that was {@link #beginBlock(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType, Attributes)
-	 * started}.
+	 * End a block that was {@link #beginBlock(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType, Attributes) started}.
 	 */
 	public abstract void endBlock();
 
 	/**
-	 * Begin a span of the specified type. Builder implementations may do a best-effort application of the provided
-	 * attributes. Each call to this method must be matched by a corresponding call to {@link #endSpan()}.
+	 * Begin a span of the specified type. Builder implementations may do a best-effort application of the provided attributes. Each call to
+	 * this method must be matched by a corresponding call to {@link #endSpan()}.
 	 *
 	 * @param type
 	 * @param attributes
@@ -128,17 +125,15 @@ public abstract class DocumentBuilder {
 	public abstract void beginSpan(SpanType type, Attributes attributes);
 
 	/**
-	 * End a span that was {@link #beginSpan(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType, Attributes)
-	 * started}.
+	 * End a span that was {@link #beginSpan(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType, Attributes) started}.
 	 *
 	 * @see #beginSpan(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType, Attributes)
 	 */
 	public abstract void endSpan();
 
 	/**
-	 * Begin a heading of the specified level (usually 1-6). Builder implementations may do a best-effort application of
-	 * the provided attributes. Each call to this method must be matched by a corresponding call to
-	 * {@link #endHeading()}.
+	 * Begin a heading of the specified level (usually 1-6). Builder implementations may do a best-effort application of the provided
+	 * attributes. Each call to this method must be matched by a corresponding call to {@link #endHeading()}.
 	 *
 	 * @param level
 	 *            the level of the heading, usually 1-6
@@ -195,10 +190,10 @@ public abstract class DocumentBuilder {
 	public abstract void link(Attributes attributes, String hrefOrHashName, String text);
 
 	/**
-	 * Create a hyperlink whose visual representation is an image. Implementations must apply the attributes to the
-	 * image tag. For example, if the builder constructs HTML, the builder would emit
-	 * <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the attributes define a css class then
-	 * the resulting HTML should look like this: <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
+	 * Create a hyperlink whose visual representation is an image. Implementations must apply the attributes to the image tag. For example,
+	 * if the builder constructs HTML, the builder would emit <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the
+	 * attributes define a css class then the resulting HTML should look like this:
+	 * <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
 	 *
 	 * @param linkAttributes
 	 *            the attributes of the link, which may be {@link LinkAttributes}
@@ -212,10 +207,10 @@ public abstract class DocumentBuilder {
 	public abstract void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl);
 
 	/**
-	 * Create a hyperlink whose visual representation is an image. Implementations must apply the attributes to the
-	 * image tag. For example, if the builder constructs HTML, the builder would emit
-	 * <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the attributes define a css class then
-	 * the resulting HTML should look like this: <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
+	 * Create a hyperlink whose visual representation is an image. Implementations must apply the attributes to the image tag. For example,
+	 * if the builder constructs HTML, the builder would emit <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the
+	 * attributes define a css class then the resulting HTML should look like this:
+	 * <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
 	 *
 	 * @param attributes
 	 *            the attributes of the image, which may be {@link ImageAttributes}
@@ -259,16 +254,14 @@ public abstract class DocumentBuilder {
 	public abstract void lineBreak();
 
 	/**
-	 * Create a horizontal rule (eg: hr in html). Not all builders need support horizontal rule. The default
-	 * implementation does nothing.
+	 * Create a horizontal rule (eg: hr in html). Not all builders need support horizontal rule. The default implementation does nothing.
 	 */
 	public void horizontalRule() {
 		// nothing to do
 	}
 
 	/**
-	 * Create unescaped characters, usually with some embedded HTML markup. Note that using this method causes the
-	 * output to be HTML-centric
+	 * Create unescaped characters, usually with some embedded HTML markup. Note that using this method causes the output to be HTML-centric
 	 *
 	 * @param literal
 	 *            the literal characters to emit

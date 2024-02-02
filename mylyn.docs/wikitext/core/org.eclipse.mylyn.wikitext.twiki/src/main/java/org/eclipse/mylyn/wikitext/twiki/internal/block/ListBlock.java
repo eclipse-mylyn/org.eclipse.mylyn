@@ -21,8 +21,8 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * List block, matches blocks that start with <code>   *</code>, <code>   1</code>, <code>   a</code>, <code>   A</code>
- * <code>   i</code> or <code>   I</code>. Note that preceding spaces must be in multiples of 3.
+ * List block, matches blocks that start with <code>   *</code>, <code>   1</code>, <code>   a</code>, <code>   A</code> <code>   i</code>
+ * or <code>   I</code>. Note that preceding spaces must be in multiples of 3.
  * 
  * @author David Green
  */
@@ -104,24 +104,25 @@ public class ListBlock extends Block {
 	private void computeAttributes(Attributes attributes, BlockType type, String typeSpec) {
 		if (type == BlockType.NUMERIC_LIST) {
 			switch (typeSpec.charAt(0)) {
-			case 'a':
-				attributes.setCssStyle("list-style: lower-alpha;"); //$NON-NLS-1$
-				break;
-			case 'A':
-				attributes.setCssStyle("list-style: upper-alpha;"); //$NON-NLS-1$
-				break;
-			case 'i':
-				attributes.setCssStyle("list-style: lower-roman;"); //$NON-NLS-1$
-				break;
-			case 'I':
-				attributes.setCssStyle("list-style: upper-roman;"); //$NON-NLS-1$
-				break;
+				case 'a':
+					attributes.setCssStyle("list-style: lower-alpha;"); //$NON-NLS-1$
+					break;
+				case 'A':
+					attributes.setCssStyle("list-style: upper-alpha;"); //$NON-NLS-1$
+					break;
+				case 'i':
+					attributes.setCssStyle("list-style: lower-roman;"); //$NON-NLS-1$
+					break;
+				case 'I':
+					attributes.setCssStyle("list-style: upper-roman;"); //$NON-NLS-1$
+					break;
 			}
 		}
 	}
 
 	private void adjustLevel(BlockType type, String typeSpec, int level) {
-		for (ListState previousState = listState.peek(); level != previousState.level || previousState.type != type; previousState = listState.peek()) {
+		for (ListState previousState = listState.peek(); level != previousState.level
+				|| previousState.type != type; previousState = listState.peek()) {
 
 			if (level > previousState.level) {
 				if (!previousState.openItem) {
@@ -195,7 +196,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, BlockType type) {
-			super();
 			this.level = level;
 			this.type = type;
 		}

@@ -54,10 +54,9 @@ public class BeginBlockEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof BeginBlockEvent)) {
+		if (!(obj instanceof BeginBlockEvent other)) {
 			return false;
 		}
-		BeginBlockEvent other = (BeginBlockEvent) obj;
 		return type == other.type;
 	}
 

@@ -46,6 +46,7 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 
 	private int lineLevel;
 
+	@Override
 	public boolean canStart(String line, int lineOffset, LookAheadReader lookAheadReader) {
 		blockLineCount = 0;
 		lineLevel = 0;
@@ -70,8 +71,8 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 	}
 
 	/**
-	 * The next line should be a sequence of same chars. The nextLine length (nextineLength) should: nextlineLength - 1
-	 * <= titleLength <= nextlineLength + 1
+	 * The next line should be a sequence of same chars. The nextLine length (nextineLength) should: nextlineLength - 1 <= titleLength <=
+	 * nextlineLength + 1
 	 *
 	 * @param length
 	 *            length of the current line (title)
@@ -87,7 +88,7 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 		Matcher matcher = pattern.matcher(nextLine);
 		if (matcher.matches()) {
 			int lineLength = matcher.group(1).length();
-			if ((lineLength > length - 2) && (lineLength < length + 2)) {
+			if (lineLength > length - 2 && lineLength < length + 2) {
 				lineLevel = level;
 				return true;
 			}

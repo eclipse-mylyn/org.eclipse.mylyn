@@ -20,8 +20,8 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * A block for Java stack traces. Matches any text that looks like a stack trace, even if it is only a portion (it's
- * common for stack traces to be clipped to eliminate unrelated text).
+ * A block for Java stack traces. Matches any text that looks like a stack trace, even if it is only a portion (it's common for stack traces
+ * to be clipped to eliminate unrelated text).
  *
  * @author David Green
  * @since 3.0
@@ -61,11 +61,9 @@ public class JavaStackTraceBlock extends Block {
 			Attributes attributes = new Attributes();
 			attributes.setCssClass("javaStackTrace"); //$NON-NLS-1$
 			builder.beginBlock(BlockType.PREFORMATTED, attributes);
-		} else {
-			if (!STACK_TRACE_PATTERN.matcher(line).matches()) {
-				setClosed(true);
-				return 0;
-			}
+		} else if (!STACK_TRACE_PATTERN.matcher(line).matches()) {
+			setClosed(true);
+			return 0;
 		}
 
 		builder.characters(offset > 0 ? line.substring(offset) : line);

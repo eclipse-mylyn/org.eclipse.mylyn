@@ -67,10 +67,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 /**
- * Manages all aspects of image download/display in an {@link HtmlViewer}. Manages the download of images for viewing in
- * an {@link HtmlViewer}, and creates appropriate space for their display. Downloads image data in a background thread,
- * instantiates the corresopnding images, and ensures that enough vertical space exists in the viewer to display the
- * images.
+ * Manages all aspects of image download/display in an {@link HtmlViewer}. Manages the download of images for viewing in an
+ * {@link HtmlViewer}, and creates appropriate space for their display. Downloads image data in a background thread, instantiates the
+ * corresopnding images, and ensures that enough vertical space exists in the viewer to display the images.
  *
  * @see ImageAnnotation
  * @see ImageDrawingStrategy
@@ -403,7 +402,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 							gc.setFont(font);
 							Point extent = gc.textExtent("\n"); //$NON-NLS-1$
 							if (extent.y > 0) {
-								int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
+								int numNewlines = (int) Math.ceil((double) height / (double) extent.y);
 								final int originalNewlines = numNewlines;
 								IDocument document = viewer.getDocument();
 								try {

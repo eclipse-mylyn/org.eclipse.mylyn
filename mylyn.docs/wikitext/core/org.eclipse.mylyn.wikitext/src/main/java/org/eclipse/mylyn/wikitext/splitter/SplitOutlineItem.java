@@ -84,7 +84,7 @@ public class SplitOutlineItem extends OutlineItem {
 		}
 		if (outlineItemById == null) {
 			final Map<String, SplitOutlineItem> splitTargetById = new HashMap<>();
-			this.accept(item -> {
+			accept(item -> {
 				if (item.getId() != null) {
 					if (splitTargetById.containsKey(item.getId())) {
 						throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId())); //$NON-NLS-1$
@@ -93,7 +93,7 @@ public class SplitOutlineItem extends OutlineItem {
 				}
 				return true;
 			});
-			this.outlineItemById = splitTargetById;
+			outlineItemById = splitTargetById;
 		}
 		return outlineItemById.get(id);
 	}

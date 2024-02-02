@@ -30,8 +30,7 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
 /**
- * a standard implementation of a markup language usually extends this class, which provides default support for common
- * functionality.
+ * a standard implementation of a markup language usually extends this class, which provides default support for common functionality.
  *
  * @author David Green
  * @since 3.0
@@ -212,8 +211,8 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
-	 * method to provide additional state tracking capability.
+	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this method to provide
+	 * additional state tracking capability.
 	 *
 	 * @return the new state.
 	 */
@@ -393,8 +392,8 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * indicate if the given line is considered 'empty'. The default implementation returns true for lines of length 0,
-	 * and for lines whose only content is whitespace.
+	 * indicate if the given line is considered 'empty'. The default implementation returns true for lines of length 0, and for lines whose
+	 * only content is whitespace.
 	 *
 	 * @param line
 	 *            the line content
@@ -593,8 +592,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	/**
 	 * subclasses may override this method to add blocks to the language. Overriding classes should call
-	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
-	 * desired.
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are desired.
 	 *
 	 * @param blocks
 	 *            the list of blocks to which extensions may be added
@@ -618,8 +616,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	/**
 	 * subclasses may override this method to add phrases to the language. Overriding classes should call
-	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
-	 * desired.
+	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are desired.
 	 *
 	 * @param phraseModifierSyntax
 	 *            the phrase modifier syntax
@@ -629,9 +626,8 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The
-	 * default implementation checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns
-	 * true if it is in the syntax.
+	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The default implementation
+	 * checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns true if it is in the syntax.
 	 *
 	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
 	 */
@@ -677,25 +673,24 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
-	 * partition boundaries are defined by blocks.
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the partition boundaries are
+	 * defined by blocks.
 	 */
 	public boolean isBlocksOnly() {
 		return blocksOnly;
 	}
 
 	/**
-	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
-	 * partition boundaries are defined by blocks.
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the partition boundaries are
+	 * defined by blocks.
 	 */
 	public void setBlocksOnly(boolean blocksOnly) {
 		this.blocksOnly = blocksOnly;
 	}
 
 	/**
-	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
-	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
-	 * link.
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific, however
+	 * implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal link.
 	 *
 	 * @see MessageFormat
 	 */
@@ -704,9 +699,8 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
-	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
-	 * link.
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific, however
+	 * implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal link.
 	 *
 	 * @see MessageFormat
 	 */
@@ -715,11 +709,10 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
-	 * editor.
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source editor.
 	 * <p>
-	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
-	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before it is processed, and
+	 * as such has the side-effect of changing computed offsets when parsing markup.
 	 * </p>
 	 * <p>
 	 * The default value is true.
@@ -732,11 +725,10 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
-	 * editor.
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source editor.
 	 * <p>
-	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
-	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before it is processed, and
+	 * as such has the side-effect of changing computed offsets when parsing markup.
 	 * </p>
 	 *
 	 * @param enableMacros

@@ -94,8 +94,8 @@ public class Preferences implements Cloneable {
 	/**
 	 * heading preferences key indexed by level (0 is null, 1 is {@link #BLOCK_H1}, etc.)
 	 */
-	public static final String[] HEADING_PREFERENCES = new String[] { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4,
-			BLOCK_H5, BLOCK_H6 };
+	public static final String[] HEADING_PREFERENCES = { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4, BLOCK_H5,
+			BLOCK_H6 };
 
 	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<>();
 
@@ -312,7 +312,7 @@ public class Preferences implements Cloneable {
 	}
 
 	public void setPreviewFileNamePattern(String previewFileNamePattern) {
-		this.openAsPreviewFileNamePattern = previewFileNamePattern;
+		openAsPreviewFileNamePattern = previewFileNamePattern;
 	}
 
 	/**

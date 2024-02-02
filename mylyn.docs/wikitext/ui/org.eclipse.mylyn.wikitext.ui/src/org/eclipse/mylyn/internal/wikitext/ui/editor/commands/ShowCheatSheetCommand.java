@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * A command that can show a cheat-sheet (help content) for a specific markup language. For the command to operate, the
- * following conditions must be met:
+ * A command that can show a cheat-sheet (help content) for a specific markup language. For the command to operate, the following conditions
+ * must be met:
  * <ul>
  * <li>The {@link ExecutionEvent#getApplicationContext() application context} must be an {@link EvaluationContext}.</li>
- * <li>The {@link EvaluationContext} must have an <code>activeFocusControl</code>
- * {@link EvaluationContext#getVariable(String) variable}</li>
+ * <li>The {@link EvaluationContext} must have an <code>activeFocusControl</code> {@link EvaluationContext#getVariable(String)
+ * variable}</li>
  * <li>The control must have the folllowing data items:
  *
  * <pre>

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 public class Code extends InlineWithText {
 
 	public Code(Line line, int offset, int delimiterSize, String text) {
-		super(line, offset, text.length() + (2 * delimiterSize), text);
+		super(line, offset, text.length() + 2 * delimiterSize, text);
 	}
 
 	@Override

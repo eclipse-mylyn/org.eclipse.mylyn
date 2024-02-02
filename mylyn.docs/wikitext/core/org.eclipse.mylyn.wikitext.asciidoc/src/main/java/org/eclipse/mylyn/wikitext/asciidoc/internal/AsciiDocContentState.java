@@ -26,8 +26,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.parser.markup.Processor;
 
 /**
- * Extended {@link ContentState content state} to provide additional AsciiDoc information to {@link Block blocks} and
- * other {@link Processor processors}
+ * Extended {@link ContentState content state} to provide additional AsciiDoc information to {@link Block blocks} and other {@link Processor
+ * processors}
  */
 public class AsciiDocContentState extends ContentState {
 
@@ -53,7 +53,7 @@ public class AsciiDocContentState extends ContentState {
 	private final Map<String, String> attributes = new HashMap<>();
 
 	public void setLastTitle(String text) {
-		this.lastTitle = text;
+		lastTitle = text;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class AsciiDocContentState extends ContentState {
 	}
 
 	public void setLastPropertiesText(String text) {
-		this.lastPropertiesText = text;
+		lastPropertiesText = text;
 	}
 
 	public Map<String, String> getLastProperties(List<String> positionalParameters) {

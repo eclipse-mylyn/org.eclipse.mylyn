@@ -54,8 +54,8 @@ public class CssParserTest {
 	@Test
 	public void testDetectStyles() {
 		String css = "a: b and more; c: d ; e: fg; h i: j";
-		String[] expectedRuleNames = new String[] { "a", "c", "e", "i" };
-		String[] expectedRuleValues = new String[] { "b and more", "d", "fg", "j" };
+		String[] expectedRuleNames = { "a", "c", "e", "i" };
+		String[] expectedRuleValues = { "b and more", "d", "fg", "j" };
 		Iterator<CssRule> ruleIterator = parser.createRuleIterator(css);
 		int count = 0;
 		while (ruleIterator.hasNext()) {

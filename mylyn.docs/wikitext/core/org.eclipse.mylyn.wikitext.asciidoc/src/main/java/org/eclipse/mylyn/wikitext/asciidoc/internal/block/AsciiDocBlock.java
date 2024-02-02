@@ -33,8 +33,7 @@ public abstract class AsciiDocBlock extends Block {
 	protected final Pattern startPattern;
 
 	/**
-	 * The delimiter used to start this block. Saved to define what is used as the 'end' since block delimiters are
-	 * meant to be balanced.
+	 * The delimiter used to start this block. Saved to define what is used as the 'end' since block delimiters are meant to be balanced.
 	 */
 	protected String startDelimiter = null;
 

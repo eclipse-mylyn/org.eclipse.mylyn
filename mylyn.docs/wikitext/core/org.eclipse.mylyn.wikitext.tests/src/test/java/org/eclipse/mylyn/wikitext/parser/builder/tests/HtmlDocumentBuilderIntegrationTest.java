@@ -99,6 +99,9 @@ public class HtmlDocumentBuilderIntegrationTest {
 
 		String expected = "<!-- Copyright notice here -->";
 		assertTrue("Expected " + expected + " but received " + html, html.startsWith(
-				"<?xml version='1.0' encoding='utf-8' ?>\n" + "<!-- Copyright notice here -->\n" + "<html"));
+				"""
+						<?xml version='1.0' encoding='utf-8' ?>
+						<!-- Copyright notice here -->
+						<html"""));
 	}
 }

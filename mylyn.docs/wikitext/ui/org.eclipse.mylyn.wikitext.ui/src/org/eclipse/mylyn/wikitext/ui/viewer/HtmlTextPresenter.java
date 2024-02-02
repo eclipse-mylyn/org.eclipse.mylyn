@@ -23,8 +23,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * An information presenter that supports HTML markup. Uses the {@link HtmlTextPresentationParser HTML parser} to parse
- * the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
+ * An information presenter that supports HTML markup. Uses the {@link HtmlTextPresentationParser HTML parser} to parse the HTML to readable
+ * text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
  *
  * @author David Green
  * @since 1.0
@@ -57,7 +57,7 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 
 		GC gc = new GC(drawable);
 		try {
-			html = html.replaceAll("<br>", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+			html = html.replace("<br>", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 			parser.setMaxWidth(maxWidth);
 			parser.setGC(gc);
 			parser.parse(html);

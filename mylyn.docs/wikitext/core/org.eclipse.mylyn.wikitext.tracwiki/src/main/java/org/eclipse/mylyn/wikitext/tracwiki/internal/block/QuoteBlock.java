@@ -21,9 +21,8 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>&gt;</code> or two spaces. These are what they call
- * discussion citations and block quotes, respectively. Creates an extended block type of {@link ParagraphBlock
- * paragraph}.
+ * quoted text block, matches blocks that start with <code>&gt;</code> or two spaces. These are what they call discussion citations and
+ * block quotes, respectively. Creates an extended block type of {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
@@ -43,7 +42,7 @@ public class QuoteBlock extends Block {
 	@Override
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
-			quoteBlockState = new Stack<BlockState>();
+			quoteBlockState = new Stack<>();
 		} else {
 			matcher = startPattern.matcher(line);
 			if (!matcher.matches()) {

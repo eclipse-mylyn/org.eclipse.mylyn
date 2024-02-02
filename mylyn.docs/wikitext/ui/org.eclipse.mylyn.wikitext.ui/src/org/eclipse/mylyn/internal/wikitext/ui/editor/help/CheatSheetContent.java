@@ -19,8 +19,7 @@ import java.util.regex.Pattern;
 import org.osgi.framework.Bundle;
 
 /**
- * A handle to cheat sheet content, which may modify the content to be more suitable for cheat-sheet viewing by applying
- * CSS styles.
+ * A handle to cheat sheet content, which may modify the content to be more suitable for cheat-sheet viewing by applying CSS styles.
  * 
  * @author David Green
  */

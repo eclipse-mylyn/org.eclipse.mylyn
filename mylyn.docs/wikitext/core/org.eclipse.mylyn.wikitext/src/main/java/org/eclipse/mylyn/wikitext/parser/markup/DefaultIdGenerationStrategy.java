@@ -14,8 +14,7 @@
 package org.eclipse.mylyn.wikitext.parser.markup;
 
 /**
- * A default ID generation strategy which removes all non-alphanumeric characters from the heading text to produce an
- * id.
+ * A default ID generation strategy which removes all non-alphanumeric characters from the heading text to produce an id.
  *
  * @author David Green
  * @since 3.0

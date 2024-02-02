@@ -30,10 +30,10 @@ class ContentLineSequence extends ForwardLineSequence {
 
 	private Line currentLine;
 
-	private final List<Line> followingLines = new ArrayList<Line>();
+	private final List<Line> followingLines = new ArrayList<>();
 
 	ContentLineSequence(String content) {
-		this.reader = new LocationTrackingReader(new StringReader(Objects.requireNonNull(content)));
+		reader = new LocationTrackingReader(new StringReader(Objects.requireNonNull(content)));
 		currentLine = readLine();
 	}
 

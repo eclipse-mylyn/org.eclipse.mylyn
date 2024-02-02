@@ -68,9 +68,9 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		String quotedDelimiter = quoteLite(endDelimiter);
 		String firstCharacterOfDelimiter = quoteLite(endDelimiter.substring(0, 1));
 
-		return quotedStartDelimiter + "(?!" + firstCharacterOfDelimiter + ")" + //$NON-NLS-1$ //$NON-NLS-2$ 
-				"([^\\s" + quotedDelimiter //$NON-NLS-1$ 
-				+ "]+|\\S(?:.*?\\S)?)" + //$NON-NLS-1$ 
+		return quotedStartDelimiter + "(?!" + firstCharacterOfDelimiter + ")" + //$NON-NLS-1$ //$NON-NLS-2$
+				"([^\\s" + quotedDelimiter //$NON-NLS-1$
+				+ "]+|\\S(?:.*?\\S)?)" + //$NON-NLS-1$
 				"(?<!" + firstCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$//$NON-NLS-2$
 
 	}
@@ -80,14 +80,14 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		for (int x = 0; x < literal.length(); ++x) {
 			char c = literal.charAt(x);
 			switch (c) {
-			case '^':
-			case '*':
-			case '?':
-			case '+':
-			case '{':
-			case '}':
-			case '-':
-				buf.append('\\');
+				case '^':
+				case '*':
+				case '?':
+				case '+':
+				case '{':
+				case '}':
+				case '-':
+					buf.append('\\');
 			}
 			buf.append(c);
 		}

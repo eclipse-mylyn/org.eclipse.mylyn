@@ -29,7 +29,6 @@ public class Processor implements Cloneable {
 	protected ContentState state;
 
 	public Processor() {
-		super();
 	}
 
 	/**
@@ -55,7 +54,7 @@ public class Processor implements Cloneable {
 			}
 		}
 		this.parser = parser;
-		this.builder = (parser == null) ? null : parser.getBuilder();
+		builder = parser == null ? null : parser.getBuilder();
 
 	}
 

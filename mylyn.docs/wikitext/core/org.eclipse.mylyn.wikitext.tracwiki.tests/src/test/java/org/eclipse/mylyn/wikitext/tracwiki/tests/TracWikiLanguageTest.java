@@ -580,10 +580,22 @@ public class TracWikiLanguageTest {
 
 		assertTrue(
 				Pattern.compile(
-						"<body>" + "<p>normal para</p>" + "<table>" + "<tr>" + "<td>a table</td>"
-								+ "<td>row with three</td>" + "<td>columns</td>" + "</tr>" + "<tr>" + "<td>another</td>"
-								+ "<td>row</td>" + "<td></td>" + "</tr>" + "</table>" + "<p>new para</p></body>",
-						Pattern.MULTILINE).matcher(html).find());
+						"""
+								<body>\
+								<p>normal para</p>\
+								<table>\
+								<tr>\
+								<td>a table</td>\
+								<td>row with three</td>\
+								<td>columns</td>\
+								</tr>\
+								<tr>\
+								<td>another</td>\
+								<td>row</td>\
+								<td></td>\
+								</tr>\
+								</table>\
+								<p>new para</p></body>""", Pattern.MULTILINE).matcher(html).find());
 	}
 
 	@Test

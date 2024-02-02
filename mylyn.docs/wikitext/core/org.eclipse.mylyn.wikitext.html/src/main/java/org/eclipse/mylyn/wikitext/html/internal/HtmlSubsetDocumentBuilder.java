@@ -34,11 +34,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private SpanStrategies spanStrategies;
 
-	private final Stack<BlockStrategy> blockStrategyState = new Stack<BlockStrategy>();
+	private final Stack<BlockStrategy> blockStrategyState = new Stack<>();
 
-	private final Stack<SpanStrategy> spanStrategyState = new Stack<SpanStrategy>();
+	private final Stack<SpanStrategy> spanStrategyState = new Stack<>();
 
-	private final Stack<Integer> headingState = new Stack<Integer>();
+	private final Stack<Integer> headingState = new Stack<>();
 
 	private int supportedHeadingLevel;
 
@@ -71,7 +71,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	void setSupportedHeadingLevel(int headingLevel) {
-		this.supportedHeadingLevel = headingLevel;
+		supportedHeadingLevel = headingLevel;
 	}
 
 	void setDocumentHandler(HtmlDocumentHandler documentHandler) {
@@ -79,11 +79,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	void setSupportsImages(boolean supportsImagesFlag) {
-		this.supportsImages = supportsImagesFlag;
+		supportsImages = supportsImagesFlag;
 	}
 
 	boolean getSupportsImages() {
-		return this.supportsImages;
+		return supportsImages;
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	public void endBlock() {
 		BlockStrategy blockStrategy = blockStrategyState.pop();
 		blockStrategy.endBlock(delegate);
-		this.blockSeparator = blockStrategy.trailingSeparator();
+		blockSeparator = blockStrategy.trailingSeparator();
 	}
 
 	@Override

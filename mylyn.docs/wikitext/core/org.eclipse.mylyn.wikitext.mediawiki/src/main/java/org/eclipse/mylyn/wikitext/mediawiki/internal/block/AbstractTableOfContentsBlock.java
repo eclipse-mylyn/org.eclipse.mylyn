@@ -30,14 +30,10 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 	protected int maxLevel = Integer.MAX_VALUE;
 
 	public AbstractTableOfContentsBlock() {
-		super();
 	}
 
 	protected void emitToc(OutlineItem item) {
-		if (item.getChildren().isEmpty()) {
-			return;
-		}
-		if ((item.getLevel() + 1) > maxLevel) {
+		if (item.getChildren().isEmpty() || (item.getLevel() + 1 > maxLevel)) {
 			return;
 		}
 		Attributes nullAttributes = new Attributes();

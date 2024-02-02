@@ -89,7 +89,7 @@ public class PotentialEmphasisSpan extends SourceSpan {
 	}
 
 	static boolean isLetterOrDigit(char previous) {
-		return (previous >= '0' && previous <= '9') || (previous >= 'A' && previous <= 'Z')
-				|| (previous >= 'a' && previous <= 'z');
+		return previous >= '0' && previous <= '9' || previous >= 'A' && previous <= 'Z'
+				|| previous >= 'a' && previous <= 'z';
 	}
 }

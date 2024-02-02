@@ -66,7 +66,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 			while (iterator.hasNext()) {
 				Annotation next = (Annotation) iterator.next();
 				Position position = annotationModel.getPosition(next);
-				if (position.getOffset() <= offset && (position.getLength() + position.getOffset()) >= offset) {
+				if (position.getOffset() <= offset && position.getLength() + position.getOffset() >= offset) {
 					start = Math.min(start, position.getOffset());
 					end = Math.max(end, position.getOffset() + position.getLength());
 				}

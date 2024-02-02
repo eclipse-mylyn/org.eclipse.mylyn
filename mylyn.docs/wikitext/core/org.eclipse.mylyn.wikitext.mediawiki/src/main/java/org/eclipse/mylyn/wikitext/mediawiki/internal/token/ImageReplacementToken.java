@@ -67,7 +67,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 				// this may seem a little odd but there's an issue here: files can be uploaded
 				// to the wiki with a name that differs from the URL.  Page authors can use
 				// either name in the wiki markup, and there's no way to know what they've used.
-				// to be safe we always replace space with underscore, and do the same in 
+				// to be safe we always replace space with underscore, and do the same in
 				// the image fetching strategy.
 				imageUrl = imageUrl.replace(' ', '_');
 			}
@@ -114,14 +114,12 @@ public class ImageReplacementToken extends PatternBasedElement {
 						Matcher altMatcher = altPattern.matcher(option);
 						if (altMatcher.matches()) {
 							attributes.setAlt(altMatcher.group(1));
+						} else if (optionIndex == options.length - 1) {
+							// the last one is a caption
+							attributes.setTitle(option);
 						} else {
-							if (optionIndex == options.length - 1) {
-								// the last one is a caption
-								attributes.setTitle(option);
-							} else {
-								// if not the last one, then it's alt text
-								attributes.setAlt(option);
-							}
+							// if not the last one, then it's alt text
+							attributes.setAlt(option);
 						}
 					}
 				}
@@ -155,8 +153,9 @@ public class ImageReplacementToken extends PatternBasedElement {
 				builder.beginBlock(BlockType.DIV, outerDivAttributes);
 
 				final Attributes thumbInnerDivAttributes = new Attributes(
-						null,
-						"thumbinner", attributes.getWidth() > 0 ? String.format("width:%spx;", attributes.getWidth() + 2) : null, null); //$NON-NLS-1$ //$NON-NLS-2$
+						null, "thumbinner", //$NON-NLS-1$
+						attributes.getWidth() > 0 ? String.format("width:%spx;", attributes.getWidth() + 2) : null, //$NON-NLS-1$
+						null);
 				builder.beginBlock(BlockType.DIV, thumbInnerDivAttributes);
 				//FIXME: image
 				LinkAttributes linkAttributes = new LinkAttributes();

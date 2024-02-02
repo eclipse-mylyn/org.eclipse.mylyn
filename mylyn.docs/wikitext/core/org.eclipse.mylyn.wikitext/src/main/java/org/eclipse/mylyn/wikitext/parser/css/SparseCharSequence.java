@@ -71,7 +71,7 @@ public class SparseCharSequence implements CharSequence {
 			throw new IndexOutOfBoundsException(String.format("%s is not within [0,%s)", index, length())); //$NON-NLS-1$
 		}
 		Segment segment = segmentOf(index);
-		return segment.offset + (index - segment.zeroBase);
+		return segment.offset + index - segment.zeroBase;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class SparseCharSequence implements CharSequence {
 			throw new IndexOutOfBoundsException(String.format("%s is not within [0,%s)", index, length())); //$NON-NLS-1$
 		}
 		Segment segment = segmentOf(index);
-		return data.charAt(segment.offset + (index - segment.zeroBase));
+		return data.charAt(segment.offset + index - segment.zeroBase);
 	}
 
 	private Segment segmentOf(int index) {

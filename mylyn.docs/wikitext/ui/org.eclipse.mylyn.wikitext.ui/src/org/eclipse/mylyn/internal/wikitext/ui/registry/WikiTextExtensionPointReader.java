@@ -75,7 +75,7 @@ public class WikiTextExtensionPointReader {
 	 * Get a markup language by name.
 	 *
 	 * @param name
-	 *                 the name of the markup language to retrieve
+	 *            the name of the markup language to retrieve
 	 * @return the markup language or null if there is no markup language known by the given name
 	 * @see #getMarkupLanguageNames()
 	 */
@@ -128,11 +128,11 @@ public class WikiTextExtensionPointReader {
 	}
 
 	/**
-	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their
-	 * expected file extensions.
+	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their expected file
+	 * extensions.
 	 *
 	 * @param name
-	 *                 the name of the file for which a markup language is desired
+	 *            the name of the file for which a markup language is desired
 	 * @return the markup language name, or null if no markup language is registered for the specified file name
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
@@ -151,8 +151,7 @@ public class WikiTextExtensionPointReader {
 	}
 
 	/**
-	 * Get the file extensions that are registered for markup languages. File extensions are specified without the
-	 * leading dot.
+	 * Get the file extensions that are registered for markup languages. File extensions are specified without the leading dot.
 	 */
 	public Set<String> getMarkupFileExtensions() {
 		if (languageByFileExtension == null) {
@@ -162,11 +161,10 @@ public class WikiTextExtensionPointReader {
 	}
 
 	/**
-	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
-	 * expected file extensions.
+	 * Get a markup language for a file. A markup language is selected based on the registered languages and their expected file extensions.
 	 *
 	 * @param name
-	 *                 the name of the file for which a markup language is desired
+	 *            the name of the file for which a markup language is desired
 	 * @return the markup language, or null if no markup language is registered for the specified file name
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
@@ -207,7 +205,7 @@ public class WikiTextExtensionPointReader {
 	 * Get a markup validator by language name.
 	 *
 	 * @param name
-	 *                 the name of the markup language for which a validator is desired
+	 *            the name of the markup language for which a validator is desired
 	 * @return the markup validator
 	 * @see #getMarkupLanguageNames()
 	 */
@@ -299,7 +297,7 @@ public class WikiTextExtensionPointReader {
 
 	private void initializeMarkupLanguages() {
 		synchronized (this) {
-			if (this.languageByName == null) {
+			if (languageByName == null) {
 				SortedMap<String, Class<? extends MarkupLanguage>> markupLanguageByName = new TreeMap<>();
 				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<>();
 				Map<String, String> languageExtensionByLanguage = new HashMap<>();
@@ -312,11 +310,9 @@ public class WikiTextExtensionPointReader {
 					for (IConfigurationElement element : configurationElements) {
 						String name = element.getAttribute("name"); //$NON-NLS-1$
 						if (name == null || name.length() == 0) {
-							log(IStatus.ERROR,
-									MessageFormat.format(
-											EXTENSION_MARKUP_LANGUAGE
-													+ Messages.getString("WikiTextExtensionPointReader.10"), //$NON-NLS-1$
-											element.getDeclaringExtension().getContributor().getName()));
+							log(IStatus.ERROR, MessageFormat.format(
+									EXTENSION_MARKUP_LANGUAGE + Messages.getString("WikiTextExtensionPointReader.10"), //$NON-NLS-1$
+									element.getDeclaringExtension().getContributor().getName()));
 							continue;
 						}
 						String extendsLanguage = element.getAttribute("extends"); //$NON-NLS-1$
@@ -374,7 +370,7 @@ public class WikiTextExtensionPointReader {
 				}
 
 				this.languageByFileExtension = languageByFileExtension;
-				this.languageByName = markupLanguageByName;
+				languageByName = markupLanguageByName;
 				this.languageExtensionByLanguage = languageExtensionByLanguage;
 				this.languageNameByLanguage = languageNameByLanguage;
 			}

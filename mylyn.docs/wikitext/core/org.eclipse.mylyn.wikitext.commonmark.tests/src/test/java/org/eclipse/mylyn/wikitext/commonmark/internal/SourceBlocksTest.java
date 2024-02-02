@@ -75,7 +75,7 @@ public class SourceBlocksTest {
 				builder.getDocumentBuilderEvents()
 						.getEvents()
 						.stream()
-						.map(x -> x.toString())
+						.map(DocumentBuilderEvent::toString)
 						.collect(Collectors.joining("\n")),
 				expectedEvents, builder.getDocumentBuilderEvents().getEvents());
 	}

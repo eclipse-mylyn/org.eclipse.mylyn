@@ -56,7 +56,7 @@ public class CommonMarkLanguageDocumentOffsetsTest {
 	}
 
 	private void assertSpanOffsets(int offset, int length, String expectedHtml, String markup) {
-		final AtomicReference<Locator> spanLocator = new AtomicReference<Locator>();
+		final AtomicReference<Locator> spanLocator = new AtomicReference<>();
 		CommonMarkLanguage language = new CommonMarkLanguage();
 		MarkupParser parser = new MarkupParser(language);
 		StringWriter out = new StringWriter();

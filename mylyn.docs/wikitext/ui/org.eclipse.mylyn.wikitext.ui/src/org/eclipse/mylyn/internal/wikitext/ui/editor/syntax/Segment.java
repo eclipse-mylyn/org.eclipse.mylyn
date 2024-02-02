@@ -33,10 +33,7 @@ public class Segment<ChildType extends Segment<?>> {
 	private Segment<?> parent;
 
 	public Segment(int offset, int length) {
-		if (offset < 0) {
-			throw new IllegalArgumentException();
-		}
-		if (length < 0) {
+		if ((offset < 0) || (length < 0)) {
 			throw new IllegalArgumentException();
 		}
 		this.offset = offset;
@@ -78,21 +75,16 @@ public class Segment<ChildType extends Segment<?>> {
 				if (child.getOffset() >= endOffset) {
 					// shouldn't ever happen, but we do this to maintain offset integrity
 					childIt.remove();
-				} else {
-					if (child.getEndOffset() > endOffset) {
-						int newChildLength = endOffset - child.getOffset();
-						child.setLength(newChildLength);
-					}
+				} else if (child.getEndOffset() > endOffset) {
+					int newChildLength = endOffset - child.getOffset();
+					child.setLength(newChildLength);
 				}
 			}
 		}
 	}
 
 	public void add(ChildType child) {
-		if (child.getOffset() < offset) {
-			throw new IllegalArgumentException();
-		}
-		if (child.getEndOffset() > getEndOffset()) {
+		if ((child.getOffset() < offset) || (child.getEndOffset() > getEndOffset())) {
 			throw new IllegalArgumentException();
 		}
 		children.add(child);

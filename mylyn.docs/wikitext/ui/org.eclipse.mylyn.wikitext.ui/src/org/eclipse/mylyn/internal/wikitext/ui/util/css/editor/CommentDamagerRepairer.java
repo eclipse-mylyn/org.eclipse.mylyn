@@ -37,7 +37,6 @@ class CommentDamagerRepairer implements IPresentationDamager, IPresentationRepai
 	private final TextAttribute defaultTextAttribute;
 
 	public CommentDamagerRepairer(TextAttribute defaultTextAttribute) {
-		super();
 		this.defaultTextAttribute = defaultTextAttribute;
 	}
 
@@ -70,8 +69,7 @@ class CommentDamagerRepairer implements IPresentationDamager, IPresentationRepai
 	}
 
 	/**
-	 * return the offset of the end of the line, or if the offset includes a line terminator then the end of the next
-	 * line.
+	 * return the offset of the end of the line, or if the offset includes a line terminator then the end of the next line.
 	 */
 	private int toLineEnd(int offset) throws BadLocationException {
 		IRegion lineRegion = document.getLineInformationOfOffset(offset);

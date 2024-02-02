@@ -288,9 +288,7 @@ public class HtmlParserTest {
 	protected void parse(String content, DocumentBuilder builder) {
 		try {
 			parser.parse(new InputSource(new StringReader(content)), builder, false);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (SAXException e) {
+		} catch (IOException | SAXException e) {
 			throw new RuntimeException(e);
 		}
 	}

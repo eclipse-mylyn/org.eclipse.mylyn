@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchWindow;
  */
 public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
-	private final Map<IEditorPart, ActiveFoldingListener> partToListener = new HashMap<IEditorPart, ActiveFoldingListener>();
+	private final Map<IEditorPart, ActiveFoldingListener> partToListener = new HashMap<>();
 
 	public ActiveFoldingEditorTracker(IWorkbench workbench) {
 		install(workbench);
@@ -67,11 +67,8 @@ public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
 	@Override
 	protected void editorOpened(IEditorPart part) {
-		IFoldingStructure foldingStructure = (IFoldingStructure) part.getAdapter(IFoldingStructure.class);
-		if (foldingStructure == null) {
-			return;
-		}
-		if (partToListener.containsKey(part)) {
+		IFoldingStructure foldingStructure = part.getAdapter(IFoldingStructure.class);
+		if ((foldingStructure == null) || partToListener.containsKey(part)) {
 			return;
 		}
 		partToListener.put(part, new ActiveFoldingListener(part, foldingStructure));

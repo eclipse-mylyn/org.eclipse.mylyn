@@ -11,7 +11,6 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * reusable {@link org.eclipse.mylyn.wikitext.parser.markup.Block} components for implementing a markup language parser  
+ * reusable {@link org.eclipse.mylyn.wikitext.parser.markup.Block} components for implementing a markup language parser
  */
 package org.eclipse.mylyn.wikitext.parser.markup.block;
-

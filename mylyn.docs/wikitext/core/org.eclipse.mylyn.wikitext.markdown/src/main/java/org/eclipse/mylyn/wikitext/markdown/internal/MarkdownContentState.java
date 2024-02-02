@@ -37,8 +37,7 @@ public class MarkdownContentState extends ContentState {
 	}
 
 	/**
-	 * Gets the {@link LinkDefinition} for the given link identifier, or <code>null</code> if there is no such
-	 * {@link LinkDefinition}.
+	 * Gets the {@link LinkDefinition} for the given link identifier, or <code>null</code> if there is no such {@link LinkDefinition}.
 	 * 
 	 * @param id
 	 *            the link identifier.

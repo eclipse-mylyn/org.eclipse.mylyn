@@ -19,8 +19,7 @@ import org.eclipse.mylyn.wikitext.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
 /**
- * State related to parsing content, propagated to {@link Block blocks} and other {@link Processor processors} during
- * the parse phase.
+ * State related to parsing content, propagated to {@link Block blocks} and other {@link Processor processors} during the parse phase.
  *
  * @author David Green
  * @since 3.0
@@ -67,8 +66,8 @@ public class ContentState implements Locator {
 	}
 
 	/**
-	 * Add a glossary term (typically an acronym) with its definition. Has no effect if the term is already present in
-	 * the glossary and the given definition is shorter or equal in length to the existing definition.
+	 * Add a glossary term (typically an acronym) with its definition. Has no effect if the term is already present in the glossary and the
+	 * given definition is shorter or equal in length to the existing definition.
 	 *
 	 * @param term
 	 *            the term to add

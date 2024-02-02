@@ -28,18 +28,12 @@ public class LookAheadReader {
 	public void setContentState(ContentState state) {
 		if (mustInitReader(state)) {
 			this.state = state;
-			this.reader = new LocationTrackingReader(new StringReader(state.getMarkupContent()));
+			reader = new LocationTrackingReader(new StringReader(state.getMarkupContent()));
 		}
 	}
 
 	private boolean mustInitReader(ContentState newState) {
-		if (state != newState) {
-			return true;
-		}
-		if (reader == null) {
-			return true;
-		}
-		if (reader.getLineNumber() >= state.getLineNumber()) {
+		if ((state != newState) || (reader == null) || (reader.getLineNumber() >= state.getLineNumber())) {
 			return true;
 		}
 		return false;

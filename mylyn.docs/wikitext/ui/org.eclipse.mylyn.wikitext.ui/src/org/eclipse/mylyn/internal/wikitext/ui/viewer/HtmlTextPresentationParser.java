@@ -201,18 +201,18 @@ public class HtmlTextPresentationParser {
 				Attributes atts) {
 			this.parent = parent;
 			this.elementName = elementName;
-			this.fontState = new FontState(elementState.fontState);
+			fontState = new FontState(elementState.fontState);
 			this.offset = offset;
-			this.originalOffset = offset;
-			this.skipWhitespace = elementState.skipWhitespace;
-			this.indentLevel = elementState.indentLevel;
-			this.bulletLevel = elementState.bulletLevel;
+			originalOffset = offset;
+			skipWhitespace = elementState.skipWhitespace;
+			indentLevel = elementState.indentLevel;
+			bulletLevel = elementState.bulletLevel;
 			initState();
 			String cssClass = null;
 			for (int x = 0; x < atts.getLength(); ++x) {
 				String localName = atts.getLocalName(x);
 				if ("id".equals(localName)) { //$NON-NLS-1$
-					this.id = atts.getValue(x);
+					id = atts.getValue(x);
 				} else if ("class".equals(localName)) { //$NON-NLS-1$
 					cssClass = atts.getValue(x);
 				}
@@ -233,7 +233,7 @@ public class HtmlTextPresentationParser {
 			this.elementName = elementName;
 			this.fontState = new FontState(fontState);
 			this.offset = offset;
-			this.originalOffset = offset;
+			originalOffset = offset;
 			initState();
 		}
 
@@ -294,7 +294,7 @@ public class HtmlTextPresentationParser {
 
 	private Color defaultBackground;
 
-	private char[] bulletChars = new char[] { '\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
+	private char[] bulletChars = { '\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
 //		'\u26AA', // empty round bullet, see http://www.fileformat.info/info/unicode/char/26AA/index.htm
 //		'\u25A0', // square bullet, see http://www.fileformat.info/info/unicode/char/25A0/index.htm
 	};
@@ -338,13 +338,13 @@ public class HtmlTextPresentationParser {
 		this.presentation = presentation;
 		if (presentation != null && presentation.getDefaultStyleRange() != null) {
 			if (presentation.getDefaultStyleRange().font != null) {
-				this.defaultFont = presentation.getDefaultStyleRange().font;
+				defaultFont = presentation.getDefaultStyleRange().font;
 			}
 			if (presentation.getDefaultStyleRange().foreground != null) {
-				this.defaultForeground = presentation.getDefaultStyleRange().foreground;
+				defaultForeground = presentation.getDefaultStyleRange().foreground;
 			}
 			if (presentation.getDefaultStyleRange().foreground != null) {
-				this.defaultForeground = presentation.getDefaultStyleRange().background;
+				defaultForeground = presentation.getDefaultStyleRange().background;
 			}
 		}
 	}
@@ -403,11 +403,10 @@ public class HtmlTextPresentationParser {
 	}
 
 	/**
-	 * Set the annotation model if the parsing process should collect annotations for things like anchors and hover
-	 * info.
+	 * Set the annotation model if the parsing process should collect annotations for things like anchors and hover info.
 	 *
 	 * @param annotationModel
-	 *                            the annotation model, or null if annotations should not be collected.
+	 *            the annotation model, or null if annotations should not be collected.
 	 */
 	public void setAnnotationModel(IAnnotationModel annotationModel) {
 		this.annotationModel = annotationModel;
@@ -476,9 +475,9 @@ public class HtmlTextPresentationParser {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
 				if (elementState.noWhitespaceTextContainer
-						|| (elementState.blockElement && elementState.skipWhitespace && elementState.textChildCount == 0
-								&& elementState.childCount == 0)
-						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+						|| elementState.blockElement && elementState.skipWhitespace && elementState.textChildCount == 0
+								&& elementState.childCount == 0
+						|| elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace) {
 					// trim left here, since we must properly eliminate whitespace in ordered lists where we've already
 					// prepended a number to the list item text
 					int skip = 0;
@@ -530,12 +529,10 @@ public class HtmlTextPresentationParser {
 			String text = elementText.toString();
 			if (elementState.skipWhitespace) {
 				if (elementClosing) {
-					if (elementState.childCount == 0) {
-						if (elementState.blockElement) {
+					if (elementState.blockElement) {
+						if (elementState.childCount == 0) {
 							text = text.trim();
-						}
-					} else {
-						if (elementState.blockElement) {
+						} else {
 							text = trimRight(text);
 						}
 					}
@@ -571,7 +568,7 @@ public class HtmlTextPresentationParser {
 			if (enforceMaxWidth) {
 				for (int x = out.length() - 1; x >= 0; --x) {
 					char ch = out.charAt(x);
-					if (x == (lastNewlineOffset + 1)) {
+					if (x == lastNewlineOffset + 1) {
 						break;
 					}
 
@@ -588,7 +585,7 @@ public class HtmlTextPresentationParser {
 
 			for (int x = 0; x < chars.length; ++x) {
 				char c = chars[x];
-				if (lastNewlineOffset == getOffset() && (c != '\n' && c != '\r') && indentLevel > 0) {
+				if (lastNewlineOffset == getOffset() && c != '\n' && c != '\r' && indentLevel > 0) {
 					for (int y = 0; y < indentLevel; ++y) {
 						out.append('\t');
 					}
@@ -623,7 +620,7 @@ public class HtmlTextPresentationParser {
 				} else if (enforceMaxWidth) {
 					Point extent = gc.textExtent(out.substring(lastNewlineOffset + 1, out.length()));
 					final int rightMargin = 2;
-					if (extent.x >= (maxWidth - rightMargin)) {
+					if (extent.x >= maxWidth - rightMargin) {
 						if (lastBreakPosition <= getOffset()) {
 							out.insert(lastBreakPosition, '\n');
 							lastNewlineOffset = lastBreakPosition;
@@ -695,7 +692,7 @@ public class HtmlTextPresentationParser {
 								gc.setFont(defaultFont);
 								Point extent = gc.textExtent("\n"); //$NON-NLS-1$
 								if (extent.y > 0) {
-									int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
+									int numNewlines = (int) Math.ceil((double) height / (double) extent.y);
 									for (int x = 0; x < numNewlines && x < 1000; ++x) {
 										emitChar('\n');
 									}
@@ -733,7 +730,7 @@ public class HtmlTextPresentationParser {
 		private boolean endsWith(StringBuilder out, char[] ch, int offset, int length) {
 			if (out.length() >= length) {
 				for (int x = 0; x < length; ++x) {
-					if (out.charAt((out.length() - length) + x) != ch[x + offset]) {
+					if (out.charAt(out.length() - length + x) != ch[x + offset]) {
 						return false;
 					}
 				}
@@ -963,11 +960,7 @@ public class HtmlTextPresentationParser {
 			}
 			ElementState elementState = state.peek();
 			int offset = elementState.offset;
-			if (offset >= getOffset()) {
-				// 0-length styles??
-				return;
-			}
-			if (elementState.fontState.equals(state.get(0).fontState)) {
+			if ((offset >= getOffset()) || elementState.fontState.equals(state.get(0).fontState)) {
 				// no different than the default state
 				return;
 			}
@@ -1031,7 +1024,7 @@ public class HtmlTextPresentationParser {
 		final int len = text.length();
 		int st = 0;
 
-		while ((st < len) && (text.charAt(st) <= ' ')) {
+		while (st < len && text.charAt(st) <= ' ') {
 			st++;
 		}
 		return st > 0 ? text.substring(st, len) : text;
@@ -1064,27 +1057,25 @@ public class HtmlTextPresentationParser {
 	private static String trimRight(String text) {
 		int len = text.length();
 
-		while (0 < len && (text.charAt(len - 1) <= ' ')) {
+		while (0 < len && text.charAt(len - 1) <= ' ') {
 			len--;
 		}
 		return len < text.length() ? text.substring(0, len) : text;
 	}
 
 	/**
-	 * get the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
-	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
-	 * number of characters provided in which case the last character is used. Note that not all characters are
-	 * available with all fonts.
+	 * get the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the first character is
+	 * used, for indent level 2 the second character is used, etc unless the indent level exceeds the number of characters provided in which
+	 * case the last character is used. Note that not all characters are available with all fonts.
 	 */
 	public char[] getBulletChars() {
 		return bulletChars;
 	}
 
 	/**
-	 * set the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
-	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
-	 * number of characters provided in which case the last character is used. Note that not all characters are
-	 * available with all fonts.
+	 * set the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the first character is
+	 * used, for indent level 2 the second character is used, etc unless the indent level exceeds the number of characters provided in which
+	 * case the last character is used. Note that not all characters are available with all fonts.
 	 */
 	public void setBulletChars(char[] bulletChars) {
 		this.bulletChars = bulletChars;

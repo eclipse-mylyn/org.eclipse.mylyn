@@ -19,8 +19,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
- * An {@link DocumentBuilderEvent} corresponding to
- * {@link DocumentBuilder#imageLink(Attributes, Attributes, String, String)}.
+ * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#imageLink(Attributes, Attributes, String, String)}.
  *
  * @author david.green
  * @since 3.0
@@ -60,10 +59,9 @@ public class ImageLinkEvent extends DocumentBuilderEvent {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof ImageLinkEvent)) {
+		if (!(obj instanceof ImageLinkEvent other)) {
 			return false;
 		}
-		ImageLinkEvent other = (ImageLinkEvent) obj;
 		return Objects.equals(href, other.href) && Objects.equals(imageUrl, other.imageUrl);
 	}
 

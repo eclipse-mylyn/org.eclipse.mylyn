@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
 public class AsciiDocIdGenerationStrategy extends IdGenerationStrategy {
 
-	private final Set<String> existingIds = new HashSet<String>();
+	private final Set<String> existingIds = new HashSet<>();
 
 	private String idPrefix = AsciiDocContentState.IDPREFIX_DEFAULT_VALUE;
 

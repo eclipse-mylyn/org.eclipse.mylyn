@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 public class ToStringHelper {
 
 	private static final String ELIPSES = "...";
+
 	private static final int STRING_MAX_LENGTH = 20;
 
 	public static String toStringValue(String text) {

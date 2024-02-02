@@ -20,6 +20,7 @@ import org.eclipse.mylyn.context.ui.IContextUiStartup;
  */
 public class WikiTextContextUiStartup implements IContextUiStartup {
 
+	@Override
 	public void lazyStartup() {
 		WikiTextContextUiPlugin.getDefault().contextUiStartup();
 	}

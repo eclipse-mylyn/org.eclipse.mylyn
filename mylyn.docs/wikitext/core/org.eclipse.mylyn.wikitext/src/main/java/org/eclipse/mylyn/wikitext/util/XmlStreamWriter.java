@@ -93,8 +93,8 @@ public abstract class XmlStreamWriter {
 	public abstract void writeStartElement(String prefix, String localName, String namespaceURI);
 
 	/**
-	 * Write an XML fragment directly to the output. The given text is not processed or XML-encoded, since it is assumed
-	 * to be a legal XML fragment.
+	 * Write an XML fragment directly to the output. The given text is not processed or XML-encoded, since it is assumed to be a legal XML
+	 * fragment.
 	 */
 	public abstract void writeLiteral(String literal);
 

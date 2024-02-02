@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class LinePredicates {
 
 	public static Predicate<Line> empty() {
-		return new Predicate<Line>() {
+		return new Predicate<>() {
 
 			@Override
 			public String toString() {
@@ -34,7 +34,7 @@ public class LinePredicates {
 	}
 
 	public static Predicate<Line> matches(final Pattern pattern) {
-		return new Predicate<Line>() {
+		return new Predicate<>() {
 
 			@Override
 			public String toString() {

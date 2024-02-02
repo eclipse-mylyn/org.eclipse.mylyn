@@ -18,8 +18,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * Switches between source and preview editor sub-tabs. Since there are only two tags this handler is used for both next
- * and previous sub-tab commands.
+ * Switches between source and preview editor sub-tabs. Since there are only two tags this handler is used for both next and previous
+ * sub-tab commands.
  */
 public class SwitchSubTabCommand extends AbstractHandler {
 	@Override

@@ -28,7 +28,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
  */
 public class ParagraphBlock extends Block {
 
-	private static final Pattern ESCAPE_PHRASE_MODIFIER_PATTERN = Pattern.compile(new EscapePhraseModifier().getPattern(0));
+	private static final Pattern ESCAPE_PHRASE_MODIFIER_PATTERN = Pattern
+			.compile(new EscapePhraseModifier().getPattern(0));
 
 	private static final Pattern NESTED_BLOCK_START_PATTERN = Pattern.compile("<!--", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 

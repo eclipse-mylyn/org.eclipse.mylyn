@@ -39,7 +39,7 @@ public class NumericEntityReferenceReplacementToken extends PatternBasedElement 
 			String character = group(1);
 			int characterValue = Integer.parseInt(character);
 			if (characterValue >= 32 && Character.isValidCodePoint(characterValue)) {
-				getBuilder().characters(Character.valueOf((char) characterValue).toString());
+				getBuilder().characters(Character.toString((char) characterValue));
 			}
 		}
 	}

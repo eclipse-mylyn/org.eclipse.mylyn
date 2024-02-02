@@ -85,10 +85,9 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 			try {
 				String queryString = String.format(
 						"action=query&titles=%s&generator=images&prop=imageinfo&iiprop=url&format=xml%s", //$NON-NLS-1$
-						URLEncoder.encode(pageName, StandardCharsets.UTF_8),
-						(gimcontinue == null
+						URLEncoder.encode(pageName, StandardCharsets.UTF_8), gimcontinue == null
 								? "" //$NON-NLS-1$
-								: "&gimcontinue=" + URLEncoder.encode(gimcontinue, StandardCharsets.UTF_8))); //$NON-NLS-1$
+								: "&gimcontinue=" + URLEncoder.encode(gimcontinue, StandardCharsets.UTF_8)); //$NON-NLS-1$
 				apiUrl = new URL(base + "api.php?" + queryString); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException("Cannot compose API URL", e); //$NON-NLS-1$
@@ -141,12 +140,10 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 				String qualifiedUrl = base;
 				if (imageUrl.matches("(file|https?)://.*")) { //$NON-NLS-1$
 					qualifiedUrl = imageUrl;
+				} else if (imageUrl.startsWith("/")) { //$NON-NLS-1$
+					qualifiedUrl += imageUrl.substring(1);
 				} else {
-					if (imageUrl.startsWith("/")) { //$NON-NLS-1$
-						qualifiedUrl += imageUrl.substring(1);
-					} else {
-						qualifiedUrl += imageUrl;
-					}
+					qualifiedUrl += imageUrl;
 				}
 
 				log("Fetching " + qualifiedUrl, Project.MSG_INFO); //$NON-NLS-1$

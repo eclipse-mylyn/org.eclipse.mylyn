@@ -46,7 +46,7 @@ public class HorizontalRuleDrawingStrategy implements IDrawingStrategy {
 
 			int baseline = textWidget.getBaseline(offset);
 
-			int vcenter = left.y + (baseline / 2) + (baseline / 4);
+			int vcenter = left.y + baseline / 2 + baseline / 4;
 
 			gc.setLineWidth(0); // NOTE: 0 means width is 1 but with optimized performance
 			gc.setLineStyle(SWT.LINE_SOLID);

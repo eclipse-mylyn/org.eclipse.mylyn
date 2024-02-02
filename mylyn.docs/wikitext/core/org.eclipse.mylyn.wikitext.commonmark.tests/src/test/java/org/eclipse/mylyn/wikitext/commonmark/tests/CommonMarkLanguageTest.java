@@ -135,6 +135,6 @@ public class CommonMarkLanguageTest {
 	}
 
 	private String toMessage(List<DocumentBuilderEvent> expectedEvents) {
-		return expectedEvents.stream().map(x -> x.toString()).collect(Collectors.joining("\n"));
+		return expectedEvents.stream().map(DocumentBuilderEvent::toString).collect(Collectors.joining("\n"));
 	}
 }

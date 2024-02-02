@@ -78,15 +78,14 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	public static final String CONTEXT = "org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"; //$NON-NLS-1$
 
 	/**
-	 * The property id for editor outline change events. Clients wishing to react to changes in the outline should
-	 * listen for this event.
+	 * The property id for editor outline change events. Clients wishing to react to changes in the outline should listen for this event.
 	 */
 	public static final int PROP_OUTLINE = 0x10000001;
 
 	/**
-	 * The property id for outline location change events. Outline location events are fired when navigation within the
-	 * source document causes the nearest computed outline item to change. Clients wishing to react to changes in the
-	 * location of the caret with respect to the current outline should listen for this event.
+	 * The property id for outline location change events. Outline location events are fired when navigation within the source document
+	 * causes the nearest computed outline item to change. Clients wishing to react to changes in the location of the caret with respect to
+	 * the current outline should listen for this event.
 	 */
 	public static final int PROP_OUTLINE_LOCATION = 0x10000002;
 
@@ -139,7 +138,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Set the source viewer configuration. This method should be called in the constructor of subclasses.
 	 *
 	 * @throws ClassCastException
-	 *                                if the configuration does not subclass {@link MarkupSourceViewerConfiguration}
+	 *             if the configuration does not subclass {@link MarkupSourceViewerConfiguration}
 	 */
 	@Override
 	protected void setSourceViewerConfiguration(SourceViewerConfiguration configuration) {
@@ -179,13 +178,13 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 			private boolean isRelevantKeyCode(int keyCode) {
 				// for some reason not all key presses result in a selection change
 				switch (keyCode) {
-				case SWT.ARROW_DOWN:
-				case SWT.ARROW_LEFT:
-				case SWT.ARROW_RIGHT:
-				case SWT.ARROW_UP:
-				case SWT.PAGE_DOWN:
-				case SWT.PAGE_UP:
-					return true;
+					case SWT.ARROW_DOWN:
+					case SWT.ARROW_LEFT:
+					case SWT.ARROW_RIGHT:
+					case SWT.ARROW_UP:
+					case SWT.PAGE_DOWN:
+					case SWT.PAGE_UP:
+						return true;
 				}
 				return false;
 			}
@@ -208,11 +207,11 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Create a markup source viewer. Subclasses may override.
 	 *
 	 * @param parent
-	 *                   the parent of the source viewer
+	 *            the parent of the source viewer
 	 * @param ruler
-	 *                   the vertical ruler
+	 *            the vertical ruler
 	 * @param styles
-	 *                   the styles to pass to the viewer
+	 *            the styles to pass to the viewer
 	 * @return a new markup source viewer
 	 * @see #createSourceViewer(Composite, IVerticalRuler, int)
 	 */
@@ -355,9 +354,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	}
 
 	/**
-	 * Get the outline model for the document being edited. The returned outline model is guaranteed to be up to date
-	 * with respect to the current document. Note that the model will change if the document changes, however all
-	 * changes occur on the UI thread.
+	 * Get the outline model for the document being edited. The returned outline model is guaranteed to be up to date with respect to the
+	 * current document. Note that the model will change if the document changes, however all changes occur on the UI thread.
 	 *
 	 * @since 3.0
 	 */
@@ -413,10 +411,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	}
 
 	private void updateOutline() {
-		if (!outlineDirty) {
-			return;
-		}
-		if (getSourceViewer().getTextWidget().isDisposed()) {
+		if (!outlineDirty || getSourceViewer().getTextWidget().isDisposed()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -467,10 +462,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	}
 
 	private void updateOutlineNow() {
-		if (!outlineDirty) {
-			return;
-		}
-		if (getSourceViewer().getTextWidget().isDisposed()) {
+		if (!outlineDirty || getSourceViewer().getTextWidget().isDisposed()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -580,7 +572,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Select and reveal the given outline item, based on its offset and length.
 	 *
 	 * @param item
-	 *                 the item, must not be null
+	 *            the item, must not be null
 	 * @since 3.0
 	 */
 	public void selectAndReveal(OutlineItem item) {

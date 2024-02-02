@@ -14,9 +14,9 @@ package org.eclipse.mylyn.wikitext.parser.builder;
 import javax.lang.model.SourceVersion;
 
 /**
- * A {@link UriProcessor} that simplifies linking to javadoc documentation. Links that start with {@code "@"} are
- * considered candidates for this processor, with the following characters interpreted as a Java package or type name. A
- * base Java package name can be provided, which is denoted with a single dot {@code "."}.
+ * A {@link UriProcessor} that simplifies linking to javadoc documentation. Links that start with {@code "@"} are considered candidates for
+ * this processor, with the following characters interpreted as a Java package or type name. A base Java package name can be provided, which
+ * is denoted with a single dot {@code "."}.
  * <p>
  * With a base package of {@code "com.example"}, examples:
  * </p>

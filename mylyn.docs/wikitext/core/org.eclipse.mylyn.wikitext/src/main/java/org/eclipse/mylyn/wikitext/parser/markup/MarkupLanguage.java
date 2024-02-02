@@ -25,19 +25,18 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 /**
  * A markup language, which knows its formatting rules and is able to process content based on {@link Block},
- * {@link PatternBasedElementProcessor} and {@link PatternBasedElement} concepts. All markup languages supported by
- * WikiText extend this class.
+ * {@link PatternBasedElementProcessor} and {@link PatternBasedElement} concepts. All markup languages supported by WikiText extend this
+ * class.
  * <p>
- * The MarkupLanguage class provides basic functionality for determining which blocks process which markup content in a
- * particular document. In general multi-line documents are split into consecutive regions called blocks, and each line
- * in a block is processed with spanning sections called phrase modifiers, and tokens within a span are replaced with
- * their respective replacement tokens. These rules apply to most lightweight markup languages, however subclasses may
- * override this default functionality if required. For example, by default phrase modifiers are non-overlapping and
- * non-nested, however if required a subclass could permit such nesting.
+ * The MarkupLanguage class provides basic functionality for determining which blocks process which markup content in a particular document.
+ * In general multi-line documents are split into consecutive regions called blocks, and each line in a block is processed with spanning
+ * sections called phrase modifiers, and tokens within a span are replaced with their respective replacement tokens. These rules apply to
+ * most lightweight markup languages, however subclasses may override this default functionality if required. For example, by default phrase
+ * modifiers are non-overlapping and non-nested, however if required a subclass could permit such nesting.
  * </p>
  * <p>
- * Generally markup language classes are not accessed directly by client code, instead client code should configure and
- * call {@link MarkupParser}, accessing the markup language by name using the {@link ServiceLocator}.
+ * Generally markup language classes are not accessed directly by client code, instead client code should configure and call
+ * {@link MarkupParser}, accessing the markup language by name using the {@link ServiceLocator}.
  * </p>
  *
  * @author David Green
@@ -86,8 +85,8 @@ public abstract class MarkupLanguage implements Cloneable {
 	}
 
 	/**
-	 * The name of the markup language, typically the same as the name of the markup language supported by this markup
-	 * language. This value may be displayed to the user.
+	 * The name of the markup language, typically the same as the name of the markup language supported by this markup language. This value
+	 * may be displayed to the user.
 	 *
 	 * @return the name, or null if unknown
 	 */
@@ -96,8 +95,8 @@ public abstract class MarkupLanguage implements Cloneable {
 	}
 
 	/**
-	 * The name of the markup language, typically the same as the name of the markup language supported by this markup
-	 * language. This value may be displayed to the user.
+	 * The name of the markup language, typically the same as the name of the markup language supported by this markup language. This value
+	 * may be displayed to the user.
 	 *
 	 * @param name
 	 *            the name
@@ -107,8 +106,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	}
 
 	/**
-	 * Provides the normal file extensions of this markup language. The default implementation returns a set of
-	 * {@link #getName()}.
+	 * Provides the normal file extensions of this markup language. The default implementation returns a set of {@link #getName()}.
 	 *
 	 * @return the file extensions
 	 */
@@ -173,8 +171,8 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * @param out
 	 *            the target to which content is written
 	 * @param formatting
-	 *            indicates if the builder should format the output using pretty-print rules. If not supported by the
-	 *            document builder this parameter is ignored.
+	 *            indicates if the builder should format the output using pretty-print rules. If not supported by the document builder this
+	 *            parameter is ignored.
 	 * @return a document builder
 	 * @throws UnsupportedOperationException
 	 *             if the markup language has no corresponding document builder

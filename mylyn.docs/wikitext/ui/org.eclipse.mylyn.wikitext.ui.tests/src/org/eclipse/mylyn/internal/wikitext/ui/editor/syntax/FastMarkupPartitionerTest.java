@@ -43,7 +43,15 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
 		partitioner.setMarkupLanguage(new TextileLanguage());
 
-		document.set("a\n" + "# a\n" + "a\n" + "# a\n" + "a\n" + "# a\n" + "\n" + "h2. a");
+		document.set("""
+				a
+				# a
+				a
+				# a
+				a
+				# a
+
+				h2. a""");
 
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
@@ -97,7 +105,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 //		MarkupPartition(type=PARAGRAPH,offset=19,length=13,end=32)
 //		MarkupPartition(type=PARAGRAPH,offset=32,length=6,end=38)
 
-		int[][] expected = new int[][] { //
+		int[][] expected = { //
 				{ 0, 12 }, //
 				{ 12, 7 }, //
 				{ 19, 13 }, //
@@ -133,7 +141,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 //			MarkupPartition(type=NOTE,offset=34,length=7,end=41)
 //			MarkupPartition(type=PARAGRAPH,offset=41,length=12,end=53)
 
-		int[][] expected = new int[][] { //
+		int[][] expected = { //
 				{ 0, 13 }, //
 				{ 13, 6 }, //
 				{ 19, 10 }, //
@@ -177,7 +185,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
 
-		int[][] expected = new int[][] { //
+		int[][] expected = { //
 				{ 0, 12 }, //
 		};
 
@@ -210,7 +218,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
 
-		int[][] expected = new int[][] { //
+		int[][] expected = { //
 				{ 0, markup.length() }, //
 		};
 

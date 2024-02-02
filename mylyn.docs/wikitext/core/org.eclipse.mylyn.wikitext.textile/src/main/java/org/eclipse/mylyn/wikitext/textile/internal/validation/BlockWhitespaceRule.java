@@ -24,7 +24,8 @@ import org.eclipse.mylyn.wikitext.validation.ValidationRule;
  */
 public class BlockWhitespaceRule extends ValidationRule {
 
-	private static final Pattern pattern = Pattern.compile("((?:bc|bq|pre|table|p)(?:\\.){1,2})(.)?", Pattern.MULTILINE); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern.compile("((?:bc|bq|pre|table|p)(?:\\.){1,2})(.)?", //$NON-NLS-1$
+			Pattern.MULTILINE);
 
 	@Override
 	public ValidationProblem findProblem(String markup, int offset, int length) {

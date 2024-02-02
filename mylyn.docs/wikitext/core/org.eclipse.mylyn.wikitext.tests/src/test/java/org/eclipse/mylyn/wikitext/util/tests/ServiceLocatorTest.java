@@ -142,8 +142,8 @@ public class ServiceLocatorTest {
 			ClassLoader classLoader = new URLClassLoader(new URL[0]) {
 				@Override
 				public Enumeration<URL> getResources(String name) throws IOException {
-					if ((metaInf && name.equals("META-INF/services/" + MarkupLanguage.class.getName()))
-							|| (!metaInf && name.equals("services/" + MarkupLanguage.class.getName()))) {
+					if (metaInf && name.equals("META-INF/services/" + MarkupLanguage.class.getName())
+							|| !metaInf && name.equals("services/" + MarkupLanguage.class.getName())) {
 						Collection<URL> resources = Collections
 								.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
 						return Collections.enumeration(resources);
@@ -178,8 +178,8 @@ public class ServiceLocatorTest {
 			ClassLoader classLoader = new URLClassLoader(new URL[0]) {
 				@Override
 				public Enumeration<URL> getResources(String name) throws IOException {
-					if ((metaInf && name.equals("META-INF/services/" + MarkupLanguageProvider.class.getName()))
-							|| (!metaInf && name.equals("services/" + MarkupLanguageProvider.class.getName()))) {
+					if (metaInf && name.equals("META-INF/services/" + MarkupLanguageProvider.class.getName())
+							|| !metaInf && name.equals("services/" + MarkupLanguageProvider.class.getName())) {
 						Collection<URL> resources = Collections
 								.singletonList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
 						return Collections.enumeration(resources);
@@ -237,8 +237,9 @@ public class ServiceLocatorTest {
 		setupServiceLocatorWithMockMarkupLanguage(true);
 		IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
 				() -> locator.getMarkupLanguage("UnknownLanguage"));
-		assertTrue(e.getMessage().contains(
-				"Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'"));
+		assertTrue(e.getMessage()
+				.contains(
+						"Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'"));
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members

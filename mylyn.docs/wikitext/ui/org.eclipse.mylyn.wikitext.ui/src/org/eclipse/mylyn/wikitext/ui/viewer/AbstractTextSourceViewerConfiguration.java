@@ -29,8 +29,8 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
 
 /**
- * Extends the default text source viewer configuration to provide greater configurability and extensibility. Makes it
- * easy to filter and customize hyperlink detectors.
+ * Extends the default text source viewer configuration to provide greater configurability and extensibility. Makes it easy to filter and
+ * customize hyperlink detectors.
  *
  * @author David Green
  * @since 1.0
@@ -40,13 +40,12 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 	 * a filter for filtering hyperlink descriptors
 	 */
 	public interface HyperlinkDetectorDescriptorFilter {
-		public boolean filter(HyperlinkDetectorDescriptor descriptor);
+		boolean filter(HyperlinkDetectorDescriptor descriptor);
 	}
 
 	/**
-	 * indicate if markup hyperlinks should be detected before other types of hyperlinks. This can affect the order in
-	 * which the hyperlinks are presented to the user in the case where multiple hyperlinks are detected in the same
-	 * region of text. The default is true.
+	 * indicate if markup hyperlinks should be detected before other types of hyperlinks. This can affect the order in which the hyperlinks
+	 * are presented to the user in the case where multiple hyperlinks are detected in the same region of text. The default is true.
 	 */
 	protected boolean markupHyperlinksFirst = true;
 
@@ -55,7 +54,6 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 	private List<IHyperlinkDetector> hyperlinkDetectors;
 
 	public AbstractTextSourceViewerConfiguration() {
-		super();
 	}
 
 	public AbstractTextSourceViewerConfiguration(IPreferenceStore preferenceStore) {

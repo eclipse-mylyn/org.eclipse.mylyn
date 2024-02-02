@@ -23,9 +23,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
- * "Block" which detects the style options for blocks. i.e. {@code [key=val1, key2]}. The properties are stored in
- * {@link ContentState contentstate} to be used by the one that needs it. This blocks emits nothing in the resulting
- * document.
+ * "Block" which detects the style options for blocks. i.e. {@code [key=val1, key2]}. The properties are stored in {@link ContentState
+ * contentstate} to be used by the one that needs it. This blocks emits nothing in the resulting document.
  *
  * @author Max Rydahl Andersen
  */

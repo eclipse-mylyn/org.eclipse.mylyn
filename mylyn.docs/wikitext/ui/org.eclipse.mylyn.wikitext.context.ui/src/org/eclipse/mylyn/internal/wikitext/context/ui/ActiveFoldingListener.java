@@ -70,9 +70,9 @@ class ActiveFoldingListener extends AbstractContextListener {
 		if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
 			foldingStructure.expandAll();
 		} else {
-			OutlineItem outline = (OutlineItem) part.getAdapter(OutlineItem.class);
+			OutlineItem outline = part.getAdapter(OutlineItem.class);
 			if (outline != null) {
-				final List<OutlineItem> toExpand = new ArrayList<OutlineItem>();
+				final List<OutlineItem> toExpand = new ArrayList<>();
 				outline.accept(item -> {
 					String identifier = bridge.getHandleIdentifier(item);
 					IInteractionElement element = ContextCore.getContextManager().getElement(identifier);
@@ -93,40 +93,40 @@ class ActiveFoldingListener extends AbstractContextListener {
 	@Override
 	public void contextChanged(ContextChangeEvent event) {
 		switch (event.getEventKind()) {
-		case ACTIVATED:
-			if (foldingStructure.isFoldingEnabled()) {
-				updateFolding(false);
-			}
-			break;
-		case DEACTIVATED:
-			if (foldingStructure.isFoldingEnabled()) {
-				foldingStructure.expandAll();
-			}
-			break;
-		case CLEARED:
-			if (event.isActiveContext()) {
+			case ACTIVATED:
 				if (foldingStructure.isFoldingEnabled()) {
-					if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
-						foldingStructure.expandAll();
-					} else {
-						foldingStructure.collapseAll(true);
+					updateFolding(false);
+				}
+				break;
+			case DEACTIVATED:
+				if (foldingStructure.isFoldingEnabled()) {
+					foldingStructure.expandAll();
+				}
+				break;
+			case CLEARED:
+				if (event.isActiveContext()) {
+					if (foldingStructure.isFoldingEnabled()) {
+						if (!foldingEnabled || !ContextCore.getContextManager().isContextActive()) {
+							foldingStructure.expandAll();
+						} else {
+							foldingStructure.collapseAll(true);
+						}
 					}
 				}
-			}
-			break;
+				break;
 
-		case INTEREST_CHANGED:
-			if (foldingStructure.isFoldingEnabled()) {
-				updateFolding(false);
-			}
-			break;
-		case ELEMENTS_DELETED:
-			if (foldingStructure.isFoldingEnabled()) {
-				updateFolding(true);
-			}
-			break;
-		default:
-			break;
+			case INTEREST_CHANGED:
+				if (foldingStructure.isFoldingEnabled()) {
+					updateFolding(false);
+				}
+				break;
+			case ELEMENTS_DELETED:
+				if (foldingStructure.isFoldingEnabled()) {
+					updateFolding(true);
+				}
+				break;
+			default:
+				break;
 		}
 	}
 

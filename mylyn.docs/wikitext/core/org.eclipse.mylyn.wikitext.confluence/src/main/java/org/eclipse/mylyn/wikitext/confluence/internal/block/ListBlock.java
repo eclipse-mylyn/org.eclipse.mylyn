@@ -44,7 +44,7 @@ public class ListBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		boolean continuation = false;
 		if (blockLineCount == 0) {
-			listState = new Stack<ListState>();
+			listState = new Stack<>();
 			Attributes attributes = new Attributes();
 			String listSpec = matcher.group(1);
 			int level = calculateLevel(listSpec);
@@ -190,7 +190,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, BlockType type) {
-			super();
 			this.level = level;
 			this.type = type;
 		}

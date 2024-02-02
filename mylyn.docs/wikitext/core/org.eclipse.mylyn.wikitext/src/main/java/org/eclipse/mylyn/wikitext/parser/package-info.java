@@ -11,10 +11,9 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * contains framework classes for {@link MarkupParser parsing} lightweight markup (wiki markup)
- * and {@link DocumentBuilder creating output}.
+ * contains framework classes for {@link MarkupParser parsing} lightweight markup (wiki markup) and {@link DocumentBuilder creating output}.
  * 
  * @see MarkupParser
- * @see DocumentBuilder 
+ * @see DocumentBuilder
  */
 package org.eclipse.mylyn.wikitext.parser;

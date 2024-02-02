@@ -77,12 +77,12 @@ public class TableBlock extends AsciiDocBlock {
 		String formatProperty = lastProperties.get("format"); //$NON-NLS-1$
 		if (formatProperty != null) {
 			switch (formatProperty) {
-			case "dsv": //$NON-NLS-1$
-				format = TableFormat.DELIMITER_SEPARATED_VALUES;
-				break;
-			case "csv": //$NON-NLS-1$
-				format = TableFormat.COMMA_SEPARATED_VALUES;
-				break;
+				case "dsv": //$NON-NLS-1$
+					format = TableFormat.DELIMITER_SEPARATED_VALUES;
+					break;
+				case "csv": //$NON-NLS-1$
+					format = TableFormat.COMMA_SEPARATED_VALUES;
+					break;
 			}
 		}
 
@@ -159,28 +159,24 @@ public class TableBlock extends AsciiDocBlock {
 
 	private Matcher createRowCellMatcher(String line) {
 		String delimiter = getCellSeparator();
-		switch (format) {
-		case COMMA_SEPARATED_VALUES:
-			String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; //$NON-NLS-1$
-			return Pattern.compile(regex).matcher(line);
-		case DELIMITER_SEPARATED_VALUES:
-			return Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
-		case PREFIX_SEPARATED_VALUES:
-		default:
-			return Pattern.compile("(\\d+\\+)?([<^>])?(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
-		}
+		return switch (format) {
+			case COMMA_SEPARATED_VALUES -> {
+				String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; //$NON-NLS-1$
+				yield Pattern.compile(regex).matcher(line);
+			}
+			case DELIMITER_SEPARATED_VALUES -> Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
+			case PREFIX_SEPARATED_VALUES -> Pattern.compile("(\\d+\\+)?([<^>])?(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
+			default -> Pattern.compile("(\\d+\\+)?([<^>])?(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
+		};
 	}
 
 	private String getCellSeparator() {
-		switch (format) {
-		case COMMA_SEPARATED_VALUES:
-			return ","; //$NON-NLS-1$
-		case DELIMITER_SEPARATED_VALUES:
-			return ":"; //$NON-NLS-1$
-		case PREFIX_SEPARATED_VALUES:
-		default:
-			return separator;
-		}
+		return switch (format) {
+			case COMMA_SEPARATED_VALUES -> ","; //$NON-NLS-1$
+			case DELIMITER_SEPARATED_VALUES -> ":"; //$NON-NLS-1$
+			case PREFIX_SEPARATED_VALUES -> separator;
+			default -> separator;
+		};
 	}
 
 	private void openCellBlock(String alignCode) {
@@ -199,20 +195,20 @@ public class TableBlock extends AsciiDocBlock {
 		}
 		attributes.setColspan(cellSpan > 1 ? Integer.toString(cellSpan) : null);
 		switch (alignCode) {
-		case "<":
-			attributes.setAlign("left");
-			break;
-		case "^":
-			attributes.setAlign("center");
-			break;
-		case ">":
-			attributes.setAlign("right");
-			break;
-		default:
-			break;
+			case "<":
+				attributes.setAlign("left");
+				break;
+			case "^":
+				attributes.setAlign("center");
+				break;
+			case ">":
+				attributes.setAlign("right");
+				break;
+			default:
+				break;
 		}
 
-		builder.beginBlock((hasHeader && isFirstRow()) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL,
+		builder.beginBlock(hasHeader && isFirstRow() ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL,
 				attributes);
 		cellBlockIsOpen = true;
 	}
@@ -224,7 +220,7 @@ public class TableBlock extends AsciiDocBlock {
 		String blockContent = append ? " " : "";
 		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
 			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
-				blockContent += cellContent.substring(1, cellContent.length() - 1).replaceAll("\"\"", "\"");
+				blockContent += cellContent.substring(1, cellContent.length() - 1).replace("\"\"", "\"");
 			} else {
 				blockContent += cellContent;
 			}
@@ -239,7 +235,7 @@ public class TableBlock extends AsciiDocBlock {
 	@Override
 	protected void processBlockEnd() {
 		closeCellBlockIfNeeded();
-		if ((!isColFormatKnown() && cellsCount > 0) || (isColFormatKnown() && cellsCount % colsAttribute.size() != 0)) {
+		if (!isColFormatKnown() && cellsCount > 0 || isColFormatKnown() && cellsCount % colsAttribute.size() != 0) {
 			builder.endBlock(); // close table row
 		}
 		builder.endBlock(); // close table

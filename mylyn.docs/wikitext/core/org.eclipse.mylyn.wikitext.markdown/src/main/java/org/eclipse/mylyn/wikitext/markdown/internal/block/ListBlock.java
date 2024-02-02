@@ -127,8 +127,8 @@ public class ListBlock extends NestableBlock {
 		Matcher nextItem = itemStartPattern.matcher(nextLine);
 		Matcher nestedItem = nestedItemStartPattern.matcher(nextLine);
 
-		return ((indentedParagraph.matches() && indentedParagraph.end(1) == thisIndentation) // paragraph starts
-				|| nextItem.matches() || nestedItem.matches()); // or (nested) list continues
+		return indentedParagraph.matches() && indentedParagraph.end(1) == thisIndentation // paragraph starts
+				|| nextItem.matches() || nestedItem.matches(); // or (nested) list continues
 	}
 
 	private void handleText(String text, boolean startsNewParagraph) {

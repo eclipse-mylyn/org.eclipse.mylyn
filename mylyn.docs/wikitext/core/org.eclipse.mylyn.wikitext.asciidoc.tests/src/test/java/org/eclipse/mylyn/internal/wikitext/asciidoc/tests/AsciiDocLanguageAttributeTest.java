@@ -39,13 +39,14 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 	}
 
 	static void ensureDefaultValues(String html) {
-		String expected = "<p>Some default values</p>\n" + //
-				"<ul>" + //
-				"<li>idprefix: _</li>" + //
-				"<li>idseparator: _</li>" + //
-				"<li>imagesdir: </li>" + //
-				"<li>leveloffset: {leveloffset}</li>" + //
-				"</ul>";
+		String expected = """
+				<p>Some default values</p>
+				<ul>\
+				<li>idprefix: _</li>\
+				<li>idseparator: _</li>\
+				<li>imagesdir: </li>\
+				<li>leveloffset: {leveloffset}</li>\
+				</ul>""";
 		assertEquals(expected, html);
 	}
 

@@ -46,8 +46,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
 /**
- * A source viewer for viewing HTML as it is intended to be displayed in a read-only fashion. Useful when markup should
- * be displayed without using a Browser widget.
+ * A source viewer for viewing HTML as it is intended to be displayed in a read-only fashion. Useful when markup should be displayed without
+ * using a Browser widget.
  *
  * @see HtmlViewerConfiguration
  * @author David Green
@@ -222,12 +222,10 @@ public class HtmlViewer extends SourceViewer {
 				textPresentation = result.textPresentation;
 				document.set(result.text);
 				annotationModel = result.annotationModel;
+			} else if (textPresentation != null) {
+				textPresentation.clear();
 			} else {
-				if (textPresentation != null) {
-					textPresentation.clear();
-				} else {
-					textPresentation = new TextPresentation();
-				}
+				textPresentation = new TextPresentation();
 			}
 			if (configuration != null) {
 				configuration.setTextPresentation(textPresentation);

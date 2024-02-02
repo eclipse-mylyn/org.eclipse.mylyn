@@ -44,9 +44,10 @@ public class EmphasisPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "_(?!(?:_|\\s))" + //$NON-NLS-1$
-				"(.*?(?<!\\s))" + //$NON-NLS-1$
-				"_"; //$NON-NLS-1$
+		return """
+				_(?!(?:_|\\s))\
+				(.*?(?<!\\s))\
+				_"""; //$NON-NLS-1$
 	}
 
 	@Override

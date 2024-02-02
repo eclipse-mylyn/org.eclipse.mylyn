@@ -17,8 +17,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- * A token replacement that replaces any two characters that start with a '!' and are followed by a trac markup
- * character
+ * A token replacement that replaces any two characters that start with a '!' and are followed by a trac markup character
  * 
  * @author David Green
  */

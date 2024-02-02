@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An item in a document outline. A document outline reflects the heading structure of the document. Generally there is
- * always a root item that represents the document itself. Every level-1 heading becomes a child item of the root.
+ * An item in a document outline. A document outline reflects the heading structure of the document. Generally there is always a root item
+ * that represents the document itself. Every level-1 heading becomes a child item of the root.
  *
  * @author David Green
  * @since 3.0
@@ -57,9 +57,8 @@ public class OutlineItem {
 	private String positionKey;
 
 	public OutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
-		super();
 		this.parent = parent;
-		this.level = (parent == null) ? 0 : level;
+		this.level = parent == null ? 0 : level;
 		if (parent != null && level < parent.getLevel()) {
 			throw new IllegalArgumentException();
 		}
@@ -73,8 +72,8 @@ public class OutlineItem {
 	}
 
 	/**
-	 * get the length of the outline item, which corresponds to the length of the heading text. The length does not
-	 * include content following the heading text itself.
+	 * get the length of the outline item, which corresponds to the length of the heading text. The length does not include content
+	 * following the heading text itself.
 	 *
 	 * @see #getSectionLength()
 	 */
@@ -83,8 +82,8 @@ public class OutlineItem {
 	}
 
 	/**
-	 * get the length of the section, which is the length of the heading text plus the length of any following content
-	 * up to the next peer-leveled heading or the parent's following sibling.
+	 * get the length of the section, which is the length of the heading text plus the length of any following content up to the next
+	 * peer-leveled heading or the parent's following sibling.
 	 *
 	 * @see #getLength()
 	 */
@@ -94,7 +93,7 @@ public class OutlineItem {
 		}
 		List<OutlineItem> siblings = getParent().getChildren();
 		int index = siblings.indexOf(this);
-		if (index < (siblings.size() - 1)) {
+		if (index < siblings.size() - 1) {
 			return siblings.get(index + 1).getOffset() - getOffset();
 		}
 		int parentRelativeOffset = getOffset() - parent.getOffset();
@@ -117,16 +116,15 @@ public class OutlineItem {
 	}
 
 	/**
-	 * the id of the heading, which is typically (though not guaranteed to be) unique within a document. Heading ids may
-	 * be used as the target of document-relative anchors
+	 * the id of the heading, which is typically (though not guaranteed to be) unique within a document. Heading ids may be used as the
+	 * target of document-relative anchors
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * the level of the document which is positive and usually <= 6 except for the root item where the value is
-	 * undefined.
+	 * the level of the document which is positive and usually <= 6 except for the root item where the value is undefined.
 	 */
 	public int getLevel() {
 		if (parent == null) {
@@ -155,8 +153,7 @@ public class OutlineItem {
 	}
 
 	/**
-	 * Get the previous item. The order of the items is determined via document order traversal of all nodes in the
-	 * outline.
+	 * Get the previous item. The order of the items is determined via document order traversal of all nodes in the outline.
 	 *
 	 * @return the previous item or null if there is no previous (ie: the root item).
 	 */
@@ -193,10 +190,7 @@ public class OutlineItem {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		OutlineItem other = (OutlineItem) obj;
@@ -313,7 +307,7 @@ public class OutlineItem {
 		 *            the item to visit
 		 * @return true if the items children should be visited
 		 */
-		public boolean visit(OutlineItem item);
+		boolean visit(OutlineItem item);
 	}
 
 	public void accept(Visitor visitor) {
@@ -393,8 +387,8 @@ public class OutlineItem {
 	}
 
 	/**
-	 * Indicate if this outline item contains the given outline item. The computation uses outline item offsets (the
-	 * {@link #getOffset() offset} and {@link #getSectionLength() section length}.
+	 * Indicate if this outline item contains the given outline item. The computation uses outline item offsets (the {@link #getOffset()
+	 * offset} and {@link #getSectionLength() section length}.
 	 *
 	 * @return true if and only if the offsets of the provided item lie within the offsets of this outline item.
 	 */

@@ -32,7 +32,7 @@ public class Stylesheet {
 
 	public interface Receiver {
 
-		public void apply(CssRule rule);
+		void apply(CssRule rule);
 
 	}
 

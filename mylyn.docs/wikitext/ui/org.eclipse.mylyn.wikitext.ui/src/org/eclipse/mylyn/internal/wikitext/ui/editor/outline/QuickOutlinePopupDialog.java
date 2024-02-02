@@ -77,7 +77,7 @@ public class QuickOutlinePopupDialog extends PopupDialog
 		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter,
 				true, true);
 
-		int heightHint = (filteredTree.getViewer().getTree().getItemHeight() * 12)
+		int heightHint = filteredTree.getViewer().getTree().getItemHeight() * 12
 				+ Math.max(filteredTree.getFilterControl().getSize().y, 12);
 		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, heightHint).applyTo(filteredTree);
 
@@ -100,7 +100,7 @@ public class QuickOutlinePopupDialog extends PopupDialog
 			@Override
 			public void mouseUp(MouseEvent e) {
 				Tree tree = filteredTree.getViewer().getTree();
-				if ((tree.getSelectionCount() < 1) || (e.button != 1)) {
+				if (tree.getSelectionCount() < 1 || e.button != 1) {
 					return;
 				}
 				// Selection is made in the selection changed listener

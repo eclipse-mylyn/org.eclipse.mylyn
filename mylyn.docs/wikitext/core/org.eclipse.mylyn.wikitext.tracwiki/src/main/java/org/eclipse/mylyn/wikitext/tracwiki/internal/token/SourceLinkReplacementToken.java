@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.tracwiki.TracWikiLanguage;
 
 /**
- * recognizes links to the Trac source browser, eg: <code>source:/trunk/COPYING</code> or
- * <code>source:/trunk/COPYING@200</code> or <code>source:/trunk/COPYING@200#L26</code>
+ * recognizes links to the Trac source browser, eg: <code>source:/trunk/COPYING</code> or <code>source:/trunk/COPYING@200</code> or
+ * <code>source:/trunk/COPYING@200#L26</code>
  * 
  * @author David Green
  */

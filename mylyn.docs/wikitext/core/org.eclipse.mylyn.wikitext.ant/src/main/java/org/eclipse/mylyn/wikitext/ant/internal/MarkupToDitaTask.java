@@ -58,7 +58,7 @@ public class MarkupToDitaTask extends MarkupTask {
 		FIRST
 	}
 
-	private final List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<>();
 
 	private String filenameFormat;
 
@@ -105,13 +105,10 @@ public class MarkupToDitaTask extends MarkupTask {
 		}
 
 		if (filenameFormat == null) {
-			switch (topicStrategy) {
-			case NONE:
-				filenameFormat = "$1.dita"; //$NON-NLS-1$
-				break;
-			default:
-				filenameFormat = "$1.ditamap"; //$NON-NLS-1$
-			}
+			filenameFormat = switch (topicStrategy) {
+				case NONE -> "$1.dita"; //$NON-NLS-1$
+				default -> "$1.ditamap"; //$NON-NLS-1$
+			};
 		}
 
 		MarkupLanguage markupLanguage = createMarkupLanguage();
@@ -219,16 +216,16 @@ public class MarkupToDitaTask extends MarkupTask {
 						builder.setTopicFolder(topicFolder);
 						builder.setOutline(outline);
 						switch (topicStrategy) {
-						case FIRST:
-							if (!outline.getChildren().isEmpty()) {
-								builder.setTopicBreakLevel(outline.getChildren().get(0).getLevel());
-							} else {
+							case FIRST:
+								if (!outline.getChildren().isEmpty()) {
+									builder.setTopicBreakLevel(outline.getChildren().get(0).getLevel());
+								} else {
+									builder.setTopicBreakLevel(1);
+								}
+								break;
+							case LEVEL1:
 								builder.setTopicBreakLevel(1);
-							}
-							break;
-						case LEVEL1:
-							builder.setTopicBreakLevel(1);
-							break;
+								break;
 						}
 
 						parser.parse(markupContent);
@@ -255,8 +252,8 @@ public class MarkupToDitaTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.ditamap</code>
+	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the input file. Default
+	 * value is <code>$1.ditamap</code>
 	 *
 	 * @see #setFilenameFormat(String)
 	 */
@@ -265,8 +262,8 @@ public class MarkupToDitaTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.ditamap</code>
+	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the input file. Default
+	 * value is <code>$1.ditamap</code>
 	 */
 	public void setFilenameFormat(String filenameFormat) {
 		this.filenameFormat = filenameFormat;

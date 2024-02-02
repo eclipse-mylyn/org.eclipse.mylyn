@@ -31,14 +31,11 @@ public class ValidationProblemAnnotation extends Annotation {
 	}
 
 	private static String computeType(ValidationProblem problem) {
-		switch (problem.getSeverity()) {
-		case ERROR:
-			return TYPE_ERROR;
-		case WARNING:
-			return TYPE_WARNING;
-		default:
-			throw new IllegalStateException(problem.getSeverity().name());
-		}
+		return switch (problem.getSeverity()) {
+			case ERROR -> TYPE_ERROR;
+			case WARNING -> TYPE_WARNING;
+			default -> throw new IllegalStateException(problem.getSeverity().name());
+		};
 	}
 
 	public static boolean isValidationAnnotation(Annotation annotation) {

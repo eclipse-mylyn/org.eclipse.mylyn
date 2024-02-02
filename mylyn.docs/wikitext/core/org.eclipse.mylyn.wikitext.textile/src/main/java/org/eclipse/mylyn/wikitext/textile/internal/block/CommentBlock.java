@@ -26,7 +26,7 @@ import org.eclipse.mylyn.wikitext.textile.internal.Textile;
  * @see <a href="http://txstyle.org/doc/40/textile-comments">textile reference documentation</a>
  */
 public class CommentBlock extends Block {
-	private static final Pattern startPattern = Pattern.compile("###\\.(\\.)?\\s+(.*)"); //$NON-NLS-1$ 
+	private static final Pattern startPattern = Pattern.compile("###\\.(\\.)?\\s+(.*)"); //$NON-NLS-1$
 
 	private boolean extended;
 

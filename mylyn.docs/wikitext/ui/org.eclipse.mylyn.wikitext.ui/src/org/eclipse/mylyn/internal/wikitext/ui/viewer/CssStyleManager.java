@@ -245,9 +245,9 @@ public class CssStyleManager {
 			throw new IllegalArgumentException();
 		}
 		this.defaultFont = defaultFont;
-		this.defaultFontHeight = defaultFont.getFontData()[0].getHeight();
+		defaultFontHeight = defaultFont.getFontData()[0].getHeight();
 		this.defaultMonospaceFont = defaultMonospaceFont;
-		this.defaultMonospaceFontHeight = defaultMonospaceFont == null
+		defaultMonospaceFontHeight = defaultMonospaceFont == null
 				? defaultFontHeight
 				: defaultMonospaceFont.getFontData()[0].getHeight();
 	}
@@ -445,9 +445,9 @@ public class CssStyleManager {
 	}
 
 	private interface RuleHandler {
-		public String getRuleName();
+		String getRuleName();
 
-		public void process(CssRule rule, FontState fontState, FontState parentFontState);
+		void process(CssRule rule, FontState fontState, FontState parentFontState);
 	}
 
 	private static class ColorRuleHandler implements RuleHandler {
@@ -553,7 +553,7 @@ public class CssStyleManager {
 			} else if ("larger".equals(cssFontSizeValue)) { //$NON-NLS-1$
 				fontState.sizeFactor = fontState.sizeFactor * 1.2f;
 			} else if ("smaller".equals(cssFontSizeValue)) { //$NON-NLS-1$
-				fontState.sizeFactor = parentFontState.sizeFactor - (parentFontState.sizeFactor * 0.2f);
+				fontState.sizeFactor = parentFontState.sizeFactor - parentFontState.sizeFactor * 0.2f;
 			} else {
 				try {
 					if (cssFontSizeValue.endsWith("pt") || cssFontSizeValue.endsWith("px")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -633,7 +633,7 @@ public class CssStyleManager {
 	}
 
 	private static RGB toRGB(int rgb) {
-		return new RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, (rgb & 0x0000FF));
+		return new RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, rgb & 0x0000FF);
 	}
 
 	/**

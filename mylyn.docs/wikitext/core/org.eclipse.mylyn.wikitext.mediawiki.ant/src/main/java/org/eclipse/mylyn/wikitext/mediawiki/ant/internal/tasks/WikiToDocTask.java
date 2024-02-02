@@ -297,7 +297,7 @@ public class WikiToDocTask extends MarkupTask {
 			log(String.format("%s:%s %s", path.name, problem.getOffset(), problem.getMessage()), messageLevel); //$NON-NLS-1$
 		}
 
-		if ((errorCount > 0 && isFailOnValidationError()) || (warningCount > 0 && isFailOnValidationWarning())) {
+		if (errorCount > 0 && isFailOnValidationError() || warningCount > 0 && isFailOnValidationWarning()) {
 			throw new BuildException(
 					MessageFormat.format("Validation failed with {0} errors and {1} warnings: {0}", errorCount, //$NON-NLS-1$
 							warningCount, path.name));
@@ -530,8 +530,7 @@ public class WikiToDocTask extends MarkupTask {
 			builder.setXhtmlStrict(xhtmlStrict);
 
 			MarkupLanguage markupLanguageClone = markupLanguage.clone();
-			if (markupLanguageClone instanceof MediaWikiLanguage) {
-				MediaWikiLanguage mediaWikiLanguage = (MediaWikiLanguage) markupLanguageClone;
+			if (markupLanguageClone instanceof MediaWikiLanguage mediaWikiLanguage) {
 				mediaWikiLanguage.setPageMapping(new PathPageMapping(path, paths, pathNameToOutline));
 				if (imageFilenames != null) {
 					mediaWikiLanguage.setImageNames(imageFilenames);
@@ -618,7 +617,7 @@ public class WikiToDocTask extends MarkupTask {
 	protected File computeDestDir(Path path) {
 		String name = path.name;
 		name.replace(' ', '_');
-		return new File(this.dest, name);
+		return new File(dest, name);
 	}
 
 	public File computeHtmlOutputFile(Path path) {

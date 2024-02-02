@@ -33,9 +33,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 /**
- * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
- * languages using the {@link ServiceLoader Java service} defined by bundle resources defined by service files at the
- * path: {@code "META-INF/services/org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage"} .
+ * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup languages using the
+ * {@link ServiceLoader Java service} defined by bundle resources defined by service files at the path:
+ * {@code "META-INF/services/org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage"} .
  *
  * @author david.green
  * @since 3.0
@@ -70,8 +70,8 @@ public class OsgiServiceLocator extends ServiceLocator {
 	}
 
 	/**
-	 * Provides the {@link #isApplicable() applicable} service locator instance. Selects an {@link OsgiServiceLocator}
-	 * if {{@link #isApplicable()} returns {@code true}, otherwise delegates to {@link ServiceLocator#getInstance()}.
+	 * Provides the {@link #isApplicable() applicable} service locator instance. Selects an {@link OsgiServiceLocator} if
+	 * {{@link #isApplicable()} returns {@code true}, otherwise delegates to {@link ServiceLocator#getInstance()}.
 	 *
 	 * @return the service locator.
 	 */
@@ -125,6 +125,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 	}
 
 	private static class SystemBundleFilter implements Predicate<Bundle> {
+		@Override
 		public boolean test(Bundle input) {
 			return input.getBundleId() != 0L;
 		}

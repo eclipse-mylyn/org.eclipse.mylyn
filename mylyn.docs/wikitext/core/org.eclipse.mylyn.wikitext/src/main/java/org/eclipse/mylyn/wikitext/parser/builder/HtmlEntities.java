@@ -88,7 +88,7 @@ class HtmlEntities {
 	}
 
 	private String stringEquivalent(List<String> values) {
-		return Normalizer.normalize(values.stream().map(s -> numericEntityToString(s)).collect(Collectors.joining()),
+		return Normalizer.normalize(values.stream().map(this::numericEntityToString).collect(Collectors.joining()),
 				Normalizer.Form.NFC);
 	}
 

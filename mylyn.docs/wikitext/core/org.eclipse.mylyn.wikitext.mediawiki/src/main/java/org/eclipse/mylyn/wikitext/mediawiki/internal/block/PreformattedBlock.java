@@ -94,11 +94,9 @@ public class PreformattedBlock extends Block {
 					return -1;
 				}
 			}
-		} else {
-			if (markupLanguage.isEmptyLine(line) || (offset == 0 && line.charAt(0) != ' ')) {
-				setClosed(true);
-				return 0;
-			}
+		} else if (markupLanguage.isEmptyLine(line) || offset == 0 && line.charAt(0) != ' ') {
+			setClosed(true);
+			return 0;
 		}
 		if (line.length() >= lineStart) {
 			addContent(line, lineStart);

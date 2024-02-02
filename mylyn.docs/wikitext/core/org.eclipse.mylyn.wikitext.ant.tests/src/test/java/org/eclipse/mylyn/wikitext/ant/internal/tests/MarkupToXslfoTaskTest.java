@@ -62,7 +62,7 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 	protected File createSimpleTextileMarkup() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");
@@ -70,8 +70,6 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}

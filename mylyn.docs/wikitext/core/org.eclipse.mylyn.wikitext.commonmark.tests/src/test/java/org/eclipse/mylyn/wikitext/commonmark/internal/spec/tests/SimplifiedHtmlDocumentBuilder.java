@@ -33,8 +33,7 @@ public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 	public void image(Attributes attributes, String url) {
 		writer.writeEmptyElement(getHtmlNsUri(), "img"); //$NON-NLS-1$
 		writer.writeAttribute("src", makeUrlAbsolute(url)); //$NON-NLS-1$
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttributes) {
 			writer.writeAttribute(getHtmlNsUri(), "alt", firstNonNull(imageAttributes.getAlt(), ""));
 			if (imageAttributes.getTitle() != null) {
 				writer.writeAttribute(getHtmlNsUri(), "title", imageAttributes.getTitle());

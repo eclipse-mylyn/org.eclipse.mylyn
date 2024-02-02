@@ -87,7 +87,7 @@ public class SparseCharSequenceTest {
 
 	@Test
 	public void testCharAtOutOfBounds() {
-		for (int x = -1; x < (testData.length() + 2); ++x) {
+		for (int x = -1; x < testData.length() + 2; ++x) {
 			if (x < 0 || x >= sequence.length()) {
 				try {
 					sequence.charAt(x);

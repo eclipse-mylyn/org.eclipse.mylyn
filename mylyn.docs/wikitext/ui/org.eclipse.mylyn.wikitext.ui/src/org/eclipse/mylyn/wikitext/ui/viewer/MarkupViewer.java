@@ -28,8 +28,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * A viewer that can show wikitext markup (lightweight markup languages) by converting the markup to HTML. Designed for
- * read-only display of markup.
+ * A viewer that can show wikitext markup (lightweight markup languages) by converting the markup to HTML. Designed for read-only display of
+ * markup.
  *
  * @see MarkupViewerConfiguration
  * @author David Green

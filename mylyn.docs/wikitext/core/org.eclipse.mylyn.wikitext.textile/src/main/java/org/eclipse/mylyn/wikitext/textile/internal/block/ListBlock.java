@@ -45,7 +45,7 @@ public class ListBlock extends Block {
 	@Override
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
-			listState = new Stack<ListState>();
+			listState = new Stack<>();
 			Attributes attributes = new Attributes();
 			String listSpec = matcher.group(1);
 			int level = calculateLevel(listSpec);
@@ -87,7 +87,8 @@ public class ListBlock extends Block {
 	}
 
 	private void adjustLevel(Matcher matcher, int level, BlockType type) {
-		for (ListState previousState = listState.peek(); level != previousState.level || previousState.type != type; previousState = listState.peek()) {
+		for (ListState previousState = listState.peek(); level != previousState.level
+				|| previousState.type != type; previousState = listState.peek()) {
 
 			if (level > previousState.level) {
 				if (!previousState.openItem) {
@@ -164,7 +165,6 @@ public class ListBlock extends Block {
 		boolean openItem;
 
 		private ListState(int level, BlockType type) {
-			super();
 			this.level = level;
 			this.type = type;
 		}

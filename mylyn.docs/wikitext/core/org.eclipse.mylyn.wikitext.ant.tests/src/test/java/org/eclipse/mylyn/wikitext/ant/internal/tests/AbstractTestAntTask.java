@@ -69,15 +69,13 @@ public abstract class AbstractTestAntTask {
 	protected String getContent(File file) throws IOException {
 		Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)),
 				StandardCharsets.UTF_8);
-		try {
+		try (reader) {
 			StringWriter writer = new StringWriter();
 			int i;
 			while ((i = reader.read()) != -1) {
 				writer.write(i);
 			}
 			return writer.toString();
-		} finally {
-			reader.close();
 		}
 	}
 

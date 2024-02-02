@@ -27,22 +27,16 @@ import org.junit.Test;
 public class DialectDocumentProviderTest {
 	@Test
 	public void testCleanUpEolMarkers() {
-		String[] lines = new String[] { "one", "two", "three" };
+		String[] lines = { "one", "two", "three" };
 		doTestCleanUpEolMarkers(lines, "\r");
 		doTestCleanUpEolMarkers(lines, "\r\n");
 		doTestCleanUpEolMarkers(lines, "\n");
 	}
 
 	private void doTestCleanUpEolMarkers(String[] lines, String documentEol) {
-		StringBuilder buf = new StringBuilder();
-		for (String line : lines) {
-			if (buf.length() > 0) {
-				buf.append(documentEol);
-			}
-			buf.append(line);
-		}
+		String buf = String.join(documentEol, lines);
 		Document document = new Document();
-		document.set(buf.toString());
+		document.set(buf);
 		MarkupDocumentProvider.cleanUpEolMarkers(document);
 
 		try {

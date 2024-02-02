@@ -54,8 +54,8 @@ public class WikiTemplateResolverTest {
 		MediaWikiLanguage markupLanguage = new MediaWikiLanguage();
 		markupLanguage.getTemplateProviders().add(resolverUnderTest);
 
-		this.templateProcessor = new TemplateProcessor(markupLanguage);
-		this.resolver = resolverUnderTest;
+		templateProcessor = new TemplateProcessor(markupLanguage);
+		resolver = resolverUnderTest;
 	}
 
 	@Test

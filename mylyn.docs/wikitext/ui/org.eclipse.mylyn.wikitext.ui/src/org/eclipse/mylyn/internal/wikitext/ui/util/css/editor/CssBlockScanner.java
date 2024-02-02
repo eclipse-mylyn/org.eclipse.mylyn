@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css.editor;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
@@ -26,11 +25,10 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 public class CssBlockScanner extends RuleBasedScanner {
 
 	public CssBlockScanner(ColorRegistry colorRegistry) {
-		setRules(new IRule[] {
-				// 
+		setRules(// 
 				new CommentRule(new Token(new TextAttribute(colorRegistry.get(Colors.KEY_COMMENT)))),
 				new PropertyNameRule(new Token(new TextAttribute(colorRegistry.get(Colors.KEY_PROPERTY_NAME)))),
 				new PropertyValueRule(new Token(new TextAttribute(colorRegistry.get(Colors.KEY_PROPERTY_VALUE)))),
-				new WhitespaceRule(new CssWhitespaceDetector()) });
+				new WhitespaceRule(new CssWhitespaceDetector()));
 	}
 }

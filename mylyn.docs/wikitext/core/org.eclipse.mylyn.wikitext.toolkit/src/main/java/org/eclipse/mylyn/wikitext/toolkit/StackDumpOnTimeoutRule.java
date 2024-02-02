@@ -24,7 +24,7 @@ import org.junit.rules.TestRule;
 
 /**
  * A {@link TestRule} that dumps a stack trace to {@code System.out}.
- * 
+ *
  * @since 3.0
  */
 public class StackDumpOnTimeoutRule extends TimeoutActionRule {

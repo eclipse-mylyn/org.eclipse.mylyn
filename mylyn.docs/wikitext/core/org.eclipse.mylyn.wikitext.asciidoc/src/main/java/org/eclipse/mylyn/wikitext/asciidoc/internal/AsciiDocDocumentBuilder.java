@@ -225,78 +225,78 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeBlock(BlockType type, Attributes attributes) {
 		switch (type) {
-		case PARAGRAPH:
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		case QUOTE:
-			return new ContentBlock(type, "[quote]\n----\n", "\n----\n", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
-		case BULLETED_LIST:
-		case DEFINITION_LIST:
-		case NUMERIC_LIST:
-			if (currentBlock != null) {
-				BlockType currentBlockType = currentBlock.getBlockType();
-				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
-						|| currentBlockType == BlockType.DEFINITION_TERM) {
-					return new ListBlock(type, 1);
+			case PARAGRAPH:
+				return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case QUOTE:
+				return new ContentBlock(type, "[quote]\n----\n", "\n----\n", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
+			case BULLETED_LIST:
+			case DEFINITION_LIST:
+			case NUMERIC_LIST:
+				if (currentBlock != null) {
+					BlockType currentBlockType = currentBlock.getBlockType();
+					if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+							|| currentBlockType == BlockType.DEFINITION_TERM) {
+						return new ListBlock(type, 1);
+					}
 				}
-			}
-			return new ListBlock(type, 2);
-		case LIST_ITEM:
-			if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
-				return new ListItemBlock("1. "); //$NON-NLS-1$
-			}
-			return new ListItemBlock("* "); //$NON-NLS-1$
-		case CODE:
-		case PREFORMATTED:
-			return new ContentBlock(type, "[listing]\n----\n", "\n----", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
-		case TABLE:
-			return new ContentBlock(type, "|===\n", "|===", 1, 1);//$NON-NLS-1$ //$NON-NLS-2$
-		case TABLE_ROW:
-			return new ContentBlock(type, "", "", 2, 1); //$NON-NLS-1$ //$NON-NLS-2$
-		case TABLE_CELL_HEADER:
-		case TABLE_CELL_NORMAL:
-			return new ContentBlock(type, "|", " ", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case DIV:
-			return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case DEFINITION_ITEM:
-			return new ContentBlock(type, ":: ", "", 0, 1); //$NON-NLS-1$//$NON-NLS-2$
-		case DEFINITION_TERM:
-			return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ListBlock(type, 2);
+			case LIST_ITEM:
+				if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
+					return new ListItemBlock("1. "); //$NON-NLS-1$
+				}
+				return new ListItemBlock("* "); //$NON-NLS-1$
+			case CODE:
+			case PREFORMATTED:
+				return new ContentBlock(type, "[listing]\n----\n", "\n----", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			case TABLE:
+				return new ContentBlock(type, "|===\n", "|===", 1, 1);//$NON-NLS-1$ //$NON-NLS-2$
+			case TABLE_ROW:
+				return new ContentBlock(type, "", "", 2, 1); //$NON-NLS-1$ //$NON-NLS-2$
+			case TABLE_CELL_HEADER:
+			case TABLE_CELL_NORMAL:
+				return new ContentBlock(type, "|", " ", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case DIV:
+				return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case DEFINITION_ITEM:
+				return new ContentBlock(type, ":: ", "", 0, 1); //$NON-NLS-1$//$NON-NLS-2$
+			case DEFINITION_TERM:
+				return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
-		case LINK:
-			if (attributes instanceof LinkAttributes) {
-				return new LinkBlock((LinkAttributes) attributes);
-			}
-			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case ITALIC:
-		case EMPHASIS:
-			return new ContentBlock("_", "_", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case BOLD:
-		case STRONG:
-			return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
-		case CODE:
-			return new CodeSpan();
-		case SUPERSCRIPT:
-			return new ContentBlock("^", "^", 0, 0);
-		case SUBSCRIPT:
-			return new ContentBlock("~", "~", 0, 0);
-		case MARK:
-			return new ContentBlock("#", "#", 0, 0);
-		case SPAN:
-			if (attributes.getCssClass() != null) {
-				return new ContentBlock("[" + attributes.getCssClass() + "]#", "#", 0, 0);
-			}
-			return new ContentBlock("", "", 0, 0);
-		default:
-			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case LINK:
+				if (attributes instanceof LinkAttributes) {
+					return new LinkBlock((LinkAttributes) attributes);
+				}
+				return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case ITALIC:
+			case EMPHASIS:
+				return new ContentBlock("_", "_", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case BOLD:
+			case STRONG:
+				return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			case CODE:
+				return new CodeSpan();
+			case SUPERSCRIPT:
+				return new ContentBlock("^", "^", 0, 0);
+			case SUBSCRIPT:
+				return new ContentBlock("~", "~", 0, 0);
+			case MARK:
+				return new ContentBlock("#", "#", 0, 0);
+			case SPAN:
+				if (attributes.getCssClass() != null) {
+					return new ContentBlock("[" + attributes.getCssClass() + "]#", "#", 0, 0);
+				}
+				return new ContentBlock("", "", 0, 0);
+			default:
+				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+				return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -351,8 +351,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		// image:path/to/img.jpg[alt text]
 		String altText = null;
 		String title = null;
-		if (attributes instanceof ImageAttributes) {
-			ImageAttributes imageAttr = (ImageAttributes) attributes;
+		if (attributes instanceof ImageAttributes imageAttr) {
 			altText = imageAttr.getAlt();
 		}
 		if (!Strings.isNullOrEmpty(attributes.getTitle())) {

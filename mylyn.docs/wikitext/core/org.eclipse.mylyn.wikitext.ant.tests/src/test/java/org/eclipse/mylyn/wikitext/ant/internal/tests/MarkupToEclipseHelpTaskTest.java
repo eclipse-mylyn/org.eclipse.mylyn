@@ -102,7 +102,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 	protected File createSimpleTextileMarkupWithMultiLevelHeadings() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try {
+		try (writer) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");
@@ -119,8 +119,6 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 			writer.println();
 			writer.println("some content");
 			writer.println();
-		} finally {
-			writer.close();
 		}
 		return markupFile;
 	}

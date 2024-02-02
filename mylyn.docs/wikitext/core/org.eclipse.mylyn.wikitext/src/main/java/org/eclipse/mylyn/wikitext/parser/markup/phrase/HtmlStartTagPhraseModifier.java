@@ -16,8 +16,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
- * A phrase modifier that detects HTML and XML tags in the source, passing them through to the builder as either escaped
- * or unescaped text.
+ * A phrase modifier that detects HTML and XML tags in the source, passing them through to the builder as either escaped or unescaped text.
  *
  * @see HtmlEndTagPhraseModifier
  * @author David Green

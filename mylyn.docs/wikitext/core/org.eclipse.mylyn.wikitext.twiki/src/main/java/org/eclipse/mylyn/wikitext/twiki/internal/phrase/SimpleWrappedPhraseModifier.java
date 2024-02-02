@@ -64,7 +64,8 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		this(startDelimiter, endDelimiter, spanType, false);
 	}
 
-	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType[] spanType, boolean nesting) {
+	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType[] spanType,
+			boolean nesting) {
 		this.startDelimiter = startDelimiter;
 		this.endDelimiter = endDelimiter;
 		this.spanType = spanType;

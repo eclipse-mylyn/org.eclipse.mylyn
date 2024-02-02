@@ -25,8 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A rudimentary CSS stylesheet parser. Recognizes commonly-used CSS syntax. The result of parsing is a CSS-specific
- * object model.
+ * A rudimentary CSS stylesheet parser. Recognizes commonly-used CSS syntax. The result of parsing is a CSS-specific object model.
  *
  * @author David Green
  * @see Stylesheet

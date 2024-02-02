@@ -49,8 +49,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 				List<Node> children = element.childNodes();
 				if (!children.isEmpty()) {
 					Node firstChild = children.get(0);
-					if (firstChild instanceof TextNode) {
-						TextNode textNode = (TextNode) firstChild;
+					if (firstChild instanceof TextNode textNode) {
 						String text = textNode.getWholeText();
 						int nonWhitespaceIndex = firstIndexOfNonWhitespace(text);
 						if (nonWhitespaceIndex > 0) {
@@ -76,9 +75,8 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 					if (!children.isEmpty()) {
 
 						Node lastChild = children.get(children.size() - 1);
-						if (lastChild instanceof TextNode) {
+						if (lastChild instanceof TextNode textNode) {
 
-							TextNode textNode = (TextNode) lastChild;
 							String text = textNode.getWholeText();
 							int lastNonWhitespaceIndex = lastIndexOfNonWhitespace(text);
 							if (lastNonWhitespaceIndex < 0) {
@@ -87,7 +85,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 								computeAfterTarget(element).after(textNode);
 
 								affectedParents.add(textNode.parent());
-							} else if (lastNonWhitespaceIndex < (text.length() - 1)) {
+							} else if (lastNonWhitespaceIndex < text.length() - 1) {
 								affectedParents.add(textNode.parent());
 
 								// split
@@ -121,8 +119,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 			for (Node child : children) {
 				Node previousSibling = child.previousSibling();
 				Node nextSibling = child.nextSibling();
-				if (child instanceof TextNode && previousSibling instanceof Element && nextSibling instanceof Element) {
-					TextNode textNode = (TextNode) child;
+				if (child instanceof TextNode textNode && previousSibling instanceof Element && nextSibling instanceof Element) {
 					Element prevElement = (Element) previousSibling;
 					Element nextElement = (Element) nextSibling;
 					normalizeTextBetweenNodes(textNode, prevElement, nextElement);
@@ -150,8 +147,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 
 	private void removeWhitespaceBefore(Element element) {
 		Node previousSibling = element.previousSibling();
-		if (previousSibling instanceof TextNode) {
-			TextNode textNode = (TextNode) previousSibling;
+		if (previousSibling instanceof TextNode textNode) {
 			String text = textNode.getWholeText();
 			int startOfTrailingWhitespace = lastIndexOfNonWhitespace(text) + 1;
 			if (startOfTrailingWhitespace <= 0) {

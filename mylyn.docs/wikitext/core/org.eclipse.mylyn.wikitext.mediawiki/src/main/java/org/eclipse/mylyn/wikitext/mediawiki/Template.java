@@ -14,8 +14,8 @@
 package org.eclipse.mylyn.wikitext.mediawiki;
 
 /**
- * A representation of <a href="http://www.mediawiki.org/wiki/Help:Templates">MediaWiki Templates</a>, which provide a
- * means to expand commonly-used content with token-replacement.
+ * A representation of <a href="http://www.mediawiki.org/wiki/Help:Templates">MediaWiki Templates</a>, which provide a means to expand
+ * commonly-used content with token-replacement.
  *
  * @since 3.0
  */
@@ -34,7 +34,6 @@ public class Template {
 	 *            the substitution content of the template
 	 */
 	public Template(String name, String templateMarkup) {
-		super();
 		this.name = name;
 		this.templateMarkup = templateMarkup;
 	}
