@@ -63,8 +63,9 @@ public class GitlabTaskAttributeMapper extends TaskAttributeMapper {
 		if (person.getAttributes().size() > 0) {
 			for (Entry<String, String> entry : person.getAttributes().entrySet()) {
 				TaskAttribute taskAttrib = taskAttribute.getAttribute(entry.getKey());
-				if (taskAttrib == null)
+				if (taskAttrib == null) {
 					taskAttrib = taskAttribute.createAttribute(entry.getKey());
+				}
 				taskAttrib.setValue(entry.getValue());
 			}
 		}

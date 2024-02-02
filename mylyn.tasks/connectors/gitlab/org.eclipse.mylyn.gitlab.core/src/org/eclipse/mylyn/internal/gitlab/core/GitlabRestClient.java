@@ -350,8 +350,9 @@ public class GitlabRestClient {
 			for (JsonElement jsonElement : ja) {
 				JsonObject jo = jsonElement.getAsJsonObject();
 				TaskData taskData = getFromJson(jo);
-				if (config != null)
+				if (config != null) {
 					config.updateProductOptions(taskData);
+				}
 				response.add(taskData);
 			}
 			return response;
