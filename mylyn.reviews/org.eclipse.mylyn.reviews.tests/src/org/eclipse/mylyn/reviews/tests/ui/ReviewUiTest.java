@@ -14,12 +14,12 @@
 
 package org.eclipse.mylyn.reviews.tests.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.reviews.tests.util.MockReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

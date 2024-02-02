@@ -27,7 +27,7 @@ public class ReviewUiFactoryProvider extends AbstractUiFactoryProvider<IReview> 
 
 	@Override
 	public List<AbstractUiFactory<IReview>> createFactories(IUiContext context, IReview set) {
-		List<AbstractUiFactory<IReview>> factories = new ArrayList<AbstractUiFactory<IReview>>();
+		List<AbstractUiFactory<IReview>> factories = new ArrayList<>();
 		factories.add(new AddReviewersUiFactory(context, set));
 		return factories;
 	}

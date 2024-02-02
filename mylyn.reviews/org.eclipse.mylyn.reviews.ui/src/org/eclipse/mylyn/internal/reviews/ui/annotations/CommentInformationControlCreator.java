@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class CommentInformationControlCreator implements IInformationControlCreator {
 
+	@Override
 	public IInformationControl createInformationControl(Shell parent) {
 		return new CommentInformationControl(parent, this);
 	}

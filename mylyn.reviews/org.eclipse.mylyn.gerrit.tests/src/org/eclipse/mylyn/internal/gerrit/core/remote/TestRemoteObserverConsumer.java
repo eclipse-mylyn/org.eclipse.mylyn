@@ -58,11 +58,11 @@ public class TestRemoteObserverConsumer<EParentObject extends EObject, EObjectTy
 		return observer;
 	}
 
-	public static <EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> // 
+	public static <EParentObject extends EObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
 			TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> //
 			create(AbstractRemoteEmfFactory<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> factory,
 					RemoteEmfConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType> consumer) {
-		return new TestRemoteObserverConsumer<EParentObject, EObjectType, LocalKey, Remote, RemoteKey, ObjectCurrentType>(
+		return new TestRemoteObserverConsumer<>(
 				factory, consumer);
 	}
 

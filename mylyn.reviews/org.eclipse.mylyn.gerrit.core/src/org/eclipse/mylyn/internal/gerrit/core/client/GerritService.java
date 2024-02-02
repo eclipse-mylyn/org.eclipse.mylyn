@@ -34,7 +34,7 @@ public class GerritService implements InvocationHandler {
 
 	public static class GerritRequest {
 
-		private static ThreadLocal<GerritRequest> currentRequest = new ThreadLocal<GerritRequest>();
+		private static ThreadLocal<GerritRequest> currentRequest = new ThreadLocal<>();
 
 		public static GerritRequest getCurrentRequest() {
 			return currentRequest.get();
@@ -77,11 +77,12 @@ public class GerritService implements InvocationHandler {
 		return uri;
 	}
 
+	@Override
 	public Object invoke(Object proxy, final Method method, Object[] args) {
 		final JSonSupport json = new JSonSupport();
 
 		// construct request
-		final List<Object> parameters = new ArrayList<Object>(args.length - 1);
+		final List<Object> parameters = new ArrayList<>(args.length - 1);
 		for (int i = 0; i < args.length - 1; i++) {
 			parameters.add(args[i]);
 		}
@@ -90,7 +91,7 @@ public class GerritService implements InvocationHandler {
 
 		try {
 			GerritRequest request = GerritRequest.getCurrentRequest();
-			IProgressMonitor monitor = (request != null) ? request.getMonitor() : null;
+			IProgressMonitor monitor = request != null ? request.getMonitor() : null;
 
 			// execute request
 			String responseMessage = client.postJsonRequest(getServiceUri(), new JsonEntity() {
@@ -113,8 +114,8 @@ public class GerritService implements InvocationHandler {
 		} catch (Throwable e) {
 			callback.onFailure(e);
 		}
-		// all methods are designed to be asynchronous and expected to return void 
+		// all methods are designed to be asynchronous and expected to return void
 		return null;
-	};
+	}
 
 }

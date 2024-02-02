@@ -44,15 +44,15 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 
 	public FileRevisionTypedElement(IFileRevision fileRevision, IProgressMonitor monitor) {
 		this.fileRevision = fileRevision;
-		this.runningMonitor = monitor;
+		runningMonitor = monitor;
 	}
 
 	private IFileRevision getFileRevision() {
 		return fileRevision;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (ISharedDocumentAdapter.class.equals(adapter)) {
 			synchronized (this) {
 				if (sharedDocumentAdapter == null) {
@@ -62,6 +62,7 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 							return FileRevisionTypedElement.this.getDocumentKey(element);
 						}
 
+						@Override
 						public void flushDocument(IDocumentProvider provider, IEditorInput documentKey,
 								IDocument document, boolean overwrite) {
 							// The document is read-only
@@ -74,6 +75,7 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		return fileRevision.getStorage(runningMonitor).getContents();
 	}
@@ -87,14 +89,17 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		return fileRevision.getName();
 	}
 
+	@Override
 	public Image getImage() {
 		return CompareUI.getImage(getType());
 	}
 
+	@Override
 	public String getType() {
 		String extension = FilenameUtils.getExtension(getName());
 		return extension != null && extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
@@ -105,8 +110,7 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 		if (obj == this) {
 			return true;
 		}
-		if (obj instanceof FileRevisionTypedElement) {
-			final FileRevisionTypedElement otherElement = (FileRevisionTypedElement) obj;
+		if (obj instanceof final FileRevisionTypedElement otherElement) {
 			return otherElement.getFileRevision().equals(fileRevision);
 		}
 		return false;

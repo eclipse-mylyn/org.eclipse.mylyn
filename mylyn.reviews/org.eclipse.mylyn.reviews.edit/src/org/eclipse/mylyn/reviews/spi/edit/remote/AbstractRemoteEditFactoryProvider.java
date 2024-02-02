@@ -65,7 +65,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 	private final EClass childType;
 
-	private final Map<Object, EChildObject> memberForId = new HashMap<Object, EChildObject>();
+	private final Map<Object, EChildObject> memberForId = new HashMap<>();
 
 	public AbstractRemoteEditFactoryProvider(final EFactory emfFactory, EReference parentReference,
 			final EAttribute localKeyAttribute, EClass childType) {
@@ -83,7 +83,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		adapterFactory.addAdapterFactory(new ReviewsItemProviderAdapterFactory());
 
 		BasicCommandStack commandStack = new BasicCommandStack();
-		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<>());
 	}
 
 	public EClass getRootClass() {
@@ -228,8 +228,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 				memberForId.remove(key);
 			}
 			Object parentList = getRoot().eGet(parentReference);
-			if (parentList instanceof List<?>) {
-				List<?> members = (List<?>) parentList;
+			if (parentList instanceof List<?> members) {
 				members.remove(child);
 			}
 		}
@@ -247,8 +246,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		if (getRoot() != null) {
 			synchronized (getRoot()) {
 				Object parentList = getRoot().eGet(parentReference);
-				if (parentList instanceof List<?>) {
-					List<?> members = (List<?>) parentList;
+				if (parentList instanceof List<?> members) {
 					members.clear();
 				}
 			}
@@ -281,7 +279,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		if (resource == null) {
 			return;
 		}
-		final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
+		final Map<Object, Object> saveOptions = new HashMap<>();
 		saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
 		try {
 			resource.save(saveOptions);
@@ -292,8 +290,8 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 	}
 
 	/**
-	 * WARNING: Recursively deletes directory specified by {@link AbstractDataLocator#getModelPath()}. Ensure that that
-	 * directory isn't used by any other resources!
+	 * WARNING: Recursively deletes directory specified by {@link AbstractDataLocator#getModelPath()}. Ensure that that directory isn't used
+	 * by any other resources!
 	 */
 	public void deleteCache() {
 		close();
@@ -311,30 +309,28 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 	@Override
 	public void modelExec(final Runnable runnable, boolean block) {
-		super.modelExec(new Runnable() { //Run in UI thread
-			public void run() {
-				editingDomain.getCommandStack().execute(new AbstractCommand() {
+		super.modelExec(() -> editingDomain.getCommandStack().execute(new AbstractCommand() {
 
-					public void redo() {
-						// noop
-					}
-
-					public void execute() {
-						runnable.run();
-					}
-
-					@Override
-					protected boolean prepare() {
-						return true;
-					}
-
-					@Override
-					public boolean canUndo() {
-						return false;
-					}
-				});
+			@Override
+			public void redo() {
+				// noop
 			}
-		}, block);
+
+			@Override
+			public void execute() {
+				runnable.run();
+			}
+
+			@Override
+			protected boolean prepare() {
+				return true;
+			}
+
+			@Override
+			public boolean canUndo() {
+				return false;
+			}
+		}), block);
 	}
 
 	public ERootObject getRoot() {

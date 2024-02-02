@@ -25,10 +25,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -86,7 +84,7 @@ public class ReviewSetContentSection {
 
 	private TreeViewer viewer;
 
-	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
+	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<>() {
 
 		@Override
 		public void updated(boolean modified) {
@@ -135,7 +133,7 @@ public class ReviewSetContentSection {
 				.getFactoryProvider()
 				.getReviewFactory()
 				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
-		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
+		reviewObserver = new RemoteEmfObserver<>() {
 			@Override
 			public void updated(boolean modified) {
 				if (reviewConsumer.getRemoteObject() != null && modified) {
@@ -304,7 +302,7 @@ public class ReviewSetContentSection {
 		parentsLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		parentsLabel.setText(Messages.ReviewSetContentSection_Parents);
 
-		final List<String> parentCommitIds = new ArrayList<String>();
+		final List<String> parentCommitIds = new ArrayList<>();
 		for (ICommit commit : set.getParentCommits()) {
 			parentCommitIds.add(commit.getId());
 		}
@@ -371,39 +369,37 @@ public class ReviewSetContentSection {
 				public String getToolTipText(Object element) {
 					//For some reason tooltips are not delegated..
 					return ReviewsLabelProvider.ITEMS_COLUMN.getToolTipText(element);
-				};
+				}
 			};
 			viewer.setLabelProvider(styledLabelProvider);
-			viewer.addOpenListener(new IOpenListener() {
-				public void open(OpenEvent event) {
-					ITreeSelection selection = (ITreeSelection) event.getSelection();
-					TreePath[] paths = selection.getPaths();
-					for (TreePath path : paths) {
-						IFileItem file = null;
-						IComment comment = null;
-						for (int i = 0; i < path.getSegmentCount(); i++) {
-							Object o = path.getSegment(i);
-							if (o instanceof IFileItem) {
-								file = (IFileItem) o;
-							} else if (o instanceof ILocation) {
-								Object[] children = contentProvider.getChildren(o);
-								if (children.length > 0 && children[0] instanceof IComment) {
-									comment = (IComment) children[0];
-								}
-							} else if (o instanceof IComment) {
-								comment = (IComment) o;
+			viewer.addOpenListener(event -> {
+				ITreeSelection selection = (ITreeSelection) event.getSelection();
+				TreePath[] paths = selection.getPaths();
+				for (TreePath path : paths) {
+					IFileItem file = null;
+					IComment comment = null;
+					for (int i = 0; i < path.getSegmentCount(); i++) {
+						Object o = path.getSegment(i);
+						if (o instanceof IFileItem) {
+							file = (IFileItem) o;
+						} else if (o instanceof ILocation) {
+							Object[] children = contentProvider.getChildren(o);
+							if (children.length > 0 && children[0] instanceof IComment) {
+								comment = (IComment) children[0];
 							}
+						} else if (o instanceof IComment) {
+							comment = (IComment) o;
 						}
-						if (file != null && comment != null) {
-							getParentSection().getUiFactoryProvider()
-									.getOpenFileToCommentFactory(ReviewSetContentSection.this.getParentSection(), set,
-											file, comment)
-									.execute();
-						} else if (file != null) {
-							getParentSection().getUiFactoryProvider()
-									.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, file)
-									.execute();
-						}
+					}
+					if (file != null && comment != null) {
+						getParentSection().getUiFactoryProvider()
+								.getOpenFileToCommentFactory(ReviewSetContentSection.this.getParentSection(), set,
+										file, comment)
+								.execute();
+					} else if (file != null) {
+						getParentSection().getUiFactoryProvider()
+								.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, file)
+								.execute();
 					}
 				}
 			});
@@ -432,7 +428,7 @@ public class ReviewSetContentSection {
 					.getRoot()
 					.getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS);
 
-			final Set<IComment> toHighlight = new HashSet<IComment>();
+			final Set<IComment> toHighlight = new HashSet<>();
 			if (fileComments != null) {
 				List<IFileItem> files = itemSetConsumer.getModelObject();
 				for (IFileItem file : files) {
@@ -444,16 +440,12 @@ public class ReviewSetContentSection {
 				}
 			}
 
-			Display.getDefault().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					if (hasViewer()) {
-						viewer.refresh();
-						viewer.expandAll();
-						decorateItems(viewer.getTree().getItems(), toHighlight);
-						reflow();
-					}
+			Display.getDefault().asyncExec(() -> {
+				if (hasViewer()) {
+					viewer.refresh();
+					viewer.expandAll();
+					decorateItems(viewer.getTree().getItems(), toHighlight);
+					reflow();
 				}
 			});
 		}
@@ -489,13 +481,7 @@ public class ReviewSetContentSection {
 	}
 
 	private void reflowAsync() {
-		Display.getDefault().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				reflow();
-			}
-		});
+		Display.getDefault().asyncExec(this::reflow);
 	}
 
 	private void reflow() {

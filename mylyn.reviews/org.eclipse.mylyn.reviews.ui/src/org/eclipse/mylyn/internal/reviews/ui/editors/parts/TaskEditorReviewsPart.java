@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -126,7 +125,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 			return;
 		}
 
-		reviewContainers = new ArrayList<TaskReview>();
+		reviewContainers = new ArrayList<>();
 		populateReviews(reviewContainers);
 
 		section = createSection(parent, toolkit, true);
@@ -138,7 +137,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 	}
 
 	private void getReviewsFromUrls(Collection<String> reviewUrls) {
-		reviews = new ArrayList<ITask>();
+		reviews = new ArrayList<>();
 
 		for (String reviewUrl : reviewUrls) {
 
@@ -191,7 +190,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 				public void widgetSelected(SelectionEvent e) {
 					int direction = reviewsTable.getSortDirection();
 					if (reviewsTable.getSortColumn() == column && direction != SWT.NONE) {
-						direction = (direction == SWT.DOWN) ? SWT.UP : SWT.NONE;
+						direction = direction == SWT.DOWN ? SWT.UP : SWT.NONE;
 					} else {
 						direction = SWT.DOWN;
 					}
@@ -216,13 +215,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 		reviewsViewer.setLabelProvider(labelProvider);
 		reviewsViewer.setComparator(new ReviewColumnSorter(labelProvider));
 
-		reviewsViewer.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				openReview(event);
-			}
-
-		});
+		reviewsViewer.addOpenListener(this::openReview);
 
 		reviewsViewer.setInput(reviewContainers.toArray());
 
@@ -255,7 +248,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 	}
 
 	protected void openReview(OpenEvent event) {
-		List<TaskReview> reviewsToOpen = new ArrayList<TaskReview>();
+		List<TaskReview> reviewsToOpen = new ArrayList<>();
 
 		StructuredSelection selection = (StructuredSelection) event.getSelection();
 

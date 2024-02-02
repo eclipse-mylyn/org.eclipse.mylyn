@@ -29,8 +29,7 @@ public interface ILineRange extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Start</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Start</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Start</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -41,8 +40,8 @@ public interface ILineRange extends EObject {
 	int getStart();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getStart <em>Start</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getStart <em>Start</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Start</em>' attribute.
@@ -65,8 +64,8 @@ public interface ILineRange extends EObject {
 	int getEnd();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getEnd <em>End</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getEnd <em>End</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>End</em>' attribute.

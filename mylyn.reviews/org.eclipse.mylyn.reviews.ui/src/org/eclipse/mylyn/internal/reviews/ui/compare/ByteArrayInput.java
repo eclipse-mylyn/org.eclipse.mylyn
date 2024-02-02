@@ -35,19 +35,23 @@ class ByteArrayInput implements ITypedElement, IStreamContentAccessor {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public String getType() {
 		String extension = FilenameUtils.getExtension(name);
 		return extension != null && extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		return new ByteArrayInputStream(content);
 	}

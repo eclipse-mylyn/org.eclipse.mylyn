@@ -59,7 +59,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType>
 
 	public PatchSetContentRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
 		super(gerritRemoteFactoryProvider);
-		this.gerritFactoryProvider = gerritRemoteFactoryProvider;
+		gerritFactoryProvider = gerritRemoteFactoryProvider;
 		cache = new ReviewItemCache();
 	}
 
@@ -79,8 +79,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType>
 								+ ". Check remote connection.")); //$NON-NLS-1$
 			}
 			CommentDetail commentDetail = patchScript.getCommentDetail();
-			List<PatchLineComment> comments = new ArrayList<PatchLineComment>();
-			comments.addAll(commentDetail.getCommentsA());
+			List<PatchLineComment> comments = new ArrayList<>(commentDetail.getCommentsA());
 			comments.addAll(commentDetail.getCommentsB());
 			for (PatchLineComment comment : comments) {
 				gerritFactoryProvider.pullUser(gerritFactoryProvider.getRoot(),
@@ -142,10 +141,8 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType>
 		}
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			String targetId = patch.getKey().toString();
-			String sourceFileName = (patch.getSourceFileName() != null)
-					? patch.getSourceFileName()
-					: patch.getFileName();
-			String baseId = (content.getBase() != null)
+			String sourceFileName = patch.getSourceFileName() != null ? patch.getSourceFileName() : patch.getFileName();
+			String baseId = content.getBase() != null
 					? new Patch.Key(content.getBase().getId(), sourceFileName).toString()
 					: "base-" + targetId; //$NON-NLS-1$
 			String id = baseId + ":" + targetId; //$NON-NLS-1$
@@ -174,7 +171,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType>
 							baseVersion.setContent(patchScript.getA().asString());
 						}
 						baseVersion.setPath(patchScript.getA().getPath());
-						baseVersion.setDescription((content.getBase() != null)
+						baseVersion.setDescription(content.getBase() != null
 								? NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set,
 										content.getBase().getPatchSetId())
 								: Messages.PatchSetContentRemoteFactory_Base);

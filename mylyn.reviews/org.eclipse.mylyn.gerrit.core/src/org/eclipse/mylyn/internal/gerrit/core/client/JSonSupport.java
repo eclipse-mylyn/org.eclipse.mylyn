@@ -52,6 +52,7 @@ public class JSonSupport {
 	 * Parses a Json response.
 	 */
 	private class JSonResponseDeserializer implements JsonDeserializer<JSonResponse> {
+		@Override
 		public JSonResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
 			JsonObject object = json.getAsJsonObject();
@@ -59,7 +60,7 @@ public class JSonSupport {
 			response.jsonrpc = object.get("jsonrpc").getAsString(); //$NON-NLS-1$
 			response.id = object.get("id").getAsInt(); //$NON-NLS-1$
 			response.result = object.get("result"); //$NON-NLS-1$
-			response.error = object.get("error"); //$NON-NLS-1$			
+			response.error = object.get("error"); //$NON-NLS-1$
 			return response;
 		}
 	}
@@ -80,7 +81,7 @@ public class JSonSupport {
 
 		String method;
 
-		final List<Object> params = new ArrayList<Object>();
+		final List<Object> params = new ArrayList<>();
 
 		String xsrfKey;
 	}
@@ -100,10 +101,11 @@ public class JSonSupport {
 	private Gson gson;
 
 	public JSonSupport() {
-		TypeToken<Map<Id, PatchSetApproval>> approvalMapType = new TypeToken<Map<ApprovalCategory.Id, PatchSetApproval>>() {
+		TypeToken<Map<Id, PatchSetApproval>> approvalMapType = new TypeToken<>() {
 		};
 		ExclusionStrategy exclustionStrategy = new ExclusionStrategy() {
 
+			@Override
 			public boolean shouldSkipField(FieldAttributes f) {
 				// commentLinks requires instantiation of com.google.gwtexpui.safehtml.client.RegexFindReplace which is not on classpath
 				if (f.getDeclaredClass() == List.class && f.getName().equals("commentLinks") //$NON-NLS-1$
@@ -120,70 +122,58 @@ public class JSonSupport {
 				return false;
 			}
 
+			@Override
 			public boolean shouldSkipClass(Class<?> clazz) {
 				return false;
 			}
 		};
 		gson = JsonServlet.defaultGsonBuilder()
 				.registerTypeAdapter(JSonResponse.class, new JSonResponseDeserializer())
-				.registerTypeAdapter(Edit.class, new JsonDeserializer<Edit>() {
-					public Edit deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-							throws JsonParseException {
-						if (json.isJsonArray()) {
-							JsonArray array = json.getAsJsonArray();
-							if (array.size() == 4) {
-								return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(),
-										array.get(2).getAsInt(), array.get(3).getAsInt());
-							}
-						}
-						return new Edit(0, 0);
-					}
-				})
+				.registerTypeAdapter(Edit.class, (JsonDeserializer<Edit>) (json, typeOfT, context) -> {
+if (json.isJsonArray()) {
+				JsonArray array = json.getAsJsonArray();
+				if (array.size() == 4) {
+					return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(),
+							array.get(2).getAsInt(), array.get(3).getAsInt());
+				}
+}
+return new Edit(0, 0);
+})
 				// ignore GerritForge specific AuthType "TEAMFORGE" which is unknown to Gerrit
-				.registerTypeAdapter(AuthType.class, new JsonDeserializer<AuthType>() {
-
-					@Override
-					public AuthType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-							throws JsonParseException {
-						String jsonString = json.getAsString();
-						if (jsonString != null) {
-							try {
-								return AuthType.valueOf(jsonString);
-							} catch (IllegalArgumentException e) {
-								// ignore the error since the connector does not make use of AuthType
-								//GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
-							}
-						}
-						return null;
+				.registerTypeAdapter(AuthType.class, (JsonDeserializer<AuthType>) (json, typeOfT, context) -> {
+String jsonString = json.getAsString();
+if (jsonString != null) {
+				try {
+					return AuthType.valueOf(jsonString);
+				} catch (IllegalArgumentException e) {
+					// ignore the error since the connector does not make use of AuthType
+					//GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
+				}
+}
+return null;
+})
+				.registerTypeAdapter(approvalMapType.getType(), (JsonDeserializer<Map<Id, PatchSetApproval>>) (json, typeOfT, context) -> {
+// Gerrit 2.2: the type of PatchSetPublishDetail.given changed from a map to a list
+Map<Id, PatchSetApproval> map = new HashMap<>();
+if (json.isJsonArray()) {
+				JsonArray array = json.getAsJsonArray();
+				for (Iterator<JsonElement> it = array.iterator(); it.hasNext();) {
+					JsonElement element = it.next();
+					Id key = context.deserialize(element, Id.class);
+					if (key.get() != null) {
+						// Gerrit < 2.1.x: json is map
+						element = it.next();
 					}
-				})
-				.registerTypeAdapter(approvalMapType.getType(), new JsonDeserializer<Map<Id, PatchSetApproval>>() {
-
-					@Override
-					public Map<Id, PatchSetApproval> deserialize(JsonElement json, Type typeOfT,
-							JsonDeserializationContext context) throws JsonParseException {
-						// Gerrit 2.2: the type of PatchSetPublishDetail.given changed from a map to a list
-						Map<Id, PatchSetApproval> map = new HashMap<ApprovalCategory.Id, PatchSetApproval>();
-						if (json.isJsonArray()) {
-							JsonArray array = json.getAsJsonArray();
-							for (Iterator<JsonElement> it = array.iterator(); it.hasNext();) {
-								JsonElement element = it.next();
-								Id key = context.deserialize(element, Id.class);
-								if (key.get() != null) {
-									// Gerrit < 2.1.x: json is map
-									element = it.next();
-								}
-								PatchSetApproval value = context.deserialize(element, PatchSetApproval.class);
-								if (key.get() == null) {
-									// Gerrit 2.2: json is a list, deduct key from value
-									key = value.getCategoryId();
-								}
-								map.put(key, value);
-							}
-						}
-						return map;
+					PatchSetApproval value = context.deserialize(element, PatchSetApproval.class);
+					if (key.get() == null) {
+						// Gerrit 2.2: json is a list, deduct key from value
+						key = value.getCategoryId();
 					}
-				})
+					map.put(key, value);
+				}
+}
+return map;
+})
 				.setExclusionStrategies(exclustionStrategy)
 				.create();
 	}
@@ -192,9 +182,7 @@ public class JSonSupport {
 		JsonRequest msg = new JsonRequest();
 		msg.method = methodName;
 		if (args != null) {
-			for (Object arg : args) {
-				msg.params.add(arg);
-			}
+			msg.params.addAll(args);
 		}
 		msg.id = id;
 		msg.xsrfKey = xsrfKey;

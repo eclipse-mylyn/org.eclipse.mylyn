@@ -198,16 +198,15 @@ public class GerritRestClient {
 	}
 
 	/**
-	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
-	 * to the query. Uses the gerrit REST API.
+	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options to the query. Uses
+	 * the gerrit REST API.
 	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
 	 *            The specific gerrit change query
 	 * @param optionsList
-	 *            List of query options ("&o=" parameter). Only applicable for the REST API, ignored otherwise. May be
-	 *            null or empty.
+	 *            List of query options ("&o=" parameter). Only applicable for the REST API, ignored otherwise. May be null or empty.
 	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
 	 * @throws GerritException
 	 */
@@ -242,8 +241,8 @@ public class GerritRestClient {
 	}
 
 	/**
-	 * Returns changes associated with the logged in user. This includes all open, closed and review requests for the
-	 * user. On Gerrit 2.4 and earlier closed reviews are not included.
+	 * Returns changes associated with the logged in user. This includes all open, closed and review requests for the user. On Gerrit 2.4
+	 * and earlier closed reviews are not included.
 	 */
 	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
 		return executeQuery(monitor, "owner:self OR reviewer:self"); //$NON-NLS-1$

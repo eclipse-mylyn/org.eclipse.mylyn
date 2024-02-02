@@ -26,7 +26,6 @@ import org.eclipse.egit.ui.internal.clone.AbstractGitCloneWizard;
 import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
-import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
 import org.eclipse.egit.ui.internal.provisional.wizards.NoRepositoryInfoException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
@@ -92,20 +91,16 @@ public class EGitUiUtil {
 	}
 
 	public static int openCloneRepositoryWizard(Shell shell, final TaskRepository repository, final Project project) {
-		AbstractGitCloneWizard cloneWizard = new GitCloneWizard(new IRepositorySearchResult() {
+		AbstractGitCloneWizard cloneWizard = new GitCloneWizard(() -> {
+			GitRepositoryInfo gitRepositoryInfo;
+			try {
+				GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).refreshConfig(null);
+				gitRepositoryInfo = new GitRepositoryInfo(getCloneUriForRepo(repository, config, project));
+				return gitRepositoryInfo;
+			} catch (GerritException e) {
 
-			@Override
-			public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
-				GitRepositoryInfo gitRepositoryInfo;
-				try {
-					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).refreshConfig(null);
-					gitRepositoryInfo = new GitRepositoryInfo(getCloneUriForRepo(repository, config, project));
-					return gitRepositoryInfo;
-				} catch (GerritException e) {
-
-				}
-				return null;
 			}
+			return null;
 		});
 		WizardDialog dlg = new WizardDialog(shell, cloneWizard);
 		dlg.setHelpAvailable(true);
@@ -116,10 +111,10 @@ public class EGitUiUtil {
 			throws NoRepositoryInfoException {
 		try {
 			Map<DownloadScheme, String> cloneUris = GerritUtil.getCloneUris(config, repository, project);
-			if (cloneUris.keySet().contains(DownloadScheme.SSH)) {
+			if (cloneUris.containsKey(DownloadScheme.SSH)) {
 				return cloneUris.get(DownloadScheme.SSH);
 			}
-			if (cloneUris.keySet().contains(DownloadScheme.HTTP)) {
+			if (cloneUris.containsKey(DownloadScheme.HTTP)) {
 				return cloneUris.get(DownloadScheme.HTTP);
 			}
 			for (DownloadScheme scheme : cloneUris.keySet()) {

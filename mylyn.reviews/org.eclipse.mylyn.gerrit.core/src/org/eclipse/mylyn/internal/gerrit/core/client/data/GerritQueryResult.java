@@ -126,7 +126,7 @@ public class GerritQueryResult {
 	}
 
 	private void setNumber(int number) {
-		this._number = number;
+		_number = number;
 	}
 
 	private void setProject(String project) {

@@ -37,8 +37,8 @@ import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
  */
 public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	/**
-	 * The cached value of the '{@link #getApprovals() <em>Approvals</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getApprovals() <em>Approvals</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getApprovals()
 	 * @generated
@@ -52,7 +52,6 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	 * @generated
 	 */
 	protected ReviewerEntry() {
-		super();
 	}
 
 	/**
@@ -70,9 +69,10 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Map<IApprovalType, Integer> getApprovals() {
 		if (approvals == null) {
-			approvals = new EcoreEMap<IApprovalType, Integer>(ReviewsPackage.Literals.APPROVAL_VALUE_MAP,
+			approvals = new EcoreEMap<>(ReviewsPackage.Literals.APPROVAL_VALUE_MAP,
 					ApprovalValueMap.class, this, ReviewsPackage.REVIEWER_ENTRY__APPROVALS);
 		}
 		return approvals.map();
@@ -86,9 +86,9 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
-					.basicRemove(otherEnd, msgs);
+			case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
+				return ((InternalEList<?>) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
+						.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -101,12 +101,12 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			if (coreType) {
-				return ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap();
-			} else {
-				return getApprovals();
-			}
+			case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
+				if (coreType) {
+					return ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap();
+				} else {
+					return getApprovals();
+				}
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,10 +120,10 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
-					.set(newValue);
-			return;
+			case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
+				((EStructuralFeature.Setting) ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap())
+						.set(newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -136,9 +136,9 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			getApprovals().clear();
-			return;
+			case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
+				getApprovals().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -151,8 +151,8 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			return approvals != null && !approvals.isEmpty();
+			case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
+				return approvals != null && !approvals.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

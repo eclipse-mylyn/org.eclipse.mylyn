@@ -23,8 +23,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -67,8 +65,8 @@ public class InlineCommentEditor {
 	private String originalComment;
 
 	/**
-	 * Creates a comment editor for the provided dialog and sets its reviewItemId and startLine. Also initializes the
-	 * state of the editor to VIEW.
+	 * Creates a comment editor for the provided dialog and sets its reviewItemId and startLine. Also initializes the state of the editor to
+	 * VIEW.
 	 *
 	 * @param dialog
 	 *            the {@link CommentPopupDialog} that the editor is adding to
@@ -99,17 +97,14 @@ public class InlineCommentEditor {
 
 			GridData textGridData = new GridData(GridData.FILL, GridData.FILL, true, true);
 			commentEditorText = new Text(editorComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-			commentEditorText.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent e) {
-					if (saveButton != null) {
-						if (StringUtils.isEmpty(((Text) e.widget).getText())) {
-							saveButton.setEnabled(false);
-							discardOrDoneButton.setEnabled(true);
-						} else {
-							discardOrDoneButton.setEnabled(currentComment == null || currentComment.isDraft());
-							saveButton.setEnabled(true);
-						}
+			commentEditorText.addModifyListener(e -> {
+				if (saveButton != null) {
+					if (StringUtils.isEmpty(((Text) e.widget).getText())) {
+						saveButton.setEnabled(false);
+						discardOrDoneButton.setEnabled(true);
+					} else {
+						discardOrDoneButton.setEnabled(currentComment == null || currentComment.isDraft());
+						saveButton.setEnabled(true);
 					}
 				}
 			});
@@ -126,11 +121,11 @@ public class InlineCommentEditor {
 
 			saveButton = createButton(buttonContainer, Messages.CommentPopupDialog_Save, buttonGridData,
 					new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					saveCommentAction();
-				}
-			});
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							saveCommentAction();
+						}
+					});
 			discardOrDoneButton = createButton(buttonContainer, null, buttonGridData, new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -145,11 +140,11 @@ public class InlineCommentEditor {
 			});
 			cancelButton = createButton(buttonContainer, Messages.CommentPopupDialog_Cancel, buttonGridData,
 					new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					removeControl();
-				}
-			});
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							removeControl();
+						}
+					});
 
 			editorComposite.setLayout(new GridLayout(1, false));
 			editorComposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
@@ -332,8 +327,8 @@ public class InlineCommentEditor {
 	}
 
 	/**
-	 * Sets the state of the editor based on the current comment's draft status (true if the submitted comment is a
-	 * comment edit, false if it is a new comment draft) and invokes a save comment action
+	 * Sets the state of the editor based on the current comment's draft status (true if the submitted comment is a comment edit, false if
+	 * it is a new comment draft) and invokes a save comment action
 	 */
 	private void saveCommentAction() {
 		if (currentComment.isDraft()) {

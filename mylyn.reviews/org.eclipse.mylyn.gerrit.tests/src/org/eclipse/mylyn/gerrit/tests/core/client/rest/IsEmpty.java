@@ -24,6 +24,7 @@ import org.hamcrest.Matcher;
  */
 public class IsEmpty<T> extends BaseMatcher<T> {
 
+	@Override
 	public boolean matches(Object o) {
 		if (o instanceof Collection) {
 			Collection<?> collection = (Collection<?>) o;
@@ -36,12 +37,13 @@ public class IsEmpty<T> extends BaseMatcher<T> {
 		return false;
 	}
 
+	@Override
 	public void describeTo(Description buffer) {
 		buffer.appendText("is empty");
 	}
 
 	public static <T> Matcher<T> isEmpty() {
-		return new IsEmpty<T>();
+		return new IsEmpty<>();
 	}
 
 	public static <T> Matcher<T> empty() {

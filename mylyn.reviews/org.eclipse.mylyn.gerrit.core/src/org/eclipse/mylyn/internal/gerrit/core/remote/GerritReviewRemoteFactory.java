@@ -63,8 +63,8 @@ import com.google.gerrit.reviewdb.PatchSetApproval;
 import com.google.gerrit.reviewdb.UserIdentity;
 
 /**
- * Manages retrieval of Review information from Gerrit API. Also creates, adds, and updates contents of review sets for
- * each patch set, but does not retrieve the patch set details or contents.
+ * Manages retrieval of Review information from Gerrit API. Also creates, adds, and updates contents of review sets for each patch set, but
+ * does not retrieve the patch set details or contents.
  *
  * @author Miles Parker
  * @author Steffen Pingel
@@ -184,11 +184,11 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 	}
 
 	public boolean isDependenciesDifferent(List<IChange> localDependencies, List<ChangeInfo> remoteDependencies) {
-		Set<String> localIds = new HashSet<String>();
+		Set<String> localIds = new HashSet<>();
 		for (IChange localChange : localDependencies) {
 			localIds.add(localChange.getId());
 		}
-		Set<String> remoteIds = new HashSet<String>();
+		Set<String> remoteIds = new HashSet<>();
 		for (ChangeInfo depend : remoteDependencies) {
 			remoteIds.add(depend.getId().toString());
 		}
@@ -312,8 +312,8 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 	}
 
 	public void updateApprovalsAndRequirements(IRepository parent, IReview review, ChangeDetailX detail) {
-		Map<String, IApprovalType> typeForKey = new HashMap<String, IApprovalType>();
-		Map<String, IApprovalType> typeForName = new HashMap<String, IApprovalType>();
+		Map<String, IApprovalType> typeForKey = new HashMap<>();
+		Map<String, IApprovalType> typeForName = new HashMap<>();
 		for (IApprovalType type : parent.getApprovalTypes()) {
 			typeForKey.put(type.getKey(), type);
 		}
@@ -438,19 +438,16 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field
 			return ReviewStatus.DRAFT;
 		}
-		switch (gerritStatus) {
-		case NEW:
-			return ReviewStatus.NEW;
-		case MERGED:
-			return ReviewStatus.MERGED;
-		case SUBMITTED:
-			return ReviewStatus.SUBMITTED;
-		case ABANDONED:
-			return ReviewStatus.ABANDONED;
-		default:
-			GerritCorePlugin.logError("Internal Error: unexpected change status: " + gerritStatus, new Exception()); //$NON-NLS-1$
-			return null;
-		}
+		return switch (gerritStatus) {
+			case NEW -> ReviewStatus.NEW;
+			case MERGED -> ReviewStatus.MERGED;
+			case SUBMITTED -> ReviewStatus.SUBMITTED;
+			case ABANDONED -> ReviewStatus.ABANDONED;
+			default -> {
+				GerritCorePlugin.logError("Internal Error: unexpected change status: " + gerritStatus, new Exception()); //$NON-NLS-1$
+				yield null;
+			}
+		};
 	}
 
 	public void updateDependencies(IRepository parent, IReview review, ChangeDetailX detail) {

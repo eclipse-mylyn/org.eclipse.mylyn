@@ -24,9 +24,10 @@ import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
  */
 public class ReviewsFlatContentProvider extends GenericTreeContentProvider {
 
+	@Override
 	public Object[] getElements(Object element) {
 		if (element instanceof ICommentContainer) {
-			List<Object> children = new ArrayList<Object>();
+			List<Object> children = new ArrayList<>();
 			children.addAll(((ICommentContainer) element).getAllComments());
 			return children.toArray();
 		}
@@ -35,7 +36,7 @@ public class ReviewsFlatContentProvider extends GenericTreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return ((element instanceof ICommentContainer) && ((ICommentContainer) element).getAllComments().size() > 0)
+		return element instanceof ICommentContainer && ((ICommentContainer) element).getAllComments().size() > 0
 				|| hasCollectionChildren(element);
 	}
 }

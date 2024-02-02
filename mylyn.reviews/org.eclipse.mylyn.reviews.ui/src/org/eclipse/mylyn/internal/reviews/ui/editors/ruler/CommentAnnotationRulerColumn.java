@@ -23,11 +23,8 @@ import org.eclipse.jface.text.source.AbstractRulerColumn;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.ISharedTextColors;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.internal.core.model.Review;
@@ -74,25 +71,31 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		super.dispose();
 	}
 
+	@Override
 	public RulerColumnDescriptor getDescriptor() {
 		return fDescriptor;
 	}
 
+	@Override
 	public void setDescriptor(RulerColumnDescriptor descriptor) {
 		fDescriptor = descriptor;
 	}
 
+	@Override
 	public void setEditor(ITextEditor editor) {
 		fEditor = editor;
 	}
 
+	@Override
 	public ITextEditor getEditor() {
 		return fEditor;
 	}
 
+	@Override
 	public void columnCreated() {
 	}
 
+	@Override
 	public void columnRemoved() {
 	}
 
@@ -173,11 +176,9 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		fDispatcher = new PropertyEventDispatcher(store);
 
 		if (commentedPref != null) {
-			fDispatcher.addPropertyChangeListener(commentedPref.getColorPreferenceKey(), new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					updateCommentedColor(commentedPref, store);
-					redraw();
-				}
+			fDispatcher.addPropertyChangeListener(commentedPref.getColorPreferenceKey(), event -> {
+				updateCommentedColor(commentedPref, store);
+				redraw();
 			});
 		}
 	}
@@ -195,15 +196,13 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 			fViewer.setDocument(fViewer.getDocument(), new AnnotationModel());
 		}
 
-		fViewer.getAnnotationModel().addAnnotationModelListener(new IAnnotationModelListener() {
-			public void modelChanged(IAnnotationModel model) {
+		fViewer.getAnnotationModel().addAnnotationModelListener(model1 -> {
 //				if (CrucibleUiPlugin.getDefault().getActiveReviewManager().isReviewActive()) {
 //					reviewActivated(CrucibleUiPlugin.getDefault().getActiveReviewManager().getActiveTask(),
 //							CrucibleUiPlugin.getDefault().getActiveReviewManager().getActiveReview());
 //				} else {
 //					reviewDeactivated(null, null);
 //				}
-			}
 		});
 
 		initialize();
@@ -249,11 +248,7 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 	 */
 	public void reviewDeactivated(ITask task, Review review) {
 		annotationModel = null;
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				redraw();
-			}
-		});
+		Display.getDefault().asyncExec(this::redraw);
 	}
 
 }

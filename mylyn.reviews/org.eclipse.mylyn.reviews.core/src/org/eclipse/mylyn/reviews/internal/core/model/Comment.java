@@ -60,8 +60,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  */
 public class Comment extends EObjectImpl implements IComment {
 	/**
-	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getIndex()
 	 * @generated
@@ -70,8 +69,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final long INDEX_EDEFAULT = 0L;
 
 	/**
-	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCreationDate()
 	 * @generated
@@ -80,8 +78,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final Date CREATION_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCreationDate()
 	 * @generated
@@ -90,8 +87,8 @@ public class Comment extends EObjectImpl implements IComment {
 	protected Date creationDate = CREATION_DATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getModificationDate()
 	 * @generated
@@ -100,8 +97,8 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final Date MODIFICATION_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getModificationDate()
 	 * @generated
@@ -110,8 +107,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected Date modificationDate = MODIFICATION_DATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getAuthor()
 	 * @generated
@@ -120,8 +116,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected IUser author;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -130,8 +125,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -158,8 +152,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getReplies() <em>Replies</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getReplies() <em>Replies</em>}' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getReplies()
 	 * @generated
@@ -168,8 +161,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected EList<IComment> replies;
 
 	/**
-	 * The default value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDraft()
 	 * @generated
@@ -178,8 +170,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final boolean DRAFT_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isDraft()
 	 * @generated
@@ -188,8 +179,8 @@ public class Comment extends EObjectImpl implements IComment {
 	protected boolean draft = DRAFT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLocations()
 	 * @generated
@@ -198,8 +189,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected EList<ILocation> locations;
 
 	/**
-	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getReview()
 	 * @generated
@@ -208,8 +198,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected IReview review;
 
 	/**
-	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTitle()
 	 * @generated
@@ -218,8 +207,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected static final String TITLE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTitle()
 	 * @generated
@@ -228,8 +216,7 @@ public class Comment extends EObjectImpl implements IComment {
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isMine() <em>Mine</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #isMine() <em>Mine</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isMine()
 	 * @generated
@@ -243,7 +230,6 @@ public class Comment extends EObjectImpl implements IComment {
 	 * @generated
 	 */
 	protected Comment() {
-		super();
 	}
 
 	/**
@@ -275,6 +261,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getAuthor() {
 		return author;
 	}
@@ -284,6 +271,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setAuthor(IUser newAuthor) {
 		IUser oldAuthor = author;
 		author = newAuthor;
@@ -297,6 +285,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -306,6 +295,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -320,6 +310,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -329,6 +320,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		//Protect against case where java.sql.Timestamp is used
@@ -344,6 +336,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Date getModificationDate() {
 		return modificationDate;
 	}
@@ -353,6 +346,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		//Protect against case where java.sql.Timestamp is used
@@ -368,6 +362,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -377,6 +372,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -390,9 +386,10 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IComment> getReplies() {
 		if (replies == null) {
-			replies = new EObjectResolvingEList<IComment>(IComment.class, this, ReviewsPackage.COMMENT__REPLIES);
+			replies = new EObjectResolvingEList<>(IComment.class, this, ReviewsPackage.COMMENT__REPLIES);
 		}
 		return replies;
 	}
@@ -402,6 +399,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isDraft() {
 		return draft;
 	}
@@ -411,6 +409,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setDraft(boolean newDraft) {
 		boolean oldDraft = draft;
 		draft = newDraft;
@@ -424,9 +423,10 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<ILocation> getLocations() {
 		if (locations == null) {
-			locations = new EObjectContainmentEList.Resolving<ILocation>(ILocation.class, this,
+			locations = new EObjectContainmentEList.Resolving<>(ILocation.class, this,
 					ReviewsPackage.COMMENT__LOCATIONS);
 		}
 		return locations;
@@ -437,6 +437,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public IReview getReview() {
 		if (getItem() instanceof IReview) {
 			return (IReview) getItem();
@@ -452,6 +453,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -461,6 +463,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
@@ -474,6 +477,7 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ICommentContainer getItem() {
 		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM) {
 			return null;
@@ -508,9 +512,10 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setItem(ICommentContainer newItem) {
 		if (newItem != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM && newItem != null)) {
+				|| eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM && newItem != null) {
 			if (EcoreUtil.isAncestor(this, newItem)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
@@ -536,12 +541,13 @@ public class Comment extends EObjectImpl implements IComment {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public boolean isMine() {
 		IRepository repos = getReview() != null ? getReview().getRepository() : null;
 		return getAuthor() != null && repos != null
 				&& (repos.getAccount() == getAuthor()
-						|| (repos.getAccount() != null && repos.getAccount().getEmail() != null
-								&& repos.getAccount().getEmail().equals(getAuthor().getEmail())));
+						|| repos.getAccount() != null && repos.getAccount().getEmail() != null
+								&& repos.getAccount().getEmail().equals(getAuthor().getEmail()));
 	}
 
 	/**
@@ -552,11 +558,11 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__ITEM:
-			if (eInternalContainer() != null) {
-				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			return basicSetItem((ICommentContainer) otherEnd, msgs);
+			case ReviewsPackage.COMMENT__ITEM:
+				if (eInternalContainer() != null) {
+					msgs = eBasicRemoveFromContainer(msgs);
+				}
+				return basicSetItem((ICommentContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -569,10 +575,10 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__LOCATIONS:
-			return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.COMMENT__ITEM:
-			return basicSetItem(null, msgs);
+			case ReviewsPackage.COMMENT__LOCATIONS:
+				return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.COMMENT__ITEM:
+				return basicSetItem(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -585,9 +591,9 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case ReviewsPackage.COMMENT__ITEM:
-			return eInternalContainer().eInverseRemove(this, ReviewsPackage.COMMENT_CONTAINER__COMMENTS,
-					ICommentContainer.class, msgs);
+			case ReviewsPackage.COMMENT__ITEM:
+				return eInternalContainer().eInverseRemove(this, ReviewsPackage.COMMENT_CONTAINER__COMMENTS,
+						ICommentContainer.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -600,35 +606,35 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__INDEX:
-			return getIndex();
-		case ReviewsPackage.COMMENT__CREATION_DATE:
-			return getCreationDate();
-		case ReviewsPackage.COMMENT__MODIFICATION_DATE:
-			return getModificationDate();
-		case ReviewsPackage.COMMENT__AUTHOR:
-			return getAuthor();
-		case ReviewsPackage.COMMENT__DESCRIPTION:
-			return getDescription();
-		case ReviewsPackage.COMMENT__ID:
-			return getId();
-		case ReviewsPackage.COMMENT__REPLIES:
-			return getReplies();
-		case ReviewsPackage.COMMENT__DRAFT:
-			return isDraft();
-		case ReviewsPackage.COMMENT__LOCATIONS:
-			return getLocations();
-		case ReviewsPackage.COMMENT__REVIEW:
-			return getReview();
-		case ReviewsPackage.COMMENT__TITLE:
-			return getTitle();
-		case ReviewsPackage.COMMENT__ITEM:
-			if (resolve) {
-				return getItem();
-			}
-			return basicGetItem();
-		case ReviewsPackage.COMMENT__MINE:
-			return isMine();
+			case ReviewsPackage.COMMENT__INDEX:
+				return getIndex();
+			case ReviewsPackage.COMMENT__CREATION_DATE:
+				return getCreationDate();
+			case ReviewsPackage.COMMENT__MODIFICATION_DATE:
+				return getModificationDate();
+			case ReviewsPackage.COMMENT__AUTHOR:
+				return getAuthor();
+			case ReviewsPackage.COMMENT__DESCRIPTION:
+				return getDescription();
+			case ReviewsPackage.COMMENT__ID:
+				return getId();
+			case ReviewsPackage.COMMENT__REPLIES:
+				return getReplies();
+			case ReviewsPackage.COMMENT__DRAFT:
+				return isDraft();
+			case ReviewsPackage.COMMENT__LOCATIONS:
+				return getLocations();
+			case ReviewsPackage.COMMENT__REVIEW:
+				return getReview();
+			case ReviewsPackage.COMMENT__TITLE:
+				return getTitle();
+			case ReviewsPackage.COMMENT__ITEM:
+				if (resolve) {
+					return getItem();
+				}
+				return basicGetItem();
+			case ReviewsPackage.COMMENT__MINE:
+				return isMine();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -642,38 +648,38 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__CREATION_DATE:
-			setCreationDate((Date) newValue);
-			return;
-		case ReviewsPackage.COMMENT__MODIFICATION_DATE:
-			setModificationDate((Date) newValue);
-			return;
-		case ReviewsPackage.COMMENT__AUTHOR:
-			setAuthor((IUser) newValue);
-			return;
-		case ReviewsPackage.COMMENT__DESCRIPTION:
-			setDescription((String) newValue);
-			return;
-		case ReviewsPackage.COMMENT__ID:
-			setId((String) newValue);
-			return;
-		case ReviewsPackage.COMMENT__REPLIES:
-			getReplies().clear();
-			getReplies().addAll((Collection<? extends IComment>) newValue);
-			return;
-		case ReviewsPackage.COMMENT__DRAFT:
-			setDraft((Boolean) newValue);
-			return;
-		case ReviewsPackage.COMMENT__LOCATIONS:
-			getLocations().clear();
-			getLocations().addAll((Collection<? extends ILocation>) newValue);
-			return;
-		case ReviewsPackage.COMMENT__TITLE:
-			setTitle((String) newValue);
-			return;
-		case ReviewsPackage.COMMENT__ITEM:
-			setItem((ICommentContainer) newValue);
-			return;
+			case ReviewsPackage.COMMENT__CREATION_DATE:
+				setCreationDate((Date) newValue);
+				return;
+			case ReviewsPackage.COMMENT__MODIFICATION_DATE:
+				setModificationDate((Date) newValue);
+				return;
+			case ReviewsPackage.COMMENT__AUTHOR:
+				setAuthor((IUser) newValue);
+				return;
+			case ReviewsPackage.COMMENT__DESCRIPTION:
+				setDescription((String) newValue);
+				return;
+			case ReviewsPackage.COMMENT__ID:
+				setId((String) newValue);
+				return;
+			case ReviewsPackage.COMMENT__REPLIES:
+				getReplies().clear();
+				getReplies().addAll((Collection<? extends IComment>) newValue);
+				return;
+			case ReviewsPackage.COMMENT__DRAFT:
+				setDraft((Boolean) newValue);
+				return;
+			case ReviewsPackage.COMMENT__LOCATIONS:
+				getLocations().clear();
+				getLocations().addAll((Collection<? extends ILocation>) newValue);
+				return;
+			case ReviewsPackage.COMMENT__TITLE:
+				setTitle((String) newValue);
+				return;
+			case ReviewsPackage.COMMENT__ITEM:
+				setItem((ICommentContainer) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -686,36 +692,36 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__CREATION_DATE:
-			setCreationDate(CREATION_DATE_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__MODIFICATION_DATE:
-			setModificationDate(MODIFICATION_DATE_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__AUTHOR:
-			setAuthor((IUser) null);
-			return;
-		case ReviewsPackage.COMMENT__DESCRIPTION:
-			setDescription(DESCRIPTION_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__REPLIES:
-			getReplies().clear();
-			return;
-		case ReviewsPackage.COMMENT__DRAFT:
-			setDraft(DRAFT_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__LOCATIONS:
-			getLocations().clear();
-			return;
-		case ReviewsPackage.COMMENT__TITLE:
-			setTitle(TITLE_EDEFAULT);
-			return;
-		case ReviewsPackage.COMMENT__ITEM:
-			setItem((ICommentContainer) null);
-			return;
+			case ReviewsPackage.COMMENT__CREATION_DATE:
+				setCreationDate(CREATION_DATE_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__MODIFICATION_DATE:
+				setModificationDate(MODIFICATION_DATE_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__AUTHOR:
+				setAuthor((IUser) null);
+				return;
+			case ReviewsPackage.COMMENT__DESCRIPTION:
+				setDescription(DESCRIPTION_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__REPLIES:
+				getReplies().clear();
+				return;
+			case ReviewsPackage.COMMENT__DRAFT:
+				setDraft(DRAFT_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__LOCATIONS:
+				getLocations().clear();
+				return;
+			case ReviewsPackage.COMMENT__TITLE:
+				setTitle(TITLE_EDEFAULT);
+				return;
+			case ReviewsPackage.COMMENT__ITEM:
+				setItem((ICommentContainer) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -728,34 +734,36 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__INDEX:
-			return getIndex() != INDEX_EDEFAULT;
-		case ReviewsPackage.COMMENT__CREATION_DATE:
-			return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-		case ReviewsPackage.COMMENT__MODIFICATION_DATE:
-			return MODIFICATION_DATE_EDEFAULT == null
-					? modificationDate != null
-					: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
-		case ReviewsPackage.COMMENT__AUTHOR:
-			return author != null;
-		case ReviewsPackage.COMMENT__DESCRIPTION:
-			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-		case ReviewsPackage.COMMENT__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ReviewsPackage.COMMENT__REPLIES:
-			return replies != null && !replies.isEmpty();
-		case ReviewsPackage.COMMENT__DRAFT:
-			return draft != DRAFT_EDEFAULT;
-		case ReviewsPackage.COMMENT__LOCATIONS:
-			return locations != null && !locations.isEmpty();
-		case ReviewsPackage.COMMENT__REVIEW:
-			return review != null;
-		case ReviewsPackage.COMMENT__TITLE:
-			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-		case ReviewsPackage.COMMENT__ITEM:
-			return basicGetItem() != null;
-		case ReviewsPackage.COMMENT__MINE:
-			return isMine() != MINE_EDEFAULT;
+			case ReviewsPackage.COMMENT__INDEX:
+				return getIndex() != INDEX_EDEFAULT;
+			case ReviewsPackage.COMMENT__CREATION_DATE:
+				return CREATION_DATE_EDEFAULT == null
+						? creationDate != null
+						: !CREATION_DATE_EDEFAULT.equals(creationDate);
+			case ReviewsPackage.COMMENT__MODIFICATION_DATE:
+				return MODIFICATION_DATE_EDEFAULT == null
+						? modificationDate != null
+						: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
+			case ReviewsPackage.COMMENT__AUTHOR:
+				return author != null;
+			case ReviewsPackage.COMMENT__DESCRIPTION:
+				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case ReviewsPackage.COMMENT__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case ReviewsPackage.COMMENT__REPLIES:
+				return replies != null && !replies.isEmpty();
+			case ReviewsPackage.COMMENT__DRAFT:
+				return draft != DRAFT_EDEFAULT;
+			case ReviewsPackage.COMMENT__LOCATIONS:
+				return locations != null && !locations.isEmpty();
+			case ReviewsPackage.COMMENT__REVIEW:
+				return review != null;
+			case ReviewsPackage.COMMENT__TITLE:
+				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+			case ReviewsPackage.COMMENT__ITEM:
+				return basicGetItem() != null;
+			case ReviewsPackage.COMMENT__MINE:
+				return isMine() != MINE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -768,14 +776,11 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == IDated.class) {
-			switch (derivedFeatureID) {
-			case ReviewsPackage.COMMENT__CREATION_DATE:
-				return ReviewsPackage.DATED__CREATION_DATE;
-			case ReviewsPackage.COMMENT__MODIFICATION_DATE:
-				return ReviewsPackage.DATED__MODIFICATION_DATE;
-			default:
-				return -1;
-			}
+			return switch (derivedFeatureID) {
+				case ReviewsPackage.COMMENT__CREATION_DATE -> ReviewsPackage.DATED__CREATION_DATE;
+				case ReviewsPackage.COMMENT__MODIFICATION_DATE -> ReviewsPackage.DATED__MODIFICATION_DATE;
+				default -> -1;
+			};
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
@@ -788,14 +793,11 @@ public class Comment extends EObjectImpl implements IComment {
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == IDated.class) {
-			switch (baseFeatureID) {
-			case ReviewsPackage.DATED__CREATION_DATE:
-				return ReviewsPackage.COMMENT__CREATION_DATE;
-			case ReviewsPackage.DATED__MODIFICATION_DATE:
-				return ReviewsPackage.COMMENT__MODIFICATION_DATE;
-			default:
-				return -1;
-			}
+			return switch (baseFeatureID) {
+				case ReviewsPackage.DATED__CREATION_DATE -> ReviewsPackage.COMMENT__CREATION_DATE;
+				case ReviewsPackage.DATED__MODIFICATION_DATE -> ReviewsPackage.COMMENT__MODIFICATION_DATE;
+				default -> -1;
+			};
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
@@ -811,7 +813,7 @@ public class Comment extends EObjectImpl implements IComment {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
 		result.append(creationDate);
 		result.append(", modificationDate: "); //$NON-NLS-1$

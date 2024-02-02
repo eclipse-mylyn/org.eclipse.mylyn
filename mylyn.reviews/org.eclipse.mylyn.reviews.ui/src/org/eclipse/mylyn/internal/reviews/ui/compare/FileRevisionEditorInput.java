@@ -38,9 +38,10 @@ public class FileRevisionEditorInput extends PlatformObject implements IWorkbenc
 
 	public FileRevisionEditorInput(IFileRevision fileRevision, IProgressMonitor monitor) {
 		this.fileRevision = fileRevision;
-		this.runningMonitor = monitor;
+		runningMonitor = monitor;
 	}
 
+	@Override
 	public IStorage getStorage() {
 		try {
 			return fileRevision.getStorage(runningMonitor);
@@ -54,18 +55,22 @@ public class FileRevisionEditorInput extends PlatformObject implements IWorkbenc
 		return null;
 	}
 
+	@Override
 	public boolean exists() {
 		return fileRevision.exists();
 	}
 
+	@Override
 	public String getName() {
 		return fileRevision.getName();
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		return null; // can't persist
 	}
 
+	@Override
 	public String getToolTipText() {
 		return fileRevision.getURI().getPath();
 	}
@@ -75,8 +80,7 @@ public class FileRevisionEditorInput extends PlatformObject implements IWorkbenc
 		if (aObject == this) {
 			return true;
 		}
-		if (aObject instanceof FileRevisionEditorInput) {
-			final FileRevisionEditorInput other = (FileRevisionEditorInput) aObject;
+		if (aObject instanceof final FileRevisionEditorInput other) {
 			return other.fileRevision.equals(fileRevision);
 		}
 		return false;
@@ -91,23 +95,28 @@ public class FileRevisionEditorInput extends PlatformObject implements IWorkbenc
 		return fileRevision;
 	}
 
+	@Override
 	public Object[] getChildren(Object o) {
 		return new Object[0];
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		return null;
 	}
 
+	@Override
 	public String getLabel(Object o) {
 		return fileRevision.getName();
 	}
 
+	@Override
 	public Object getParent(Object o) {
 		// ignore
 		return null;
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		// ignore
 		return null;

@@ -32,7 +32,7 @@ public class CommentPart extends AbstractCommentPart<CommentPart> {
 
 	@Override
 	public void hookCustomActionRunListener(IReviewActionListener actionRunListener) {
-		this.actionListener = actionRunListener;
+		actionListener = actionRunListener;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class CommentPart extends AbstractCommentPart<CommentPart> {
 
 	@Override
 	protected Control update(Composite parentComposite, FormToolkit toolkit, IComment newComment) {
-		this.comment = newComment;
+		comment = newComment;
 		Control createControl = createOrUpdateControl(parentComposite, toolkit);
 		return createControl;
 	}

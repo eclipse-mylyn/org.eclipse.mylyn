@@ -21,6 +21,7 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 
 	private final MultiValuedMap<String, ILocation> threadLocationsByFile = new ArrayListValuedHashMap<>();
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getReviewItems(inputElement).toArray();
 	}
@@ -49,8 +50,7 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof IFileItem) {
-			IFileItem file = (IFileItem) parentElement;
+		if (parentElement instanceof IFileItem file) {
 			MultiValuedMap<Long, IComment> commentsByLocation = new ArrayListValuedHashMap<>();
 			for (IComment comment : getFileComments(file)) {
 				commentsByLocation.put(comment.getLocations().iterator().next().getIndex(), comment);
@@ -84,13 +84,7 @@ final class ReviewSetContentProvider implements ITreeContentProvider {
 	}
 
 	private Comparator<ILocation> lineNumberComparator() {
-		return new Comparator<ILocation>() {
-
-			@Override
-			public int compare(ILocation o1, ILocation o2) {
-				return (int) (o1.getIndex() - o2.getIndex());
-			}
-		};
+		return (o1, o2) -> (int) (o1.getIndex() - o2.getIndex());
 	}
 
 	private List<IFileItem> getReviewItems(Object inputElement) {

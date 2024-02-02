@@ -28,7 +28,7 @@ class TestEPackageRemoteFactory
 
 	static TestRemoteEPackage remote2 = new TestRemoteEPackage("Remote Package 2");
 
-	static Map<String, TestRemoteEPackage> remoteForKey = new HashMap<String, TestRemoteEPackage>();
+	static Map<String, TestRemoteEPackage> remoteForKey = new HashMap<>();
 
 	{
 		remoteForKey.put("remoteKeyFor Package 1", remote1);
@@ -48,7 +48,7 @@ class TestEPackageRemoteFactory
 	@Override
 	protected EPackage createModel(EPackage parent, TestRemoteEPackage remotePackage) {
 		EPackage pckg = EcoreFactory.eINSTANCE.createEPackage();
-		pckg.setName(remotePackage.name.replaceAll("Remote", "Local"));
+		pckg.setName(remotePackage.name.replace("Remote", "Local"));
 		return pckg;
 	}
 

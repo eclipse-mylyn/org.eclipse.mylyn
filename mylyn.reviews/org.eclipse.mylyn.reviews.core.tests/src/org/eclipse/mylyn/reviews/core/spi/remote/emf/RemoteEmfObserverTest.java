@@ -46,8 +46,8 @@ public class RemoteEmfObserverTest {
 		consumer2 = factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 2");
 		assertThat(consumer1, not(sameInstance(consumer2)));
 
-		listener1 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(consumer1);
-		listener2 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>();
+		listener1 = new TestRemoteEmfObserver<>(consumer1);
+		listener2 = new TestRemoteEmfObserver<>();
 	}
 
 	@Test

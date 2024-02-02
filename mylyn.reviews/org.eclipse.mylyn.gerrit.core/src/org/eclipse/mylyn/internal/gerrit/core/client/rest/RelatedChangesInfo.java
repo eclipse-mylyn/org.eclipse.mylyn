@@ -15,8 +15,7 @@ import java.util.List;
 
 /**
  * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-changes-info"
- * >RelatedChangesInfo</a>.
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-changes-info" >RelatedChangesInfo</a>.
  */
 public class RelatedChangesInfo {
 

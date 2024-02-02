@@ -30,12 +30,10 @@ public class GerritRepositorySearchPageLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) element;
+		if (element instanceof TaskRepository repository) {
 			return repository.getRepositoryLabel();
 		}
-		if (element instanceof Project) {
-			Project project = (Project) element;
+		if (element instanceof Project project) {
 			return project.getName();
 		}
 		return super.getText(element);

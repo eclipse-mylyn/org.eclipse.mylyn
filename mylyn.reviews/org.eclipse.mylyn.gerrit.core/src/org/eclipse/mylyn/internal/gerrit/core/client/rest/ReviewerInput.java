@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Data model object for <a href=
- * "https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#reviewer-input">ReviewerInput</a>.
+ * Data model object for
+ * <a href= "https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#reviewer-input">ReviewerInput</a>.
  */
 public class ReviewerInput {
 

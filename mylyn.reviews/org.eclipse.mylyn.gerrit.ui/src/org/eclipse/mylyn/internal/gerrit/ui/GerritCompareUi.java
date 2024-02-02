@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -83,15 +82,13 @@ public class GerritCompareUi {
 			CompareEditorInput editorInput, Predicate<CompareEditorInput> predicate) {
 		Optional<CompareEditorInput> input = Stream.of(editorReferences)
 				.filter(ref -> ref.getId().equals("org.eclipse.compare.CompareEditor")) //$NON-NLS-1$
-				.map(new Function<IEditorReference, CompareEditorInput>() {
-					public CompareEditorInput apply(IEditorReference reference) {
-						try {
-							return (CompareEditorInput) reference.getEditorInput();
-						} catch (PartInitException e) {
-							handleError(e);
-						}
-						return null;
+				.map(reference -> {
+					try {
+						return (CompareEditorInput) reference.getEditorInput();
+					} catch (PartInitException e) {
+						handleError(e);
 					}
+					return null;
 				})
 				.filter(predicate)
 				.findFirst();
@@ -104,15 +101,15 @@ public class GerritCompareUi {
 
 	static Predicate<CompareEditorInput> getFileComparePredicate(final IFileItem item) {
 		return existingEditorInput -> existingEditorInput instanceof FileItemCompareEditorInput
-				? (((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId()))
+				? ((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId())
 				: false;
 	}
 
 	static Predicate<CompareEditorInput> getReviewItemSetComparePredicate(final IReviewItemSet itemSet,
 			final String taskId) {
 		return existingEditorInput -> existingEditorInput instanceof ReviewItemSetCompareEditorInput
-				? (((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
-						&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId()))
+				? ((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
+						&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId())
 				: false;
 	}
 

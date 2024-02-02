@@ -84,8 +84,8 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	private static ImageRegistry fImageRegistry = new ImageRegistry();
 
 	/**
-	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the
-	 * SWT Display is disposed.
+	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the SWT Display is
+	 * disposed.
 	 */
 	static {
 
@@ -123,18 +123,18 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 */
 	private Image getReviewStateImage(int aState) {
 		switch (aState) {
-		case 2:
-			return fImageRegistry.get(CHECKED_IMAGE);
-		case 1:
-			return fImageRegistry.get(PLUS_ONE);
-		case 0:
-			break;
-		case -1:
-			return fImageRegistry.get(MINUS_ONE);
-		case -2:
-			return fImageRegistry.get(NOT_OK_IMAGE);
-		default:
-			break;
+			case 2:
+				return fImageRegistry.get(CHECKED_IMAGE);
+			case 1:
+				return fImageRegistry.get(PLUS_ONE);
+			case 0:
+				break;
+			case -1:
+				return fImageRegistry.get(MINUS_ONE);
+			case -2:
+				return fImageRegistry.get(NOT_OK_IMAGE);
+			default:
+				break;
 		}
 		return null;
 	}
@@ -148,16 +148,16 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 */
 	private Image getVerifyStateImage(int aState) {
 		switch (aState) {
-		case 2:
-		case 1:
-			return fImageRegistry.get(CHECKED_IMAGE);
-		case 0:
-			break;
-		case -1:
-		case -2:
-			return fImageRegistry.get(NOT_OK_IMAGE);
-		default:
-			break;
+			case 2:
+			case 1:
+				return fImageRegistry.get(CHECKED_IMAGE);
+			case 0:
+				break;
+			case -1:
+			case -2:
+				return fImageRegistry.get(NOT_OK_IMAGE);
+			default:
+				break;
 		}
 		return null;
 	}
@@ -188,36 +188,36 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 *            column index
 	 * @return String text associated to the column
 	 */
+	@Override
 	@SuppressWarnings("restriction")
 	public String getColumnText(Object aObj, int aIndex) {
 		// GerritPlugin.Ftracer.traceWarning("getColumnText object: " + aObj
 		// + "\tcolumn: " + aIndex);
-		if (aObj instanceof GerritTask) {
-			GerritTask reviewSummary = (GerritTask) aObj;
-//			String value = null;
+		if (aObj instanceof GerritTask reviewSummary) {
+			//			String value = null;
 			switch (aIndex) {
-			case 0:
-				return reviewSummary.getAttribute(GerritTask.IS_STARRED); // Needed for the sorter
-			case 1:
-				return reviewSummary.getAttribute(GerritTask.SHORT_CHANGE_ID);
-			case 2:
-				return reviewSummary.getAttribute(GerritTask.SUBJECT);
-			case 3:
-				String attribute = reviewSummary.getAttribute(GerritTask.STATUS);
-				return attribute;
-			case 4:
-				return reviewSummary.getAttribute(GerritTask.OWNER);
-			case 5:
-				return reviewSummary.getAttribute(GerritTask.PROJECT);
-			case 6:
-				String branch = reviewSummary.getAttribute(GerritTask.BRANCH);
-				String topic = reviewSummary.getAttribute(GerritTask.TOPIC);
-				if (topic != null && !topic.isEmpty()) {
-					branch += " (" + reviewSummary.getAttribute(GerritTask.TOPIC) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				return branch;
-			case 7:
-				return reviewSummary.getAttributeAsDate(GerritTask.DATE_MODIFICATION);
+				case 0:
+					return reviewSummary.getAttribute(GerritTask.IS_STARRED); // Needed for the sorter
+				case 1:
+					return reviewSummary.getAttribute(GerritTask.SHORT_CHANGE_ID);
+				case 2:
+					return reviewSummary.getAttribute(GerritTask.SUBJECT);
+				case 3:
+					String attribute = reviewSummary.getAttribute(GerritTask.STATUS);
+					return attribute;
+				case 4:
+					return reviewSummary.getAttribute(GerritTask.OWNER);
+				case 5:
+					return reviewSummary.getAttribute(GerritTask.PROJECT);
+				case 6:
+					String branch = reviewSummary.getAttribute(GerritTask.BRANCH);
+					String topic = reviewSummary.getAttribute(GerritTask.TOPIC);
+					if (topic != null && !topic.isEmpty()) {
+						branch += " (" + reviewSummary.getAttribute(GerritTask.TOPIC) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					return branch;
+				case 7:
+					return reviewSummary.getAttributeAsDate(GerritTask.DATE_MODIFICATION);
 //			case 8:
 //				value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
@@ -235,8 +235,8 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //					return formatValue (value);
 //				}
 //                return EMPTY_STRING;
-			default:
-				return EMPTY_STRING;
+				default:
+					return EMPTY_STRING;
 			}
 		}
 		return EMPTY_STRING;
@@ -266,34 +266,34 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 *            column index
 	 * @return Image Image according to the selected column
 	 */
+	@Override
 	@SuppressWarnings("restriction")
 	public Image getColumnImage(Object aObj, int aIndex) {
 		String value = null;
-		if (aObj instanceof GerritTask) {
-			GerritTask reviewSummary = (GerritTask) aObj;
+		if (aObj instanceof GerritTask reviewSummary) {
 			switch (aIndex) {
-			case 0:
-				value = reviewSummary.getAttribute(GerritTask.IS_STARRED);
-				if (null != value && !value.equals(EMPTY_STRING)) {
-					return getReviewId(Boolean.valueOf(value.toLowerCase()));
-				}
-				break;
-			case 8:
-				value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
+				case 0:
+					value = reviewSummary.getAttribute(GerritTask.IS_STARRED);
+					if (null != value && !value.equals(EMPTY_STRING)) {
+						return getReviewId(Boolean.valueOf(value.toLowerCase()));
+					}
+					break;
+				case 8:
+					value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
 
-				if (null != value && !value.equals(EMPTY_STRING)) {
-					int val = Integer.parseInt(value);
-					return getReviewStateImage(val);
-				}
-				break;
-			case 9:
-				value = reviewSummary.getAttribute(GerritTask.VERIFY_STATE);
+					if (null != value && !value.equals(EMPTY_STRING)) {
+						int val = Integer.parseInt(value);
+						return getReviewStateImage(val);
+					}
+					break;
+				case 9:
+					value = reviewSummary.getAttribute(GerritTask.VERIFY_STATE);
 
-				if (null != value && !value.equals(EMPTY_STRING)) {
-					int val = Integer.parseInt(value);
-					return getVerifyStateImage(val);
-				}
-				break;
+					if (null != value && !value.equals(EMPTY_STRING)) {
+						int val = Integer.parseInt(value);
+						return getVerifyStateImage(val);
+					}
+					break;
 			}
 		}
 		return null;
@@ -315,14 +315,14 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //					|| aColumnIndex == ReviewTableDefinition.IC.ordinal()
 					|| aColumnIndex == ReviewTableDefinition.VERIFY.ordinal()) {
 				switch (aColumnIndex) {
-				case 7: // ReviewTableDefinition.CR.ordinal():
+					case 7: // ReviewTableDefinition.CR.ordinal():
 //					st = item.getAttribute(GerritTask.REVIEW_STATE);
 //					if (st != null) {
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
 //								.parseInt(st);
 //					}
-					break;
-				case 8: // ReviewTableDefinition.IC.ordinal():
+						break;
+					case 8: // ReviewTableDefinition.IC.ordinal():
 //					st = item.getAttribute(GerritTask.IS_IPCLEAN);
 //					if (st != null) {
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
@@ -335,7 +335,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
 //								.parseInt(st);
 //					}
-					break;
+						break;
 				}
 				if (value < 0) {
 					return RED;
@@ -353,8 +353,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 		// GerritUi.Ftracer.traceInfo("getBackground column : " +
 		// aColumnIndex +
 		// " ]: "+ aElement );
-		if (aElement instanceof GerritTask) {
-			GerritTask item = (GerritTask) aElement;
+		if (aElement instanceof GerritTask item) {
 			//
 			// To modify when we can verify the review state
 			String state = item.getAttribute(GerritTask.IS_STARRED);

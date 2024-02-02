@@ -78,7 +78,7 @@ public class OpenIdAuthenticationTest extends TestCase {
 	}
 
 	private Request<Object> createRequest() {
-		return new Request<Object>() {
+		return new Request<>() {
 			@Override
 			public HttpMethodBase createMethod() throws IOException {
 				return new GetMethod();

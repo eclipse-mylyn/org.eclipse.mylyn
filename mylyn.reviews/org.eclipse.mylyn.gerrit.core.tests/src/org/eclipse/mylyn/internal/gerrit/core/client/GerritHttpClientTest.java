@@ -95,8 +95,7 @@ public class GerritHttpClientTest {
 	}
 
 	/**
-	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null} service URI
-	 * argument.
+	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null} service URI argument.
 	 */
 	@Test(expected = AssertionFailedException.class)
 	public void postJsonRequestNullServiceUri() throws IOException, GerritException {
@@ -111,8 +110,7 @@ public class GerritHttpClientTest {
 	}
 
 	/**
-	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null}
-	 * {@link JsonEntity} argument.
+	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null} {@link JsonEntity} argument.
 	 */
 	@Test(expected = AssertionFailedException.class)
 	public void postJsonRequestNullJsonEntity() throws IOException, GerritException {
@@ -124,10 +122,10 @@ public class GerritHttpClientTest {
 	@Test
 	public void restRequestCanReturnBinaryContent() throws IOException {
 		// given
-		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
+		final TypeToken<Byte[]> byteArrayType = new TypeToken<>() {
 		};
 		Request<byte[]> request = new GerritHttpClient(abstractWebLocation,
-				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION).new RestRequest<byte[]>(HttpMethod.GET, "serviceUri", //$NON-NLS-1$
+				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION).new RestRequest<>(HttpMethod.GET, "serviceUri", //$NON-NLS-1$
 						null /*input*/, byteArrayType.getType(), null /*error handler*/);
 		HttpMethodBase httpMethodBase = mock(HttpMethodBase.class);
 		byte[] binary = "binary".getBytes(); //$NON-NLS-1$

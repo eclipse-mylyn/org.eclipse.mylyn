@@ -13,8 +13,7 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-info">ProjectInfo</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-info">ProjectInfo</a>.
  */
 public class ProjectInfo {
 	// should be "gerritcodereview#project"

@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * Supports UI context and implementation neutral creation of interface components that modify the state of model
- * objects and their related remote objects.
+ * Supports UI context and implementation neutral creation of interface components that modify the state of model objects and their related
+ * remote objects.
  * 
  * @author Miles Parker
  */

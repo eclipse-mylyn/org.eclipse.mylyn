@@ -12,12 +12,9 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 
 /**
@@ -34,8 +31,7 @@ import org.eclipse.mylyn.reviews.core.model.IApprovalType;
  */
 public class ApprovalType extends EObjectImpl implements IApprovalType {
 	/**
-	 * The default value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getKey()
 	 * @generated
@@ -53,8 +49,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	protected String key = KEY_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -63,8 +58,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -78,7 +72,6 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 * @generated
 	 */
 	protected ApprovalType() {
-		super();
 	}
 
 	/**
@@ -96,6 +89,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -105,6 +99,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
@@ -118,6 +113,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -127,6 +123,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -143,10 +140,10 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.APPROVAL_TYPE__KEY:
-			return getKey();
-		case ReviewsPackage.APPROVAL_TYPE__NAME:
-			return getName();
+			case ReviewsPackage.APPROVAL_TYPE__KEY:
+				return getKey();
+			case ReviewsPackage.APPROVAL_TYPE__NAME:
+				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -159,12 +156,12 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.APPROVAL_TYPE__KEY:
-			setKey((String) newValue);
-			return;
-		case ReviewsPackage.APPROVAL_TYPE__NAME:
-			setName((String) newValue);
-			return;
+			case ReviewsPackage.APPROVAL_TYPE__KEY:
+				setKey((String) newValue);
+				return;
+			case ReviewsPackage.APPROVAL_TYPE__NAME:
+				setName((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -177,12 +174,12 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.APPROVAL_TYPE__KEY:
-			setKey(KEY_EDEFAULT);
-			return;
-		case ReviewsPackage.APPROVAL_TYPE__NAME:
-			setName(NAME_EDEFAULT);
-			return;
+			case ReviewsPackage.APPROVAL_TYPE__KEY:
+				setKey(KEY_EDEFAULT);
+				return;
+			case ReviewsPackage.APPROVAL_TYPE__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -195,10 +192,10 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.APPROVAL_TYPE__KEY:
-			return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
-		case ReviewsPackage.APPROVAL_TYPE__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case ReviewsPackage.APPROVAL_TYPE__KEY:
+				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
+			case ReviewsPackage.APPROVAL_TYPE__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -214,7 +211,7 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (key: "); //$NON-NLS-1$
 		result.append(key);
 		result.append(", name: "); //$NON-NLS-1$

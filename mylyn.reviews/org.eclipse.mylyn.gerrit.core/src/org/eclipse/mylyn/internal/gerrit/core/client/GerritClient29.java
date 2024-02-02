@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -72,7 +71,7 @@ public class GerritClient29 extends GerritClient {
 
 	final String MAY = "MAY"; //$NON-NLS-1$
 
-	private static enum UserType {
+	private enum UserType {
 		Author, Committer
 	}
 
@@ -194,7 +193,7 @@ public class GerritClient29 extends GerritClient {
 		publishDetail = new PatchSetPublishDetailX();
 		ChangeInfo changeInfo = getChangeInfo(id.getParentKey().get(), monitor);
 
-		List<AccountInfo> listAccountInfo = new ArrayList<AccountInfo>();
+		List<AccountInfo> listAccountInfo = new ArrayList<>();
 
 		AccountInfo accountInfo = convertAuthorFrom29ToAccountInfo(changeInfo);
 		listAccountInfo.add(accountInfo);
@@ -222,7 +221,7 @@ public class GerritClient29 extends GerritClient {
 	private List<PatchSet> getPatchSets(final String changeInfoId, int reviewId, IProgressMonitor monitor)
 			throws GerritException {
 
-		List<PatchSet> patchSets = new ArrayList<PatchSet>();
+		List<PatchSet> patchSets = new ArrayList<>();
 		String query = "/changes/?q=" + changeInfoId + "+change:" + reviewId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		ChangeInfo28[] changeInfo = (ChangeInfo28[]) getRestClient().executeGetRestRequest(query, ChangeInfo28[].class,
 				monitor);
@@ -234,19 +233,12 @@ public class GerritClient29 extends GerritClient {
 			}
 
 		}
-		Collections.sort(patchSets, new Comparator<PatchSet>() {
-
-			@Override
-			public int compare(PatchSet p1, PatchSet p2) {
-				return p1.getPatchSetId() - p2.getPatchSetId();
-			}
-
-		});
+		Collections.sort(patchSets, (p1, p2) -> p1.getPatchSetId() - p2.getPatchSetId());
 		return patchSets;
 	}
 
 	private List<SubmitRecord> currentSubmitRecord(String uri, IProgressMonitor monitor) throws GerritException {
-		List<SubmitRecord> submitRecordList = new ArrayList<SubmitRecord>();
+		List<SubmitRecord> submitRecordList = new ArrayList<>();
 		if (isAnonymous()) {
 			return submitRecordList;
 		}
@@ -303,7 +295,7 @@ public class GerritClient29 extends GerritClient {
 
 		List<PatchSet> patchSets = getPatchSets(changeInfo.getChangeId(), reviewId, monitor);
 
-		List<ChangeMessage> listChangeMessage = new ArrayList<ChangeMessage>();
+		List<ChangeMessage> listChangeMessage = new ArrayList<>();
 		List<ChangeMessageInfo> listChangeMessageInfo = changeInfo.getMessages();
 
 		boolean containsMessageFromGerritSystem = false;
@@ -317,7 +309,7 @@ public class GerritClient29 extends GerritClient {
 			listChangeMessage.add(changeMessage);
 		}
 
-		List<AccountInfo> listAccountInfo = new ArrayList<AccountInfo>();
+		List<AccountInfo> listAccountInfo = new ArrayList<>();
 
 		AccountInfo accountInfo = convertAuthorFrom29ToAccountInfo(changeInfo);
 		listAccountInfo.add(accountInfo);
@@ -383,8 +375,8 @@ public class GerritClient29 extends GerritClient {
 
 	private void setChangeDetailDependency(int reviewId, ChangeInfo28 changeInfo28, ChangeDetailX changeDetail,
 			AccountInfo accountInfo, IProgressMonitor monitor) throws GerritException {
-		List<com.google.gerrit.common.data.ChangeInfo> dependsOn = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
-		List<com.google.gerrit.common.data.ChangeInfo> neededBy = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
+		List<com.google.gerrit.common.data.ChangeInfo> dependsOn = new ArrayList<>();
+		List<com.google.gerrit.common.data.ChangeInfo> neededBy = new ArrayList<>();
 		Branch.NameKey branchKey = getBranchKey(changeInfo28);
 
 		RelatedChangesInfo relatedChangesInfo = getRelatedChanges(reviewId, changeInfo28.getCurrentRevision(), monitor);
@@ -395,15 +387,13 @@ public class GerritClient29 extends GerritClient {
 					.getCommit()
 					.equalsIgnoreCase(changeInfo28.getCurrentRevision())) {
 				needed = false;
-			} else {
-				if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {
-					com.google.gerrit.common.data.ChangeInfo googleChangeInfo = convertToGoogleChangeInfo(
-							relatedChangeAndCommitInfo, accountInfo, branchKey);
-					if (needed) {
-						neededBy.add(googleChangeInfo);
-					} else {
-						dependsOn.add(googleChangeInfo);
-					}
+			} else if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {
+				com.google.gerrit.common.data.ChangeInfo googleChangeInfo = convertToGoogleChangeInfo(
+						relatedChangeAndCommitInfo, accountInfo, branchKey);
+				if (needed) {
+					neededBy.add(googleChangeInfo);
+				} else {
+					dependsOn.add(googleChangeInfo);
 				}
 			}
 		}

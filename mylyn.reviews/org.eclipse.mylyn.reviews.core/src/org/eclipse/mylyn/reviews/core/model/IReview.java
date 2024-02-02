@@ -34,11 +34,9 @@ public interface IReview extends ICommentContainer, IChange {
 	/**
 	 * Returns the value of the '<em><b>Sets</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}'. <!--
-	 * begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Sets</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Sets</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -49,12 +47,10 @@ public interface IReview extends ICommentContainer, IChange {
 	List<IReviewItemSet> getSets();
 
 	/**
-	 * Returns the value of the '<em><b>Repository</b></em>' container reference. It is bidirectional and its opposite
-	 * is '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}'. <!-- begin-user-doc
-	 * -->
+	 * Returns the value of the '<em><b>Repository</b></em>' container reference. It is bidirectional and its opposite is
+	 * '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Repository</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Repository</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -66,8 +62,8 @@ public interface IReview extends ICommentContainer, IChange {
 	IRepository getRepository();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}'
-	 * container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}' container reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Repository</em>' container reference.
@@ -80,8 +76,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * Returns the value of the '<em><b>Parents</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IChange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parents</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Parents</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -94,8 +89,8 @@ public interface IReview extends ICommentContainer, IChange {
 	 * Returns the value of the '<em><b>Children</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IChange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Children</em>' containment reference list isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Children</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -109,8 +104,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * {@link org.eclipse.mylyn.reviews.core.model.IUser}, and the value is of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry}, <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Reviewer Approvals</em>' map isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Reviewer Approvals</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -124,8 +118,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}, and the value is of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry}, <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Requirements</em>' map isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Requirements</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

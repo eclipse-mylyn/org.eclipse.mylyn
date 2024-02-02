@@ -37,8 +37,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -49,8 +48,8 @@ public interface IComment extends IIndexed, IDated {
 	IUser getAuthor();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getAuthor <em>Author</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getAuthor <em>Author</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Author</em>' reference.
@@ -62,8 +61,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -74,8 +72,8 @@ public interface IComment extends IIndexed, IDated {
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getDescription <em>Description</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getDescription <em>Description</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
@@ -98,8 +96,8 @@ public interface IComment extends IIndexed, IDated {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
@@ -112,8 +110,7 @@ public interface IComment extends IIndexed, IDated {
 	 * Returns the value of the '<em><b>Replies</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Replies</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Replies</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -125,8 +122,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Draft</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Draft</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Draft</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -137,8 +133,8 @@ public interface IComment extends IIndexed, IDated {
 	boolean isDraft();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#isDraft <em>Draft</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#isDraft <em>Draft</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Draft</em>' attribute.
@@ -151,8 +147,8 @@ public interface IComment extends IIndexed, IDated {
 	 * Returns the value of the '<em><b>Locations</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.ILocation}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Locations</em>' containment reference list isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Locations</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -164,8 +160,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Review</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -177,8 +172,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Title</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Title</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -189,8 +183,8 @@ public interface IComment extends IIndexed, IDated {
 	String getTitle();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Title</em>' attribute.
@@ -201,11 +195,9 @@ public interface IComment extends IIndexed, IDated {
 
 	/**
 	 * Returns the value of the '<em><b>Item</b></em>' container reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments <em>Comments</em>}'. <!--
-	 * begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments <em>Comments</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Item</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Item</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -217,8 +209,8 @@ public interface IComment extends IIndexed, IDated {
 	ICommentContainer getItem();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}' container
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}' container reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Item</em>' container reference.

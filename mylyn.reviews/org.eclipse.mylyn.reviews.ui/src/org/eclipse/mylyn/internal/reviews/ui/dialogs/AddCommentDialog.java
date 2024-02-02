@@ -16,12 +16,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
@@ -81,7 +79,7 @@ public class AddCommentDialog extends ProgressDialog {
 		this.reviewBehavior = reviewBehavior;
 		this.item = item;
 		this.location = location;
-		this.task = reviewBehavior.getTask();
+		task = reviewBehavior.getTask();
 	}
 
 	@Override
@@ -112,13 +110,9 @@ public class AddCommentDialog extends ProgressDialog {
 	}
 
 	private boolean performOperation(final IComment comment) {
-		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
+		final AtomicReference<IStatus> result = new AtomicReference<>();
 		try {
-			run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					result.set(reviewBehavior.addComment(item, comment, monitor));
-				}
-			});
+			run(true, true, monitor -> result.set(reviewBehavior.addComment(item, comment, monitor)));
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
 					.handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
@@ -199,7 +193,7 @@ public class AddCommentDialog extends ProgressDialog {
 		editor.setText(value);
 		editor.setSpellCheckingEnabled(true);
 		editor.createControl(composite, toolkit);
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		if (handlerService != null) {
 			textSupport = new CommonTextSupport(handlerService);
 			textSupport.install(editor.getViewer(), true);
@@ -208,9 +202,11 @@ public class AddCommentDialog extends ProgressDialog {
 		// HACK: this is to make sure that we can't have multiple things highlighted
 		editor.getViewer().getTextWidget().addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				editor.getViewer().getTextWidget().setSelection(0);
 			}

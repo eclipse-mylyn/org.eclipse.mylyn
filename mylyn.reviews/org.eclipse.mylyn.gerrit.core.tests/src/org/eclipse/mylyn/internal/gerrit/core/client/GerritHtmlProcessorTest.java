@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class GerritHtmlProcessorTest extends TestCase {
 	@Test

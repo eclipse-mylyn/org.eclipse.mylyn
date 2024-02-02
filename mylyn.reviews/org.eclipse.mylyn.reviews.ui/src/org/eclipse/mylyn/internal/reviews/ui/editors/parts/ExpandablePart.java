@@ -70,7 +70,7 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 	private Label annotationsTextLabel;
 
 	public ExpandablePart() {
-		childrenParts = new ArrayList<V>();
+		childrenParts = new ArrayList<>();
 	}
 
 	protected void addChildPart(V part) {
@@ -288,7 +288,7 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 	}
 
 	public void hookCustomActionRunListener(IReviewActionListener actionRunListener) {
-		this.actionListener = actionRunListener;
+		actionListener = actionRunListener;
 	}
 
 	public IReviewActionListener getActionListener() {
@@ -304,7 +304,7 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 	}
 
 	public void setIncomming(boolean newIncomming) {
-		this.isIncomming = newIncomming;
+		isIncomming = newIncomming;
 	}
 
 	public boolean isIncomming() {
@@ -331,11 +331,11 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 	protected final void updateChildren(Composite composite, FormToolkit toolkit, boolean shouldHighlight,
 			Collection<T> childrenObjects) {
 
-		List<V> toRemove = new ArrayList<V>();
-		List<V> newParts = new ArrayList<V>();
+		List<V> toRemove = new ArrayList<>();
+		List<V> newParts = new ArrayList<>();
 
 		if (childrenObjects.size() > 0) {
-			List<T> generalComments = new ArrayList<T>(childrenObjects);
+			List<T> generalComments = new ArrayList<>(childrenObjects);
 			Collections.sort(generalComments, getComparator());
 
 			// The following code is almost duplicated in the crucible review files part
@@ -386,9 +386,7 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 			}
 
 		} else {
-			for (V part : childrenParts) {
-				toRemove.add(part);
-			}
+			toRemove.addAll(childrenParts);
 		}
 
 		for (V part : toRemove) {

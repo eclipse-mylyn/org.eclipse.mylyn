@@ -68,7 +68,7 @@ public class RemoteEmfFactoryTest {
 		TestManagerEClassHarness(TestEClassRemoteFactory factory) {
 			this.factory = factory;
 			consumer = createConsumer();
-			listener = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(consumer);
+			listener = new TestRemoteEmfObserver<>(consumer);
 		}
 
 		TestManagerEClassHarness() {
@@ -97,7 +97,7 @@ public class RemoteEmfFactoryTest {
 		TestManagerEPackageHarness(TestEPackageRemoteFactory factory) {
 			this.factory = factory;
 			consumer = createConsumer();
-			listener = new TestRemoteEmfObserver<EPackage, EPackage, String, Integer>(consumer);
+			listener = new TestRemoteEmfObserver<>(consumer);
 		}
 
 		TestManagerEPackageHarness() {
@@ -298,7 +298,7 @@ public class RemoteEmfFactoryTest {
 		parent.getEClassifiers().add(create2);
 		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer = factory
 				.getConsumerForLocalKey(parent, LOCAL_KEY_2);
-		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener1 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
+		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener1 = new TestRemoteEmfObserver<>(
 				consumer);
 		consumer.retrieve(false);
 		testListener1.waitForResponse(1, 0);
@@ -328,7 +328,7 @@ public class RemoteEmfFactoryTest {
 		};
 		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory
 				.getConsumerForRemoteKey(parent, "object1");
-		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
+		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener = new TestRemoteEmfObserver<>(
 				consumer1);
 		consumer1.retrieve(false);
 		testListener.waitForResponse(1, 0);
@@ -354,7 +354,7 @@ public class RemoteEmfFactoryTest {
 		TestCollectionObjectRemoteFactory factory = new TestCollectionObjectRemoteFactory();
 		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer1 = factory
 				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
-		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
+		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<>(
 				consumer1);
 		consumer1.retrieve(false);
 		testListener.waitForResponse(1, 1);
@@ -487,7 +487,7 @@ public class RemoteEmfFactoryTest {
 		TestCollectionObjectRemoteFactory factory = new TestCollectionObjectRemoteFactory();
 		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory
 				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
-		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
+		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<>(
 				consumer);
 		consumer.retrieve(false);
 		testListener.waitForResponse(1, 1);
@@ -513,7 +513,7 @@ public class RemoteEmfFactoryTest {
 		};
 		RemoteEmfConsumer<EPackage, List<EClassifier>, String, TestRemoteEClass, String, Integer> consumer = factory
 				.getConsumerForRemoteKey(parent, REMOTE_KEY_1);
-		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
+		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<>(
 				consumer);
 		consumer.retrieve(false);
 		testListener.waitForResponse(1, 0);

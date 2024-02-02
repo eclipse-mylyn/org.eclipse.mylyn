@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 public abstract class ReviewsConnector extends AbstractRepositoryConnector {
 
-	Map<TaskRepository, ReviewsClient> clientForRepository = new HashMap<TaskRepository, ReviewsClient>();
+	Map<TaskRepository, ReviewsClient> clientForRepository = new HashMap<>();
 
 	private RemoteFactoryProviderConfigurer factoryProviderConfigurer = new RemoteFactoryProviderConfigurer();
 

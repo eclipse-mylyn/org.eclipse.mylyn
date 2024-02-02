@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -92,9 +93,7 @@ public class BranchProposalProviderTest {
 
 	private void setUpProvider(String... branchNames) {
 		proposals = new TreeSet<>();
-		for (String branch : branchNames) {
-			proposals.add(branch);
-		}
+		Collections.addAll(proposals, branchNames);
 		provider = new BranchProposalProvider(proposals);
 	}
 }

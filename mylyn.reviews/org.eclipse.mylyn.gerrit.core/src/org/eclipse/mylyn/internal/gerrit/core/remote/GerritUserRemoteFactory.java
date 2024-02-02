@@ -35,7 +35,7 @@ import com.google.gerrit.reviewdb.Account.Id;
  * @author Miles Parker
  */
 public class GerritUserRemoteFactory
-extends AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
+		extends AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
 
 	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<>());
 

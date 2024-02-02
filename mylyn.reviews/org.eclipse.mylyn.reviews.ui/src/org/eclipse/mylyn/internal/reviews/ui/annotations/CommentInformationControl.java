@@ -52,7 +52,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 	@SuppressWarnings("restriction")
 	public CommentInformationControl(Shell parent, CommentInformationControlCreator crucibleInformationControlCreator) {
 		super(parent, new HTMLTextPresenter(true));
-		this.informationControlCreator = crucibleInformationControlCreator;
+		informationControlCreator = crucibleInformationControlCreator;
 		commentPopupDialog = new CommentPopupDialog(parent, SWT.NO_FOCUS | SWT.ON_TOP, null, null, false);
 		// Force create early so that listeners can be added at all times with API.
 		commentPopupDialog.create();
@@ -65,11 +65,12 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 
 	@Override
 	public void setInformation(String content) {
-		this.input = content;
+		input = content;
 		commentPopupDialog.setInput(input);
 		super.setInformation(content);
 	}
 
+	@Override
 	public void setInput(Object input) {
 		this.input = input;
 		commentPopupDialog.setInput(input);
@@ -86,7 +87,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 			return;
 		}
 
-		Set<IComment> comments = new HashSet<IComment>();
+		Set<IComment> comments = new HashSet<>();
 		for (CommentAnnotation annotation : annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.collect(Collectors.toList())) {
@@ -101,7 +102,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 
 	private Collection<? extends IComment> getUnreadComments(IComment comment) {
 		// FIXME
-		Set<IComment> result = new HashSet<IComment>();
+		Set<IComment> result = new HashSet<>();
 //		if (comment.getReadState().equals(ReadState.UNREAD)) {
 //			result.add(comment);
 //		}

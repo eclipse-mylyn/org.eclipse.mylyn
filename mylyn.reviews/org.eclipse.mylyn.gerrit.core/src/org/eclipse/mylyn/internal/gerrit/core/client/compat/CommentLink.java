@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -41,25 +43,14 @@ public class CommentLink {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		CommentLink other = (CommentLink) obj;
-		if (find == null) {
-			if (other.find != null) {
-				return false;
-			}
-		} else if (!find.equals(other.find)) {
+		if (!Objects.equals(find, other.find)) {
 			return false;
 		}
-		if (replace == null) {
-			if (other.replace != null) {
-				return false;
-			}
-		} else if (!replace.equals(other.replace)) {
+		if (!Objects.equals(replace, other.replace)) {
 			return false;
 		}
 		return true;
@@ -75,11 +66,7 @@ public class CommentLink {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((find == null) ? 0 : find.hashCode());
-		result = prime * result + ((replace == null) ? 0 : replace.hashCode());
-		return result;
+		return Objects.hash(find, replace);
 	}
 
 	@Override

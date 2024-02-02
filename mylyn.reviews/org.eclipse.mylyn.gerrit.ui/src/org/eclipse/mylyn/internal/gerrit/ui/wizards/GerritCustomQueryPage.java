@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -76,12 +75,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		Composite composite = parent.getContent();
 		composite.setLayout(new GridLayout(2, false));
 
-		ModifyListener modifyListener = new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				updateButtons();
-			}
-		};
+		ModifyListener modifyListener = e -> updateButtons();
 
 		Group group = new Group(composite, SWT.NONE);
 		group.setText(Messages.GerritCustomQueryPage_Query_type);
@@ -155,12 +149,12 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 	@Override
 	public boolean isPageComplete() {
-		boolean ret = (getQueryTitle() != null && getQueryTitle().trim().length() > 0);
+		boolean ret = getQueryTitle() != null && getQueryTitle().trim().length() > 0;
 		if (byProjectButton != null && byProjectButton.getSelection()) {
-			ret &= (projectText != null && projectText.getText().length() > 0);
+			ret &= projectText != null && projectText.getText().length() > 0;
 		}
 		if (customQueryButton != null && customQueryButton.getSelection()) {
-			ret &= (queryText != null && queryText.getText().length() > 0);
+			ret &= queryText != null && queryText.getText().length() > 0;
 		}
 		return ret;
 	}

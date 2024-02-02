@@ -118,6 +118,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 		return location;
 	}
 
+	@Override
 	public void run(IAction action) {
 		IReviewItem item = getItem();
 		ReviewBehavior reviewBehavior = compareSourceViewer.getAnnotationModel().getBehavior();

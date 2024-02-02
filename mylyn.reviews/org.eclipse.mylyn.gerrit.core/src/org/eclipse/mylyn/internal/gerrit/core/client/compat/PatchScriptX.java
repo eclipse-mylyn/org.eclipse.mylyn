@@ -64,11 +64,11 @@ public class PatchScriptX extends PatchScript {
 	}
 
 	public void setA(SparseFileContent contentA) {
-		this.a = contentA;
+		a = contentA;
 	}
 
 	public void setB(SparseFileContent contentB) {
-		this.b = contentB;
+		b = contentB;
 	}
 
 	public void setEdits(List<Edit> edits) {

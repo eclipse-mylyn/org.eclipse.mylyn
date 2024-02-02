@@ -61,7 +61,7 @@ public class CommentInfo {
 	}
 
 	public void setLine(int number) {
-		this.line = number;
+		line = number;
 	}
 
 	public String getSide() {

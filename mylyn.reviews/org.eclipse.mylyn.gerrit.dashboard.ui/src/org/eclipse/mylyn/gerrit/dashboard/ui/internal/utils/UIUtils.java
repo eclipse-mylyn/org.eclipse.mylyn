@@ -40,11 +40,7 @@ public class UIUtils {
 		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInformation,
 				NLS.bind(Messages.UIUtils_methodNotReady, aSt),
 				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, Messages.UIUtils_notImplemented, null), IStatus.INFO);
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				dialog.open();
-			}
-		});
+		Display.getDefault().syncExec(() -> dialog.open());
 		// TODO later we will want to do this automatically
 	}
 
@@ -60,11 +56,7 @@ public class UIUtils {
 		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason);
 		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInfo, aMsg,
 				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				dialog.open();
-			}
-		});
+		Display.getDefault().syncExec(() -> dialog.open());
 	}
 
 	/**

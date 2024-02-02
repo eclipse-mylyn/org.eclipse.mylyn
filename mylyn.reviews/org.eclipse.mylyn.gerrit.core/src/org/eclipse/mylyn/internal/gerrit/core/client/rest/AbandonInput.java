@@ -25,6 +25,6 @@ public class AbandonInput {
 
 	public AbandonInput(String msg) {
 		Assert.isLegal(msg != null);
-		this.message = msg;
+		message = msg;
 	}
 }

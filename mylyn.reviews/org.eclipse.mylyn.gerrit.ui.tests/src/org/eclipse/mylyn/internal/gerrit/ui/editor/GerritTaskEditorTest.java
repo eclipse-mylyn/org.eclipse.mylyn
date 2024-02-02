@@ -87,7 +87,7 @@ public class GerritTaskEditorTest {
 	}
 
 	private static class TasksUiLogListener implements ILogListener {
-		List<IStatus> statuses = new ArrayList<IStatus>();
+		List<IStatus> statuses = new ArrayList<>();
 
 		@Override
 		public void logging(IStatus status, String plugin) {

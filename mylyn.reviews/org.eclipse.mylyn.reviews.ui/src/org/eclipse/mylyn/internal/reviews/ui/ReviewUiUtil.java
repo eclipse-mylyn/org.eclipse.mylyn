@@ -52,8 +52,7 @@ public final class ReviewUiUtil {
 	 * Must be invoked in UI thread
 	 * 
 	 * @param viewId
-	 * @return <code>true</code> when the view has been successfully made visible or it already was, <code>false</code>
-	 *         if operation failed
+	 * @return <code>true</code> when the view has been successfully made visible or it already was, <code>false</code> if operation failed
 	 */
 	public static boolean ensureViewIsVisible(String viewId) {
 		final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -104,16 +103,14 @@ public final class ReviewUiUtil {
 			ISelection selection = ((ITextEditor) editor).getSelectionProvider().getSelection();
 			return getLineRange(selection);
 		} else if (editor.getAdapter(ITextEditor.class) != null) {
-			ISelection selection = ((ITextEditor) editor.getAdapter(ITextEditor.class)).getSelectionProvider()
-					.getSelection();
+			ISelection selection = editor.getAdapter(ITextEditor.class).getSelectionProvider().getSelection();
 			return getLineRange(selection);
 		}
 		return null;
 	}
 
 	private static LineRange getLineRange(ISelection selection) {
-		if (selection instanceof TextSelection) {
-			TextSelection textSelection = ((TextSelection) selection);
+		if (selection instanceof TextSelection textSelection) {
 			return new LineRange(textSelection.getStartLine() + 1,
 					textSelection.getEndLine() - textSelection.getStartLine() + 1);
 		}

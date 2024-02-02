@@ -42,8 +42,8 @@ public interface IChange extends IDated {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getId <em>Id</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getId <em>Id</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
@@ -66,8 +66,8 @@ public interface IChange extends IDated {
 	String getKey();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getKey <em>Key</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getKey <em>Key</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Key</em>' attribute.
@@ -79,8 +79,7 @@ public interface IChange extends IDated {
 	/**
 	 * Returns the value of the '<em><b>Subject</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Subject</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Subject</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -91,8 +90,8 @@ public interface IChange extends IDated {
 	String getSubject();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getSubject <em>Subject</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getSubject <em>Subject</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Subject</em>' attribute.
@@ -104,8 +103,7 @@ public interface IChange extends IDated {
 	/**
 	 * Returns the value of the '<em><b>Message</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -116,8 +114,8 @@ public interface IChange extends IDated {
 	String getMessage();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getMessage <em>Message</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getMessage <em>Message</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Message</em>' attribute.
@@ -129,8 +127,7 @@ public interface IChange extends IDated {
 	/**
 	 * Returns the value of the '<em><b>Owner</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -141,8 +138,8 @@ public interface IChange extends IDated {
 	IUser getOwner();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getOwner <em>Owner</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getOwner <em>Owner</em>}' reference. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Owner</em>' reference.
@@ -155,8 +152,7 @@ public interface IChange extends IDated {
 	 * Returns the value of the '<em><b>State</b></em>' attribute. The literals are from the enumeration
 	 * {@link org.eclipse.mylyn.reviews.core.model.ReviewStatus}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>State</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>State</em>' containment reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -168,8 +164,8 @@ public interface IChange extends IDated {
 	ReviewStatus getState();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getState <em>State</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getState <em>State</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>State</em>' attribute.

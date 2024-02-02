@@ -21,8 +21,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Requirement Entry</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Requirement Entry</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -36,8 +35,7 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
  */
 public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	/**
-	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -46,8 +44,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	protected static final RequirementStatus STATUS_EDEFAULT = RequirementStatus.UNKNOWN;
 
 	/**
-	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -70,7 +67,6 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 * @generated
 	 */
 	protected RequirementEntry() {
-		super();
 	}
 
 	/**
@@ -88,6 +84,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public RequirementStatus getStatus() {
 		return status;
 	}
@@ -97,6 +94,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setStatus(RequirementStatus newStatus) {
 		RequirementStatus oldStatus = status;
 		status = newStatus == null ? STATUS_EDEFAULT : newStatus;
@@ -111,6 +109,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getBy() {
 		if (by != null && by.eIsProxy()) {
 			InternalEObject oldBy = (InternalEObject) by;
@@ -139,6 +138,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setBy(IUser newBy) {
 		IUser oldBy = by;
 		by = newBy;
@@ -155,13 +155,13 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
-			return getStatus();
-		case ReviewsPackage.REQUIREMENT_ENTRY__BY:
-			if (resolve) {
-				return getBy();
-			}
-			return basicGetBy();
+			case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
+				return getStatus();
+			case ReviewsPackage.REQUIREMENT_ENTRY__BY:
+				if (resolve) {
+					return getBy();
+				}
+				return basicGetBy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -174,12 +174,12 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
-			setStatus((RequirementStatus) newValue);
-			return;
-		case ReviewsPackage.REQUIREMENT_ENTRY__BY:
-			setBy((IUser) newValue);
-			return;
+			case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
+				setStatus((RequirementStatus) newValue);
+				return;
+			case ReviewsPackage.REQUIREMENT_ENTRY__BY:
+				setBy((IUser) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -192,12 +192,12 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
-			setStatus(STATUS_EDEFAULT);
-			return;
-		case ReviewsPackage.REQUIREMENT_ENTRY__BY:
-			setBy((IUser) null);
-			return;
+			case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
+				setStatus(STATUS_EDEFAULT);
+				return;
+			case ReviewsPackage.REQUIREMENT_ENTRY__BY:
+				setBy((IUser) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -210,10 +210,10 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
-			return status != STATUS_EDEFAULT;
-		case ReviewsPackage.REQUIREMENT_ENTRY__BY:
-			return by != null;
+			case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
+				return status != STATUS_EDEFAULT;
+			case ReviewsPackage.REQUIREMENT_ENTRY__BY:
+				return by != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -229,7 +229,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (status: "); //$NON-NLS-1$
 		result.append(status);
 		result.append(')');

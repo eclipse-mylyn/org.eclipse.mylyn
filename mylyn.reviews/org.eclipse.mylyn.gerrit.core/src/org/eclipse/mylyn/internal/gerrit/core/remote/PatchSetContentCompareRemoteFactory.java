@@ -22,8 +22,8 @@ import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
- * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API,
- * supporting arbitrary patch set contents, including comparisons.
+ * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API, supporting arbitrary patch
+ * set contents, including comparisons.
  * 
  * @author Miles Parker
  */

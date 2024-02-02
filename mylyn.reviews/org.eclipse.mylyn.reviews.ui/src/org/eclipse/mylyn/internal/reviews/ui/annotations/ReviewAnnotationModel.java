@@ -54,18 +54,20 @@ import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
  */
 public class ReviewAnnotationModel implements IAnnotationModel {
 
-	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
+	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<>(2);
 
-	private final Set<Annotation> annotations = new LinkedHashSet<Annotation>();
+	private final Set<Annotation> annotations = new LinkedHashSet<>();
 
 	private ReviewBehavior behavior;
 
 	private IDocument document;
 
 	private final IDocumentListener documentListener = new IDocumentListener() {
+		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
 		}
 
+		@Override
 		public void documentChanged(DocumentEvent event) {
 			// TODO consider hiding annotations if the document changes
 			//updateAnnotations(false);
@@ -110,16 +112,19 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	public ReviewAnnotationModel() {
 	}
 
+	@Override
 	public void addAnnotation(Annotation annotation, Position position) {
 		// do nothing, we do not support external modification
 	}
 
+	@Override
 	public void addAnnotationModelListener(IAnnotationModelListener listener) {
 		if (annotationModelListeners.add(listener)) {
 			fireModelChanged(new AnnotationModelEvent(this, true));
 		}
 	}
 
+	@Override
 	public void connect(final IDocument document) {
 		this.document = document;
 		connectItem();
@@ -138,6 +143,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		updateAnnotations();
 	}
 
+	@Override
 	public void disconnect(IDocument document) {
 		for (Annotation commentAnnotation : annotations) {
 			if (commentAnnotation instanceof CommentAnnotation) {
@@ -157,6 +163,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		clear();
 	}
 
+	@Override
 	public Iterator<Annotation> getAnnotationIterator() {
 		return annotations.iterator();
 	}
@@ -165,14 +172,14 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
 	public List<CommentAnnotation> getAnnotationsForOffset(int offset) {
-		List<CommentAnnotation> result = new ArrayList<CommentAnnotation>();
-		for (CommentAnnotation annotation : this.annotations.stream()
+		List<CommentAnnotation> result = new ArrayList<>();
+		for (CommentAnnotation annotation : annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.map(CommentAnnotation.class::cast)
 				.collect(Collectors.toList())) {
 
 			if (annotation.getPosition().offset <= offset
-					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
+					&& annotation.getPosition().length + annotation.getPosition().offset >= offset) {
 				result.add(annotation);
 			}
 		}
@@ -191,13 +198,13 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
 	public Annotation getFirstAnnotationForOffset(int offset) {
-		for (CommentAnnotation annotation : this.annotations.stream()
+		for (CommentAnnotation annotation : annotations.stream()
 				.filter(CommentAnnotation.class::isInstance)
 				.map(CommentAnnotation.class::cast)
 				.collect(Collectors.toList())) {
 
 			if (annotation.getPosition().offset <= offset
-					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
+					&& annotation.getPosition().length + annotation.getPosition().offset >= offset) {
 				return annotation;
 			}
 		}
@@ -208,6 +215,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		return reviewItem;
 	}
 
+	@Override
 	public Position getPosition(Annotation annotation) {
 		if (annotation instanceof CommentAnnotation) {
 			return ((CommentAnnotation) annotation).getPosition();
@@ -217,10 +225,12 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		}
 	}
 
+	@Override
 	public void removeAnnotation(Annotation annotation) {
 		// do nothing, we do not support external modification
 	}
 
+	@Override
 	public void removeAnnotationModelListener(IAnnotationModelListener listener) {
 		annotationModelListeners.remove(listener);
 	}

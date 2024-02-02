@@ -28,18 +28,12 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface IIndexed extends EObject {
 
-	public static final Comparator<IIndexed> COMPARATOR = new Comparator<IIndexed>() {
-
-		public int compare(IIndexed o1, IIndexed o2) {
-			return ((Long) o1.getIndex()).compareTo(o2.getIndex());
-		}
-	};
+	Comparator<IIndexed> COMPARATOR = Comparator.comparing(IIndexed::getIndex);
 
 	/**
 	 * Returns the value of the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Index</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Index</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

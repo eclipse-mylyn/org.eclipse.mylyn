@@ -18,16 +18,16 @@ package org.eclipse.mylyn.internal.reviews.ui;
  */
 public interface ReviewsUiConstants {
 
-	public static final String REVIEW_EXPLORER_ID = "org.eclipse.mylyn.reviews.Explorer"; //$NON-NLS-1$
+	String REVIEW_EXPLORER_ID = "org.eclipse.mylyn.reviews.Explorer"; //$NON-NLS-1$
 
-	public static final String REVIEW_CONTENT_ID = "org.eclipse.mylyn.reviews.ui.ReviewContent"; //$NON-NLS-1$
+	String REVIEW_CONTENT_ID = "org.eclipse.mylyn.reviews.ui.ReviewContent"; //$NON-NLS-1$
 
-	public static final String REVIEW_FLAT_CONTENT_ID = "org.eclipse.mylyn.reviews.ui.ReviewFlatContent"; //$NON-NLS-1$
+	String REVIEW_FLAT_CONTENT_ID = "org.eclipse.mylyn.reviews.ui.ReviewFlatContent"; //$NON-NLS-1$
 
-	public static final String REVIEW_FILTER_FOR_COMMENTS = "org.eclipse.mylyn.reviews.ui.CommonFilter"; //$NON-NLS-1$
+	String REVIEW_FILTER_FOR_COMMENTS = "org.eclipse.mylyn.reviews.ui.CommonFilter"; //$NON-NLS-1$
 
-	public static final int DIALOG_DEFAULT_HEIGHT = 300;
+	int DIALOG_DEFAULT_HEIGHT = 300;
 
-	public static final int DIALOG_DEFAULT_WIDTH = 400;
+	int DIALOG_DEFAULT_WIDTH = 400;
 
 }

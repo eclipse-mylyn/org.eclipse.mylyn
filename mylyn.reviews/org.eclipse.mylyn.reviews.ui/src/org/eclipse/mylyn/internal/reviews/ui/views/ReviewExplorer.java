@@ -98,7 +98,7 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer;
 
-	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
+	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<>() {
 
 		@Override
 		public void updated(boolean modified) {
@@ -133,9 +133,9 @@ public class ReviewExplorer extends CommonNavigator {
 				}
 			}
 		}
-	};
+	}
 
-	private final Map<IReviewItemSet, RemoteItemSetContentObserver> patchSetObservers = new HashMap<IReviewItemSet, RemoteItemSetContentObserver>();
+	private final Map<IReviewItemSet, RemoteItemSetContentObserver> patchSetObservers = new HashMap<>();
 
 	private IReviewRemoteFactoryProvider factoryProvider;
 
@@ -237,6 +237,7 @@ public class ReviewExplorer extends CommonNavigator {
 		final CommonViewer viewer = super.createCommonViewer(parent);
 		updateTreeViewer(viewer);
 		viewer.addTreeListener(new ITreeViewerListener() {
+			@Override
 			public void treeExpanded(TreeExpansionEvent event) {
 				if (event.getElement() instanceof IReviewItemSet) {
 					IReviewItemSet set = (IReviewItemSet) event.getElement();
@@ -247,6 +248,7 @@ public class ReviewExplorer extends CommonNavigator {
 				}
 			}
 
+			@Override
 			public void treeCollapsed(TreeExpansionEvent event) {
 			}
 		});
@@ -294,7 +296,7 @@ public class ReviewExplorer extends CommonNavigator {
 			public String getToolTipText(Object element) {
 				//For some reason tooltips are not delegated..
 				return provider.getToolTipText(element);
-			};
+			}
 		};
 		viewerColumn.setLabelProvider(styledLabelProvider);
 		column = viewerColumn.getColumn();
@@ -312,7 +314,7 @@ public class ReviewExplorer extends CommonNavigator {
 					allWidths += provider2.getMinimumSize();
 				}
 			}
-			column.setWidth((width - allWidths));
+			column.setWidth(width - allWidths);
 		}
 		TableLayout layout = (TableLayout) viewer.getTree().getLayout();
 		layout.addColumnData(new ColumnWeightData(provider.getWeight(), provider.getMinimumSize()));
@@ -325,7 +327,7 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private Collection<Object> matchingElements(ITreeContentProvider provider, Object parent,
 			Collection<Object> toMatch, boolean prune) {
-		HashSet<String> matchingLabels = new HashSet<String>();
+		HashSet<String> matchingLabels = new HashSet<>();
 		for (Object object : toMatch) {
 			String label = ((ILabelProvider) getCommonViewer().getLabelProvider()).getText(object);
 			matchingLabels.add(label);
@@ -335,7 +337,7 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private Collection<Object> matchingLabelElements(ITreeContentProvider provider, Object parent,
 			Collection<String> toMatch, boolean prune) {
-		HashSet<Object> matches = new HashSet<Object>();
+		HashSet<Object> matches = new HashSet<>();
 		String parentLabel = ((ILabelProvider) getCommonViewer().getLabelProvider()).getText(parent);
 		if (toMatch.contains(parentLabel)) {
 			matches.add(parent);
@@ -441,7 +443,7 @@ public class ReviewExplorer extends CommonNavigator {
 		if (!getCommonViewer().getControl().isDisposed()) {
 			//Because we don't necessarily have the same backing EMF objects, we need to test on equality. We'd also like to restore selection even if the tree structure changes. In this case, using labels will be most consistent with user expectations..
 			Object[] priorExpanded = getCommonViewer().getExpandedElements();
-			Object[] priorSelection = new Object[] {};
+			Object[] priorSelection = {};
 			if (getCommonViewer().getSelection() instanceof IStructuredSelection) {
 				priorSelection = ((IStructuredSelection) getCommonViewer().getSelection()).toArray();
 			}
@@ -449,10 +451,10 @@ public class ReviewExplorer extends CommonNavigator {
 			update();
 			Collection<Object> newExpanded = matchingElements(
 					(ITreeContentProvider) getCommonViewer().getContentProvider(), getActiveReview(),
-					new HashSet<Object>(Arrays.asList(priorExpanded)), true);
+					new HashSet<>(Arrays.asList(priorExpanded)), true);
 			Collection<Object> newSelection = matchingElements(
 					(ITreeContentProvider) getCommonViewer().getContentProvider(), getActiveReview(),
-					new HashSet<Object>(Arrays.asList(priorSelection)), false);
+					new HashSet<>(Arrays.asList(priorSelection)), false);
 			getCommonViewer().setExpandedElements(newExpanded.toArray());
 			getCommonViewer().setSelection(new StructuredSelection(newSelection.toArray()), true);
 			getCommonViewer().getControl().setRedraw(true);
@@ -551,14 +553,12 @@ public class ReviewExplorer extends CommonNavigator {
 				.getActivationService();
 		if (!isSupportsListTree()) {
 			activationService.activateExtensions(new String[] { getTreeContentId() }, false);
+		} else if (isFlat()) {
+			activationService.deactivateExtensions(new String[] { getTreeContentId() }, false);
+			activationService.activateExtensions(new String[] { getListContentId() }, false);
 		} else {
-			if (isFlat()) {
-				activationService.deactivateExtensions(new String[] { getTreeContentId() }, false);
-				activationService.activateExtensions(new String[] { getListContentId() }, false);
-			} else {
-				activationService.deactivateExtensions(new String[] { getListContentId() }, false);
-				activationService.activateExtensions(new String[] { getTreeContentId() }, false);
-			}
+			activationService.deactivateExtensions(new String[] { getListContentId() }, false);
+			activationService.activateExtensions(new String[] { getTreeContentId() }, false);
 		}
 		INavigatorFilterService filterService = getCommonViewer().getNavigatorContentService().getFilterService();
 		ICommonFilterDescriptor[] visibleDescriptors = filterService.getVisibleFilterDescriptors();

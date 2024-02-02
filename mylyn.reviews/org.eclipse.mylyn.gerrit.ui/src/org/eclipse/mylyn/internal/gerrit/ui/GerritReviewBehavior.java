@@ -76,8 +76,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 		}
 		Patch.Key key = Patch.Key.parse(id);
 		for (ILocation location : comment.getLocations()) {
-			if (location instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) location;
+			if (location instanceof ILineLocation lineLocation) {
 				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side, null,
 						StringUtils.defaultIfEmpty(comment.getId(), null));
 				request.setMessage(comment.getDescription());

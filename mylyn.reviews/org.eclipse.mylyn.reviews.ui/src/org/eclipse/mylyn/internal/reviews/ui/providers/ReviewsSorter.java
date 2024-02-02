@@ -43,16 +43,14 @@ public class ReviewsSorter extends ViewerSorter {
 			return 1;
 		}
 		Date d1 = null;
-		if (e1 instanceof IDated) {
-			IDated ed1 = (IDated) e1;
+		if (e1 instanceof IDated ed1) {
 			d1 = ed1.getModificationDate();
 			if (d1 == null) {
 				d1 = ed1.getCreationDate();
 			}
 		}
 		Date d2 = null;
-		if (e2 instanceof IDated) {
-			IDated ed2 = (IDated) e2;
+		if (e2 instanceof IDated ed2) {
 			d2 = ed2.getModificationDate();
 			if (d2 == null) {
 				d2 = ed2.getCreationDate();

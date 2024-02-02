@@ -14,8 +14,7 @@ package org.eclipse.mylyn.reviews.core.model;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Requirement Entry</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Requirement Entry</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -31,8 +30,7 @@ public interface IRequirementEntry extends EObject {
 	 * Returns the value of the '<em><b>Status</b></em>' attribute. The literals are from the enumeration
 	 * {@link org.eclipse.mylyn.reviews.core.model.RequirementStatus}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -44,8 +42,8 @@ public interface IRequirementEntry extends EObject {
 	RequirementStatus getStatus();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry#getStatus <em>Status</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry#getStatus <em>Status</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Status</em>' attribute.
@@ -69,8 +67,8 @@ public interface IRequirementEntry extends EObject {
 	IUser getBy();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry#getBy <em>By</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry#getBy <em>By</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>By</em>' reference.

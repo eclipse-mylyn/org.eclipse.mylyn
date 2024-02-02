@@ -27,7 +27,7 @@ public interface IOpenIdLocation {
 	/**
 	 * Returns a URL if this location is configured for OpenID authentication.
 	 */
-	public String getProviderUrl();
+	String getProviderUrl();
 
 	/**
 	 * Handles OpenID authentication in a blocking way.
@@ -41,7 +41,7 @@ public interface IOpenIdLocation {
 	 * @throws OperationCanceledException
 	 *             if the authentication was canceled
 	 */
-	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request,
-			IProgressMonitor monitor) throws UnsupportedRequestException;
+	OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request, IProgressMonitor monitor)
+			throws UnsupportedRequestException;
 
 }

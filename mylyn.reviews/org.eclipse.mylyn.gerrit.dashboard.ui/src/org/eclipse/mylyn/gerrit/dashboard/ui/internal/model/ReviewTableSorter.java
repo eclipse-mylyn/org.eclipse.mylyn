@@ -11,7 +11,7 @@
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the view sorter
- *   Francois Chouinard - Refined the sorting of 1) dates and 2) flags 
+ *   Francois Chouinard - Refined the sorting of 1) dates and 2) flags
  *   Marc-Andre Laperle - Add Status to dashboard
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
@@ -46,7 +46,6 @@ public class ReviewTableSorter extends ViewerSorter {
 	// ------------------------------------------------------------------------
 
 	public ReviewTableSorter(int columnIndex) {
-		super();
 		this.columnIndex = columnIndex;
 	}
 
@@ -72,51 +71,50 @@ public class ReviewTableSorter extends ViewerSorter {
 		int result = 0;
 
 		// We are dealing with GerritTask:s but just in case...
-		if (viewer instanceof TableViewer && item1 instanceof GerritTask && item2 instanceof GerritTask) {
+		if (viewer instanceof TableViewer && item1 instanceof GerritTask task1 && item2 instanceof GerritTask) {
 
-			GerritTask task1 = (GerritTask) item1;
 			GerritTask task2 = (GerritTask) item2;
 
 			String val1 = null;
 			String val2 = null;
 
 			switch (columnIndex) {
-			case 0: // Star
-				val1 = task1.getAttribute(GerritTask.IS_STARRED);
-				val2 = task2.getAttribute(GerritTask.IS_STARRED);
-				if (val1 != null && val2 != null) {
-					result = val1.compareTo(val2);
-				}
-				break;
-			case 7: // Updated
-				val1 = task1.getAttribute(GerritTask.DATE_MODIFICATION);
-				val2 = task2.getAttribute(GerritTask.DATE_MODIFICATION);
-				if (val1 != null && val2 != null) {
-					result = val1.compareTo(val2);
-				}
-				break;
-			case 8: // Code Review
-				val1 = task1.getAttribute(GerritTask.REVIEW_STATE);
-				val2 = task2.getAttribute(GerritTask.REVIEW_STATE);
-				if (val1 != null && val2 != null) {
-					Integer v1 = Integer.valueOf(val1);
-					Integer v2 = Integer.valueOf(val2);
-					result = v2 - v1;
-				}
-				break;
-			case 9: // Verify
-				val1 = task1.getAttribute(GerritTask.VERIFY_STATE);
-				val2 = task2.getAttribute(GerritTask.VERIFY_STATE);
-				if (val1 != null && val2 != null) {
-					Integer v1 = Integer.valueOf(val1);
-					Integer v2 = Integer.valueOf(val2);
-					result = v2 - v1;
-				}
-				break;
-			case 10: // IPLog Clean
-			default:
-				result = defaultCompare(viewer, item1, item2);
-				break;
+				case 0: // Star
+					val1 = task1.getAttribute(GerritTask.IS_STARRED);
+					val2 = task2.getAttribute(GerritTask.IS_STARRED);
+					if (val1 != null && val2 != null) {
+						result = val1.compareTo(val2);
+					}
+					break;
+				case 7: // Updated
+					val1 = task1.getAttribute(GerritTask.DATE_MODIFICATION);
+					val2 = task2.getAttribute(GerritTask.DATE_MODIFICATION);
+					if (val1 != null && val2 != null) {
+						result = val1.compareTo(val2);
+					}
+					break;
+				case 8: // Code Review
+					val1 = task1.getAttribute(GerritTask.REVIEW_STATE);
+					val2 = task2.getAttribute(GerritTask.REVIEW_STATE);
+					if (val1 != null && val2 != null) {
+						int v1 = Integer.parseInt(val1);
+						int v2 = Integer.parseInt(val2);
+						result = v2 - v1;
+					}
+					break;
+				case 9: // Verify
+					val1 = task1.getAttribute(GerritTask.VERIFY_STATE);
+					val2 = task2.getAttribute(GerritTask.VERIFY_STATE);
+					if (val1 != null && val2 != null) {
+						int v1 = Integer.parseInt(val1);
+						int v2 = Integer.parseInt(val2);
+						result = v2 - v1;
+					}
+					break;
+				case 10: // IPLog Clean
+				default:
+					result = defaultCompare(viewer, item1, item2);
+					break;
 			}
 		} else {
 			result = defaultCompare(viewer, item1, item2);
@@ -131,10 +129,9 @@ public class ReviewTableSorter extends ViewerSorter {
 
 	private int defaultCompare(Viewer aViewer, Object aE1, Object aE2) {
 
-		if (aViewer instanceof TableViewer) {
+		if (aViewer instanceof TableViewer tv) {
 
 			// We are in a table
-			TableViewer tv = (TableViewer) aViewer;
 			tv.getTable().setSortColumn(tv.getTable().getColumn(columnIndex));
 
 			// Lookup aE1 and aE2
@@ -155,16 +152,15 @@ public class ReviewTableSorter extends ViewerSorter {
 			int order = 0;
 
 			if (idx1 > -1 && idx2 > -1) {
-				String str1 = tv.getTable().getItems()[idx1].getText(this.columnIndex);
-				String str2 = tv.getTable().getItems()[idx2].getText(this.columnIndex);
+				String str1 = tv.getTable().getItems()[idx1].getText(columnIndex);
+				String str2 = tv.getTable().getItems()[idx2].getText(columnIndex);
 				order = str1.compareTo(str2);
 			}
 			return order;
 		}
 
-		else if (aViewer instanceof TreeViewer) {
+		else if (aViewer instanceof TreeViewer tv) {
 
-			TreeViewer tv = (TreeViewer) aViewer;
 			tv.getTree().setSortColumn(tv.getTree().getColumn(columnIndex));
 			int idx1 = -1, idx2 = -1;
 
@@ -194,8 +190,8 @@ public class ReviewTableSorter extends ViewerSorter {
 
 			int order = 0;
 			if (idx1 > -1 && idx2 > -1) {
-				String str1 = tv.getTree().getItems()[idx1].getText(this.columnIndex);
-				String str2 = tv.getTree().getItems()[idx2].getText(this.columnIndex);
+				String str1 = tv.getTree().getItems()[idx1].getText(columnIndex);
+				String str2 = tv.getTree().getItems()[idx2].getText(columnIndex);
 				order = str1.compareTo(str2);
 			}
 			return order;
@@ -204,7 +200,7 @@ public class ReviewTableSorter extends ViewerSorter {
 	}
 
 	// ------------------------------------------------------------------------
-	// Static methods 
+	// Static methods
 	// ------------------------------------------------------------------------
 
 	/**

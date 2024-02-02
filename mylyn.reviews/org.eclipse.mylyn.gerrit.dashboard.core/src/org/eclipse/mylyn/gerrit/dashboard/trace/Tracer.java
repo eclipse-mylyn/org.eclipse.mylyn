@@ -23,8 +23,8 @@ import org.eclipse.mylyn.gerrit.dashboard.Messages;
 
 // ESCA-JAVA0100:
 /**
- * This class implements a simple trace facility using Eclipse that can be used to send debugging output to the console
- * and/or to file. It supports various levels of tracing
+ * This class implements a simple trace facility using Eclipse that can be used to send debugging output to the console and/or to file. It
+ * supports various levels of tracing
  * 
  * @author Sebastien Dubois
  */
@@ -87,27 +87,27 @@ public class Tracer {
 		// Initialize tracer members from .options plugin file
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_error);
 		if (traceKey != null) {
-			ERROR = (Boolean.valueOf(traceKey)).booleanValue();
+			ERROR = Boolean.parseBoolean(traceKey);
 		}
 
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_warning);
 		if (traceKey != null) {
-			WARNING = (Boolean.valueOf(traceKey)).booleanValue();
+			WARNING = Boolean.parseBoolean(traceKey);
 		}
 
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_info);
 		if (traceKey != null) {
-			INFO = (Boolean.valueOf(traceKey)).booleanValue();
+			INFO = Boolean.parseBoolean(traceKey);
 		}
 
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_debug);
 		if (traceKey != null) {
-			DEBUG = (Boolean.valueOf(traceKey)).booleanValue();
+			DEBUG = Boolean.parseBoolean(traceKey);
 		}
 
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_consoleLog);
 		if (traceKey != null) {
-			fLogToConsole = (Boolean.valueOf(traceKey)).booleanValue();
+			fLogToConsole = Boolean.parseBoolean(traceKey);
 		}
 
 		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_logFile);

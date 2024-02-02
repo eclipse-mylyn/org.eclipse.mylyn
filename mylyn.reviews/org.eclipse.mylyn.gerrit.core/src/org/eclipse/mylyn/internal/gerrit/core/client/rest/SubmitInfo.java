@@ -13,8 +13,7 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#submit-info">SubmitInfo</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#submit-info">SubmitInfo</a>.
  */
 public class SubmitInfo {
 

@@ -70,17 +70,14 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 
 	void pullUser(final IRepository parent, final AccountInfoCache cache, final Id id, final IProgressMonitor monitor)
 			throws CoreException {
-		modelExec(new Runnable() {
-			@Override
-			public void run() {
-				if (id != null) {
-					final RemoteEmfConsumer<IRepository, IUser, String, AccountInfo, Id, String> userConsumer = getUserFactory(
-							cache).getConsumerForRemoteKey(parent, id);
-					try {
-						userConsumer.pull(false, monitor);
-					} catch (CoreException e) {
-						StatusHandler.log(e.getStatus());
-					}
+		modelExec(() -> {
+			if (id != null) {
+				final RemoteEmfConsumer<IRepository, IUser, String, AccountInfo, Id, String> userConsumer = getUserFactory(
+						cache).getConsumerForRemoteKey(parent, id);
+				try {
+					userConsumer.pull(false, monitor);
+				} catch (CoreException e) {
+					StatusHandler.log(e.getStatus());
 				}
 			}
 		}, true);

@@ -12,11 +12,11 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
 import org.osgi.framework.Version;
+
+import junit.framework.TestCase;
 
 public class GerritCapabilitiesTest extends TestCase {
 

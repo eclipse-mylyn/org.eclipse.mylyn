@@ -50,7 +50,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 
 	List<String> getReviewers() {
 		String[] reviewers = reviewersEditor.getText().split(","); //$NON-NLS-1$
-		List<String> result = new ArrayList<String>(reviewers.length);
+		List<String> result = new ArrayList<>(reviewers.length);
 		for (int i = 0; i < reviewers.length; i++) {
 			reviewers[i] = reviewers[i].trim();
 			if (reviewers[i].length() > 0) {
@@ -78,8 +78,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 	@Override
 	protected boolean processOperationResult(GerritOperation<?> operation) {
 		Object result = operation.getOperationResult();
-		if (result instanceof ReviewerResult) {
-			ReviewerResult reviewerResult = (ReviewerResult) result;
+		if (result instanceof ReviewerResult reviewerResult) {
 			if (reviewerResult.getErrors() != null && reviewerResult.getErrors().size() > 0) {
 				setErrorMessage(reviewerResult.getErrors().toString());
 				return false;

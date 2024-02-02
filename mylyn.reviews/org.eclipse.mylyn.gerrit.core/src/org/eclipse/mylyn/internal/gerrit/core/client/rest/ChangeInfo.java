@@ -36,8 +36,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info">ChangeInfo</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info">ChangeInfo</a>.
  */
 public class ChangeInfo {
 	// e.g. "gerritcodereview#change"
@@ -173,7 +172,7 @@ public class ChangeInfo {
 		if (labels == null) {
 			return Collections.<ApprovalDetail> emptySet();
 		}
-		Set<ApprovalDetail> result = new LinkedHashSet<ApprovalDetail>();
+		Set<ApprovalDetail> result = new LinkedHashSet<>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			List<ApprovalInfo> all = entry.getValue().getAll();
 			if (all != null) {
@@ -198,14 +197,14 @@ public class ChangeInfo {
 		if (labels == null) {
 			return null;
 		}
-		Set<ApprovalType> result = new LinkedHashSet<ApprovalType>();
+		Set<ApprovalType> result = new LinkedHashSet<>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
 			if (approvalCategory == null) {
 				// it's a custom approval type
 				approvalCategory = new ApprovalCategory(new ApprovalCategory.Id(null), entry.getKey());
 			}
-			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();
+			List<ApprovalCategoryValue> valueList = new ArrayList<>();
 			if (entry.getValue() != null && entry.getValue().getValues() != null) {
 				// custom approval types may not provide values
 				for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
@@ -223,9 +222,9 @@ public class ChangeInfo {
 		if (permitted_labels == null) {
 			return null;
 		}
-		List<PermissionLabel> result = new ArrayList<PermissionLabel>(permitted_labels.size());
+		List<PermissionLabel> result = new ArrayList<>(permitted_labels.size());
 		for (Entry<String, String[]> entry : permitted_labels.entrySet()) {
-			List<Short> values = new ArrayList<Short>(entry.getValue().length);
+			List<Short> values = new ArrayList<>(entry.getValue().length);
 			for (String value : entry.getValue()) {
 				values.add(ApprovalUtil.parseShort(value));
 			}
@@ -252,14 +251,11 @@ public class ChangeInfo {
 		if (labels == null) {
 			return null;
 		}
-		Map<ApprovalCategory.Id, PatchSetApproval> result = new HashMap<ApprovalCategory.Id, PatchSetApproval>(
+		Map<ApprovalCategory.Id, PatchSetApproval> result = new HashMap<>(
 				labels.size());
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
-			if (approvalCategory == null) {
-				continue;
-			}
-			if (entry.getValue().getAll() == null) {
+			if ((approvalCategory == null) || (entry.getValue().getAll() == null)) {
 				continue;
 			}
 			for (ApprovalInfo approvalInfo : entry.getValue().getAll()) {

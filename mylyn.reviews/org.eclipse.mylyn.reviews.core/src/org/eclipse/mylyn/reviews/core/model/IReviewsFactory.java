@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 /**
- * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of
- * the model. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of the model. <!--
+ * end-user-doc -->
  * 
  * @generated
  */

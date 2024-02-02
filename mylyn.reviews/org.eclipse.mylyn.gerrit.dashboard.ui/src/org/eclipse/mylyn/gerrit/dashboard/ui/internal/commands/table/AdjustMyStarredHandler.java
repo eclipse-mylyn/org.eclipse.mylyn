@@ -78,11 +78,7 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 							UIUtils.showErrorDialog(e.getMessage(), e.getStatus().getException().getMessage());
 						}
 
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								viewer.update(item, null);
-							}
-						});
+						Display.getDefault().asyncExec(() -> viewer.update(item, null));
 					}
 				}
 				return Status.OK_STATUS;

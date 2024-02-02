@@ -12,12 +12,9 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 
 /**
@@ -34,8 +31,7 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
  */
 public class LineRange extends EObjectImpl implements ILineRange {
 	/**
-	 * The default value of the '{@link #getStart() <em>Start</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getStart() <em>Start</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStart()
 	 * @generated
@@ -44,8 +40,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	protected static final int START_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getStart() <em>Start</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getStart() <em>Start</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getStart()
 	 * @generated
@@ -54,8 +49,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	protected int start = START_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEnd() <em>End</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getEnd() <em>End</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getEnd()
 	 * @generated
@@ -78,7 +72,6 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 * @generated
 	 */
 	protected LineRange() {
-		super();
 	}
 
 	/**
@@ -96,6 +89,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getStart() {
 		return start;
 	}
@@ -105,6 +99,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setStart(int newStart) {
 		int oldStart = start;
 		start = newStart;
@@ -118,6 +113,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getEnd() {
 		return end;
 	}
@@ -127,6 +123,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setEnd(int newEnd) {
 		int oldEnd = end;
 		end = newEnd;
@@ -143,10 +140,10 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_RANGE__START:
-			return getStart();
-		case ReviewsPackage.LINE_RANGE__END:
-			return getEnd();
+			case ReviewsPackage.LINE_RANGE__START:
+				return getStart();
+			case ReviewsPackage.LINE_RANGE__END:
+				return getEnd();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -159,12 +156,12 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_RANGE__START:
-			setStart((Integer) newValue);
-			return;
-		case ReviewsPackage.LINE_RANGE__END:
-			setEnd((Integer) newValue);
-			return;
+			case ReviewsPackage.LINE_RANGE__START:
+				setStart((Integer) newValue);
+				return;
+			case ReviewsPackage.LINE_RANGE__END:
+				setEnd((Integer) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -177,12 +174,12 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_RANGE__START:
-			setStart(START_EDEFAULT);
-			return;
-		case ReviewsPackage.LINE_RANGE__END:
-			setEnd(END_EDEFAULT);
-			return;
+			case ReviewsPackage.LINE_RANGE__START:
+				setStart(START_EDEFAULT);
+				return;
+			case ReviewsPackage.LINE_RANGE__END:
+				setEnd(END_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -195,10 +192,10 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_RANGE__START:
-			return start != START_EDEFAULT;
-		case ReviewsPackage.LINE_RANGE__END:
-			return end != END_EDEFAULT;
+			case ReviewsPackage.LINE_RANGE__START:
+				return start != START_EDEFAULT;
+			case ReviewsPackage.LINE_RANGE__END:
+				return end != END_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -214,7 +211,7 @@ public class LineRange extends EObjectImpl implements ILineRange {
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (start: "); //$NON-NLS-1$
 		result.append(start);
 		result.append(", end: "); //$NON-NLS-1$

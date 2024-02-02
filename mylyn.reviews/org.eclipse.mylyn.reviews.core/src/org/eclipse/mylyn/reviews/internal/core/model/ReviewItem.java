@@ -41,8 +41,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  */
 public abstract class ReviewItem extends CommentContainer implements IReviewItem {
 	/**
-	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getAddedBy()
 	 * @generated
@@ -51,8 +50,8 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	protected IUser addedBy;
 
 	/**
-	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getCommittedBy()
 	 * @generated
@@ -61,8 +60,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	protected IUser committedBy;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -71,8 +69,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -99,8 +96,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getReference()
 	 * @generated
@@ -109,8 +105,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	protected static final String REFERENCE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getReference()
 	 * @generated
@@ -124,7 +119,6 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * @generated
 	 */
 	protected ReviewItem() {
-		super();
 	}
 
 	/**
@@ -152,6 +146,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getAddedBy() {
 		if (addedBy != null && addedBy.eIsProxy()) {
 			InternalEObject oldAddedBy = (InternalEObject) addedBy;
@@ -180,6 +175,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setAddedBy(IUser newAddedBy) {
 		IUser oldAddedBy = addedBy;
 		addedBy = newAddedBy;
@@ -194,6 +190,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser getCommittedBy() {
 		if (committedBy != null && committedBy.eIsProxy()) {
 			InternalEObject oldCommittedBy = (InternalEObject) committedBy;
@@ -222,6 +219,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setCommittedBy(IUser newCommittedBy) {
 		IUser oldCommittedBy = committedBy;
 		committedBy = newCommittedBy;
@@ -236,6 +234,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReview getReview() {
 		// TODO: implement this method to return the 'Review' reference
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -247,6 +246,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -256,6 +256,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -269,6 +270,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -278,6 +280,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -291,6 +294,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getReference() {
 		return reference;
 	}
@@ -300,6 +304,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setReference(String newReference) {
 		String oldReference = reference;
 		reference = newReference;
@@ -331,24 +336,24 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			if (resolve) {
-				return getAddedBy();
-			}
-			return basicGetAddedBy();
-		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
-			if (resolve) {
-				return getCommittedBy();
-			}
-			return basicGetCommittedBy();
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			return getReview();
-		case ReviewsPackage.REVIEW_ITEM__NAME:
-			return getName();
-		case ReviewsPackage.REVIEW_ITEM__ID:
-			return getId();
-		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
-			return getReference();
+			case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
+				if (resolve) {
+					return getAddedBy();
+				}
+				return basicGetAddedBy();
+			case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+				if (resolve) {
+					return getCommittedBy();
+				}
+				return basicGetCommittedBy();
+			case ReviewsPackage.REVIEW_ITEM__REVIEW:
+				return getReview();
+			case ReviewsPackage.REVIEW_ITEM__NAME:
+				return getName();
+			case ReviewsPackage.REVIEW_ITEM__ID:
+				return getId();
+			case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+				return getReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -362,21 +367,21 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			setAddedBy((IUser) newValue);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
-			setCommittedBy((IUser) newValue);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__NAME:
-			setName((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__ID:
-			setId((String) newValue);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
-			setReference((String) newValue);
-			return;
+			case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
+				setAddedBy((IUser) newValue);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+				setCommittedBy((IUser) newValue);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__NAME:
+				setName((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__ID:
+				setId((String) newValue);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+				setReference((String) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -389,21 +394,21 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			setAddedBy((IUser) null);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
-			setCommittedBy((IUser) null);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__NAME:
-			setName(NAME_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__ID:
-			setId(ID_EDEFAULT);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
-			setReference(REFERENCE_EDEFAULT);
-			return;
+			case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
+				setAddedBy((IUser) null);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+				setCommittedBy((IUser) null);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+				setReference(REFERENCE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -416,18 +421,18 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			return addedBy != null;
-		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
-			return committedBy != null;
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			return getReview() != null;
-		case ReviewsPackage.REVIEW_ITEM__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case ReviewsPackage.REVIEW_ITEM__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
-			return REFERENCE_EDEFAULT == null ? reference != null : !REFERENCE_EDEFAULT.equals(reference);
+			case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
+				return addedBy != null;
+			case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+				return committedBy != null;
+			case ReviewsPackage.REVIEW_ITEM__REVIEW:
+				return getReview() != null;
+			case ReviewsPackage.REVIEW_ITEM__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case ReviewsPackage.REVIEW_ITEM__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+				return REFERENCE_EDEFAULT == null ? reference != null : !REFERENCE_EDEFAULT.equals(reference);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -443,7 +448,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 			return super.toString();
 		}
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", id: "); //$NON-NLS-1$

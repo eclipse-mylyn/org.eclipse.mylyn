@@ -277,7 +277,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					} else {
 						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y,
 								target.getPath() == null ? target.getName() : target.getPath(),
-										target.getDescription());
+								target.getDescription());
 					}
 				}
 			}
@@ -489,8 +489,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	private final boolean includeAuthors;
 
 	public static class Flat extends ReviewsLabelProvider {
-		TableColumnProvider[] columns = { ARTIFACT_COLUMN, COMMENTS_COLUMN, AUTHORS_COLUMN,
-				DATE_COLUMN };
+		TableColumnProvider[] columns = { ARTIFACT_COLUMN, COMMENTS_COLUMN, AUTHORS_COLUMN, DATE_COLUMN };
 
 		@Override
 		public TableColumnProvider[] getColumnProviders() {

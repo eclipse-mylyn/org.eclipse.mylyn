@@ -51,7 +51,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 
 	private RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer;
 
-	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
+	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<>() {
 		@Override
 		public void updating() {
 			updateMessage();
@@ -135,8 +135,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	@Override
 	public void dispose() {
 		IReviewRemoteFactoryProvider provider = getFactoryProvider();
-		if (provider instanceof ReviewsRemoteEditFactoryProvider) {
-			ReviewsRemoteEditFactoryProvider reviewsProvider = (ReviewsRemoteEditFactoryProvider) provider;
+		if (provider instanceof ReviewsRemoteEditFactoryProvider reviewsProvider) {
 			reviewsProvider.save(getReview());
 			reviewObserver.dispose();
 		}

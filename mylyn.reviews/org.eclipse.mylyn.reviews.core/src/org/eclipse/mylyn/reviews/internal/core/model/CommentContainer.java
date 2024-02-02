@@ -29,8 +29,7 @@ import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Comment Container</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Comment Container</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -43,8 +42,8 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
  */
 public abstract class CommentContainer extends EObjectImpl implements ICommentContainer {
 	/**
-	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getComments()
 	 * @generated
@@ -58,7 +57,6 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * @generated
 	 */
 	protected CommentContainer() {
-		super();
 	}
 
 	/**
@@ -76,6 +74,7 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IComment> getAllComments() {
 		// TODO: implement this method to return the 'All Comments' reference list
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -89,9 +88,10 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<IComment> getComments() {
 		if (comments == null) {
-			comments = new EObjectContainmentWithInverseEList.Resolving<IComment>(IComment.class, this,
+			comments = new EObjectContainmentWithInverseEList.Resolving<>(IComment.class, this,
 					ReviewsPackage.COMMENT_CONTAINER__COMMENTS, ReviewsPackage.COMMENT__ITEM);
 		}
 		return comments;
@@ -102,14 +102,15 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public List<IComment> getAllDrafts() {
-		List<IComment> drafts = new ArrayList<IComment>(getComments());
+		List<IComment> drafts = new ArrayList<>(getComments());
 		for (IComment comment : getAllComments()) {
 			if (comment.isDraft()) {
 				drafts.add(comment);
 			}
 		}
-		return new EObjectEList.UnmodifiableEList<IComment>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS,
+		return new EObjectEList.UnmodifiableEList<>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS,
 				drafts.size(), drafts.toArray());
 	}
 
@@ -118,14 +119,15 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public List<IComment> getDrafts() {
-		List<IComment> drafts = new ArrayList<IComment>(getComments());
+		List<IComment> drafts = new ArrayList<>(getComments());
 		for (IComment comment : getComments()) {
 			if (comment.isDraft()) {
 				drafts.add(comment);
 			}
 		}
-		return new EObjectEList.UnmodifiableEList<IComment>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS,
+		return new EObjectEList.UnmodifiableEList<>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS,
 				drafts.size(), drafts.toArray());
 	}
 
@@ -134,6 +136,7 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public IComment createComment(ILocation initalLocation, String commentText) {
 		IComment comment = ReviewsFactory.eINSTANCE.createComment();
 		comment.setDescription(commentText);
@@ -156,8 +159,8 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -170,10 +173,10 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
-			return ((InternalEList<?>) getDrafts()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+				return ((InternalEList<?>) getDrafts()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -186,14 +189,14 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
-			return getAllComments();
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			return getComments();
-		case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
-			return getAllDrafts();
-		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
-			return getDrafts();
+			case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
+				return getAllComments();
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				return getComments();
+			case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
+				return getAllDrafts();
+			case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+				return getDrafts();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -207,14 +210,14 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			getComments().clear();
-			getComments().addAll((Collection<? extends IComment>) newValue);
-			return;
-		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
-			getDrafts().clear();
-			getDrafts().addAll((Collection<? extends IComment>) newValue);
-			return;
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				getComments().clear();
+				getComments().addAll((Collection<? extends IComment>) newValue);
+				return;
+			case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+				getDrafts().clear();
+				getDrafts().addAll((Collection<? extends IComment>) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -227,12 +230,12 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			getComments().clear();
-			return;
-		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
-			getDrafts().clear();
-			return;
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				getComments().clear();
+				return;
+			case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+				getDrafts().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -245,14 +248,14 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
-			return !getAllComments().isEmpty();
-		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
-			return comments != null && !comments.isEmpty();
-		case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
-			return !getAllDrafts().isEmpty();
-		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
-			return !getDrafts().isEmpty();
+			case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
+				return !getAllComments().isEmpty();
+			case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+				return comments != null && !comments.isEmpty();
+			case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
+				return !getAllDrafts().isEmpty();
+			case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+				return !getDrafts().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

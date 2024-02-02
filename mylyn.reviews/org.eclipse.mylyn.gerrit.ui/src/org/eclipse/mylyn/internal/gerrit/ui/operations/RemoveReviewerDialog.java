@@ -33,7 +33,7 @@ public class RemoveReviewerDialog extends GerritOperationDialog {
 
 	public RemoveReviewerDialog(Shell parentShell, ITask task, IUser user) {
 		super(parentShell, task);
-		this.userToRemove = user;
+		userToRemove = user;
 	}
 
 	@Override
@@ -59,8 +59,7 @@ public class RemoveReviewerDialog extends GerritOperationDialog {
 	@Override
 	protected boolean processOperationResult(GerritOperation<?> operation) {
 		Object result = operation.getOperationResult();
-		if (result instanceof ReviewerResult) {
-			ReviewerResult reviewerResult = (ReviewerResult) result;
+		if (result instanceof ReviewerResult reviewerResult) {
 			if (reviewerResult.getErrors() != null && reviewerResult.getErrors().size() > 0) {
 				setErrorMessage(reviewerResult.getErrors().toString());
 				return false;

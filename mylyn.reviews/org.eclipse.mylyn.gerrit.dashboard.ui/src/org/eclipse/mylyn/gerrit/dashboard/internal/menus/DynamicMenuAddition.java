@@ -47,8 +47,8 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 	private static String SELECT_PICTURE_FILE = "icons/select.gif"; //$NON-NLS-1$
 
 	/**
-	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the
-	 * SWT Display is disposed.
+	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the SWT Display is
+	 * disposed.
 	 */
 	// For the images
 	private static ImageRegistry fImageRegistry = new ImageRegistry();
@@ -76,7 +76,7 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 	protected IContributionItem[] getContributionItems() {
 
 		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .getContributionItems()"); //$NON-NLS-1$
-		CommandContributionItem[] contributionItems = new CommandContributionItem[0];
+		CommandContributionItem[] contributionItems = {};
 		if (fServer != null) {
 			fMapServer = GerritServerUtility.getGerritMapping();
 		}

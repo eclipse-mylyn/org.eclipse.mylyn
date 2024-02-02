@@ -128,7 +128,7 @@ public class GerritConnector extends ReviewsConnector {
 
 	private TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
 
-	private final ConcurrentMap<TaskRepository, GerritConfiguration> configurationCache = new ConcurrentHashMap<TaskRepository, GerritConfiguration>();
+	private final ConcurrentMap<TaskRepository, GerritConfiguration> configurationCache = new ConcurrentHashMap<>();
 
 	public GerritConnector() {
 		if (GerritCorePlugin.getDefault() != null) {

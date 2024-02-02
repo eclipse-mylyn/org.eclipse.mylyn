@@ -38,8 +38,8 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
  */
 public class LineLocation extends Location implements ILineLocation {
 	/**
-	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getRanges()
 	 * @generated
@@ -48,8 +48,7 @@ public class LineLocation extends Location implements ILineLocation {
 	protected EList<ILineRange> ranges;
 
 	/**
-	 * The default value of the '{@link #getRangeMin() <em>Range Min</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getRangeMin() <em>Range Min</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRangeMin()
 	 * @generated
@@ -58,8 +57,7 @@ public class LineLocation extends Location implements ILineLocation {
 	protected static final int RANGE_MIN_EDEFAULT = 0;
 
 	/**
-	 * The default value of the '{@link #getRangeMax() <em>Range Max</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getRangeMax() <em>Range Max</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRangeMax()
 	 * @generated
@@ -73,7 +71,6 @@ public class LineLocation extends Location implements ILineLocation {
 	 * @generated
 	 */
 	protected LineLocation() {
-		super();
 	}
 
 	/**
@@ -91,9 +88,10 @@ public class LineLocation extends Location implements ILineLocation {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List<ILineRange> getRanges() {
 		if (ranges == null) {
-			ranges = new EObjectContainmentEList.Resolving<ILineRange>(ILineRange.class, this,
+			ranges = new EObjectContainmentEList.Resolving<>(ILineRange.class, this,
 					ReviewsPackage.LINE_LOCATION__RANGES);
 		}
 		return ranges;
@@ -104,6 +102,7 @@ public class LineLocation extends Location implements ILineLocation {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public int getRangeMin() {
 		int min = -1;
 		for (ILineRange range : getRanges()) {
@@ -111,7 +110,7 @@ public class LineLocation extends Location implements ILineLocation {
 				min = range.getStart();
 			}
 		}
-		return (min == -1) ? 0 : min;
+		return min == -1 ? 0 : min;
 	}
 
 	/**
@@ -119,6 +118,7 @@ public class LineLocation extends Location implements ILineLocation {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public int getRangeMax() {
 		int max = -1;
 		for (ILineRange range : getRanges()) {
@@ -126,7 +126,7 @@ public class LineLocation extends Location implements ILineLocation {
 				max = range.getStart();
 			}
 		}
-		return (max == -1) ? 0 : max;
+		return max == -1 ? 0 : max;
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class LineLocation extends Location implements ILineLocation {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_LOCATION__RANGES:
-			return ((InternalEList<?>) getRanges()).basicRemove(otherEnd, msgs);
+			case ReviewsPackage.LINE_LOCATION__RANGES:
+				return ((InternalEList<?>) getRanges()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -159,12 +159,12 @@ public class LineLocation extends Location implements ILineLocation {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_LOCATION__RANGES:
-			return getRanges();
-		case ReviewsPackage.LINE_LOCATION__RANGE_MIN:
-			return getRangeMin();
-		case ReviewsPackage.LINE_LOCATION__RANGE_MAX:
-			return getRangeMax();
+			case ReviewsPackage.LINE_LOCATION__RANGES:
+				return getRanges();
+			case ReviewsPackage.LINE_LOCATION__RANGE_MIN:
+				return getRangeMin();
+			case ReviewsPackage.LINE_LOCATION__RANGE_MAX:
+				return getRangeMax();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -178,10 +178,10 @@ public class LineLocation extends Location implements ILineLocation {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_LOCATION__RANGES:
-			getRanges().clear();
-			getRanges().addAll((Collection<? extends ILineRange>) newValue);
-			return;
+			case ReviewsPackage.LINE_LOCATION__RANGES:
+				getRanges().clear();
+				getRanges().addAll((Collection<? extends ILineRange>) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -194,9 +194,9 @@ public class LineLocation extends Location implements ILineLocation {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_LOCATION__RANGES:
-			getRanges().clear();
-			return;
+			case ReviewsPackage.LINE_LOCATION__RANGES:
+				getRanges().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -209,12 +209,12 @@ public class LineLocation extends Location implements ILineLocation {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.LINE_LOCATION__RANGES:
-			return ranges != null && !ranges.isEmpty();
-		case ReviewsPackage.LINE_LOCATION__RANGE_MIN:
-			return getRangeMin() != RANGE_MIN_EDEFAULT;
-		case ReviewsPackage.LINE_LOCATION__RANGE_MAX:
-			return getRangeMax() != RANGE_MAX_EDEFAULT;
+			case ReviewsPackage.LINE_LOCATION__RANGES:
+				return ranges != null && !ranges.isEmpty();
+			case ReviewsPackage.LINE_LOCATION__RANGE_MIN:
+				return getRangeMin() != RANGE_MIN_EDEFAULT;
+			case ReviewsPackage.LINE_LOCATION__RANGE_MAX:
+				return getRangeMax() != RANGE_MAX_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

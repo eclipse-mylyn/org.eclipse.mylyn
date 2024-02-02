@@ -12,16 +12,30 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.eclipse.mylyn.reviews.core.model.*;
+import org.eclipse.mylyn.reviews.core.model.IApprovalType;
+import org.eclipse.mylyn.reviews.core.model.IChange;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.ILineLocation;
+import org.eclipse.mylyn.reviews.core.model.ILineRange;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
+import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
@@ -60,7 +74,6 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * @generated
 	 */
 	public ReviewsFactory() {
-		super();
 	}
 
 	/**
@@ -70,44 +83,26 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-		case ReviewsPackage.CHANGE:
-			return createChange();
-		case ReviewsPackage.REVIEW:
-			return createReview();
-		case ReviewsPackage.COMMENT:
-			return createComment();
-		case ReviewsPackage.USER:
-			return createUser();
-		case ReviewsPackage.REPOSITORY:
-			return createRepository();
-		case ReviewsPackage.FILE_ITEM:
-			return createFileItem();
-		case ReviewsPackage.REVIEW_ITEM_SET:
-			return createReviewItemSet();
-		case ReviewsPackage.LINE_LOCATION:
-			return createLineLocation();
-		case ReviewsPackage.LINE_RANGE:
-			return createLineRange();
-		case ReviewsPackage.FILE_VERSION:
-			return createFileVersion();
-		case ReviewsPackage.APPROVAL_TYPE:
-			return createApprovalType();
-		case ReviewsPackage.USER_APPROVALS_MAP:
-			return (EObject) createUserApprovalsMap();
-		case ReviewsPackage.REVIEWER_ENTRY:
-			return createReviewerEntry();
-		case ReviewsPackage.APPROVAL_VALUE_MAP:
-			return (EObject) createApprovalValueMap();
-		case ReviewsPackage.REQUIREMENT_ENTRY:
-			return createRequirementEntry();
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP:
-			return (EObject) createReviewRequirementsMap();
-		case ReviewsPackage.COMMIT:
-			return createCommit();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eClass.getClassifierID()) {
+			case ReviewsPackage.CHANGE -> createChange();
+			case ReviewsPackage.REVIEW -> createReview();
+			case ReviewsPackage.COMMENT -> createComment();
+			case ReviewsPackage.USER -> createUser();
+			case ReviewsPackage.REPOSITORY -> createRepository();
+			case ReviewsPackage.FILE_ITEM -> createFileItem();
+			case ReviewsPackage.REVIEW_ITEM_SET -> createReviewItemSet();
+			case ReviewsPackage.LINE_LOCATION -> createLineLocation();
+			case ReviewsPackage.LINE_RANGE -> createLineRange();
+			case ReviewsPackage.FILE_VERSION -> createFileVersion();
+			case ReviewsPackage.APPROVAL_TYPE -> createApprovalType();
+			case ReviewsPackage.USER_APPROVALS_MAP -> (EObject) createUserApprovalsMap();
+			case ReviewsPackage.REVIEWER_ENTRY -> createReviewerEntry();
+			case ReviewsPackage.APPROVAL_VALUE_MAP -> (EObject) createApprovalValueMap();
+			case ReviewsPackage.REQUIREMENT_ENTRY -> createRequirementEntry();
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP -> (EObject) createReviewRequirementsMap();
+			case ReviewsPackage.COMMIT -> createCommit();
+			default -> throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -117,14 +112,12 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-		case ReviewsPackage.REQUIREMENT_STATUS:
-			return createRequirementStatusFromString(eDataType, initialValue);
-		case ReviewsPackage.REVIEW_STATUS:
-			return createReviewStatusFromString(eDataType, initialValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eDataType.getClassifierID()) {
+			case ReviewsPackage.REQUIREMENT_STATUS -> createRequirementStatusFromString(eDataType, initialValue);
+			case ReviewsPackage.REVIEW_STATUS -> createReviewStatusFromString(eDataType, initialValue);
+			default -> throw new IllegalArgumentException(
+					"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -134,14 +127,12 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-		case ReviewsPackage.REQUIREMENT_STATUS:
-			return convertRequirementStatusToString(eDataType, instanceValue);
-		case ReviewsPackage.REVIEW_STATUS:
-			return convertReviewStatusToString(eDataType, instanceValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return switch (eDataType.getClassifierID()) {
+			case ReviewsPackage.REQUIREMENT_STATUS -> convertRequirementStatusToString(eDataType, instanceValue);
+			case ReviewsPackage.REVIEW_STATUS -> convertReviewStatusToString(eDataType, instanceValue);
+			default -> throw new IllegalArgumentException(
+					"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		};
 	}
 
 	/**
@@ -149,6 +140,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReview createReview() {
 		Review review = new Review();
 		return review;
@@ -159,6 +151,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IComment createComment() {
 		Comment comment = new Comment();
 		return comment;
@@ -169,6 +162,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IUser createUser() {
 		User user = new User();
 		return user;
@@ -179,6 +173,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IRepository createRepository() {
 		Repository repository = new Repository();
 		return repository;
@@ -189,6 +184,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileItem createFileItem() {
 		FileItem fileItem = new FileItem();
 		return fileItem;
@@ -199,6 +195,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReviewItemSet createReviewItemSet() {
 		ReviewItemSet reviewItemSet = new ReviewItemSet();
 		return reviewItemSet;
@@ -209,6 +206,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ILineLocation createLineLocation() {
 		LineLocation lineLocation = new LineLocation();
 		return lineLocation;
@@ -219,6 +217,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ILineRange createLineRange() {
 		LineRange lineRange = new LineRange();
 		return lineRange;
@@ -229,6 +228,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IFileVersion createFileVersion() {
 		FileVersion fileVersion = new FileVersion();
 		return fileVersion;
@@ -239,6 +239,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IReviewerEntry createReviewerEntry() {
 		ReviewerEntry reviewerEntry = new ReviewerEntry();
 		return reviewerEntry;
@@ -249,6 +250,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IApprovalType createApprovalType() {
 		ApprovalType approvalType = new ApprovalType();
 		return approvalType;
@@ -269,6 +271,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IRequirementEntry createRequirementEntry() {
 		RequirementEntry requirementEntry = new RequirementEntry();
 		return requirementEntry;
@@ -289,6 +292,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ICommit createCommit() {
 		Commit commit = new Commit();
 		return commit;
@@ -355,6 +359,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IChange createChange() {
 		Change change = new Change();
 		return change;

@@ -74,8 +74,8 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		IUser author = comment.getAuthor();
 		return NLS.bind(Messages.AbstractCommentPart_Section_header, //
 				author != null ? author.getDisplayName() : Messages.AbstractCommentPart_No_author, //
-						DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) //
-				);
+				DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) //
+		);
 	}
 
 	public ReviewBehavior getBehavior() {
@@ -84,16 +84,11 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected Comparator<IComment> getComparator() {
-		return new Comparator<>() {
-
-			@Override
-			public int compare(IComment o1, IComment o2) {
-				if (o1 != null && o2 != null) {
-					return o1.getCreationDate().compareTo(o2.getCreationDate());
-				}
-				return 0;
+		return (o1, o2) -> {
+			if (o1 != null && o2 != null) {
+				return o1.getCreationDate().compareTo(o2.getCreationDate());
 			}
-
+			return 0;
 		};
 	}
 

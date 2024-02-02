@@ -79,8 +79,7 @@ public class InlineCommentSubmitter {
 	}
 
 	/**
-	 * Creates a new comment, sets the comment's parameters based on the editor's current comment and text, and submits
-	 * the comment
+	 * Creates a new comment, sets the comment's parameters based on the editor's current comment and text, and submits the comment
 	 */
 	public void saveComment() {
 		if (!commentEditor.getState().equals(CommentEditorState.VIEW)
@@ -162,8 +161,7 @@ public class InlineCommentSubmitter {
 	}
 
 	/**
-	 * Updates the UI with the result of the comment operation (either a new comment draft, draft comment edit or
-	 * discard comment action)
+	 * Updates the UI with the result of the comment operation (either a new comment draft, draft comment edit or discard comment action)
 	 * 
 	 * @param comment
 	 *            the comment that the operation was done on
@@ -217,13 +215,10 @@ public class InlineCommentSubmitter {
 	 *            the message that will be displayed to the user
 	 */
 	private void processServerError(final String message) {
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				final MessageDialog dialog = new MessageDialog(null, Messages.CommentPopupDialog_ServerError, null,
-						message, MessageDialog.ERROR, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
-				dialog.open();
-			}
+		Display.getDefault().syncExec(() -> {
+			final MessageDialog dialog = new MessageDialog(null, Messages.CommentPopupDialog_ServerError, null,
+					message, MessageDialog.ERROR, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+			dialog.open();
 		});
 	}
 
@@ -240,7 +235,7 @@ public class InlineCommentSubmitter {
 						reviewBehavior.getTask().getRepositoryUrl());
 		@SuppressWarnings("restriction")
 		ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin
-		.getConnector(reviewBehavior.getTask().getConnectorKind());
+				.getConnector(reviewBehavior.getTask().getConnectorKind());
 		IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector
 				.getReviewClient(taskRepository)
 				.getFactoryProvider();

@@ -22,9 +22,8 @@ import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
- * Defines a single patch set, that is a state comparison between an (optional) base and target. The content can then be
- * populated by calling
- * {@link GerritClient#loadPatchSetContent(GerritPatchSetContent, org.eclipse.core.runtime.IProgressMonitor)}.
+ * Defines a single patch set, that is a state comparison between an (optional) base and target. The content can then be populated by
+ * calling {@link GerritClient#loadPatchSetContent(GerritPatchSetContent, org.eclipse.core.runtime.IProgressMonitor)}.
  *
  * @author Steffen Pingel
  * @author Miles Parker
@@ -49,7 +48,7 @@ public class PatchSetContent {
 	public PatchSetContent(PatchSet base, PatchSetDetail targetDetail) {
 		this.base = base;
 		this.targetDetail = targetDetail;
-		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScriptX>();
+		patchScriptByPatchKey = new HashMap<>();
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class PatchSetContent {
 	public PatchSetContent(PatchSet base, PatchSet target) {
 		this.base = base;
 		this.target = target;
-		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScriptX>();
+		patchScriptByPatchKey = new HashMap<>();
 	}
 
 	public PatchSet getBase() {

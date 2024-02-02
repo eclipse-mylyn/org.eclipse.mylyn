@@ -136,10 +136,10 @@ public class CommentPopupDialogTest extends TestCase {
 		commentPopupDialog = createPopupWithXComments(1, false);
 		Listener[] listeners = commentPopupDialog.getComposite().getListeners(SWT.MouseMove);
 		Arrays.asList(listeners)
-		.stream()
-		.filter(Listener.class::isInstance)
-		.findFirst()
-		.orElseThrow(NoSuchElementException::new);
+				.stream()
+				.filter(Listener.class::isInstance)
+				.findFirst()
+				.orElseThrow(NoSuchElementException::new);
 	}
 
 	/**
@@ -186,12 +186,11 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Tests that buttons save and discard/done buttons are interacting properly depending if there is text in the
-	 * comment editor. First, we check that invoking the comment editor on a draft with text enables the save and
-	 * discard/done buttons. Second, removing the text in the comment editor disables the save button. Third, we check
-	 * that an additional invocation of the comment popup does not result in a change in the editor. Then, removing the
-	 * popup and making the same invocation of the comment popup causes it to open the last comment in the popup which
-	 * is a draft and contains text so both buttons are enabled
+	 * Tests that buttons save and discard/done buttons are interacting properly depending if there is text in the comment editor. First, we
+	 * check that invoking the comment editor on a draft with text enables the save and discard/done buttons. Second, removing the text in
+	 * the comment editor disables the save button. Third, we check that an additional invocation of the comment popup does not result in a
+	 * change in the editor. Then, removing the popup and making the same invocation of the comment popup causes it to open the last comment
+	 * in the popup which is a draft and contains text so both buttons are enabled
 	 */
 	@Test
 	public void testTextListenerWithDraft() {
@@ -221,10 +220,9 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Tests that buttons save and discard/done buttons are interacting properly depending if there is text in the
-	 * comment editor. First, we check that invoking the comment editor on a saved comment (non-draft) causes the editor
-	 * to open with no text and with both the save and discard/done buttons disabled. Second, we check that adding text
-	 * to the editor enables these buttons.
+	 * Tests that buttons save and discard/done buttons are interacting properly depending if there is text in the comment editor. First, we
+	 * check that invoking the comment editor on a saved comment (non-draft) causes the editor to open with no text and with both the save
+	 * and discard/done buttons disabled. Second, we check that adding text to the editor enables these buttons.
 	 */
 	@Test
 	public void testTextListenerNoDraft() {
@@ -387,8 +385,7 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Tests that having one hover comment popup and one comment navigator comment popup will only result in one being
-	 * editable
+	 * Tests that having one hover comment popup and one comment navigator comment popup will only result in one being editable
 	 */
 	@Test
 	public void testDuplicateHoverAndNavigatorCommentEditor() {
@@ -407,8 +404,8 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Tests that opening the hover comment popup first will make a comment navigator popup editable (since hover
-	 * comment popups are not added to the edit map until the editor is invoked)
+	 * Tests that opening the hover comment popup first will make a comment navigator popup editable (since hover comment popups are not
+	 * added to the edit map until the editor is invoked)
 	 */
 	@Test
 	public void testEditableHoverCommentOpennedFirst() {
@@ -419,8 +416,7 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Tests that opening the hover comment popup first and then its comment editor will make a comment navigator popup
-	 * not editable
+	 * Tests that opening the hover comment popup first and then its comment editor will make a comment navigator popup not editable
 	 */
 	@Test
 	public void testEditableHoverCommentAndEditorOpennedFirst() {
@@ -515,8 +511,7 @@ public class CommentPopupDialogTest extends TestCase {
 	 * @param x
 	 *            the number of comments that will be added to the dialog
 	 * @param isCommentNavigator
-	 *            true if the dialog will be from the next/previous button, false if the dialog will be from a hover
-	 *            input
+	 *            true if the dialog will be from the next/previous button, false if the dialog will be from a hover input
 	 * @return the created {@link CommentPopupDialog}
 	 */
 	private CommentPopupDialog createPopupWithXComments(int x, boolean isCommentNavigator) {
@@ -749,9 +744,9 @@ public class CommentPopupDialogTest extends TestCase {
 	private void assertSavingComment(Button button, String description, boolean isDraft, boolean isDiscard)
 			throws Exception {
 		doReturn(Status.OK_STATUS).when(behavior)
-		.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+				.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 		doReturn(Status.OK_STATUS).when(behavior)
-		.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+				.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 
 		pressButton(button);
 
@@ -803,8 +798,8 @@ public class CommentPopupDialogTest extends TestCase {
 	}
 
 	/**
-	 * Adds a comment editor to the popup (note that if the comment provided is not a draft, you will be editing the
-	 * last draft in that comment thread)
+	 * Adds a comment editor to the popup (note that if the comment provided is not a draft, you will be editing the last draft in that
+	 * comment thread)
 	 *
 	 * @param popup
 	 *            the comment dialog popup that will be edited

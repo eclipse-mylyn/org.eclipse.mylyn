@@ -14,11 +14,11 @@ package org.eclipse.mylyn.reviews.internal.core;
 
 public interface ReviewsCoreConstants {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.reviews.core"; //$NON-NLS-1$
+	String PLUGIN_ID = "org.eclipse.mylyn.reviews.core"; //$NON-NLS-1$
 
-	public static final String CODE_REVIEW = "CODE_REVIEW"; //$NON-NLS-1$
+	String CODE_REVIEW = "CODE_REVIEW"; //$NON-NLS-1$
 
-	public static final String VERIFIED = "VERIFIED"; //$NON-NLS-1$
+	String VERIFIED = "VERIFIED"; //$NON-NLS-1$
 
-	public static final String BRANCH = "BRANCH"; //$NON-NLS-1$
+	String BRANCH = "BRANCH"; //$NON-NLS-1$
 }

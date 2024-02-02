@@ -147,6 +147,6 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	@Override
 	protected boolean isExecutableStateKnown() {
 		return isAnonymous()
-				|| (getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null);
+				|| getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null;
 	}
 }

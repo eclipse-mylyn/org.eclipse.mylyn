@@ -12,24 +12,19 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Requirements Map</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Requirements Map</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -42,8 +37,7 @@ import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
  */
 public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entry<IApprovalType, IRequirementEntry> {
 	/**
-	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTypedKey()
 	 * @generated
@@ -52,8 +46,8 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	protected IApprovalType key;
 
 	/**
-	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getTypedValue()
 	 * @generated
@@ -67,7 +61,6 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * @generated
 	 */
 	protected ReviewRequirementsMap() {
-		super();
 	}
 
 	/**
@@ -214,8 +207,8 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			return basicSetTypedValue(null, msgs);
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
+				return basicSetTypedValue(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -228,16 +221,16 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
-			if (resolve) {
-				return getTypedKey();
-			}
-			return basicGetTypedKey();
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			if (resolve) {
-				return getTypedValue();
-			}
-			return basicGetTypedValue();
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
+				if (resolve) {
+					return getTypedKey();
+				}
+				return basicGetTypedKey();
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
+				if (resolve) {
+					return getTypedValue();
+				}
+				return basicGetTypedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -250,12 +243,12 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
-			setTypedKey((IApprovalType) newValue);
-			return;
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			setTypedValue((IRequirementEntry) newValue);
-			return;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
+				setTypedKey((IApprovalType) newValue);
+				return;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
+				setTypedValue((IRequirementEntry) newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -268,12 +261,12 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
-			setTypedKey((IApprovalType) null);
-			return;
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			setTypedValue((IRequirementEntry) null);
-			return;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
+				setTypedKey((IApprovalType) null);
+				return;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
+				setTypedValue((IRequirementEntry) null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -286,10 +279,10 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
-			return key != null;
-		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			return value != null;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
+				return key != null;
+			case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
+				return value != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -306,10 +299,11 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getHash() {
 		if (hash == -1) {
 			Object theKey = getKey();
-			hash = (theKey == null ? 0 : theKey.hashCode());
+			hash = theKey == null ? 0 : theKey.hashCode();
 		}
 		return hash;
 	}
@@ -319,6 +313,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setHash(int hash) {
 		this.hash = hash;
 	}
@@ -328,6 +323,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IApprovalType getKey() {
 		return getTypedKey();
 	}
@@ -337,6 +333,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void setKey(IApprovalType key) {
 		setTypedKey(key);
 	}
@@ -346,6 +343,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IRequirementEntry getValue() {
 		return getTypedValue();
 	}
@@ -355,6 +353,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	 * 
 	 * @generated
 	 */
+	@Override
 	public IRequirementEntry setValue(IRequirementEntry value) {
 		IRequirementEntry oldValue = getValue();
 		setTypedValue(value);

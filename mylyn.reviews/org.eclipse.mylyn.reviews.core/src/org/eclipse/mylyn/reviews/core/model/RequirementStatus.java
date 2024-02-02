@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Requirement Status</b></em>', and
- * utility methods for working with them. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Requirement Status</b></em>', and utility methods for
+ * working with them. <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementStatus()
  * @generated
@@ -89,8 +89,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Unknown</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Unknown</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Unknown</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -103,8 +102,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Satisfied</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Satisfied</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Satisfied</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -117,8 +115,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Optional</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Optional</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Optional</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -131,8 +128,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Closed</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Closed</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Closed</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -145,8 +141,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Not Satisfied</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Not Satisfied</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Not Satisfied</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -159,8 +154,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Rejected</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Rejected</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Rejected</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -173,8 +167,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Error</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Error</b></em>' literal object isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of '<em><b>Error</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -185,25 +178,23 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	public static final int ERROR_VALUE = 100;
 
 	/**
-	 * An array of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * An array of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	private static final RequirementStatus[] VALUES_ARRAY = new RequirementStatus[] { UNKNOWN, SATISFIED, OPTIONAL,
-			CLOSED, NOT_SATISFIED, REJECTED, ERROR, };
+	private static final RequirementStatus[] VALUES_ARRAY = { UNKNOWN, SATISFIED, OPTIONAL, CLOSED, NOT_SATISFIED,
+			REJECTED, ERROR, };
 
 	/**
-	 * A public read-only list of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * A public read-only list of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	public static final List<RequirementStatus> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified literal value. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified literal value. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -217,8 +208,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	}
 
 	/**
-	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified name. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -232,27 +222,27 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	}
 
 	/**
-	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified integer value. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified integer value. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
 	public static RequirementStatus get(int value) {
 		switch (value) {
-		case UNKNOWN_VALUE:
-			return UNKNOWN;
-		case SATISFIED_VALUE:
-			return SATISFIED;
-		case OPTIONAL_VALUE:
-			return OPTIONAL;
-		case CLOSED_VALUE:
-			return CLOSED;
-		case NOT_SATISFIED_VALUE:
-			return NOT_SATISFIED;
-		case REJECTED_VALUE:
-			return REJECTED;
-		case ERROR_VALUE:
-			return ERROR;
+			case UNKNOWN_VALUE:
+				return UNKNOWN;
+			case SATISFIED_VALUE:
+				return SATISFIED;
+			case OPTIONAL_VALUE:
+				return OPTIONAL;
+			case CLOSED_VALUE:
+				return CLOSED;
+			case NOT_SATISFIED_VALUE:
+				return NOT_SATISFIED;
+			case REJECTED_VALUE:
+				return REJECTED;
+			case ERROR_VALUE:
+				return ERROR;
 		}
 		return null;
 	}
@@ -283,7 +273,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * 
 	 * @generated
 	 */
-	private RequirementStatus(int value, String name, String literal) {
+	RequirementStatus(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -294,6 +284,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -303,6 +294,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -312,13 +304,13 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -330,8 +322,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 } //RequirementStatus
 
 /**
- * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */

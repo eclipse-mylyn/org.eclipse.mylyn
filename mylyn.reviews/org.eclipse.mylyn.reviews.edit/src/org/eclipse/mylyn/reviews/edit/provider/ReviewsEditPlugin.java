@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.reviews.edit.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
 
 /**
@@ -77,8 +76,6 @@ public final class ReviewsEditPlugin extends EMFPlugin {
 		 * @generated
 		 */
 		public Implementation() {
-			super();
-
 			// Remember the static instance.
 			//
 			plugin = this;

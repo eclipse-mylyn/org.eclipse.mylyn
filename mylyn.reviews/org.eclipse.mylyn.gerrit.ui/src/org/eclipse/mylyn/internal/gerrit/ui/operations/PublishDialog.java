@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.gerrit.ui.operations;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,7 +74,7 @@ public class PublishDialog extends GerritOperationDialog {
 		this.publishDetail = publishDetail;
 		this.set = set;
 		this.editorCommentText = editorCommentText;
-		this.approvalButtons = new ArrayList<Button>();
+		approvalButtons = new ArrayList<>();
 		setNeedsConfig(true);
 	}
 
@@ -88,7 +87,7 @@ public class PublishDialog extends GerritOperationDialog {
 	}
 
 	private Set<ApprovalCategoryValue.Id> getApprovals() {
-		Set<ApprovalCategoryValue.Id> approvals = new HashSet<ApprovalCategoryValue.Id>();
+		Set<ApprovalCategoryValue.Id> approvals = new HashSet<>();
 		for (Button button : approvalButtons) {
 			if (button.getSelection()) {
 				approvals.add((ApprovalCategoryValue.Id) button.getData(KEY_ID));
@@ -169,12 +168,8 @@ public class PublishDialog extends GerritOperationDialog {
 					}
 				}
 
-				List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
-				Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
-					public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
-						return o2.get() - o1.get();
-					}
-				});
+				List<ApprovalCategoryValue.Id> allowedList = new ArrayList<>(allowed);
+				Collections.sort(allowedList, (o1, o2) -> o2.get() - o1.get());
 				for (ApprovalCategoryValue.Id valueId : allowedList) {
 					ApprovalCategoryValue approvalValue = approvalType.getValue(valueId.get());
 
@@ -206,7 +201,7 @@ public class PublishDialog extends GerritOperationDialog {
 			// Gerrit 2.2
 			List<PermissionLabel> labels = ((PatchSetPublishDetailX) publishDetail).getLabels();
 			if (labels != null) {
-				Set<ApprovalCategoryValue.Id> result = new HashSet<ApprovalCategoryValue.Id>();
+				Set<ApprovalCategoryValue.Id> result = new HashSet<>();
 				for (PermissionLabel label : labels) {
 					if (label.matches(approvalType.getCategory())) {
 						for (ApprovalCategoryValue value : approvalType.getValues()) {

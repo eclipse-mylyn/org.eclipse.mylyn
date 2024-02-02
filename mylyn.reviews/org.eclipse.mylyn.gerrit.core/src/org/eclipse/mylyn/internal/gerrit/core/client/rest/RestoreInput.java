@@ -25,6 +25,6 @@ public class RestoreInput {
 
 	public RestoreInput(String msg) {
 		Assert.isLegal(msg != null);
-		this.message = msg;
+		message = msg;
 	}
 }

@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
@@ -26,6 +24,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
 import org.junit.Test;
 
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+
+import junit.framework.TestCase;
 
 public class ReviewInputTest extends TestCase {
 
@@ -88,7 +88,7 @@ public class ReviewInputTest extends TestCase {
 	@Test
 	public void testSetApprovals() throws Exception {
 		ReviewInput reviewInput = new ReviewInput("");
-		Set<ApprovalCategoryValue.Id> approvals = new HashSet<ApprovalCategoryValue.Id>(1);
+		Set<ApprovalCategoryValue.Id> approvals = new HashSet<>(1);
 		approvals.add(ApprovalUtil.CRVW.getValue((short) 1).getId());
 		reviewInput.setApprovals(approvals);
 

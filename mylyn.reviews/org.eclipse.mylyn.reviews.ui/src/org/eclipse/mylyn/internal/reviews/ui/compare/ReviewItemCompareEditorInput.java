@@ -65,8 +65,7 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 	@Override
 	public Viewer findStructureViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
 		Viewer structureViewer = super.findStructureViewer(oldViewer, input, parent);
-		if (structureViewer instanceof StructureDiffViewer) {
-			StructureDiffViewer diffViewer = (StructureDiffViewer) structureViewer;
+		if (structureViewer instanceof StructureDiffViewer diffViewer) {
 			diffViewer.setLabelProvider(new LabelProvider() {
 
 				@Override
@@ -79,8 +78,7 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 
 				@Override
 				public Image getImage(Object element) {
-					if (element instanceof IDiffElement) {
-						IDiffElement input = (IDiffElement) element;
+					if (element instanceof IDiffElement input) {
 						int kind = input.getKind();
 						//We need to swap additions and deletions as work-around. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=410534
 						if (kind == Differencer.ADDITION) {

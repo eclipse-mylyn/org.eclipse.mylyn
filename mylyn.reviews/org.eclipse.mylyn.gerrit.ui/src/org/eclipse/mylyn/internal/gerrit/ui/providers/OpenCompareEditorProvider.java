@@ -56,9 +56,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 							ActiveReviewManager reviewManager = ReviewsUiPlugin.getDefault().getReviewManager();
 							if (reviewManager != null) {
 								IWorkbenchPart currentPart = reviewManager.getCurrentPart();
-								if (currentPart instanceof TaskEditor) {
+								if (currentPart instanceof TaskEditor part) {
 
-									TaskEditor part = (TaskEditor) currentPart;
 									TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
 									GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
 									CompareConfiguration configuration = new CompareConfiguration();

@@ -37,7 +37,7 @@ import org.junit.Test;
 @SuppressWarnings("restriction")
 public class GerritCompareUiTest {
 
-	private static final IEditorReference[] EMPTY_IEDITOR_REFERENCE_ARRAY = new IEditorReference[0];
+	private static final IEditorReference[] EMPTY_IEDITOR_REFERENCE_ARRAY = {};
 
 	private static final String FILE_ITEM_ID = "Test file item ID";
 
@@ -61,7 +61,7 @@ public class GerritCompareUiTest {
 
 	@Before
 	public void setUp() throws PartInitException {
-		editorReferences = new ArrayList<IEditorReference>();
+		editorReferences = new ArrayList<>();
 		editorReferences.add(getMockEditor("org.eclipse.other.Editor"));
 
 		item = IReviewsFactory.INSTANCE.createFileItem();

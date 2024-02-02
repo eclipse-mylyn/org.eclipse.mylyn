@@ -23,8 +23,7 @@ public class NonCommentFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (element instanceof ICommentContainer) {
-			ICommentContainer container = (ICommentContainer) element;
+		if (element instanceof ICommentContainer container) {
 			return container.getAllComments().size() > 0;
 		}
 		return true;

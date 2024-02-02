@@ -58,13 +58,10 @@ public class RebaseDialog extends GerritOperationDialog {
 		Label label = new Label(composite, SWT.NONE);
 		label.setText(NLS.bind(Messages.RebaseDialog_Rebase_patch_set_X, patchSet.getRefName()));
 
-		parent.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (!parent.isDisposed()) {
-					setReturnCode(Window.OK);
-					close();
-				}
+		parent.getDisplay().asyncExec(() -> {
+			if (!parent.isDisposed()) {
+				setReturnCode(Window.OK);
+				close();
 			}
 		});
 

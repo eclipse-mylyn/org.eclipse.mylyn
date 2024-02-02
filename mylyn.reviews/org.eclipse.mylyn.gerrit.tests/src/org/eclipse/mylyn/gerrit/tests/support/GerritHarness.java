@@ -13,10 +13,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.support;
 
-import java.net.Proxy;
-
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -65,23 +62,13 @@ public class GerritHarness {
 			username = null;
 			password = null;
 		}
-		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), username, password, new IProxyProvider() {
-			@Override
-			public Proxy getProxyForHost(String host, String proxyType) {
-				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
-			}
-		});
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), username, password, (host, proxyType) -> WebUtil.getProxyForUrl(fixture.getRepositoryUrl()));
 		return location;
 	}
 
 	public GerritClient clientAnonymous() {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(fixture.getRepositoryUrl());
-		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), null, null, new IProxyProvider() {
-			@Override
-			public Proxy getProxyForHost(String host, String proxyType) {
-				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
-			}
-		});
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), null, null, (host, proxyType) -> WebUtil.getProxyForUrl(fixture.getRepositoryUrl()));
 		return GerritClient.create(repository, location);
 	}
 

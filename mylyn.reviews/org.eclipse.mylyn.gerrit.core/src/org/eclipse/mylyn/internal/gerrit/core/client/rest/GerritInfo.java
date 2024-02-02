@@ -12,8 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for
- * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-config.html#gerrit-info">GerritInfo</a>.
+ * Data model object for <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-config.html#gerrit-info">GerritInfo</a>.
  *
  * @since 2.12
  */

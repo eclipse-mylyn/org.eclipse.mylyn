@@ -36,7 +36,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class UIReviewTable {
 
-	private final int TABLE_STYLE = (SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	private final int TABLE_STYLE = SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
 
 	// ------------------------------------------------------------------------
 	// Variables
@@ -169,7 +168,7 @@ public class UIReviewTable {
 					scrollWidth = 0;
 				}
 
-				int computeExtraWidth = parentSize.x - 10 - (minimumTableWidth) - scrollWidth;
+				int computeExtraWidth = parentSize.x - 10 - minimumTableWidth - scrollWidth;
 				int newSubjectWidth = mimimumSubjectWidth;
 				int newProjectWidth = minProjectWidth;
 				//If extra space, redistribute it to specific column
@@ -219,10 +218,9 @@ public class UIReviewTable {
 
 	}
 
-	private final Listener mouseButtonListener = new Listener() {
-		public void handleEvent(Event aEvent) {
-			GerritUi.Ftracer.traceInfo("mouseButtonListener() for " + aEvent.button); //$NON-NLS-1$
-			switch (aEvent.type) {
+	private final Listener mouseButtonListener = aEvent -> {
+		GerritUi.Ftracer.traceInfo("mouseButtonListener() for " + aEvent.button); //$NON-NLS-1$
+		switch (aEvent.type) {
 			case SWT.MouseDown:
 				// Left Click
 				if (aEvent.button == 1) {
@@ -260,9 +258,7 @@ public class UIReviewTable {
 				break;
 			default:
 				break;
-			}
 		}
-
 	};
 
 	/**

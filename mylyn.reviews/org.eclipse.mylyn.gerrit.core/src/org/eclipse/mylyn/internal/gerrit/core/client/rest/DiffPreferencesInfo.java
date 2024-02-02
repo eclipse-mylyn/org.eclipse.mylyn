@@ -79,7 +79,7 @@ public class DiffPreferencesInfo {
 	 *            the ignoreWhitespace to set
 	 */
 	public void setIgnoreWhitespace(Whitespace ignoreWhitespace) {
-		this.ignore_whitespace = ignoreWhitespace;
+		ignore_whitespace = ignoreWhitespace;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class DiffPreferencesInfo {
 	 *            the tabSize to set
 	 */
 	public void setTabSize(int tabSize) {
-		this.tab_size = tabSize;
+		tab_size = tabSize;
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class DiffPreferencesInfo {
 	 *            the lineLength to set
 	 */
 	public void setLineLength(int lineLength) {
-		this.line_Length = lineLength;
+		line_Length = lineLength;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class DiffPreferencesInfo {
 	 *            the syntaxHighlighting to set
 	 */
 	public void setSyntaxHighlighting(boolean syntaxHighlighting) {
-		this.syntax_highlighting = syntaxHighlighting;
+		syntax_highlighting = syntaxHighlighting;
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class DiffPreferencesInfo {
 	 *            the showWhitespaceErrors to set
 	 */
 	public void setShowWhitespaceErrors(boolean showWhitespaceErrors) {
-		this.show_whitespace_errors = showWhitespaceErrors;
+		show_whitespace_errors = showWhitespaceErrors;
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class DiffPreferencesInfo {
 	 *            the intralineDifference to set
 	 */
 	public void setIntralineDifference(boolean intralineDifference) {
-		this.intraline_difference = intralineDifference;
+		intraline_difference = intralineDifference;
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class DiffPreferencesInfo {
 	 *            the showTabs to set
 	 */
 	public void setShowTabs(boolean showTabs) {
-		this.show_tabs = showTabs;
+		show_tabs = showTabs;
 	}
 
 	/**

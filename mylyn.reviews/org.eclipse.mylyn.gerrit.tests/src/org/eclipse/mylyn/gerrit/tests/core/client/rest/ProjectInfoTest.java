@@ -16,14 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
 import org.junit.Test;
 
 import com.google.gson.reflect.TypeToken;
+
+import junit.framework.TestCase;
 
 public class ProjectInfoTest extends TestCase {
 	@Test
@@ -65,7 +65,7 @@ public class ProjectInfoTest extends TestCase {
 	@Test
 	public void testFromProjects() throws Exception {
 		File file = CommonTestUtil.getFile(this, "testdata/ProjectInfo_projects.json");
-		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<Map<String, ProjectInfo>>() {
+		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<>() {
 		};
 		String content = CommonTestUtil.read(file);
 		Map<String, ProjectInfo> projects = new JSonSupport().parseResponse(content, resultType.getType());

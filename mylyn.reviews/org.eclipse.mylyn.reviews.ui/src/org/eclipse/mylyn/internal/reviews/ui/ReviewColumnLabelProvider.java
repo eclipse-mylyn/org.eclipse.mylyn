@@ -53,12 +53,12 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		TaskReview reviewContainer = (TaskReview) element;
 
 		switch (columnIndex) {
-		case DESCRIPTION_COLUMN:
-			return getIncomingChangesImage(reviewContainer);
-		case CODE_REVIEW_COLUMN:
-			return getReviewStateImage(reviewContainer);
-		case VERIFIED_COLUMN:
-			return getVerifiedStateImage(reviewContainer);
+			case DESCRIPTION_COLUMN:
+				return getIncomingChangesImage(reviewContainer);
+			case CODE_REVIEW_COLUMN:
+				return getReviewStateImage(reviewContainer);
+			case VERIFIED_COLUMN:
+				return getVerifiedStateImage(reviewContainer);
 		}
 
 		return null;
@@ -78,14 +78,14 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		int reviewScore = reviewContainer.getCodeReviewScore();
 
 		switch (reviewScore) {
-		case MINUS_TWO:
-			return CommonImages.getImage(ReviewsImages.RED_NOT);
-		case MINUS_ONE:
-			return CommonImages.getImage(ReviewsImages.MINUS_ONE);
-		case PLUS_ONE:
-			return CommonImages.getImage(ReviewsImages.PLUS_ONE);
-		case PLUS_TWO:
-			return CommonImages.getImage(ReviewsImages.GREEN_CHECK);
+			case MINUS_TWO:
+				return CommonImages.getImage(ReviewsImages.RED_NOT);
+			case MINUS_ONE:
+				return CommonImages.getImage(ReviewsImages.MINUS_ONE);
+			case PLUS_ONE:
+				return CommonImages.getImage(ReviewsImages.PLUS_ONE);
+			case PLUS_TWO:
+				return CommonImages.getImage(ReviewsImages.GREEN_CHECK);
 		}
 
 		return CommonImages.getImage(CommonImages.OVERLAY_CLEAR);
@@ -106,29 +106,22 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 	public String getColumnText(Object element, int columnIndex) {
 		TaskReview reviewContainer = (TaskReview) element;
 
-		switch (columnIndex) {
-		case DESCRIPTION_COLUMN:
-			return reviewContainer.getSummary();
-		case BRANCH_COLUMN:
-			return reviewContainer.getBranch();
-		case STATUS_COLUMN:
-			return reviewContainer.getStatus();
-		default:
-			return ""; //$NON-NLS-1$
-		}
+		return switch (columnIndex) {
+			case DESCRIPTION_COLUMN -> reviewContainer.getSummary();
+			case BRANCH_COLUMN -> reviewContainer.getBranch();
+			case STATUS_COLUMN -> reviewContainer.getStatus();
+			default -> ""; //$NON-NLS-1$
+		};
 	}
 
 	public String getSortString(Object element, int columnIndex) {
 		TaskReview reviewContainer = (TaskReview) element;
 
-		switch (columnIndex) {
-		case CODE_REVIEW_COLUMN:
-			return Integer.toString(reviewContainer.getCodeReviewScore());
-		case VERIFIED_COLUMN:
-			return Integer.toString(reviewContainer.getVerifiedScore());
-		default:
-			return getColumnText(element, columnIndex);
-		}
+		return switch (columnIndex) {
+			case CODE_REVIEW_COLUMN -> Integer.toString(reviewContainer.getCodeReviewScore());
+			case VERIFIED_COLUMN -> Integer.toString(reviewContainer.getVerifiedScore());
+			default -> getColumnText(element, columnIndex);
+		};
 	}
 
 	@Override

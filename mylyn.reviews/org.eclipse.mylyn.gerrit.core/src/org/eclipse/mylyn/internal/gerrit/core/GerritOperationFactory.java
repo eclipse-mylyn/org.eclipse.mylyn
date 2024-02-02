@@ -35,7 +35,7 @@ public class GerritOperationFactory {
 	}
 
 	public <T> GerritOperation<T> createOperation(ITask review, AbstractRequest<T> request) {
-		return new GerritOperation<T>(request.getOperationName(), getClient(review), request);
+		return new GerritOperation<>(request.getOperationName(), getClient(review), request);
 	}
 
 	public GerritClient getClient(ITask review) {

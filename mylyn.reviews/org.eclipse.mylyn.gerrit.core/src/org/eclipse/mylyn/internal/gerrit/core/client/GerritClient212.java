@@ -121,7 +121,7 @@ public class GerritClient212 extends GerritClient29 {
 
 		config.setSchemes(schemes);
 		config.setDownloadSchemes(
-				schemes.keySet().stream().map(scheme -> scheme.toDownloadScheme()).collect(Collectors.toSet()));
+				schemes.keySet().stream().map(DownloadSchemeX::toDownloadScheme).collect(Collectors.toSet()));
 
 		return config;
 	}
@@ -317,7 +317,7 @@ public class GerritClient212 extends GerritClient29 {
 		adaptCommentDetails(commentInfo_B, rightId, commentDetail.getCommentsB(), fileName, commentDetail);
 
 		ChangeInfo changeInfo = getChangeInfo(rightId.getParentKey().get(), monitor);
-		List<com.google.gerrit.common.data.AccountInfo> listAccountInfo = new ArrayList<com.google.gerrit.common.data.AccountInfo>();
+		List<com.google.gerrit.common.data.AccountInfo> listAccountInfo = new ArrayList<>();
 
 		com.google.gerrit.common.data.AccountInfo accountInfo = setAccountFromChangeInfo(changeInfo);
 		listAccountInfo.add(accountInfo);
@@ -500,13 +500,13 @@ public class GerritClient212 extends GerritClient29 {
 	private void adaptLineContent_A(SparseFileContent sparseFileContent, DiffInfo diffInfo) {
 		List<DiffContent> diffContent = diffInfo.getContent();
 		int contentIdx = 0;
-		for (int i = 0; i < diffContent.size(); i++) {
-			if (diffContent.get(i).getAb() != null) { // add common content if this is the case
-				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getAb(), contentIdx);
-				contentIdx += diffContent.get(i).getAb().size();
-			} else if (diffContent.get(i).getA() != null) { // content only on side a (deleted in b)
-				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getA(), contentIdx);
-				contentIdx += diffContent.get(i).getA().size();
+		for (DiffContent element : diffContent) {
+			if (element.getAb() != null) { // add common content if this is the case
+				addLinesAndConvertToStrings(sparseFileContent, element.getAb(), contentIdx);
+				contentIdx += element.getAb().size();
+			} else if (element.getA() != null) { // content only on side a (deleted in b)
+				addLinesAndConvertToStrings(sparseFileContent, element.getA(), contentIdx);
+				contentIdx += element.getA().size();
 			}
 		}
 	}
@@ -514,13 +514,13 @@ public class GerritClient212 extends GerritClient29 {
 	private void adaptLineContent_B(SparseFileContent sparseFileContent, DiffInfo diffInfo) {
 		List<DiffContent> diffContent = diffInfo.getContent();
 		int contentIdx = 0;
-		for (int i = 0; i < diffContent.size(); i++) {
-			if (diffContent.get(i).getAb() != null) { // add common content if this is the case
-				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getAb(), contentIdx);
-				contentIdx += diffContent.get(i).getAb().size();
-			} else if (diffContent.get(i).getB() != null) { // content only on side b (added in b)
-				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getB(), contentIdx);
-				contentIdx += diffContent.get(i).getB().size();
+		for (DiffContent element : diffContent) {
+			if (element.getAb() != null) { // add common content if this is the case
+				addLinesAndConvertToStrings(sparseFileContent, element.getAb(), contentIdx);
+				contentIdx += element.getAb().size();
+			} else if (element.getB() != null) { // content only on side b (added in b)
+				addLinesAndConvertToStrings(sparseFileContent, element.getB(), contentIdx);
+				contentIdx += element.getB().size();
 			}
 		}
 	}

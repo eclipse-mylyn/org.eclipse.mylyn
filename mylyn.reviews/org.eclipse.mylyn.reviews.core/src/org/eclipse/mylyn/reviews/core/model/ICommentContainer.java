@@ -16,8 +16,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Comment Container</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Comment Container</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -33,8 +32,7 @@ public interface ICommentContainer extends EObject {
 	 * Returns the value of the '<em><b>All Comments</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>All Comments</em>' reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>All Comments</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -48,8 +46,8 @@ public interface ICommentContainer extends EObject {
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. It is bidirectional and its opposite is '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comments</em>' containment reference list isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Comments</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -63,8 +61,7 @@ public interface ICommentContainer extends EObject {
 	 * Returns the value of the '<em><b>All Drafts</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>All Drafts</em>' reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>All Drafts</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -77,8 +74,7 @@ public interface ICommentContainer extends EObject {
 	 * Returns the value of the '<em><b>Drafts</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Drafts</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Drafts</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 

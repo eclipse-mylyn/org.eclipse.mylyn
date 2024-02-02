@@ -8,12 +8,12 @@
  * 
  * Description:
  * 
- * This class implements the "Add ..." a new Gerrit 
+ * This class implements the "Add ..." a new Gerrit
  * project locations.
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial implementation of the handler
- *   
+ * 
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all;
 
@@ -37,6 +37,7 @@ public class AllOpenReviewsHandler extends AbstractHandler {
 	 * @return Object
 	 * @see org.eclipse.core.commands.IHandler#execute(ExecutionEvent)
 	 */
+	@Override
 	public Object execute(final ExecutionEvent aEvent) {
 		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 

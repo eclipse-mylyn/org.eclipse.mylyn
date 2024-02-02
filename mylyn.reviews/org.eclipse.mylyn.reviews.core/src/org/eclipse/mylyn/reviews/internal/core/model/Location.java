@@ -11,16 +11,9 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.ILocation;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Location</b></em>'. <!-- end-user-doc -->
@@ -35,8 +28,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
  */
 public abstract class Location extends EObjectImpl implements ILocation {
 	/**
-	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getIndex()
 	 * @generated
@@ -50,7 +42,6 @@ public abstract class Location extends EObjectImpl implements ILocation {
 	 * @generated
 	 */
 	protected Location() {
-		super();
 	}
 
 	/**
@@ -68,6 +59,7 @@ public abstract class Location extends EObjectImpl implements ILocation {
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public long getIndex() {
 		return 0;
 	}
@@ -80,8 +72,8 @@ public abstract class Location extends EObjectImpl implements ILocation {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.LOCATION__INDEX:
-			return getIndex();
+			case ReviewsPackage.LOCATION__INDEX:
+				return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -94,8 +86,8 @@ public abstract class Location extends EObjectImpl implements ILocation {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.LOCATION__INDEX:
-			return getIndex() != INDEX_EDEFAULT;
+			case ReviewsPackage.LOCATION__INDEX:
+				return getIndex() != INDEX_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

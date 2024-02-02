@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.reviews.ui.tests;
 
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialogTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialogTest;
 
 public class AllReviewsUiTests {
 

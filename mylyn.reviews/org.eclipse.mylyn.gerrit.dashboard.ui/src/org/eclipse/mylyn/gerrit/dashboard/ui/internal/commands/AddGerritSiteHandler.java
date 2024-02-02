@@ -52,6 +52,7 @@ public class AddGerritSiteHandler extends AbstractHandler {
 	 * @return Object
 	 * @see org.eclipse.core.commands.IHandler#execute(ExecutionEvent)
 	 */
+	@Override
 	public Object execute(final ExecutionEvent aEvent) {
 
 		String menuItemText = ""; //$NON-NLS-1$
@@ -59,11 +60,9 @@ public class AddGerritSiteHandler extends AbstractHandler {
 		Object obj = aEvent.getTrigger();
 		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
-		if (obj instanceof Event) {
-			Event ev = (Event) obj;
+		if (obj instanceof Event ev) {
 			Widget objWidget = ev.widget;
-			if (objWidget instanceof MenuItem) {
-				MenuItem menuItem = (MenuItem) objWidget;
+			if (objWidget instanceof MenuItem menuItem) {
 				menuItemText = menuItem.getText();
 				String stURL = fServerUtil.getMenuSelectionURL(menuItemText);
 				// Open the review table first;

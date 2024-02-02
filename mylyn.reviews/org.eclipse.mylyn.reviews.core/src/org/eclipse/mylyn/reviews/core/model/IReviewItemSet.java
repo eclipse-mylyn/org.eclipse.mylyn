@@ -23,8 +23,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits <em>Parent Commits</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need Of
- * Retrieval</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need Of Retrieval</em>}</li>
  * </ul>
  *
  * @generated
@@ -35,8 +34,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * {@link org.eclipse.mylyn.reviews.core.model.IFileItem}. It is bidirectional and its opposite is
 	 * '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -47,11 +45,9 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	List<IFileItem> getItems();
 
 	/**
-	 * Returns the value of the '<em><b>Revision</b></em>' attribute. The default value is <code>""</code>. <!--
-	 * begin-user-doc -->
+	 * Returns the value of the '<em><b>Revision</b></em>' attribute. The default value is <code>""</code>. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description
-	 * here...
+	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -62,8 +58,8 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	String getRevision();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Revision</em>' attribute.
@@ -73,11 +69,10 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	void setRevision(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Parent Review</b></em>' container reference. It is bidirectional and its
-	 * opposite is '{@link org.eclipse.mylyn.reviews.core.model.IReview#getSets <em>Sets</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Parent Review</b></em>' container reference. It is bidirectional and its opposite is
+	 * '{@link org.eclipse.mylyn.reviews.core.model.IReview#getSets <em>Sets</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parent Review</em>' container reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Parent Review</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -89,8 +84,8 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	IReview getParentReview();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent
-	 * Review</em>}' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}' container
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Parent Review</em>' container reference.
@@ -100,11 +95,11 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	void setParentReview(IReview value);
 
 	/**
-	 * Returns the value of the '<em><b>Parent Commits</b></em>' containment reference list. The list contents are of
-	 * type {@link org.eclipse.mylyn.reviews.core.model.ICommit}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Parent Commits</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.ICommit}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parent Commits</em>' containment reference list isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Parent Commits</em>' containment reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -114,11 +109,10 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	List<ICommit> getParentCommits();
 
 	/**
-	 * Returns the value of the '<em><b>In Need Of Retrieval</b></em>' attribute. The default value is
-	 * <code>"false"</code>. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>In Need Of Retrieval</b></em>' attribute. The default value is <code>"false"</code>. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>In Need Of Retrieval</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>In Need Of Retrieval</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -129,8 +123,8 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	boolean isInNeedOfRetrieval();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need
-	 * Of Retrieval</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need Of Retrieval</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>In Need Of Retrieval</em>' attribute.

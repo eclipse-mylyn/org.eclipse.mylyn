@@ -29,7 +29,7 @@ public class PatchSetUiFactoryProvider extends AbstractReviewItemSetUiFactoryPro
 
 	@Override
 	public List<AbstractUiFactory<IReviewItemSet>> createFactories(IUiContext context, IReviewItemSet set) {
-		List<AbstractUiFactory<IReviewItemSet>> factories = new ArrayList<AbstractUiFactory<IReviewItemSet>>();
+		List<AbstractUiFactory<IReviewItemSet>> factories = new ArrayList<>();
 		factories.add(new PublishUiFactory(context, set));
 		factories.add(new FetchUiFactory(context, set));
 		factories.add(new CompareWithUiFactory(context, set));
