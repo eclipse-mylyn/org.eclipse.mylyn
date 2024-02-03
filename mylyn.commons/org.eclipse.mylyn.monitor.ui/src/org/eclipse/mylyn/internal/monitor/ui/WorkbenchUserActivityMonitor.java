@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.monitor.ui;
@@ -16,6 +17,7 @@ import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -32,7 +34,7 @@ public class WorkbenchUserActivityMonitor extends AbstractUserActivityMonitor {
 
 	@Override
 	public void start() {
-		display = MonitorUiPlugin.getDefault().getWorkbench().getDisplay();
+		display = PlatformUI.getWorkbench().getDisplay();
 		interactionActivityListener = event -> setLastEventTime(System.currentTimeMillis());
 
 		display.addFilter(SWT.KeyUp, interactionActivityListener);

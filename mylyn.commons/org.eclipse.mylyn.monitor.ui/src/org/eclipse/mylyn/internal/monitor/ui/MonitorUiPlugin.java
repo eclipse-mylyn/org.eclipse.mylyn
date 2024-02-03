@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.monitor.ui;
@@ -37,6 +38,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -103,7 +105,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		@Override
 		public void windowOpened(IWorkbenchWindow window) {
-			if (getWorkbench().isClosing()) {
+			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
 			}
 
@@ -164,8 +166,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			}
 			if (Platform.isRunning()) {
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
-				if (getWorkbench() != null && !getWorkbench().isClosing()) {
-					getWorkbench().removeWindowListener(WINDOW_LISTENER);
+				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+					PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
 
 					for (IWorkbenchWindow window : monitoredWindows) {
 						removeListenersFromWindow(window);
@@ -351,9 +353,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private void init() {
 		try {
-			getWorkbench().addWindowListener(WINDOW_LISTENER);
-
-			IWorkbenchWindow[] windows = getWorkbench().getWorkbenchWindows();
+			PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 			if (windows.length > 0) {
 				launchingWorkbenchWindow = windows[0];
 			}
@@ -392,7 +393,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private void updateActivityTimout() {
 		if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
 			activityContextManager
-					.setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+			.setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
 		} else {
 			activityContextManager.setInactivityTimeout(0);
 		}
