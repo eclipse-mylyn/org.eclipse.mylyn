@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2000, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Benjamin Pasero - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.manual;
@@ -26,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
  * @author Benjamin Pasero
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class SampleNotificationPopup extends AbstractNotificationPopup {
 
 	public SampleNotificationPopup(Display display) {

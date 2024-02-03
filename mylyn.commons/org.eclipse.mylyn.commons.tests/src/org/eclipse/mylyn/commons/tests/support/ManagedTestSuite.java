@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.support;
@@ -43,6 +44,7 @@ import junit.framework.TestSuite;
  * @author Steffen Pingel
  */
 @Deprecated
+@SuppressWarnings("nls")
 public class ManagedTestSuite extends TestSuite {
 
 	private class DumpThreadTask extends TimerTask {
@@ -196,7 +198,7 @@ public class ManagedTestSuite extends TestSuite {
 		System.err.print("Proxy : " + WebUtil.getProxyForUrl("http://mylyn.eclipse.org") + " (Platform)");
 		try {
 			System.err
-					.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
+			.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
 		} catch (URISyntaxException e) {
 			// ignore
 		}

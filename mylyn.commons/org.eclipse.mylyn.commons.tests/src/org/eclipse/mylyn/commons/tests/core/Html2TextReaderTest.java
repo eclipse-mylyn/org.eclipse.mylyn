@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2024 IBM Corporation and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
@@ -35,6 +36,7 @@ import junit.framework.TestCase;
  * &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; testSymbolNotInEntityLookup
  */
 
+@SuppressWarnings("nls")
 public class Html2TextReaderTest extends TestCase {
 
 	private static final boolean DEBUG = false;
