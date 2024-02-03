@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.monitor.core.collection;
@@ -78,9 +79,7 @@ public class DataOverviewCollector implements IUsageCollector {
 			interactionHistoryRanges.put(userId, dateRange);
 		}
 		dateRange = interactionHistoryRanges.get(userId);
-		if (dateRange.size() == 0) {
-			dateRange.add(event.getDate());
-		} else if (dateRange.size() == 1) {
+		if (dateRange.size() == 0 || dateRange.size() == 1) {
 			dateRange.add(event.getDate());
 		} else {
 			dateRange.set(endDatePosition, event.getDate());
@@ -129,9 +128,7 @@ public class DataOverviewCollector implements IUsageCollector {
 
 		String filename = directory + File.separator + filePrefix + "baseLine.csv"; //$NON-NLS-1$
 
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
-
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)))) {
 			// Write the header
 			writer.write(Messages.DataOverviewCollector_CSV_USER);
 			writer.write(","); //$NON-NLS-1$
