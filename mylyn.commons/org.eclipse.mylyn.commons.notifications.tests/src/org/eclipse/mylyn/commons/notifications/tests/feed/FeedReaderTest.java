@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
@@ -28,6 +29,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class FeedReaderTest extends TestCase {
 
 	private FeedReader reader;
