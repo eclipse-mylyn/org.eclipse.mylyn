@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.identity.ui;
 
@@ -24,7 +25,7 @@ public class IdentityUiPlugin extends AbstractUIPlugin {
 
 	private static IdentityUiPlugin plugin;
 
-	private ServiceTracker identityServiceTracker;
+	private ServiceTracker<IIdentityService, ?> identityServiceTracker;
 
 	public IdentityUiPlugin() {
 	}
@@ -56,7 +57,7 @@ public class IdentityUiPlugin extends AbstractUIPlugin {
 
 	public IIdentityService getIdentityService() {
 		if (identityServiceTracker == null) {
-			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),
+			identityServiceTracker = new ServiceTracker<>(getBundle().getBundleContext(),
 					IIdentityService.class.getName(), null);
 			identityServiceTracker.open();
 		}
