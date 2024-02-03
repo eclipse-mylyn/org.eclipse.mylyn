@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Frank Becker and others.
+ * Copyright (c) 2016, 2024 Frank Becker and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker and others - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.commons.sdk.util;
 
@@ -27,6 +28,7 @@ import org.junit.runners.model.Statement;
  * (https://stackoverflow.com/questions/28145735/androidjunit4-class-org-junit-assume-assumetrue-assumptionviolatedexception/
  */
 
+@SuppressWarnings("nls")
 public class ConditionalIgnoreRule implements TestRule {
 
 	private final IFixtureJUnitClass fixtureJUnitClass;

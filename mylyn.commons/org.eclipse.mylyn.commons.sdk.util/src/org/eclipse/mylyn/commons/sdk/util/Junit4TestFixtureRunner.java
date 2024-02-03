@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Frank Becker and others.
+ * Copyright (c) 2013, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -39,6 +40,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class Junit4TestFixtureRunner extends Suite {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
