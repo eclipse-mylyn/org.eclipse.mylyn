@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui;
@@ -89,7 +90,6 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 	/**
 	 * Compares <code>e1</code> and <code>e2</code> according based on their category and column specific label.
 	 */
-	@SuppressWarnings("unchecked")
 	public int compare(V viewer, Object e1, Object e2, int columnIndex) {
 		int cat1 = category(e1);
 		int cat2 = category(e2);
