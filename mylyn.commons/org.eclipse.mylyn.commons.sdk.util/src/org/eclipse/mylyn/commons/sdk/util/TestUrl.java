@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2024 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -23,6 +24,7 @@ import java.net.URL;
  *
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TestUrl {
 
 	public static final TestUrl DEFAULT = probeLocalhost();
@@ -46,8 +48,7 @@ public class TestUrl {
 	}
 
 	private static TestUrl probeLocalhost() {
-		Socket socket = new Socket();
-		try {
+		try (Socket socket = new Socket()) {
 			socket.connect(new InetSocketAddress("localhost", 2080), 100);
 			return new TestUrl("localhost");
 		} catch (IOException e) {

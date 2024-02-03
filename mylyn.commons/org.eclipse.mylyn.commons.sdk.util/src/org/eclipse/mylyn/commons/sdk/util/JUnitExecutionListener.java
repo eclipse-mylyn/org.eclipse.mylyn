@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Frank Becker and others.
+ * Copyright (c) 2016, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,12 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
 
 import java.text.MessageFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +24,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+@SuppressWarnings("nls")
 @RunListener.ThreadSafe
 public class JUnitExecutionListener extends RunListener {
 
@@ -116,10 +117,9 @@ public class JUnitExecutionListener extends RunListener {
 
 	private void dumpIgnored() {
 		System.err.println("Ignored: ");
-		Iterator<String> it = ingored.iterator();
-		while (it.hasNext()) {
+		for (String element : ingored) {
 			System.err.print("  ");
-			System.err.println(it.next());
+			System.err.println(element);
 		}
 	}
 
@@ -134,7 +134,6 @@ public class JUnitExecutionListener extends RunListener {
 			dumpIgnored();
 		}
 
-		int failedCount = result.getFailureCount();
 		System.err.println();
 		System.err.println(MessageFormat.format("{0} out of {1} tests failed ({2} tests skipped)",
 				result.getFailureCount(), result.getRunCount() + result.getIgnoreCount(), result.getIgnoreCount()));

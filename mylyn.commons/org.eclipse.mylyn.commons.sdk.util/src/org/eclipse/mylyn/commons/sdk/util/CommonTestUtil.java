@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -58,7 +59,7 @@ import junit.framework.AssertionFailedError;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class CommonTestUtil {
 
 	public enum PrivilegeLevel {
@@ -376,15 +377,8 @@ public class CommonTestUtil {
 	}
 
 	public static void write(String fileName, StringBuffer content) throws IOException {
-		Writer writer = new FileWriter(fileName);
-		try {
+		try (Writer writer = new FileWriter(fileName)) {
 			writer.write(content.toString());
-		} finally {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				// don't need to catch this
-			}
 		}
 	}
 
