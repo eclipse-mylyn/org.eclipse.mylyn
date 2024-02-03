@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.junit.Assert;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class UiSecureCredentialsStoreTest {
 	private static final String DEADLOCK_ERROR_MESSAGE = "Aborting request to prevent deadlock accessing secure storage";
 
