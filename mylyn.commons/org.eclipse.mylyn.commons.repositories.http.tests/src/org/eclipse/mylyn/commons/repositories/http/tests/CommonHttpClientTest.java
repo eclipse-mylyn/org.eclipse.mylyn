@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.http.tests;
@@ -50,6 +51,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class CommonHttpClientTest {
 
 	@BeforeClass
