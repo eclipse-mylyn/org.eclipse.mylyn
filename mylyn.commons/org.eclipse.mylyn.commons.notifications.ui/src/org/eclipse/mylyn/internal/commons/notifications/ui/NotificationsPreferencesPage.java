@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,6 +11,7 @@
  *     Itema AS - bug 329897 select event type on open if available
  *     Itema AS - bug 330064 notification filtering and model persistence
  *     Itema AS - bug 331424 handle default event-sink action associations
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.notifications.ui;
 
@@ -234,7 +235,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		label = new Label(composite, SWT.NONE);
 		label.setText(Messages.NotificationsPreferencesPage_Notifiers_Label);
 		// Create the tree showing all the various notification types
-		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true);
+		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true, true);
 		eventsViewer = tree.getViewer();
 		GridDataFactory.fillDefaults().span(1, 2).grab(false, true).applyTo(tree);
 		eventsViewer.setComparer(new NotificationEventComparer());
@@ -373,7 +374,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	public void reset() {
 		enableNotificationsButton
-				.setSelection(getPreferenceStore().getBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
 		updateEnablement();
 	}
 
@@ -393,7 +394,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	@Override
 	protected void performDefaults() {
 		enableNotificationsButton
-				.setSelection(getPreferenceStore().getDefaultBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
+		.setSelection(getPreferenceStore().getDefaultBoolean(NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
 		for (NotificationCategory category : model.getCategories()) {
 			for (NotificationEvent event : category.getEvents()) {
 				NotificationHandler handler = model.getOrCreateNotificationHandler(event);
