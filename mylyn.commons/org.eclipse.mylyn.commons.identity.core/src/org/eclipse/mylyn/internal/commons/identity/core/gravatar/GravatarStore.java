@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2024 GitHub Inc and others
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -7,7 +7,8 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  *
- *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *     Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.identity.core.gravatar;
@@ -224,17 +225,11 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 		}
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		InputStream input = connection.getInputStream();
-		try {
+		try (InputStream input = connection.getInputStream()) {
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int read = -1;
 			while ((read = input.read(buffer)) != -1) {
 				output.write(buffer, 0, read);
-			}
-		} finally {
-			try {
-				input.close();
-			} catch (IOException ignore) {
 			}
 		}
 		avatar = new Gravatar(hash, System.currentTimeMillis(), output.toByteArray());
