@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     BREDEX GmbH - fix for bug 295050
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -202,13 +203,13 @@ public class WebUtil {
 		// FIXME fix connection leaks
 		if (CoreUtil.TEST_MODE) {
 			client.getHttpConnectionManager()
-					.getParams()
-					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
+			.getParams()
+			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 2);
 		} else {
 			client.getHttpConnectionManager()
-					.getParams()
-					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
-							NetUtil.getMaxHttpConnectionsPerHost());
+			.getParams()
+			.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
+					NetUtil.getMaxHttpConnectionsPerHost());
 			client.getHttpConnectionManager().getParams().setMaxTotalConnections(NetUtil.getMaxHttpConnections());
 		}
 	}
@@ -533,8 +534,7 @@ public class WebUtil {
 				HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 				int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
-					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-					try (in) {
+					try (InputStream in = WebUtil.getResponseBodyAsStream(method, monitor)) {
 						BufferedReader reader = new BufferedReader(
 								new InputStreamReader(in, method.getResponseCharSet()));
 						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
@@ -781,11 +781,11 @@ public class WebUtil {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
 			boolean authenticated = proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0
 					&& proxyPassword.length() > 0;
-			if (authenticated) {
-				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
-			} else {
-				return new Proxy(Type.HTTP, sockAddr);
-			}
+					if (authenticated) {
+						return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+					} else {
+						return new Proxy(Type.HTTP, sockAddr);
+					}
 		}
 		return Proxy.NO_PROXY;
 	}
