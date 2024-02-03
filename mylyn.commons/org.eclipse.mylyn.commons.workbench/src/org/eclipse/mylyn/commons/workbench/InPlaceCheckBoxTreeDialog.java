@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.commons.workbench;
 
@@ -59,7 +60,7 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 	private class CheckboxFilteredTree extends FilteredTree {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-			super(parent, treeStyle, filter, true);
+			super(parent, treeStyle, filter, true, true);
 		}
 
 		@Override

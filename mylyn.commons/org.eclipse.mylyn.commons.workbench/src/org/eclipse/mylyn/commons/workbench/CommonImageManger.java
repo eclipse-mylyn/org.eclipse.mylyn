@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,6 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Perforce - fixes for bug 343892
  *     GitHub - fixes for bug 350333
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench;
@@ -22,7 +23,6 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Steffen Pingel
@@ -43,7 +43,7 @@ public class CommonImageManger {
 	}
 
 	public Image getFolderImage() {
-		return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
+		return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 	}
 
 	public Image getFileImage(String filename) {
@@ -62,7 +62,7 @@ public class CommonImageManger {
 				return getImage(PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(filename));
 			}
 		}
-		return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
+		return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 	}
 
 	public Image getImage(ImageDescriptor imageDescriptor) {
