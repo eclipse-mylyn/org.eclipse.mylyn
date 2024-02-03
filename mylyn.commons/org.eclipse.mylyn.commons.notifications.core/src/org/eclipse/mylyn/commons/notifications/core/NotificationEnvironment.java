@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.core;
@@ -71,7 +72,9 @@ public class NotificationEnvironment {
 			return true;
 		}
 
-		if (!matchesVersion(entry.getFilter("frameworkVersion"), getFrameworkVersion()) || !matchesVersion(entry.getFilter("platformVersion"), getPlatformVersion()) || !matchesVersion(entry.getFilter("runtimeVersion"), getRuntimeVersion())) { //$NON-NLS-1$
+		if (!matchesVersion(entry.getFilter("frameworkVersion"), getFrameworkVersion()) //$NON-NLS-1$
+				|| !matchesVersion(entry.getFilter("platformVersion"), getPlatformVersion()) //$NON-NLS-1$
+				|| !matchesVersion(entry.getFilter("runtimeVersion"), getRuntimeVersion())) { //$NON-NLS-1$
 			return false;
 		}
 		List<String> filterExpressions = entry.getFilters("filter"); //$NON-NLS-1$
