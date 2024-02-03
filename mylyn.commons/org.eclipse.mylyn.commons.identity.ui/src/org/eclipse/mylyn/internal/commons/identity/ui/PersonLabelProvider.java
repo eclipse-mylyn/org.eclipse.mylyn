@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.identity.ui;
@@ -25,7 +26,7 @@ import org.eclipse.mylyn.commons.identity.core.IProfileImage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -34,7 +35,7 @@ public class PersonLabelProvider extends LabelProvider {
 
 	private static final int IMAGE_SIZE = 16;
 
-	ImageRegistry registry = new ImageRegistry();
+	private final ImageRegistry registry = new ImageRegistry();
 
 	@Override
 	public void dispose() {
@@ -45,7 +46,7 @@ public class PersonLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(Object object) {
 		if (object instanceof PeopleCategory) {
-			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
+			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 		} else if (object instanceof IIdentity identity) {
 			Image image = registry.get(identity.getId().toString());
 			if (image == null) {
