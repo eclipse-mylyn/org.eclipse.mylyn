@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.browser;
@@ -95,8 +96,7 @@ public class WebBrowserDialog extends MessageDialog {
 			try {
 				file = File.createTempFile("temp", ".html"); //$NON-NLS-1$ //$NON-NLS-2$
 				file.deleteOnExit();
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				try (writer) {
+				try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 					writer.write(message);
 				}
 			} catch (IOException e) {
@@ -104,8 +104,8 @@ public class WebBrowserDialog extends MessageDialog {
 					file.delete();
 				}
 				StatusManager.getManager()
-						.handle(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
-								"Unexpected error while displaying page", e), StatusManager.LOG); //$NON-NLS-1$
+				.handle(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
+						"Unexpected error while displaying page", e), StatusManager.LOG); //$NON-NLS-1$
 				return Window.CANCEL;
 			}
 			BrowserUtil.openUrl(file.toURI().toString(), IWorkbenchBrowserSupport.AS_EXTERNAL);
@@ -133,7 +133,7 @@ public class WebBrowserDialog extends MessageDialog {
 			statusLabel = new Label(parent, SWT.NONE);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(statusLabel);
 
-			browser.addStatusTextListener(event -> statusLabel.setText(event.text != null ? event.text : ""));
+			browser.addStatusTextListener(event -> statusLabel.setText(event.text != null ? event.text : "")); //$NON-NLS-1$
 		}
 		if (showLocation) {
 			browser.addLocationListener(new LocationListener() {

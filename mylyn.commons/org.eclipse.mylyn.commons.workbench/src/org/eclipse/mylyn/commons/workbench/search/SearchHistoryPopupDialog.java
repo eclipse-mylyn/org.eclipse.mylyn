@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.search;
@@ -23,7 +24,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.commons.workbench.TableTreePatternFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -250,16 +251,16 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 		patternFilter.setPattern(textSearchControl.getTextControl().getText());
 		historyTable.addFilter(patternFilter);
 		if (textControl.getText().length() > 0) {
-			historyTable.setSorter(new ViewerSorter());
+			historyTable.setComparator(new ViewerComparator());
 			historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_FILTER));
 		} else {
-			historyTable.setSorter(null);
+			historyTable.setComparator(null);
 			historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
 		}
 		GridDataFactory.fillDefaults()
-				.grab(true, false)
-				.hint(trimBounds.width, SWT.DEFAULT)
-				.applyTo(historyTable.getTable());
+		.grab(true, false)
+		.hint(trimBounds.width, SWT.DEFAULT)
+		.applyTo(historyTable.getTable());
 		setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
 	}
 
@@ -361,12 +362,12 @@ public class SearchHistoryPopupDialog extends PopupDialog {
 				historyTable.setSelection(null);
 				historyTable.refresh();
 				if (textControl.getText().length() > 0) {
-					historyTable.setSorter(new ViewerSorter());
+					historyTable.setComparator(new ViewerComparator());
 					historyTable.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_FILTER));
 				} else {
-					historyTable.setSorter(null);
+					historyTable.setComparator(null);
 					historyTable
-							.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
+					.setItemCount(Math.min(historyTable.getTable().getItemCount(), MAX_HISTORY_NO_FILTER));
 				}
 				setHistoryTableVisible(historyTable.getTable().getItemCount() > 0);
 				if (!shouldOpen()) {

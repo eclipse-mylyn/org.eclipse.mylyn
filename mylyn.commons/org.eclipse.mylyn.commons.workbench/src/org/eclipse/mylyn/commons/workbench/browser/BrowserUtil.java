@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.browser;
@@ -66,9 +67,9 @@ public class BrowserUtil {
 		}
 
 		@Override
-		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		public <T> T getAdapter(Class<T> adapter) {
 			if (adapter == IWebBrowser.class) {
-				return browser;
+				return adapter.cast(browser);
 			}
 			return super.getAdapter(adapter);
 		}
@@ -229,10 +230,10 @@ public class BrowserUtil {
 				@Override
 				public void handleException(Throwable exception) {
 					CommonsWorkbenchPlugin.getDefault()
-							.getLog()
-							.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
-									NLS.bind("Unexpected error in {0} while opening URL ''{1}''", handler.getClass(), //$NON-NLS-1$
-											location)));
+					.getLog()
+					.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN,
+							NLS.bind("Unexpected error in {0} while opening URL ''{1}''", handler.getClass(), //$NON-NLS-1$
+									location)));
 				}
 			});
 

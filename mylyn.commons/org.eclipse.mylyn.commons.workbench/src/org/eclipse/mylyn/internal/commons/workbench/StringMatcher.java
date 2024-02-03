@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *     See git history
+ *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.workbench;
 
 import java.util.Vector;
@@ -5,6 +17,7 @@ import java.util.Vector;
 /**
  * A string pattern matcher, suppporting "*" and "?" wildcards. Copied from org.eclipse.ui.internal.misc.StringMatcher.
  */
+//FIXME: AF: switch to Platform StringMatcher
 public class StringMatcher {
 	protected String fPattern;
 
@@ -273,7 +286,7 @@ public class StringMatcher {
 			}
 		}
 
-		Vector temp = new Vector();
+		Vector<String> temp = new Vector<>();
 
 		int pos = 0;
 		StringBuilder buf = new StringBuilder();
@@ -405,7 +418,7 @@ public class StringMatcher {
 			if (fIgnoreCase) {
 				// comparing after converting to upper case doesn't handle all cases;
 				// also compare after converting to lower case
-				if ((Character.toUpperCase(tchar) == Character.toUpperCase(pchar)) || (Character.toLowerCase(tchar) == Character.toLowerCase(pchar))) {
+				if (Character.toUpperCase(tchar) == Character.toUpperCase(pchar) || Character.toLowerCase(tchar) == Character.toLowerCase(pchar)) {
 					continue;
 				}
 			}
