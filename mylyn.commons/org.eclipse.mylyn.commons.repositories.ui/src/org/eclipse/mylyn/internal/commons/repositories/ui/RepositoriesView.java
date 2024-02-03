@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.repositories.ui;
@@ -56,10 +57,13 @@ public class RepositoriesView extends CommonNavigator {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		// FIXME read targets from extension point?
 		if (adapter == IShowInTargetList.class) {
-			return (IShowInTargetList) () -> new String[] { "org.eclipse.mylyn.builds.navigator.builds" };
+			return adapter.cast((IShowInTargetList) () -> new String[] {
+					//FIXME: AF: this hidden circular dependency should be reworked
+					"org.eclipse.mylyn.builds.navigator.builds" //$NON-NLS-1$
+			});
 		}
 		return super.getAdapter(adapter);
 	}

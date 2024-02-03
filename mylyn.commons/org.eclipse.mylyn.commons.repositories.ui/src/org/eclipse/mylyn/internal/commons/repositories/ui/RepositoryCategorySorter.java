@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.repositories.ui;
@@ -15,10 +16,10 @@ package org.eclipse.mylyn.internal.commons.repositories.ui;
 import java.text.Collator;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
 
-public class RepositoryCategorySorter extends ViewerSorter {
+public class RepositoryCategorySorter extends ViewerComparator {
 
 	public RepositoryCategorySorter() {
 	}
@@ -29,8 +30,7 @@ public class RepositoryCategorySorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof RepositoryCategory category1 && e2 instanceof RepositoryCategory) {
-			RepositoryCategory category2 = (RepositoryCategory) e2;
+		if (e1 instanceof RepositoryCategory category1 && e2 instanceof RepositoryCategory category2) {
 			int result = category1.getRank() - category2.getRank();
 			if (result != 0) {
 				return result;

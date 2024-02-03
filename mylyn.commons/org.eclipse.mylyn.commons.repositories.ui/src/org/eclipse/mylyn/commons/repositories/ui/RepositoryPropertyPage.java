@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2014 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.ui;
@@ -55,9 +56,9 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		if ((adapter == DialogPage.class) || (adapter == IPartContainer.class)) {
-			return this;
+	public <T> T getAdapter(Class<T> adapter) {
+		if (adapter == DialogPage.class || adapter == IPartContainer.class) {
+			return adapter.cast(this);
 		}
 		return null;
 	}

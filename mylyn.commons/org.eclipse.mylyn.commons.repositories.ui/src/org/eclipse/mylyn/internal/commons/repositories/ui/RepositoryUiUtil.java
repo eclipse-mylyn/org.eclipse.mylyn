@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2014, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.repositories.ui;
@@ -45,7 +46,6 @@ public class RepositoryUiUtil {
 		}
 	}
 
-	@SuppressWarnings({ "restriction", "unchecked" })
 	public static <T> T adapt(Object sourceObject, Class<T> adapter) {
 		try {
 			if (PlatformUiUtil.isNeonOrLater()) {
@@ -53,13 +53,13 @@ public class RepositoryUiUtil {
 				Class<?> clazz = bundle.loadClass("org.eclipse.core.runtime.Adapters"); //$NON-NLS-1$
 				Method adaptMethod = clazz.getMethod("adapt", Object.class, Class.class); //$NON-NLS-1$
 				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
-				return (T) result;
+				return adapter.cast(result);
 			} else {
 				Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
 				Class<?> clazz = bundle.loadClass("org.eclipse.ui.internal.util.Util"); //$NON-NLS-1$
 				Method adaptMethod = clazz.getMethod("getAdapter", Object.class, Class.class); //$NON-NLS-1$
 				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
-				return (T) result;
+				return adapter.cast(result);
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN, "Could not adapt", e)); //$NON-NLS-1$

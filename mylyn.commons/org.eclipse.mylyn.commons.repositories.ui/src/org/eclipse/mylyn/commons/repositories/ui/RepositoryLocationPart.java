@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2024 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     GitHub - fix for bug 352919
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.ui;
@@ -468,7 +469,6 @@ public class RepositoryLocationPart {
 		return composite;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T getContainer(Class<T> clazz) {
 		return getServiceLocator().getAdapter(clazz);
 	}
@@ -567,9 +567,9 @@ public class RepositoryLocationPart {
 			});
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
-							Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
-							StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+			.handle(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
+					Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
+					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -628,9 +628,9 @@ public class RepositoryLocationPart {
 		final Text keyStoreFileNameText = new Text(composite, SWT.BORDER);
 		// FIXME fix width hint
 		GridDataFactory.fillDefaults()
-				.grab(true, false)
-				.hint(IDialogConstants.ENTRY_FIELD_WIDTH, SWT.DEFAULT)
-				.applyTo(keyStoreFileNameText);
+		.grab(true, false)
+		.hint(IDialogConstants.ENTRY_FIELD_WIDTH, SWT.DEFAULT)
+		.applyTo(keyStoreFileNameText);
 
 		Button certBrowseButton = new Button(composite, SWT.PUSH);
 		certBrowseButton.setText(Messages.RepositoryLocationPart_Browse);
