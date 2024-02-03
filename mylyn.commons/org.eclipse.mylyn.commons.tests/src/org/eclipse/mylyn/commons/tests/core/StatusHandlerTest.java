@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Tasktop Technologies and others.
+ * Copyright (c) 2014, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class StatusHandlerTest extends TestCase {
 
 	public void testLogDumpsErrorToConsoleInTestMode() throws Exception {

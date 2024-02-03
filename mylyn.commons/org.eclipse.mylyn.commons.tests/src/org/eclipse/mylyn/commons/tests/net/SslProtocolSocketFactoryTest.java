@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
@@ -25,6 +26,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class SslProtocolSocketFactoryTest extends TestCase {
 
 	private MockServer server;

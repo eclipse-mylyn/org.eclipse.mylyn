@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
@@ -23,6 +24,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class NetUtilTest extends TestCase {
 
 	static final int /*NetUtil.*/ MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;

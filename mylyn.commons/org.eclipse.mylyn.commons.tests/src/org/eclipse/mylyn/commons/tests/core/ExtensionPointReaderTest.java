@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
@@ -25,6 +26,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Sam Davis
  */
+@SuppressWarnings("nls")
 public class ExtensionPointReaderTest extends TestCase {
 
 	public interface ExtensionPointReaderExtension {
@@ -45,7 +47,7 @@ public class ExtensionPointReaderTest extends TestCase {
 			if (this == obj) {
 				return true;
 			}
-			if ((obj == null) || (getClass() != obj.getClass())) {
+			if (obj == null || getClass() != obj.getClass()) {
 				return false;
 			}
 			ExtensionPointReaderExtensionImplementation other = (ExtensionPointReaderExtensionImplementation) obj;
@@ -57,19 +59,19 @@ public class ExtensionPointReaderTest extends TestCase {
 	}
 
 	public static class P5ExtensionPointReaderExtensionImplementation
-			extends ExtensionPointReaderExtensionImplementation {
+	extends ExtensionPointReaderExtensionImplementation {
 	}
 
 	public static class PNegative5ExtensionPointReaderExtensionImplementation
-			extends ExtensionPointReaderExtensionImplementation {
+	extends ExtensionPointReaderExtensionImplementation {
 	}
 
 	public static class P10ExtensionPointReaderExtensionImplementation
-			extends ExtensionPointReaderExtensionImplementation {
+	extends ExtensionPointReaderExtensionImplementation {
 	}
 
 	public static class P0ExtensionPointReaderExtensionImplementation
-			extends ExtensionPointReaderExtensionImplementation {
+	extends ExtensionPointReaderExtensionImplementation {
 	}
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.tests";
