@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.core;
@@ -160,16 +161,15 @@ public class ZipFileUtil {
 				// Add ZIP entry to output stream.m
 				String path = ""; //$NON-NLS-1$
 				if (!rootPath.equals("")) { //$NON-NLS-1$
-					rootPath = rootPath.replace('\\', '/'); //$NON-NLS-1$ //$NON-NLS-2$
-					path = file.getAbsolutePath().replace('\\', '/'); //$NON-NLS-1$ //$NON-NLS-2$
+					rootPath = rootPath.replace('\\', '/');
+					path = file.getAbsolutePath().replace('\\', '/');
 					path = path.substring(rootPath.length());
 				} else {
 					path = file.getName();
 				}
 
 				zipOut.putNextEntry(new ZipEntry(path));
-				InputStream in = new BufferedInputStream(new FileInputStream(file));
-				try (in) {
+				try (InputStream in = new BufferedInputStream(new FileInputStream(file))) {
 					copyStream(in, zipOut);
 				}
 
