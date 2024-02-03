@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2012 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.repositories.ui.wizards;
 
@@ -125,13 +126,9 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 		trimPrimaryWizards();
 
-		if (this.primaryWizards.length > 0) {
-			if (allPrimary(wizardCategories)) {
-				this.wizardCategories = null; // dont bother considering the categories as all wizards are primary
-				needShowAll = false;
-			} else {
-				needShowAll = !allActivityEnabled(wizardCategories);
-			}
+		if (this.primaryWizards.length > 0 && allPrimary(wizardCategories)) {
+			this.wizardCategories = null; // dont bother considering the categories as all wizards are primary
+			needShowAll = false;
 		} else {
 			needShowAll = !allActivityEnabled(wizardCategories);
 		}
@@ -299,7 +296,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 		filteredTreeFilter = new WizardPatternFilter();
 		FilteredTree filterTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
-				filteredTreeFilter, true);
+				filteredTreeFilter, true, true);
 
 		final TreeViewer treeViewer = filterTree.getViewer();
 		treeViewer.setContentProvider(new WizardContentProvider());
@@ -542,7 +539,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	 */
 	protected void selectPreviouslySelected() {
 		String selectedId = settings.get(STORE_SELECTED_ID);
-		if ((selectedId == null) || (wizardCategories == null)) {
+		if (selectedId == null || wizardCategories == null) {
 			return;
 		}
 
