@@ -9,19 +9,20 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 
 /**
  * Sorts results of Bugzilla search by bug severity.
  */
-public class BugzillaSeveritySearchSorter extends ViewerSorter {
+public class BugzillaSeveritySearchSorter extends ViewerComparator {
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the first bug's severity goes before, is the same as, or goes after
@@ -67,7 +68,7 @@ public class BugzillaSeveritySearchSorter extends ViewerSorter {
 
 			// return the bugs id
 			if (marker.getType().equals(BugzillaUiPlugin.HIT_MARKER_ID)) {
-				return ((Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID));
+				return (Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID);
 			}
 		} catch (Exception ignored) {
 			// ignore if there is a problem

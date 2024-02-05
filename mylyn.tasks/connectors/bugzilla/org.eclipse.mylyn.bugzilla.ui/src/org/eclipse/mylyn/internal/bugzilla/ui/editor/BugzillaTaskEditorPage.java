@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
@@ -71,8 +72,8 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -371,15 +372,15 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					.getMappedAttribute(TaskAttribute.PRODUCT);
 			if (productAttribute != null && productAttribute.getValue().length() > 0) {
 				getModel().getTaskRepository()
-						.setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION, productAttribute.getValue());
+				.setProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION, productAttribute.getValue());
 			}
 			TaskAttribute componentSelectedAttribute = getModel().getTaskData()
 					.getRoot()
 					.getMappedAttribute(TaskAttribute.COMPONENT);
 			if (componentSelectedAttribute != null && componentSelectedAttribute.getValue().length() > 0) {
 				getModel().getTaskRepository()
-						.setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
-								componentSelectedAttribute.getValue());
+				.setProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION,
+						componentSelectedAttribute.getValue());
 			}
 		}
 
@@ -590,12 +591,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				if (bugzillaResponse.getResponseData().size() > 0) {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
 							IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent event) {
-									showSubmitResponse(bugzillaResponse);
-								}
+						@Override
+						public void linkActivated(HyperlinkEvent event) {
+							showSubmitResponse(bugzillaResponse);
+						}
 
-							});
+					});
 				} else {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
 							IMessageProvider.INFORMATION);
@@ -618,12 +619,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		if (username == null || username.length() == 0) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks, type,
 					new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-							refresh();
-						}
-					}));
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					TasksUiUtil.openEditRepositoryWizard(taskRepository);
+					refresh();
+				}
+			}));
 			return false;
 		}
 		if (!getModel().getTaskData().isNew()) {
@@ -633,12 +634,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			if (exporter == null || exporter.getValue().equals("")) { //$NON-NLS-1$
 				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh, type,
 						new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								TasksUiUtil.openEditRepositoryWizard(taskRepository);
-								refresh();
-							}
-						}));
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openEditRepositoryWizard(taskRepository);
+						refresh();
+					}
+				}));
 				return false;
 			}
 		}
@@ -796,7 +797,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		} else {
 			decoration.setDescriptionText(
 					NLS.bind(Messages.BugzillaTaskEditorPage_Content_Assist_for_Error_Available, bindingService
-							.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
+							.getBestActiveBindingFormattedFor(IWorkbenchCommandConstants.EDIT_CONTENT_ASSIST)));
 			errorDecorations.add(decoration);
 
 			final PersonAttributeEditor personEditor = (PersonAttributeEditor) editor;
