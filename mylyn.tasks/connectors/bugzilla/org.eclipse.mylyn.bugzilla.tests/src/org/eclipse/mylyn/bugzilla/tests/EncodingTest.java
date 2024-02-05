@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 Tasktop Technologies and others.
+ * Copyright © 2004, 2012, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class EncodingTest extends AbstractBugzillaTest {
 
 	public void testEncodingSetting() {

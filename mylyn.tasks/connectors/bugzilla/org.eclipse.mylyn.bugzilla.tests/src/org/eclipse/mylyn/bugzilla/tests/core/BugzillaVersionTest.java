@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Frank Becker and others.
+ * Copyright © 2009, 2010, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -20,6 +21,7 @@ import junit.framework.TestCase;
 /**
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaVersionTest extends TestCase {
 
 	public final static BugzillaVersion BUGZILLA_2_18_1 = new BugzillaVersion("2.18.1");

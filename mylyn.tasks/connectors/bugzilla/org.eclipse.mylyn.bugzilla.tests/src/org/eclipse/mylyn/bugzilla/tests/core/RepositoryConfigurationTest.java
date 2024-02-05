@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Tasktop Technologies and others.
+ * Copyright © 2013, 2016, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class RepositoryConfigurationTest extends TestCase {
 
 	private final static String PRODUCT = "product";

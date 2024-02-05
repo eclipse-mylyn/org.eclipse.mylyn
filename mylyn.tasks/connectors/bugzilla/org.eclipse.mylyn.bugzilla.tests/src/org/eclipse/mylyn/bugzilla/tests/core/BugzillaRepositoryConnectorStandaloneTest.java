@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Nathan Hapke and others.
+ * Copyright © 2004, 2013, 2024 Nathan Hapke and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,6 +11,7 @@
  *     Nathan Hapke - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -54,6 +55,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	private TaskRepository repository;
@@ -254,7 +256,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		String bug_status = BugzillaFixture.current()
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
-						? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
+				? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
 						: "&bug_status=UNCONFIRMED&bug_status=CONFIRMED";
 		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?priority=" + priority
 				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="
@@ -285,8 +287,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 		// set priority and severity on task
 		taskData.getRoot()
-				.getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey())
-				.setValue(System.currentTimeMillis() + "");
+		.getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey())
+		.setValue(System.currentTimeMillis() + "");
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
 		taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(descriptionNotNull);

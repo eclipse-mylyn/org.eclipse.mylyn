@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 Frank Becker and others.
+ * Copyright © 2010, 2014, 2024 Frank Becker and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -55,6 +56,7 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
  *
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	private static final String BUGZILLA_LE_4_0 = "<4.0";
@@ -410,9 +412,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	public void testTransitionManagerWithXml() throws Exception {
 
-		if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
-			return;
-		} else if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6) || !BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			CustomTransitionManager ctm = new CustomTransitionManager();
@@ -586,7 +586,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			}
 			if (attributeHTML.getValue().compareTo(attributeXMLRPC.getValue()) != 0) {
 				div += prefix + attributeNameHTML + " value not equal HTML = \'" + attributeHTML.getValue()
-						+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n";
+				+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n";
 			}
 			TaskAttributeMetaData metaHTML = attributeHTML.getMetaData();
 			TaskAttributeMetaData metaXMLRPC = attributeXMLRPC.getMetaData();
@@ -599,19 +599,19 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 					div += prefix + attributeNameHTML + " MetaData Kind not in XMLRPC\n";
 				} else if (metaHTML.getKind() != null && metaHTML.getKind().compareTo(metaXMLRPC.getKind()) != 0) {
 					div += prefix + attributeNameHTML + " Meta Kind not equal HTML = \'" + metaHTML.getKind()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getKind() + "\'\n";
+					+ "\' XMLRPC = \'" + metaXMLRPC.getKind() + "\'\n";
 				}
 				if (metaHTML.getType() != null && metaXMLRPC.getType() == null) {
 					div += prefix + attributeNameHTML + " MetaData Type not in XMLRPC\n";
 				} else if (metaHTML.getType() != null && metaHTML.getType().compareTo(metaXMLRPC.getType()) != 0) {
 					div += prefix + attributeNameHTML + " Meta Type not equal HTML = \'" + metaHTML.getType()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getType() + "\'\n";
+					+ "\' XMLRPC = \'" + metaXMLRPC.getType() + "\'\n";
 				}
 				if (metaHTML.getLabel() != null && metaXMLRPC.getLabel() == null) {
 					div += prefix + attributeNameHTML + " MetaData Label not in XMLRPC\n";
 				} else if (metaHTML.getLabel() != null && metaHTML.getLabel().compareTo(metaXMLRPC.getLabel()) != 0) {
 					div += prefix + attributeNameHTML + " Meta Label not equal HTML = \'" + metaHTML.getLabel()
-							+ "\' XMLRPC = \'" + metaXMLRPC.getLabel() + "\'\n";
+					+ "\' XMLRPC = \'" + metaXMLRPC.getLabel() + "\'\n";
 				}
 			}
 			Map<String, TaskAttribute> subAttribHTML = attributeHTML.getAttributes();

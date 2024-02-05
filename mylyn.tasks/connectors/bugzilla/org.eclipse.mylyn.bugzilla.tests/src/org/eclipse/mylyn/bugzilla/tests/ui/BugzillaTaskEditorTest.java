@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Jeff Pound and others.
+ * Copyright © 2004, 2013, 2024 Jeff Pound and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     Jeff Pound - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
@@ -32,6 +33,7 @@ import junit.framework.TestCase;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class BugzillaTaskEditorTest extends TestCase {
 
 	private TaskRepository repository;

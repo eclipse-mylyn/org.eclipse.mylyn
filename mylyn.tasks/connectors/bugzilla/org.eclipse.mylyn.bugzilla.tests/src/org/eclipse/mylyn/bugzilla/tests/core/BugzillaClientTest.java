@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 Tasktop Technologies and others.
+ * Copyright © 2009, 2015, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -50,6 +51,7 @@ import org.eclipse.mylyn.tests.util.UrlBuilder;
  * @author Frank Becker
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class BugzillaClientTest extends AbstractBugzillaTest {
 
 	public void testRDFProductConfig() throws Exception {
@@ -181,8 +183,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 			client.validate(new NullProgressMonitor());
 		} catch (Exception e) {
 			assertEquals("Unable to login to " + repository.getUrl()
-					+ ".\n\n\n    The username or password you entered is not valid.\n\n"
-					+ "Please validate credentials via Task Repositories view.", e.getMessage());
+			+ ".\n\n\n    The username or password you entered is not valid.\n\n"
+			+ "Please validate credentials via Task Repositories view.", e.getMessage());
 		}
 	}
 

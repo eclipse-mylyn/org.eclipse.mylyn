@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
+ * Copyright © 2004, 2014, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
  * @author Rob Elves
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class RepositoryReportFactoryTest extends TestCase {
 
 	TaskRepository repository;

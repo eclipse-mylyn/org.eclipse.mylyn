@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright © 2004, 2013, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
@@ -40,6 +41,7 @@ import junit.framework.TestCase;
  * @author Terry Hon
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private static final String DUPLICATE_NUMBER = "112233";

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013 Tasktop Technologies and others.
+ * Copyright © 2009, 2013, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.support;
@@ -56,6 +57,7 @@ import junit.framework.AssertionFailedError;
  * @author Thomas Ehrnhoefer
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaFixture extends TestFixture {
 
 	public static final String CUSTOM_WF = "Custom Workflow";
@@ -233,8 +235,8 @@ public class BugzillaFixture extends TestFixture {
 		taskDataHandler.initializeTaskData(repository(), taskData, initializationData, null);
 		for (String attributeKey : additionalAttributeValues.keySet()) {
 			taskData.getRoot()
-					.createMappedAttribute(attributeKey)
-					.setValue(additionalAttributeValues.get(attributeKey));
+			.createMappedAttribute(attributeKey)
+			.setValue(additionalAttributeValues.get(attributeKey));
 		}
 		RepositoryResponse response = submitTask(taskData, client);
 		String bugId = response.getTaskId();
