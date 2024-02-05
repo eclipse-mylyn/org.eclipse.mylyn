@@ -195,10 +195,9 @@ public class BugzillaHarness {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file from " + System.currentTimeMillis());
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("Description");
@@ -377,10 +376,9 @@ public class BugzillaHarness {
 		File attachFile = File.createTempFile("test-attach", null);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file from " + System.currentTimeMillis());
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 1");
@@ -401,10 +399,9 @@ public class BugzillaHarness {
 		attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file 2 from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file 2 from " + System.currentTimeMillis());
+		}
 		attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 2");
@@ -425,10 +422,9 @@ public class BugzillaHarness {
 		attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file 3 from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file 3 from " + System.currentTimeMillis());
+		}
 		attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 3");
@@ -453,10 +449,9 @@ public class BugzillaHarness {
 		attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file 4 from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file 4 from " + System.currentTimeMillis());
+		}
 		attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 4");

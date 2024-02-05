@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 Tasktop Technologies and others.
+ * Copyright © 2004, 2015, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,6 +11,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - fixes for bug 165072
  *     Red Hat Inc. - fixes for bug 259291
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -200,7 +201,7 @@ public class BugzillaClient {
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
-			throws MalformedURLException {
+					throws MalformedURLException {
 		repositoryUrl = new URL(location.getUrl());
 		this.location = location;
 		this.characterEncoding = characterEncoding;
@@ -379,7 +380,7 @@ public class BugzillaClient {
 		throw new CoreException(
 				new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
 						repositoryUrl.toString(), "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
-								+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
+						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 
 	public void logout(IProgressMonitor monitor) throws IOException, CoreException {
@@ -414,8 +415,8 @@ public class BugzillaClient {
 				// content-type: application/x-gzip can be set by any apache
 				// after 302 redirect, based on .gz suffix
 				null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type") //$NON-NLS-1$ //$NON-NLS-2$
-						.getValue()
-						.equals("application/x-gzip"); //$NON-NLS-1$
+				.getValue()
+				.equals("application/x-gzip"); //$NON-NLS-1$
 		return zipped;
 	}
 
@@ -608,8 +609,7 @@ public class BugzillaClient {
 				}
 
 				if (!loggedIn) {
-					InputStream input = getResponseStream(postMethod, monitor);
-					try (input) {
+					try (InputStream input = getResponseStream(postMethod, monitor)) {
 						throw new CoreException(parseHtmlError(input));
 					}
 				}
@@ -727,8 +727,7 @@ public class BugzillaClient {
 				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type"); //$NON-NLS-1$
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						InputStream stream = getResponseStream(postMethod, monitor);
-						try (stream) {
+						try (InputStream stream = getResponseStream(postMethod, monitor)) {
 							RepositoryQueryResultsFactory queryFactory = getQueryResultsFactory(stream);
 							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper);
 							return count > 0;
@@ -843,8 +842,7 @@ public class BugzillaClient {
 					throw new IOException("Could not retrieve configuratoin. HttpClient return null method."); //$NON-NLS-1$
 				}
 
-				InputStream stream = getResponseStream(method, monitor);
-				try (stream) {
+				try (InputStream stream = getResponseStream(method, monitor)) {
 					if (method.getResponseHeader("Content-Type") != null) { //$NON-NLS-1$
 						Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
 						for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -956,7 +954,7 @@ public class BugzillaClient {
 
 	public void postAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
-			throws HttpException, IOException, CoreException {
+					throws HttpException, IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
 		String description = source.getDescription();
 		String contentType = source.getContentType();
@@ -1087,8 +1085,7 @@ public class BugzillaClient {
 			postMethod.setDoAuthentication(true);
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (status == HttpStatus.SC_OK) {
-				InputStream input = getResponseStream(postMethod, monitor);
-				try (input) {
+				try (InputStream input = getResponseStream(postMethod, monitor)) {
 					parsePostResponse(bugReportID, input);
 				}
 
@@ -1096,7 +1093,7 @@ public class BugzillaClient {
 				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: " //$NON-NLS-1$
-								+ HttpStatus.getStatusText(status)));
+						+ HttpStatus.getStatusText(status)));
 				// throw new IOException("Communication error occurred during
 				// upload. \n\n"
 				// + HttpStatus.getStatusText(status));
@@ -1416,7 +1413,7 @@ public class BugzillaClient {
 
 				token = getTokenInternal(
 						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI
-								+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
+						+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
 						monitor);
 			}
 			formData = getPairsForNew(taskData, token);
@@ -1483,7 +1480,7 @@ public class BugzillaClient {
 					if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
 							.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
 							|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
-									.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 						TaskAttribute attributeOperation = taskData.getRoot()
 								.getMappedAttribute(TaskAttribute.OPERATION);
 						value = attributeOperation.getValue().toUpperCase();
@@ -1497,11 +1494,11 @@ public class BugzillaClient {
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
 					b.getMetaData()
-							.defaults()
-							.setReadOnly(BugzillaAttribute.CC.isReadOnly())
-							.setKind(BugzillaAttribute.CC.getKind())
-							.setLabel(BugzillaAttribute.CC.toString())
-							.setType(BugzillaAttribute.CC.getType());
+					.defaults()
+					.setReadOnly(BugzillaAttribute.CC.isReadOnly())
+					.setKind(BugzillaAttribute.CC.getKind())
+					.setLabel(BugzillaAttribute.CC.toString())
+					.setType(BugzillaAttribute.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -1611,7 +1608,7 @@ public class BugzillaClient {
 					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
 						if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_4_7) < 0
 								|| bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_5) >= 0
-										&& bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) < 0) {
+								&& bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) < 0) {
 							value = stripTimeZone(value);
 						}
 					}
@@ -2299,8 +2296,7 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type"); //$NON-NLS-1$
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							InputStream input = getResponseStream(method, monitor);
-							try (input) {
+							try (InputStream input = getResponseStream(method, monitor)) {
 								MultiBugReportFactory factory = new MultiBugReportFactory(input, getCharacterEncoding(),
 										connector);
 								List<BugzillaCustomField> customFields = new ArrayList<>();
@@ -2432,7 +2428,7 @@ public class BugzillaClient {
 		throw new CoreException(
 				new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
 						repositoryUrl.toString(), "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
-								+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
+						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 
 	public void setRepositoryConfiguration(RepositoryConfiguration repositoryConfiguration) {

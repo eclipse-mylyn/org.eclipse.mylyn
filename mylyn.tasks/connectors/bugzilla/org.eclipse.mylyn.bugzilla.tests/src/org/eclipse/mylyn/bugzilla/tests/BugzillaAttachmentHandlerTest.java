@@ -82,10 +82,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file from " + System.currentTimeMillis());
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file from " + System.currentTimeMillis());
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("Description");
@@ -275,7 +274,6 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 
 		attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
@@ -295,9 +293,10 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		assertEquals(numAttached,
 				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 
-		/* Test uploading a proper file */
-		write.write("test file");
-		write.close();
+		try (/* Test uploading a proper file */
+				BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file");
+		}
 		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
 				new NullProgressMonitor());
 
@@ -340,10 +339,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(filename);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		write.write("test file content");
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file content");
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription(description);
@@ -447,11 +445,10 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		/* Test uploading a proper file */
-		write.write("test file");
-		write.close();
-
+		try (/* Test uploading a proper file */
+				BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write("test file");
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
 		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
@@ -590,10 +587,10 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 		String expected = "test file from " + System.currentTimeMillis();
-		write.write(expected);
-		write.close();
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write(expected);
+		}
 
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
@@ -619,18 +616,15 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		try (OutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
 			AttachmentUtil.downloadAttachment(taskAttachment, out, new NullProgressMonitor());
 		}
-		FileInputStream raf = new FileInputStream(file);
-
-		byte[] data = new byte[expected.length()];
-		try {
-			raf.read(data);
+		try (FileInputStream raf = new FileInputStream(file)) {
+			byte[] data = new byte[expected.length()];
+			try {
+				raf.read(data);
+			} finally {
+				file.delete();
+			}
+			assertEquals(expected, new String(data));
 		}
-
-		finally {
-			raf.close();
-			file.delete();
-		}
-		assertEquals(expected, new String(data));
 	}
 
 	public void testDownloadNonExsistingAttachmentFile() throws Exception {
@@ -656,11 +650,10 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
-		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 		String expected = "test file from " + System.currentTimeMillis();
-		write.write(expected);
-		write.close();
-
+		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
+			write.write(expected);
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
 		attachment.setContentType("text/plain");
 		attachment.setDescription("Description");
