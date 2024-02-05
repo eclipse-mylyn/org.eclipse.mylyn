@@ -317,7 +317,11 @@ public class GitlabRestClient {
 
 			@Override
 			protected String parseFromJson(InputStreamReader in) throws GitlabException {
-				return new BufferedReader(in).lines().parallel().collect(Collectors.joining("\n")); //$NON-NLS-1$
+				try (BufferedReader bufferedReader = new BufferedReader(in)) {
+					return bufferedReader.lines().parallel().collect(Collectors.joining("\n")); //$NON-NLS-1$
+				} catch (IOException e) {
+					throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+				}
 			}
 		}.run(monitor);
 		return validate.length() > 0 && validate.contains("version"); //$NON-NLS-1$

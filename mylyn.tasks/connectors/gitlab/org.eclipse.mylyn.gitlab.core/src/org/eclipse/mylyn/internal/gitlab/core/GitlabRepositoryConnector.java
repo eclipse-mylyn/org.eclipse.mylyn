@@ -355,21 +355,17 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 					connection.connect();
 
 					if (connection.getResponseCode() == 200) {
-						ByteArrayOutputStream output = new ByteArrayOutputStream();
-						InputStream input = connection.getInputStream();
-						try {
+
+						try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+								InputStream input = connection.getInputStream()) {
 							byte[] buffer = new byte[8192];
 							int read = -1;
 							while ((read = input.read(buffer)) != -1) {
 								output.write(buffer, 0, read);
 							}
-						} finally {
-							try {
-								input.close();
-							} catch (IOException ignore) {
-							}
+
+							avatarBytes = output.toByteArray();
 						}
-						avatarBytes = output.toByteArray();
 					}
 					return avatarBytes;
 				}
