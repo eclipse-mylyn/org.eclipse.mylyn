@@ -164,12 +164,11 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		task = TasksUi.getRepositoryModel().createTask(repository1, "123");
 		detector.setContext(new IAdaptable() {
 			@Override
-			@SuppressWarnings("rawtypes")
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
-					return activeRepository;
+					return adapter.cast(activeRepository);
 				} else if (adapter == ITask.class) {
-					return task;
+					return adapter.cast(task);
 				}
 				return null;
 			}
