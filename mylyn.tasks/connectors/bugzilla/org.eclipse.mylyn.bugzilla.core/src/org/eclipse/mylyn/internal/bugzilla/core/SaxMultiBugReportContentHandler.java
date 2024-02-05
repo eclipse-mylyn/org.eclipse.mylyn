@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -175,7 +176,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					String name = attributes.getValue(ATTRIBUTE_NAME);
 					if (name != null) {
 						BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.REPORTER_NAME)
-								.setValue(name);
+						.setValue(name);
 					}
 				}
 				break;
@@ -184,7 +185,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					String name = attributes.getValue(ATTRIBUTE_NAME);
 					if (name != null) {
 						BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.QA_CONTACT_NAME)
-								.setValue(name);
+						.setValue(name);
 					}
 				}
 				break;
@@ -193,7 +194,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					String name = attributes.getValue(ATTRIBUTE_NAME);
 					if (name != null) {
 						BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.ASSIGNED_TO_NAME)
-								.setValue(name);
+						.setValue(name);
 					}
 				}
 				break;
@@ -364,10 +365,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 				break;
 
-			// Attachment attributes
+				// Attachment attributes
 			case ATTACHID:
 				attachmentAttribute = repositoryTaskData.getRoot()
-						.createAttribute(TaskAttribute.PREFIX_ATTACHMENT + parsedText);
+				.createAttribute(TaskAttribute.PREFIX_ATTACHMENT + parsedText);
 				attachment = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
 				attachment.setLength(-1L);
 				attachment.setAttachmentId(parsedText);
@@ -573,9 +574,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				break;
 			case SEE_ALSO:
 				TaskAttribute seeAlso = repositoryTaskData.getRoot()
-						.getMappedAttribute(BugzillaAttribute.SEE_ALSO_READ.getKey());
+				.getMappedAttribute(BugzillaAttribute.SEE_ALSO_READ.getKey());
 				if (seeAlso == null) {
-					BugzillaUtil.createAttributeWithKindDefaultIfUsed("", tag, repositoryTaskData,
+					BugzillaUtil.createAttributeWithKindDefaultIfUsed("", tag, repositoryTaskData, //$NON-NLS-1$
 							IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
 					BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, BugzillaAttribute.SEE_ALSO_READ,
 							repositoryTaskData, IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);

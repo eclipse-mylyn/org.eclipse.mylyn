@@ -1960,7 +1960,7 @@ public class BugzillaClient {
 	}
 
 	private static String toCommaSeparatedList(String[] strings) {
-		String buffer = String.join(",", strings);
+		String buffer = String.join(",", strings); //$NON-NLS-1$
 		return buffer;
 	}
 
