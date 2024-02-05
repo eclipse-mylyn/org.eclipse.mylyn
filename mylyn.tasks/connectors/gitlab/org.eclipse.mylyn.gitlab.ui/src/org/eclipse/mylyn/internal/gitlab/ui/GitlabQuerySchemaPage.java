@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
@@ -38,7 +39,7 @@ public class GitlabQuerySchemaPage extends RepositoryQuerySchemaPage {
 
 		TaskAttribute productAttribute = taskData.getRoot().getAttribute(key);
 		productAttribute.setValues(Arrays.asList(
-				Optional.ofNullable(query.getAttribute(key)).map(st -> st.split(",")).orElse(new String[] { "" })));
+				Optional.ofNullable(query.getAttribute(key)).map(st -> st.split(",")).orElse(new String[] { "" }))); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
@@ -60,7 +61,7 @@ public class GitlabQuerySchemaPage extends RepositoryQuerySchemaPage {
 		for (Entry<String, AbstractAttributeEditor> entry : editorMap.entrySet()) {
 			if (entry.getValue() instanceof MultiSelectionAttributeEditor) {
 				query.setAttribute(entry.getKey(),
-						String.join(",", ((MultiSelectionAttributeEditor) entry.getValue()).getValues()));
+						String.join(",", ((MultiSelectionAttributeEditor) entry.getValue()).getValues())); //$NON-NLS-1$
 			} else {
 				query.setAttribute(entry.getKey(), entry.getValue().getTaskAttribute().getValue());
 			}

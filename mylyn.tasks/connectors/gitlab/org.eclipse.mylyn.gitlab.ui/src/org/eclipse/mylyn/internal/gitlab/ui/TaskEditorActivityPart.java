@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
@@ -63,7 +64,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	private final Gson gson = new Gson();
 
 	public TaskEditorActivityPart() {
-		setPartName("Activity Events");
+		setPartName("Activity Events"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 		if (activityAttributes.size() > 0) {
 			createActivityList(toolkit);
 		} else {
-			toolkit.createLabel(activityComposite, "No Activity Events");
+			toolkit.createLabel(activityComposite, "No Activity Events"); //$NON-NLS-1$
 		}
 
 		toolkit.paintBordersFor(activityComposite);
@@ -131,7 +132,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 			String activityText = taskAttribute.getAttribute(TaskAttribute.COMMENT_TEXT).getValue();
 			String activityType = taskAttribute.getAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY).getValue();
 
-			Label labelIcon = toolkit.createLabel(activityComposite, "");
+			Label labelIcon = toolkit.createLabel(activityComposite, ""); //$NON-NLS-1$
 			labelIcon.setImage(GitlabUiActivator.getDefault()
 					.getImageRegistry()
 					.get(switch (GitlabCoreActivator.ActivityType.valueOf(activityType)) {
@@ -189,7 +190,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 								// no character under event.x, event.y
 							}
 							if (style1 != null && style1.underline && style1.underlineStyle == SWT.UNDERLINE_LINK) {
-								System.out.println("Click on a Link " + style1.data);
+								System.out.println("Click on a Link " + style1.data); //$NON-NLS-1$
 								BrowserUtil.openUrl((String) style1.data, BrowserUtil.NO_RICH_EDITOR);
 							}
 						}
@@ -206,8 +207,8 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 						}
 						if (style1 != null && style1.underline && style1.underlineStyle == SWT.UNDERLINE_LINK) {
 							String oldTooltip = text.getToolTipText();
-							text.setToolTipText("" + style1.data);
-							Job job = new Job("Deactivate Tooltip") {
+							text.setToolTipText("" + style1.data); //$NON-NLS-1$
+							Job job = new Job("Deactivate Tooltip") { //$NON-NLS-1$
 
 								@Override
 								protected IStatus run(IProgressMonitor monitor) {

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.ui;
@@ -91,7 +92,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(aditionalContainer);
 
 		Label groupsLabel = new Label(aditionalContainer, SWT.NONE);
-		groupsLabel.setText("include Groups");
+		groupsLabel.setText("include Groups"); //$NON-NLS-1$
 		GridData gd = new GridData(GridData.VERTICAL_ALIGN_CENTER);
 		gd.horizontalSpan = 1;
 		gd.verticalSpan = 3;
@@ -107,7 +108,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		if (repository != null) {
 			String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 			if (groupsValue != null) {
-				groupList = new ArrayList<>(Arrays.asList(groupsValue.split(",")));
+				groupList = new ArrayList<>(Arrays.asList(groupsValue.split(","))); //$NON-NLS-1$
 			}
 		}
 		groups.setInput(groupList);
@@ -137,19 +138,19 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		});
 
 		groupAddButton = new Button(aditionalContainer, SWT.PUSH);
-		groupAddButton.setText("Add");
+		groupAddButton.setText("Add"); //$NON-NLS-1$
 		groupAddButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				groupList.add(groupInput.getText());
-				groupInput.setText("");
+				groupInput.setText(""); //$NON-NLS-1$
 				groups.refresh();
 				updateUIEnablement();
 			}
 		});
 
 		groupRemoveButton = new Button(aditionalContainer, SWT.PUSH);
-		groupRemoveButton.setText("remove");
+		groupRemoveButton.setText("remove"); //$NON-NLS-1$
 		groupRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -160,7 +161,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 					lastIdx = groupList.indexOf(firstElement);
 				}
 				groupList.remove(groupInput.getText());
-				groupInput.setText("");
+				groupInput.setText(""); //$NON-NLS-1$
 				groups.refresh();
 				if (lastIdx >= 0 && lastIdx < groupList.size()) {
 					groups.setSelection(new StructuredSelection(groupList.get(lastIdx)), true);
@@ -170,7 +171,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		});
 
 		Label projectsLabel = new Label(aditionalContainer, SWT.NONE);
-		projectsLabel.setText("include Projects");
+		projectsLabel.setText("include Projects"); //$NON-NLS-1$
 		gd = new GridData(GridData.VERTICAL_ALIGN_CENTER);
 		gd.horizontalSpan = 1;
 		gd.verticalSpan = 3;
@@ -186,7 +187,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		if (repository != null) {
 			String projectsValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
 			if (projectsValue != null) {
-				projectList = new ArrayList<>(Arrays.asList(projectsValue.split(",")));
+				projectList = new ArrayList<>(Arrays.asList(projectsValue.split(","))); //$NON-NLS-1$
 			}
 		}
 		projects.setInput(projectList);
@@ -216,19 +217,19 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		});
 
 		projectAddButton = new Button(aditionalContainer, SWT.PUSH);
-		projectAddButton.setText("Add");
+		projectAddButton.setText("Add"); //$NON-NLS-1$
 		projectAddButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectList.add(projectInput.getText());
-				projectInput.setText("");
+				projectInput.setText(""); //$NON-NLS-1$
 				projects.refresh();
 				updateUIEnablement();
 			}
 		});
 
 		projectRemoveButton = new Button(aditionalContainer, SWT.PUSH);
-		projectRemoveButton.setText("remove");
+		projectRemoveButton.setText("remove"); //$NON-NLS-1$
 		projectRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -239,7 +240,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 					lastIdx = projectList.indexOf(firstElement);
 				}
 				projectList.remove(projectInput.getText());
-				projectInput.setText("");
+				projectInput.setText(""); //$NON-NLS-1$
 				projects.refresh();
 				if (lastIdx >= 0 && lastIdx < projectList.size()) {
 					projects.setSelection(new StructuredSelection(projectList.get(lastIdx)), true);
@@ -249,7 +250,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		});
 
 		avatarSupportButton = new Button(aditionalContainer, SWT.CHECK);
-		avatarSupportButton.setText("Show Avantars");
+		avatarSupportButton.setText("Show Avantars"); //$NON-NLS-1$
 		avatarSupportButton.setSelection(getRepository() != null
 				&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.AVANTAR)));
 
@@ -260,7 +261,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		avatarSupportButton.setLayoutData(gd);
 
 		showActivityIconsButton = new Button(aditionalContainer, SWT.CHECK);
-		showActivityIconsButton.setText("Show Activity Icons");
+		showActivityIconsButton.setText("Show Activity Icons"); //$NON-NLS-1$
 		if (getRepository() != null) {
 			String value = getRepository().getProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS);
 			showActivityIconsButton.setSelection(value == null ? true : Boolean.parseBoolean(value));
@@ -273,7 +274,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		showActivityIconsButton.setLayoutData(gd);
 
 		usePersonalAccessTokenButton = new Button(aditionalContainer, SWT.CHECK);
-		usePersonalAccessTokenButton.setText("use personal access token");
+		usePersonalAccessTokenButton.setText("use personal access token"); //$NON-NLS-1$
 		usePersonalAccessTokenButton.setSelection(getRepository() != null
 				&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN)));
 
@@ -295,7 +296,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 				? getRepository().getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN)
 				: null;
 		if (accessTokenValue == null) {
-			accessTokenValue = "";
+			accessTokenValue = ""; //$NON-NLS-1$
 		}
 		personalAccessTokenText.setText(accessTokenValue);
 		gd = new GridData(GridData.FILL_BOTH);
@@ -320,9 +321,9 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 	@Override
 	public void applyTo(TaskRepository repository) {
-		repository.setProperty(GitlabCoreActivator.GROUPS, groupList.size() == 0 ? null : String.join(",", groupList));
+		repository.setProperty(GitlabCoreActivator.GROUPS, groupList.size() == 0 ? null : String.join(",", groupList)); //$NON-NLS-1$
 		repository.setProperty(GitlabCoreActivator.PROJECTS,
-				projectList.size() == 0 ? null : String.join(",", projectList));
+				projectList.size() == 0 ? null : String.join(",", projectList)); //$NON-NLS-1$
 		repository.setProperty(GitlabCoreActivator.AVANTAR, Boolean.toString(avatarSupportButton.getSelection()));
 		repository.setProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS,
 				Boolean.toString(showActivityIconsButton.getSelection()));

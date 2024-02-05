@@ -543,7 +543,7 @@ public class GitlabRestClient {
 							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
-							attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note); //$NON-NLS-1$
+							attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
 							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -562,7 +562,7 @@ public class GitlabRestClient {
 								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							} else {
-								attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note); //$NON-NLS-1$
+								attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
 								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
