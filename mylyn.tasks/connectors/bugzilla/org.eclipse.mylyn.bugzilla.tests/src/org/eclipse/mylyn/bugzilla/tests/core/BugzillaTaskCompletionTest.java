@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright © 2004, 2011, 2024 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2011 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at

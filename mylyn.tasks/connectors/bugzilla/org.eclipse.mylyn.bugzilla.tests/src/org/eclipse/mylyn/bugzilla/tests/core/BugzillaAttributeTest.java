@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright © 2013, 2024 Frank Becker and others.
+ * Copyright (c) 2013 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse @Test
 	public License v1.0
