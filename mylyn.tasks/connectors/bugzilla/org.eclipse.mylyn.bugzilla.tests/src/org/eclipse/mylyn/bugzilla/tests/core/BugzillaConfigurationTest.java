@@ -114,19 +114,12 @@ public class BugzillaConfigurationTest extends TestCase {
 	 * (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
-		BufferedReader inCleaned = null;
-		try {
-			File tempFile = File.createTempFile("XmlCleaner-", "tmp");
-			tempFile.deleteOnExit();
+		File tempFile = File.createTempFile("XmlCleaner-", "tmp");
+		tempFile.deleteOnExit();
 
-			InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
-			BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-			try (in) {
-				inCleaned = XmlCleaner.clean(in, tempFile);
-				if (tempFile != null) {
-					tempFile.delete();
-				}
-			}
+		try (InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
+				BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+				BufferedReader inCleaned = XmlCleaner.clean(in, tempFile)) {
 
 			SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 			final XMLReader reader = CoreUtil.newXmlReader();
@@ -147,6 +140,7 @@ public class BugzillaConfigurationTest extends TestCase {
 					throw exception;
 				}
 			});
+
 			reader.parse(new InputSource(inCleaned));
 
 			RepositoryConfiguration config = contentHandler.getConfiguration();
@@ -155,9 +149,7 @@ public class BugzillaConfigurationTest extends TestCase {
 			assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT)
 					.contains("Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 		} finally {
-			if (inCleaned != null) {
-				inCleaned.close();
-			}
+			tempFile.delete();
 		}
 	}
 }
