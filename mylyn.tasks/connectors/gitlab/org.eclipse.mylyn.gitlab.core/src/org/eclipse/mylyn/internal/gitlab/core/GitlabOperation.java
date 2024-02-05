@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -52,7 +53,7 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 			return execute(monitor);
 		} catch (IOException e) {
 			throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-					"org.eclipse.mylyn.gitlab.core.GitlabOperation.run(IOperationMonitor)", e));
+					"org.eclipse.mylyn.gitlab.core.GitlabOperation.run(IOperationMonitor)", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -68,7 +69,7 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 	protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
 		request.setHeader(ACCEPT, APPLICATION_JSON);
 		String accessToken = (String) getClient().getAttribute(GitlabRestClient.AUTHORIZATION_HEADER);
-		request.setHeader("Authorization", accessToken);
+		request.setHeader("Authorization", accessToken); //$NON-NLS-1$
 	}
 
 	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException, GitlabException {
@@ -99,10 +100,10 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 		if (statusCode != expected /* && statusCode != HttpStatus.SC_BAD_REQUEST */) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath())));
+						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()))); //$NON-NLS-1$
 			}
 			throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-					NLS.bind("Unexpected response from Gitlab REST server for ''{0}'': {1}", response.getRequestPath(),
+					NLS.bind("Unexpected response from Gitlab REST server for ''{0}'': {1}", response.getRequestPath(), //$NON-NLS-1$
 							HttpUtil.getStatusText(statusCode))));
 		}
 	}

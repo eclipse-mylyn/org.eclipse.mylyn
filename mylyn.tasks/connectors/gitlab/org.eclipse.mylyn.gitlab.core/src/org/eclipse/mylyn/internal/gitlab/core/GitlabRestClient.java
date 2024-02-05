@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -97,9 +98,9 @@ public class GitlabRestClient {
 
 	private final TaskRepository taskRepository;
 
-	private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
+	private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)"); //$NON-NLS-1$
 
-	public static String AUTHORIZATION_HEADER = "authorization_header";
+	public static String AUTHORIZATION_HEADER = "authorization_header"; //$NON-NLS-1$
 
 	@SuppressWarnings("restriction")
 	public GitlabRestClient(RepositoryLocation location, GitlabRepositoryConnector connector,
@@ -128,23 +129,23 @@ public class GitlabRestClient {
 			throws GitlabException, CoreException {
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
-					query.toString() + " " + query.getSummary());
+					query.toString() + " " + query.getSummary()); //$NON-NLS-1$
 		}
 		getAccessTokenIfNotPresent(monitor);
-		String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(",");
-		String groupAttribute = query.getAttribute("group");
+		String[] queryProjects = query.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey()).split(","); //$NON-NLS-1$
+		String groupAttribute = query.getAttribute("group"); //$NON-NLS-1$
 
 		if (!queryProjects[0].isEmpty()) {
 			for (String string : queryProjects) {
-				String path = "/projects/" + string.replaceAll("/", "%2F");
+				String path = "/projects/" + string.replaceAll("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				getIssuesInternal(query, collector, path, monitor);
 			}
 		}
 		if (groupAttribute != null) {
-			String[] gueryGroups = groupAttribute.split(",");
+			String[] gueryGroups = groupAttribute.split(","); //$NON-NLS-1$
 			if (!gueryGroups[0].isEmpty()) {
 				for (String string : gueryGroups) {
-					String path = "/groups/" + string.replaceAll("/", "%2F");
+					String path = "/groups/" + string.replaceAll("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					getIssuesInternal(query, collector, path, monitor);
 				}
 			}
@@ -157,42 +158,42 @@ public class GitlabRestClient {
 
 	private void getIssuesInternal(IRepositoryQuery query, TaskDataCollector collector, String path,
 			final IOperationMonitor monitor) throws GitlabException {
-		List<TaskData> taskDataArray = new GitlabOperation<List<TaskData>>(client, path + "/issues") {
+		List<TaskData> taskDataArray = new GitlabOperation<List<TaskData>>(client, path + "/issues") { //$NON-NLS-1$
 
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
-				String state = query.getAttribute("STATE");
+				String state = query.getAttribute("STATE"); //$NON-NLS-1$
 				ArrayList<String> suffix = new ArrayList<>();
-				switch (state != null ? state : "") {
-					case "opened":
-						suffix.add("state=opened");
+				switch (state != null ? state : "") { //$NON-NLS-1$
+					case "opened": //$NON-NLS-1$
+						suffix.add("state=opened"); //$NON-NLS-1$
 						break;
-					case "closed":
-						suffix.add("state=closed");
+					case "closed": //$NON-NLS-1$
+						suffix.add("state=closed"); //$NON-NLS-1$
 						break;
 					default:
 				}
-				String search = query.getAttribute("SEARCH");
+				String search = query.getAttribute("SEARCH"); //$NON-NLS-1$
 				if (search != null && !search.isBlank()) {
 					try {
-						suffix.add("search=" + URLEncoder.encode(search, StandardCharsets.UTF_8.toString()));
-						String searchIn = query.getAttribute("SEARCH_IN");
+						suffix.add("search=" + URLEncoder.encode(search, StandardCharsets.UTF_8.toString())); //$NON-NLS-1$
+						String searchIn = query.getAttribute("SEARCH_IN"); //$NON-NLS-1$
 						if (searchIn != null && !searchIn.isBlank()) {
-							suffix.add("in=" + searchIn);
+							suffix.add("in=" + searchIn); //$NON-NLS-1$
 						}
 					} catch (UnsupportedEncodingException e) {
 						// ignore if we not can encode the search value
 						e.printStackTrace();
 					}
 				}
-				if (Boolean.valueOf(query.getAttribute("CONFIDENTIAL"))) {
-					suffix.add("confidential=true");
+				if (Boolean.valueOf(query.getAttribute("CONFIDENTIAL"))) { //$NON-NLS-1$
+					suffix.add("confidential=true"); //$NON-NLS-1$
 				}
-				if (Boolean.valueOf(query.getAttribute("ASSIGNED_TO_ME"))) {
-					suffix.add("scope=assigned_to_me");
+				if (Boolean.valueOf(query.getAttribute("ASSIGNED_TO_ME"))) { //$NON-NLS-1$
+					suffix.add("scope=assigned_to_me"); //$NON-NLS-1$
 				}
 
-				String suffixStr = suffix.size() > 0 ? "?" + String.join("&", suffix) : "";
+				String suffixStr = suffix.size() > 0 ? "?" + String.join("&", suffix) : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				HttpRequestBase request = new HttpGet(url + suffixStr);
 				return request;
 			}
@@ -200,9 +201,9 @@ public class GitlabRestClient {
 			private String nextPage(Header[] linkHeader) {
 				if (linkHeader.length > 0) {
 					Header firstLinkHeader = linkHeader[0];
-					for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) {
-						String[] linkHeaderElements = linkHeaderEntry.split("; ");
-						if ("rel=\"next\"".equals(linkHeaderElements[1])) {
+					for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) { //$NON-NLS-1$
+						String[] linkHeaderElements = linkHeaderEntry.split("; "); //$NON-NLS-1$
+						if ("rel=\"next\"".equals(linkHeaderElements[1])) { //$NON-NLS-1$
 							return linkHeaderElements[0].substring(1, linkHeaderElements[0].length() - 1);
 						}
 					}
@@ -218,7 +219,7 @@ public class GitlabRestClient {
 				addHttpRequestEntities(request);
 				CommonHttpResponse response = execute(request, monitor);
 				result = processAndRelease(response, monitor);
-				Header[] linkHeader = response.getResponse().getHeaders("Link");
+				Header[] linkHeader = response.getResponse().getHeaders("Link"); //$NON-NLS-1$
 				String nextPageValue = nextPage(linkHeader);
 				while (nextPageValue != null) {
 					HttpRequestBase looprequest = new HttpGet(nextPageValue);
@@ -226,7 +227,7 @@ public class GitlabRestClient {
 					CommonHttpResponse loopresponse = execute(looprequest, monitor);
 					List<TaskData> loopresult = processAndRelease(loopresponse, monitor);
 					result.addAll(loopresult);
-					linkHeader = loopresponse.getResponse().getHeaders("Link");
+					linkHeader = loopresponse.getResponse().getHeaders("Link"); //$NON-NLS-1$
 					nextPageValue = nextPage(linkHeader);
 				}
 				return result;
@@ -265,7 +266,7 @@ public class GitlabRestClient {
 
 	public String getVersion(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject versionInfo = new GitlabOperation<JsonObject>(client, "/version") {
+		JsonObject versionInfo = new GitlabOperation<JsonObject>(client, "/version") { //$NON-NLS-1$
 
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
@@ -278,12 +279,12 @@ public class GitlabRestClient {
 				return new Gson().fromJson(in, JsonObject.class);
 			}
 		}.run(monitor);
-		return versionInfo.get("version").getAsString();
+		return versionInfo.get("version").getAsString(); //$NON-NLS-1$
 	}
 
 	public String getVersionAndRevision(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject versionInfo = new GitlabOperation<JsonObject>(client, "/version") {
+		JsonObject versionInfo = new GitlabOperation<JsonObject>(client, "/version") { //$NON-NLS-1$
 
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
@@ -296,12 +297,12 @@ public class GitlabRestClient {
 				return new Gson().fromJson(in, JsonObject.class);
 			}
 		}.run(monitor);
-		return versionInfo.get("version").getAsString() + "(rev: " + versionInfo.get("revision").getAsString() + ")";
+		return versionInfo.get("version").getAsString() + "(rev: " + versionInfo.get("revision").getAsString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	public boolean validate(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		String validate = new GitlabOperation<String>(client, "/version") {
+		String validate = new GitlabOperation<String>(client, "/version") { //$NON-NLS-1$
 
 			@Override
 			protected boolean isRepeatable() {
@@ -316,15 +317,15 @@ public class GitlabRestClient {
 
 			@Override
 			protected String parseFromJson(InputStreamReader in) throws GitlabException {
-				return new BufferedReader(in).lines().parallel().collect(Collectors.joining("\n"));
+				return new BufferedReader(in).lines().parallel().collect(Collectors.joining("\n")); //$NON-NLS-1$
 			}
 		}.run(monitor);
-		return validate.length() > 0 && validate.contains("version");
+		return validate.length() > 0 && validate.contains("version"); //$NON-NLS-1$
 	}
 
 	public JsonObject getMetadata(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/metadata") {
+		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/metadata") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -362,9 +363,9 @@ public class GitlabRestClient {
 	private TaskData getFromJson(JsonObject jo) {
 		GitlabTaskDataHandler dataHandler = (GitlabTaskDataHandler) connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = dataHandler.getAttributeMapper(taskRepository);
-		String selfString = jo.get("_links").getAsJsonObject().get("self").getAsString();
+		String selfString = jo.get("_links").getAsJsonObject().get("self").getAsString(); //$NON-NLS-1$ //$NON-NLS-2$
 		TaskData response = new TaskData(mapper, connector.getConnectorKind(), taskRepository.getRepositoryUrl(),
-				selfString.replace(taskRepository.getUrl() + GitlabCoreActivator.API_VERSION, ""));
+				selfString.replace(taskRepository.getUrl() + GitlabCoreActivator.API_VERSION, "")); //$NON-NLS-1$
 		try {
 			dataHandler.initializeTaskData(taskRepository, response, null, null);
 		} catch (CoreException e) {
@@ -392,16 +393,16 @@ public class GitlabRestClient {
 			}
 			if (field != null && TaskAttribute.TYPE_PERSON.equals(field.getType()) && entry.getValue().isJsonObject()) {
 				JsonObject personObject = entry.getValue().getAsJsonObject();
-				attribute.setValue(personObject.get("name").getAsString());
-				IRepositoryPerson author = taskRepository.createPerson(personObject.get("username").getAsString());
-				author.setName(personObject.get("name").getAsString());
-				author.setAttribute("avatar_url", personObject.get("avatar_url").getAsString());
+				attribute.setValue(personObject.get("name").getAsString()); //$NON-NLS-1$
+				IRepositoryPerson author = taskRepository.createPerson(personObject.get("username").getAsString()); //$NON-NLS-1$
+				author.setName(personObject.get("name").getAsString()); //$NON-NLS-1$
+				author.setAttribute("avatar_url", personObject.get("avatar_url").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 				mapper.setRepositoryPerson(attribute, author);
 			}
 			if (GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey().equals(attributeId) && attribute != null
 					&& entry.getValue() != null && entry.getValue().isJsonObject()) {
 				JsonObject obj = (JsonObject) entry.getValue();
-				attribute.setValue(obj.get("id").getAsString());
+				attribute.setValue(obj.get("id").getAsString()); //$NON-NLS-1$
 			}
 		}
 		return response;
@@ -440,7 +441,7 @@ public class GitlabRestClient {
 			try {
 				obtainAccessToken(monitor);
 			} catch (Exception e) {
-				throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "Exception", e));
+				throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "Exception", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -466,24 +467,24 @@ public class GitlabRestClient {
 			String password = credentials1.getPassword();
 			String repositoryUrl = taskRepository.getRepositoryUrl();
 
-			URL url = new URL(repositoryUrl + "/oauth/token");
+			URL url = new URL(repositoryUrl + "/oauth/token"); //$NON-NLS-1$
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod("POST"); //$NON-NLS-1$
 			connection.setDoOutput(true);
 			connection.getOutputStream()
-					.write(("grant_type=password&username=" + username + "&password=" + password).getBytes());
+					.write(("grant_type=password&username=" + username + "&password=" + password).getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			connection.connect();
 
 			int responseCode = connection.getResponseCode();
 			if (responseCode != 200) {
-				throw new Exception("Failed to obtain access token");
+				throw new Exception("Failed to obtain access token"); //$NON-NLS-1$
 			}
 
 			String response = new String(connection.getInputStream().readAllBytes());
-			accessToken = response.split("\"access_token\":\"")[1].split("\"")[0];
+			accessToken = response.split("\"access_token\":\"")[1].split("\"")[0]; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		setClientAttribute(AUTHORIZATION_HEADER, "Bearer " + accessToken);
+		setClientAttribute(AUTHORIZATION_HEADER, "Bearer " + accessToken); //$NON-NLS-1$
 		return accessToken;
 	}
 
@@ -492,20 +493,20 @@ public class GitlabRestClient {
 		TaskData result = null;
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
-					repository.getUrl() + " id " + taskId);
+					repository.getUrl() + " id " + taskId); //$NON-NLS-1$
 		}
-		String searchString = ".*(/projects/\\d+)/issues/(\\d+)";
+		String searchString = ".*(/projects/\\d+)/issues/(\\d+)"; //$NON-NLS-1$
 		Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(taskId);
 		if (matcher.find()) {
 			GitlabConfiguration config = getConfiguration();
 			if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
-				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE, "get Configuration ");
+				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE, "get Configuration "); //$NON-NLS-1$
 			}
 			JsonObject issue = getIssue(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 			if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-						"get Issue with path " + matcher.group(1) + " an ID " + matcher.group(2));
+						"get Issue with path " + matcher.group(1) + " an ID " + matcher.group(2)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			TypeToken<TaskData> type = new TypeToken<>() {
 			};
@@ -525,7 +526,7 @@ public class GitlabRestClient {
 					OperationUtil.convert(monitor));
 			if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-						"get IssueDiscussions with path " + matcher.group(1) + " an ID " + matcher.group(2));
+						"get IssueDiscussions with path " + matcher.group(1) + " an ID " + matcher.group(2)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (discussions != null) {
 				int commentIdx = 0;
@@ -533,38 +534,38 @@ public class GitlabRestClient {
 				for (JsonElement jsonElement : discussions) {
 					JsonObject discussion = (JsonObject) jsonElement;
 
-					JsonArray notesArray = discussion.get("notes").getAsJsonArray();
-					if (discussion.get("individual_note").getAsBoolean()) {
+					JsonArray notesArray = discussion.get("notes").getAsJsonArray(); //$NON-NLS-1$
+					if (discussion.get("individual_note").getAsBoolean()) { //$NON-NLS-1$
 						JsonObject note = notesArray.get(0).getAsJsonObject();
-						if (!note.get("system").getAsBoolean()) {
+						if (!note.get("system").getAsBoolean()) { //$NON-NLS-1$
 							attrib = createNoteTaskAttribute(repository, result.getRoot(), commentIdx++, note);
-							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-							attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
-							attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
-							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-							attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+							attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note); //$NON-NLS-1$
+							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					} else {
 						TaskAttribute reply = null;
 						for (JsonElement jsonElement2 : notesArray) {
 							JsonObject note = jsonElement2.getAsJsonObject();
-							if (!note.get("system").getAsBoolean()) {
+							if (!note.get("system").getAsBoolean()) { //$NON-NLS-1$
 								attrib = createNoteTaskAttribute(repository, reply == null ? result.getRoot() : reply,
 										commentIdx++, note);
 								if (reply == null) {
-									reply = attrib.createAttribute("reply");
+									reply = attrib.createAttribute("reply"); //$NON-NLS-1$
 								}
-								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-								attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							} else {
-								attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
-								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString());
-								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString());
-								attrib.createAttribute("note_id").setValue(note.get("id").getAsString());
+								attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note); //$NON-NLS-1$
+								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 					}
@@ -574,20 +575,20 @@ public class GitlabRestClient {
 			JsonArray states = getIssueStateEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 			if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-						"get IssueStateEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+						"get IssueStateEvents with path " + matcher.group(1) + " an ID " + matcher.group(2)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (states != null) {
 				for (JsonElement stateElem : states) {
 					JsonObject state = (JsonObject) stateElem;
 					Instant instant = Instant
-							.from(DateTimeFormatter.ISO_INSTANT.parse(state.get("created_at").getAsString()));
+							.from(DateTimeFormatter.ISO_INSTANT.parse(state.get("created_at").getAsString())); //$NON-NLS-1$
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
 
 					TaskAttribute taskAttribute = result.getRoot()
 							.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
 					taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 
-					String stateText = state.get("state").getAsString();
+					String stateText = state.get("state").getAsString(); //$NON-NLS-1$
 
 					TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT)
 							.createAttribute(taskAttribute);
@@ -598,14 +599,14 @@ public class GitlabRestClient {
 					child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 					child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
-					child.setValue(state.get("user").getAsJsonObject().get("name").getAsString());
+					child.setValue(state.get("user").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 
 					TaskAttribute typeAttribute = taskAttribute
 							.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 
-					if (stateText.startsWith("closed")) {
+					if (stateText.startsWith("closed")) { //$NON-NLS-1$
 						typeAttribute.setValue(ActivityType.LOCK.toString());
-					} else if (stateText.startsWith("reopened")) {
+					} else if (stateText.startsWith("reopened")) { //$NON-NLS-1$
 						typeAttribute.setValue(ActivityType.REOPEN.toString());
 					}
 
@@ -614,7 +615,7 @@ public class GitlabRestClient {
 			JsonArray labels = getIssueLabelEvents(matcher.group(1), matcher.group(2), OperationUtil.convert(monitor));
 			if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 				GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-						"get getIssueLabelEvents with path " + matcher.group(1) + " an ID " + matcher.group(2));
+						"get getIssueLabelEvents with path " + matcher.group(1) + " an ID " + matcher.group(2)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (labels != null) {
 				long lastLabelAt = 0;
@@ -625,7 +626,7 @@ public class GitlabRestClient {
 				for (JsonElement stateElem : labels) {
 					JsonObject label = (JsonObject) stateElem;
 					Instant instant = Instant
-							.from(DateTimeFormatter.ISO_INSTANT.parse(label.get("created_at").getAsString()));
+							.from(DateTimeFormatter.ISO_INSTANT.parse(label.get("created_at").getAsString())); //$NON-NLS-1$
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
 
 					if (!instant.equals(instantAt)) {
@@ -644,7 +645,7 @@ public class GitlabRestClient {
 						child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 						child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
-						child.setValue(label.get("user").getAsJsonObject().get("name").getAsString());
+						child.setValue(label.get("user").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 
 						TaskAttribute typeAttribute = taskAttribute
 								.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
@@ -654,11 +655,11 @@ public class GitlabRestClient {
 						taskAttribute.getMetaData()
 								.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, labelText.getId());
 					}
-					if (label.getAsJsonObject().get("action").getAsString().equals("add")) {
-						added.add(label.get("label").getAsJsonObject().get("name").getAsString());
+					if (label.getAsJsonObject().get("action").getAsString().equals("add")) { //$NON-NLS-1$ //$NON-NLS-2$
+						added.add(label.get("label").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					if (label.getAsJsonObject().get("action").getAsString().equals("remove")) {
-						removed.add(label.get("label").getAsJsonObject().get("name").getAsString());
+					if (label.getAsJsonObject().get("action").getAsString().equals("remove")) { //$NON-NLS-1$ //$NON-NLS-2$
+						removed.add(label.get("label").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 				}
@@ -676,16 +677,16 @@ public class GitlabRestClient {
 
 	private void buildLableText(TaskAttribute labelText, ArrayList<String> added, ArrayList<String> removed) {
 		if (labelText != null) {
-			String text = "";
+			String text = ""; //$NON-NLS-1$
 			if (added.size() > 0) {
-				text += "added ";
-				text += String.join(", ", added);
-				text += added.size() > 1 ? " labels" : " label";
+				text += "added "; //$NON-NLS-1$
+				text += String.join(", ", added); //$NON-NLS-1$
+				text += added.size() > 1 ? " labels" : " label"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (removed.size() > 0) {
-				text += text.length() == 0 ? "removed " : " and removed ";
-				text += String.join(", ", removed);
-				text += removed.size() > 1 ? " labels" : " label";
+				text += text.length() == 0 ? "removed " : " and removed "; //$NON-NLS-1$ //$NON-NLS-2$
+				text += String.join(", ", removed); //$NON-NLS-1$
+				text += removed.size() > 1 ? " labels" : " label"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			labelText.setValue(text);
 		}
@@ -693,7 +694,7 @@ public class GitlabRestClient {
 
 	private TaskAttribute createActivityEventTaskAttribute(TaskRepository repository, TaskAttribute result,
 			JsonObject note) {
-		Instant instant = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(note.get("created_at").getAsString()));
+		Instant instant = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(note.get("created_at").getAsString())); //$NON-NLS-1$
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
 		TaskAttribute taskAttribute = result.createAttribute(GitlabCoreActivator.PREFIX_ACTIVITY + instant);
 		taskAttribute.getMetaData().setType(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
@@ -702,9 +703,9 @@ public class GitlabRestClient {
 		child.setValue(localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 		child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(taskAttribute);
-		child.setValue(note.get("author").getAsJsonObject().get("name").getAsString());
+		child.setValue(note.get("author").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 
-		buildActivityEventStyleInformation(taskAttribute, note.get("body").getAsString());
+		buildActivityEventStyleInformation(taskAttribute, note.get("body").getAsString()); //$NON-NLS-1$
 
 		return taskAttribute;
 	}
@@ -715,26 +716,26 @@ public class GitlabRestClient {
 		taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, textAttribute.getId());
 		TaskAttribute typeAttribute = taskAttribute.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
 
-		if (bodyText.startsWith("changed due date ") || bodyText.startsWith("removed due date ")) {
+		if (bodyText.startsWith("changed due date ") || bodyText.startsWith("removed due date ")) { //$NON-NLS-1$ //$NON-NLS-2$
 			typeAttribute.setValue(ActivityType.CALENDAR.toString());
-		} else if (bodyText.startsWith("assigned to ") || bodyText.startsWith("unassigned ")) {
+		} else if (bodyText.startsWith("assigned to ") || bodyText.startsWith("unassigned ")) { //$NON-NLS-1$ //$NON-NLS-2$
 			typeAttribute.setValue(ActivityType.PERSON.toString());
-		} else if (bodyText.startsWith("changed ")) {
+		} else if (bodyText.startsWith("changed ")) { //$NON-NLS-1$
 			typeAttribute.setValue(ActivityType.PENCIL.toString());
-		} else if (bodyText.startsWith("unlocked ")) {
+		} else if (bodyText.startsWith("unlocked ")) { //$NON-NLS-1$
 			typeAttribute.setValue(ActivityType.UNLOCK.toString());
-		} else if (bodyText.startsWith("locked ")) {
+		} else if (bodyText.startsWith("locked ")) { //$NON-NLS-1$
 			typeAttribute.setValue(ActivityType.LOCK.toString());
-		} else if (bodyText.contains("/designs?version=")) {
+		} else if (bodyText.contains("/designs?version=")) { //$NON-NLS-1$
 			typeAttribute.setValue(ActivityType.DESIGN.toString());
 		} else {
 			typeAttribute.setValue(ActivityType.UNKNOWN.toString());
 		}
 
 		TaskAttribute styleAttribute = taskAttribute.createAttribute(GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY_STYLE);
-		String resultText = "";
+		String resultText = ""; //$NON-NLS-1$
 
-		String[] parts = bodyText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}");
+		String[] parts = bodyText.split("\\*\\*|\\*\\*\\{\\-|\\{\\-|\\-\\}|\\{\\+|\\+\\}"); //$NON-NLS-1$
 		ArrayList<GitlabActivityStyle> styles = new ArrayList<>(parts.length);
 		int textIdx = 0;
 		GitlabActivityStyle styleRange = new GitlabActivityStyle(0);
@@ -743,7 +744,7 @@ public class GitlabRestClient {
 		for (String matchText : parts) {
 			int actPartLen = matchText.length();
 			textIdx += actPartLen;
-			String marker = textIdx + 2 <= textLen ? bodyText.substring(textIdx, textIdx + 2) : "  ";
+			String marker = textIdx + 2 <= textLen ? bodyText.substring(textIdx, textIdx + 2) : "  "; //$NON-NLS-1$
 
 			Matcher linkMatcher = linkPattern.matcher(matchText);
 
@@ -767,7 +768,7 @@ public class GitlabRestClient {
 				resultText += matchText;
 				styleRange.add2Length(actPartLen);
 			}
-			if ("**".equals(marker)) {
+			if ("**".equals(marker)) { //$NON-NLS-1$
 				styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
 				if (styleRange.getFontStyle() == GitlabActivityStyle.BOLD) {
 					styleRange.setFontStyle(GitlabActivityStyle.NORMAL);
@@ -775,15 +776,15 @@ public class GitlabRestClient {
 					styleRange.setFontStyle(GitlabActivityStyle.BOLD);
 				}
 			}
-			if ("{-".equals(marker)) {
+			if ("{-".equals(marker)) { //$NON-NLS-1$
 				styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
 				styleRange.setColor(GitlabActivityStyle.COLOR_RED);
 			}
-			if ("{+".equals(marker)) {
+			if ("{+".equals(marker)) { //$NON-NLS-1$
 				styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
 				styleRange.setColor(GitlabActivityStyle.COLOR_GREEN);
 			}
-			if ("-}".equals(marker) || "+}".equals(marker)) {
+			if ("-}".equals(marker) || "+}".equals(marker)) { //$NON-NLS-1$ //$NON-NLS-2$
 				styleRange = createNewRangeIfNeeded(resultText.length(), styles, styleRange, actPartLen);
 				styleRange.setColor(GitlabActivityStyle.COLOR_INHERIT_DEFAULT);
 
@@ -821,16 +822,16 @@ public class GitlabRestClient {
 			JsonObject note) {
 		TaskCommentMapper cmapper = new TaskCommentMapper();
 		IRepositoryPerson author = repository
-				.createPerson(note.get("author").getAsJsonObject().get("username").getAsString());
-		author.setName(note.get("author").getAsJsonObject().get("name").getAsString());
-		author.setAttribute("avatar_url", note.get("author").getAsJsonObject().get("avatar_url").getAsString());
+				.createPerson(note.get("author").getAsJsonObject().get("username").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+		author.setName(note.get("author").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+		author.setAttribute("avatar_url", note.get("author").getAsJsonObject().get("avatar_url").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		cmapper.setAuthor(author);
-		cmapper.setCreationDate(GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString()));
-		cmapper.setText(note.get("body").getAsString());
+		cmapper.setCreationDate(GitlabTaskAttributeMapper.parseDate(note.get("created_at").getAsString())); //$NON-NLS-1$
+		cmapper.setText(note.get("body").getAsString()); //$NON-NLS-1$
 		cmapper.setNumber(++i);
 		TaskAttribute attribute = result.createAttribute(TaskAttribute.PREFIX_COMMENT + i);
 		cmapper.applyTo(attribute);
-		attribute.createAttribute("system").setValue(note.get("system").getAsString());
+		attribute.createAttribute("system").setValue(note.get("system").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 		return attribute;
 	}
 
@@ -846,7 +847,7 @@ public class GitlabRestClient {
 
 	public JsonObject getUser(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/user") {
+		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/user") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -863,7 +864,7 @@ public class GitlabRestClient {
 
 	public JsonArray getUsers(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/users" + path) {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/users" + path) { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -880,7 +881,7 @@ public class GitlabRestClient {
 
 	public JsonArray getNamespaces(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/namespaces") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/namespaces") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -897,7 +898,7 @@ public class GitlabRestClient {
 
 	public JsonObject getGroup(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/groups" + path) {
+		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/groups" + path) { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -914,7 +915,7 @@ public class GitlabRestClient {
 
 	public JsonArray getSubGroups(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/groups" + path + "/subgroups?all_available=true") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/groups" + path + "/subgroups?all_available=true") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -932,7 +933,7 @@ public class GitlabRestClient {
 	public JsonArray getDescendantGroups(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
-				"/groups" + path + "/descendant_groups?all_available=true") {
+				"/groups" + path + "/descendant_groups?all_available=true") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -949,7 +950,7 @@ public class GitlabRestClient {
 
 	public JsonObject getNamespace(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonObject = new GitlabOperation<JsonObject>(client, "/namespaces" + path) {
+		JsonObject jsonObject = new GitlabOperation<JsonObject>(client, "/namespaces" + path) { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -966,7 +967,7 @@ public class GitlabRestClient {
 
 	public JsonArray getProjects(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/projects") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/projects") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -983,7 +984,7 @@ public class GitlabRestClient {
 
 	public JsonObject getProject(String projectid, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/projects/" + projectid) {
+		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, "/projects/" + projectid) { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1001,7 +1002,7 @@ public class GitlabRestClient {
 	public JsonArray getGroupProjects(String projectid, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
-				"/groups/" + projectid + "/projects?include_subgroups=true") {
+				"/groups/" + projectid + "/projects?include_subgroups=true") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1018,7 +1019,7 @@ public class GitlabRestClient {
 
 	public JsonArray getIssues(String path, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1035,7 +1036,7 @@ public class GitlabRestClient {
 
 	public JsonObject getIssue(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, path + "/issues/" + id) {
+		JsonObject jsonArray = new GitlabOperation<JsonObject>(client, path + "/issues/" + id) { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1052,7 +1053,7 @@ public class GitlabRestClient {
 
 	public JsonArray getIssueNotes(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/notes?sort=asc") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/notes?sort=asc") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1069,7 +1070,7 @@ public class GitlabRestClient {
 
 	public JsonArray getIssueDiscussions(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/discussions") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/discussions") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1086,7 +1087,7 @@ public class GitlabRestClient {
 
 	public JsonArray getIssueStateEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_state_events") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_state_events") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1103,7 +1104,7 @@ public class GitlabRestClient {
 
 	public JsonArray getIssueLabelEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_label_events") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, path + "/issues/" + id + "/resource_label_events") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1121,7 +1122,7 @@ public class GitlabRestClient {
 	public JsonArray getIssueMilestoneEvents(String path, String id, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
-				path + "/issues/" + id + "/resource_milestone_events") {
+				path + "/issues/" + id + "/resource_milestone_events") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1140,7 +1141,7 @@ public class GitlabRestClient {
 			throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonObject jsonArray = new GitlabOperation<JsonObject>(client,
-				path + "/issues/" + id + "/discussions/" + discussion_id) {
+				path + "/issues/" + id + "/discussions/" + discussion_id) { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1159,7 +1160,7 @@ public class GitlabRestClient {
 			throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonObject jsonElement;
-		jsonElement = new GitlabPostOperation<JsonObject>(client, path + "/issues/" + id + "/notes") {
+		jsonElement = new GitlabPostOperation<JsonObject>(client, path + "/issues/" + id + "/notes") { //$NON-NLS-1$ //$NON-NLS-2$
 
 			@Override
 			protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
@@ -1169,7 +1170,7 @@ public class GitlabRestClient {
 					((HttpPost) request).setEntity(new StringEntity(body));
 				} catch (UnsupportedEncodingException e) {
 					throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-							"UnsupportedEncodingException", e));
+							"UnsupportedEncodingException", e)); //$NON-NLS-1$
 				}
 			}
 
@@ -1191,7 +1192,7 @@ public class GitlabRestClient {
 			throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonObject jsonElement;
-		jsonElement = new GitlabPutOperation<JsonObject>(client, path + "/issues/" + id, body) {
+		jsonElement = new GitlabPutOperation<JsonObject>(client, path + "/issues/" + id, body) { //$NON-NLS-1$
 			@Override
 
 			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
@@ -1226,26 +1227,26 @@ public class GitlabRestClient {
 		}
 		GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 		JsonObject user = getUser(monitor);
-		config.setUserID(user.get("id").getAsBigInteger());
+		config.setUserID(user.get("id").getAsBigInteger()); //$NON-NLS-1$
 		config.setUserDetails(user);
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-					/* repository.getRepositoryUrl() + */ "get User");
+					/* repository.getRepositoryUrl() + */ "get User"); //$NON-NLS-1$
 		}
-		JsonElement projects = getProjects("/users/" + config.getUserID(), monitor);
+		JsonElement projects = getProjects("/users/" + config.getUserID(), monitor); //$NON-NLS-1$
 		for (JsonElement project : (JsonArray) projects) {
 			JsonObject projectObject = (JsonObject) project;
-			JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
-			JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+			JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+			JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
 			config.addProject(projectObject, labels, milestones);
 		}
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-					/* repository.getRepositoryUrl() + */ "get User Projects");
+					/* repository.getRepositoryUrl() + */ "get User Projects"); //$NON-NLS-1$
 		}
 		String projectValue = repository.getProperty(GitlabCoreActivator.PROJECTS);
 		if (projectValue != null && !projectValue.isBlank()) {
-			String[] projectList = projectValue.split(",");
+			String[] projectList = projectValue.split(","); //$NON-NLS-1$
 			for (int i = 0; i < projectList.length; i++) {
 				try {
 					String project = projectList[i];
@@ -1253,53 +1254,53 @@ public class GitlabRestClient {
 							monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
-										+ projectList.length + "): " + project + " ");
+								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
+										+ projectList.length + "): " + project + " "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					JsonObject projectObject = projectDetail;
-					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/"
-										+ projectList.length + "): " + project + " Labels/Milestone ");
+								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
+										+ projectList.length + "): " + project + " Labels/Milestone "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					config.addProject(projectObject, labels, milestones);
 				} catch (UnsupportedEncodingException e) {
 					throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-							"UnsupportedEncodingException", e));
+							"UnsupportedEncodingException", e)); //$NON-NLS-1$
 				}
 			}
 		}
 		String groupsValue = repository.getProperty(GitlabCoreActivator.GROUPS);
 		if (groupsValue != null && !groupsValue.isBlank()) {
-			String[] groupList = groupsValue.split(",");
+			String[] groupList = groupsValue.split(","); //$NON-NLS-1$
 			for (int i = 0; i < groupList.length; i++) {
 				String group = groupList[i];
-				JsonObject groupDetail = getGroup("/" + group, monitor);
+				JsonObject groupDetail = getGroup("/" + group, monitor); //$NON-NLS-1$
 				config.addGroup(groupDetail);
 				if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 					GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
-									+ "): " + group);
+							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
+									+ "): " + group); //$NON-NLS-1$
 				}
 				projects = getGroupProjects(group, monitor);
 				if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 					GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
-									+ "): " + group + " projects");
+							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
+									+ "): " + group + " projects"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				JsonArray projectsArray = (JsonArray) projects;
 				for (int j = 0; j < projectsArray.size(); j++) {
 					JsonElement project = projectsArray.get(j);
 					JsonObject projectObject = (JsonObject) project;
-					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor);
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor);
+					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
-								/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length
-										+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): "
-										+ projectObject.get("id").getAsString() + " Labels/Milestone: ");
+								/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
+										+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+										+ projectObject.get("id").getAsString() + " Labels/Milestone: "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					config.addProject(projectObject, labels, milestones);
 				}
@@ -1311,30 +1312,30 @@ public class GitlabRestClient {
 		return config;
 	}
 
-	Map<String, String> updatable = Map.ofEntries(Map.entry(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title"),
-			Map.entry(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description"),
+	Map<String, String> updatable = Map.ofEntries(Map.entry(GitlabTaskSchema.getDefault().SUMMARY.getKey(), "title"), //$NON-NLS-1$
+			Map.entry(GitlabTaskSchema.getDefault().DESCRIPTION.getKey(), "description"), //$NON-NLS-1$
 			Map.entry(GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey(),
 					GitlabTaskSchema.getDefault().DISCUSSION_LOCKED.getKey()),
 			Map.entry(GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey(),
 					GitlabTaskSchema.getDefault().CONFIDENTIAL.getKey()),
 			Map.entry(GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey(),
 					GitlabTaskSchema.getDefault().ISSUE_TYPE.getKey()),
-			Map.entry(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event"),
+			Map.entry(GitlabTaskSchema.getDefault().OPERATION.getKey(), "state_event"), //$NON-NLS-1$
 			Map.entry(GitlabTaskSchema.getDefault().DUE_DATE.getKey(), GitlabTaskSchema.getDefault().DUE_DATE.getKey()),
 			Map.entry(GitlabTaskSchema.getDefault().TASK_LABELS.getKey(),
 					GitlabTaskSchema.getDefault().TASK_LABELS.getKey()),
-			Map.entry(GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey(), "milestone_id"));
+			Map.entry(GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey(), "milestone_id")); //$NON-NLS-1$
 
-	private static SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 
 	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IOperationMonitor monitor) throws GitlabException {
 		if (taskData.isNew()) {
 			JsonElement result = createNewIssue(taskData, monitor);
 			JsonObject resObj = (JsonObject) result;
-			String newID = resObj.get("iid").getAsString();
-			String projectID = resObj.get("project_id").getAsString();
-			return new RepositoryResponse(ResponseKind.TASK_CREATED, "/projects/" + projectID + "/issues/" + newID);
+			String newID = resObj.get("iid").getAsString(); //$NON-NLS-1$
+			String projectID = resObj.get("project_id").getAsString(); //$NON-NLS-1$
+			return new RepositoryResponse(ResponseKind.TASK_CREATED, "/projects/" + projectID + "/issues/" + newID); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return updateExistingIssue(taskData, oldAttributes, monitor);
 		}
@@ -1344,11 +1345,11 @@ public class GitlabRestClient {
 			IOperationMonitor monitor) throws GitlabException {
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
-					taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
+					taskData.getRepositoryUrl() + " id " + taskData.getTaskId()); //$NON-NLS-1$
 		}
 		ArrayList<String> changedAtributes = new ArrayList<>();
-		String newComentValue = "";
-		String discussionsId = "";
+		String newComentValue = ""; //$NON-NLS-1$
+		String discussionsId = ""; //$NON-NLS-1$
 		for (TaskAttribute taskAttribute : oldAttributes) {
 			String attributeID = taskAttribute.getId();
 			if (updatable.containsKey(attributeID)) {
@@ -1359,27 +1360,27 @@ public class GitlabRestClient {
 							.toString()
 							.substring(1, newAttrib.getValues().toString().length() - 1);
 				}
-				if (attributeID.equals("due_date")) {
+				if (attributeID.equals("due_date")) { //$NON-NLS-1$
 					if (newValue.length() > 0) {
 						newValue = dmyFormat.format(new Date(Long.parseLong(newValue)));
 					}
 				}
-				changedAtributes.add(NLS.bind("\"{0}\":\"{1}\"", updatable.get(attributeID), newValue));
+				changedAtributes.add(NLS.bind("\"{0}\":\"{1}\"", updatable.get(attributeID), newValue)); //$NON-NLS-1$
 			}
 
 			if (GitlabTaskSchema.getDefault().NEW_COMMENT.getKey().equals(taskAttribute.getId())) {
 				TaskAttribute newAttrib = taskData.getRoot().getAttribute(attributeID);
-				TaskAttribute noteableIdAttrib = newAttrib.getAttribute("noteable_id");
+				TaskAttribute noteableIdAttrib = newAttrib.getAttribute("noteable_id"); //$NON-NLS-1$
 				TaskAttribute iidAttribute = taskData.getRoot()
 						.getAttribute(GitlabTaskSchema.getDefault().IID.getKey());
 				discussionsId = iidAttribute.getValue();
 				if (noteableIdAttrib != null) {
-					newComentValue = "{\"note_id\":" + noteableIdAttrib.getValue() + ",\"body\":\""
-							+ newAttrib.getValue().replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"") + "\"}";
-					TaskAttribute xx1 = newAttrib.getAttribute("discussions");
-					discussionsId += ("/discussions/" + xx1.getValue());
+					newComentValue = "{\"note_id\":" + noteableIdAttrib.getValue() + ",\"body\":\"" //$NON-NLS-1$ //$NON-NLS-2$
+							+ newAttrib.getValue().replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"") + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					TaskAttribute xx1 = newAttrib.getAttribute("discussions"); //$NON-NLS-1$
+					discussionsId += ("/discussions/" + xx1.getValue()); //$NON-NLS-1$
 				} else {
-					newComentValue = "{\"body\":\"" + newAttrib.getValue().replaceAll("\n", "\\\n") + "\"}";
+					newComentValue = "{\"body\":\"" + newAttrib.getValue().replaceAll("\n", "\\\n") + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				}
 			}
 		}
@@ -1389,11 +1390,11 @@ public class GitlabRestClient {
 		if (productAttribute != null && !productAttribute.getValue().isEmpty()) {
 			TaskAttribute iidAttribute = taskData.getRoot().getAttribute(GitlabTaskSchema.getDefault().IID.getKey());
 			if (!changedAtributes.isEmpty()) {
-				updateIssue("/projects/" + productAttribute.getValue(), iidAttribute.getValue(),
-						"{" + String.join(",", changedAtributes) + "}", monitor);
+				updateIssue("/projects/" + productAttribute.getValue(), iidAttribute.getValue(), //$NON-NLS-1$
+						"{" + String.join(",", changedAtributes) + "}", monitor); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			if (!newComentValue.isEmpty()) {
-				createIssueNote("/projects/" + productAttribute.getValue(), discussionsId, newComentValue, monitor);
+				createIssueNote("/projects/" + productAttribute.getValue(), discussionsId, newComentValue, monitor); //$NON-NLS-1$
 			}
 		}
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
@@ -1405,7 +1406,7 @@ public class GitlabRestClient {
 	public JsonElement createNewIssue(TaskData taskData, IOperationMonitor monitor) throws GitlabException {
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(GitlabCoreActivator.REST_CLIENT,
-					taskData.getRepositoryUrl() + " id " + taskData.getTaskId());
+					taskData.getRepositoryUrl() + " id " + taskData.getTaskId()); //$NON-NLS-1$
 		}
 		try {
 			getAccessTokenIfNotPresent(monitor);
@@ -1413,11 +1414,11 @@ public class GitlabRestClient {
 					.getAttribute(GitlabTaskSchema.getDefault().PRODUCT.getKey());
 			if (productAttribute == null || productAttribute.getValue().isEmpty()) {
 				throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-						"productAttribute should not be null"));
+						"productAttribute should not be null")); //$NON-NLS-1$
 			}
 			JsonObject jsonElement;
 			jsonElement = new GitlabPostOperation<JsonObject>(client,
-					"/projects/" + productAttribute.getValue() + "/issues") {
+					"/projects/" + productAttribute.getValue() + "/issues") { //$NON-NLS-1$ //$NON-NLS-2$
 
 				@Override
 				protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
@@ -1430,7 +1431,7 @@ public class GitlabRestClient {
 						((HttpPost) request).setEntity(new StringEntity(jsondata));
 					} catch (UnsupportedEncodingException e) {
 						throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-								"UnsupportedEncodingException", e));
+								"UnsupportedEncodingException", e)); //$NON-NLS-1$
 					}
 				}
 
@@ -1462,7 +1463,7 @@ public class GitlabRestClient {
 				String id = taskAttribute.getId();
 				String attributValue = convertString2GSonString(taskAttribute.getValue());
 				id = GitlabNewTaskSchema.getJsonNameFromAttributeName(id);
-				if ("project_id".equals(id) || "state".equals(id)) {
+				if ("project_id".equals(id) || "state".equals(id)) { //$NON-NLS-1$ //$NON-NLS-2$
 					continue;
 				}
 				out.name(id).value(attributValue);
@@ -1497,7 +1498,7 @@ public class GitlabRestClient {
 
 	public JsonArray getProjectLabels(String projectid, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
-		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/projects/" + projectid + "/labels") {
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/projects/" + projectid + "/labels") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1515,7 +1516,7 @@ public class GitlabRestClient {
 	public JsonArray getProjectMilestones(String projectid, IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
-				"/projects/" + projectid + "/milestones?include_parent_milestones=true") {
+				"/projects/" + projectid + "/milestones?include_parent_milestones=true") { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);

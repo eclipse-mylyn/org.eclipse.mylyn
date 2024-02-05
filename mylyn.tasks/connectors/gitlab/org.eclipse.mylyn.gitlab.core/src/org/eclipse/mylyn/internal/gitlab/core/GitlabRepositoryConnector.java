@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -98,7 +99,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final LoadingCache<RepositoryKey, Optional<GitlabConfiguration>> configurationCache;
 
-	private SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	private SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 
 	public static Duration CONFIGURATION_CACHE_EXPIRE_DURATION = new Duration(7, TimeUnit.DAYS);
 
@@ -163,7 +164,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
 	public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
 		long startTime = 0, endTime = 0;
-		String traceExitResult = "";
+		String traceExitResult = ""; //$NON-NLS-1$
 		if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 			GitlabCoreActivator.DEBUG_TRACE.traceEntry(null, repository.getUrl());
 		}
@@ -179,7 +180,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
 			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 				endTime = System.currentTimeMillis();
-				traceExitResult = result.toString() + " " + (endTime - startTime) + " ms";
+				traceExitResult = result.toString() + " " + (endTime - startTime) + " ms"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return result;
 		} finally {
@@ -219,7 +220,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			@NonNull TaskData taskData) {
 		String lastKnownLocalModValue = task.getModificationDate() != null
 				? simpleFormatter.format(task.getModificationDate())
-				: "";
+				: ""; //$NON-NLS-1$
 		TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
 		return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
@@ -241,7 +242,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return "Gitlab";
+		return "Gitlab"; //$NON-NLS-1$
 	}
 
 	public class SingleTaskDataCollector extends TaskDataCollector {
@@ -276,7 +277,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
-		monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
+		monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 		GitlabRestClient client;
 		try {
 			client = getClient(repository);
@@ -284,7 +285,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			client.getIssues(query, collector, new NullOperationMonitor());
 		} catch (CoreException e) {
 			return new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, IStatus.INFO,
-					"CoreException from performQuery", e);
+					"CoreException from performQuery", e); //$NON-NLS-1$
 		}
 		return Status.OK_STATUS;
 	}
@@ -306,7 +307,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			GitlabRestClient client = createClient(repository);
 			if (!client.validate(OperationUtil.convert(monitor))) {
 				throw new CoreException(
-						new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "repository is invalide"));
+						new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "repository is invalide")); //$NON-NLS-1$
 			}
 			return new RepositoryInfo(new RepositoryVersion(client.getVersion(OperationUtil.convert(monitor))));
 		} catch (Exception e) {

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.core;
 
@@ -95,8 +96,8 @@ public class GitlabActivityStyle implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color="
-				+ color + ", url=" + url + "]";
+		return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ color + ", url=" + url + "]";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }
