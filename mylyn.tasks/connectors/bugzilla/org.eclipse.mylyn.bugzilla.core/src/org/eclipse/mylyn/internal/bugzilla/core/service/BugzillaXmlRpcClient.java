@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -120,7 +120,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public static final String XML_RESPONSE_WEB_TIME = "web_time"; //$NON-NLS-1$
 
 	public static final String[] XML_BUGZILLA_TIME_RESPONSE_TO_REMOVE = { "tz_offset", "tz_short_name", "web_time_utc", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-			"tz_name" }; //$NON-NLS-1$
+	"tz_name" }; //$NON-NLS-1$
 
 	public static final String XML_RESPONSE_VERSION = "version"; //$NON-NLS-1$
 
@@ -224,12 +224,12 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				public Integer execute() throws XmlRpcException {
 					HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_USER_LOGIN,
 							new HashMap<String, Object>() {
-								{
-									put(XML_PARAMETER_LOGIN, credentials.getUserName());
-									put(XML_PARAMETER_PASSWORD, credentials.getPassword());
-									put(XML_PARAMETER_REMEMBER, true);
-								}
-							});
+						{
+							put(XML_PARAMETER_LOGIN, credentials.getUserName());
+							put(XML_PARAMETER_PASSWORD, credentials.getPassword());
+							put(XML_PARAMETER_REMEMBER, true);
+						}
+					});
 					if (response != null) {
 						Integer result = response2Integer(response, XML_RESPONSE_ID);
 						if (response.get(XML_RESPONSE_TOKEN) != null) {
@@ -737,7 +737,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 			RepositoryConfiguration repositoryConfiguration = bugzillaClient.getRepositoryConfiguration();
 			if (repositoryConfiguration == null) {
-				repositoryConfiguration = bugzillaClient.getRepositoryConfiguration(new SubProgressMonitor(monitor, 1),
+				repositoryConfiguration = bugzillaClient.getRepositoryConfiguration(SubMonitor.convert(monitor, 1),
 						null);
 			}
 			List<BugzillaCustomField> customFields = new ArrayList<>();

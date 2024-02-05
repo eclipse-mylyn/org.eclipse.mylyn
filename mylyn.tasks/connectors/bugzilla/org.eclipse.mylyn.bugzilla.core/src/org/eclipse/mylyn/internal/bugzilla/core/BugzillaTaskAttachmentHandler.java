@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright © 2004, 2013, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker         - bug# 395029
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -21,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -77,7 +78,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 		try {
 			monitor.beginTask(Messages.BugzillaTaskAttachmentHandler_Sending_attachment, IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager()
-					.getClient(repository, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+					.getClient(repository, SubMonitor.convert(monitor, IProgressMonitor.UNKNOWN));
 
 			client.postAttachment(task.getTaskId(), comment, source, attachmentAttribute, monitor);
 		} catch (IOException e) {
