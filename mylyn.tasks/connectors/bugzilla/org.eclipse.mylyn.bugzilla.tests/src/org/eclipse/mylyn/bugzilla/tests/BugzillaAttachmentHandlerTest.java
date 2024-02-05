@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 Tasktop Technologies and others.
+ * Copyright © 2009, 2016, 2024 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -54,6 +55,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Robert Elves
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	@SuppressWarnings("null")
@@ -555,8 +557,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			attachmentMapper.applyTo(attrAttachment);
 
 			connector.getTaskAttachmentHandler()
-					.postContent(repository, task, attachment, attachmentMapper.getComment(), attrAttachment,
-							new NullProgressMonitor());
+			.postContent(repository, task, attachment, attachmentMapper.getComment(), attrAttachment,
+					new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertTrue(BugzillaTestSupportUtil.isInvalidLogon(e));
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());

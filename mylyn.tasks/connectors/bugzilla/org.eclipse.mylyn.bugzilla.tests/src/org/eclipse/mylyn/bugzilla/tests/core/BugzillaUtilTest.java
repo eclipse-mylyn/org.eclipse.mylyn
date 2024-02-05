@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Frank Becker and others.
+ * Copyright © 2013, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class BugzillaUtilTest extends TestCase {
 
 	@Test

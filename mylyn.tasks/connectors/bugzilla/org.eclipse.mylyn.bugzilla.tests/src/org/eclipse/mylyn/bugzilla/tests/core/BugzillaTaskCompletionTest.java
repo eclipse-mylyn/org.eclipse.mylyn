@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others.
+ * Copyright © 2004, 2011, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -32,6 +33,7 @@ import junit.framework.TestCase;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings("nls")
 public class BugzillaTaskCompletionTest extends TestCase {
 
 	private TaskRepository repository;
@@ -62,8 +64,8 @@ public class BugzillaTaskCompletionTest extends TestCase {
 		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
 				BugzillaFixture.current().getRepositoryUrl(), "1");
 		taskData.getRoot()
-				.createAttribute(BugzillaAttribute.BUG_STATUS.getKey())
-				.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
+		.createAttribute(BugzillaAttribute.BUG_STATUS.getKey())
+		.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
 		TaskAttribute attrComment = taskData.getRoot().createAttribute(BugzillaAttribute.COMMENTID.getKey());
 		attrComment.getMetaData().setType(TaskAttribute.TYPE_COMMENT);
 		TaskAttribute attrCreationDate = attrComment.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());

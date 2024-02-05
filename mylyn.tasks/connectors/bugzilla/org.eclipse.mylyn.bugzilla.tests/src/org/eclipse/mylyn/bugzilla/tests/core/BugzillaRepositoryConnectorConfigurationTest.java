@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 Frank Becker and others.
+ * Copyright © 2009, 2012, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -26,6 +27,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  */
 // TODO 3.5 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released
+@SuppressWarnings("nls")
 public class BugzillaRepositoryConnectorConfigurationTest extends TestCase {
 
 	private TaskRepository repository;

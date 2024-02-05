@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Frank Becker and others.
+ * Copyright © 2004, 2013, 2024 Frank Becker and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -33,6 +34,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  * @author Rob Elves
  */
+@SuppressWarnings("nls")
 public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	private TaskRepository repository;

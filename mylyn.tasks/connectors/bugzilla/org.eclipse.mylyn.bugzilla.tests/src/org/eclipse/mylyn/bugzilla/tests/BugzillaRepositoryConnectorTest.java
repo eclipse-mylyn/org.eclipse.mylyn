@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
+ * Copyright © 2004, 2014, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -73,6 +74,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
  * @author Rob Elves
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testSingleRetrievalFailure() throws CoreException {
@@ -509,7 +511,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString().toUpperCase());
 		TaskOperation.applyTo(selectedOperationAttribute,
 				operationAttribute != null ? operationAttribute.getValue() : operationAttributeUppercase.getValue(),
-				BugzillaOperation.in_progress.getLabel());
+						BugzillaOperation.in_progress.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);
@@ -576,7 +578,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString().toUpperCase());
 		TaskOperation.applyTo(selectedOperationAttribute,
 				operationAttribute != null ? operationAttribute.getValue() : operationAttributeUppercase.getValue(),
-				BugzillaOperation.confirmed.getLabel());
+						BugzillaOperation.confirmed.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);
@@ -1183,8 +1185,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 
 		taskData.getRoot()
-				.getAttribute(BugzillaAttribute.NEW_COMMENT.getKey())
-				.setValue("New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
+		.getAttribute(BugzillaAttribute.NEW_COMMENT.getKey())
+		.setValue("New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
 		Set<TaskAttribute> changed = new HashSet<>();
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()));
 		changed.add(taskData.getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey()));

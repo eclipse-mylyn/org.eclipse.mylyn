@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Tasktop Technologies and others.
+ * Copyright © 2010, 2013, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
@@ -56,6 +57,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  * @author Robert Elves
  */
+@SuppressWarnings("nls")
 public class BugzillaCustomFieldsTest extends TestCase {
 
 	private TaskData fruitTaskData;
@@ -259,9 +261,9 @@ public class BugzillaCustomFieldsTest extends TestCase {
 			}
 		};
 		BugzillaFixture.current()
-				.connector()
-				.performQuery(BugzillaFixture.current().repository(), query, collector, null,
-						new NullProgressMonitor());
+		.connector()
+		.performQuery(BugzillaFixture.current().repository(), query, collector, null,
+				new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
 			SortedSet<Integer> sks = new TreeSet<>(ks);

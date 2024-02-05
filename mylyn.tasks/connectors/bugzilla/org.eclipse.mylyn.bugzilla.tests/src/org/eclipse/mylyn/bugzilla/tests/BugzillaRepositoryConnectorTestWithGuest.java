@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright © 2012, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -37,13 +38,14 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
+@SuppressWarnings("nls")
 public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTest {
 
 	@Override
 	protected void setUp() throws Exception {
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
 		client = BugzillaFixture.current().client(PrivilegeLevel.GUEST);
