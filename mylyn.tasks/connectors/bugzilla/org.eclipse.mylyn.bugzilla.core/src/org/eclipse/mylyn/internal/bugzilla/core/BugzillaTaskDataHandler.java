@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -346,7 +346,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				@Override
 				public void accept(TaskData taskData) {
 					try {
-						initializeTaskData(repository, taskData, null, new SubProgressMonitor(monitor2, 1));
+						initializeTaskData(repository, taskData, null, SubMonitor.convert(monitor2, 1));
 					} catch (CoreException e) {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
@@ -370,7 +370,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				throw collectionException[0];
 			}
 			if (updateConfig[0] != null) {
-				SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
+				SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 				client.getRepositoryConfiguration(subMonitor, null);
 				subMonitor.done();
 			}
@@ -529,18 +529,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		if (bugzillaVersion == null) {
 			bugzillaVersion = BugzillaVersion.MIN_VERSION;
 		}
-		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+		if ((bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) || (!repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+				.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) && !repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
+		.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))) {
 			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
-		} else if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
-				.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-				|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)
-						.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
-
-			attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
-			repositoryConfiguration.addValidOperations(taskData);
 		} else {
-			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
-		}
+
+attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
+repositoryConfiguration.addValidOperations(taskData);
+}
 
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 
@@ -583,10 +580,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					String defaultMilestone = repositoryConfiguration.getDefaultMilestones(product);
 					if (defaultMilestone != null) {
 						attributeTargetMilestone.setValue(defaultMilestone);
-					} else {
-						if (optionValues.contains("---")) { //$NON-NLS-1$
-							attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
-						}
+					} else if (optionValues.contains("---")) { //$NON-NLS-1$
+						attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
 					}
 				} else if (optionValues.contains("---")) { //$NON-NLS-1$
 					attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
@@ -753,8 +748,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
 					.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
 			subTaskData.getRoot()
-					.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
-					.setValue(parentAttributeAssigned.getValue());
+			.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
+			.setValue(parentAttributeAssigned.getValue());
 			return true;
 		} else {
 			return false;
@@ -773,11 +768,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaAttribute key) {
 		TaskAttribute attribute = parent.createAttribute(key.getKey());
 		attribute.getMetaData()
-				.defaults()
-				.setReadOnly(key.isReadOnly())
-				.setKind(key.getKind())
-				.setLabel(key.toString())
-				.setType(key.getType());
+		.defaults()
+		.setReadOnly(key.isReadOnly())
+		.setKind(key.getKind())
+		.setLabel(key.toString())
+		.setType(key.getType());
 
 		if (key == BugzillaAttribute.STATUS_WHITEBOARD) {
 			attribute.getMetaData().putValue(TaskAttribute.META_INDEXED_AS_CONTENT, Boolean.TRUE.toString());

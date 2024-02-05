@@ -73,7 +73,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.core.HtmlTag;
@@ -679,7 +679,7 @@ public class BugzillaClient {
 		HttpMethodBase postMethod = null;
 
 		try {
-			authenticate(new SubProgressMonitor(monitor, 1));
+			authenticate(SubMonitor.convert(monitor, 1));
 			String queryUrl = query.getUrl();
 			int start = queryUrl.indexOf('?');
 
@@ -1338,7 +1338,7 @@ public class BugzillaClient {
 	private String getTokenInternal(String bugUrl, IProgressMonitor monitor) throws IOException, CoreException {
 		String tokenValue = null;
 		if (!loggedIn) {
-			authenticate(new SubProgressMonitor(monitor, 1));
+			authenticate(SubMonitor.convert(monitor, 1));
 		}
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
@@ -1392,10 +1392,10 @@ public class BugzillaClient {
 		NameValuePair[] formData = null;
 		monitor = Policy.monitorFor(monitor);
 		BugzillaRepositoryResponse response;
-		authenticate(new SubProgressMonitor(monitor, 1));
+		authenticate(SubMonitor.convert(monitor, 1));
 
 		if (repositoryConfiguration == null) {
-			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1), null);
+			getRepositoryConfiguration(SubMonitor.convert(monitor, 1), null);
 			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 		if (taskData == null) {
@@ -1418,7 +1418,7 @@ public class BugzillaClient {
 			}
 			formData = getPairsForNew(taskData, token);
 		} else {
-			formData = getPairsForExisting(taskData, new SubProgressMonitor(monitor, 1));
+			formData = getPairsForExisting(taskData, SubMonitor.convert(monitor, 1));
 		}
 
 		GzipPostMethod method = null;
@@ -1893,7 +1893,7 @@ public class BugzillaClient {
 
 	private HtmlInformation getHtmlOnlyInformation(TaskData taskData, IProgressMonitor monitor) throws CoreException {
 		HtmlInformation htmlInfo = new HtmlInformation();
-		authenticate(new SubProgressMonitor(monitor, 1));
+		authenticate(SubMonitor.convert(monitor, 1));
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 		String bugUrl = taskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + taskData.getTaskId();
@@ -2238,7 +2238,7 @@ public class BugzillaClient {
 			final IProgressMonitor monitor) throws IOException, CoreException {
 
 		if (repositoryConfiguration == null) {
-			getRepositoryConfiguration(new SubProgressMonitor(monitor, 1), null);
+			getRepositoryConfiguration(SubMonitor.convert(monitor, 1), null);
 			connector.addRepositoryConfiguration(repositoryConfiguration);
 		}
 

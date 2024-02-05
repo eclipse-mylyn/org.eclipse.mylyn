@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 Tasktop Technologies and others.
+ * Copyright © 2004, 2014, 2024 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -42,7 +43,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -311,7 +312,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				urlQueryString.append(URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding())); //$NON-NLS-1$
 				if (urlQueryString.length() >= 7000) {
 					queryForChanged(repository, changedTasks, urlQueryString.toString(), session,
-							new SubProgressMonitor(monitor, queryCounter));
+							SubMonitor.convert(monitor, queryCounter));
 
 					queryCounter = 0;
 					urlQueryString.setLength(0);
@@ -320,7 +321,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				if (!itr.hasNext() && queryCounter != 0) {
 					queryForChanged(repository, changedTasks, urlQueryString.toString(), session,
-							new SubProgressMonitor(monitor, queryCounter));
+							SubMonitor.convert(monitor, queryCounter));
 				}
 			}
 
@@ -333,7 +334,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding() //$NON-NLS-1$
-							+ "\n\n Unable to determine changed tasks.", //$NON-NLS-1$
+					+ "\n\n Unable to determine changed tasks.", //$NON-NLS-1$
 					e));
 		} finally {
 			monitor.done();
@@ -342,7 +343,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
 			ISynchronizationSession syncSession, IProgressMonitor monitor)
-			throws UnsupportedEncodingException, CoreException {
+					throws UnsupportedEncodingException, CoreException {
 
 		HashMap<String, ITask> taskById = new HashMap<>();
 		for (ITask task : syncSession.getTasks()) {
@@ -392,7 +393,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask(Messages.BugzillaRepositoryConnector_running_query, IProgressMonitor.UNKNOWN);
-			BugzillaClient client = getClientManager().getClient(repository, new SubProgressMonitor(monitor, 1));
+			BugzillaClient client = getClientManager().getClient(repository, SubMonitor.convert(monitor, 1));
 			TaskAttributeMapper mapper = getTaskDataHandler().getAttributeMapper(repository);
 			boolean hitsReceived = client.getSearchHits(query, resultCollector, mapper, monitor);
 			if (!hitsReceived) {
@@ -578,10 +579,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				if (cachedHasTZ && !repoHasTZ || !cachedHasTZ && repoHasTZ) { // State 2 (unlikely) || Sate 3
 					long delta = Math.abs(newModDate.getTime() - oldModDate.getTime());
-					if (delta == 0) {
-						return false;
-					} else if (delta > 0 && delta % HOUR == 0 && delta < 24 * HOUR) {
-						// If same time but in different time zones, ignore/migrate
+					if (delta == 0 || delta > 0 && delta % HOUR == 0 && delta < 24 * HOUR) {
 						return false;
 					}
 					return true;
@@ -700,7 +698,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			} catch (Exception e) {
 				StatusHandler
-						.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
+				.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
 				try {
 					if (in != null) {
 						in.close();
@@ -784,7 +782,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				if (configuration == null) {
 					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL, "Failed to retrieve repository configuration for " //$NON-NLS-1$
-									+ repository.getRepositoryUrl().toString()));
+							+ repository.getRepositoryUrl().toString()));
 
 				}
 				return configuration;

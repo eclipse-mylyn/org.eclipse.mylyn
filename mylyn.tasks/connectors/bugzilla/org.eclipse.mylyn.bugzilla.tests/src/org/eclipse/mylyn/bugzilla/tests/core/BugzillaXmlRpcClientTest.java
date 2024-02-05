@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
@@ -504,7 +504,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 					try {
 						AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 						taskDataHandler.initializeTaskData(repository, taskData, null,
-								new SubProgressMonitor(monitor2, 1));
+								SubMonitor.convert(monitor2, 1));
 					} catch (CoreException e) {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
