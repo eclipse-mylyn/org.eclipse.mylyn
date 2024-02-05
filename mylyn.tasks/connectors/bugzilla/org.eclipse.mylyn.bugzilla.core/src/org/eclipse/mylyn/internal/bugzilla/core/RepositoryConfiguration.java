@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Red Hat Inc. - fixes for bug 259291
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -526,7 +527,9 @@ public class RepositoryConfiguration implements Serializable {
 		TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
 		TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 		for (BugzillaFlag bugzillaFlag : flags) {
-			if (bugzillaFlag.getType().equals("attachment") || !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue()) || (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable())) {
+			if (bugzillaFlag.getType().equals("attachment") //$NON-NLS-1$
+					|| !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())
+					|| existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
 				continue;
 			}
 			BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
@@ -669,9 +672,9 @@ public class RepositoryConfiguration implements Serializable {
 		}
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
 				|| !getOptionValues(BugzillaAttribute.BUG_STATUS)
-						.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-						&& !getOptionValues(BugzillaAttribute.BUG_STATUS)
-								.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+				.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+				&& !getOptionValues(BugzillaAttribute.BUG_STATUS)
+				.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 			addValidOperationsBefore4(bugReport);
 		} else {
 			addValidOperationsAfter4(bugReport);
@@ -703,7 +706,7 @@ public class RepositoryConfiguration implements Serializable {
 					//This happens automatically if current status is RESOLVED, else we need to supply one
 					if (b.toString().equals(BugzillaOperation.close.toString())) {
 						if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null //$NON-NLS-1$
-								|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
+								|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
 							//Do not add close with resolution operation if status is RESOLVED
 							continue;
 						}
@@ -776,11 +779,11 @@ public class RepositoryConfiguration implements Serializable {
 		if (operationAttribute == null) {
 			operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 			operationAttribute.getMetaData()
-					.defaults()
-					.setReadOnly(key.isReadOnly())
-					.setKind(key.getKind())
-					.setLabel(key.toString())
-					.setType(key.getType());
+			.defaults()
+			.setReadOnly(key.isReadOnly())
+			.setKind(key.getKind())
+			.setLabel(key.toString())
+			.setType(key.getType());
 			operationAttribute.setValue("0"); //$NON-NLS-1$
 		}
 		operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -814,7 +817,7 @@ public class RepositoryConfiguration implements Serializable {
 				//This happens automatically if current status is RESOLVED, else we need to supply one
 				if (b.toString().equals(BugzillaOperation.close.toString())) {
 					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null //$NON-NLS-1$
-							|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
+							|| !attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
 						//Do not add close with resolution operation if status is RESOLVED
 						continue;
 					}
@@ -916,11 +919,11 @@ public class RepositoryConfiguration implements Serializable {
 			if (operationAttribute == null) {
 				operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 				operationAttribute.getMetaData()
-						.defaults()
-						.setReadOnly(key.isReadOnly())
-						.setKind(key.getKind())
-						.setLabel(key.toString())
-						.setType(key.getType());
+				.defaults()
+				.setReadOnly(key.isReadOnly())
+				.setKind(key.getKind())
+				.setLabel(key.toString())
+				.setType(key.getType());
 				operationAttribute.setValue("0"); //$NON-NLS-1$
 			}
 			operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -1030,44 +1033,44 @@ public class RepositoryConfiguration implements Serializable {
 		//set the Tooltip
 		if (op.toString().equals(BugzillaOperation.none.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_none);
+			.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_none);
 		} else if (op.toString().equals(BugzillaOperation.new_default.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_new_default);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_new_default);
 		} else if (op.toString().equals(BugzillaOperation.unconfirmed.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_unconfirmed);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_unconfirmed);
 		} else if (op.toString().equals(BugzillaOperation.confirmed.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_confirmed);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_confirmed);
 		} else if (op.toString().equals(BugzillaOperation.in_progress.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_in_progress);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_in_progress);
 		} else if (op.toString().equals(BugzillaOperation.resolve.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_resolve);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_resolve);
 		} else if (op.toString().equals(BugzillaOperation.verify.toString())
 				|| op.toString().equals(BugzillaOperation.verify_with_resolution.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_veryfy);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_veryfy);
 		} else if (op.toString().equals(BugzillaOperation.duplicate.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_duplicate);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_duplicate);
 		} else if (op.toString().equals(BugzillaOperation.reopen.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION,
-							Messages.RepositoryConfiguration_Operation_Tooltip_reopen);
+			.putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_reopen);
 		} else if (op.toString().equals(BugzillaOperation.close.toString())
 				|| op.toString().equals(BugzillaOperation.close_with_resolution.toString())) {
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_close);
+			.putValue(TaskAttribute.META_DESCRIPTION, Messages.RepositoryConfiguration_Operation_Tooltip_close);
 		}
 
 	}
@@ -1171,7 +1174,9 @@ public class RepositoryConfiguration implements Serializable {
 			TaskAttribute componentAttribute = taskData.getRoot()
 					.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 			for (BugzillaFlag bugzillaFlag : flags) {
-				if (!bugzillaFlag.getType().equals("attachment") || !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue()) || (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable())) {
+				if (!bugzillaFlag.getType().equals("attachment") //$NON-NLS-1$
+						|| !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())
+						|| existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
 					continue;
 				}
 				BugzillaFlagMapper mapper = new BugzillaFlagMapper(connector);
@@ -1199,7 +1204,7 @@ public class RepositoryConfiguration implements Serializable {
 	public String getDuplicateStatus() {
 		return validTransitions == null
 				? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
-				: validTransitions.getDuplicateStatus();
+						: validTransitions.getDuplicateStatus();
 	}
 
 	public String getStartStatus() {
@@ -1208,9 +1213,9 @@ public class RepositoryConfiguration implements Serializable {
 					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS)
 							.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
 							|| getOptionValues(BugzillaAttribute.BUG_STATUS)
-									.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
-											? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
-											: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
+							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
+					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
+							: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
 			return validTransitions.getStartStatus();
 		}
