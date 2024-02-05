@@ -670,7 +670,6 @@ public class BugzillaClient {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			IProgressMonitor monitor) throws IOException, CoreException {
 		HttpMethodBase postMethod = null;
@@ -732,9 +731,11 @@ public class BugzillaClient {
 					}
 				}
 			}
-			// because html is not a valid config content type it is save to get
-			// the response here
-			throw new CoreException(parseHtmlError(getResponseStream(postMethod, monitor)));
+			try (InputStream responseStream = getResponseStream(postMethod, monitor)) {
+				// because html is not a valid config content type it is save to get
+				// the response here
+				throw new CoreException(parseHtmlError(responseStream));
+			}
 		} finally {
 			if (postMethod != null) {
 				WebUtil.releaseConnection(postMethod, monitor);
@@ -2311,9 +2312,11 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
-					// because html is not a valid config content type it is
-					// save to get the response here
-					throw new CoreException(parseHtmlError(getResponseStream(method, monitor)));
+					try (InputStream responseStream = getResponseStream(method, monitor)) {
+						// because html is not a valid config content type it is
+						// save to get the response here
+						throw new CoreException(parseHtmlError(responseStream));
+					}
 				}
 			} catch (CoreException c) {
 				if (c.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN && authenticationAttempt < 1) {

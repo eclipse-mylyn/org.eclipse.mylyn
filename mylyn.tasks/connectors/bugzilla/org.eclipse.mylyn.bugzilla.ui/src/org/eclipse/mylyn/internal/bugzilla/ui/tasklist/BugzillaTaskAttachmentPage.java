@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Tomasz Zarna <tzarna@gmail.com> - bug 361536
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -122,7 +123,8 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 			Composite pageComposite = (Composite) children[children.length - 1];
 			Composite flagComposite = null;
 			for (BugzillaFlag bugzillaFlag : flags) {
-				if (bugzillaFlag.getType().equals("bug") || !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
+				if (bugzillaFlag.getType().equals("bug") //$NON-NLS-1$
+						|| !bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
 					continue;
 				}
 
