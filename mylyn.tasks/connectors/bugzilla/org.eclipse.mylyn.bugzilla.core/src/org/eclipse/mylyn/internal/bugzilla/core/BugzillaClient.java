@@ -580,20 +580,17 @@ public class BugzillaClient {
 				// see bug 305267 or
 				// https://bugzilla.mozilla.org/show_bug.cgi?id=385606
 				loggedIn = true;
-				InputStream inputStream = getResponseStream(postMethod, monitor);
-				try {
-					BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
 
-					try {
-						String errorMessage = extractErrorMessage(in);
+				try (InputStream inputStream = getResponseStream(postMethod, monitor);
+						BufferedReader in = new BufferedReader(
+								new InputStreamReader(inputStream, getCharacterEncoding()))) {
 
-						if (errorMessage != null) {
-							loggedIn = false;
-							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), errorMessage));
-						}
-					} finally {
-						inputStream.close();
+					String errorMessage = extractErrorMessage(in);
+
+					if (errorMessage != null) {
+						loggedIn = false;
+						throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+								RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), errorMessage));
 					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block

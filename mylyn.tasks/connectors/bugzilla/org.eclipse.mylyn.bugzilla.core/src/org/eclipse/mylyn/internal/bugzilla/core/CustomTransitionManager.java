@@ -103,11 +103,9 @@ public class CustomTransitionManager implements Serializable {
 			return isValid();
 		}
 
-		BufferedReader br = null;
-		try {
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String s;
 			boolean checkOptions = true;
-			br = new BufferedReader(new FileReader(file));
 
 			while ((s = br.readLine()) != null && isValid()) {
 				if (s.equals("<transitions>")) { //$NON-NLS-1$
@@ -127,13 +125,6 @@ public class CustomTransitionManager implements Serializable {
 			setValid(false);
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error parsing transition description file.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
 		}
 
 		return valid;
@@ -369,7 +360,7 @@ public class CustomTransitionManager implements Serializable {
 			setValid(false);
 			String message = e.linkedException == null
 					? e.getMessage()
-					: e.getMessage() + ">" //$NON-NLS-1$
+							: e.getMessage() + ">" //$NON-NLS-1$
 							+ e.linkedException.getMessage();
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error parsing xmlrpc response.\n\n" + message, e)); //$NON-NLS-1$

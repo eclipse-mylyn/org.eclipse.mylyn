@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -37,8 +38,7 @@ public class XmlCleaner {
 	public static BufferedReader clean(Reader in, File tempFile) {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-		try {
-			BufferedWriter content = new BufferedWriter(new FileWriter(tempFile));
+		try (BufferedWriter content = new BufferedWriter(new FileWriter(tempFile))) {
 			// Hack since HtmlStreamTokenizer not familiar with xml tag.
 			content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
@@ -58,8 +58,6 @@ public class XmlCleaner {
 					content.append(token.toString());
 				}
 			}
-			content.flush();
-			content.close();
 			return new BufferedReader(new FileReader(tempFile));
 		} catch (IOException | ParseException e) {
 
