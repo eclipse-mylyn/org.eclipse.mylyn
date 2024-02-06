@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.reviews.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews UI
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui;singleton:=true

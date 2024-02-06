@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.gerrit.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
