@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.compat;
@@ -34,6 +35,7 @@ import com.google.gerrit.reviewdb.ChangeMessage;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class ChangeDetailXTest extends TestCase {
 	@Test
 	public void testCustomLabel() throws Exception {

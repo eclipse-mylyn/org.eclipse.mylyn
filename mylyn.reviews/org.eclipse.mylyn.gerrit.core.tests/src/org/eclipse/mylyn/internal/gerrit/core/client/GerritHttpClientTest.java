@@ -10,6 +10,7 @@
  *     Christian Trutz - initial API and implementation
  *     Tasktop Technologies - ongoing maintenance
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
@@ -53,6 +54,7 @@ import com.google.gson.reflect.TypeToken;
  *
  * @author Christian Trutz
  */
+@SuppressWarnings("nls")
 @RunWith(MockitoJUnitRunner.class)
 public class GerritHttpClientTest {
 	public class TestGerritHttpClient extends GerritHttpClient {

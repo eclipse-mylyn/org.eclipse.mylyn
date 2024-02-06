@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class AbandonInputTest extends TestCase {
 
 	@Test(expected = IllegalArgumentException.class)

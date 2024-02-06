@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Landon Butterworth - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ReviewColumnLabelProviderTest {
 
 	private final String summaryString = "new changes";

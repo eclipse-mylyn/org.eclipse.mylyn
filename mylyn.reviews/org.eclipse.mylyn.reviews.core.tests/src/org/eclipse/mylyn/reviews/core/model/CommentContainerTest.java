@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  */
 package org.eclipse.mylyn.reviews.core.model;
 
@@ -40,6 +41,7 @@ import org.junit.Test;
  *
  * @generated NOT
  */
+@SuppressWarnings("nls")
 public class CommentContainerTest {
 
 	@Test

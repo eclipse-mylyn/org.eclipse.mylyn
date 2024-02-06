@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Guy Perron 423242: Add ability to edit comment from compare navigator popup
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
@@ -38,6 +39,8 @@ import junit.framework.TestCase;
  * @author Leo Dos Santos
  * @author Guy Perron
  */
+
+@SuppressWarnings("nls")
 public class ReviewAnnotationModelTest extends TestCase {
 
 	private final static String DEFAULT_TEXT = "This change looks good.";

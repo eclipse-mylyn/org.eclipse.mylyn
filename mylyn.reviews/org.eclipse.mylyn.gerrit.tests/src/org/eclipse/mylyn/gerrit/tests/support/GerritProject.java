@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.support;
@@ -36,6 +37,8 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
+
+@SuppressWarnings("nls")
 public class GerritProject {
 
 	public static final String PROP_ALTERNATE_PUSH = "org.eclipse.mylyn.gerrit.tests.alternate.push";

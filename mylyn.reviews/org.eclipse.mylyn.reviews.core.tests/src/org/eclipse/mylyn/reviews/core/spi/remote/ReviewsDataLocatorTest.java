@@ -9,6 +9,7 @@
  *
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
@@ -26,6 +27,7 @@ import org.junit.Test;
 /**
  * @author Miles Parker
  */
+@SuppressWarnings("nls")
 public class ReviewsDataLocatorTest {
 
 	ReviewsDataLocator reviewDataLocator = new ReviewsDataLocator() {

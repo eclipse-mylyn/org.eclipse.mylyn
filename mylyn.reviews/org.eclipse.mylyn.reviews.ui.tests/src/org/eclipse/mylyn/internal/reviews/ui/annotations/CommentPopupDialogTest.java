@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
@@ -63,6 +64,7 @@ import org.mockito.ArgumentMatcher;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class CommentPopupDialogTest extends TestCase {
 
 	private final static String USER_ID = "1";
@@ -136,10 +138,10 @@ public class CommentPopupDialogTest extends TestCase {
 		commentPopupDialog = createPopupWithXComments(1, false);
 		Listener[] listeners = commentPopupDialog.getComposite().getListeners(SWT.MouseMove);
 		Arrays.asList(listeners)
-				.stream()
-				.filter(Listener.class::isInstance)
-				.findFirst()
-				.orElseThrow(NoSuchElementException::new);
+		.stream()
+		.filter(Listener.class::isInstance)
+		.findFirst()
+		.orElseThrow(NoSuchElementException::new);
 	}
 
 	/**
@@ -744,9 +746,9 @@ public class CommentPopupDialogTest extends TestCase {
 	private void assertSavingComment(Button button, String description, boolean isDraft, boolean isDiscard)
 			throws Exception {
 		doReturn(Status.OK_STATUS).when(behavior)
-				.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+		.addComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 		doReturn(Status.OK_STATUS).when(behavior)
-				.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
+		.discardComment(any(IReviewItem.class), any(IComment.class), any(IProgressMonitor.class));
 
 		pressButton(button);
 

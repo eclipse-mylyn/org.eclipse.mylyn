@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
@@ -27,6 +28,7 @@ import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class ReviewInputTest extends TestCase {
 
 	@Test

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.spi.edit.remote;
@@ -50,6 +51,8 @@ import junit.framework.TestCase;
 /**
  * @author Miles Parker
  */
+
+@SuppressWarnings("nls")
 public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 
 	class TestEditFactoryProvider extends AbstractRemoteEditFactoryProvider<EPackage, EClass> {

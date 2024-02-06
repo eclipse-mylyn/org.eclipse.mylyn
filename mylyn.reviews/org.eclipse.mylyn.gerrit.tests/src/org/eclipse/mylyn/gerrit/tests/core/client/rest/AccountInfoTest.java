@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class AccountInfoTest extends TestCase {
 
 	@Test

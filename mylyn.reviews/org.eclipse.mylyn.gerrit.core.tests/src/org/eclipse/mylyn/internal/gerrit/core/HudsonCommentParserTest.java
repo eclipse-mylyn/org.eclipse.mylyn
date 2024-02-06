@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Vaughan Hilts, Kyle Ross - Initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -22,7 +23,7 @@ import org.junit.Test;
 /**
  * Performs tests against the HudsonCommentParser with various different comment sets.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class HudsonCommentParserTest {
 
 	private final HudsonCommentParser parser = new HudsonCommentParser();
@@ -166,7 +167,7 @@ public class HudsonCommentParserTest {
 			Build Successful
 			https://hudson.eclipse.org/sirius/job/sirius.gerrit.tests-mars/2434/ : SUCCESS
 			https://hudson.eclipse.org/sirius/job/sirius.gerrit.build-mars/2584/ : SUCCESS
-		*/
+		 */
 		String multipleJobMessage = "Patch Set 1: Verified+1\r\nBuild Successful \r\nhttps://hudson.eclipse.org/sirius/job/sirius.gerrit.tests-mars/2434/ : SUCCESS\r\nhttps://hudson.eclipse.org/sirius/job/sirius.gerrit.build-mars/2584/ : SUCCESS";
 		List<BuildResult> results = parser.getBuildResult(multipleJobMessage);
 		Assert.assertEquals(2, results.size());

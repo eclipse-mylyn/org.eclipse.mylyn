@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core;
@@ -68,6 +69,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class GerritSynchronizationTest extends TestCase {
 
 	private GerritHarness harness;
@@ -88,8 +90,8 @@ public class GerritSynchronizationTest extends TestCase {
 //		GerritCorePlugin.getDefault().getConnector().setFactoryProviderConfigurer(configurer);
 		GerritUiPlugin.getDefault();
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		// cancel any parallel query synchronization jobs
 		Job.getJobManager().cancel(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 
@@ -98,15 +100,15 @@ public class GerritSynchronizationTest extends TestCase {
 		harness = GerritFixture.current().harness();
 		repository = GerritFixture.current().singleRepository();
 		GerritCorePlugin.getDefault()
-				.getConnector()
-				.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
+		.getConnector()
+		.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
 		client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
 		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client
 				.getFactoryProvider();
 		GerritCorePlugin.getDefault()
-				.getConnector()
-				.getFactoryProviderConfigurer()
-				.configure(abstractRemoteEditFactoryProvider);
+		.getConnector()
+		.getFactoryProviderConfigurer()
+		.configure(abstractRemoteEditFactoryProvider);
 
 		assertThat(abstractRemoteEditFactoryProvider.getService(), instanceOf(RemoteUiService.class));
 		taskList = TasksUiPlugin.getTaskList();

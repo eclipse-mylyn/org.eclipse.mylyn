@@ -13,6 +13,7 @@
  *     Francois Chouinard (Ericsson)  - Bug 414219 Add new Test
  *     Jacques Bouthillier (Ericsson) - Fix comments for Bug 414219
  *     Jacques Bouthillier (Ericsson) - Bug 414253 Adjust some Test
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
@@ -68,6 +69,8 @@ import junit.framework.TestCase;
  * @author Francois Chouinard
  * @author Jacques Bouthillier
  */
+
+@SuppressWarnings("nls")
 public class GerritClientTest extends TestCase {
 	public class TestGerritClient extends GerritClient212 {
 

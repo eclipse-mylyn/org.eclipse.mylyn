@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -50,7 +51,7 @@ import com.google.gerrit.reviewdb.Project;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class GerritTaskDataHandlerTest {
 
 	@Test

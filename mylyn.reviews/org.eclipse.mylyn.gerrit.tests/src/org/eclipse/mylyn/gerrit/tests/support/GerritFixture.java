@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.support;
@@ -25,6 +26,7 @@ import org.osgi.framework.Version;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class GerritFixture extends TestFixture {
 
 	@Deprecated

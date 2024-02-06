@@ -9,6 +9,7 @@
  *
  *     Blaine Lewis
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.internal.core;
@@ -40,7 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class TaskReviewMappingStoreTest {
 
 	final String taskUrl1 = "https://bugs.eclipse.org/bugs/show_bug.cgi?id=477635";
@@ -114,7 +115,7 @@ public class TaskReviewMappingStoreTest {
 		taskDataManager = mock(TaskDataManager.class);
 
 		when(repositoryManager.getConnectorForRepositoryTaskUrl(ArgumentMatchers.anyString()))
-				.thenReturn(reviewConnector);
+		.thenReturn(reviewConnector);
 		when(repositoryManager.getRepositoryConnector("reviewKind")).thenReturn(reviewConnector);
 		when(repositoryManager.getRepositoryConnector("taskKind")).thenReturn(taskConnector);
 

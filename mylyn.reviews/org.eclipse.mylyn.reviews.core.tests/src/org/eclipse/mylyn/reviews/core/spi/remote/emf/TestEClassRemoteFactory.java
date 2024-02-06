@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.core.spi.remote.emf;
@@ -22,8 +23,9 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 
+@SuppressWarnings("nls")
 class TestEClassRemoteFactory
-		extends AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteEClass, String, Integer> {
+extends AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteEClass, String, Integer> {
 
 	static TestRemoteEClass remote1 = new TestRemoteEClass("Remote Object 1");
 
