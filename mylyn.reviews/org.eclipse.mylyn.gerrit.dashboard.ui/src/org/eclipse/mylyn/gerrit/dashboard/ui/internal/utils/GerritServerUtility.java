@@ -11,6 +11,7 @@
  *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the server selection
+ *   See git history
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils;
@@ -245,7 +246,7 @@ public class GerritServerUtility {
 			if (reviewRepo != null) {
 				for (TaskRepository taskRepo : reviewRepo) {
 					GerritPlugin.Ftracer.traceInfo("Add Gerrit Review repo: " + taskRepo.getRepositoryLabel() //$NON-NLS-1$
-							+ "\t url: " + taskRepo.getRepositoryUrl()); //$NON-NLS-1$
+					+ "\t url: " + taskRepo.getRepositoryUrl()); //$NON-NLS-1$
 					fResultTask.put(taskRepo, taskRepo.getRepositoryUrl());
 					if (null != taskRepo.getRepositoryUrl()) {
 						adjustTemplatemanager(taskRepo);
@@ -268,11 +269,9 @@ public class GerritServerUtility {
 	public Boolean saveLastGerritServer(String aURL) {
 		boolean ok = true;
 		File file = getLastGerritFile(LAST_GERRIT_FILE);
-		try {
-			FileWriter fw = new FileWriter(file);
-			BufferedWriter out = new BufferedWriter(fw);
+		try (FileWriter fw = new FileWriter(file); BufferedWriter out = new BufferedWriter(fw)) {
+
 			out.write(aURL);
-			out.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			ok = false;
@@ -290,11 +289,9 @@ public class GerritServerUtility {
 		String lastGerritURL = null;
 		File file = getLastGerritFile(LAST_GERRIT_FILE);
 		if (file != null) {
-			try {
-				FileReader fr = new FileReader(file);
-				BufferedReader in = new BufferedReader(fr);
+			try (FileReader fr = new FileReader(file); BufferedReader in = new BufferedReader(fr)) {
+
 				lastGerritURL = in.readLine();
-				in.close();
 			} catch (IOException e1) {
 				//When there is no file,
 				//e1.printStackTrace();
@@ -395,14 +392,12 @@ public class GerritServerUtility {
 	public Boolean saveLastCommandList(Set<String> aCommands) {
 		boolean ok = true;
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
-		try {
-			FileWriter fw = new FileWriter(file);
-			BufferedWriter out = new BufferedWriter(fw);
+		try (FileWriter fw = new FileWriter(file); BufferedWriter out = new BufferedWriter(fw)) {
+
 			for (String s : aCommands) {
 				out.write(s);
 				out.newLine();
 			}
-			out.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			ok = false;
@@ -420,14 +415,12 @@ public class GerritServerUtility {
 		LinkedHashSet<String> lastCommands = new LinkedHashSet<>();
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		if (file != null) {
-			try {
-				FileReader fr = new FileReader(file);
-				BufferedReader in = new BufferedReader(fr);
+			try (FileReader fr = new FileReader(file);
+					BufferedReader in = new BufferedReader(fr)) {
 				while (in.ready()) {
 					String line = in.readLine();
 					lastCommands.add(line);
 				}
-				in.close();
 			} catch (IOException e1) {
 				//When there is no file,
 				//e1.printStackTrace();

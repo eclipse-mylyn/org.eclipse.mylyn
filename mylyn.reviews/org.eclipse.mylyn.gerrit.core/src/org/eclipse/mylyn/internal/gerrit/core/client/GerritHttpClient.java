@@ -407,8 +407,7 @@ public class GerritHttpClient {
 					}
 				}
 
-				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-				try (in) {
+				try (InputStream in = WebUtil.getResponseBodyAsStream(method, monitor)) {
 					GerritHtmlProcessor processor = new GerritHtmlProcessor();
 					processor.parse(in, method.getResponseCharSet());
 					String xGerritAuth = processor.getXGerritAuth();

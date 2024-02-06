@@ -186,9 +186,8 @@ public class GerritProject {
 	private String execute(File directory, String... command) throws IOException {
 //		System.out.println("# Executing " + StringUtils.join(command, " "));
 		Process process = Runtime.getRuntime().exec(command, null, directory);
-		BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 		final StringBuilder responseMessage = new StringBuilder();
-		try {
+		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
 			String line;
 			while ((line = r.readLine()) != null) {
 				if (!line.startsWith("remote:")) {
@@ -197,8 +196,6 @@ public class GerritProject {
 				responseMessage.append(line);
 				responseMessage.append('\n');
 			}
-		} finally {
-			r.close();
 		}
 		return responseMessage.toString();
 	}

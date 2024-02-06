@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the server selection
+ *   See git history
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.internal.utils;
@@ -187,11 +188,9 @@ public class GerritServerUtility {
 	public Boolean saveLastGerritServer(String aURL) {
 		boolean ok = true;
 		File file = getLastGerritFile();
-		try {
-			FileWriter fw = new FileWriter(file);
-			BufferedWriter out = new BufferedWriter(fw);
+		try (FileWriter fw = new FileWriter(file); BufferedWriter out = new BufferedWriter(fw)) {
+
 			out.write(aURL);
-			out.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			ok = false;
@@ -209,11 +208,9 @@ public class GerritServerUtility {
 		String lastGerritURL = null;
 		File file = getLastGerritFile();
 		if (file != null) {
-			try {
-				FileReader fr = new FileReader(file);
-				BufferedReader in = new BufferedReader(fr);
+			try (FileReader fr = new FileReader(file); BufferedReader in = new BufferedReader(fr)) {
+
 				lastGerritURL = in.readLine();
-				in.close();
 			} catch (IOException e1) {
 				//When there is no file,
 				//e1.printStackTrace();
