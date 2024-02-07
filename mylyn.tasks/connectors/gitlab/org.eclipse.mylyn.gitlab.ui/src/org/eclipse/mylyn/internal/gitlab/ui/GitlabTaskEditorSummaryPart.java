@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
@@ -77,14 +78,14 @@ public class GitlabTaskEditorSummaryPart extends TaskEditorSummaryPart {
 						.applyTo(editor.getControl());
 				layout.marginRight = 1;
 				layout.numColumns++;
-				TaskAttribute avatarURL = userAssignedAttribute.getAttribute("avatar_url");
+				TaskAttribute avatarURL = userAssignedAttribute.getAttribute("avatar_url"); //$NON-NLS-1$
 
 				if (avatarURL != null) {
 					GitlabRepositoryConnector gitlabConnector = (GitlabRepositoryConnector) TasksUi
 							.getRepositoryManager()
 							.getRepositoryConnector(userAssignedAttribute.getTaskData().getConnectorKind());
 					byte[] avatarBytes = gitlabConnector.getAvatarData(avatarURL.getValue());
-					editor.updateImage(new ProfileImage(avatarBytes, 30, 30, ""));
+					editor.updateImage(new ProfileImage(avatarBytes, 30, 30, "")); //$NON-NLS-1$
 				}
 			}
 		}

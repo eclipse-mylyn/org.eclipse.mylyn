@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.ui;
@@ -46,7 +47,7 @@ public class GitlabTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return "Gitlab";
+		return "Gitlab"; //$NON-NLS-1$
 	}
 
 	@Override

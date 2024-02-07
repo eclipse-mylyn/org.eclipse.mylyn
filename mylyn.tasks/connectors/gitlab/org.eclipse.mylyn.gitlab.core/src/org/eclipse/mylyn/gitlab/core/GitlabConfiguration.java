@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.gitlab.core;
 
@@ -47,11 +48,11 @@ public final class GitlabConfiguration implements Serializable {
 			this.project = project;
 			for (JsonElement jsonElement : labels) {
 				JsonObject jsonObject = (JsonObject) jsonElement;
-				labelsHash.put(jsonObject.get("name").getAsString(), jsonObject);
+				labelsHash.put(jsonObject.get("name").getAsString(), jsonObject); //$NON-NLS-1$
 			}
 			for (JsonElement jsonElement : milestones) {
 				JsonObject jsonObject = (JsonObject) jsonElement;
-				milestonesHash.put(jsonObject.get("id").getAsString(), jsonObject);
+				milestonesHash.put(jsonObject.get("id").getAsString(), jsonObject); //$NON-NLS-1$
 			}
 		}
 
@@ -110,7 +111,7 @@ public final class GitlabConfiguration implements Serializable {
 	public void addProject(JsonElement project, JsonElement lables, JsonElement milestones) {
 		GitlabProjectDetail gitlabProject = new GitlabProjectDetail(project.getAsJsonObject(), lables.getAsJsonArray(),
 				milestones.getAsJsonArray());
-		projectIDsMap.put(project.getAsJsonObject().get("id").getAsInt(), gitlabProject);
+		projectIDsMap.put(project.getAsJsonObject().get("id").getAsInt(), gitlabProject); //$NON-NLS-1$
 	}
 
 	public Set<Integer> getProjectIDs() {
@@ -127,7 +128,7 @@ public final class GitlabConfiguration implements Serializable {
 
 	public void addGroup(JsonElement group) {
 		groups.add(group);
-		groupsDetailsMap.put(group.getAsJsonObject().get("full_path").getAsString(), group);
+		groupsDetailsMap.put(group.getAsJsonObject().get("full_path").getAsString(), group); //$NON-NLS-1$
 
 	}
 
@@ -145,8 +146,8 @@ public final class GitlabConfiguration implements Serializable {
 		for (GitlabProjectDetail product : projectIDsMap.values()) {
 			JsonObject productObject = product.getProject();
 			if (attributeProduct != null) {
-				attributeProduct.putOption(productObject.get("id").getAsString(),
-						productObject.get("name_with_namespace").getAsString());
+				attributeProduct.putOption(productObject.get("id").getAsString(), //$NON-NLS-1$
+						productObject.get("name_with_namespace").getAsString()); //$NON-NLS-1$
 			}
 		}
 		if (attributeProduct.getValue() != null && !attributeProduct.getValue().isBlank()) {
@@ -159,23 +160,23 @@ public final class GitlabConfiguration implements Serializable {
 					.getMilestones()
 					.entrySet()) {
 				attributeMilestone.putOption(milestone.getKey(),
-						milestone.getValue().getAsJsonObject().get("title").getAsString());
+						milestone.getValue().getAsJsonObject().get("title").getAsString()); //$NON-NLS-1$
 			}
 		}
 
 		TaskAttribute priorityAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.PRIORITY.getKey());
 		if (priorityAttrib != null) {
-			priorityAttrib.putOption("CRITICAL", "critical");
-			priorityAttrib.putOption("HIGH", "high");
-			priorityAttrib.putOption("MEDIUM", "Medium");
-			priorityAttrib.putOption("LOW", "low");
-			priorityAttrib.putOption("UNKNOWN", "unknown");
+			priorityAttrib.putOption("CRITICAL", "critical"); //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("HIGH", "high");  //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("MEDIUM", "Medium");  //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("LOW", "low");  //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("UNKNOWN", "unknown");  //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		TaskAttribute typeAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.ISSUE_TYPE.getKey());
 		if (typeAttrib != null) {
-			typeAttrib.putOption("issue", "Issue");
-			typeAttrib.putOption("incident", "Incident");
+			typeAttrib.putOption("issue", "Issue");  //$NON-NLS-1$//$NON-NLS-2$ 
+			typeAttrib.putOption("incident", "Incident");  //$NON-NLS-1$//$NON-NLS-2$ 
 		}
 
 		return true;
@@ -186,35 +187,35 @@ public final class GitlabConfiguration implements Serializable {
 			return false;
 		}
 
-		TaskAttribute attributeGroups = taskData.getRoot().getMappedAttribute("GROUP");
+		TaskAttribute attributeGroups = taskData.getRoot().getMappedAttribute("GROUP"); //$NON-NLS-1$
 		if (attributeGroups != null) {
 			Set<String> groups = getGroupNames();
 			for (String string : groups) {
 				attributeGroups.putOption(string, string);
 			}
 		}
-		TaskAttribute stateAttrib = taskData.getRoot().getMappedAttribute("STATE");
+		TaskAttribute stateAttrib = taskData.getRoot().getMappedAttribute("STATE"); //$NON-NLS-1$
 		if (stateAttrib != null) {
-			stateAttrib.putOption("opened", "Opened");
-			stateAttrib.putOption("closed", "Closed");
-			stateAttrib.putOption("", "All");
+			stateAttrib.putOption("opened", "Opened"); //$NON-NLS-1$ //$NON-NLS-2$
+			stateAttrib.putOption("closed", "Closed"); //$NON-NLS-1$ //$NON-NLS-2$
+			stateAttrib.putOption("", "All"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		TaskAttribute searchinAttrib = taskData.getRoot().getMappedAttribute("SEARCH_IN");
+		TaskAttribute searchinAttrib = taskData.getRoot().getMappedAttribute("SEARCH_IN"); //$NON-NLS-1$
 		if (searchinAttrib != null) {
-			searchinAttrib.putOption("title", "Title");
-			searchinAttrib.putOption("description", "Description");
-			searchinAttrib.putOption("", "Title and Description");
+			searchinAttrib.putOption("title", "Title"); //$NON-NLS-1$ //$NON-NLS-2$
+			searchinAttrib.putOption("description", "Description"); //$NON-NLS-1$ //$NON-NLS-2$
+			searchinAttrib.putOption("", "Title and Description"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return updateProductOptions(taskData);
 	}
 
 	public String getGroupID(String path) {
 		Optional<Object> groupId = Optional.ofNullable(groupsDetailsMap.get(path))
-				.map(ma -> ma.getAsJsonObject().get("id").getAsString());
+				.map(ma -> ma.getAsJsonObject().get("id").getAsString()); //$NON-NLS-1$
 		if (groupId.isPresent()) {
 			return (String) groupId.get();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public void addValidOperations(TaskData bugReport) {
@@ -226,14 +227,14 @@ public final class GitlabConfiguration implements Serializable {
 		}
 		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
 
-		TaskAttribute attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "opened");
+		TaskAttribute attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "opened"); //$NON-NLS-1$
 		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
 
-		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "closed");
-		if (attributeStatusValue.equals("closed")) {
-			TaskOperation.applyTo(attribute, "reopen", "Reopen");
+		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "closed"); //$NON-NLS-1$
+		if (attributeStatusValue.equals("closed")) { //$NON-NLS-1$
+			TaskOperation.applyTo(attribute, "reopen", "Reopen"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			TaskOperation.applyTo(attribute, "close", "Close");
+			TaskOperation.applyTo(attribute, "close", "Close"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

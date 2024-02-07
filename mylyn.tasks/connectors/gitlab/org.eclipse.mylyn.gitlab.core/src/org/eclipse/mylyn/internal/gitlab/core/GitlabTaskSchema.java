@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -40,53 +41,53 @@ public class GitlabTaskSchema extends GitlabNewTaskSchema {
 
 	public final Field URL = inheritFrom(parent.TASK_URL).addFlags(Flag.ATTRIBUTE).create();
 
-	public final Field USER_NOTES_COUNT = createField("user_notes_count", "User Notes Count",
+	public final Field USER_NOTES_COUNT = createField("user_notes_count", "User Notes Count", //$NON-NLS-1$ //$NON-NLS-2$
 			TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
 
-	public final Field BLOCKING_ISSUE_COUNT = createField("blocking_issues_count", "Blocking Issue Count",
+	public final Field BLOCKING_ISSUE_COUNT = createField("blocking_issues_count", "Blocking Issue Count", //$NON-NLS-1$ //$NON-NLS-2$
 			TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
 
-	public final Field MERGE_REQUEST_COUNT = createField("merge_requests_count", "Merge Request Count",
+	public final Field MERGE_REQUEST_COUNT = createField("merge_requests_count", "Merge Request Count", //$NON-NLS-1$ //$NON-NLS-2$
 			TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
 
-	public final Field UPVOTES = createField("upvotes", "Up Votes", TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
+	public final Field UPVOTES = createField("upvotes", "Up Votes", TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field DOWNVOTES = createField("downvotes", "Down Notes", TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE);
+	public final Field DOWNVOTES = createField("downvotes", "Down Notes", TaskAttribute.TYPE_INTEGER, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
 //	public final Field WEB_URL = createField("web_url", "WEB URL", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
 
-	public final Field HAS_TASKS = createField("has_tasks", "has Tasks", TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
+	public final Field HAS_TASKS = createField("has_tasks", "has Tasks", TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field SUBSCRIBED = createField("subscribed", "subscribed", TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
+	public final Field SUBSCRIBED = createField("subscribed", "subscribed", TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field CONFIDENTIAL = createField("confidential", "confidential", TaskAttribute.TYPE_BOOLEAN,
+	public final Field CONFIDENTIAL = createField("confidential", "confidential", TaskAttribute.TYPE_BOOLEAN, //$NON-NLS-1$ //$NON-NLS-2$
 			Flag.ATTRIBUTE);
 
 	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 
-	public final Field DISCUSSION_LOCKED = createField("discussion_locked", "Discussion locked",
+	public final Field DISCUSSION_LOCKED = createField("discussion_locked", "Discussion locked", //$NON-NLS-1$ //$NON-NLS-2$
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
-	public final Field IID = createField("iid", "interne ID", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+	public final Field IID = createField("iid", "interne ID", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
+	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION); //$NON-NLS-1$
 
-	public final Field CLOSED_BY = createField("closed_by", "closed by", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, //$NON-NLS-1$
+	public final Field CLOSED_BY = createField("closed_by", "closed by", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, //$NON-NLS-1$ //$NON-NLS-2$
 			Flag.READ_ONLY);
 
-	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to").create();
+	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to").create(); //$NON-NLS-1$
 
-	public final Field TYPE = createField("type", "Type", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+	public final Field TYPE = createField("type", "Type", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field TASK_STATUS = createField("task_status", "Task Status", TaskAttribute.TYPE_SHORT_TEXT,
+	public final Field TASK_STATUS = createField("task_status", "Task Status", TaskAttribute.TYPE_SHORT_TEXT, //$NON-NLS-1$ //$NON-NLS-2$
 			Flag.ATTRIBUTE);
 
-	public final Field TASK_LABELS = createField("labels", "Labels", TaskAttribute.TYPE_MULTI_SELECT, Flag.ATTRIBUTE);
+	public final Field TASK_LABELS = createField("labels", "Labels", TaskAttribute.TYPE_MULTI_SELECT, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field TASK_MILESTONE = createField("milestone", "Milestone", TaskAttribute.TYPE_SINGLE_SELECT,
+	public final Field TASK_MILESTONE = createField("milestone", "Milestone", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$ //$NON-NLS-2$
 			Flag.ATTRIBUTE);
 
-	public final Field DUE_DATE = createField("due_date", "Due date", TaskAttribute.TYPE_DATE, Flag.ATTRIBUTE);
+	public final Field DUE_DATE = createField("due_date", "Due date", TaskAttribute.TYPE_DATE, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static Map<String, String> json2AttributeMapper = Map
 			.ofEntries(Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$

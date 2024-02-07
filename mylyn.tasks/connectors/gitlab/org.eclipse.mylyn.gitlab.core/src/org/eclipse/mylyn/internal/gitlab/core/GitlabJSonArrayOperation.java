@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.core;
 
@@ -33,9 +34,9 @@ public abstract class GitlabJSonArrayOperation extends GitlabOperation<JsonArray
 	private String nextPage(Header[] linkHeader) {
 		if (linkHeader.length > 0) {
 			Header firstLinkHeader = linkHeader[0];
-			for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) {
-				String[] linkHeaderElements = linkHeaderEntry.split("; ");
-				if ("rel=\"next\"".equals(linkHeaderElements[1])) {
+			for (String linkHeaderEntry : firstLinkHeader.getValue().split(", ")) { //$NON-NLS-1$
+				String[] linkHeaderElements = linkHeaderEntry.split("; "); //$NON-NLS-1$
+				if ("rel=\"next\"".equals(linkHeaderElements[1])) { //$NON-NLS-1$
 					return linkHeaderElements[0].substring(1, linkHeaderElements[0].length() - 1);
 				}
 			}
@@ -51,7 +52,7 @@ public abstract class GitlabJSonArrayOperation extends GitlabOperation<JsonArray
 		addHttpRequestEntities(request);
 		CommonHttpResponse response = execute(request, monitor);
 		result = processAndRelease(response, monitor);
-		Header[] linkHeader = response.getResponse().getHeaders("Link");
+		Header[] linkHeader = response.getResponse().getHeaders("Link"); //$NON-NLS-1$
 		String nextPageValue = nextPage(linkHeader);
 		while (nextPageValue != null) {
 			HttpRequestBase looprequest = new HttpGet(nextPageValue);
@@ -59,7 +60,7 @@ public abstract class GitlabJSonArrayOperation extends GitlabOperation<JsonArray
 			CommonHttpResponse loopresponse = execute(looprequest, monitor);
 			JsonArray loopresult = processAndRelease(loopresponse, monitor);
 			result.addAll(loopresult);
-			linkHeader = loopresponse.getResponse().getHeaders("Link");
+			linkHeader = loopresponse.getResponse().getHeaders("Link"); //$NON-NLS-1$
 			nextPageValue = nextPage(linkHeader);
 		}
 

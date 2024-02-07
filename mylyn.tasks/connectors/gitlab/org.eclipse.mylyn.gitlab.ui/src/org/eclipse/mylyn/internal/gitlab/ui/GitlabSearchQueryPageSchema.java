@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
@@ -33,16 +34,16 @@ public class GitlabSearchQueryPageSchema extends AbstractQueryPageSchema {
 			.layoutPriority(1)
 			.create();
 
-	public final Field group = createField("GROUP", "Group", TaskAttribute.TYPE_MULTI_SELECT, null, 1);
+	public final Field group = createField("GROUP", "Group", TaskAttribute.TYPE_MULTI_SELECT, null, 1); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field search = createField("SEARCH", "search", TaskAttribute.TYPE_SHORT_TEXT, null, 2);
+	public final Field search = createField("SEARCH", "search", TaskAttribute.TYPE_SHORT_TEXT, null, 2); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field search_in = createField("SEARCH_IN", "in", TaskAttribute.TYPE_SINGLE_SELECT, null, 2);
+	public final Field search_in = createField("SEARCH_IN", "in", TaskAttribute.TYPE_SINGLE_SELECT, null, 2); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field state = createField("STATE", "State", TaskAttribute.TYPE_SINGLE_SELECT, null, 3);
+	public final Field state = createField("STATE", "State", TaskAttribute.TYPE_SINGLE_SELECT, null, 3); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field confidential = createField("CONFIDENTIAL", "confidential", TaskAttribute.TYPE_BOOLEAN, null, 4);
+	public final Field confidential = createField("CONFIDENTIAL", "confidential", TaskAttribute.TYPE_BOOLEAN, null, 4); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field assigned_to_me = createField("ASSIGNED_TO_ME", "assigned to me", TaskAttribute.TYPE_BOOLEAN,
+	public final Field assigned_to_me = createField("ASSIGNED_TO_ME", "assigned to me", TaskAttribute.TYPE_BOOLEAN, //$NON-NLS-1$ //$NON-NLS-2$
 			null, 4);
 }

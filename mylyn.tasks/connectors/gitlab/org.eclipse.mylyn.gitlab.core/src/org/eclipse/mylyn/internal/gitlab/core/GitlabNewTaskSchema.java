@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -39,12 +40,12 @@ public class GitlabNewTaskSchema extends AbstractTaskSchema {
 
 	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
 
-	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SINGLE_SELECT,
+	public final Field ISSUE_TYPE = createField("issue_type", "Issue Type", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$ //$NON-NLS-2$
 			Flag.ATTRIBUTE);
 
 	private static Map<String, String> json2AttributeMapper = Map.ofEntries(
-			Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1
-			, Map.entry("description", getDefault().DESCRIPTION.getKey()) //$NON-
+			Map.entry("project_id", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
+			, Map.entry("description", getDefault().DESCRIPTION.getKey()) ///$NON-NLS-1$
 			, Map.entry("title", getDefault().SUMMARY.getKey()) //$NON-NLS-1$
 			, Map.entry("state", getDefault().STATUS.getKey()) //$NON-NLS-1$
 			, Map.entry("severity", getDefault().PRIORITY.getKey()) //$NON-NLS-1$

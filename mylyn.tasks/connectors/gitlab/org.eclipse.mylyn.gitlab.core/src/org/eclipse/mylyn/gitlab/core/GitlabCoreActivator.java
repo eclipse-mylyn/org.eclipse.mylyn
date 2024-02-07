@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gitlab.core;
@@ -30,21 +31,21 @@ public final class GitlabCoreActivator extends Plugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.gitlab.core"; //$NON-NLS-1$
 
-	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gitlab";
+	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gitlab"; //$NON-NLS-1$
 
-	public static final String GROUPS = "gitlab.groups";
+	public static final String GROUPS = "gitlab.groups"; //$NON-NLS-1$
 
-	public static final String PROJECTS = "gitlab.projects";
+	public static final String PROJECTS = "gitlab.projects"; //$NON-NLS-1$
 
-	public static final String AVANTAR = "gitlab.avantar";
+	public static final String AVANTAR = "gitlab.avantar"; //$NON-NLS-1$
 
-	public static final String SHOW_ACTIVITY_ICONS = "gitlab.show.activity.icons";
+	public static final String SHOW_ACTIVITY_ICONS = "gitlab.show.activity.icons"; //$NON-NLS-1$
 
-	public static final String USE_PERSONAL_ACCESS_TOKEN = "gitlab.use.personal.access.token";
+	public static final String USE_PERSONAL_ACCESS_TOKEN = "gitlab.use.personal.access.token"; //$NON-NLS-1$
 
-	public static final String PERSONAL_ACCESS_TOKEN = "gitlab.personal.access.token";
+	public static final String PERSONAL_ACCESS_TOKEN = "gitlab.personal.access.token"; //$NON-NLS-1$
 
-	public static final String API_VERSION = "/api/v4";
+	public static final String API_VERSION = "/api/v4"; //$NON-NLS-1$
 
 	public static final String ATTRIBUTE_TYPE_ACTIVITY = "activity"; //$NON-NLS-1$
 
@@ -54,7 +55,7 @@ public final class GitlabCoreActivator extends Plugin {
 
 	public static final String PREFIX_ACTIVITY = "task.gitlab.activity-"; //$NON-NLS-1$
 
-	public static final String GITLAB_ACTIVITY_TYPE = "org.eclipse.mylyn.gitlab.activity.type";
+	public static final String GITLAB_ACTIVITY_TYPE = "org.eclipse.mylyn.gitlab.activity.type"; //$NON-NLS-1$
 
 	public static enum ActivityType {
 		UNKNOWN, PERSON, PENCIL, UNLOCK, LOCK, CLOSED, REOPEN, LABEL, CALENDAR, DESIGN;

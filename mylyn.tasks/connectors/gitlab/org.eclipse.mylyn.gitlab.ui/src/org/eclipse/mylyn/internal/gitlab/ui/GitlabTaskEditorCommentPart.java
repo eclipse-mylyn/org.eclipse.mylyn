@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gitlab.ui;
 
@@ -67,14 +68,14 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 
 					UserAttributeEditor userImage = new UserAttributeEditor(getModel(), userImageAttribute, 30);
 					userImage.createControl(userImageComposite, toolkit);
-					TaskAttribute avatarURL = userImageAttribute.getAttribute("avatar_url");
+					TaskAttribute avatarURL = userImageAttribute.getAttribute("avatar_url"); //$NON-NLS-1$
 
 					if (avatarURL != null) {
 						GitlabRepositoryConnector gitlabConnector = (GitlabRepositoryConnector) TasksUi
 								.getRepositoryManager()
 								.getRepositoryConnector(userImageAttribute.getTaskData().getConnectorKind());
 						byte[] avatarBytes = gitlabConnector.getAvatarData(avatarURL.getValue());
-						userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, ""));
+						userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, "")); //$NON-NLS-1$
 					}
 				}
 			}
@@ -83,7 +84,7 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 		@Override
 		protected void createAdditionalControls(FormToolkit toolkit, Composite commentViewer,
 				TaskAttribute commentAttribute) {
-			TaskAttribute reply = commentAttribute.getAttribute("reply");
+			TaskAttribute reply = commentAttribute.getAttribute("reply"); //$NON-NLS-1$
 			if (reply != null) {
 				Composite replayComposite = new Composite(commentViewer, SWT.NONE);
 				GridLayout replayLayout = new GridLayout(2, false);
@@ -128,13 +129,13 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 				.mapToRepositoryKey(commentAttribute, TaskAttribute.COMMENT_AUTHOR);
 
 		TaskAttribute userImageAttribute = commentAttribute.getAttribute(commentAuthor);
-		TaskAttribute avatarUrl = userImageAttribute.getAttribute("avatar_url");
+		TaskAttribute avatarUrl = userImageAttribute.getAttribute("avatar_url"); //$NON-NLS-1$
 
 		if (avatarUrl != null) {
 			GitlabRepositoryConnector gitlabConnector = (GitlabRepositoryConnector) TasksUi.getRepositoryManager()
 					.getRepositoryConnector(userImageAttribute.getTaskData().getConnectorKind());
 			byte[] avatarBytes = gitlabConnector.getAvatarData(avatarUrl.getValue());
-			userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, ""));
+			userImage.updateImage(new ProfileImage(avatarBytes, 30, 30, "")); //$NON-NLS-1$
 		}
 	}
 

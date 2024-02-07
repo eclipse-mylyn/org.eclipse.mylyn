@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -28,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 public class GitlabTaskAttributeMapper extends TaskAttributeMapper {
 
 	private static DateTimeFormatter formatter = DateTimeFormatter
-			.ofPattern("yyyy-MM-dd[' ']['T'][H:mm[:ss[.SSS]['Z']]]");
+			.ofPattern("yyyy-MM-dd[' ']['T'][H:mm[:ss[.SSS]['Z']]]"); //$NON-NLS-1$
 
 	public GitlabTaskAttributeMapper(TaskRepository taskRepository) {
 		super(taskRepository);
@@ -50,7 +51,7 @@ public class GitlabTaskAttributeMapper extends TaskAttributeMapper {
 	 * Note: Date formatter constructed within method for thread safety
 	 */
 	public static final Date parseDate(String dateString) {
-		if (dateString.matches("[0-9]+")) {
+		if (dateString.matches("[0-9]+")) { //$NON-NLS-1$
 			return new Date(Long.parseLong(dateString));
 		} else {
 			return Date.from(LocalDateTime.parse(dateString, formatter).atZone(ZoneId.systemDefault()).toInstant());

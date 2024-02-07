@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -47,7 +48,7 @@ public abstract class GitlabPutOperation<T> extends GitlabOperation<T> {
 			((HttpPut) request).setEntity(new StringEntity(body));
 		} catch (UnsupportedEncodingException e) {
 			throw new GitlabException(
-					new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "UnsupportedEncodingException", e));
+					new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "UnsupportedEncodingException", e)); //$NON-NLS-1$
 		}
 	}
 

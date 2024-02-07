@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.ui;
@@ -45,7 +46,7 @@ public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository repository) {
-		return new GitlabRepositorySettingsPage("New repository", "Enter the HTTPS-URL to your GitLab repository",
+		return new GitlabRepositorySettingsPage("New repository", "Enter the HTTPS-URL to your GitLab repository", //$NON-NLS-1$ //$NON-NLS-2$
 				repository);
 	}
 
@@ -65,8 +66,8 @@ public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
 		}
 		GitlabQuerySchemaPage mp = new GitlabQuerySchemaPage(getConnectorKind(), repository, query,
 				GitlabSearchQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "", "EnterQueryParameter", //$NON-NLS-1$
-						"EnterTitleAndURL", "([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null));
+				new QueryPageDetails(true, "", "EnterQueryParameter", //$NON-NLS-1$ //$NON-NLS-2$
+						"EnterTitleAndURL", "([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null)); //$NON-NLS-1$ //$NON-NLS-2$
 		wizard.addPage(mp);
 
 		return wizard;
@@ -86,8 +87,8 @@ public class GitlabConnectorUI extends AbstractRepositoryConnectorUi {
 	@Override
 	public @Nullable String getReplyText(@NonNull TaskRepository taskRepository, @NonNull ITask task,
 			@Nullable ITaskComment taskComment, boolean includeTask) {
-		TaskAttribute note_id = taskComment.getTaskAttribute().getAttribute("note_id");
-		String note_idValue = note_id != null ? note_id.getValue() : "";
-		return MessageFormat.format("( In reply to {0}#note_{1} )\n", taskComment.getTask().getUrl(), note_idValue);
+		TaskAttribute note_id = taskComment.getTaskAttribute().getAttribute("note_id"); //$NON-NLS-1$
+		String note_idValue = note_id != null ? note_id.getValue() : ""; //$NON-NLS-1$
+		return MessageFormat.format("( In reply to {0}#note_{1} )\n", taskComment.getTask().getUrl(), note_idValue); //$NON-NLS-1$
 	}
 }

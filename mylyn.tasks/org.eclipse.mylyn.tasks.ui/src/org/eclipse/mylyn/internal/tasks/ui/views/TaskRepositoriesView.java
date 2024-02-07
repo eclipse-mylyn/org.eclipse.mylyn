@@ -78,7 +78,7 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 	}
 
-	private final IRepositoryModelListener MODEL_LISTENER = () -> asyncExec(() -> refresh());
+	private final IRepositoryModelListener MODEL_LISTENER = () -> asyncExec(this::refresh);
 
 	private final IRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryAdapter() {
 
@@ -151,7 +151,7 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
-		viewer.setSorter(new TaskRepositoriesViewSorter());
+		viewer.setComparator(new TaskRepositoriesViewSorter());
 
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(event -> WorkbenchUtil.openProperties(getSite()));

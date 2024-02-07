@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.core;
@@ -48,14 +49,14 @@ public class GitlabTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Submitting_task", IProgressMonitor.UNKNOWN);
+			monitor.beginTask("Submitting_task", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 			GitlabRestClient client = connector.getClient(repository);
-			IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+			IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3); //$NON-NLS-1$
 			try {
 				return client.postTaskData(taskData, oldAttributes, progress);
 			} catch (GitlabException e) {
 				throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, 2,
-						"Error post taskdata.\n\n" + e.getMessage(), e));
+						"Error post taskdata.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 			}
 		} finally {
 			monitor.done();
@@ -95,15 +96,15 @@ public class GitlabTaskDataHandler extends AbstractTaskDataHandler {
 			final TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("retrive_task", IProgressMonitor.UNKNOWN);
+			monitor.beginTask("retrive_task", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 			GitlabRestClient client = connector.getClient(repository);
 			try {
-				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3); //$NON-NLS-1$
 				progress.addFlag(OperationFlag.BACKGROUND);
 				client.getTaskData(taskIds, repository, collector, progress);
 			} catch (GitlabException e) {
 				throw new CoreException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, 2,
-						"Error get taskdata.\n\n" + e.getMessage(), e));
+						"Error get taskdata.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 			}
 		} finally {
 			monitor.done();

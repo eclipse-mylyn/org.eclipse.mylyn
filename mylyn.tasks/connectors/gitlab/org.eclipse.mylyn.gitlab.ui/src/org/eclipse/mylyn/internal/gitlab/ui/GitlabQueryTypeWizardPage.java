@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gitlab.ui;
@@ -33,9 +34,9 @@ public class GitlabQueryTypeWizardPage extends WizardPage {
 	private Composite composite;
 
 	public GitlabQueryTypeWizardPage(TaskRepository repository, AbstractRepositoryConnector connector) {
-		super("Super");
-		setTitle("Title");
-		setDescription("Desc");
+		super("Super"); //$NON-NLS-1$
+		setTitle("Title"); //$NON-NLS-1$
+		setDescription("Desc"); //$NON-NLS-1$
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
@@ -48,11 +49,11 @@ public class GitlabQueryTypeWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout(1, false));
 
 		buttonForm = new Button(composite, SWT.RADIO);
-		buttonForm.setText("Messages.BugzillaRestQueryTypeWizardPage_CreateQueryUsingForm");
+		buttonForm.setText("Messages.BugzillaRestQueryTypeWizardPage_CreateQueryUsingForm"); //$NON-NLS-1$
 		buttonForm.setSelection(true);
 
 		buttonCustom = new Button(composite, SWT.RADIO);
-		buttonCustom.setText("Messages.BugzillaRestQueryTypeWizardPage_CreateQueryFromExistingURL");
+		buttonCustom.setText("Messages.BugzillaRestQueryTypeWizardPage_CreateQueryFromExistingURL"); //$NON-NLS-1$
 
 		setPageComplete(true);
 		setControl(composite);
