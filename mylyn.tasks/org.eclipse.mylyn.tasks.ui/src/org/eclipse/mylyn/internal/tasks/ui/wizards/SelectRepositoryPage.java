@@ -152,7 +152,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		container.setLayout(layout);
 
 		Tree tree = createTableViewer(container);
-		viewer.setSorter(new TaskRepositoriesViewSorter());
+		viewer.setComparator(new TaskRepositoriesViewSorter());
 
 		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
 		tree.setLayoutData(gridData);
