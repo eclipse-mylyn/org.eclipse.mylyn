@@ -10,6 +10,7 @@
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *     Alvaro Sanchez-Leon - Resolve IResource information in generated artifacts
  *     Tasktop Technologies - Improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.git.core;
@@ -122,14 +123,15 @@ public class GitConnector extends ScmConnector {
 			throws CoreException {
 		GitRepository gitRepository = (GitRepository) repository;
 		Repository repository2 = gitRepository.getRepository();
-		RevWalk walk = new RevWalk(repository2);
-		try {
-			RevCommit commit;
-			commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
-			//diffCommit(repository, repository2, walk, commit);
-			return changeSet(commit, gitRepository);
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
+		try (RevWalk walk = new RevWalk(repository2)) {
+			try {
+				RevCommit commit;
+				commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
+				//diffCommit(repository, repository2, walk, commit);
+				return changeSet(commit, gitRepository);
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
+			}
 		}
 	}
 
@@ -263,18 +265,19 @@ public class GitConnector extends ScmConnector {
 
 		final GitRepository gitRepository = (GitRepository) repository;
 		final Repository gitRepo = gitRepository.getRepository();
-		Git git = new Git(gitRepo);
 		Iterable<RevCommit> revs;
-		try {
-			revs = git.log().call();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		try (Git git = new Git(gitRepo)) {
+			try {
+				revs = git.log().call();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 
-		return StreamSupport.stream(revs.spliterator(), false)
-				.map(input -> changeSet(input, gitRepository))
-				.collect(Collectors.toList())
-				.iterator();
+			return StreamSupport.stream(revs.spliterator(), false)
+					.map(input -> changeSet(input, gitRepository))
+					.collect(Collectors.toList())
+					.iterator();
+		}
 	}
 
 	private ChangeSet changeSet(RevCommit r, GitRepository repository) {
@@ -338,16 +341,17 @@ public class GitConnector extends ScmConnector {
 		ObjectId headCommitId = repo.resolve(Constants.HEAD);
 		String id = null;
 		if (headCommitId != null) {
-			// Not an empty repo
-			RevWalk revWalk = new RevWalk(repo);
-			RevCommit headCommit = revWalk.parseCommit(headCommitId);
-			RevTree headTree = headCommit.getTree();
-			TreeWalk resourceInRepo = TreeWalk.forPath(repo, repoRelativePath, headTree);
-			if (resourceInRepo != null) {
-				ObjectId objId = resourceInRepo.getObjectId(0);
-				id = objId.getName();
+			try (// Not an empty repo
+					RevWalk revWalk = new RevWalk(repo)) {
+				RevCommit headCommit = revWalk.parseCommit(headCommitId);
+				RevTree headTree = headCommit.getTree();
+				TreeWalk resourceInRepo = TreeWalk.forPath(repo, repoRelativePath, headTree);
+				if (resourceInRepo != null) {
+					ObjectId objId = resourceInRepo.getObjectId(0);
+					id = objId.getName();
+				}
+				revWalk.dispose();
 			}
-			revWalk.dispose();
 		}
 
 		return id;
