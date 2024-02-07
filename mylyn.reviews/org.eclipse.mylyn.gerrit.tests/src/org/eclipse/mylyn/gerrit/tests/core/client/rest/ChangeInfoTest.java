@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
@@ -60,6 +61,7 @@ import com.google.gerrit.reviewdb.PatchSetApproval;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class ChangeInfoTest extends TestCase {
 	@Test
 	public void testFromEmptyJson() throws Exception {

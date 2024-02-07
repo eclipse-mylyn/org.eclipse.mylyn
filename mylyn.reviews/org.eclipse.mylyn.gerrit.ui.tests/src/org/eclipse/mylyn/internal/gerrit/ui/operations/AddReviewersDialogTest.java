@@ -29,6 +29,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class AddReviewersDialogTest {
 
 	private Shell shell;

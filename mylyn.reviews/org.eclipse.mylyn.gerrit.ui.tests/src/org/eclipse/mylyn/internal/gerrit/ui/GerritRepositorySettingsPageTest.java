@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Michael Keppler - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class GerritRepositorySettingsPageTest {
 
 	private GerritRepositorySettingsPage page;

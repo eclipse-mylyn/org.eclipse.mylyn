@@ -11,6 +11,7 @@
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in utility
+ *   See git history
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils;
@@ -53,7 +54,7 @@ public class UIUtils {
 	 *            reason
 	 */
 	public static void showErrorDialog(String aMsg, String aReason) {
-		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason);
+		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason); //$NON-NLS-1$
 		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInfo, aMsg,
 				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
 		Display.getDefault().syncExec(() -> dialog.open());

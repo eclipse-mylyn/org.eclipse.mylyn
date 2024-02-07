@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
@@ -19,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 
+@SuppressWarnings("nls")
 class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P, T, L, C> {
 
 	static final int TEST_TIMEOUT = 15000;

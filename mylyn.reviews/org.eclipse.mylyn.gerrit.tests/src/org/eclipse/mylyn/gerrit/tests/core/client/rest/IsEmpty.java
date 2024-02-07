@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
@@ -22,6 +23,7 @@ import org.hamcrest.Matcher;
 /**
  * TODO: to be removed once https://git.eclipse.org/r/#/c/14691/ is merged
  */
+@SuppressWarnings("nls")
 public class IsEmpty<T> extends BaseMatcher<T> {
 
 	@Override

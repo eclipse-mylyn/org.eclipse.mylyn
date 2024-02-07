@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
@@ -52,6 +53,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+@SuppressWarnings("nls")
 class ReviewHarness {
 
 	private static final Pattern SHORT_ID_PATTERN = Pattern.compile("(\\d+).*", Pattern.DOTALL);
@@ -222,10 +224,10 @@ class ReviewHarness {
 		assertThat(targetCommit.toString(), is(commitId));
 
 		git.checkout()
-				.setCreateBranch(true)
-				.setName("change" + "/" + getReview().getId() + "/" + number)
-				.setStartPoint(targetCommit)
-				.call();
+		.setCreateBranch(true)
+		.setName("change" + "/" + getReview().getId() + "/" + number)
+		.setStartPoint(targetCommit)
+		.call();
 	}
 
 	private RevCommit parseCommit(ObjectId ref) throws IOException {

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
@@ -45,7 +46,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import junit.framework.TestCase;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class GerritTaskEditorPageTest extends TestCase {
 
 	private static class TestGerritTaskEditorPage extends GerritTaskEditorPage {

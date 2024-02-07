@@ -9,6 +9,7 @@
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Sascha Scholz (SAP) - improvements
+ *      See git history
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
@@ -40,6 +41,7 @@ import com.google.gerrit.reviewdb.Project.NameKey;
 /**
  * @author Mikael Kober
  */
+@SuppressWarnings("nls")
 public class GerritConnectorTest {
 
 	private final GerritConnector connector = new GerritConnector();
@@ -194,8 +196,8 @@ public class GerritConnectorTest {
 				new TaskAttributeMapper(new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://mock")),
 				GerritConnector.CONNECTOR_KIND, "http://mock", "1");
 		taskData.getRoot()
-				.createMappedAttribute(TaskAttribute.DATE_MODIFICATION)
-				.setValue(String.valueOf(repositoryDate));
+		.createMappedAttribute(TaskAttribute.DATE_MODIFICATION)
+		.setValue(String.valueOf(repositoryDate));
 		return connector.hasTaskChanged(null, task, taskData);
 	}
 }

@@ -11,6 +11,7 @@
  *   Francois Chouinard - Handle gerrit queries and open reviews in editor
  *   Guy Perron			- Add review counter, Add Gerrit button selection
  *   Jacques Bouthillier - Bug 426580 Add the starred functionality
+ *   See git history
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.views;
@@ -506,7 +507,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 *            aQuery
 	 */
 	public void processCommands(String aQuery) {
-		GerritUi.Ftracer.traceInfo("Process command :   " + aQuery);
+		GerritUi.Ftracer.traceInfo("Process command :   " + aQuery); //$NON-NLS-1$
 		String lastSaved = fServerUtil.getLastSavedGerritServer();
 		if (lastSaved != null) {
 			//Already saved a Gerrit server, so use it
@@ -667,7 +668,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 				} catch (GerritQueryException e) {
 					status = e.getStatus();
 					StatusHandler
-							.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(), e));
+					.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(), e));
 				}
 
 				aMonitor.done();
@@ -700,10 +701,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 				if (index != -1) {
 					fRequestList.remove(fRequestList.remove(ar[index]));
 				} else //Remove the oldest element from the list
-				if (fRequestList.size() > SEARCH_SIZE_MENU_LIST) {
-					Object obj = fRequestList.iterator().next(); //Should be the first item in the list
-					fRequestList.remove(fRequestList.remove(obj));
-				}
+					if (fRequestList.size() > SEARCH_SIZE_MENU_LIST) {
+						Object obj = fRequestList.iterator().next(); //Should be the first item in the list
+						fRequestList.remove(fRequestList.remove(obj));
+					}
 				//Add the new text in the combo
 				fRequestList.add(aSt.trim());
 				//Save the list of commands in file

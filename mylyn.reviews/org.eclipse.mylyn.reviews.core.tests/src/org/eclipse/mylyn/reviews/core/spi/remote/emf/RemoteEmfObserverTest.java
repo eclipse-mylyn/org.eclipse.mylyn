@@ -9,6 +9,7 @@
  *
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
@@ -27,6 +28,7 @@ import org.junit.Test;
 /**
  * @author Miles Parker
  */
+@SuppressWarnings("nls")
 public class RemoteEmfObserverTest {
 
 	RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1;

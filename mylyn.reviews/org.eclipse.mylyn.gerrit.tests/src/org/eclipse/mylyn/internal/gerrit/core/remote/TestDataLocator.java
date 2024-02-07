@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
@@ -17,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
 
+@SuppressWarnings("nls")
 public final class TestDataLocator extends ReviewsDataLocator {
 	@Override
 	public IPath getSystemDataPath() {

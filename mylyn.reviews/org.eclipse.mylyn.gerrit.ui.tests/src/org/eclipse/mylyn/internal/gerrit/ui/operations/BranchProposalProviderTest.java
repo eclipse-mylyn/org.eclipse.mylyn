@@ -22,6 +22,7 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class BranchProposalProviderTest {
 
 	private SortedSet<String> proposals;

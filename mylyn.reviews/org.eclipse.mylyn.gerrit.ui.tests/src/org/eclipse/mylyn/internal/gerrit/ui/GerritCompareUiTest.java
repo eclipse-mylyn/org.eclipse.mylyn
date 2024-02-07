@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
@@ -34,7 +35,7 @@ import org.eclipse.ui.PartInitException;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class GerritCompareUiTest {
 
 	private static final IEditorReference[] EMPTY_IEDITOR_REFERENCE_ARRAY = {};

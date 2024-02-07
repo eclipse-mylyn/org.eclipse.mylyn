@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Sascha Scholz (SAP) - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.support;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Steffen Pingel
  * @author Sascha Scholz
  */
+@SuppressWarnings("nls")
 public class GerritHarness {
 
 	private final GerritFixture fixture;

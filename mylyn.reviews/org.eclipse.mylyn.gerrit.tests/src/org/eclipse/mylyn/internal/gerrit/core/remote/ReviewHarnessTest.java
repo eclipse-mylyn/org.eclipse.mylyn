@@ -8,12 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class ReviewHarnessTest extends TestCase {
 
 	public void testParseShortId() {

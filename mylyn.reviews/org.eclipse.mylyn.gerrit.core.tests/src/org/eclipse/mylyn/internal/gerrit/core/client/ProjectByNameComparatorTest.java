@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Vadim Dmitriev - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
@@ -23,6 +24,7 @@ import com.google.gerrit.reviewdb.Project.NameKey;
 /**
  * @author Vadim Dmitriev
  */
+@SuppressWarnings("nls")
 public class ProjectByNameComparatorTest {
 
 	@Test

@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class AddReviewerResultTest extends TestCase {
 	@Test
 	public void testFromEmptyJson() throws Exception {

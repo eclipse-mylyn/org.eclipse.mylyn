@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
@@ -25,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class ProjectInfoTest extends TestCase {
 	@Test
 	public void testFromEmptyJson() throws Exception {

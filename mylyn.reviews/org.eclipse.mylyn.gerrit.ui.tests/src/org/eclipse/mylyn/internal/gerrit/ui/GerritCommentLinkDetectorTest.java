@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
@@ -29,6 +30,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class GerritCommentLinkDetectorTest {
 
 	TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");

@@ -9,6 +9,7 @@
  *
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -32,6 +33,7 @@ import org.junit.Test;
  * @author Kevin Sawicki
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class ChangeIdHyperlinkTest {
 
 	private TaskRepository repository;

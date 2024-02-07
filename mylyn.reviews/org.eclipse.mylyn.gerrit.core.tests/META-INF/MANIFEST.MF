@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.gerrit.core.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests;singleton:=true

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -19,6 +20,7 @@ import org.junit.Test;
 import com.google.gerrit.reviewdb.Project;
 import com.google.gerrit.reviewdb.Project.NameKey;
 
+@SuppressWarnings("nls")
 public class GerritUtilTest {
 
 	@Test

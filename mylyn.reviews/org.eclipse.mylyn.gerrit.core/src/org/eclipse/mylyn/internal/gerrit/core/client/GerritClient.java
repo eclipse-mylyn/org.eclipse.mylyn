@@ -17,6 +17,7 @@
  *      Jacques Bouthillier (Ericsson) - Bug 426505 Add Starred functionality
  *      Guy Perron (Ericsson) Bug 423242 Add ability to edit comment from compare navigator popup
  *      Guy Perron/Jacques Bouthillier Bug 437825  support Gerrit 2.9 with API changes
+ *      See git history
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -283,8 +284,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 				@Override
 				public GerritConfigX process(HttpMethodBase method) throws IOException {
-					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-					try (in) {
+					try (InputStream in = WebUtil.getResponseBodyAsStream(method, monitor)) {
 						GerritHtmlProcessor processor = new GerritHtmlProcessor();
 						processor.parse(in, method.getResponseCharSet());
 						return processor.getConfig();
@@ -516,14 +516,12 @@ public abstract class GerritClient extends ReviewsClient {
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public static byte[] unzip(byte[] zip) throws GerritException {
-		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zip));
-		try {
+
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zip))) {
 			zis.getNextEntry(); // expecting a single entry
 			return IOUtils.toByteArray(zis);
 		} catch (IOException e) {
 			throw new GerritException(e);
-		} finally {
-			IOUtils.closeQuietly(zis);
 		}
 	}
 
@@ -755,7 +753,7 @@ public abstract class GerritClient extends ReviewsClient {
 		ChangeInfo28 changeInfo28 = null;
 		try {
 			changeInfo28 = restClient.executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
-					+ "/?o=ALL_REVISIONS&o=CURRENT_ACTIONS&o=ALL_COMMITS", ChangeInfo28.class, monitor); //$NON-NLS-1$
+			+ "/?o=ALL_REVISIONS&o=CURRENT_ACTIONS&o=ALL_COMMITS", ChangeInfo28.class, monitor); //$NON-NLS-1$
 		} catch (GerritException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 		}

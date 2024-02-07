@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
@@ -65,6 +66,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 /**
  * @author Miles Parker
  */
+@SuppressWarnings("nls")
 public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
@@ -304,7 +306,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 			return;
 		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
-				= setUpAddComments();
+		= setUpAddComments();
 		IReviewItemSet testPatchSet = getReview().getSets().get(1);
 		IFileItem commentFile = testPatchSet.getItems().get(1);
 
@@ -331,7 +333,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(allComments.size(), is(0));
 
 		reviewHarness.getClient()
-				.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null, new NullProgressMonitor());
+		.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null, new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
@@ -344,8 +346,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
 
 		reviewHarness.getClient()
-				.saveDraft(Patch.Key.parse(id), "Line 2 Comment modified", 2, (short) 1, null, fileComment.getId(),
-						new NullProgressMonitor());
+		.saveDraft(Patch.Key.parse(id), "Line 2 Comment modified", 2, (short) 1, null, fileComment.getId(),
+				new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
@@ -359,8 +361,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getDescription(), is("Line 2 Comment modified"));
 
 		reviewHarness.getClient()
-				.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
-						Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
+		.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 		allComments = commentFile.getAllComments();
@@ -378,20 +380,20 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 			return;
 		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
-				= setUpAddComments();
+		= setUpAddComments();
 		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
 		String id = commentFile.getReference();
 
 		reviewHarness.getClient()
-				.saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null, new NullProgressMonitor());
+		.saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null, new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
 		assertFileComments(commentFile, 1, true);
 
 		reviewHarness.getClient()
-				.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
-						Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
+		.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
@@ -404,25 +406,25 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 			return;
 		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
-				= setUpAddComments();
+		= setUpAddComments();
 		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
 		String id = commentFile.getReference();
 
 		reviewHarness.getClient()
-				.saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null, new NullProgressMonitor());
+		.saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null, new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
 		reviewHarness.getClient()
-				.saveDraft(Patch.Key.parse(id), "another comment", 1, (short) 1, null, null, new NullProgressMonitor());
+		.saveDraft(Patch.Key.parse(id), "another comment", 1, (short) 1, null, null, new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
 		assertFileComments(commentFile, 2, true);
 
 		reviewHarness.getClient()
-				.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
-						Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
+		.publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
@@ -440,7 +442,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		IReviewItemSet testPatchSet = getReview().getSets().get(1);
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
-				= retrievePatchSetContents(testPatchSet);
+		= retrievePatchSetContents(testPatchSet);
 
 		IFileItem commentFile = testPatchSet.getItems().get(1);
 		assertThat(commentFile.getName(), is("testComments.txt"));
@@ -494,8 +496,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-				= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId,
-						false);
+		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId,
+				false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		assertNotNull(NLS.bind("Failed to retrieve PatchSetDetail {0} for {1}", patchSetId, getReview().getId()),
 				detail);

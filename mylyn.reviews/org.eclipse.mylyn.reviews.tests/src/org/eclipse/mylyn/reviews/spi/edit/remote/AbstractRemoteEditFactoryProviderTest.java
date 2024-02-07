@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.spi.edit.remote;
@@ -50,6 +51,8 @@ import junit.framework.TestCase;
 /**
  * @author Miles Parker
  */
+
+@SuppressWarnings("nls")
 public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 
 	class TestEditFactoryProvider extends AbstractRemoteEditFactoryProvider<EPackage, EClass> {
@@ -129,19 +132,19 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		parentDir.mkdirs();
 		File file = new File(filePath);
 		file.createNewFile();
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-		bufferedWriter.write("Garbage");
-		bufferedWriter.close();
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		assertThat(reader.readLine(), is("Garbage"));
-		reader.close();
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+			bufferedWriter.write("Garbage");
+		}
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			assertThat(reader.readLine(), is("Garbage"));
+		}
 		assertThat("File should exist at: " + filePath, file.exists(), is(true));
 		provider.open();
 		assertThat(provider.getRoot(), instanceOf(EPackage.class));
 		provider.save();
-		reader = new BufferedReader(new FileReader(file));
-		assertThat(reader.readLine(), startsWith("<?xml version"));
-		reader.close();
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			assertThat(reader.readLine(), startsWith("<?xml version"));
+		}
 	}
 
 	@Test
@@ -201,16 +204,16 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		provider.close(child);
 		assertThat("File should exist at: " + filePath, file.exists(), is(true));
 		assertThat(provider.getRoot().getEClassifiers().size(), is(0));
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-		bufferedWriter.write("Garbage");
-		bufferedWriter.close();
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+			bufferedWriter.write("Garbage");
+		}
 		EClass newChild = provider.open("123");
 		assertThat(provider.getRoot().getEClassifiers().size(), is(1));
 		assertThat(newChild.getInstanceClassName(), nullValue());
 		provider.save(newChild);
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		assertThat(reader.readLine(), startsWith("<?xml version"));
-		reader.close();
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			assertThat(reader.readLine(), startsWith("<?xml version"));
+		}
 	}
 
 	@Test

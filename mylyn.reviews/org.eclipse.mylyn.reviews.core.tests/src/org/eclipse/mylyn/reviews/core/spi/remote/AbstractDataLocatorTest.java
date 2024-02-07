@@ -24,6 +24,7 @@ import org.junit.Test;
 /**
  * @author Miles Parker
  */
+@SuppressWarnings("nls")
 public class AbstractDataLocatorTest {
 
 	AbstractDataLocator testLocator = new AbstractDataLocator() {

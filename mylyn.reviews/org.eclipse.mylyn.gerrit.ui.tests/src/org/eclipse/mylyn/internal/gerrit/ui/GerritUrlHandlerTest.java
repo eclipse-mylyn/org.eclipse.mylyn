@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
@@ -48,6 +49,7 @@ import org.junit.Test;
 //FIXME: AF: enable tests
 //https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
 @Ignore
+@SuppressWarnings("nls")
 public class GerritUrlHandlerTest {
 
 	private final TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND,

@@ -38,6 +38,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	private static final String NON_DRAFT_BRANCH = "HEAD:refs/for/master";
