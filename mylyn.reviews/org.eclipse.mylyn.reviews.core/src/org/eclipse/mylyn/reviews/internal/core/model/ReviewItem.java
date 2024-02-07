@@ -363,7 +363,6 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

@@ -119,7 +119,6 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	public IReviewerEntry getTypedValue() {
 		if (value != null && value.eIsProxy()) {
 			InternalEObject oldValue = (InternalEObject) value;
@@ -240,7 +239,6 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
