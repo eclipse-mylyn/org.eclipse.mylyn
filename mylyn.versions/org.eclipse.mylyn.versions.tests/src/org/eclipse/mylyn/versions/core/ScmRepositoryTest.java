@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.versions.core;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.versions.tests.support.MockScmConnector;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ScmRepositoryTest {
 	private static final String REPO_URL = "http://git.eclipse.org/c/org.eclipse.mylyn.versions.git";
 
