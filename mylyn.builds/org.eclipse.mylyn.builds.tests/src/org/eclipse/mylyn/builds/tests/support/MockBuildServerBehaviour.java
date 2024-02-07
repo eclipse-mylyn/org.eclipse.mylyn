@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.tests.support;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class MockBuildServerBehaviour extends BuildServerBehaviour {
 
 	private List<IBuild> builds;

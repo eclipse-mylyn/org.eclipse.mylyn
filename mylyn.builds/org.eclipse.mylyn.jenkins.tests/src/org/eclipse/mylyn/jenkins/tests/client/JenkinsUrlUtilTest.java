@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Christian Gaege - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.client;
@@ -32,6 +33,7 @@ import junit.framework.TestCase;
 /**
  * @author Christian Gaege
  */
+@SuppressWarnings("nls")
 public class JenkinsUrlUtilTest extends TestCase {
 
 	private JenkinsUrlUtil jenkinsUrlUtil;

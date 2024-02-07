@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.support;
@@ -26,6 +27,7 @@ import junit.framework.Assert;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JenkinsTestUtil {
 
 	private static final long POLL_TIMEOUT = 60 * 1000;

@@ -9,6 +9,7 @@
  *
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.client;
@@ -39,6 +40,7 @@ import junit.framework.TestCase;
  * @author Markus Knittig
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JenkinsClientTest extends TestCase {
 
 	private JenkinsHarness harness;
@@ -144,7 +146,7 @@ public class JenkinsClientTest extends TestCase {
 		try {
 			HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), null);
 			fail("Expected JenkinsResourceNotFoundException, since " + harness.getPlanDisabled()
-					+ " was never built, got: " + build);
+			+ " was never built, got: " + build);
 		} catch (JenkinsResourceNotFoundException e) {
 			// expected
 		}

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.tests.ui;
@@ -26,6 +27,7 @@ import org.mockito.Mockito;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class BuildsViewTest extends TestCase {
 	public class TestBuildsView extends BuildsView {
 		@Override
