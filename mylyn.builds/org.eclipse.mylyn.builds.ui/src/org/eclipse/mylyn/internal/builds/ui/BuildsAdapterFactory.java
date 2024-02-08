@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -29,25 +30,23 @@ public class BuildsAdapterFactory implements IAdapterFactory {
 			IHistoryPageSource.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Object getAdapter(final Object adaptable, Class adapterType) {
-		if (adapterType.isAssignableFrom(IHistoryPageSource.class)) {
-			return BuildHistoryPageSource.getInstance();
+	public <T> T getAdapter(final Object adaptable, Class<T> adapter) {
+		if (adapter.isAssignableFrom(IHistoryPageSource.class)) {
+			return adapter.cast(BuildHistoryPageSource.getInstance());
 		}
-		if (adapterType.isAssignableFrom(IBuild.class)) {
+		if (adapter.isAssignableFrom(IBuild.class)) {
 			if (adaptable instanceof IBuildPlan) {
-				return ((IBuildPlan) adaptable).getLastBuild();
+				return adapter.cast(((IBuildPlan) adaptable).getLastBuild());
 			}
 		}
-		if (adapterType.isAssignableFrom(IBuildServer.class)) {
+		if (adapter.isAssignableFrom(IBuildServer.class)) {
 			if (adaptable instanceof IBuildElement) {
-				return ((IBuildElement) adaptable).getServer();
+				return adapter.cast(((IBuildElement) adaptable).getServer());
 			}
 		}
 		return null;

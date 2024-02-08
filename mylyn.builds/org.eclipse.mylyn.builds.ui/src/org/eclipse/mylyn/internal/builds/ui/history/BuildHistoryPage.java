@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.history;
@@ -95,7 +96,7 @@ public class BuildHistoryPage extends HistoryPage {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 
@@ -183,7 +184,7 @@ public class BuildHistoryPage extends HistoryPage {
 
 		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		buildViewerColumn
-				.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null, null));
+		.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null, null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("ID");
 		buildColumn.setWidth(70);

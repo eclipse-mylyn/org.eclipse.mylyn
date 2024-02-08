@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -162,15 +163,15 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 	}
 
 	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, FeaturePath path) {
-		IWidgetValueProperty textProp = WidgetProperties.text(SWT.Modify);
+		IWidgetValueProperty<Text, ?> textProp = WidgetProperties.text(SWT.Modify);
 		IEMFValueProperty property = EMFProperties.value(path);
 		IObservableValue uiObservable = textProp.observe(text);
 		IObservableValue modelObservable = property.observe(getInput(clazz));
 
-		UpdateValueStrategy modelToTargetStrategy = null;
+		final UpdateValueStrategy modelToTargetStrategy;
 		EStructuralFeature feature = path.getFeaturePath()[path.getFeaturePath().length - 1];
 		String name = feature.getEType().getName();
-		if (name.equals("ELong")) {
+		if (name.equals("ELong")) { //$NON-NLS-1$
 			modelToTargetStrategy = new UpdateValueStrategy();
 			modelToTargetStrategy.setConverter(new TimestampToStringConverter());
 		} else {

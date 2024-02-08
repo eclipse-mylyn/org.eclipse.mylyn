@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui.spi;
@@ -33,9 +34,9 @@ public class BuildServerWizardPage extends RepositoryWizardPage {
 		super(pageName);
 		setTitle("Build Server Properties");
 		setElement(new IAdaptable() {
-			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == RepositoryLocation.class) {
-					return getModel().getLocation();
+					return adapter.cast(getModel().getLocation());
 				}
 				return null;
 			}
