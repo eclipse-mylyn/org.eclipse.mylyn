@@ -21,8 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
-
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * @author Steffen Pingel
