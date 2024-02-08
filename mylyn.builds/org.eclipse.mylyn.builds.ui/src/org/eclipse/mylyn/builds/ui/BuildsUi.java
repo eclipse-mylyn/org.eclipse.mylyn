@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - Typo fix, corrected lazy initialisation of field
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui;
@@ -78,7 +79,7 @@ public class BuildsUi {
 		MultiStatus result = new MultiStatus(BuildsUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(BuildsUiPlugin.ID_PLUGIN + ".connectors");
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(BuildsUiPlugin.ID_PLUGIN + ".connectors"); //$NON-NLS-1$
 		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -37,7 +38,7 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 
 	public BuildOutputPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Output");
+		setPartName("Output"); //$NON-NLS-1$
 		span = 2;
 	}
 

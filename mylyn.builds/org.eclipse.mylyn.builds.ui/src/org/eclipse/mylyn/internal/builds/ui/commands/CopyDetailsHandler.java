@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
@@ -108,7 +109,7 @@ public class CopyDetailsHandler extends AbstractHandler {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			Mode mode = Mode.SUMMARY;
-			String kind = event.getParameter("kind");
+			String kind = event.getParameter("kind"); //$NON-NLS-1$
 			if (kind != null) {
 				try {
 					mode = Mode.valueOf(kind);

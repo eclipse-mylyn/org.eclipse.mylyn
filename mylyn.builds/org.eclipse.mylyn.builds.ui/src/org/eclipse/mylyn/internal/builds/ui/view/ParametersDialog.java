@@ -9,6 +9,7 @@
  *
  *     Eike Stepper - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -88,8 +89,8 @@ public class ParametersDialog extends TitleAreaDialog {
 			Control control = addParameter(pane, definition);
 			if (control instanceof Text) {
 				GridDataFactory.fillDefaults()
-						.hint(convertVerticalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
-						.applyTo(control);
+				.hint(convertVerticalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
+				.applyTo(control);
 			}
 			control.addFocusListener(new FocusAdapter() {
 				private boolean firstTime = true;
@@ -150,7 +151,7 @@ public class ParametersDialog extends TitleAreaDialog {
 	}
 
 	private String toValue(String defaultValue) {
-		return defaultValue != null ? defaultValue : "";
+		return defaultValue != null ? defaultValue : ""; //$NON-NLS-1$
 	}
 
 	@Override

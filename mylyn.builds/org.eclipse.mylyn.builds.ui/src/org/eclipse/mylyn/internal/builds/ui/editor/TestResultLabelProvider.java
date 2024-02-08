@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -121,7 +122,7 @@ public class TestResultLabelProvider extends LabelProvider implements IStyledLab
 		if (text != null) {
 			StyledString styledString = new StyledString(text);
 			if (element instanceof ITestCase) {
-				String duration = " " + DateUtil.getFormattedDurationShort(((ITestCase) element).getDuration(), true);
+				String duration = " " + DateUtil.getFormattedDurationShort(((ITestCase) element).getDuration(), true); //$NON-NLS-1$
 				styledString.append(duration, StyledString.DECORATIONS_STYLER);
 			}
 			return styledString;

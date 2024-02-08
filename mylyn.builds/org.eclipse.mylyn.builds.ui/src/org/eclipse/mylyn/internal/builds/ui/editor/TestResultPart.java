@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     GitHub, Inc. - fixes for bug 350334
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -93,8 +94,8 @@ public class TestResultPart extends AbstractBuildEditorPart {
 				removeFilter();
 			}
 			BuildsUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(BuildsUiInternal.PREF_SHOW_TEST_FAILURES_ONLY, checked);
+			.getPreferenceStore()
+			.setValue(BuildsUiInternal.PREF_SHOW_TEST_FAILURES_ONLY, checked);
 		}
 	}
 
@@ -205,19 +206,19 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 			label = createLabel(composite, toolkit, "Passed:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-			text = createTextReadOnly(composite, toolkit, "");
+			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__PASS_COUNT));
 
 			label = createLabel(composite, toolkit, "Failed:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-			text = createTextReadOnly(composite, toolkit, "");
+			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__FAIL_COUNT));
 
 			label = createLabel(composite, toolkit, "Ignored:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-			text = createTextReadOnly(composite, toolkit, "");
+			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__IGNORED_COUNT));
 		}

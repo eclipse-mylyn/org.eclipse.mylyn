@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -66,12 +67,12 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 			if (element instanceof IChange) {
 				IUser author = ((IChange) element).getAuthor();
 				if (author != null && author.getId() != null) {
-					styledString.append("  " + author.getId(), StyledString.DECORATIONS_STYLER);
+					styledString.append("  " + author.getId(), StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
 				}
 			} else if (element instanceof IChangeArtifact artifact) {
 				StringBuilder sb = new StringBuilder();
 				if (artifact.getRevision() != null) {
-					sb.append("  " + artifact.getRevision());
+					sb.append("  " + artifact.getRevision()); //$NON-NLS-1$
 				}
 				styledString.append(sb.toString(), StyledString.DECORATIONS_STYLER);
 			}

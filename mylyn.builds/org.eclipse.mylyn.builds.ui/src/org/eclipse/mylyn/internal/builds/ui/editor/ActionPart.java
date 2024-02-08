@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -43,12 +44,10 @@ public class ActionPart extends AbstractBuildEditorPart {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		Label label;
-
 		final ShowTestResultsAction testResultsAction = new ShowTestResultsAction();
 		testResultsAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
 		if (testResultsAction.isEnabled()) {
-			label = toolkit.createLabel(composite, "");
+			Label label = toolkit.createLabel(composite, ""); //$NON-NLS-1$
 			label.setImage(CommonImages.getImage(BuildImages.JUNIT));
 
 			Link link = new Link(composite, SWT.FLAT);
@@ -66,7 +65,7 @@ public class ActionPart extends AbstractBuildEditorPart {
 		buildOutputAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
 		Link link;
 		if (buildOutputAction.isEnabled()) {
-			label = toolkit.createLabel(composite, "");
+			Label label = toolkit.createLabel(composite, ""); //$NON-NLS-1$
 			label.setImage(CommonImages.getImage(BuildImages.CONSOLE));
 
 			link = new Link(composite, SWT.FLAT);

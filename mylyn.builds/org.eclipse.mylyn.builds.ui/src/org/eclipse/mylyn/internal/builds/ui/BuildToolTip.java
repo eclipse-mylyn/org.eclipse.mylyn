@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 33148 server tooltip show a summary of build plans
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -200,7 +201,7 @@ public class BuildToolTip extends RichToolTip {
 	}
 
 	private void addBuild(Composite parent, IBuild build) {
-		String text = "";
+		String text = ""; //$NON-NLS-1$
 		String time = DateUtil.getRelative(build.getTimestamp());
 		if (time.length() > 0) {
 			text = NLS.bind("Last built {0}, ", time);
