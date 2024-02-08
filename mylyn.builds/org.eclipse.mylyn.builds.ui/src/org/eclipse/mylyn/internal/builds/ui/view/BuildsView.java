@@ -142,7 +142,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private static class ToggleableFilterTree extends FilteredTree {
 		private ToggleableFilterTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
-			super(parent, treeStyle, filter, useNewLook);
+			super(parent, treeStyle, filter, useNewLook, true);
 		}
 
 		public void setFilterVisible(boolean visible) {
@@ -374,7 +374,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		serviceMessageControl = new BuildsServiceMessageControl(body);
 
 		viewer.setInput(model);
-		viewer.setSorter(new BuildTreeSorter());
+		viewer.setComparator(new BuildTreeSorter());
 		viewer.expandAll();
 
 		installAutomaticResize(viewer.getTree());

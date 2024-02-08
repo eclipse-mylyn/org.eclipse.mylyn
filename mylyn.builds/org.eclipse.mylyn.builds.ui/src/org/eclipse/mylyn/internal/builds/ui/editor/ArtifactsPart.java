@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     GitHub - fixes for bug 352916
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -29,7 +30,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -186,7 +187,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 				}
 			}
 		});
-		viewer.setSorter(new ViewerSorter() {
+		viewer.setComparator(new ViewerComparator() {
 
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {

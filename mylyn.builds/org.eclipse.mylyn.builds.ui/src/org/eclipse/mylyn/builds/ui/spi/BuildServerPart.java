@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui.spi;
@@ -33,7 +34,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
@@ -95,7 +96,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	private class CheckboxFilteredTree extends FilteredTree {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-			super(parent, treeStyle, filter, true);
+			super(parent, treeStyle, filter, true, true);
 		}
 
 		@Override
@@ -352,15 +353,15 @@ public class BuildServerPart extends RepositoryLocationPart {
 				configuration = (BuildServerConfiguration) newInput;
 			}
 		});
-		planViewer.setSorter(new ViewerSorter());
+		planViewer.setComparator(new ViewerComparator());
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
 		GridLayoutFactory.fillDefaults()
-				.numColumns(1)
-				.margins(0, 0)
-				.extendedMargins(0, 0, 0, 0)
-				.applyTo(buttonComposite);
+		.numColumns(1)
+		.margins(0, 0)
+		.extendedMargins(0, 0, 0, 0)
+		.applyTo(buttonComposite);
 		createButtons(buttonComposite);
 
 		return section;
