@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui;
 
@@ -152,28 +153,16 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 		URLConnection connection = parsed.openConnection();
 		connection.setConnectTimeout(TIMEOUT);
 
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		InputStream input = connection.getInputStream();
-		try {
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+				InputStream input = connection.getInputStream()) {
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int read = input.read(buffer);
 			while (read != -1) {
 				output.write(buffer, 0, read);
 				read = input.read(buffer);
 			}
-		} finally {
-			try {
-				input.close();
-			} catch (IOException ignore) {
-				// Ignored
-			}
-			try {
-				output.close();
-			} catch (IOException ignore) {
-				// Ignored
-			}
+			data = output.toByteArray();
 		}
-		data = output.toByteArray();
 		avatars.put(url, data);
 		return getData(data);
 	}
