@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
@@ -71,7 +72,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 		public void run() {
 			InputDialog dialog = new InputDialog(getControl().getShell(),
 					Messages.IssueLabelAttributeEditor_TitleNewLabel,
-					Messages.IssueLabelAttributeEditor_DescriptionNewLabel, "", newText -> {
+					Messages.IssueLabelAttributeEditor_DescriptionNewLabel, "", newText -> { //$NON-NLS-1$
 						if (newText == null || newText.trim().length() == 0) {
 							return Messages.IssueLabelAttributeEditor_MessageEnterName;
 						}
