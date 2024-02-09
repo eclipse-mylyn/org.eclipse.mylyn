@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.core.gist;
 
@@ -103,8 +104,8 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 		GitHubClient client = GistConnector.createClient(repository);
 		GistService service = new GistService(client);
-		InputStream input = source.createInputStream(monitor);
-		try {
+
+		try (InputStream input = source.createInputStream(monitor)) {
 			byte[] buffer = new byte[8192];
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			int read;
@@ -115,12 +116,6 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			service.updateGist(gist);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
-		} finally {
-			try {
-				input.close();
-			} catch (IOException ignore) {
-				// Ignored
-			}
 		}
 
 	}
