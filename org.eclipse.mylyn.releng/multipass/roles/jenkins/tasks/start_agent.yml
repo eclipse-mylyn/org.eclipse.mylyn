@@ -1,0 +1,22 @@
+- name: get secret {{ act_agent.nodeName }}
+  ansible.builtin.shell: |
+    crumbv=$(curl -k -s -u admin@mylyn.eclipse.org:mylyntest -s  --cookie-jar /tmp/cookies 'https://{{ common_domain_name }}/{{act_item.servmame}}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+    #echo "crumbv:  $crumbv"
+    result=$(curl -k -s --user admin@mylyn.eclipse.org:mylyntest \
+      --cookie /tmp/cookies \
+      -d 'script=jenkins.model.Jenkins.getInstance().getComputer("{{ act_agent.nodeName }}").getJnlpMac()' \
+      https://{{ common_domain_name }}/{{act_item.servmame}}/scriptText -H "$crumbv")
+      echo ${result#"Result: "}
+  register: script_out
+#- name: script_out
+#  debug:
+#    var: script_out
+- name: start agent {{ act_agent.nodeName }}
+  ansible.builtin.shell: |
+    docker run -d --rm --name agent_{{ act_agent.nodeName }} --init \
+      --add-host {{ common_domain_name }}:{{ hostvars[inventory_hostname].ansible_host }} \
+      jenkins/agent \
+      java -jar /usr/share/jenkins/agent.jar \
+      -noCertificateCheck \
+      -jnlpUrl https://{{ common_domain_name }}/{{act_item.servmame}}/manage/computer/{{ act_agent.nodeName }}/jenkins-agent.jnlp \
+      -secret {{script_out.stdout}}

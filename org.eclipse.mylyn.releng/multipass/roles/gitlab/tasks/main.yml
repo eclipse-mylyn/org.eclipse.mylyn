@@ -1,0 +1,192 @@
+---
+- name: cleanup
+  block:
+    - name: Stop running container
+      community.docker.docker_container:
+        name: gitlab
+        container_default_behavior: no_defaults
+        state: stopped
+      failed_when: false
+    
+    - name: Remove Stoped docker container
+      ansible.builtin.shell: |
+         docker rm gitlab
+      failed_when: false
+    
+#    - name: Remove  own image
+#      community.docker.docker_image:
+#        name: "127.0.0.1:5000/mylyn-gitlab-ce"
+#        state: absent
+#        force_absent: true
+#      failed_when: false
+    
+    - name: Recursively remove directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      become: true 
+      loop:
+        - /mylyn-config-dir/{{ role_name }}
+        - /mylyn-runtime-dir/{{ role_name }}
+
+- name: myServiceLabel
+  set_fact:
+    serviceLabel: '{"type":"gitlab","url":"https://{{ gitlabHostURL }}","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ gitlabHostURL }}","host-ip":"{{ansible_ssh_host}}","ansible-name":"{{ inventory_hostname }}","docker":"true","default":"true"} }'
+
+- name: debug1 
+  debug:
+    var: serviceLabel
+
+- name: setlabels registry
+  ansible.builtin.set_fact:
+    label_data: |
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.{{ role_name }}.rule: "Host(`{{ gitlabHostURL }}`)" ,
+         traefik.http.routers.{{ role_name }}.entrypoints: websecure ,
+         traefik.http.routers.{{ role_name }}.tls: "true" ,
+         traefik.http.routers.{{ role_name }}.service: {{ role_name }} ,
+         traefik.http.services.{{ role_name }}.loadbalancer.server.port: "8888" ,
+         org.eclipse.mylyn.service: "{{ serviceLabel | from_yaml }}"
+       }
+#         traefik.http.routers.{{ role_name }}.rule: "Host(`{{ gitlabHostURL }}`) && PathPrefix(`/gitlab`)" ,
+#         traefik.http.services.{{ role_name }}.loadbalancer.server.url: "http://mylynmstr01:8888" 
+#         traefik.http.routers.{{ role_name }}.rule: "Host(`gitlab.{{ common_domain_name}}`)",
+#         traefik.http.routers.{{ role_name }}.rule: "Host(`{{ common_domain_name }}`,`{{ remote_domain_name }}`) && PathPrefix(`/gitlab`)" ,
+- name: debug2
+  debug:
+    var: label_data
+        
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/config
+    - /mylyn-runtime-dir/{{ role_name }}/data/logs
+    - /mylyn-runtime-dir/{{ role_name }}/data/data
+    - /mylyn-runtime-dir/{{ role_name }}/data/database
+    - /mylyn-runtime-dir/{{ role_name }}/registry
+    - /mylyn-runtime-dir/{{ role_name }}/registry/data
+    - /mylyn-runtime-dir/{{ role_name }}/registry/certs
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: setup arm64 Mac
+  block:
+    - name: git clone
+      ansible.builtin.shell:
+        cmd: git clone https://gitlab.com/gitlab-org/omnibus-gitlab.git && ls -al 
+        chdir: /mylyn-config-dir/{{ role_name }}
+    - name: create RELEASE
+      ansible.builtin.copy:
+          dest: /mylyn-config-dir/{{ role_name }}/omnibus-gitlab/docker/RELEASE
+          content: |
+            RELEASE_PACKAGE=gitlab-ce
+            RELEASE_VERSION={{gitlabImageVersion}}-ce
+            DOWNLOAD_URL=https://packages.gitlab.com/gitlab/gitlab-ce/packages/ubuntu/focal/gitlab-ce_{{gitlabImageVersion}}-ce.0_arm64.deb/download.deb
+    
+    - name: create change Dockerfile
+      ansible.builtin.copy:
+          dest: /mylyn-config-dir/{{ role_name }}/changeDockerfile.sh
+          mode: '0755'
+          content: |
+            #! /bin/bash -e
+            cd /mylyn-config-dir/{{ role_name }}/omnibus-gitlab/docker
+            sed -ie 's/FROM ubuntu:22.04/FROM arm64v8\/ubuntu:22.04/g' Dockerfile
+            sed -ie '/libperl5.34 \\/a \ \ \ \ \ \ libatomic1 \\' Dockerfile
+            sed -ie 's@/assets RELEASE ; \\@/assets RELEASE@g' Dockerfile
+            sed -ie 's@  /assets/setup@RUN /assets/setup@g' Dockerfile
+    
+    - name: change Dockerfile
+      ansible.builtin.shell:
+        cmd: /mylyn-config-dir/{{ role_name }}/changeDockerfile.sh 
+
+    - name: set gitlabImageName
+      ansible.builtin.set_fact:
+        gitlabImageName: "127.0.0.1:5000/mylyn-gitlab-ce"
+    
+    - name: Build the image
+      community.docker.docker_image:
+        name: "127.0.0.1:5000/mylyn-gitlab-ce"
+        tag: latest
+        push: true
+        build:
+          nocache: true
+          path: /mylyn-config-dir/{{ role_name }}/omnibus-gitlab/docker
+        source: build
+#  when: (hostvars['localhost'].localhostPlatform == 'MacOSX/arm64')    
+  when: (ansible_facts['distribution'] +'/' + ansible_facts['architecture'] == 'Ubuntu/aarch64')    
+
+- name: setup non arm64 Mac
+  block:
+    - name: set gitlabImageName
+      ansible.builtin.set_fact:
+        gitlabImageName: "127.0.0.1:5000/mylyn-gitlab-ce"
+   
+    - name: Pull image
+      community.docker.docker_image:
+        name: "gitlab/gitlab-ee:{{gitlabImageVersion}}-ce.0"
+        source: pull
+#  when: (hostvars['localhost'].localhostPlatform != 'MacOSX/arm64')    
+  when: (ansible_facts['distribution'] +'/' + ansible_facts['architecture'] != 'Ubuntu/aarch64')    
+   
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "gitlab"
+    image: "{{ gitlabImageName }}"
+#    platform: amd64
+    ports:
+      - '8888:8888'
+      - '2222:22'
+    networks:
+      - name: mylyn_net
+    restart: true
+    restart_policy: "unless-stopped"
+    env:
+      hostname: "{{ gitlabHostURL }}"
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "https://{{ gitlabHostURL }}"
+        nginx['listen_https'] = false
+        nginx['listen_port'] = 8888
+        gitlab_rails['initial_root_password'] = 'mylyntest'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    volumes:
+      - /mylyn-runtime-dir/{{ role_name }}/data/config:/etc/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data/logs:/var/log/gitlab
+      - /mylyn-runtime-dir/{{ role_name }}/data:/var/opt/gitlab
+#    etc_hosts: >
+#      {
+#        "gitlab.{{ common_domain_name }}": "{{ hostvars[inventory_hostname].ansible_host }}",
+#        "{{ common_domain_name }}" : "{{ hostvars[inventory_hostname].ansible_host }}"
+#      }
+    labels: "{{ label_data | from_yaml }}"
+##        external_url "https://gitlab.mylyn.local"
+
+- name: Copy file into existing container 
+  ansible.builtin.shell: docker cp /mylyn-config-dir/{{ role_name }}/initialSetup.rb gitlab:/etc/gitlab
+
+- name: init
+  ansible.builtin.shell: 
+    cmd: /mylyn-config-dir/{{ role_name }}/doInit.sh
+    chdir: /mylyn-config-dir/{{ role_name }}
+  register: init_info
+
+- ansible.builtin.debug: msg="{{ init_info.stdout_lines }}" 									# verbosity=3
+
+
+#docker run --detach --env 
+#GITLAB_OMNIBUS_CONFIG="external_url 'http://192.168.64.6:8888';gitlab_rails['gitlab_shell_ssh_port'] = 2222;gitlab_rails['initial_root_password'] = 'mylyntest'"
+# --hostname 192.168.64.6 -p 8888:8888 -p 2222:22 --name gitlab-test-16.0.5 --platform linux/amd64 gitlab/gitlab-ee:16.0.5-ee.0
+

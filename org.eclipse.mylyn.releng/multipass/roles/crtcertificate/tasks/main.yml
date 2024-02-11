@@ -3,6 +3,10 @@
   ansible.posix.synchronize:
     src: ./first_setup/ubuntu_key
     dest: .ssh/id_rsa
+- name: transfer id_rsa.pub
+  ansible.posix.synchronize:
+    src: ./first_setup/ubuntu_key.pub
+    dest: .ssh/id_rsa.pub
 
 # - name: add to known_hosts
 #   become: true

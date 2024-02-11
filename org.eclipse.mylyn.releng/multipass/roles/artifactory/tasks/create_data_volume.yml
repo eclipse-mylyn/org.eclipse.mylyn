@@ -1,0 +1,4 @@
+- name: create data-volume
+  community.docker.docker_volume:
+    name: "{{ role_name }}-data-volume"
+    state: present

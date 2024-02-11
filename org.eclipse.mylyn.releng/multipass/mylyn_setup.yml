@@ -7,90 +7,28 @@
     - name: include global mode
       ansible.builtin.include_tasks:
         file: "global_setup.yml"
+      tags:
+        - global
+    - name: debug distribution
+      debug:
+        msg: "{{ localhostPlatform }}"
 
 #
-- hosts: localhost
-  gather_facts: false
-  roles:
-    - role: multipass_create_vm_setup
-      tags:
-        - base_software
-# 
-#
-# Admin Instanz für Zertifikate und root ca 
-#
-- hosts: "{{ hostvars['localhost'].rootca_server_name }}"
-  gather_facts: false
-  vars:
-    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
-  roles:
-    - role: crtrootca
-      vars:
-        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-      tags:
-        - createValidCertificates
-        - base_software
-    - role: crtcertificate
-      vars:
-        subject_alt: 
-          - "DNS:*.{{ hostvars['localhost'].local_domain }}"
-        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-      tags:
-        - createValidCertificates
-        - base_software
-#
-# Alle normalen Knoten mit Zertifikaten versorgen
+# Alle normalen Knoten Docker starten
 #
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
-  roles:
-    - role: crtcertificate
-      tags:
-        - createValidCertificates
-        - base_software
-      vars:
-        subject_alt: 
-          - "DNS:{{ inventory_hostname }}.{{ hostvars['localhost'].local_domain }}"
-        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-    - role: dockerhost
-      tags:
-        - base_software
   tasks:
     - name: Ensure docker deamon is running
       service:
         name: docker
         state: started
       become: true
-    - name: Creates directory certs
-      ansible.builtin.file:
-            path: "/mylyn-config-dir/certs"
-            state: directory
-            owner: ubuntu
-            group: ubuntu
-            mode: '0755'
-      tags:
-        - base_software
-    - name: Synchronization root ca
-      ansible.posix.synchronize:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-      tags:
-        - base_software
-      delegate_to: "{{ hostvars['localhost'].rootca_server_name }}"
-      loop:
-        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.crt", dest: "/mylyn-config-dir/certs/rootca.crt"}
-        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.key", dest: "/mylyn-config-dir/certs/rootca.key"}
-    - name: get worker certificates
-      ansible.posix.synchronize:
-        src:  "/cacerts/server_ca/"
-        dest: /mylyn-config-dir/certs
-      tags:
-        - base_software
-      delegate_to: "{{ item }}"
-      with_items: 
-        -  "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
+    - name: debug distribution
+      debug:
+        msg: "{{ ansible_facts['distribution'] +'/' + ansible_facts['architecture'] + ' on ' + hostvars['localhost'].localhostPlatform }}"
 #
 # Neuen Docker Swarm Leader installieren laufende stacks und services löschen
 # Servies starten
@@ -111,7 +49,9 @@
         - docker_swarm_setup
     - role: swarm_stop
       when: hostvars['localhost'].docker_swarm_recreate | bool == false
-
+#
+# docker cleanup auf allen Instanzen
+#
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
   vars:
@@ -136,14 +76,26 @@
     - role: mylyn_idx
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-#    #    - role: hello
-#    #      vars:
-#    #        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        remote_domain_name: "{{ hostvars['localhost'].remote_domain }}"
+    - role: artifactory
+      tags:
+        - artifactory
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+#        remote_domain_name: "{{ hostvars['localhost'].remote_domain }}"
+    - role: gitlab
+      tags:
+        - gitlab
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        gitlabImageVersion: "16.8.1"
+        gitlabHostURL: "gitlab.{{ hostvars['localhost'].local_domain }}"
     - role: jenkins
       tags:
         - jenkins
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        remote_domain_name: "{{ hostvars['localhost'].remote_domain }}"
         jenkins_instances:
 #          - {  servmame: "jenkins-2_303_3", port1: 8081, port2: 50001, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:2.303.3-lts-jdk11", extra_info: '' }
 #          - {  servmame: "jenkins-1_651_1", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins:1.651.1", extra_info: '"' }
@@ -154,6 +106,7 @@
         - bugzilla
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+        remote_domain_name: "{{ hostvars['localhost'].remote_domain }}"
         bugzilla_instances:
           - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4", port1: 8090, port2: 8490, image_tag: "4.4", extra_info: '"default": "true"' }
 #          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf", port1: 8091, port2: 8491, image_tag: "4.4-custom_wf", extra_info: '"custom_wf":"true"' }
@@ -162,3 +115,21 @@
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
+
+# - hosts: gitlabhost
+#   gather_facts: false
+#   vars:
+#     swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
+#     docker_mode: "{{ hostvars['localhost'].docker_mode_global }}"
+#   roles:
+#     - role: binfmt
+#       tags:
+#         - binfmt
+#       when:  hostvars['localhost'].docker_mode_global == "gitlab"
+#     - role: gitlab
+#       tags:
+#         - gitlab
+#       vars:
+#         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+#       when:  hostvars['localhost'].docker_mode_global == "gitlab"
+#  
