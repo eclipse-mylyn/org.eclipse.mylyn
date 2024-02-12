@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui.state;
@@ -68,12 +69,9 @@ public class ContextStateManager {
 	public ContextState read(IInteractionContext context, InputStream in) {
 		ContextState memento = null;
 		if (in != null) {
-			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET));
-				try (reader) {
-					XMLMemento xmlMemento = XMLMemento.createReadRoot(reader);
-					return new ContextState(context, context.getHandleIdentifier(), xmlMemento);
-				}
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET))) {
+				XMLMemento xmlMemento = XMLMemento.createReadRoot(reader);
+				return new ContextState(context, context.getHandleIdentifier(), xmlMemento);
 			} catch (IOException | CoreException e) {
 				StatusHandler.log(
 						new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore context state", e)); //$NON-NLS-1$
@@ -143,11 +141,8 @@ public class ContextStateManager {
 	}
 
 	public void write(OutputStream out, ContextState memento) {
-		try {
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, CHARSET));
-			try (writer) {
-				memento.getMemento().save(writer);
-			}
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, CHARSET))) {
+			memento.getMemento().save(writer);
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to save context state", e)); //$NON-NLS-1$
 		}

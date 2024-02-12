@@ -10,6 +10,7 @@
  *     Brock Janiczak - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Jevgeni Holodkov - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.core;
@@ -51,35 +52,29 @@ public class SaxContextReader implements IInteractionContextReader {
 		if (!file.exists()) {
 			return null;
 		}
-		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			try (fileInputStream) {
-				ZipInputStream zipInputStream = new ZipInputStream(fileInputStream);
-				try (zipInputStream) {
-					// search for context entry
-					String encoded = URLEncoder.encode(handleIdentifier,
-							InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-					String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
-					ZipEntry entry = zipInputStream.getNextEntry();
-					while (entry != null) {
-						if (contextFileName.equals(entry.getName())) {
-							break;
-						}
-						entry = zipInputStream.getNextEntry();
-					}
+		try (FileInputStream fileInputStream = new FileInputStream(file);
+				ZipInputStream zipInputStream = new ZipInputStream(fileInputStream)) {
 
-					if (entry == null) {
-						return null;
-					}
-
-					SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier,
-							contextScaling);
-					XMLReader reader = CoreUtil.newXmlReader();
-					reader.setContentHandler(contentHandler);
-					reader.parse(new InputSource(zipInputStream));
-					return contentHandler.getContext();
+			// search for context entry
+			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+			ZipEntry entry = zipInputStream.getNextEntry();
+			while (entry != null) {
+				if (contextFileName.equals(entry.getName())) {
+					break;
 				}
+				entry = zipInputStream.getNextEntry();
 			}
+
+			if (entry == null) {
+				return null;
+			}
+
+			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier, contextScaling);
+			XMLReader reader = CoreUtil.newXmlReader();
+			reader.setContentHandler(contentHandler);
+			reader.parse(new InputSource(zipInputStream));
+			return contentHandler.getContext();
 		} catch (Exception e) {
 			File saveFile = new File(file.getAbsolutePath() + "-save"); //$NON-NLS-1$
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
