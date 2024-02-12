@@ -8,18 +8,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.context.core.InterestComparator;
 
 /**
  * @author Mik Kersten
  */
-public class DoiOrderSorter extends ViewerSorter {
+public class DoiOrderSorter extends ViewerComparator {
 	protected InterestComparator<Object> comparator = new InterestComparator<>();
 
 	@Override
