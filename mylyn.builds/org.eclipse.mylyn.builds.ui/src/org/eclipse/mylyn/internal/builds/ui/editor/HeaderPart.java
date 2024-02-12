@@ -39,17 +39,17 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		Composite composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout());
 
-		Label label = createLabel(composite, toolkit, Messages.HeaderPart_Plan);
+		Label label = createLabel(composite, toolkit, Messages.HeaderPart_plan);
 		GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 		Text text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuildPlan.class, BuildPackage.Literals.BUILD_ELEMENT__NAME);
 
-		label = createLabel(composite, toolkit, Messages.HeaderPart_Build);
+		label = createLabel(composite, toolkit, Messages.HeaderPart_build);
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__BUILD_NUMBER);
 
-		label = createLabel(composite, toolkit, Messages.HeaderPart_Status);
+		label = createLabel(composite, toolkit, Messages.HeaderPart_status);
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		IBuild build = getInput(IBuild.class);
@@ -67,10 +67,10 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		String durationLabel;
 		long duration;
 		if (build.getState() == BuildState.RUNNING) {
-			durationLabel = Messages.HeaderPart_ExecutingFor;
+			durationLabel = Messages.HeaderPart_executingFor;
 			duration = System.currentTimeMillis() - build.getTimestamp();
 		} else {
-			durationLabel = Messages.HeaderPart_Duration;
+			durationLabel = Messages.HeaderPart_duration;
 			duration = build.getDuration();
 		}
 		Label label = createLabel(composite, toolkit, durationLabel);
@@ -83,7 +83,7 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		if (build.getStatus() != null) {
 			return build.getStatus().getLabel();
 		}
-		return build.getState() == BuildState.RUNNING ? Messages.HeaderPart_Running : Messages.HeaderPart_Unknown;
+		return build.getState() == BuildState.RUNNING ? Messages.HeaderPart_running : Messages.HeaderPart_unknown;
 	}
 
 	@Override

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -25,8 +26,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class ShowTestResultsAction extends BaseSelectionListenerAction {
 
 	public ShowTestResultsAction() {
-		super("Show Test Results");
-		setToolTipText("Show Test Results in JUnit View");
+		super(Messages.ShowTestResultsAction_showTestResults);
+		setToolTipText(Messages.ShowTestResultsAction_showTestResultsInJUnitView);
 		setImageDescriptor(BuildImages.JUNIT);
 	}
 

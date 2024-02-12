@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -28,7 +29,7 @@ public class FilterByStatusAction extends Action {
 	public FilterByStatusAction(BuildsView view, BuildStatus status) {
 		this.view = view;
 		this.status = status;
-		setText("Hide Disabled Plans");
+		setText(Messages.FilterByStatusAction_hideDisabledPlans);
 		update();
 	}
 

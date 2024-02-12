@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.core;
@@ -23,13 +24,13 @@ public enum BuildStatus {
 
 	public String getLabel() {
 		return switch (this) {
-			case FAILED -> "Failed";
-			case UNSTABLE -> "Unstable";
-			case SUCCESS -> "Success";
-			case DISABLED -> "Disabled";
-			case ABORTED -> "Aborted";
-			case NOT_BUILT -> "Not built";
-			default -> "Unknown";
+			case FAILED -> Messages.BuildStatus_failed;
+			case UNSTABLE -> Messages.BuildStatus_unstable;
+			case SUCCESS -> Messages.BuildStatus_success;
+			case DISABLED -> Messages.BuildStatus_disabled;
+			case ABORTED -> Messages.BuildStatus_aborted;
+			case NOT_BUILT -> Messages.BuildStatus_notBuilt;
+			default -> Messages.BuildStatus_unknown;
 		};
 	}
 

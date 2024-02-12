@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -24,8 +25,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class BuildElementPropertiesAction extends BaseSelectionListenerAction {
 
 	protected BuildElementPropertiesAction() {
-		super("Properties");
-		setToolTipText("Properties");
+		super(Messages.BuildElementPropertiesAction_properties);
+		setToolTipText(Messages.BuildElementPropertiesAction_propertiesToolTip);
 	}
 
 	@Override

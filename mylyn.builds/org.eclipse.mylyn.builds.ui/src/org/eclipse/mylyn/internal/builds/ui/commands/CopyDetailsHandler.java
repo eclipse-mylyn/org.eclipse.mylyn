@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     See git history
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
@@ -40,10 +41,10 @@ public class CopyDetailsHandler extends AbstractHandler {
 		@Override
 		public String toString() {
 			return switch (this) {
-				case KEY -> "ID";
-				case URL -> "URL";
-				case SUMMARY -> "Summary";
-				case SUMMARY_URL -> "Summary and URL";
+				case KEY -> Messages.CopyDetailsHandler_id;
+				case URL -> Messages.CopyDetailsHandler_url;
+				case SUMMARY -> Messages.CopyDetailsHandler_summary;
+				case SUMMARY_URL -> Messages.CopyDetailsHandler_summaryAndUrl;
 				default -> null;
 			};
 		}
@@ -80,7 +81,7 @@ public class CopyDetailsHandler extends AbstractHandler {
 			case SUMMARY:
 				if (object instanceof IBuild build) {
 					if (build.getLabel() != null) {
-						sb.append(NLS.bind("Build {0}", build.getLabel()));
+						sb.append(NLS.bind(Messages.CopyDetailsHandler_buildLabel, build.getLabel()));
 					}
 				} else if (object instanceof IBuildElement element) {
 					sb.append(element.getLabel());
@@ -90,7 +91,7 @@ public class CopyDetailsHandler extends AbstractHandler {
 				if (object instanceof IBuildElement element) {
 					if (object instanceof IBuild build) {
 						if (build.getLabel() != null) {
-							sb.append(NLS.bind("Build {0}", build.getLabel()));
+							sb.append(NLS.bind(Messages.CopyDetailsHandler_buildLabel, build.getLabel()));
 						}
 					}
 					sb.append(element.getLabel());
@@ -114,7 +115,7 @@ public class CopyDetailsHandler extends AbstractHandler {
 				try {
 					mode = Mode.valueOf(kind);
 				} catch (IllegalArgumentException e) {
-					throw new ExecutionException(NLS.bind("Invalid kind ''{0}'' specified", kind));
+					throw new ExecutionException(NLS.bind(Messages.CopyDetailsHandler_invalidKindSpecified, kind));
 				}
 			}
 			copyDetails(BuildsUiInternal.getElements(event), mode);

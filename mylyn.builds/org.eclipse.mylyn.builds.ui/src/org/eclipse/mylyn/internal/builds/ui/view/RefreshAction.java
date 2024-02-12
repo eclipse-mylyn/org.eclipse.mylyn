@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -24,7 +25,7 @@ public class RefreshAction extends Action {
 
 	public RefreshAction() {
 		setImageDescriptor(CommonImages.REFRESH);
-		setToolTipText("Refresh");
+		setToolTipText(Messages.RefreshAction_refreshTooltip);
 	}
 
 	@Override

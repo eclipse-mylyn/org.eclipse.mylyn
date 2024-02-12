@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.console;
@@ -62,8 +63,8 @@ public class BuildConsole {
 	public MessageConsole show() {
 		if (console == null) {
 			console = new MessageConsole(
-					NLS.bind("Output for Build {0}#{1}",
-							build.getPlan() == null ? "Unknown" : build.getPlan().getLabel(), build.getLabel()),
+					NLS.bind(Messages.BuildConsole_outputForBuild,
+							build.getPlan() == null ? Messages.BuildConsole_unknown : build.getPlan().getLabel(), build.getLabel()),
 					CONSOLE_TYPE, BuildImages.CONSOLE, true);
 			consoleManager.addConsoles(new IConsole[] { console });
 			console.setAttribute(ATTRIBUTE_BUILD, build);

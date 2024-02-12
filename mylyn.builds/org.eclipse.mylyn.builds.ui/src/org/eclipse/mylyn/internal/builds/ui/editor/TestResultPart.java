@@ -61,9 +61,9 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		private final TestFailureFilter filter;
 
 		public FilterTestFailuresAction() {
-			super("Show Failures Only", IAction.AS_CHECK_BOX);
+			super(Messages.TestResultPart_showFailuresOnly, IAction.AS_CHECK_BOX);
 			filter = new TestFailureFilter();
-			setToolTipText("Show Failures Only");
+			setToolTipText(Messages.TestResultPart_showFailuresOnly);
 			setImageDescriptor(BuildImages.FILTER_FAILURES);
 			setChecked(BuildsUiPlugin.getDefault()
 					.getPreferenceStore()
@@ -191,7 +191,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 	public TestResultPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Test Results");
+		setPartName(Messages.TestResultPart_testResults);
 	}
 
 	@Override
@@ -204,19 +204,19 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			Label label;
 			Text text;
 
-			label = createLabel(composite, toolkit, "Passed:");
+			label = createLabel(composite, toolkit, Messages.TestResultPart_passed);
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__PASS_COUNT));
 
-			label = createLabel(composite, toolkit, "Failed:");
+			label = createLabel(composite, toolkit, Messages.TestResultPart_failed);
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__FAIL_COUNT));
 
-			label = createLabel(composite, toolkit, "Ignored:");
+			label = createLabel(composite, toolkit, Messages.TestResultPart_ignored);
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 			bind(text, IBuild.class,
@@ -260,7 +260,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			}
 			showTestResultsAction.setEnabled(true);
 		} else {
-			viewer.setInput("No test results generated.");
+			viewer.setInput(Messages.TestResultPart_noResults);
 			filterTestFailuresAction.setEnabled(false);
 			filterTestFailuresAction.setChecked(false);
 			showTestResultsAction.setEnabled(false);

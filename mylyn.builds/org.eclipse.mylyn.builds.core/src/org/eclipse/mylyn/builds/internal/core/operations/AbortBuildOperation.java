@@ -42,15 +42,15 @@ public class AbortBuildOperation extends AbstractElementOperation<IBuild> {
 
 	@Override
 	protected BuildJob doCreateJob(IBuild build) {
-		return new BuildJob(NLS.bind("Aborting Build {0}", build.getLabel())) {
+		return new BuildJob(NLS.bind(Messages.AbortBuildOperation_abortingBuild, build.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor progress) {
-				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Aborting of build failed", null);
+				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.AbortBuildOperation_buildAbortFailed, null);
 				try {
 					server.getBehaviour().abortBuild(build, progress);
 				} catch (UnsupportedOperationException | CoreException e) {
 					result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-							NLS.bind("Aborting build ''{0}'' failed", build.getName()), e));
+							NLS.bind(Messages.AbortBuildOperation_abortingBuildFailed, build.getName()), e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;
 				}

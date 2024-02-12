@@ -51,7 +51,7 @@ public class ActionPart extends AbstractBuildEditorPart {
 			label.setImage(CommonImages.getImage(BuildImages.JUNIT));
 
 			Link link = new Link(composite, SWT.FLAT);
-			link.setText("Show tests results in <a>JUnit View</a>.");
+			link.setText(Messages.ActionPart_showTestResultsInJUnitView);
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -69,7 +69,7 @@ public class ActionPart extends AbstractBuildEditorPart {
 			label.setImage(CommonImages.getImage(BuildImages.CONSOLE));
 
 			link = new Link(composite, SWT.FLAT);
-			link.setText("Show output in <a>Console</a>.");
+			link.setText(Messages.ActionPart_showOutputInAConsole);
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

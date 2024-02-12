@@ -38,8 +38,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 
 	public NewTaskFromBuildAction() {
-		super("New Task from Build...");
-		setToolTipText("New Task from Build");
+		super(Messages.NewTaskFromBuildAction_newTaskFromBuild);
+		setToolTipText(Messages.NewTaskFromBuildAction_newTaskFromBuildToolTip);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
@@ -62,21 +62,22 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 			public String getSummary() {
 				BuildStatus status = build.getStatus();
 				if (status != null) {
-					return NLS.bind("Build {0}: {1}", build.getLabel(), status.toString());
+					return NLS.bind(Messages.NewTaskFromBuildAction_buildLabelStatus, build.getLabel(),
+							status.toString());
 				} else {
-					return NLS.bind("Build {0}", build.getLabel());
+					return NLS.bind(Messages.NewTaskFromBuildAction_buildLabel, build.getLabel());
 				}
 			}
 
 			@Override
 			public String getDescription() {
 				StringBuilder sb = new StringBuilder();
-				sb.append(NLS.bind("Build Results at {0} .\n", build.getUrl()));
-				sb.append("\n"); //$NON-NLS-1$
+				sb.append(NLS.bind(Messages.NewTaskFromBuildAction_buildResultsAt, build.getUrl()));
+				sb.append("\n\n"); //$NON-NLS-1$
 				if (build.getChangeSet() != null && build.getChangeSet().getChanges().size() > 0) {
-					sb.append("= Changes =\n");
-					sb.append("\n"); //$NON-NLS-1$
-					sb.append("Changed Files:");
+					sb.append(Messages.NewTaskFromBuildAction_changes);
+					sb.append("\n\n"); //$NON-NLS-1$
+					sb.append(Messages.NewTaskFromBuildAction_ChangedFiles);
 					sb.append("\n"); //$NON-NLS-1$
 					for (IChange change : build.getChangeSet().getChanges()) {
 //						if (change.getAuthor() != null) {
@@ -91,11 +92,13 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 					sb.append("\n"); //$NON-NLS-1$
 				}
 				if (build.getTestResult() != null) {
-					sb.append("= Tests Results =\n");
-					sb.append(NLS.bind("Duration: {0}",
+					sb.append(Messages.NewTaskFromBuildAction_testResults);
+					sb.append("\n"); //$NON-NLS-1$
+					sb.append(NLS.bind(Messages.NewTaskFromBuildAction_duration,
 							DateUtil.getFormattedDurationShort(build.getTestResult().getDuration())));
 					sb.append("\n"); //$NON-NLS-1$
-					sb.append("Failed Tests:\n");
+					sb.append(Messages.NewTaskFromBuildAction_failedTests);
+					sb.append("\n"); //$NON-NLS-1$
 					appendFailed(sb, build.getTestResult().getSuites());
 					sb.append("\n"); //$NON-NLS-1$
 				}

@@ -165,7 +165,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 
 	public ArtifactsPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Artifacts");
+		setPartName(Messages.ArtifactsPart_artifactsLabel);
 	}
 
 	@Override
@@ -221,18 +221,18 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		if (root.hasChildren()) {
 			viewer.setInput(root);
 		} else {
-			viewer.setInput("No artifacts.");
+			viewer.setInput(Messages.ArtifactsPart_noArtifacts);
 		}
 
 		final int numArtifacts = getInput(IBuild.class).getArtifacts().size();
-		getSection().setText(MessageFormat.format("Artifacts ({0})", numArtifacts));
+		getSection().setText(MessageFormat.format(Messages.ArtifactsPart_artifacts, numArtifacts));
 
 		toolkit.paintBordersFor(composite);
 		return composite;
 	}
 
 	private ArtifactFolder getRootFolder() {
-		ArtifactFolder root = new ArtifactFolder("Root");
+		ArtifactFolder root = new ArtifactFolder(Messages.ArtifactsPart_rootFolder);
 		for (IArtifact artifact : getInput(IBuild.class).getArtifacts()) {
 			root.add(artifact);
 		}
@@ -243,7 +243,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 	protected void fillToolBar(ToolBarManager toolBarManager) {
 		super.fillToolBar(toolBarManager);
 
-		toolBarManager.add(new Action("Collapse All", CommonImages.COLLAPSE_ALL) {
+		toolBarManager.add(new Action(Messages.ArtifactsPart_collapseAll, CommonImages.COLLAPSE_ALL) {
 
 			@Override
 			public void run() {

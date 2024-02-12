@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -123,7 +124,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 
 	public ChangesPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Changes");
+		setPartName(Messages.ChangesPart_changesPartName);
 		setExpandVertically(true);
 		span = 2;
 	}
@@ -166,7 +167,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		viewer.getControl().setMenu(menu);
 
 		if (changeSet == null || changeSet.getChanges().isEmpty()) {
-			viewer.setInput("No changes.");
+			viewer.setInput(Messages.ChangesPart_noChanges);
 		} else {
 			viewer.setInput(changeSet);
 		}
@@ -179,13 +180,13 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		final IResource resource = ScmCore.findResource(changeArtifact.getFile());
 		if (resource == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"The selected file is not available in the workspace", null, IMessageProvider.WARNING);
+					Messages.ChangesPart_fileNotAvailable, null, IMessageProvider.WARNING);
 			return;
 		}
 		final ScmConnector connector = ScmCore.getConnector(resource);
 		if (connector == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"No extension available to open the selected file", null, IMessageProvider.WARNING);
+					Messages.ChangesPart_noExtensionAvailbleForFile, null, IMessageProvider.WARNING);
 			return;
 		}
 
@@ -195,7 +196,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 				: ((IChange) ((ChangeArtifact) changeArtifact).eContainer()).getRevision();
 		if (revision == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"Could not determine change revisions for the selected file", null, IMessageProvider.WARNING);
+					Messages.ChangesPart_couldNotDetermineChangeRevisionsForTheSelectedFile, null, IMessageProvider.WARNING);
 		}
 
 		try {
@@ -230,11 +231,11 @@ public class ChangesPart extends AbstractBuildEditorPart {
 				ScmUi.openCompareEditor(getPage().getSite().getPage(), left.get(), right.get());
 			} else {
 				getMessageManager().addMessage(ChangesPart.class.getName(),
-						"Could not determine change revisions for the selected file", null, IMessageProvider.WARNING);
+						Messages.ChangesPart_couldNotDetermineChangeRevisionsForTheSelectedFile, null, IMessageProvider.WARNING);
 			}
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error", e),
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, Messages.ChangesPart_unexpectedError, e),
 							StatusManager.SHOW | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// ignore

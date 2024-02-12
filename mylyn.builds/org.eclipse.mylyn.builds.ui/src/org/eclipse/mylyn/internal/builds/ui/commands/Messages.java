@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
@@ -20,6 +21,22 @@ public class Messages extends NLS {
 	public static String BuildUrlCommandHandler_Downloading_Build_X;
 
 	public static String BuildUrlCommandHandler_Open_with_Browser;
+
+	public static String CopyDetailsHandler_buildLabel;
+
+	public static String CopyDetailsHandler_id;
+
+	public static String CopyDetailsHandler_invalidKindSpecified;
+
+	public static String CopyDetailsHandler_summary;
+
+	public static String CopyDetailsHandler_summaryAndUrl;
+
+	public static String CopyDetailsHandler_url;
+
+	public static String DeleteBuildElementHandler_areYouSure;
+
+	public static String DeleteBuildElementHandler_deleteBuildServer;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

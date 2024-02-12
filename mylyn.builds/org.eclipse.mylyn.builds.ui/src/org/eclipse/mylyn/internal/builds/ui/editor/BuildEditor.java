@@ -73,7 +73,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	@Override
 	protected void addPages() {
-		buildDetailsPage = new BuildDetailsPage(this, Messages.BuildEditor_Details);
+		buildDetailsPage = new BuildDetailsPage(this, Messages.BuildEditor_details);
 		try {
 			addPage(buildDetailsPage);
 		} catch (PartInitException e) {
@@ -134,17 +134,17 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		Image image;
 		if (input.getBuild() != null) {
 			image = CommonImages.getImage(BuildLabelProvider.getImageDescriptor(input.getBuild().getStatus()));
-			title = NLS.bind(Messages.BuildEditor_Build_X, input.getBuild().getLabel());
+			title = NLS.bind(Messages.BuildEditor_buildLabel, input.getBuild().getLabel());
 		} else {
 			image = CommonImages.getImage(BuildsUi.getConnectorUi(plan.getServer()).getImageDescriptor());
-			title = Messages.BuildEditor_Build;
+			title = Messages.BuildEditor_build;
 		}
 		switch (getEditorInput().getBuildInfo()) {
 			case PARTIAL:
-				title = NLS.bind(Messages.BuildEditor_X_Retrieving_Build, title);
+				title = NLS.bind(Messages.BuildEditor_retrievingBuild, title);
 				break;
 			case ERROR:
-				title = NLS.bind(Messages.BuildEditor_X_Failed_Retrieve_Build_Information, title);
+				title = NLS.bind(Messages.BuildEditor_failedToRetrieveBuildInformation, title);
 				image = CommonImages.getImage(CommonImages.ERROR);
 				break;
 		}
@@ -192,7 +192,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 			}
 		};
 		openWithBrowserAction.setImageDescriptor(CommonImages.WEB);
-		openWithBrowserAction.setToolTipText(Messages.BuildEditor_Open_with_Web_Browser);
+		openWithBrowserAction.setToolTipText(Messages.BuildEditor_openWithWebBrowser);
 		toolBarManager.add(openWithBrowserAction);
 
 		toolBarManager.update(true);

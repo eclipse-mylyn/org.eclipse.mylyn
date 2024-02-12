@@ -87,12 +87,12 @@ public class BuildHistoryPage extends HistoryPage {
 	@Override
 	public String getName() {
 		IBuildPlan plan = getPlan();
-		return plan != null ? NLS.bind("Build Plan {0}", plan.getLabel()) : null;
+		return plan != null ? NLS.bind(Messages.BuildHistoryPage_buildPlan, plan.getLabel()) : null;
 	}
 
 	@Override
 	public String getDescription() {
-		return NLS.bind("Build history for {0}", getName());
+		return NLS.bind(Messages.BuildHistoryPage_buildHistoryFor, getName());
 	}
 
 	@Override
@@ -186,26 +186,26 @@ public class BuildHistoryPage extends HistoryPage {
 		buildViewerColumn
 		.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null, null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
-		buildColumn.setText("ID");
+		buildColumn.setText(Messages.BuildHistoryPage_id);
 		buildColumn.setWidth(70);
 		buildColumn.setData(AbstractColumnViewerSupport.KEY_COLUMN_CAN_HIDE, false);
 
 		TreeViewerColumn timeViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		timeViewerColumn.setLabelProvider(new BuildTimeLabelProvider());
 		TreeColumn timeColumn = timeViewerColumn.getColumn();
-		timeColumn.setText("Time");
+		timeColumn.setText(Messages.BuildHistoryPage_time);
 		timeColumn.setWidth(140);
 
 		TreeViewerColumn durationViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		durationViewerColumn.setLabelProvider(new BuildDurationLabelProvider());
 		TreeColumn durationColumn = durationViewerColumn.getColumn();
-		durationColumn.setText("Duration");
+		durationColumn.setText(Messages.BuildHistoryPage_duration);
 		durationColumn.setWidth(70);
 
 		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
 		TreeColumn summaryColumn = summaryViewerColumn.getColumn();
-		summaryColumn.setText("Summary");
+		summaryColumn.setText(Messages.BuildHistoryPage_summary);
 		summaryColumn.setWidth(220);
 
 		contentProvider = new BuildHistoryContentProvider();

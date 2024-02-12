@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     See git history
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -103,7 +104,7 @@ public class BuildNotification extends AbstractUiNotification {
 			int featureId = msg.getFeatureID(IBuildPlan.class);
 			if (featureId == BuildPackage.BUILD_PLAN__STATUS) {
 				notification = new BuildNotification(ID_EVENT_PLAN_STATUS_CHANGED, (IBuildElement) msg.getNotifier());
-				notification.setLabel(NLS.bind("Plan {0}: {1}", plan.getLabel(), plan.getStatus().toString()));
+				notification.setLabel(NLS.bind(Messages.BuildNotification_planLabelStatus, plan.getLabel(), plan.getStatus().toString()));
 				notification.setDescription(plan.getSummary());
 //			} else if (featureId == BuildPackage.BUILD_PLAN__STATE && plan.getLastBuild() != null) {
 //				if (plan.getState() == BuildState.RUNNING) {

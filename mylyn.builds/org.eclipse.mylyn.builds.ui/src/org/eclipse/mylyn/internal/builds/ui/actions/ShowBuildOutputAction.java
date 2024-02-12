@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Techonologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -25,8 +26,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class ShowBuildOutputAction extends BaseSelectionListenerAction {
 
 	public ShowBuildOutputAction() {
-		super("Show Output");
-		setToolTipText("Show Build Output in Console");
+		super(Messages.ShowBuildOutputAction_showOutput);
+		setToolTipText(Messages.ShowBuildOutputAction_showOutputInConsole);
 		setImageDescriptor(BuildImages.CONSOLE);
 	}
 

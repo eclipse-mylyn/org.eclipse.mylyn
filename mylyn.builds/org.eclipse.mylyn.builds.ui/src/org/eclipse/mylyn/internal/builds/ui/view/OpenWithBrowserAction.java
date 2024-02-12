@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.builds.ui.view;
 
@@ -28,8 +29,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
 	public OpenWithBrowserAction() {
-		super("Open with Browser");
-		setToolTipText("Open with Browser");
+		super(Messages.OpenWithBrowserAction_openWithBrowser);
+		setToolTipText(Messages.OpenWithBrowserAction_openWithBrowserToolTip);
 		setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 	}
 

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.core.client;
@@ -209,7 +210,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 			try {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
 				try (BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in, charSet != null ? charSet : "UTF-8"))) {
+						new InputStreamReader(in, charSet != null ? charSet : "UTF-8"))) { //$NON-NLS-1$
 					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer
 							.nextToken()) {
@@ -295,7 +296,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
 			String encodedCreds = AUTHORIZATION_BASIC_TYPE + Base64.getEncoder()
-					.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes()); //$NON-NLS-1$
+			.encodeToString((credentials.getUserName() + ":" + credentials.getPassword()).getBytes()); //$NON-NLS-1$
 			request.addHeader(AUTHORIZATION_HEADER, encodedCreds);
 		}
 	}

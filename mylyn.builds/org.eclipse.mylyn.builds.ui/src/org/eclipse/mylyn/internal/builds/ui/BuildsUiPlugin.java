@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *     Itema AS - Added support for build service messages
  *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
@@ -69,7 +70,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 			BuildsUiInternal.save();
 		} catch (IOException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, Messages.BuildsUiPlugin_unexpectedErrorWhileSavingBuilds,
 							e));
 		}
 		super.stop(context);
@@ -117,7 +118,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 			} catch (IOException e) {
 				StatusManager.getManager()
 						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-								"Unexpected error while saving builds", e));
+								Messages.BuildsUiPlugin_unexpectedErrorWhileSavingBuilds, e));
 			}
 		});
 	}

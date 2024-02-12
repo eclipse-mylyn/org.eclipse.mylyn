@@ -27,8 +27,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class AbortBuildAction extends BaseSelectionListenerAction {
 
 	public AbortBuildAction() {
-		super("Abort Build");
-		setToolTipText("Abort Build");
+		super(Messages.AbortBuildAction_abortBuild);
+		setToolTipText(Messages.AbortBuildAction_abortBuild);
 		setImageDescriptor(BuildImages.ABORT);
 		setDisabledImageDescriptor(BuildImages.ABORT_DISABLED);
 	}

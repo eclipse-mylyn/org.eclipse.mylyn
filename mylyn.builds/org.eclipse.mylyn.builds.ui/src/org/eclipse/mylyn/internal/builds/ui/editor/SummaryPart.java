@@ -35,7 +35,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 
 	public SummaryPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName(Messages.SummaryPart_Summary);
+		setPartName(Messages.SummaryPart_summary);
 	}
 
 	private void append(StringBuilder sb, String text) {
@@ -56,7 +56,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 
 		Text text;
 
-		createLabel(composite, toolkit, Messages.SummaryPart_StartedOn);
+		createLabel(composite, toolkit, Messages.SummaryPart_startedOn);
 		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__TIMESTAMP);
 
@@ -77,7 +77,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 				sb.append("."); //$NON-NLS-1$
 			}
 
-			createLabel(composite, toolkit, Messages.SummaryPart_Cause);
+			createLabel(composite, toolkit, Messages.SummaryPart_cause);
 			text = createTextReadOnly(composite, toolkit, "", SWT.WRAP); //$NON-NLS-1$
 			text.setText(sb.toString());
 		}

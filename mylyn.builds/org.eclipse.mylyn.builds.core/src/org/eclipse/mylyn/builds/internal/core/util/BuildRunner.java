@@ -36,7 +36,7 @@ public class BuildRunner {
 			throw (CoreException) exception;
 		}
 		throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-				"Unexpected error during invocation of operation", exception));
+				Messages.BuildRunner_unexpectedError, exception));
 	}
 
 	private static void handleException(BuildRunnableWithResult<?> code, Throwable exception)
@@ -51,7 +51,7 @@ public class BuildRunner {
 			throw (CoreException) exception;
 		}
 		throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-				"Unexpected error during invocation of operation", exception));
+				Messages.BuildRunner_unexpectedError, exception));
 	}
 
 	public static void run(BuildRunnable code) throws CoreException, OperationCanceledException {
@@ -70,7 +70,7 @@ public class BuildRunner {
 		} catch (Exception | LinkageError | AssertionError e) {
 			handleException(code, e);
 		}
-		throw new IllegalStateException("Unreachable code");
+		throw new IllegalStateException(Messages.BuildRunner_unreachableCode);
 	}
 
 }

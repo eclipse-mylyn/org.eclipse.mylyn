@@ -51,15 +51,15 @@ public class GetBuildsOperation extends AbstractElementOperation<IBuildPlan> {
 
 	@Override
 	protected BuildJob doCreateJob(IBuildPlan element) {
-		return new BuildJob(NLS.bind("Retrieving Builds for {0}", element.getLabel())) {
+		return new BuildJob(NLS.bind(Messages.GetBuildsOperation_buildFor, element.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor progress) {
-				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Retrieval of builds failed", null);
+				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.GetBuildsOperation_retrieveFailed, null);
 				try {
 					builds = server.getBehaviour().getBuilds(request, progress);
 				} catch (CoreException e) {
 					result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-							NLS.bind("Getting build ''{0}'' failed", request.getPlan().getName()), e));
+							NLS.bind(Messages.GetBuildsOperation_buildRetrieveFailed, request.getPlan().getName()), e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;
 				}

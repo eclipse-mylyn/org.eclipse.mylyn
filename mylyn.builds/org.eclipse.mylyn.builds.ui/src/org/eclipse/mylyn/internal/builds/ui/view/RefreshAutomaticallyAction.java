@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -22,7 +23,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 public class RefreshAutomaticallyAction extends Action {
 
 	public RefreshAutomaticallyAction() {
-		setText("Refresh Automatically");
+		setText(Messages.RefreshAutomaticallyAction_refreshAutomatically);
 		updateState();
 	}
 
