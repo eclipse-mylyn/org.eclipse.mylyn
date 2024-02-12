@@ -32,6 +32,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;

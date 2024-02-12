@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui.editors;
@@ -35,7 +36,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
@@ -78,7 +79,7 @@ public class InvisibleContextElementsPart {
 		}
 	}
 
-	private final class InteractionElementTableSorter extends ViewerSorter {
+	private final class InteractionElementTableSorter extends ViewerComparator {
 
 		private int criteria = 0;
 
@@ -196,8 +197,8 @@ public class InvisibleContextElementsPart {
 								final List<IInteractionElement> allToRemove = getAllInvisibleElements(context,
 										allVisible);
 								Display.getDefault()
-										.asyncExec(() -> ContextCorePlugin.getContextManager()
-												.deleteElements(allToRemove, true));
+								.asyncExec(() -> ContextCorePlugin.getContextManager()
+										.deleteElements(allToRemove, true));
 
 							} else {
 								MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
@@ -304,7 +305,7 @@ public class InvisibleContextElementsPart {
 
 		InteractionElementTableSorter invisibleTableSorter = new InteractionElementTableSorter(labelProvider);
 		invisibleTableSorter.setCriteria(0);
-		invisibleTable.setSorter(invisibleTableSorter);
+		invisibleTable.setComparator(invisibleTableSorter);
 		createColumn(layout, 0, Messages.InvisibleContextElementsPart_Structure_handle, 340, table,
 				invisibleTableSorter);
 		createColumn(layout, 1, Messages.InvisibleContextElementsPart_Structure_kind, 100, table, invisibleTableSorter);

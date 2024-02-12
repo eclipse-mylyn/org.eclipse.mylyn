@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -113,7 +113,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 		public void run(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 			try {
-				IStatus result = execute(new SubProgressMonitor(monitor, 100));
+				IStatus result = execute(SubMonitor.convert(monitor, 100));
 				if (result != null && !result.isOK()) {
 					throw new CoreException(result);
 				}
@@ -138,7 +138,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 			try (FileOutputStream fos = new FileOutputStream(file)) {
 				AttachmentUtil.downloadAttachment(attachment, fos, monitor);
 				ok = true;
-				
+
 				IWorkbenchPartSite site = wbPart.getSite();
 				if (site == null) {
 					return new Status(IStatus.WARNING, FocusedTeamUiPlugin.ID_PLUGIN,

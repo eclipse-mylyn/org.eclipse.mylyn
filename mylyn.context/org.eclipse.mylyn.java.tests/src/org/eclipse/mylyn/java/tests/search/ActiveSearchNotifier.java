@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests.search;
@@ -22,8 +23,7 @@ import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * @author Shawn Minto
@@ -63,8 +63,8 @@ public class ActiveSearchNotifier {
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager()
-				.processInteractionEvent(mockUserEvent(handle, kind, source,
-						1 / ContextCore.getCommonContextScaling().getLandmark() * -2), true);
+		.processInteractionEvent(mockUserEvent(handle, kind, source,
+				1 / ContextCore.getCommonContextScaling().getLandmark() * -2), true);
 		return node;
 	}
 
