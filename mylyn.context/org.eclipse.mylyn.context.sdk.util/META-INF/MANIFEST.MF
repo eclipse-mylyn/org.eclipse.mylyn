@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.context.sdk.util
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.context.sdk.util;singleton:=true
