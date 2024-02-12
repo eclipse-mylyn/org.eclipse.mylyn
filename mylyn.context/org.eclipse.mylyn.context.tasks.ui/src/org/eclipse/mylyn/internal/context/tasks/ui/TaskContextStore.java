@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -258,9 +259,9 @@ public class TaskContextStore extends AbstractTaskContextStore {
 
 	private IAdaptable asAdaptable(final IInteractionContext result) {
 		return new IAdaptable() {
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == IInteractionContext.class) {
-					return result;
+					return adapter.cast(result);
 				}
 				return null;
 			}

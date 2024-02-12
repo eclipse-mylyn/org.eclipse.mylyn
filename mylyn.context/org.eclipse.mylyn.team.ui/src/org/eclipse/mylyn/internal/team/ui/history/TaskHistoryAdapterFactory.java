@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui.history;
@@ -23,16 +24,14 @@ public class TaskHistoryAdapterFactory implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { IHistoryPageSource.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Object getAdapter(final Object adaptable, Class adapterType) {
+	public <T> T getAdapter(final Object adaptable, Class<T> adapterType) {
 		if (adapterType.isAssignableFrom(IHistoryPageSource.class)) {
-			return TaskHistoryPageSource.getInstance();
+			return adapterType.cast(TaskHistoryPageSource.getInstance());
 		}
 		return null;
 	}
