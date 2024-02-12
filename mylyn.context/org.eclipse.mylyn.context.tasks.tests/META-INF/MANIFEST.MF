@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: 
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context Tasks Tests
 Bundle-SymbolicName: org.eclipse.mylyn.context.tasks.tests;singleton:=true
