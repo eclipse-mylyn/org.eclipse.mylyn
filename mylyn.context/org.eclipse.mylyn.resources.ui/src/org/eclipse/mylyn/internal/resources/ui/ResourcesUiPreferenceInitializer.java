@@ -9,6 +9,7 @@
  *
  *     Fabio Zadrozny - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.resources.ui;
@@ -75,7 +76,7 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 	@Override
 	public void initializeDefaultPreferences() {
 		// most defaults come from extension points
-		Set<String> defaultPatterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern(".*"));
+		Set<String> defaultPatterns = new HashSet<>(ResourcePatternExclusionStrategy.convertToAntPattern(".*")); //$NON-NLS-1$
 
 		defaultPatterns.addAll(ADDED_PATTERNS_1_0);
 
@@ -83,8 +84,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCE_MONITOR_ENABLED, true);
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setDefault(PREF_RESOURCES_IGNORED_ANT, createResourceExclusionMemento(defaultPatterns));
+		.getPreferenceStore()
+		.setDefault(PREF_RESOURCES_IGNORED_ANT, createResourceExclusionMemento(defaultPatterns));
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
@@ -142,12 +143,12 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		}
 
 		Set<String> exclusions = new HashSet<>();
-		if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)
-				&& !ResourcesUiBridgePlugin.getDefault().getPreferenceStore().isDefault(PREF_RESOURCES_IGNORED_ANT)) {
+		if ((ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED_ANT)
+				&& !ResourcesUiBridgePlugin.getDefault().getPreferenceStore().isDefault(PREF_RESOURCES_IGNORED_ANT)) || !ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED)) {
 			// we are using the new ant patterns
 			exclusions = getResourceExclusionsFromMemento(
 					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED_ANT));
-		} else if (ResourcesUiBridgePlugin.getDefault().getPreferenceStore().contains(PREF_RESOURCES_IGNORED)) {
+		} else {
 			//we are using the old patterns
 			String read = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 			if (read != null) {
@@ -158,10 +159,6 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 			}
 
 			setExcludedResourcePatterns(exclusions);
-		} else {
-			// make sure that we load the default preferences if it is a clean workspace
-			exclusions = getResourceExclusionsFromMemento(
-					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED_ANT));
 		}
 
 		cachedExclusionPatterns = new HashSet<>(exclusions);
@@ -170,8 +167,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 				ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCE_PATTERNS_VERSION))) {
 			cachedExclusionPatterns.addAll(ADDED_PATTERNS_1_0);
 			ResourcesUiBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(PREF_RESOURCE_PATTERNS_VERSION, RESOURCE_PATTERN_VERSION);
+			.getPreferenceStore()
+			.setValue(PREF_RESOURCE_PATTERNS_VERSION, RESOURCE_PATTERN_VERSION);
 			// make sure to save the new value
 			setExcludedResourcePatterns(cachedExclusionPatterns);
 		}

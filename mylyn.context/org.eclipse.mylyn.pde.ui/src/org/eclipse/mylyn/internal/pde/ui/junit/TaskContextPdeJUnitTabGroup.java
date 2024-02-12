@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.pde.ui.junit;
@@ -38,7 +39,7 @@ public class TaskContextPdeJUnitTabGroup extends JUnitTabGroup {
 		ILaunchConfigurationTab[] tabs = null;
 		tabs = new ILaunchConfigurationTab[] { new TaskContextJUnitMainTab(true),
 //				new JUnitLaunchConfigurationTab(),
-				new PluginJUnitMainTab(), new JavaArgumentsTab(), new PluginsTab(false), new ConfigurationTab(true),
+				new PluginJUnitMainTab(), new JavaArgumentsTab(), new PluginsTab(), new ConfigurationTab(true),
 				new TracingTab(), new EnvironmentTab(), new CommonTab() };
 		setTabs(tabs);
 	}
