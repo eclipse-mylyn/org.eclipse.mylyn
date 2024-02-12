@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui;
@@ -182,18 +183,17 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/ impl
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 //		if (adapter == ResourceMapping.class) {
 //			return null;
 //			return new ChangeSetResourceMapping(this);
 //		}
 		if (adapter == AbstractTask.class) {
-			return task;
+			return adapter.cast(task);
 		} else if (adapter == AbstractTaskReference.class) {
-			return new LinkedTaskInfo(getTask(), this);
+			return adapter.cast(new LinkedTaskInfo(getTask(), this));
 		}
-		return Platform.getAdapterManager().getAdapter(this, adapter);
+		return adapter.cast(Platform.getAdapterManager().getAdapter(this, adapter));
 	}
 
 	/**

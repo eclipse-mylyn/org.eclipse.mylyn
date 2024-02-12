@@ -121,14 +121,14 @@ public class EditorRestoreTest extends TestCase {
 		FileEditorInput input = new FileEditorInput(fileA);
 		IEditorInput[] inputs = { input, new FileEditorInput(fileB) {
 			@Override
-			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == ContextAwareEditorInput.class) {
-					return new ContextAwareEditorInput() {
+					return adapter.cast(new ContextAwareEditorInput() {
 						@Override
 						public boolean forceClose(String contextHandle) {
 							return true;
 						}
-					};
+					});
 				}
 				return super.getAdapter(adapter);
 			}

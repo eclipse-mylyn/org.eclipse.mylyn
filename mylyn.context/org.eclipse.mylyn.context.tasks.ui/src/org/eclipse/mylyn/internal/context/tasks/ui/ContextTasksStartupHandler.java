@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -65,18 +66,18 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		}
 
 		@Override
-		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		public <T> T getAdapter(Class<T> adapter) {
 			if (adapter == ITask.class) {
-				return task;
+				return adapter.cast(task);
 			} else if (adapter == TaskData.class) {
-				return taskData;
+				return adapter.cast(taskData);
 			} else if (adapter == String.class) {
 				if (taskData != null) {
 					TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 					if (attribute != null) {
 						String description = attribute.getValue();
 						if (description != null && description.length() > 0) {
-							return description;
+							return adapter.cast(description);
 						}
 					}
 
@@ -84,14 +85,14 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 					if (attribute != null) {
 						String description = attribute.getValue();
 						if (description != null && description.length() > 0) {
-							return description;
+							return adapter.cast(description);
 						}
 					}
 				}
 				if (task instanceof AbstractTask) {
 					String description = ((AbstractTask) task).getNotes();
 					if (description != null && description.length() > 0) {
-						return description;
+						return adapter.cast(description);
 					}
 				}
 			}
@@ -110,16 +111,16 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				case ACTIVATED:
 					getStateHandler().activated(event.getContext());
 					PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getActivePage()
-							.showActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.showActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
 					break;
 				case DEACTIVATED:
 					getStateHandler().deactivated(event.getContext());
 					PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getActivePage()
-							.hideActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.hideActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
 					break;
 				case CLEARED:
 					getStateHandler().clear(event.getContextHandle(), event.isActiveContext());
@@ -217,8 +218,8 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION);
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
 	}
 
 	void contextActivated(ContextChangeEvent event) {
