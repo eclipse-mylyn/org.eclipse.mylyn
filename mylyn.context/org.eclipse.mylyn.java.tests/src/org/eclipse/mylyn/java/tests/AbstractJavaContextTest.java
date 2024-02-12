@@ -37,6 +37,7 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
  * @author Mik Kersten
  */
 @Deprecated
+@SuppressWarnings("nls")
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();

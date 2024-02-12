@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -23,6 +24,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class DegreeOfInterestTest extends TestCase {
 
 	private final InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());

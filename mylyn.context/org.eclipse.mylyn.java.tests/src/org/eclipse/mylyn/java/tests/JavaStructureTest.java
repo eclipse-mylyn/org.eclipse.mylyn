@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2023-06
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -38,6 +39,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private final InteractionContextManager manager = ContextCorePlugin.getContextManager();

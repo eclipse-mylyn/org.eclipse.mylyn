@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2023-06
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -39,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private IInteractionElement method;

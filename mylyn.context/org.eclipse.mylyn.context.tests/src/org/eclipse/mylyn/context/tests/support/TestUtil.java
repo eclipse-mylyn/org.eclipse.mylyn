@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests.support;
@@ -30,6 +31,7 @@ import junit.framework.AssertionFailedError;
  * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.CommonTestUtil} instead
  */
 @Deprecated
+@SuppressWarnings("nls")
 public class TestUtil {
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";

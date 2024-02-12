@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.tests;
@@ -34,6 +35,7 @@ import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private ContextActiveChangeSetManager changeSetManager;

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -27,6 +28,7 @@ import junit.framework.TestCase;
 /**
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class ResourcePatternExclusionStrategyTest extends TestCase {
 	public void testForcedExclusionPatterns() {
 		String pattern = "file:/foo";

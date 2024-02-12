@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.cdt.tests;
@@ -32,6 +33,7 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 /**
  * @author Sam Davis
  */
+@SuppressWarnings("nls")
 public class CdtStructureBridgeTest extends AbstractCdtContextTest {
 	private IProject importedProject;
 

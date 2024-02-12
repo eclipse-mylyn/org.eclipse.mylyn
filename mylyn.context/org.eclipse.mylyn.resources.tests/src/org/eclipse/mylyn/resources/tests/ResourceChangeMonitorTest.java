@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -43,6 +44,7 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	private static class MockResourceDelta extends ResourceDelta {

@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - fixes for bug 420326
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tasks.tests;
@@ -46,6 +47,7 @@ import junit.framework.TestCase;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings("nls")
 public class TaskActivityTimingTest extends TestCase {
 
 	private TaskActivityManager activityManager;
@@ -259,8 +261,8 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 
 		MonitorUiPlugin.getDefault()
-				.getActivityContextManager()
-				.removeActivityTime(task1.getHandleIdentifier(), start.getTimeInMillis(), end.getTimeInMillis());
+		.getActivityContextManager()
+		.removeActivityTime(task1.getHandleIdentifier(), start.getTimeInMillis(), end.getTimeInMillis());
 		// Half gone since end date is exclusive (removes up to but not including hour)
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
@@ -271,8 +273,8 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
 		MonitorUiPlugin.getDefault()
-				.getActivityContextManager()
-				.removeActivityTime(task1.getHandleIdentifier(), start2.getTimeInMillis(), end2.getTimeInMillis());
+		.getActivityContextManager()
+		.removeActivityTime(task1.getHandleIdentifier(), start2.getTimeInMillis(), end2.getTimeInMillis());
 
 		assertEquals(0, activityManager.getElapsedTime(task1));
 	}
@@ -658,7 +660,7 @@ public class TaskActivityTimingTest extends TestCase {
 		activityMonitor.reloadActivityTime();
 		assertEquals(
 				endTime1.getTimeInMillis() - startTime1.getTimeInMillis() + endTime2.getTimeInMillis()
-						- startTime2.getTimeInMillis(),
+				- startTime2.getTimeInMillis(),
 				TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
@@ -920,7 +922,7 @@ public class TaskActivityTimingTest extends TestCase {
 		// TaskActivityManager.getInstance().parseInteractionEvent(event6);
 		activityMonitor.parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event7), false);
 		long expectedTotalTime = time6.getTime() - time5.getTime() + time4.getTime() - time3.getTime() + time2.getTime()
-				- time1.getTime();
+		- time1.getTime();
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 

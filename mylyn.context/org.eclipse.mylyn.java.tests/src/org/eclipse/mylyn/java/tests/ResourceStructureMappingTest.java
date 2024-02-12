@@ -10,6 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Yatta Solutions -  WorkingSet tests (bug 334024)
  *     ArSysOp - adapt to SimRel 2023-06
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -34,6 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Carsten Reckord (bug 334024: focused package explorer not working if top level element is working set)
  */
+@SuppressWarnings("nls")
 public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 
 	@Override

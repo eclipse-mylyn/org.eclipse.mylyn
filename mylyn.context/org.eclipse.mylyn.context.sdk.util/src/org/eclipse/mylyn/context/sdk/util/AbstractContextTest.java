@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.sdk.util;
@@ -22,6 +23,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public abstract class AbstractContextTest extends TestCase {
 
 	protected static final String MOCK_HANDLE = "<mock-handle>";
@@ -39,7 +41,7 @@ public abstract class AbstractContextTest extends TestCase {
 			assertFalse(
 					"Unexpected context active: "
 							+ ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
-					ContextCore.getContextManager().isContextActive());
+							ContextCore.getContextManager().isContextActive());
 		}
 	}
 

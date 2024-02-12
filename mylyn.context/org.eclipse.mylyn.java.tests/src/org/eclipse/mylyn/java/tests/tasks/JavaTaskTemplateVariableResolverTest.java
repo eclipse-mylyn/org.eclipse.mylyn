@@ -9,6 +9,7 @@
  *
  *     Andreas Hoehmann - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.java.tests.tasks;
 
@@ -41,6 +42,7 @@ import junit.framework.TestCase;
  * @author Andreas Hoehmann
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JavaTaskTemplateVariableResolverTest extends TestCase {
 
 	@Override
