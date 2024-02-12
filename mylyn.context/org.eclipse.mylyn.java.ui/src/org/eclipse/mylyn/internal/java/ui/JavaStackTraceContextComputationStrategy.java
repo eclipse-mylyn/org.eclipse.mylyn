@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui;
 
@@ -51,7 +52,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$
 
 	private final SortedSet<String> filteredPrefixes = new TreeSet<>(
-			Arrays.asList("java", "javax", "junit.framework", "sun.reflect")); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+			Arrays.asList("java", "javax", "junit.framework", "sun.reflect")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	/**
 	 * public for testing only

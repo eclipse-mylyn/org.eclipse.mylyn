@@ -274,7 +274,6 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testDerrivedFolderChanged() throws CoreException {
 		folder.setDerived(true, null);
 		fileInFolder.setDerived(false, null);
