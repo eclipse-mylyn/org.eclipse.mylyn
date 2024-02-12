@@ -171,8 +171,7 @@ public class BreakpointsStateUtilTest {
 
 	private Document getDocument(File inputFile) throws IOException, ParserConfigurationException, SAXException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		FileInputStream fileInputStream = new FileInputStream(inputFile);
-		try (fileInputStream) {
+		try (FileInputStream fileInputStream = new FileInputStream(inputFile)) {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			return builder.parse(fileInputStream);
 		}

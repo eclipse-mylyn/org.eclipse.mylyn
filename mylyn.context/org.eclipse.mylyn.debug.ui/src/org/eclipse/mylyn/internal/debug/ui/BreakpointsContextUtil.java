@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastian Schmidt - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.debug.ui;
 
@@ -64,28 +65,28 @@ public class BreakpointsContextUtil {
 	}
 
 	public static List<IBreakpoint> importBreakpoints(InputStream stream, IProgressMonitor progressMonitor) {
-		Scanner scanner = new Scanner(stream);
-		scanner.useDelimiter("\\A"); //$NON-NLS-1$
-		String breakpoints = scanner.next();
-		scanner.close();
+		try (Scanner scanner = new Scanner(stream)) {
+			scanner.useDelimiter("\\A"); //$NON-NLS-1$
+			String breakpoints = scanner.next();
 
-		ImportBreakpointsOperation importBreakpointOperation = new ImportBreakpointsOperation(
-				new StringBuffer(breakpoints), true, false);
-		try {
-			importBreakpointOperation.run(progressMonitor);
-			return new ArrayList<>(Arrays.asList(importBreakpointOperation.getImportedBreakpoints()));
-		} catch (InvocationTargetException e) {
-			StatusHandler.log(
-					new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, "Could not import context breakpoints", e));//$NON-NLS-1$
+			ImportBreakpointsOperation importBreakpointOperation = new ImportBreakpointsOperation(
+					new StringBuffer(breakpoints), true, false);
+			try {
+				importBreakpointOperation.run(progressMonitor);
+				return new ArrayList<>(Arrays.asList(importBreakpointOperation.getImportedBreakpoints()));
+			} catch (InvocationTargetException e) {
+				StatusHandler.log(
+						new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, "Could not import context breakpoints", e));//$NON-NLS-1$
+			}
+			return new ArrayList<>();
 		}
-		return new ArrayList<>();
 	}
 
 	public static void removeBreakpoints(Collection<IBreakpoint> breakpoints) {
 		try {
 			DebugPlugin.getDefault()
-					.getBreakpointManager()
-					.removeBreakpoints(breakpoints.toArray(new IBreakpoint[0]), true);
+			.getBreakpointManager()
+			.removeBreakpoints(breakpoints.toArray(new IBreakpoint[0]), true);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
 					"Could not remove obsolete breakpoints from workspace", e)); //$NON-NLS-1$

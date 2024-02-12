@@ -298,8 +298,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		File file = File.createTempFile("context", null);
 		file.deleteOnExit();
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-		try (out) {
+		try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file))) {
 			ZipEntry entry = new ZipEntry("name");
 			out.putNextEntry(entry);
 		}
@@ -345,7 +344,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		InputStream resultStream = externalizer.getAdditionalInformation(contextFile, testContributorId);
 		assertNotNull(resultStream);
 		assertNull(externalizer.getAdditionalInformation(contextFile, "nonExistingContributor"));
-		assertEquals(testData, new Scanner(resultStream).useDelimiter("\\A").next());
+		try (Scanner scanner = new Scanner(resultStream)) {
+			assertEquals(testData, scanner.useDelimiter("\\A").next());
+		}
 
 		resultStream = ContextCore.getContextManager().getAdditionalContextData(context, testContributorId);
 		assertNotNull(resultStream);

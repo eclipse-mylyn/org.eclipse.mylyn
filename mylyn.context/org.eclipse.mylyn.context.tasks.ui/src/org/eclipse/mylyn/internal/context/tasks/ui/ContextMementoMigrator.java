@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -217,8 +218,7 @@ public class ContextMementoMigrator {
 		ICommonStorable storable = ((TaskContextStore) TasksUiPlugin.getContextStore()).getStorable(task);
 		try {
 			if (!storable.exists("context-state.xml")) { //$NON-NLS-1$
-				OutputStream out = storable.write("context-state.xml", null); //$NON-NLS-1$
-				try (out) {
+				try (OutputStream out = storable.write("context-state.xml", null)) { //$NON-NLS-1$
 					stateManager.write(out, state);
 				}
 			}
