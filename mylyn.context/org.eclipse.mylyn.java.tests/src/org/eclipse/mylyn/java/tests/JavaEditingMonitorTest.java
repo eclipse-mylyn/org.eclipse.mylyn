@@ -9,6 +9,7 @@
  *
  *     Jingwen Ou - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -38,6 +39,7 @@ import org.eclipse.ui.PartInitException;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	private IMethod callee;

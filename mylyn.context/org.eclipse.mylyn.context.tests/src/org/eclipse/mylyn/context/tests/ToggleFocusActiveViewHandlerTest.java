@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Gregory Amerson - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -20,6 +21,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 /**
  * @author Gregory Amerson
  */
+@SuppressWarnings("nls")
 public class ToggleFocusActiveViewHandlerTest extends AbstractResourceContextTest {
 
 	public void testToggleFocusActiveViewHandler() throws Exception {

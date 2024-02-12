@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.tests;
@@ -15,6 +16,7 @@ package org.eclipse.mylyn.team.tests;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
+@SuppressWarnings("nls")
 public class TestCommitTemplateVariable extends AbstractCommitTemplateVariable {
 
 	@Override

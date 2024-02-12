@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tasks.tests;
@@ -40,7 +41,7 @@ import org.junit.Before;
 
 import junit.framework.TestCase;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class TaskEditorRestoreTest extends TestCase {
 
 	private IWorkbenchPage page;

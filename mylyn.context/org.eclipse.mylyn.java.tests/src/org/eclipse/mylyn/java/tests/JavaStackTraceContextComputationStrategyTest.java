@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.java.tests;
 
@@ -28,6 +29,7 @@ import junit.framework.TestCase;
  * 
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class JavaStackTraceContextComputationStrategyTest extends TestCase {
 
 	@SuppressWarnings("unused")

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -45,6 +46,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * @author Mik Kersten
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class ContextExternalizerTest extends AbstractContextTest {
 
 	private static final String CONTEXT_HANDLE = "context-externalization";

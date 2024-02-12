@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests.support;
@@ -40,6 +41,7 @@ import org.w3c.dom.Element;
  * 
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class DomContextWriter implements IInteractionContextWriter {
 
 	private DocumentBuilderFactory dbf = null;

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests.search;
@@ -29,6 +30,7 @@ import junit.framework.Assert;
 /**
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class SearchPluginTestHelper {
 
 	private final ISearchPluginTest test;

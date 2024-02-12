@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.internal.resources.ui.ResourceModifiedDateExclusionStra
 /**
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class ResourceModificationDateExclusionStrategyTest extends AbstractResourceContextTest {
 
 	private ResourceModifiedDateExclusionStrategy exclusionStrategy;

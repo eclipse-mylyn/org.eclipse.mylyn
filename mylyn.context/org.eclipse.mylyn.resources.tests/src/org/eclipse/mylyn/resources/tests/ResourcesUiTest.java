@@ -9,6 +9,7 @@
  *
  *     Manuel Doninger - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
  * @author Manuel Doninger
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class ResourcesUiTest extends AbstractResourceContextTest {
 
 	@Override
@@ -43,8 +45,8 @@ public class ResourcesUiTest extends AbstractResourceContextTest {
 		ContextTestUtil.triggerContextUiLazyStart();
 		// disable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		.getPreferenceStore()
+		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
 	public void testGetProjects() throws CoreException {

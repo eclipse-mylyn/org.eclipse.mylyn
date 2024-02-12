@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private InterestFilter filter;

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.tests;
@@ -34,6 +35,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TeamPropertiesLinkProviderTest extends TestCase {
 
 	private IProject project1;
@@ -76,8 +78,8 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		resources.add(project1);
 
 		FocusedTeamUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "${task.key}: ${task.description}");
+		.getPreferenceStore()
+		.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "${task.key}: ${task.description}");
 		assertEquals("1: summary", changeSet.getComment());
 
 		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();
@@ -121,8 +123,8 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		resources.add(project1);
 
 		FocusedTeamUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "global template: ${task.key}");
+		.getPreferenceStore()
+		.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "global template: ${task.key}");
 
 		// only set template on project 2
 		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -25,6 +26,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * @author Mik Kersten
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class ContentSpecificContextTest extends AbstractContextTest {
 
 	public void testEventProcessing() {

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.context.sdk.util;
 
@@ -19,6 +20,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class ContextTestUtil {
 
 	private static boolean contextUiLazyStarted;

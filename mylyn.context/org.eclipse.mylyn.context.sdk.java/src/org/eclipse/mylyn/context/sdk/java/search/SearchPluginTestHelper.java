@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.sdk.java.search;
@@ -29,6 +30,7 @@ import junit.framework.TestCase;
 /**
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class SearchPluginTestHelper extends TestCase {
 
 	private final ISearchPluginTest test;
@@ -44,7 +46,7 @@ public class SearchPluginTestHelper extends TestCase {
 
 	public void searchResultsNotNull(ActiveSearchNotifier notifier, String handle, String kind,
 			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava)
-			throws IOException, CoreException {
+					throws IOException, CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
@@ -64,7 +66,7 @@ public class SearchPluginTestHelper extends TestCase {
 
 	public void searchResultsNotNullInteresting(ActiveSearchNotifier notifier, String handle, String kind,
 			IInteractionElement searchNode, int dos, int expected, boolean includeOnlyJava)
-			throws IOException, CoreException {
+					throws IOException, CoreException {
 		notifier.mockEditorSelection(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);

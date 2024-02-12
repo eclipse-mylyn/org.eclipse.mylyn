@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.sdk.java;
@@ -52,6 +53,7 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TestJavaProject {
 	public IProject project;
 
@@ -167,7 +169,7 @@ public class TestJavaProject {
 	public void waitForIndexer() throws JavaModelException {
 		new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS,
 				SearchEngine.createJavaSearchScope(new IJavaElement[0]), new TypeNameRequestor() {
-					// nothing needs to be done here...we accept everything
-				}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+			// nothing needs to be done here...we accept everything
+		}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 	}
 }

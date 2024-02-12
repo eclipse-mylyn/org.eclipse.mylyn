@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.sdk.java;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();

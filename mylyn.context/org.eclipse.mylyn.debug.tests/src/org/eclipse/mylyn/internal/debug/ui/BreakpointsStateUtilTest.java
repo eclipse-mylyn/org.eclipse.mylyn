@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastian Schmidt - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.debug.ui;
@@ -53,6 +54,7 @@ import org.xml.sax.SAXException;
 /**
  * @author Sebastian Schmidt
  */
+@SuppressWarnings("nls")
 public class BreakpointsStateUtilTest {
 
 	private final IPath pluginStateDir = Platform.getStateLocation(DebugUiPlugin.getDefault().getBundle());

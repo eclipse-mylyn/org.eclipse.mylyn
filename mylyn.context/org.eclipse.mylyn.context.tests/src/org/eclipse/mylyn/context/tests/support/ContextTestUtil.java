@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.context.tests.support;
 
@@ -40,6 +41,7 @@ import org.eclipse.pde.internal.core.natures.PluginProject;
  * @deprecated user {@link org.eclipse.mylyn.context.sdk.util.ContextTestUtil} instead
  */
 @Deprecated
+@SuppressWarnings("nls")
 public class ContextTestUtil {
 
 	private static boolean contextUiLazyStarted;

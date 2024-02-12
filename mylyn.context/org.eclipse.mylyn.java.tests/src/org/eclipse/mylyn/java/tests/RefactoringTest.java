@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -29,6 +30,7 @@ import org.eclipse.ui.IViewPart;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class RefactoringTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
