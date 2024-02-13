@@ -1,5 +1,5 @@
 #
-# Globale Facts setzen
+# set Globale Facts
 #
 - hosts: localhost
   gather_facts: true
@@ -14,7 +14,7 @@
         msg: "{{ localhostPlatform }}"
 
 #
-# Alle normalen Knoten Docker starten
+# start all non admin Docker Nodes
 #
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
@@ -30,14 +30,13 @@
       debug:
         msg: "{{ ansible_facts['distribution'] +'/' + ansible_facts['architecture'] + ' on ' + hostvars['localhost'].localhostPlatform }}"
 #
-# Neuen Docker Swarm Leader installieren laufende stacks und services löschen
-# Servies starten
+# 1) install Docker Swarm Leader (if needed)
+# 2) stop all Docker Services / Container
 #
 - hosts: "{{ hostvars['localhost'].prim_install_server_name }}"
   gather_facts: false
   vars:
     swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
-
   roles:
     - role: swarm_delete
       when: ((hostvars['localhost'].docker_swarm_recreate | bool == true) or (hostvars['localhost'].docker_mode_global == "container"))
@@ -50,7 +49,7 @@
     - role: swarm_stop
       when: hostvars['localhost'].docker_swarm_recreate | bool == false
 #
-# docker cleanup auf allen Instanzen
+# cleanup all docker instances 
 #
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
@@ -62,6 +61,7 @@
         - docker_cleanup
 #
 # Services installieren
+# install Docker Services / Container
 # 
 - hosts: "{{ hostvars['localhost'].prim_install_server_name  }}"
   gather_facts: false
@@ -115,21 +115,3 @@
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
 #          - { git_branch: "5.2", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
-
-# - hosts: gitlabhost
-#   gather_facts: false
-#   vars:
-#     swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
-#     docker_mode: "{{ hostvars['localhost'].docker_mode_global }}"
-#   roles:
-#     - role: binfmt
-#       tags:
-#         - binfmt
-#       when:  hostvars['localhost'].docker_mode_global == "gitlab"
-#     - role: gitlab
-#       tags:
-#         - gitlab
-#       vars:
-#         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-#       when:  hostvars['localhost'].docker_mode_global == "gitlab"
-#  

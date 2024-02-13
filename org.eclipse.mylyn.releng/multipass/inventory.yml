@@ -22,18 +22,6 @@ all:
       vars:
         multipass_disk: 20G
         multipass_memory: 8G
-    mylyn_gitlab:
-      children:
-        gitlabmain:
-          hosts:
-            gitlabhost:
-          vars:
-            multipass_disk: 16G
-            multipass_memory: 8G
-            multipass_cpus: 4
-        gitlabrun:
-          hosts:
-            gitlabrunner:
       
   hosts:
     mylynadm01:
@@ -57,17 +45,3 @@ all:
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
       default_etc_hosts: "mylynwrk01 mylynwrk01.mylyn.local"
-    gitlabhost:
-      ansible_connection: ssh
-      ansible_host: "192.168.64.5"
-      ansible_user: ubuntu
-      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
-      ansible_ssh_private_key_file: first_setup/ubuntu_key
-      default_etc_hosts: "gitlabhost gitlabhost.mylyn.local test.gitlab.mylyn.local"
-    gitlabrunner:
-      ansible_connection: ssh
-      ansible_host: "192.168.64.6"
-      ansible_user: ubuntu
-      ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
-      ansible_ssh_private_key_file: first_setup/ubuntu_key
-      default_etc_hosts: "gitlabrunner gitlabrunner.mylyn.local"

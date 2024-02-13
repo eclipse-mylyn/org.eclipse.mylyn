@@ -9,8 +9,8 @@
         file: "global_setup.yml"
 
 #
-# Multipass Instanzen erzeugen
-# 
+# create Multipass Instances
+#
 - hosts: localhost
   gather_facts: false
   roles:
@@ -22,7 +22,7 @@
         - base_software
 # 
 #
-# Admin Instanz für Zertifikate und root ca 
+# Admin Instance for Certificates
 #
 - hosts: "{{ hostvars['localhost'].rootca_server_name }}"
   gather_facts: false
@@ -45,7 +45,7 @@
         - base_software
 
 #
-# Alle normalen Knoten mit Zertifikaten versorgen
+# create Certificates for amm non Admin Nodes
 #
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true
@@ -92,6 +92,9 @@
       with_items: 
         -  "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
 
+#
+# Copy rootca to local and crete cacerts with our rootca
+#
 - hosts: "{{ hostvars['localhost'].rootca_server_name }}"
   gather_facts: false
   tasks:

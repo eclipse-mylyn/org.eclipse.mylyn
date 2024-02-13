@@ -26,15 +26,6 @@
       tags:
         - global
       when: (docker_mode_global == 'swarm' or docker_mode_global == 'all')
-    - name: build list gitlab
-      ansible.builtin.set_fact:
-        setup_lst_tmp:  
-         "{{ setup_lst_tmp  +  groups[grp_prefix + \"_gitlab\" ] }}"
-        setup_noadmin_vm_list: 
-         "{{ setup_noadmin_vm_list  +  groups[grp_prefix + \"_gitlab\" ] }}"
-      tags:
-        - global
-      when: (docker_mode_global == 'gitlab' or docker_mode_global == 'all')
     - name: set list admin server
       ansible.builtin.set_fact:
         rootca_server_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
@@ -69,16 +60,6 @@
       tags:
         - global
 
-       
-#    - ansible.builtin.debug: msg="admin = {{ item }}"											# verbosity=3
-#      with_items:
-#        - "{{ groups[grp_prefix + \"_admin\"] }}"
-#    - ansible.builtin.debug: msg="master = {{ item }}"											# verbosity=3
-#      with_items:
-#        - "{{ groups[grp_prefix + \"_swarm_master\"] }}"
-#    - ansible.builtin.debug: msg="worker = {{ item }}"											# verbosity=3
-#      with_items:
-#        - "{{ groups[grp_prefix + \"_swarm_worker\"] }}"
     - ansible.builtin.debug: msg="all hosts = {{ setup_lst }}" 									# verbosity=3
       tags:
         - global
