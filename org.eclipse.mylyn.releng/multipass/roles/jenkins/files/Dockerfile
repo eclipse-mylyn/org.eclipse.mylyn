@@ -16,7 +16,3 @@ COPY --chown=jenkins:jenkins $DATA_DIR/jenkins_home/ /var/jenkins_home/
 
 COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
-
-# RUN cp /usr/local/bin/jenkins.sh /usr/local/bin/jenkins_org.sh
-#COPY --chown=jenkins:jenkins mylynJenkins.sh /usr/local/bin/mylynJenkins.sh
-#ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/mylynJenkins.sh"]

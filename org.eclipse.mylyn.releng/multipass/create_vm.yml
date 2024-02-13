@@ -9,9 +9,106 @@
         file: "global_setup.yml"
 
 #
-# Multipass Instanzen erzeugen
-# 
+# create Multipass Instances
+#
 - hosts: localhost
   gather_facts: false
   roles:
     - role: multipass_create_vm
+      tags:
+        - create_vm
+    - role: multipass_create_vm_setup
+      tags:
+        - base_software
+# 
+#
+# Admin Instance for Certificates
+#
+- hosts: "{{ hostvars['localhost'].rootca_server_name }}"
+  gather_facts: false
+  vars:
+    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
+  roles:
+    - role: crtrootca
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+      tags:
+        - createValidCertificates
+        - base_software
+    - role: crtcertificate
+      vars:
+        subject_alt: 
+          - "DNS:*.{{ hostvars['localhost'].local_domain }}"
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+      tags:
+        - createValidCertificates
+        - base_software
+
+#
+# create Certificates for amm non Admin Nodes
+#
+- hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
+  gather_facts: true
+  vars:
+    rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
+  roles:
+    - role: crtcertificate
+      tags:
+        - createValidCertificates
+        - base_software
+      vars:
+        subject_alt: "{{ hostvars[inventory_hostname].default_etc_hosts.split() | map('regex_replace', '^', 'DNS:') | list }}"
+        common_domain_name: "{{ hostvars['localhost'].local_domain }}"
+    - role: dockerhost
+      tags:
+        - base_software
+  tasks:
+    - name: Creates directory certs
+      ansible.builtin.file:
+            path: "/mylyn-config-dir/certs"
+            state: directory
+            owner: ubuntu
+            group: ubuntu
+            mode: '0755'
+      tags:
+        - base_software
+    - name: Synchronization root ca
+      ansible.posix.synchronize:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      tags:
+        - base_software
+      delegate_to: "{{ hostvars['localhost'].rootca_server_name }}"
+      loop:
+        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.crt", dest: "/mylyn-config-dir/certs/rootca.crt"}
+        - {src: "/cacerts/root_ca/{{ hostvars['localhost'].rootca_server_name }}.key", dest: "/mylyn-config-dir/certs/rootca.key"}
+    - name: get worker certificates
+      ansible.posix.synchronize:
+        src:  "/cacerts/server_ca/"
+        dest: /mylyn-config-dir/certs
+      tags:
+        - base_software
+      delegate_to: "{{ item }}"
+      with_items: 
+        -  "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
+
+#
+# Copy rootca to local and crete cacerts with our rootca
+#
+- hosts: "{{ hostvars['localhost'].rootca_server_name }}"
+  gather_facts: false
+  tasks:
+    - name: Fetch stuff from the remote and save to local
+      synchronize:  src={{ item }} dest=../../../../certs/ mode=pull
+      with_items:
+        - "/cacerts/root_ca"
+- name: copy files to destination
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: copy src.txt as dest.txt in the same dir 
+      copy:
+        src: ../../../../certs/cacerts
+        dest: ../../../../certs/mylyncacerts
+    - name: add mylynadm01.crt
+      command: keytool -alias mylyn -storepass changeit -noprompt -import -file ../../../../certs/root_ca/mylynadm01.crt -keystore ../../../../certs/mylyncacerts

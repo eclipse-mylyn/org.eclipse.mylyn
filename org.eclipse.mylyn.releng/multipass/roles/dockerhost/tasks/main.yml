@@ -16,6 +16,8 @@
           - virtualenv
           - python3-setuptools
           - lsb-release
+          - jq
+          - maven
         state: latest
         update_cache: true
     
