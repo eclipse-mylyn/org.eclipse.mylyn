@@ -92,13 +92,7 @@ public class TaskEditorActivityPart extends AbstractTaskEditorPart {
 	private void initialize() {
 		activityAttributes = getTaskData().getAttributeMapper()
 				.getAttributesByType(getTaskData(), GitlabCoreActivator.ATTRIBUTE_TYPE_ACTIVITY);
-		Collections.sort(activityAttributes, new Comparator<TaskAttribute>() {
-
-			@Override
-			public int compare(TaskAttribute o1, TaskAttribute o2) {
-				return o1.getId().compareTo(o2.getId());
-			}
-		});
+		Collections.sort(activityAttributes, Comparator.comparing(TaskAttribute::getId));
 
 		for (TaskAttribute attribute : activityAttributes) {
 			if (getModel().hasIncomingChanges(attribute)) {
