@@ -40,7 +40,6 @@ public class GitlabTaskDataHandler extends AbstractTaskDataHandler {
 	protected final GitlabRepositoryConnector connector;
 
 	public GitlabTaskDataHandler(GitlabRepositoryConnector connector) {
-		super();
 		this.connector = connector;
 	}
 

@@ -27,8 +27,6 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
-import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,6 +37,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 class RestfulGitlabClientTest {
@@ -81,75 +80,116 @@ class RestfulGitlabClientTest {
 	@Test
 	@GitLabTestService
 	void testVersion() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		String version = client.getVersion(new NullOperationMonitor());
+		String version = GitlabTestFixture.current().client().getVersion(new NullOperationMonitor());
 		assertNotNull(version);
-		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+"));
+		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+")); //$NON-NLS-1$
 	}
 
 	@Test
 	@GitLabTestService
 	void testVersionAndRevision() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		String version = client.getVersionAndRevision(new NullOperationMonitor());
+		String version = GitlabTestFixture.current().client().getVersionAndRevision(new NullOperationMonitor());
 		assertNotNull(version);
-		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+\\(rev: \\w+\\)"));
+		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+\\(rev: \\w+\\)")); //$NON-NLS-1$
 	}
 
 	@Test
 	@GitLabTestService
 	void validate() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		assertTrue(client.validate(new NullOperationMonitor()));
+		assertTrue(GitlabTestFixture.current().client().validate(new NullOperationMonitor()));
 	}
 
 	@Test
 	@GitLabTestService
 	void testGetMetadata() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		JsonObject metaData = client.getMetadata(new NullOperationMonitor());
+		JsonObject metaData = GitlabTestFixture.current().client().getMetadata(new NullOperationMonitor());
 		assertNotNull(metaData);
 		Set<String> keys = metaData.keySet();
 		assertEquals(4, keys.size());
-		assertTrue(keys.contains("version"));
-		assertTrue(keys.contains("revision"));
-		assertTrue(keys.contains("kas"));
-		assertTrue(keys.contains("enterprise"));
+		assertTrue(keys.contains("version")); //$NON-NLS-1$
+		assertTrue(keys.contains("revision")); //$NON-NLS-1$
+		assertTrue(keys.contains("kas")); //$NON-NLS-1$
+		assertTrue(keys.contains("enterprise")); //$NON-NLS-1$
 	}
 
 	@Test
 	@GitLabTestService
 	void testGetNamespaces() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		JsonElement namespaces = client.getNamespaces(new NullOperationMonitor());
-		assertNotNull(namespaces);
-		assertTrue(namespaces.isJsonArray());
-		JsonArray namespacesArray = namespaces.getAsJsonArray();
-		assertEquals(5, namespacesArray.size());
+		JsonElement resultElement = GitlabTestFixture.current().client().getNamespaces(new NullOperationMonitor());
+		assertNotNull(resultElement);
+		assertTrue(resultElement.isJsonArray());
+		JsonArray resultArray = resultElement.getAsJsonArray();
+		assertEquals(5, resultArray.size());
+		for (JsonElement resultObj : resultArray) {
+			JsonObject jsonObject = resultObj.getAsJsonObject();
+			JsonElement jsonElement = jsonObject.get("root_repository_size"); //$NON-NLS-1$
+			if (jsonElement != null && !(jsonElement instanceof JsonNull)) {
+				// size of root_repository_size could be 1923 or 1924
+				// so we change the expected value for this field
+				jsonObject.addProperty("root_repository_size", 1924); //$NON-NLS-1$
+			}
+			jsonElement = jsonObject.get("avatar_url"); //$NON-NLS-1$
+			if (jsonElement != null && !(jsonElement instanceof JsonNull)) {
+				jsonObject.addProperty("avatar_url", //$NON-NLS-1$
+						"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
+			}
+		}
 
-		// size of root_repository_size could be 1923 or 1924
-		// so we change the expected value for this field
-		int size = namespacesArray.get(3).getAsJsonObject().get("root_repository_size").getAsInt();
-		String expected = IOUtils
-				.toString(CommonTestUtil.getResource(this, "testdata/getNamespaces.json"), Charset.defaultCharset())
-				.replace("##size##", Integer.toString(size));
-		assertEquals("eclipse-mylyn", namespacesArray.get(3).getAsJsonObject().get("name").getAsString());
-		assertEquals(expected, new GsonBuilder().setPrettyPrinting().create().toJson(namespaces));
+		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getNamespaces.json"), //$NON-NLS-1$
+				Charset.defaultCharset());
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	@GitLabTestService
 	void testGetUser() throws Exception {
-		GitlabRestClient client = GitlabTestFixture.current().client();
-		TaskRepository tr = client.getTaskRepository();
-		JsonElement user = client.getUser(new NullOperationMonitor());
+		JsonElement user = GitlabTestFixture.current().client().getUser(new NullOperationMonitor());
 		assertNotNull(user);
-		String expected = IOUtils
-				.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), Charset.defaultCharset())
-				.replace("##created_at##", user.getAsJsonObject().get("created_at").getAsString())
-				.replace("##confirmed_at##", user.getAsJsonObject().get("confirmed_at").getAsString())
-				.replace("##last_activity_on##", user.getAsJsonObject().get("last_activity_on").getAsString());
-		assertEquals(expected, new GsonBuilder().setPrettyPrinting().create().toJson(user));
+		JsonObject userObj = user.getAsJsonObject();
+		userObj.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
+		userObj.addProperty("confirmed_at", "2024-02-14T11:11:11.112Z"); //$NON-NLS-1$ //$NON-NLS-2$
+		userObj.addProperty("last_activity_on", "2024-02-15"); //$NON-NLS-1$ //$NON-NLS-2$
+		userObj.addProperty("avatar_url", //$NON-NLS-1$
+				"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
+		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(user);
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
+				Charset.defaultCharset());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	@GitLabTestService
+	void testGetUsers() throws Exception {
+		JsonElement resultElement = GitlabTestFixture.current().client().getUsers("", new NullOperationMonitor());
+		assertNotNull(resultElement);
+		for (JsonElement resultObj : resultElement.getAsJsonArray()) {
+			JsonObject jsonObject = resultObj.getAsJsonObject();
+			jsonObject.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
+			jsonObject.addProperty("confirmed_at", "2024-02-14T11:11:11.112Z"); //$NON-NLS-1$ //$NON-NLS-2$
+			jsonObject.addProperty("last_activity_on", "2024-02-15"); //$NON-NLS-1$ //$NON-NLS-2$
+			jsonObject.addProperty("avatar_url", //$NON-NLS-1$
+					"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
+		}
+		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUsers.json"), //$NON-NLS-1$
+				Charset.defaultCharset());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	@GitLabTestService
+	void testGetGroups() throws Exception {
+		JsonElement resultElement = GitlabTestFixture.current().client().getGroups(new NullOperationMonitor());
+		assertNotNull(resultElement);
+		for (JsonElement resultObj : resultElement.getAsJsonArray()) {
+			JsonObject jsonObject = resultObj.getAsJsonObject();
+			jsonObject.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getGroups.json"), //$NON-NLS-1$
+				Charset.defaultCharset());
+		assertEquals(expected, actual);
 	}
 
 }

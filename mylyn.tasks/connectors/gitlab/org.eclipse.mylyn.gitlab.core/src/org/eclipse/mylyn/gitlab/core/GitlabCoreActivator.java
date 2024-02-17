@@ -57,7 +57,7 @@ public final class GitlabCoreActivator extends Plugin {
 
 	public static final String GITLAB_ACTIVITY_TYPE = "org.eclipse.mylyn.gitlab.activity.type"; //$NON-NLS-1$
 
-	public static enum ActivityType {
+	public enum ActivityType {
 		UNKNOWN, PERSON, PENCIL, UNLOCK, LOCK, CLOSED, REOPEN, LABEL, CALENDAR, DESIGN;
 	}
 
@@ -95,17 +95,13 @@ public final class GitlabCoreActivator extends Plugin {
 
 		Hashtable<String, String> properties = new Hashtable<>(2);
 		properties.put(DebugOptions.LISTENER_SYMBOLICNAME, PLUGIN_ID);
-		DEBUG_REGISTRATION = context.registerService(DebugOptionsListener.class, new DebugOptionsListener() {
-
-			@Override
-			public void optionsChanged(DebugOptions options) {
-				boolean debugCore = options.getBooleanOption(PLUGIN_ID + DEBUG, false);
-				DEBUG_TRACE = options.newDebugTrace(PLUGIN_ID);
-				DEBUG_REPOSITORY_CONNECTOR = debugCore
-						&& options.getBooleanOption(PLUGIN_ID + REPOSITORY_CONNECTOR, false);
-				DEBUG_REST_CLIENT = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT, false);
-				DEBUG_REST_CLIENT_TRACE = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT_TRACE, false);
-			}
+		DEBUG_REGISTRATION = context.registerService(DebugOptionsListener.class, options -> {
+			boolean debugCore = options.getBooleanOption(PLUGIN_ID + DEBUG, false);
+			DEBUG_TRACE = options.newDebugTrace(PLUGIN_ID);
+			DEBUG_REPOSITORY_CONNECTOR = debugCore
+					&& options.getBooleanOption(PLUGIN_ID + REPOSITORY_CONNECTOR, false);
+			DEBUG_REST_CLIENT = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT, false);
+			DEBUG_REST_CLIENT_TRACE = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT_TRACE, false);
 		}, properties);
 	}
 

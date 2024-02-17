@@ -40,7 +40,6 @@ public class GitlabActivityStyle implements Cloneable {
 	private String url;
 
 	public GitlabActivityStyle(int start) {
-		super();
 		this.start = start;
 		color = COLOR_INHERIT_DEFAULT;
 	}
@@ -97,7 +96,7 @@ public class GitlabActivityStyle implements Cloneable {
 	@Override
 	public String toString() {
 		return "GitlabActivityStyle [start=" + start + ", length=" + length + ", fontStyle=" + fontStyle + ", color=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				+ color + ", url=" + url + "]";  //$NON-NLS-1$//$NON-NLS-2$
+				+ color + ", url=" + url + "]"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }
