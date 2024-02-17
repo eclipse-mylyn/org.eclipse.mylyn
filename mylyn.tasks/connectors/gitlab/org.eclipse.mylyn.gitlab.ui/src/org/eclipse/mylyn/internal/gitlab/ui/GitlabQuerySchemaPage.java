@@ -56,7 +56,7 @@ public class GitlabQuerySchemaPage extends RepositoryQuerySchemaPage {
 
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		query.setSummary(this.getQueryTitle());
+		query.setSummary(getQueryTitle());
 		query.setUrl(getQueryUrl(getTaskRepository().getRepositoryUrl()));
 		for (Entry<String, AbstractAttributeEditor> entry : editorMap.entrySet()) {
 			if (entry.getValue() instanceof MultiSelectionAttributeEditor) {

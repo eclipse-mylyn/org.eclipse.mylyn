@@ -147,7 +147,8 @@ public class TestConfiguration {
 		List<FixtureConfiguration> configurations = getConfigurations(location, result);
 		if (configurations != null) {
 			for (FixtureConfiguration configuration : configurations) {
-				if (configuration != null) {
+				if (configuration != null && configuration.getUrl() != null
+						&& !configuration.getUrl().startsWith("http")) {
 					configuration.setUrl(baseUrl + configuration.getUrl());
 				}
 			}

@@ -112,7 +112,7 @@ public class GitlabTaskEditorCommentPart extends TaskEditorCommentPart {
 
 		@Override
 		protected void closeAdditionalControls() {
-			subViewer.forEach(subView -> subView.dispose());
+			subViewer.forEach(GitlabCommentViewer::dispose);
 			subViewer.clear();
 		}
 	}

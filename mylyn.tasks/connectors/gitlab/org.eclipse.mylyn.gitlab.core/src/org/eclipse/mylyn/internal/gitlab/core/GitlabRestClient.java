@@ -467,16 +467,13 @@ public class GitlabRestClient {
 		} else {
 			AuthenticationCredentials credentials1 = taskRepository
 					.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
-			String username = credentials1.getUserName();
-			String password = credentials1.getPassword();
-			String repositoryUrl = taskRepository.getRepositoryUrl();
 
-			URL url = new URL(repositoryUrl + "/oauth/token"); //$NON-NLS-1$
+			URL url = new URL(taskRepository.getRepositoryUrl() + "/oauth/token"); //$NON-NLS-1$
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST"); //$NON-NLS-1$
 			connection.setDoOutput(true);
 			connection.getOutputStream()
-					.write(("grant_type=password&username=" + username + "&password=" + password).getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+					.write(("grant_type=password&username=" + credentials1.getUserName() + "&password=" + credentials1.getPassword()).getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			connection.connect();
 
 			int responseCode = connection.getResponseCode();
