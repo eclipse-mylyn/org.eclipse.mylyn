@@ -167,16 +167,16 @@ public final class GitlabConfiguration implements Serializable {
 		TaskAttribute priorityAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.PRIORITY.getKey());
 		if (priorityAttrib != null) {
 			priorityAttrib.putOption("CRITICAL", "critical"); //$NON-NLS-1$ //$NON-NLS-2$
-			priorityAttrib.putOption("HIGH", "high");  //$NON-NLS-1$ //$NON-NLS-2$
-			priorityAttrib.putOption("MEDIUM", "Medium");  //$NON-NLS-1$ //$NON-NLS-2$
-			priorityAttrib.putOption("LOW", "low");  //$NON-NLS-1$ //$NON-NLS-2$
-			priorityAttrib.putOption("UNKNOWN", "unknown");  //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("HIGH", "high"); //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("MEDIUM", "Medium"); //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("LOW", "low"); //$NON-NLS-1$ //$NON-NLS-2$
+			priorityAttrib.putOption("UNKNOWN", "unknown"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		TaskAttribute typeAttrib = taskData.getRoot().getMappedAttribute(SCHEMA.ISSUE_TYPE.getKey());
 		if (typeAttrib != null) {
-			typeAttrib.putOption("issue", "Issue");  //$NON-NLS-1$//$NON-NLS-2$ 
-			typeAttrib.putOption("incident", "Incident");  //$NON-NLS-1$//$NON-NLS-2$ 
+			typeAttrib.putOption("issue", "Issue"); //$NON-NLS-1$//$NON-NLS-2$
+			typeAttrib.putOption("incident", "Incident"); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		return true;

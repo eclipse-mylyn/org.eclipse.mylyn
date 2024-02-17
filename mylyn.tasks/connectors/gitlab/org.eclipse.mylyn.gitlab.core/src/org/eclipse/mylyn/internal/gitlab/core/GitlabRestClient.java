@@ -105,7 +105,6 @@ public class GitlabRestClient {
 	@SuppressWarnings("restriction")
 	public GitlabRestClient(RepositoryLocation location, GitlabRepositoryConnector connector,
 			TaskRepository taskRepository) {
-		super();
 		client = new CommonHttpClient(location);
 		this.connector = connector;
 		this.taskRepository = taskRepository;
@@ -137,7 +136,7 @@ public class GitlabRestClient {
 
 		if (!queryProjects[0].isEmpty()) {
 			for (String string : queryProjects) {
-				String path = "/projects/" + string.replaceAll("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String path = "/projects/" + string.replace("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				getIssuesInternal(query, collector, path, monitor);
 			}
 		}
@@ -145,7 +144,7 @@ public class GitlabRestClient {
 			String[] gueryGroups = groupAttribute.split(","); //$NON-NLS-1$
 			if (!gueryGroups[0].isEmpty()) {
 				for (String string : gueryGroups) {
-					String path = "/groups/" + string.replaceAll("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					String path = "/groups/" + string.replace("/", "%2F"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					getIssuesInternal(query, collector, path, monitor);
 				}
 			}
@@ -186,10 +185,10 @@ public class GitlabRestClient {
 						e.printStackTrace();
 					}
 				}
-				if (Boolean.valueOf(query.getAttribute("CONFIDENTIAL"))) { //$NON-NLS-1$
+				if (Boolean.parseBoolean(query.getAttribute("CONFIDENTIAL"))) { //$NON-NLS-1$
 					suffix.add("confidential=true"); //$NON-NLS-1$
 				}
-				if (Boolean.valueOf(query.getAttribute("ASSIGNED_TO_ME"))) { //$NON-NLS-1$
+				if (Boolean.parseBoolean(query.getAttribute("ASSIGNED_TO_ME"))) { //$NON-NLS-1$
 					suffix.add("scope=assigned_to_me"); //$NON-NLS-1$
 				}
 
@@ -320,7 +319,8 @@ public class GitlabRestClient {
 				try (BufferedReader bufferedReader = new BufferedReader(in)) {
 					return bufferedReader.lines().parallel().collect(Collectors.joining("\n")); //$NON-NLS-1$
 				} catch (IOException e) {
-					throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
+					throw new GitlabException(
+							new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, e.getMessage(), e));
 				}
 			}
 		}.run(monitor);
@@ -473,7 +473,8 @@ public class GitlabRestClient {
 			connection.setRequestMethod("POST"); //$NON-NLS-1$
 			connection.setDoOutput(true);
 			connection.getOutputStream()
-					.write(("grant_type=password&username=" + credentials1.getUserName() + "&password=" + credentials1.getPassword()).getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+					.write(("grant_type=password&username=" + credentials1.getUserName() + "&password=" //$NON-NLS-1$//$NON-NLS-2$
+							+ credentials1.getPassword()).getBytes());
 			connection.connect();
 
 			int responseCode = connection.getResponseCode();
@@ -883,6 +884,23 @@ public class GitlabRestClient {
 	public JsonArray getNamespaces(IOperationMonitor monitor) throws GitlabException {
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/namespaces") { //$NON-NLS-1$
+			@Override
+			protected HttpRequestBase createHttpRequestBase(String url) {
+				HttpRequestBase request = new HttpGet(url);
+				return request;
+			}
+
+			@Override
+			protected JsonArray parseFromJson(InputStreamReader in) throws GitlabException {
+				return new Gson().fromJson(in, JsonArray.class);
+			}
+		}.run(monitor);
+		return jsonArray;
+	}
+
+	public JsonArray getGroups(IOperationMonitor monitor) throws GitlabException {
+		getAccessTokenIfNotPresent(monitor);
+		JsonArray jsonArray = new GitlabJSonArrayOperation(client, "/groups") { //$NON-NLS-1$
 			@Override
 			protected HttpRequestBase createHttpRequestBase(String url) {
 				HttpRequestBase request = new HttpGet(url);
@@ -1377,11 +1395,11 @@ public class GitlabRestClient {
 				discussionsId = iidAttribute.getValue();
 				if (noteableIdAttrib != null) {
 					newComentValue = "{\"note_id\":" + noteableIdAttrib.getValue() + ",\"body\":\"" //$NON-NLS-1$ //$NON-NLS-2$
-							+ newAttrib.getValue().replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"") + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+							+ newAttrib.getValue().replace("\n", "\\n").replace("\"", "\\\"") + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 					TaskAttribute xx1 = newAttrib.getAttribute("discussions"); //$NON-NLS-1$
-					discussionsId += ("/discussions/" + xx1.getValue()); //$NON-NLS-1$
+					discussionsId += "/discussions/" + xx1.getValue(); //$NON-NLS-1$
 				} else {
-					newComentValue = "{\"body\":\"" + newAttrib.getValue().replaceAll("\n", "\\\n") + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					newComentValue = "{\"body\":\"" + newAttrib.getValue().replace('\n', '\n') + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -1483,7 +1501,7 @@ public class GitlabRestClient {
 		StringBuffer ostr = new StringBuffer();
 		for (int i = 0; i < str.length(); i++) {
 			char ch = str.charAt(i);
-			if ((ch >= 0x0020) && (ch <= 0x007e)) {
+			if (ch >= 0x0020 && ch <= 0x007e) {
 				ostr.append(ch);
 			} else {
 				ostr.append("\\u"); //$NON-NLS-1$
@@ -1494,7 +1512,7 @@ public class GitlabRestClient {
 				ostr.append(hex.toLowerCase());
 			}
 		}
-		return (new String(ostr));
+		return new String(ostr);
 	}
 
 	public JsonArray getProjectLabels(String projectid, IOperationMonitor monitor) throws GitlabException {

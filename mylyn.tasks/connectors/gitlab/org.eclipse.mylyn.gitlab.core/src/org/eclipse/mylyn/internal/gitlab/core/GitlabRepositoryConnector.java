@@ -59,7 +59,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
@@ -69,7 +68,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		private final TaskRepository repository;
 
 		public RepositoryKey(@NonNull TaskRepository repository) {
-			super();
 			this.repository = repository;
 		}
 
@@ -90,7 +88,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			if (obj == null || getClass() != obj.getClass()) {
 				return false;
 			}
-			return this.repository.equals(((RepositoryKey) obj).getRepository());
+			return repository.equals(((RepositoryKey) obj).getRepository());
 		}
 	}
 
@@ -146,18 +144,12 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public GitlabRepositoryConnector(Duration refreshAfterWriteDuration) {
-		super();
 		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
-				.build(new CacheLoader<RepositoryKey, Optional<GitlabConfiguration>>() {
-
-					@Override
-					public Optional<GitlabConfiguration> load(RepositoryKey key) throws Exception {
-						GitlabRestClient client = clientCache.get(key);
-						TaskRepository repository = key.getRepository();
-						repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
-						return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
-					}
-
+				.build(key -> {
+					GitlabRestClient client = clientCache.get(key);
+					TaskRepository repository = key.getRepository();
+					repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
+					return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
 				});
 	}
 
@@ -318,56 +310,44 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		return clientCache.get(new RepositoryKey(repository));
 	}
 
-	private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			TaskRepository taskRepository = (TaskRepository) evt.getSource();
-			clientCache.invalidate(new RepositoryKey(taskRepository));
-		}
+	private final PropertyChangeListener repositoryChangeListener4ClientCache = evt -> {
+		TaskRepository taskRepository = (TaskRepository) evt.getSource();
+		this.clientCache.invalidate(new RepositoryKey(taskRepository));
 	};
 
 	private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = Caffeine.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
-			.build(new CacheLoader<RepositoryKey, GitlabRestClient>() {
-
-				@Override
-				public GitlabRestClient load(RepositoryKey key) throws Exception {
-					TaskRepository repository = key.getRepository();
-					repository.addChangeListener(repositoryChangeListener4ClientCache);
-					return createClient(repository);
-				}
+			.build(key -> {
+				TaskRepository repository = key.getRepository();
+				repository.addChangeListener(repositoryChangeListener4ClientCache);
+				return createClient(repository);
 			});
 
 	private final LoadingCache<String, byte[]> avatarCache = Caffeine.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
-			.build(new CacheLoader<String, byte[]>() {
+			.build(key -> {
+				byte[] avatarBytes = null;
+				HttpURLConnection connection;
 
-				@Override
-				public byte[] load(String key) throws Exception {
-					byte[] avatarBytes = null;
-					HttpURLConnection connection;
+				connection = (HttpURLConnection) new URL(key).openConnection();
+				connection.setConnectTimeout(30000);
+				connection.setUseCaches(false);
+				connection.connect();
 
-					connection = (HttpURLConnection) new URL(key).openConnection();
-					connection.setConnectTimeout(30000);
-					connection.setUseCaches(false);
-					connection.connect();
+				if (connection.getResponseCode() == 200) {
 
-					if (connection.getResponseCode() == 200) {
-
-						try (ByteArrayOutputStream output = new ByteArrayOutputStream();
-								InputStream input = connection.getInputStream()) {
-							byte[] buffer = new byte[8192];
-							int read = -1;
-							while ((read = input.read(buffer)) != -1) {
-								output.write(buffer, 0, read);
-							}
-
-							avatarBytes = output.toByteArray();
+					try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+							InputStream input = connection.getInputStream()) {
+						byte[] buffer = new byte[8192];
+						int read = -1;
+						while ((read = input.read(buffer)) != -1) {
+							output.write(buffer, 0, read);
 						}
+
+						avatarBytes = output.toByteArray();
 					}
-					return avatarBytes;
 				}
+				return avatarBytes;
 			});
 
 	public GitlabRestClient createClient(TaskRepository repository) {
