@@ -12,7 +12,7 @@ updates:
     labels:
       - dependencies
   - package-ecosystem: maven
-    directory: mylyn.docs
+    directory: org.eclipse.mylyn
     schedule:
       interval: daily
     commit-message:
