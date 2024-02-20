@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.context.ui" version="2">
+    <resource path="src/org/eclipse/mylyn/context/ui/InterestSorter.java" type="org.eclipse.mylyn.context.ui.InterestSorter">
+        <filter comment="Intended change. This class is more like Mylyn-internal API" id="338849923">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.context.ui.InterestSorter"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
