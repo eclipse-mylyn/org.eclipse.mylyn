@@ -84,7 +84,9 @@
     ports:       
       - "5000:5000"
     networks:
-      - name: mylyn_net
+      - name: mylyn_net    
+    restart: true
+    restart_policy: "unless-stopped"
     env:
       REGISTRY_HTTP_ADDR: 0.0.0.0:5000
       REGISTRY_HTTP_TLS_CERTIFICATE: "/run/secrets/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.crt"
@@ -92,4 +94,4 @@
     volumes:
       - "registry-data-volume:/var/lib/registry"
       - "/mylyn-config-dir/certs:/run/secrets"
-  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single'))
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single' or docker_mode == 'gitlab'))

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastian Schmidt - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.debug.ui;
@@ -74,7 +75,6 @@ public class BreakpointsStateUtil {
 	}
 
 	private void saveStateFile(File stateFile, InputStream exportedBreakpoints) {
-		FileOutputStream output = null;
 		if (!stateFile.exists()) {
 			try {
 				stateFile.createNewFile();
@@ -82,20 +82,12 @@ public class BreakpointsStateUtil {
 				return;
 			}
 		}
-		try {
-			output = new FileOutputStream(stateFile);
+		try (FileOutputStream output = new FileOutputStream(stateFile)) {
+			IOUtils.copy(exportedBreakpoints, output);
 		} catch (FileNotFoundException e) {
 			return;
-		}
-		try {
-			IOUtils.copy(exportedBreakpoints, output);
 		} catch (IOException e) {
 			// FIXME
-		} finally {
-			try {
-				output.close();
-			} catch (IOException e) {
-			}
 		}
 	}
 }

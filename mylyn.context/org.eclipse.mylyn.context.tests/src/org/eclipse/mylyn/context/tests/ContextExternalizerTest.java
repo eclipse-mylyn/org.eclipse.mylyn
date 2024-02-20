@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -45,6 +47,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * @author Mik Kersten
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class ContextExternalizerTest extends AbstractContextTest {
 
 	private static final String CONTEXT_HANDLE = "context-externalization";
@@ -296,8 +299,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		File file = File.createTempFile("context", null);
 		file.deleteOnExit();
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-		try (out) {
+		try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file))) {
 			ZipEntry entry = new ZipEntry("name");
 			out.putNextEntry(entry);
 		}
@@ -343,7 +345,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		InputStream resultStream = externalizer.getAdditionalInformation(contextFile, testContributorId);
 		assertNotNull(resultStream);
 		assertNull(externalizer.getAdditionalInformation(contextFile, "nonExistingContributor"));
-		assertEquals(testData, new Scanner(resultStream).useDelimiter("\\A").next());
+		try (Scanner scanner = new Scanner(resultStream)) {
+			assertEquals(testData, scanner.useDelimiter("\\A").next());
+		}
 
 		resultStream = ContextCore.getContextManager().getAdditionalContextData(context, testContributorId);
 		assertNotNull(resultStream);

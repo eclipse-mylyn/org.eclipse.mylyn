@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.sdk.java;
@@ -46,6 +47,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
+@SuppressWarnings("nls")
 public class WorkspaceSetupHelper {
 
 	private static final int MAX_RETRY = 10;

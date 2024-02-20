@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Sebastian Schmidt - bug 387156
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -33,31 +34,30 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { IInteractionContext.class };
 
 	@Override
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType == IInteractionContext.class) {
 			if (adaptableObject == TasksUi.getTaskActivityManager().getActiveTask()) {
-				return ContextCore.getContextManager().getActiveContext();
+				return adapterType.cast(ContextCore.getContextManager().getActiveContext());
 			} else if (adaptableObject instanceof TaskEditorInput editorInput) {
 				ITask task = editorInput.getTask();
-				return ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());
+				return adapterType.cast(ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()));
 			}
 		} else if (adapterType == ContextAwareEditorInput.class) {
 			if (adaptableObject instanceof final TaskEditorInput input) {
 				// forces closing of task editors that do not show the active task
-				return new ContextAwareEditorInput() {
+				return adapterType.cast(new ContextAwareEditorInput() {
 					@Override
 					public boolean forceClose(String contextHandle) {
 						return !input.getTask().getHandleIdentifier().equals(contextHandle);
 					}
-				};
+				});
 			}
 		}
 		return null;
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 

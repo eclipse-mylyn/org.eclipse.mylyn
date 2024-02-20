@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -21,6 +22,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class ContextTest extends AbstractContextTest {
 
 	private InteractionContext context;

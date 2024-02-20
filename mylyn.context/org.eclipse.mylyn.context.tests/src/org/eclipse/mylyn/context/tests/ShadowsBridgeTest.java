@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Andrew Eisenberg - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
  * 
  * @author Andrew Eisenberg
  */
+@SuppressWarnings("nls")
 public class ShadowsBridgeTest extends AbstractContextTest {
 
 	static final String BASE_CONTENT_TYPE = "BASE_CONTENT_TYPE";

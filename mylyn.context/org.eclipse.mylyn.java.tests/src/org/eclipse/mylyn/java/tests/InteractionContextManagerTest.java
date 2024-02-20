@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -55,6 +56,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;

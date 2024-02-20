@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests.support;
@@ -38,6 +39,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Mik Kersten TODO: merge into a single externalizer
  */
+@SuppressWarnings("nls")
 public class DomContextReader implements IInteractionContextReader {
 
 	@Override

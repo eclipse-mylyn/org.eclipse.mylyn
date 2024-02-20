@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "Administrator",
+    "path": "root",
+    "kind": "user",
+    "full_path": "root",
+    "avatar_url": "https://secure.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/root"
+  },
+  {
+    "id": 2,
+    "name": "Mylyn Admin User",
+    "path": "mylynAdmin",
+    "kind": "user",
+    "full_path": "mylynAdmin",
+    "avatar_url": "https://secure.gravatar.com/avatar/1bfa5556d1f8f657fa1a20d579a12e9f?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/mylynAdmin"
+  },
+  {
+    "id": 3,
+    "name": "Mylyn Test User",
+    "path": "mylynTest",
+    "kind": "user",
+    "full_path": "mylynTest",
+    "avatar_url": "https://secure.gravatar.com/avatar/3977471931ae7d1fdbf787a2e06676a2?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/mylynTest"
+  },
+  {
+    "id": 4,
+    "name": "eclipse-mylyn",
+    "path": "eclipse-mylyn",
+    "kind": "group",
+    "full_path": "eclipse-mylyn",
+    "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn",
+    "members_count_with_descendants": 1,
+    "root_repository_size": ##size##,
+    "projects_count": 1
+  },
+  {
+    "id": 5,
+    "name": "ci-test",
+    "path": "ci-test",
+    "kind": "group",
+    "full_path": "eclipse-mylyn/ci-test",
+    "parent_id": 4,
+    "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test",
+    "members_count_with_descendants": 1,
+    "projects_count": 1
+  }
+]

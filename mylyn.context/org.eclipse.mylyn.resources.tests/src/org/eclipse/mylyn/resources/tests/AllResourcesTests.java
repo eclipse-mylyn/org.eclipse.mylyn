@@ -20,6 +20,7 @@ import junit.framework.TestSuite;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class AllResourcesTests {
 
 	public static Test suite() {

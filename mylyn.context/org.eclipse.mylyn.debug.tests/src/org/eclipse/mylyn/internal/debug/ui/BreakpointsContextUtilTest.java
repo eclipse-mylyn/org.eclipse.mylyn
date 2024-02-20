@@ -45,6 +45,7 @@ import org.junit.Test;
 /**
  * @author Sebastian Schmidt
  */
+@SuppressWarnings("nls")
 public class BreakpointsContextUtilTest {
 
 	private final String contextFileName = "contextWithBreakpoints.xml.zip"; //$NON-NLS-1$

@@ -20,11 +20,9 @@ import java.util.Arrays;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -125,16 +123,12 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 			}
 
 		});
-		groups.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.size() > 0) {
-					groupInput.setText((String) selection.getFirstElement());
-				}
-				updateUIEnablement();
+		groups.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			if (selection.size() > 0) {
+				groupInput.setText((String) selection.getFirstElement());
 			}
+			updateUIEnablement();
 		});
 
 		groupAddButton = new Button(aditionalContainer, SWT.PUSH);
@@ -204,16 +198,12 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 			}
 
 		});
-		projects.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.size() > 0) {
-					projectInput.setText((String) selection.getFirstElement());
-				}
-				updateUIEnablement();
+		projects.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			if (selection.size() > 0) {
+				projectInput.setText((String) selection.getFirstElement());
 			}
+			updateUIEnablement();
 		});
 
 		projectAddButton = new Button(aditionalContainer, SWT.PUSH);

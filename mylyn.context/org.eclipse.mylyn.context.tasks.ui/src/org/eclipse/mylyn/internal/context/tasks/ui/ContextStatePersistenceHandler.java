@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -54,18 +55,8 @@ public class ContextStatePersistenceHandler {
 
 		ICommonStorable storable = getStorable(context.getHandleIdentifier());
 		if (storable != null) {
-			try {
-				InputStream in = null;
-				if (storable.exists(FILE_NAME)) {
-					in = storable.read(FILE_NAME, null);
-				}
-				try {
-					getStateManager().restoreState(context, in);
-				} finally {
-					if (in != null) {
-						in.close();
-					}
-				}
+			try (InputStream in = storable.exists(FILE_NAME) ? storable.read(FILE_NAME, null) : null) {
+				getStateManager().restoreState(context, in);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 						NLS.bind("Unexpected error restoring the context state for {0}", context.getHandleIdentifier()), //$NON-NLS-1$
@@ -137,8 +128,7 @@ public class ContextStatePersistenceHandler {
 		ICommonStorable storable = getStorable(context.getHandleIdentifier());
 		if (storable != null) {
 			try {
-				OutputStream out = storable.write(FILE_NAME, null);
-				try (out) {
+				try (OutputStream out = storable.write(FILE_NAME, null)) {
 					getStateManager().saveState(context, out, allowModifications);
 				}
 			} catch (Exception e) {
@@ -187,18 +177,16 @@ public class ContextStatePersistenceHandler {
 
 	private void copyStateFile(ICommonStorable sourceStorable, ICommonStorable targetStorable, String handle)
 			throws CoreException, IOException {
-		BufferedInputStream in = new BufferedInputStream(sourceStorable.read(handle, null));
-		try (in) {
-			BufferedOutputStream out = new BufferedOutputStream(targetStorable.write(handle, null));
-			try (out) {
-				byte[] buffer = new byte[4096];
-				while (true) {
-					int count = in.read(buffer);
-					if (count == -1) {
-						return;
-					}
-					out.write(buffer, 0, count);
+
+		try (BufferedInputStream in = new BufferedInputStream(sourceStorable.read(handle, null));
+				BufferedOutputStream out = new BufferedOutputStream(targetStorable.write(handle, null))) {
+			byte[] buffer = new byte[4096];
+			while (true) {
+				int count = in.read(buffer);
+				if (count == -1) {
+					return;
 				}
+				out.write(buffer, 0, count);
 			}
 		}
 	}

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.tests;
@@ -31,6 +32,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class CopyCommitMessageHandlerTest extends TestCase {
 
 	private Clipboard clipboard;

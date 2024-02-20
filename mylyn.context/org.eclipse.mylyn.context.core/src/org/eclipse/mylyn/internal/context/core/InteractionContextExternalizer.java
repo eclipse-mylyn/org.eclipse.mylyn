@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.core;
@@ -77,8 +78,7 @@ public class InteractionContextExternalizer {
 
 	static String getFirstContextHandle(File sourceFile) throws CoreException {
 		try {
-			ZipFile zipFile = new ZipFile(sourceFile);
-			try (zipFile) {
+			try (ZipFile zipFile = new ZipFile(sourceFile)) {
 				for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
 					ZipEntry entry = (ZipEntry) e.nextElement();
 					String name = entry.getName();
@@ -119,12 +119,9 @@ public class InteractionContextExternalizer {
 			return;
 		}
 
-		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		try (fileOutputStream) {
-			ZipOutputStream outputStream = new ZipOutputStream(fileOutputStream);
-			try (outputStream) {
-				writeContext(context, outputStream, writer);
-			}
+		try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+				ZipOutputStream outputStream = new ZipOutputStream(fileOutputStream)) {
+			writeContext(context, outputStream, writer);
 		}
 	}
 
@@ -164,9 +161,8 @@ public class InteractionContextExternalizer {
 
 				@Override
 				public void run() throws Exception {
-					InputStream additionalContextInformation = contributor.getDataAsStream(context);
-					if (additionalContextInformation != null) {
-						try {
+					try (InputStream additionalContextInformation = contributor.getDataAsStream(context)) {
+						if (additionalContextInformation != null) {
 							String encoded = URLEncoder.encode(contributor.getIdentifier(),
 									InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 							ZipEntry zipEntry = new ZipEntry(encoded);
@@ -174,8 +170,6 @@ public class InteractionContextExternalizer {
 							IOUtils.copy(additionalContextInformation, outputStream);
 							outputStream.flush();
 							outputStream.closeEntry();
-						} finally {
-							additionalContextInformation.close();
 						}
 					}
 				}

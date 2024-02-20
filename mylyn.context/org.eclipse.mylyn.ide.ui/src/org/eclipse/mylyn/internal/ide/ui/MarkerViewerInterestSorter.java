@@ -8,13 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -24,7 +25,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 /**
  * @author Mik Kersten
  */
-public class MarkerViewerInterestSorter extends ViewerSorter {
+public class MarkerViewerInterestSorter extends ViewerComparator {
 
 	protected InterestComparator<IInteractionElement> interestComparator = new InterestComparator<>();
 

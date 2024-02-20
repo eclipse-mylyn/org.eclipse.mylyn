@@ -11,12 +11,18 @@ This setup is only tested on am MacBook Pro M1.
 
 1. Download Multipass
    please install https://multipass.run/install for your platform
-2. Create the Multipass VM's (3 VM's)
-   - switch to this folder
+2. Add certificate so you can run a runtime Workspace
+   
+   Steps from my Mac Environment use $JAVA_HOME on other Environments.
+   $JAVA_HOME was not set on my environment so I have to use th Path '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home' instead
+
+   1. cp /Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/security/cacerts to the root folder of your installation ../certs/cacerts
+3. Create the Multipass VM's (3 VM's)
+  - switch to this folder
      ```
      cd ./org.eclipse.mylyn.all/org.eclipse.mylyn/org.eclipse.mylyn.releng/multipass/
      ```
-   - create the 3 VM's
+  - create the 3 VM's
      ```
      ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=container"
      or
@@ -27,7 +33,7 @@ This setup is only tested on am MacBook Pro M1.
      This creates the 3 VM's and make sure that /etc/hosts contains the correct entries
      and also update the inventory.yml with the new IP addresses of the VM's.
      During the first time run we create a sshkey for all instances in folder first_setup
-3. First time Setup the VM's
+4. First time Setup the VM's
    ```
    ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=container"
    or
@@ -35,7 +41,7 @@ This setup is only tested on am MacBook Pro M1.
    or
    ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
-4. restart the services the VM's 
+5. restart the services the VM's 
    ```
    ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="docker_run_mode=container"
    or
@@ -48,8 +54,7 @@ This setup is only tested on am MacBook Pro M1.
    ansible-playbook mylyn_setup.yml --skip-tags base_software --extra-vars="swarm_recreate=true" --extra-vars="docker_run_mode=swarm"
    ```
 
-5. delete VM's and recreate VM's
-   
+6. delete VM's and recreate VM's 
    1. delete the running VM's
    ```
    multipass delete mylynadm01 
@@ -76,5 +81,3 @@ This setup is only tested on am MacBook Pro M1.
    ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=single"
    ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
-   
-Scrach Pad

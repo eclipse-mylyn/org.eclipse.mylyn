@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui;
@@ -37,24 +38,22 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Object object, Class adapterType) {
+	public <T> T getAdapter(Object object, Class<T> adapterType) {
 		if (!AbstractTaskReference.class.equals(adapterType)) {
 			return null;
 		}
 
 		if (object instanceof ChangeSetDiffNode) {
-			return adaptChangeSetDiffNode(object);
+			return adapterType.cast(adaptChangeSetDiffNode(object));
 		}
 
 		// TODO add other adapted types
 
-		return adaptFromComment(object);
+		return adapterType.cast(adaptFromComment(object));
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -33,6 +34,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class ProblemsListTest extends AbstractJavaContextTest {
 
 	boolean done = false;
@@ -50,7 +52,7 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 		manager.processInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), 2f));
 
 		TableViewer viewer = new TableViewer(new Table(problemsPart.getViewSite().getShell(), SWT.NULL));
-		viewer.setSorter(new MarkerViewerInterestSorter());
+		viewer.setComparator(new MarkerViewerInterestSorter());
 
 		IMarker[] markers = type1.getResource()
 				.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);

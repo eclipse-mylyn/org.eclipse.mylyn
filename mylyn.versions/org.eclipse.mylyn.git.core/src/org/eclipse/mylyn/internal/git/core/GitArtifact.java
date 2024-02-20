@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.git.core;
@@ -62,8 +63,7 @@ public class GitArtifact extends ScmArtifact {
 					return new IStorage() {
 
 						@Override
-						@SuppressWarnings("rawtypes")
-						public Object getAdapter(Class adapter) {
+						public <T> T getAdapter(Class<T> adapter) {
 							return null;
 						}
 

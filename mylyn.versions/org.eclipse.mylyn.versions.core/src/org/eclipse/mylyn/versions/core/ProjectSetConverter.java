@@ -9,6 +9,7 @@
  *
  *     IBM Corporation - initial API and implementation
  *     Manuel Doninger - fixes for bug 376271
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.versions.core;
@@ -154,15 +155,10 @@ public class ProjectSetConverter {
 
 	private static XmlMemento parseStream(InputStream input)
 			throws InvocationTargetException, UnsupportedEncodingException {
-		InputStreamReader reader = new InputStreamReader(input, "UTF-8"); //$NON-NLS-1$
-		try {
+		try (InputStreamReader reader = new InputStreamReader(input, "UTF-8")) { //$NON-NLS-1$
 			return XmlMemento.createReadRoot(reader);
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				// ignore
-			}
+		} catch (IOException e) {
+			throw new InvocationTargetException(e);
 		}
 	}
 

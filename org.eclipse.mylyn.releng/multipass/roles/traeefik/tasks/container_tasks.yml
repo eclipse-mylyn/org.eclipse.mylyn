@@ -25,6 +25,8 @@
       - "443:443"
     networks:
       - name: mylyn_net
+    restart: true
+    restart_policy: "unless-stopped"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/mylyn-runtime-dir/{{ role_name }}/logs:/logs"

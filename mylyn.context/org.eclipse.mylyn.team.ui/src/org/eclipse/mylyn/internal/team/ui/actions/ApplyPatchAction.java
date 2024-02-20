@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Peter Stibrany - fixes for bug 220314
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui.actions;
@@ -24,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -112,7 +113,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 		public void run(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 			try {
-				IStatus result = execute(new SubProgressMonitor(monitor, 100));
+				IStatus result = execute(SubMonitor.convert(monitor, 100));
 				if (result != null && !result.isOK()) {
 					throw new CoreException(result);
 				}
@@ -134,11 +135,31 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 			file.deleteOnExit();
 
 			boolean ok = false;
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(file);
+			try (FileOutputStream fos = new FileOutputStream(file)) {
 				AttachmentUtil.downloadAttachment(attachment, fos, monitor);
 				ok = true;
+
+				IWorkbenchPartSite site = wbPart.getSite();
+				if (site == null) {
+					return new Status(IStatus.WARNING, FocusedTeamUiPlugin.ID_PLUGIN,
+							Messages.ApplyPatchAction_cannotApplyPatch);
+				}
+
+				final Display disp = site.getWorkbenchWindow().getWorkbench().getDisplay();
+				if (disp.isDisposed()) {
+					return new Status(IStatus.WARNING, FocusedTeamUiPlugin.ID_PLUGIN,
+							Messages.ApplyPatchAction_cannotApplyPatch);
+				}
+
+				final AttachmentFileStorage fileStorage = new AttachmentFileStorage(file, attachmentFilename);
+
+				disp.asyncExec(() -> {
+					ApplyPatchOperation op = new ApplyPatchOperation(wbPart, fileStorage, null, new CompareConfiguration());
+
+					BusyIndicator.showWhile(disp, op);
+				});
+
+				return Status.OK_STATUS;
 			} catch (IOException e) {
 				return new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 						Messages.ApplyPatchAction_failedToDownloadPatch, e);
@@ -149,46 +170,10 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 				}
 				return new Status(s, FocusedTeamUiPlugin.ID_PLUGIN, Messages.ApplyPatchAction_failedToDownloadPatch, e);
 			} finally {
-				if (fos != null) {
-					try {
-						fos.close();
-					} catch (IOException e) {
-						if (ok) {
-							// report this exception if there was no other problem until now ... we will not work with file
-							// which cannot be closed properly, because this indicates some problem
-							file.delete();
-							return new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-									Messages.ApplyPatchAction_failedToDownloadPatch, e);
-						}
-					}
-				}
-
 				if (!ok) {
 					file.delete();
 				}
 			}
-
-			IWorkbenchPartSite site = wbPart.getSite();
-			if (site == null) {
-				return new Status(IStatus.WARNING, FocusedTeamUiPlugin.ID_PLUGIN,
-						Messages.ApplyPatchAction_cannotApplyPatch);
-			}
-
-			final Display disp = site.getWorkbenchWindow().getWorkbench().getDisplay();
-			if (disp.isDisposed()) {
-				return new Status(IStatus.WARNING, FocusedTeamUiPlugin.ID_PLUGIN,
-						Messages.ApplyPatchAction_cannotApplyPatch);
-			}
-
-			final AttachmentFileStorage fileStorage = new AttachmentFileStorage(file, attachmentFilename);
-
-			disp.asyncExec(() -> {
-				ApplyPatchOperation op = new ApplyPatchOperation(wbPart, fileStorage, null, new CompareConfiguration());
-
-				BusyIndicator.showWhile(disp, op);
-			});
-
-			return Status.OK_STATUS;
 		}
 	}
 

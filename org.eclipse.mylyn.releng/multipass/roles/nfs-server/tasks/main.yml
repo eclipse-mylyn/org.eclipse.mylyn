@@ -1,0 +1,36 @@
+---
+- name: all
+  block:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+     
+    - name: Install required system packages
+      ansible.builtin.apt:
+        pkg:
+          - nfs-common
+          - nfs-kernel-server
+        state: latest
+        update_cache: true
+    
+    - name: Ensure directories to export exist
+      file:
+        path: "{{ item.strip().split()[0] }}"
+        owner: ubuntu
+        group: ubuntu
+        state: directory
+      with_items: "{{ nfs_exports }}"
+    
+    - name: Copy exports file.
+      template:
+        src: exports.j2
+        dest: /etc/exports
+        owner: root
+        group: root
+        mode: 0644
+      notify: reload nfs
+    
+    - name: Ensure nfs is running.
+      service: "name=nfs-kernel-server state=started enabled=yes"
+      when: nfs_exports|length
+  become: true 

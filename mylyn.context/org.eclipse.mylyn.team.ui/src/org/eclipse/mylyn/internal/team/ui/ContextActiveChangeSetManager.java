@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui;
@@ -216,7 +217,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			}
 		} catch (Exception e) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -256,7 +257,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings({ "restriction", "deprecation" })
+	@SuppressWarnings("deprecation")
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		// disabled, see bug 162007

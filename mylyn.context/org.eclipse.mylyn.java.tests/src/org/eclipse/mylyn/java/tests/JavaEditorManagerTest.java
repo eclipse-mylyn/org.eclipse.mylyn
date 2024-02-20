@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -44,6 +45,7 @@ import org.eclipse.ui.ide.IDE;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class JavaEditorManagerTest extends AbstractJavaContextTest {
 
 	private IWorkbenchPage page;
@@ -62,8 +64,8 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+		.getPreferenceStore()
+		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 		UiTestUtil.closeWelcomeView();
 		UiTestUtil.closeAllEditors();
 	}
@@ -73,11 +75,11 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		super.tearDown();
 		UiTestUtil.closeAllEditors();
 		ContextUiPlugin.getDefault()
+		.getPreferenceStore()
+		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+				ContextUiPlugin.getDefault()
 				.getPreferenceStore()
-				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
-						ContextUiPlugin.getDefault()
-								.getPreferenceStore()
-								.getDefaultBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
+				.getDefaultBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
 	public void testInterestCapturedForResourceOnFocus()

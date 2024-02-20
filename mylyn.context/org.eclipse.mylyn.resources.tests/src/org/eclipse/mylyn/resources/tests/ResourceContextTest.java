@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Yatta Solutions -  WorkingSet tests (bug 334024)
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -41,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Carsten Reckord (bug 334024: focused package explorer not working if top level element is working set)
  */
+@SuppressWarnings("nls")
 public class ResourceContextTest extends AbstractResourceContextTest {
 
 	@Override
@@ -52,8 +54,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ContextTestUtil.triggerContextUiLazyStart();
 		// disable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		.getPreferenceStore()
+		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
 	@Override
@@ -62,8 +64,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 		// re-enable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
+		.getPreferenceStore()
+		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 
 		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 		IWorkingSet workingSet = workingSetManager.getWorkingSet("TestWorkingSet");

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tasks.tests;
@@ -51,6 +52,7 @@ import junit.framework.TestCase;
  *
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class EditorRestoreTest extends TestCase {
 
 	private IEditorDescriptor editor;
@@ -119,14 +121,14 @@ public class EditorRestoreTest extends TestCase {
 		FileEditorInput input = new FileEditorInput(fileA);
 		IEditorInput[] inputs = { input, new FileEditorInput(fileB) {
 			@Override
-			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == ContextAwareEditorInput.class) {
-					return new ContextAwareEditorInput() {
+					return adapter.cast(new ContextAwareEditorInput() {
 						@Override
 						public boolean forceClose(String contextHandle) {
 							return true;
 						}
-					};
+					});
 				}
 				return super.getAdapter(adapter);
 			}

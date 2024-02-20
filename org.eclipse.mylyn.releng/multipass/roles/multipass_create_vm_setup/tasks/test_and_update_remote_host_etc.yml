@@ -4,7 +4,7 @@
   become_user: root
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    line: "{{ item.ip4 }} {{ item.name }} {{ item.name }}.{{ hostvars['localhost'].local_domain }}"
+    line: "{{  item.ip4 + ' ' +  hostvars[item.name].default_etc_hosts }}"
     insertafter: EOF
   loop: "{{ setup_lst }}"
   delegate_to: "{{ act_name.name }}"
