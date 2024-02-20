@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.builds.ui.view;
 
@@ -23,8 +24,8 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 public class OpenBuildsPreferencesAction extends Action {
 
 	public OpenBuildsPreferencesAction() {
-		setText("Preferences...");
-		setToolTipText("Build Preferences");
+		setText(Messages.OpenBuildsPreferencesAction_preferences);
+		setToolTipText(Messages.OpenBuildsPreferencesAction_buildPreferences);
 	}
 
 	@Override

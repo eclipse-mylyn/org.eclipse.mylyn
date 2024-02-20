@@ -8,12 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class DefaultPackageTest extends TestCase {
 
 	public void testDefaultPackage() {

@@ -10,6 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 325079 added support for build service messages
  *     Itema AS - bug 331008 automatic resize of view columns
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -141,7 +142,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private static class ToggleableFilterTree extends FilteredTree {
 		private ToggleableFilterTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
-			super(parent, treeStyle, filter, useNewLook);
+			super(parent, treeStyle, filter, useNewLook, true);
 		}
 
 		public void setFilterVisible(boolean visible) {
@@ -176,15 +177,13 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		public int compare(TreeViewer viewer, Object e1, Object e2, int columnIndex) {
 			if (e1 instanceof IBuildServer && e2 instanceof IBuildServer) {
 				// keep server sort order stable for now
-				@SuppressWarnings("unchecked")
 				int res = getComparator().compare(((IBuildElement) e1).getLabel(), ((IBuildElement) e2).getLabel());
 				if (getSortDirection(viewer) == SWT.UP) {
 					return -res;
 				}
 				return res;
 			}
-			if (e1 instanceof IBuildPlan p1 && e2 instanceof IBuildPlan) {
-				IBuildPlan p2 = (IBuildPlan) e2;
+			if (e1 instanceof IBuildPlan p1 && e2 instanceof IBuildPlan p2) {
 				switch (columnIndex) {
 					case -1: // default
 						return CoreUtil.compare(p1.getLabel(), p2.getLabel());
@@ -263,17 +262,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private BuildElementPropertiesAction propertiesAction;
 
-	private final IPropertyChangeListener propertyChangeListener = event -> {
-		if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED
-				.equals(event.getProperty())) {
-			Display.getDefault().asyncExec(() -> {
-				if (this.refreshAutomaticallyAction != null) {
-					this.refreshAutomaticallyAction.updateState();
-				}
-			});
-		}
-	};
-
 	private RefreshAutomaticallyAction refreshAutomaticallyAction;
 
 	private StackLayout stackLayout;
@@ -289,6 +277,17 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private BuildToolTip toolTip;
 
 	private BuildsServiceMessageControl serviceMessageControl;
+
+	private final IPropertyChangeListener propertyChangeListener = event -> {
+		if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED
+				.equals(event.getProperty())) {
+			Display.getDefault().asyncExec(() -> {
+				if (refreshAutomaticallyAction != null) {
+					refreshAutomaticallyAction.updateState();
+				}
+			});
+		}
+	};
 
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
@@ -375,7 +374,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		serviceMessageControl = new BuildsServiceMessageControl(body);
 
 		viewer.setInput(model);
-		viewer.setSorter(new BuildTreeSorter());
+		viewer.setComparator(new BuildTreeSorter());
 		viewer.expandAll();
 
 		installAutomaticResize(viewer.getTree());
@@ -745,11 +744,12 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IShowInTargetList.class) {
-			return (IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" };
+			return adapter.cast((IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" }); //$NON-NLS-1$
 		} else if (adapter == IShowInSource.class) {
-			return (IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection());
+			return adapter
+					.cast((IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection()));
 		}
 		return super.getAdapter(adapter);
 	}

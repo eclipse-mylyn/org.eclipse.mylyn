@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.tests.support;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsS
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class BuildHarness {
 
 	private final BuildModel model;

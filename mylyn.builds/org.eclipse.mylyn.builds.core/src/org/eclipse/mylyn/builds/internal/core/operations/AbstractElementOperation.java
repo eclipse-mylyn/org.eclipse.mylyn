@@ -53,7 +53,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 
 	public void execute() {
 		jobs = init();
-		final MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Operation result", null);
+		final MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.AbstractElementOperation_result, null);
 		final CountDownLatch latch = new CountDownLatch(jobs.size());
 		for (final BuildJob job : jobs) {
 			job.addJobChangeListener(new JobChangeAdapter() {
@@ -100,7 +100,7 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 
 	public IStatus doExecute(IOperationMonitor progress) {
 		List<BuildJob> jobs = init();
-		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Operation failed", null);
+		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.AbstractElementOperation_failed, null);
 		progress.beginTask("", jobs.size()); //$NON-NLS-1$
 		try {
 			for (BuildJob job : jobs) {

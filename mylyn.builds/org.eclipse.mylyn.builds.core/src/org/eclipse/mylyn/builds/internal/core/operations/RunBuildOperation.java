@@ -9,6 +9,7 @@
  *
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.internal.core.operations;
@@ -48,15 +49,15 @@ public class RunBuildOperation extends AbstractElementOperation<IBuildPlan> {
 
 	@Override
 	protected BuildJob doCreateJob(IBuildPlan element) {
-		return new BuildJob(NLS.bind("Running Build {0}", element.getLabel())) {
+		return new BuildJob(NLS.bind(Messages.RunBuildOperation_runningBuild, element.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor progress) {
-				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Running of build failed", null);
+				MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.RunBuildOperation_buildFailed, null);
 				try {
 					server.getBehaviour().runBuild(request, progress);
 				} catch (CoreException e) {
 					result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-							NLS.bind("Running build ''{0}'' failed", request.getPlan().getName()), e));
+							NLS.bind(Messages.RunBuildOperation_specificBuildFailed, request.getPlan().getName()), e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;
 				}

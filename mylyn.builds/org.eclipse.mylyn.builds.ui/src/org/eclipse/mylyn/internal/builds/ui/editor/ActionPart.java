@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -43,16 +44,14 @@ public class ActionPart extends AbstractBuildEditorPart {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		Label label;
-
 		final ShowTestResultsAction testResultsAction = new ShowTestResultsAction();
 		testResultsAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
 		if (testResultsAction.isEnabled()) {
-			label = toolkit.createLabel(composite, "");
+			Label label = toolkit.createLabel(composite, ""); //$NON-NLS-1$
 			label.setImage(CommonImages.getImage(BuildImages.JUNIT));
 
 			Link link = new Link(composite, SWT.FLAT);
-			link.setText("Show tests results in <a>JUnit View</a>.");
+			link.setText(Messages.ActionPart_showTestResultsInJUnitView);
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -66,11 +65,11 @@ public class ActionPart extends AbstractBuildEditorPart {
 		buildOutputAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
 		Link link;
 		if (buildOutputAction.isEnabled()) {
-			label = toolkit.createLabel(composite, "");
+			Label label = toolkit.createLabel(composite, ""); //$NON-NLS-1$
 			label.setImage(CommonImages.getImage(BuildImages.CONSOLE));
 
 			link = new Link(composite, SWT.FLAT);
-			link.setText("Show output in <a>Console</a>.");
+			link.setText(Messages.ActionPart_showOutputInAConsole);
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

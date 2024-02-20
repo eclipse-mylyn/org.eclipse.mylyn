@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class AllTests {
 
 	public static Test suite() {

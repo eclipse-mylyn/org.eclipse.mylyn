@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.internal.core.operations;
@@ -56,7 +57,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		private final RefreshData data;
 
 		private RefreshJob(RefreshData data) {
-			super(NLS.bind("Refreshing Builds ({0})", data.server.getLabel()));
+			super(NLS.bind(Messages.RefreshOperation_refreshingBuild, data.server.getLabel()));
 			this.data = data;
 		}
 
@@ -76,7 +77,7 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				((BuildServer) data.server).getRefreshSession().refresh(request, progress.newChild(1));
 			} catch (CoreException e) {
 				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						NLS.bind("Refresh of server ''{0}'' failed", data.server.getLabel()), e));
+						NLS.bind(Messages.RefreshOperation_refreshBuildFailed, data.server.getLabel()), e));
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			}

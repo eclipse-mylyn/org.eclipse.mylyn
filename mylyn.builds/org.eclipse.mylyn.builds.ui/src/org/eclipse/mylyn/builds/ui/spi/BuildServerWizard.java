@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *     Itema AS - Added support for build service messages; bug 325079
  *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
@@ -56,11 +57,11 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		original = server;
 		setNeedsProgressMonitor(true);
 		if (isNew()) {
-			setWindowTitle("New Build Server");
+			setWindowTitle(Messages.BuildServerWizard_newBuildServer);
 			setDefaultPageImageDescriptor(
 					WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
 		} else {
-			setWindowTitle("Build Server Properties");
+			setWindowTitle(Messages.BuildServerWizard_buildServerProperties);
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
 		}
 	}
@@ -125,7 +126,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 			BuildsUiInternal.save();
 		} catch (IOException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, Messages.BuildServerWizard_unexpectedErrorWhileSavingBuilds,
 							e));
 		}
 

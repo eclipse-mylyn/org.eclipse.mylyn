@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -26,8 +27,8 @@ public class NewBuildServerAction extends Action {
 
 	public NewBuildServerAction() {
 		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);
-		setToolTipText("Add Build Server Location");
-		setText("Add Build Server...");
+		setToolTipText(Messages.NewBuildServerAction_addBuildServerLocation);
+		setText(Messages.NewBuildServerAction_addBuildServer);
 	}
 
 	@Override

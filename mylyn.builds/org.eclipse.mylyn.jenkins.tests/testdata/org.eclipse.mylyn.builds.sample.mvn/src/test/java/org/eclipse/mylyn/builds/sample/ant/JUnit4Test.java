@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.builds.sample.ant;
 
@@ -19,6 +20,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JUnit4Test {
 
 	@Test

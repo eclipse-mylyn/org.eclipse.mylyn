@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Itema AS - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.notifications;
@@ -79,8 +80,8 @@ public class BuildsServiceNotification extends AbstractUiNotification {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		return Platform.getAdapterManager().getAdapter(this, adapter);
+	public <T> T getAdapter(Class<T> adapter) {
+		return adapter.cast(Platform.getAdapterManager().getAdapter(this, adapter));
 	}
 
 	@Override

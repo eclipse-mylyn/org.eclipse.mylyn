@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -37,8 +38,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 
 	public NewTaskFromBuildAction() {
-		super("New Task from Build...");
-		setToolTipText("New Task from Build");
+		super(Messages.NewTaskFromBuildAction_newTaskFromBuild);
+		setToolTipText(Messages.NewTaskFromBuildAction_newTaskFromBuildToolTip);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
@@ -61,42 +62,45 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 			public String getSummary() {
 				BuildStatus status = build.getStatus();
 				if (status != null) {
-					return NLS.bind("Build {0}: {1}", build.getLabel(), status.toString());
+					return NLS.bind(Messages.NewTaskFromBuildAction_buildLabelStatus, build.getLabel(),
+							status.toString());
 				} else {
-					return NLS.bind("Build {0}", build.getLabel());
+					return NLS.bind(Messages.NewTaskFromBuildAction_buildLabel, build.getLabel());
 				}
 			}
 
 			@Override
 			public String getDescription() {
 				StringBuilder sb = new StringBuilder();
-				sb.append(NLS.bind("Build Results at {0} .\n", build.getUrl()));
-				sb.append("\n");
+				sb.append(NLS.bind(Messages.NewTaskFromBuildAction_buildResultsAt, build.getUrl()));
+				sb.append("\n\n"); //$NON-NLS-1$
 				if (build.getChangeSet() != null && build.getChangeSet().getChanges().size() > 0) {
-					sb.append("= Changes =\n");
-					sb.append("\n");
-					sb.append("Changed Files:");
-					sb.append("\n");
+					sb.append(Messages.NewTaskFromBuildAction_changes);
+					sb.append("\n\n"); //$NON-NLS-1$
+					sb.append(Messages.NewTaskFromBuildAction_ChangedFiles);
+					sb.append("\n"); //$NON-NLS-1$
 					for (IChange change : build.getChangeSet().getChanges()) {
 //						if (change.getAuthor() != null) {
 //							sb.append(NLS.bind("Changes by {0}", change.getAuthor().getLabel()));
 //							sb.append("\n");
 //						}
 						for (IChangeArtifact artifact : change.getArtifacts()) {
-							sb.append(" " + artifact.getFile());
+							sb.append(" " + artifact.getFile()); //$NON-NLS-1$
 						}
-						sb.append("\n");
+						sb.append("\n"); //$NON-NLS-1$
 					}
-					sb.append("\n");
+					sb.append("\n"); //$NON-NLS-1$
 				}
 				if (build.getTestResult() != null) {
-					sb.append("= Tests Results =\n");
-					sb.append(NLS.bind("Duration: {0}",
+					sb.append(Messages.NewTaskFromBuildAction_testResults);
+					sb.append("\n"); //$NON-NLS-1$
+					sb.append(NLS.bind(Messages.NewTaskFromBuildAction_duration,
 							DateUtil.getFormattedDurationShort(build.getTestResult().getDuration())));
-					sb.append("\n");
-					sb.append("Failed Tests:\n");
+					sb.append("\n"); //$NON-NLS-1$
+					sb.append(Messages.NewTaskFromBuildAction_failedTests);
+					sb.append("\n"); //$NON-NLS-1$
 					appendFailed(sb, build.getTestResult().getSuites());
-					sb.append("\n");
+					sb.append("\n"); //$NON-NLS-1$
 				}
 				return sb.toString();
 			}
@@ -126,28 +130,28 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 		if (testCase.getStackTrace() != null) {
 			sb.append(testCase.getStackTrace());
 		} else {
-			sb.append(" ");
+			sb.append(" "); //$NON-NLS-1$
 			sb.append(testCase.getClassName());
 			if (testCase.getLabel() != null) {
-				sb.append(".");
+				sb.append("."); //$NON-NLS-1$
 				sb.append(testCase.getLabel());
 
 				// emulate stack trace format to hyperlink tests in task editor
-				sb.append("(");
+				sb.append("("); //$NON-NLS-1$
 				String className = testCase.getClassName();
-				int i = className.lastIndexOf(".");
+				int i = className.lastIndexOf("."); //$NON-NLS-1$
 				if (i != -1) {
 					className = className.substring(i + 1);
 				}
-				i = className.lastIndexOf("$");
+				i = className.lastIndexOf("$"); //$NON-NLS-1$
 				if (i != -1) {
 					className = className.substring(0, i);
 				}
 				sb.append(className);
-				sb.append(".java:0)");
+				sb.append(".java:0)"); //$NON-NLS-1$
 			}
 		}
-		sb.append("\n");
+		sb.append("\n"); //$NON-NLS-1$
 	}
 
 }

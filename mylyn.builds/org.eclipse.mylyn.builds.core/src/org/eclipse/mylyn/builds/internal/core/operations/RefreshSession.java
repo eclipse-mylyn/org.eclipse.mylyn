@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.internal.core.operations;
@@ -177,7 +178,7 @@ public class RefreshSession {
 		// handle result
 		if (result == null) {
 			throw new CoreException(
-					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "Server did not provide any plans."));
+					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, Messages.RefreshSession_serverDidNotProvidePlans));
 		}
 		original.getLoader().getRealm().syncExec(() -> {
 			Date refreshDate = new Date();
@@ -190,7 +191,7 @@ public class RefreshSession {
 						update(request, oldPlan, newPlan, monitor);
 					} else {
 						((BuildPlan) oldPlan).setOperationStatus(
-								new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
+								new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, Messages.RefreshSession_planDoesNotExist));
 					}
 				}
 			}

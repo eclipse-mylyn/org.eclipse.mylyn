@@ -36,7 +36,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 	private class RefreshJob extends BuildJob {
 
 		public RefreshJob() {
-			super("Background Builds Refresh");
+			super(Messages.BuildRefresher_backgroundBuildsRefresh);
 			setUser(false);
 		}
 

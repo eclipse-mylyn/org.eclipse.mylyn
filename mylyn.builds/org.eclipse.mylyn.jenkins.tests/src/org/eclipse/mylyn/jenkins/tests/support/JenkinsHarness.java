@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.support;
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JenkinsHarness {
 
 	private static final String PLAN_DISABLED = "test-disabled";

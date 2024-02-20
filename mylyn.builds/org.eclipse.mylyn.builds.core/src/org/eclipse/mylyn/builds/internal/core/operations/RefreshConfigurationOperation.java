@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.internal.core.operations;
@@ -38,7 +39,7 @@ public class RefreshConfigurationOperation extends BuildJob {
 	private final List<IBuildServer> servers;
 
 	public RefreshConfigurationOperation(List<IBuildServer> servers) {
-		super("Refresh Configuration");
+		super(Messages.RefreshConfigurationOperation_refreshConfiguration);
 		Assert.isNotNull(servers);
 		this.servers = new ArrayList<>(servers.size());
 		for (IBuildServer server : servers) {
@@ -48,19 +49,19 @@ public class RefreshConfigurationOperation extends BuildJob {
 
 	@Override
 	protected IStatus doExecute(IOperationMonitor progress) {
-		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, "Refreshing of builds failed", null);
+		MultiStatus result = new MultiStatus(BuildsCorePlugin.ID_PLUGIN, 0, Messages.RefreshConfigurationOperation_configurationRefreshFailed, null);
 		if (servers.size() == 1) {
-			progress.beginTask("Refreshing configuration", servers.size());
+			progress.beginTask(Messages.RefreshConfigurationOperation_refreshingConfiguration, servers.size());
 		} else {
-			progress.beginTask("Refreshing server configurations", servers.size());
+			progress.beginTask(Messages.RefreshConfigurationOperation_refreshingServerConfiguration, servers.size());
 		}
 		for (IBuildServer server : servers) {
 			try {
-				progress.subTask(NLS.bind("{0}", server.getLabel()));
+				progress.subTask(NLS.bind(Messages.RefreshConfigurationOperation_subTaskLabel, server.getLabel()));
 				doRefresh((BuildServer) server, progress.newChild(1));
 			} catch (CoreException e) {
 				result.add(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						NLS.bind("Refresh of server ''{0}'' failed", server.getName()), e));
+						NLS.bind(Messages.RefreshConfigurationOperation_serverRefreshFailed, server.getName()), e));
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			}
@@ -78,7 +79,7 @@ public class RefreshConfigurationOperation extends BuildJob {
 		});
 		if (result == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide a valid configuration."));
+					Messages.RefreshConfigurationOperation_invalidServerConfiguration));
 		}
 	}
 

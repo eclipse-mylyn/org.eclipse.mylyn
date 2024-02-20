@@ -9,6 +9,7 @@
  *
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -72,9 +73,9 @@ public class BuildEditorInput implements IEditorInput {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IEditorInput.class) {
-			return this;
+			return adapter.cast(this);
 		}
 		return null;
 	}

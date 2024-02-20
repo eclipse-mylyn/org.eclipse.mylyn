@@ -1,9 +1,14 @@
-/**
- * <copyright>
- * </copyright>
+/*******************************************************************************
+ * Copyright (c) 2010 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-v20.html.
  *
- * $Id: StringToStringMap.java,v 1.2 2010/08/28 09:21:40 spingel Exp $
- */
+ * Contributors:
+ *      See git history
+ *******************************************************************************/
+
 package org.eclipse.mylyn.builds.internal.core;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -52,7 +57,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = "";
+	protected static final String VALUE_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->

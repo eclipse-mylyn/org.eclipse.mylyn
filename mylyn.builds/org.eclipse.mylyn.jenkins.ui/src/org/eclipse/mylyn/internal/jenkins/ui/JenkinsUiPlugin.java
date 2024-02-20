@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.ui;
@@ -20,7 +21,7 @@ import org.osgi.framework.BundleContext;
  */
 public class JenkinsUiPlugin extends AbstractUIPlugin {
 
-	public static String ID_PLUGIN = "org.eclipse.mylyn.jenkins.ui";
+	public static String ID_PLUGIN = "org.eclipse.mylyn.jenkins.ui"; //$NON-NLS-1$
 
 	public JenkinsUiPlugin() {
 	}

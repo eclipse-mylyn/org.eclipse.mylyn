@@ -80,9 +80,7 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 			return;
 		}
 
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(cacheFile));
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(cacheFile))) {
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				String url = (String) in.readObject();
@@ -94,14 +92,6 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.WARNING, BuildsCorePlugin.ID_PLUGIN,
 					"The configuration cache could not be read", e)); //$NON-NLS-1$
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 
 	}

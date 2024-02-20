@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.core.client;
@@ -53,9 +54,9 @@ public class JenkinsRunBuildForm {
 	}
 
 	public void add(String key, String value) {
-		requestParameters.add(new BasicNameValuePair("name", key));
+		requestParameters.add(new BasicNameValuePair("name", key)); //$NON-NLS-1$
 		if (value != null) {
-			requestParameters.add(new BasicNameValuePair("value", value));
+			requestParameters.add(new BasicNameValuePair("value", value)); //$NON-NLS-1$
 		}
 		NameValue param = new NameValue();
 		param.name = key;
@@ -72,7 +73,7 @@ public class JenkinsRunBuildForm {
 		requestParameters.add(new BasicNameValuePair("json", new Gson().toJson(jsonObject))); //$NON-NLS-1$
 
 		// set form parameters
-		requestParameters.add(new BasicNameValuePair("Submit", "Build"));
+		requestParameters.add(new BasicNameValuePair("Submit", "Build")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// create entity
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(requestParameters);

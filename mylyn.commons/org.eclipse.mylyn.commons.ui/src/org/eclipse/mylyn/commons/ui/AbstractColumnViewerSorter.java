@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui;
@@ -20,7 +21,6 @@ import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
 
@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Item;
  * @author Steffen Pingel
  * @since 3.7
  */
-public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I extends Item> extends ViewerSorter {
+public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I extends Item> extends ViewerComparator {
 
 	/**
 	 * Returns the current sort column.

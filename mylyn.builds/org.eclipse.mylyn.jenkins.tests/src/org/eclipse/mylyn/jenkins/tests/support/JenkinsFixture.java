@@ -10,6 +10,7 @@
  *     Markus Knittig - initial API and implementation
  *     Benjamin Muskalla - bug 324039: [build] tests fail with NPE
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.support;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
  * @author Markus Knittig
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class JenkinsFixture extends RepositoryTestFixture {
 
 	public static final JenkinsFixture DEFAULT = discoverDefault();

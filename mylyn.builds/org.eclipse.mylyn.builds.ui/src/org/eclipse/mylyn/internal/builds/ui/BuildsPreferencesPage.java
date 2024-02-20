@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.builds.ui;
 
@@ -57,7 +58,7 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 
 		enableRefreshButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(enableRefreshButton);
-		enableRefreshButton.setText("&Automatically refresh builds");
+		enableRefreshButton.setText(Messages.BuildsPreferencesPage_automaticallyRefreshBuilds);
 		enableRefreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -66,7 +67,7 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 		});
 
 		intervalLabel = new Label(composite, SWT.NONE);
-		intervalLabel.setText("&Refresh build status every (in minutes):");
+		intervalLabel.setText(Messages.BuildsPreferencesPage_refreshBuildStatusEveryInMinutes);
 
 		intervalText = new Text(composite, SWT.BORDER | SWT.RIGHT);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(intervalText);
@@ -74,7 +75,7 @@ public class BuildsPreferencesPage extends PreferencePage implements IWorkbenchP
 
 		refreshOnFocusButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(refreshOnFocusButton);
-		refreshOnFocusButton.setText("&Refresh when Builds view is focused");
+		refreshOnFocusButton.setText(Messages.BuildsPreferencesPage_refreshWhenBuildsViewIsFocused);
 
 		reset();
 		Dialog.applyDialogFont(composite);

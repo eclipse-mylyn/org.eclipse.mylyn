@@ -56,7 +56,7 @@ public class BuildModelManager {
 		Resource resource = null;
 		BuildModel model = null;
 		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl()); //$NON-NLS-1$
 		URI uri = URI.createURI(file.toURI().toString());
 		if (file.exists()) {
 			try {
@@ -73,11 +73,11 @@ public class BuildModelManager {
 					}
 				} else {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-							NLS.bind("Unexpected content while loading builds from ''{0}''", file.getAbsolutePath())));
+							NLS.bind(Messages.BuildModelManager_unexpectedContent, file.getAbsolutePath())));
 				}
 			} catch (RuntimeException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-						NLS.bind("Unexpected error while loading builds from ''{0}''", file.getAbsolutePath()), e));
+						NLS.bind(Messages.BuildModelManager_unexpectedError, file.getAbsolutePath()), e));
 			}
 		}
 		if (model == null) {

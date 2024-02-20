@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Maarten Meijer       - added confirmation dialog bug#340986
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
@@ -40,10 +41,9 @@ public class DeleteBuildElementHandler extends AbstractHandler {
 			Object item = ((IStructuredSelection) selection).getFirstElement();
 			if (item instanceof IBuildServer server) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete Build Server",
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DeleteBuildElementHandler_deleteBuildServer,
 						NLS.bind(
-								"Are you sure you want to delete build server \"{0}\"?\n"
-										+ "You will also lose the settings for the builds that you watched.",
+								Messages.DeleteBuildElementHandler_areYouSure,
 								server.getLabel()));
 
 				if (deleteConfirmed) {

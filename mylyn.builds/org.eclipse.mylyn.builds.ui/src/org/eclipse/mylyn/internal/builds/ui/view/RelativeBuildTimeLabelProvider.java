@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -39,7 +40,7 @@ public class RelativeBuildTimeLabelProvider extends ColumnLabelProvider {
 		long timestamp = build.getTimestamp();
 		if (timestamp != 0) {
 			if (System.currentTimeMillis() - timestamp < 60 * 1000) {
-				return "< 1 min ago";
+				return Messages.RelativeBuildTimeLabelProvider_lessThanAMinuteAgo;
 			} else {
 				return DateUtil.getRelative(timestamp);
 			}

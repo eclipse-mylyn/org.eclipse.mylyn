@@ -10,6 +10,7 @@
  *     Markus Knittig - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Eike Stepper - improvements for bug 323781
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -38,8 +39,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class RunBuildAction extends BaseSelectionListenerAction {
 
 	public RunBuildAction() {
-		super("Run Build");
-		setToolTipText("Run Build");
+		super(Messages.RunBuildAction_runBuild);
+		setToolTipText(Messages.RunBuildAction_runBuildToolTip);
 		setImageDescriptor(BuildImages.RUN);
 		setDisabledImageDescriptor(BuildImages.RUN_DISABLED);
 	}

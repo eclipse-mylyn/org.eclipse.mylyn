@@ -9,6 +9,7 @@
  *
  *     Eike Stepper - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -66,14 +67,14 @@ public class ParametersDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Run Build");
+		newShell.setText(Messages.ParametersDialog_runBuild);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 
-		setTitle(NLS.bind("Build Plan {0}", plan.getLabel()));
+		setTitle(NLS.bind(Messages.ParametersDialog_buildPlan, plan.getLabel()));
 
 		Composite pane = new Composite(composite, SWT.NONE);
 		pane.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -88,8 +89,8 @@ public class ParametersDialog extends TitleAreaDialog {
 			Control control = addParameter(pane, definition);
 			if (control instanceof Text) {
 				GridDataFactory.fillDefaults()
-						.hint(convertVerticalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
-						.applyTo(control);
+				.hint(convertVerticalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
+				.applyTo(control);
 			}
 			control.addFocusListener(new FocusAdapter() {
 				private boolean firstTime = true;
@@ -97,7 +98,7 @@ public class ParametersDialog extends TitleAreaDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					if (firstTime) {
-						setMessage("Provide build parameters.");
+						setMessage(Messages.ParametersDialog_provideBuildParameters);
 						firstTime = false;
 					} else {
 						setMessage(definition.getDescription());
@@ -146,11 +147,11 @@ public class ParametersDialog extends TitleAreaDialog {
 			return control;
 		}
 
-		throw new IllegalArgumentException("Unexpected definition type: " + definition.getClass().getName());
+		throw new IllegalArgumentException(Messages.ParametersDialog_unexpectedDefinitionType + definition.getClass().getName());
 	}
 
 	private String toValue(String defaultValue) {
-		return defaultValue != null ? defaultValue : "";
+		return defaultValue != null ? defaultValue : ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -175,7 +176,7 @@ public class ParametersDialog extends TitleAreaDialog {
 
 		if (control instanceof Button button) {
 			if (button.getSelection()) {
-				return "on";
+				return "on"; //$NON-NLS-1$
 			}
 
 			return null;
@@ -185,7 +186,7 @@ public class ParametersDialog extends TitleAreaDialog {
 			return text.getText();
 		}
 
-		throw new IllegalArgumentException("Unexpected control type: " + control.getClass().getName());
+		throw new IllegalArgumentException(Messages.ParametersDialog_unexpectedControlType + control.getClass().getName());
 	}
 
 }

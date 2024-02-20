@@ -38,8 +38,8 @@ public class BuildContentProvider implements ITreeContentProvider {
 		@Override
 		public String toString() {
 			return switch (this) {
-				case BY_SERVER -> "Servers";
-				case BY_PLAN -> "Plans";
+				case BY_SERVER -> Messages.BuildContentProvider_servers;
+				case BY_PLAN -> Messages.BuildContentProvider_plans;
 				default -> throw new IllegalStateException();
 			};
 		}

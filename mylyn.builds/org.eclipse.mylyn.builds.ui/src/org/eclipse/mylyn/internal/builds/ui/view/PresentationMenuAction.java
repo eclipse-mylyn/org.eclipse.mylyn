@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -32,7 +33,7 @@ public class PresentationMenuAction extends Action implements IMenuCreator {
 	public PresentationMenuAction(BuildsView view) {
 		this.view = view;
 		setMenuCreator(this);
-		setText("Top Level Elements");
+		setText(Messages.PresentationMenuAction_topLevelElements);
 	}
 
 	private void addActions(Menu menu) { // add repository action

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
@@ -48,7 +49,7 @@ public class NewTaskFromTestHandler extends AbstractHandler {
 		TaskMapping mapping = new TaskMapping() {
 			@Override
 			public String getSummary() {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 
 			@Override

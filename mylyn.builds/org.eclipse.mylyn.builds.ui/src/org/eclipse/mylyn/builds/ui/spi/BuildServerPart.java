@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui.spi;
@@ -33,7 +34,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IBuildServerConfiguration;
@@ -95,7 +96,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	private class CheckboxFilteredTree extends FilteredTree {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-			super(parent, treeStyle, filter, true);
+			super(parent, treeStyle, filter, true, true);
 		}
 
 		@Override
@@ -128,7 +129,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			IOperationMonitor progress = OperationUtil.convert(monitor, "Validating repository", 3);
+			IOperationMonitor progress = OperationUtil.convert(monitor, Messages.BuildServerPart_validatingRepository, 3);
 			progress.addFlag(OperationFlag.BACKGROUND);
 			try {
 				IBuildServer server = getServer();
@@ -143,7 +144,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 				return result;
 			} catch (CoreException e) {
 				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-						NLS.bind("Server validation failed: {0}", e.getMessage()), e);
+						NLS.bind(Messages.BuildServerPart_serverValidationFailed, e.getMessage()), e);
 			}
 		}
 
@@ -194,7 +195,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 	private void createButtons(Composite section) {
 		refreshButton = new Button(section, SWT.PUSH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(refreshButton);
-		refreshButton.setText("&Refresh");
+		refreshButton.setText(Messages.BuildServerPart_refreshShortcut);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -205,7 +206,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		Button selectAllButton = new Button(section, SWT.PUSH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(selectAllButton);
-		selectAllButton.setText("&Select All");
+		selectAllButton.setText(Messages.BuildServerPart_selectAllShortcut);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -221,7 +222,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		Button deselectAllButton = new Button(section, SWT.PUSH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(deselectAllButton);
-		deselectAllButton.setText("&Deselect All");
+		deselectAllButton.setText(Messages.BuildServerPart_deselectAllShortcut);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -238,7 +239,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 		// XXX spacer to make layout consistent
 		Button dummyButton = new Button(section, SWT.CHECK);
 		dummyButton.setVisible(false);
-		dummyButton.setText("Save Password");
+		dummyButton.setText(Messages.BuildServerPart_savePassword);
 	}
 
 	@Override
@@ -273,7 +274,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 				parent.layout(true);
 			}
 		});
-		section.setText("Build Plans");
+		section.setText(Messages.BuildServerPart_buildPlans);
 //		ExpandableComposite section = section.createSection("Build Plans");
 //		section.setExpanded(true);
 //		if (section.getLayoutData() instanceof GridData) {
@@ -352,15 +353,15 @@ public class BuildServerPart extends RepositoryLocationPart {
 				configuration = (BuildServerConfiguration) newInput;
 			}
 		});
-		planViewer.setSorter(new ViewerSorter());
+		planViewer.setComparator(new ViewerComparator());
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
 		GridLayoutFactory.fillDefaults()
-				.numColumns(1)
-				.margins(0, 0)
-				.extendedMargins(0, 0, 0, 0)
-				.applyTo(buttonComposite);
+		.numColumns(1)
+		.margins(0, 0)
+		.extendedMargins(0, 0, 0, 0)
+		.applyTo(buttonComposite);
 		createButtons(buttonComposite);
 
 		return section;

@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - Corrected lazy initialisation of fields
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -104,13 +105,13 @@ public class BuildsUiInternal {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-						NLS.bind("Loading of connector for server ''{0}'' failed. No connector kind was specified.",
+						NLS.bind(Messages.BuildsUiInternal_noConnectorKindWasSpecified,
 								server.getName())));
 			}
 			BuildConnector connector = BuildsUi.getConnector(connectorKind);
 			if (connector == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-						NLS.bind("Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.",
+						NLS.bind(Messages.BuildsUiInternal_ConnectorKindUnknown,
 								server.getName(), connectorKind)));
 			}
 			BuildServerBehaviour behaviour;
@@ -118,13 +119,13 @@ public class BuildsUiInternal {
 				behaviour = connector.getBehaviour(server.getLocation());
 			} catch (Exception | LinkageError | AssertionError e) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed.",
+						Messages.BuildsUiInternal_UnexpectedErrorLoadingConnector,
 						server.getName(), connectorKind), e));
 
 			}
 			if (behaviour == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Unexpected error during loading of connector for server ''{0}'' with connector kind ''{1}'' failed, returned behaviour object is null.",
+						Messages.BuildsUiInternal_UNexpectedErrorLoadingConnectorReturnedNUll,
 						server.getName(), connectorKind)));
 			}
 			return behaviour;

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -40,7 +41,7 @@ public class BuildsStartup implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		UIJob job = new UIJob("Initializing Builds View") {
+		UIJob job = new UIJob(Messages.BuildsStartup_initializingBuildsView) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {

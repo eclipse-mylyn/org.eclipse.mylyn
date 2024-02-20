@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.util;
@@ -31,8 +32,8 @@ import org.eclipse.osgi.util.NLS;
 class TestResultSession extends TestRunSession {
 
 	TestResultSession(IBuild build) {
-		super(NLS.bind("Test Results for Build {0}#{1}",
-				build.getPlan() == null ? "Unknown" : build.getPlan().getLabel(), build.getLabel()), null);
+		super(NLS.bind(Messages.TestResultSession_testResultsForBuild,
+				build.getPlan() == null ? Messages.TestResultSession_unknownPlan : build.getPlan().getLabel(), build.getLabel()), null);
 	}
 
 	// Eclipse 3.5 and earlier
@@ -64,7 +65,7 @@ class TestResultSession extends TestRunSession {
 				typeName += "." + testName + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-					NLS.bind("Launch failed: Test ''{0}'' not found in workspace.", typeName)));
+					NLS.bind(Messages.TestResultSession_launchFailedFor, typeName)));
 		}
 		JUnitLaunchShortcut shortcut = new JUnitLaunchShortcut();
 		shortcut.launch(new StructuredSelection(result.get()), launchMode);

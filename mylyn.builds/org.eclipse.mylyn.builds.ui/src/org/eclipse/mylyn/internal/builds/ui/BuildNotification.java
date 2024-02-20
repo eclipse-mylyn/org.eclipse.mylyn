@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -51,7 +53,7 @@ public class BuildNotification extends AbstractUiNotification {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
@@ -102,7 +104,7 @@ public class BuildNotification extends AbstractUiNotification {
 			int featureId = msg.getFeatureID(IBuildPlan.class);
 			if (featureId == BuildPackage.BUILD_PLAN__STATUS) {
 				notification = new BuildNotification(ID_EVENT_PLAN_STATUS_CHANGED, (IBuildElement) msg.getNotifier());
-				notification.setLabel(NLS.bind("Plan {0}: {1}", plan.getLabel(), plan.getStatus().toString()));
+				notification.setLabel(NLS.bind(Messages.BuildNotification_planLabelStatus, plan.getLabel(), plan.getStatus().toString()));
 				notification.setDescription(plan.getSummary());
 //			} else if (featureId == BuildPackage.BUILD_PLAN__STATE && plan.getLastBuild() != null) {
 //				if (plan.getState() == BuildState.RUNNING) {

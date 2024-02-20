@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -30,13 +31,13 @@ public class BuildElementPropertyTester extends PropertyTester {
 	 */
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if ("available".equals(property)) {
+		if ("available".equals(property)) { //$NON-NLS-1$
 			if (args.length > 0) {
 				String kind = (String) args[0];
-				if ("console".equals(kind)) {
-					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.ui.console") != null, expectedValue);
-				} else if ("junit".equals(kind)) {
-					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.jdt.junit") != null, expectedValue);
+				if ("console".equals(kind)) { //$NON-NLS-1$
+					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.ui.console") != null, expectedValue); //$NON-NLS-1$
+				} else if ("junit".equals(kind)) { //$NON-NLS-1$
+					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.jdt.junit") != null, expectedValue); //$NON-NLS-1$
 				}
 			}
 		}

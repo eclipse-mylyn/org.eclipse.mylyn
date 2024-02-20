@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.core;
@@ -30,6 +31,7 @@ import junit.framework.TestCase;
 /**
  * @author Markus Knittig
  */
+@SuppressWarnings("nls")
 public class JenkinsServerBehaviourTest extends TestCase {
 
 	public void testParseJobHealthNoReport() throws Exception {

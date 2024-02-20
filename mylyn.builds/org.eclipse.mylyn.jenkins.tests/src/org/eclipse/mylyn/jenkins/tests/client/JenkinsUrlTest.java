@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.client;
@@ -19,6 +20,7 @@ import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsUrl;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class JenkinsUrlTest extends TestCase {
 
 	public void testQuotes() throws Exception {

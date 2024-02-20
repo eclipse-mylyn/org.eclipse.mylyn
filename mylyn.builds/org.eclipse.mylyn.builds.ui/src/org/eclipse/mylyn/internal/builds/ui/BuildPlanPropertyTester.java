@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -29,10 +30,10 @@ public class BuildPlanPropertyTester extends PropertyTester {
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof IBuildPlan plan) {
-			if ("hasBuild".equals(property)) {
+			if ("hasBuild".equals(property)) { //$NON-NLS-1$
 				return CoreUtil.propertyEquals(plan.getLastBuild() != null, expectedValue);
 			}
-			if ("isLastBuildRunning".equals(property)) {
+			if ("isLastBuildRunning".equals(property)) { //$NON-NLS-1$
 				return CoreUtil.propertyEquals(plan.getLastBuild().getState() == BuildState.RUNNING, expectedValue);
 			}
 		}

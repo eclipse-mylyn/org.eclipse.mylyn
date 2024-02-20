@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.jenkins.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Jenkins Connector
 Bundle-SymbolicName: org.eclipse.mylyn.jenkins.tests;singleton:=true

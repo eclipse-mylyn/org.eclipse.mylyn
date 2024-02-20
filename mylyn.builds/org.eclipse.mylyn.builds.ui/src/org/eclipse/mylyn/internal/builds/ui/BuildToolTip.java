@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 33148 server tooltip show a summary of build plans
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -96,26 +97,28 @@ public class BuildToolTip extends RichToolTip {
 			if (plan.getStatus() != null) {
 				StringBuilder sb = new StringBuilder(" ["); //$NON-NLS-1$
 				if (plan.getState() == BuildState.RUNNING) {
-					sb.append(NLS.bind("running, ", null));
+					sb.append(NLS.bind(Messages.BuildToolTip_statusRunning, null));
+					sb.append(", "); //$NON-NLS-1$
 				}
 				if (plan.getFlags().contains(BuildState.QUEUED)) {
-					sb.append(NLS.bind("queued, ", null));
+					sb.append(NLS.bind(Messages.BuildToolTip_statusQueued, null));
+					sb.append(", "); //$NON-NLS-1$
 				}
 				switch (plan.getStatus()) {
 					case SUCCESS:
-						sb.append(NLS.bind("success", null));
+						sb.append(NLS.bind(Messages.BuildToolTip_statusSuccess, null));
 						break;
 					case FAILED:
-						sb.append(NLS.bind("failed", null));
+						sb.append(NLS.bind(Messages.BuildToolTip_statusFailed, null));
 						break;
 					case UNSTABLE:
-						sb.append(NLS.bind("unstable", null));
+						sb.append(NLS.bind(Messages.BuildToolTip_statusUnstable, null));
 						break;
 					case ABORTED:
-						sb.append(NLS.bind("aborted", null));
+						sb.append(NLS.bind(Messages.BuildToolTip_statusAborted, null));
 						break;
 					case DISABLED:
-						sb.append(NLS.bind("disabled", null));
+						sb.append(NLS.bind(Messages.BuildToolTip_statusDisabled, null));
 						break;
 					default:
 						break;
@@ -131,7 +134,7 @@ public class BuildToolTip extends RichToolTip {
 		Date refreshDate = data.getRefreshDate();
 		if (refreshDate != null) {
 			String refreshString = DateUtil.getRelative(refreshDate.getTime());
-			addIconAndLabel(parent, null, NLS.bind("Refreshed {0}", refreshString), false);
+			addIconAndLabel(parent, null, NLS.bind(Messages.BuildToolTip_refreshed, refreshString), false);
 		}
 
 		if (data instanceof IBuildPlan plan) {
@@ -175,23 +178,23 @@ public class BuildToolTip extends RichToolTip {
 			}
 			if (passed > 0) {
 				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED),
-						NLS.bind("{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
+						NLS.bind(Messages.BuildToolTip_passedBuilds, new Object[] { passed, plans.size() }));
 			}
 			if (failed > 0) {
 				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED),
-						NLS.bind("{0} failed builds", new Object[] { failed }));
+						NLS.bind(Messages.BuildToolTip_failedBuilds, new Object[] { failed }));
 			}
 			if (unstable > 0) {
 				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE),
-						NLS.bind("{0} unstable builds", new Object[] { unstable }));
+						NLS.bind(Messages.BuildToolTip_unustableBuilds, new Object[] { unstable }));
 			}
 			if (disabled > 0) {
 				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED),
-						NLS.bind("{0} disabled builds", new Object[] { disabled }));
+						NLS.bind(Messages.BuildToolTip_disabledBuilds, new Object[] { disabled }));
 			}
 			if (unstable > 0) {
 				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED),
-						NLS.bind("{0} aborted builds", new Object[] { unstable }));
+						NLS.bind(Messages.BuildToolTip_abortedBuilds, new Object[] { unstable }));
 			}
 
 		}
@@ -200,13 +203,13 @@ public class BuildToolTip extends RichToolTip {
 	}
 
 	private void addBuild(Composite parent, IBuild build) {
-		String text = "";
+		String text = ""; //$NON-NLS-1$
 		String time = DateUtil.getRelative(build.getTimestamp());
 		if (time.length() > 0) {
-			text = NLS.bind("Last built {0}, ", time);
+			text = NLS.bind(Messages.BuildToolTip_lastBuilt, time);
 		}
-		addLabel(parent, text + NLS.bind("took {0}", DateUtil.getFormattedDurationShort(build.getDuration())));
-		addLabel(parent, NLS.bind("Build {0} [{1}]", build.getLabel(), build.getServer().getLabel()));
+		addLabel(parent, text + NLS.bind(Messages.BuildToolTip_took, DateUtil.getFormattedDurationShort(build.getDuration())));
+		addLabel(parent, NLS.bind(Messages.BuildToolTip_build, build.getLabel(), build.getServer().getLabel()));
 	}
 
 	private void addPlan(Composite parent, IBuildPlan plan) {

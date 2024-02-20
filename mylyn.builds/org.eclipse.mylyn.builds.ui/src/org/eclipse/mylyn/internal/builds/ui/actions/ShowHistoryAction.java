@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - Minor enhancements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -28,8 +29,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class ShowHistoryAction extends BaseSelectionListenerAction {
 
 	public ShowHistoryAction() {
-		super("Show History");
-		setToolTipText("Show Plan in History View");
+		super(Messages.ShowHistoryAction_showHistory);
+		setToolTipText(Messages.ShowHistoryAction_showPlanInHistoryView);
 		setImageDescriptor(BuildImages.VIEW_HISTORY);
 	}
 
@@ -44,10 +45,7 @@ public class ShowHistoryAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
-		if (selection instanceof IBuildPlan) {
-			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection,
-					null);
-		} else if (selection instanceof IBuild) {
+		if ((selection instanceof IBuildPlan) || (selection instanceof IBuild)) {
 			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection,
 					null);
 		}

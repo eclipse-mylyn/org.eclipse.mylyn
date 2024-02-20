@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.internal.core.operations;
@@ -79,7 +80,7 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 			}
 		} catch (IOException e) {
 			throw new CoreException(
-					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "Failed to retrieve build output", e));
+					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, Messages.GetBuildOutputOperation_failedRetrievingOutput, e));
 		} finally {
 			reader.done();
 		}
@@ -87,15 +88,15 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 
 	@Override
 	protected BuildJob doCreateJob(final IBuild build) {
-		return new BuildJob(NLS.bind("Retrieving Output for Build {0}#{1}",
-				build.getPlan() == null ? "Unknown" : build.getPlan().getLabel(), build.getLabel())) {
+		return new BuildJob(NLS.bind(Messages.GetBuildOutputOperation_retrievingOutputForBuild,
+				build.getPlan() == null ? Messages.GetBuildOutputOperation_unknown : build.getPlan().getLabel(), build.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor monitor) {
 				try {
 					doGetOutput(build, monitor);
 				} catch (CoreException e) {
 					setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-							NLS.bind("Unexpected error while retrieving output for build ''{0}''.", build.getName()),
+							NLS.bind(Messages.GetBuildOutputOperation_unexpectedError, build.getName()),
 							e));
 				} catch (OperationCanceledException e) {
 					return Status.CANCEL_STATUS;

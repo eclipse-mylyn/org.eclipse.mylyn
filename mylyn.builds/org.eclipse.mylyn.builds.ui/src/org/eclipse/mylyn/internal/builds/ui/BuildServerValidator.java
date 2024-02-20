@@ -9,6 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -41,7 +42,7 @@ public class BuildServerValidator extends RepositoryValidator {
 			BuildServerBehaviour behaviour = ((BuildServer) server).getBehaviour();
 			return behaviour.validate(OperationUtil.convert(monitor));
 		} catch (CoreException e) {
-			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Server validation failed", e);
+			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, Messages.BuildServerValidator_serverValidationFailed, e);
 		}
 	}
 

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.core.client;
@@ -35,9 +36,9 @@ public class HudsonConfiguration implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("HudsonConfiguration [jobNameById=");
+		builder.append("HudsonConfiguration [jobNameById="); //$NON-NLS-1$
 		builder.append(jobNameById);
-		builder.append("]");
+		builder.append("]"); //$NON-NLS-1$
 		return builder.toString();
 	}
 

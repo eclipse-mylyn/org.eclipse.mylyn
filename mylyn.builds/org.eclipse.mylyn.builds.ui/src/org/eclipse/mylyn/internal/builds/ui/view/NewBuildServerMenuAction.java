@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -46,7 +47,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 
 	public NewBuildServerMenuAction() {
 		setMenuCreator(this);
-		setToolTipText("New Build Server Location");
+		setToolTipText(Messages.NewBuildServerMenuAction_newBuildServerLocation);
 		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);
 	}
 
@@ -67,7 +68,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 					Display.getDefault().asyncExec(() -> BuildsUiUtil.openPropertiesDialog(server));
 				}
 			};
-			openAction.setText(NLS.bind("Properties for {0}", server.getLocation().getLabel()));
+			openAction.setText(NLS.bind(Messages.NewBuildServerMenuAction_propertiesFor, server.getLocation().getLabel()));
 			manager.add(openAction);
 		}
 		manager.add(new Separator());
@@ -81,7 +82,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 		Map<String, String> targetId = new HashMap<>();
 		targetId.put(IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
 		parm.parameters = targetId;
-		parm.label = "Show Repositories View";
+		parm.label = Messages.NewBuildServerMenuAction_showRepositoriesView;
 		if (parm.label.length() > 0) {
 			parm.mnemonic = parm.label.substring(0, 1);
 		}

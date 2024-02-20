@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -37,7 +38,7 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 
 	public BuildOutputPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Output");
+		setPartName(Messages.BuildOutputPart_output);
 		span = 2;
 	}
 
@@ -54,7 +55,7 @@ public class BuildOutputPart extends AbstractBuildEditorPart {
 		Composite composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout(2, false));
 
-		hyperlink = toolkit.createHyperlink(composite, "Show Output in Console", SWT.NONE);
+		hyperlink = toolkit.createHyperlink(composite, Messages.BuildOutputPart_showOutputInConsole, SWT.NONE);
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent event) {
