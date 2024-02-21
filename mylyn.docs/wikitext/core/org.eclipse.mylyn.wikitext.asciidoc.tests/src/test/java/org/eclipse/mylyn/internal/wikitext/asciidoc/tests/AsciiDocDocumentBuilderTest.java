@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AsciiDocDocumentBuilderTest {
 
 	private DocumentBuilder builder;

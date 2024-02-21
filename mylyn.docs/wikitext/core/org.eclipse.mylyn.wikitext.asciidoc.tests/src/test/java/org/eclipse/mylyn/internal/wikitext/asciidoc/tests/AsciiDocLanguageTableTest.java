@@ -26,6 +26,7 @@ import org.junit.Test;
 /**
  * Tests for the AsciiDoc TableBlock elements.
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 
 	@Test
@@ -692,7 +693,7 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 				"lorem ""a\""",second,third
 				first,"lorem ""a\""",third
 				first,second,"lorem ""a\"""
-				|===
+		|===
 				Some Text""");
 		assertEquals("""
 				<table>\

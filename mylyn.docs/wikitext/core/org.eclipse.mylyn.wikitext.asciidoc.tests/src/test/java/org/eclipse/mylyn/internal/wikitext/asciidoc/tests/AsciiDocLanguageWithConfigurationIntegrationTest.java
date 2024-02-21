@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AsciiDocLanguageWithConfigurationIntegrationTest extends AsciiDocLanguageTestBase {
 
 	@Test

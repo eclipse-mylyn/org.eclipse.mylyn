@@ -23,6 +23,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 
 	@Test

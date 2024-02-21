@@ -28,6 +28,7 @@ import org.junit.Test;
  *
  * @author Patrik Suzzi
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 	static final String BR = System.lineSeparator();
@@ -221,7 +222,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "end of first list" + BR + BR //
 				+ "    - item a" + BR //
 				+ "    - item b" + BR //
-		);
+				);
 		assertEquals("""
 				<ul>\
 				<li>item 1</li>\
@@ -346,7 +347,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "----" + BR //
 				+ "other code" + BR //
 				+ "----" + BR //
-		); //
+				); //
 		assertEquals("testListBreak", """
 				<ul>\
 				<li>lorem\
@@ -381,7 +382,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				code block 2
 				----
 				"""
-		); //
+				); //
 		assertEquals("testListBreak", """
 				<ul>\
 				<li>item 1\
@@ -413,7 +414,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				----
 
 				end of list"""
-		); //
+				); //
 		assertEquals("testListBreak", """
 				<ul>\
 				<li>item 1\
@@ -437,7 +438,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				----
 
 				end of list"""
-		); //
+				); //
 		assertEquals("testListBreak", """
 				<ul>\
 				<li>item 1\
@@ -462,7 +463,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				|===
 
 				end of list"""
-		); //
+				); //
 		assertEquals("testListBreak", """
 				<ul>\
 				<li>item 1\
@@ -672,7 +673,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				ab. level 5
 				I) level 1
 				"""
-		);
+				);
 		assertEquals("""
 				<ol style="list-style-type:upper-roman;">\
 				<li>level 1<ol style="list-style-type:upper-alpha;">\
@@ -784,7 +785,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 				Sub First 1::: description
 				"""
-		);
+				);
 		assertEquals("""
 				<dl>\
 				<dt class="hdlist1">First</dt>\

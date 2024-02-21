@@ -23,6 +23,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
 	static final String MARKUP_FOR_DEFAULT = "Some default values\n\n" + //
