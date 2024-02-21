@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2022 David Green and others.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -52,9 +53,9 @@ public abstract class InlineWithNestedContents extends Inline {
 
 	@Override
 	public String toString() {
-		return toStringHelper(getClass()).add("offset", getOffset())
-				.add("length", getLength())
-				.add("contents", getContents())
+		return toStringHelper(getClass()).add("offset", getOffset()) //$NON-NLS-1$
+				.add("length", getLength()) //$NON-NLS-1$
+				.add("contents", getContents()) //$NON-NLS-1$
 				.toString();
 	}
 }

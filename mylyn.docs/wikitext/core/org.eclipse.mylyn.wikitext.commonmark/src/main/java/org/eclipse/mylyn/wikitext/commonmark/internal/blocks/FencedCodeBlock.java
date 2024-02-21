@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2024 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -32,7 +33,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 public class FencedCodeBlock extends SourceBlock {
 
-	private final Pattern openingFencePattern = Pattern.compile("(\\s{0,4})(`{3,}|~{3,})\\s*(?:([^\\s~`]+)[^~`]*)?");
+	private final Pattern openingFencePattern = Pattern.compile("(\\s{0,4})(`{3,}|~{3,})\\s*(?:([^\\s~`]+)[^~`]*)?"); //$NON-NLS-1$
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
@@ -67,12 +68,12 @@ public class FencedCodeBlock extends SourceBlock {
 		String text = line.getText();
 		text = removeIndent(indent, text);
 		builder.characters(text);
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 	}
 
 	private String removeIndent(String indent, String text) {
 		if (indent != null && indent.length() > 0) {
-			Pattern indentPattern = Pattern.compile("\\s{1," + indent.length() + "}(.*)");
+			Pattern indentPattern = Pattern.compile("\\s{1," + indent.length() + "}(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher matcher = indentPattern.matcher(text);
 			if (matcher.matches()) {
 				return matcher.group(1);
@@ -84,7 +85,7 @@ public class FencedCodeBlock extends SourceBlock {
 	private Pattern closingFencePattern(Matcher matcher) {
 		String fence = matcher.group(2);
 		char fenceDelimiter = fence.charAt(0);
-		return Pattern.compile("\\s{0,3}" + fenceDelimiter + "{" + fence.length() + ",}\\s*");
+		return Pattern.compile("\\s{0,3}" + fenceDelimiter + "{" + fence.length() + ",}\\s*"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	private void addInfoTextCssClass(ProcessingContext processingContext, Attributes codeAttributes, Matcher matcher) {
@@ -93,7 +94,7 @@ public class FencedCodeBlock extends SourceBlock {
 			InlineParser inlineParser = processingContext.getInlineParser();
 			String language = inlineParser.toStringContent(processingContext,
 					new TextSegment(Collections.singletonList(new Line(0, 0, infoText))));
-			codeAttributes.setCssClass("language-" + language);
+			codeAttributes.setCssClass("language-" + language); //$NON-NLS-1$
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -39,7 +40,7 @@ import com.google.common.base.CharMatcher;
 public class ListBlock extends BlockWithNestedBlocks {
 
 	private final Pattern bulletPattern = Pattern
-			.compile("\\s{0,3}(([*+-])|(([0-9]{0,5})[.)]))(?:(?:\\s(\\s*)(.*))|\\s*$)");
+			.compile("\\s{0,3}(([*+-])|(([0-9]{0,5})[.)]))(?:(?:\\s(\\s*)(.*))|\\s*$)"); //$NON-NLS-1$
 
 	private final HorizontalRuleBlock horizontalRuleBlock = new HorizontalRuleBlock();
 
@@ -62,7 +63,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
 		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence,
 				(dummyContext, builder, listMode, lineSequence1) -> CommonMark.sourceBlocks()
-						.createContext(contextBuilder, listItemLineSequence(lineSequence1)));
+				.createContext(contextBuilder, listItemLineSequence(lineSequence1)));
 	}
 
 	private void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,
@@ -259,7 +260,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 		Matcher matcher = bulletPattern.matcher(line.getText());
 		checkState(matcher.matches());
 		String marker = matcher.group(4);
-		if ("1".equals(marker)) {
+		if ("1".equals(marker)) { //$NON-NLS-1$
 			marker = null;
 		}
 		return marker;

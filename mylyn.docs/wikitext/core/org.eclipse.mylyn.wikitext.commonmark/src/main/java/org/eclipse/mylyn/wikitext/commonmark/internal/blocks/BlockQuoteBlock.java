@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2024 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -33,7 +34,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 public class BlockQuoteBlock extends BlockWithNestedBlocks {
 
-	private static final Pattern START_PATTERN = Pattern.compile("\\s{0,3}>\\s?(.*)");
+	private static final Pattern START_PATTERN = Pattern.compile("\\s{0,3}>\\s?(.*)"); //$NON-NLS-1$
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {

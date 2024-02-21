@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
@@ -33,10 +34,10 @@ public class TextSegment {
 	}
 
 	private static String computeText(List<Line> lines) {
-		String text = "";
+		String text = ""; //$NON-NLS-1$
 		for (Line line : lines) {
 			if (text.length() > 0) {
-				text += "\n";
+				text += "\n"; //$NON-NLS-1$
 			}
 			text += line.getText();
 		}
@@ -81,7 +82,7 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString();
+		return toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString(); //$NON-NLS-1$
 	}
 
 	public Line getLineAtOffset(int textOffset) {

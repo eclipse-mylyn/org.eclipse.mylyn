@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -37,41 +38,41 @@ import com.google.common.net.UrlEscapers;
 public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	private static final Pattern HTML_ENTITY_PATTERN = Pattern
-			.compile("(&([a-zA-Z][a-zA-Z0-9]{1,32}|#x[a-fA-F0-9]{1,8}|#[0-9]{1,8});)");
+			.compile("(&([a-zA-Z][a-zA-Z0-9]{1,32}|#x[a-fA-F0-9]{1,8}|#[0-9]{1,8});)"); //$NON-NLS-1$
 
-	static final String ESCAPABLE_CHARACTER_GROUP = "[!\"\\\\#$%&'()*+,./:;<=>?@\\[\\]^_`{|}~-]";
+	static final String ESCAPABLE_CHARACTER_GROUP = "[!\"\\\\#$%&'()*+,./:;<=>?@\\[\\]^_`{|}~-]"; //$NON-NLS-1$
 
-	static final String ESCAPED_CHARS = "(?:\\\\" + ESCAPABLE_CHARACTER_GROUP + ")";
+	static final String ESCAPED_CHARS = "(?:\\\\" + ESCAPABLE_CHARACTER_GROUP + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String CAPTURING_ESCAPED_CHARS = "\\\\(" + ESCAPABLE_CHARACTER_GROUP + ")";
+	static final String CAPTURING_ESCAPED_CHARS = "\\\\(" + ESCAPABLE_CHARACTER_GROUP + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String PARENS_TITLE_PART = "(?:\\(((?:" + ESCAPED_CHARS + "|[^\\)])*)\\))";
+	static final String PARENS_TITLE_PART = "(?:\\(((?:" + ESCAPED_CHARS + "|[^\\)])*)\\))"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String SINGLE_QUOTED_TITLE_PART = "(?:'((?:" + ESCAPED_CHARS + "|[^'])*)')";
+	static final String SINGLE_QUOTED_TITLE_PART = "(?:'((?:" + ESCAPED_CHARS + "|[^'])*)')"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String QUOTED_TITLE_PART = "(?:\"((?:" + ESCAPED_CHARS + "|[^\"])*)\")";
+	static final String QUOTED_TITLE_PART = "(?:\"((?:" + ESCAPED_CHARS + "|[^\"])*)\")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String BRACKET_URI_PART = "<((?:[^<>\\\\\r\n]|" + ESCAPED_CHARS + ")*?)>";
+	static final String BRACKET_URI_PART = "<((?:[^<>\\\\\r\n]|" + ESCAPED_CHARS + ")*?)>"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final String IN_PARENS = "\\((?:[^\\\\()]|" + ESCAPED_CHARS + ")*\\)";
+	private static final String IN_PARENS = "\\((?:[^\\\\()]|" + ESCAPED_CHARS + ")*\\)"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	static final String NOBRACKET_URI_PART = "((?:[^\\\\\\s()]|" + ESCAPED_CHARS + "|" + IN_PARENS + "|\\\\)+)";
+	static final String NOBRACKET_URI_PART = "((?:[^\\\\\\s()]|" + ESCAPED_CHARS + "|" + IN_PARENS + "|\\\\)+)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	static final String URI_PART = "(?:" + BRACKET_URI_PART + "|" + NOBRACKET_URI_PART + ")";
+	static final String URI_PART = "(?:" + BRACKET_URI_PART + "|" + NOBRACKET_URI_PART + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	static final String TITLE_PART = "(?:" + QUOTED_TITLE_PART + "|" + SINGLE_QUOTED_TITLE_PART + "|"
-			+ PARENS_TITLE_PART + ")";
+	static final String TITLE_PART = "(?:" + QUOTED_TITLE_PART + "|" + SINGLE_QUOTED_TITLE_PART + "|" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ PARENS_TITLE_PART + ")"; //$NON-NLS-1$
 
-	final Pattern endPattern = Pattern.compile("\\(\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART + ")?\\s*\\)(.*)",
+	final Pattern endPattern = Pattern.compile("\\(\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART + ")?\\s*\\)(.*)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Pattern.DOTALL);
 
-	final Pattern referenceLabelPattern = Pattern.compile("(\\s*\\[((?:[^\\]]|\\\\]){0,1000})]).*", Pattern.DOTALL);
+	final Pattern referenceLabelPattern = Pattern.compile("(\\s*\\[((?:[^\\]]|\\\\]){0,1000})]).*", Pattern.DOTALL); //$NON-NLS-1$
 
 	final Pattern referenceDefinitionEndPattern = Pattern
-			.compile(":\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART + ")?\\s*(.*)", Pattern.DOTALL);
+			.compile(":\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART + ")?\\s*(.*)", Pattern.DOTALL); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public PotentialBracketEndDelimiter(Line line, int offset) {
-		super(line, offset, 1, "]");
+		super(line, offset, 1, "]"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					&& eligibleForReferenceDefinition(openingDelimiter, cursor);
 			Matcher matcher = cursor.hasNext()
 					? cursor.matcher(1, referenceDefinition ? referenceDefinitionEndPattern : endPattern)
-					: null;
+							: null;
 
 			List<Inline> contents = InlineParser
 					.secondPass(inlines.subList(indexOfOpeningDelimiter + 1, inlines.size()));
@@ -111,7 +112,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					}
 					NamedUriWithTitle uriWithTitle = referenceName == null
 							? null
-							: context.namedUriWithTitle(referenceName);
+									: context.namedUriWithTitle(referenceName);
 					if (uriWithTitle != null) {
 						cursor.advance(size);
 
@@ -167,7 +168,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	private String referenceName(Cursor cursor, List<Inline> contents) {
 		if (contents.isEmpty()) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		int start = cursor.toCursorOffset(contents.get(0).getOffset());
 		int end = cursor.toCursorOffset(getOffset());
@@ -176,9 +177,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	private boolean containsLink(List<Inline> contents) {
 		for (Inline inline : contents) {
-			if (inline instanceof Link) {
-				return true;
-			} else if (inline instanceof InlineWithNestedContents
+			if (inline instanceof Link || inline instanceof InlineWithNestedContents
 					&& containsLink(((InlineWithNestedContents) inline).getContents())) {
 				return true;
 			}
@@ -206,7 +205,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		if (startIndex > 0) {
 			for (int x = startIndex; x < indexOfContent; ++x) {
 				char c = cursor.getChar(x);
-				if ((c == '\n') || !Character.isWhitespace(c)) {
+				if (c == '\n' || !Character.isWhitespace(c)) {
 					return false;
 				}
 			}
@@ -284,7 +283,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			if (title == null) {
 				title = matcher.group(5);
 				if (title == null) {
-					title = "";
+					title = ""; //$NON-NLS-1$
 				}
 			}
 		}
@@ -308,7 +307,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		if (uriWithEscapes == null) {
 			uriWithEscapes = matcher.group(2);
 		}
-		uriWithEscapes = firstNonNull(uriWithEscapes, "");
+		uriWithEscapes = firstNonNull(uriWithEscapes, ""); //$NON-NLS-1$
 		return normalizeUri(uriWithEscapes);
 	}
 
@@ -334,7 +333,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	}
 
 	String replaceHtmlEntities(String text, Escaper escaper) {
-		String replaced = "";
+		String replaced = ""; //$NON-NLS-1$
 		int lastEnd = 0;
 		Matcher matcher = HTML_ENTITY_PATTERN.matcher(text);
 		while (matcher.find()) {
@@ -345,7 +344,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			String entityTextEquivalent = EntityReferences.instance().equivalentString(entity);
 			replaced += entityTextEquivalent == null
 					? matcher.group(1)
-					: escaper == null ? entityTextEquivalent : escaper.escape(entityTextEquivalent);
+							: escaper == null ? entityTextEquivalent : escaper.escape(entityTextEquivalent);
 			lastEnd = matcher.end(1);
 		}
 		if (lastEnd < text.length()) {
@@ -355,7 +354,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	}
 
 	String toReferenceName(String stringWithBackslashEscapes) {
-		String referenceName = stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " ");
+		String referenceName = stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (CharMatcher.whitespace().matchesAllOf(referenceName)) {
 			return null;
 		}
@@ -363,7 +362,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	}
 
 	String unescapeBackslashEscapes(String stringWithBackslashEscapes) {
-		return stringWithBackslashEscapes.replaceAll(CAPTURING_ESCAPED_CHARS, "$1");
+		return stringWithBackslashEscapes.replaceAll(CAPTURING_ESCAPED_CHARS, "$1"); //$NON-NLS-1$
 	}
 
 	private Optional<PotentialBracketDelimiter> findLastPotentialBracketDelimiter(List<Inline> inlines) {
